@@ -123,10 +123,10 @@ public class ThievesTownTest
     {
         var randomizer = new Randomizer(new[]
         {
-            new Dictionary<string, object>()
+            new RandomizerConfig
             {
-                { "mode.state", "open" },
-                { "logic", "NoGlitches" },
+                Glitches = GlitchesOption.None,
+                State = StateOption.Open,
             }
         });
         randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));

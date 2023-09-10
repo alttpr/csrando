@@ -18,15 +18,15 @@ internal sealed class EntranceShuffler
     public EntranceShuffler(World world)
     {
         _world = world;
-        string definition_name = world.Config<string>("entrances") switch
+        string definition_name = world.RandomizerConfig.EntranceShuffle switch
         {
-            "simple" => "simple",
-            "restricted" => "vanilla",
-            "full" => "vanilla",
-            "crossed" => "vanilla",
-            "insanity" => "vanilla",
-            "none" => "vanilla",
-            _ => world.Config<string>("entrances") ?? "vanilla",
+            EntranceShuffleOption.Simple => "simple",
+            EntranceShuffleOption.Restricted => "vanilla",
+            EntranceShuffleOption.Full => "vanilla",
+            EntranceShuffleOption.Crossed => "vanilla",
+            EntranceShuffleOption.Insanity => "vanilla",
+            EntranceShuffleOption.None => "vanilla",
+            _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.RandomizerConfig.EntranceShuffle)
         };
 
         _definition = YamlReader.LoadEntrances(definition_name);

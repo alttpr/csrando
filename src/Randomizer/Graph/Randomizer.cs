@@ -62,7 +62,7 @@ public sealed class Randomizer
      *
      * @return void
      */
-    public Randomizer(Dictionary<string, object>[] configs)
+    public Randomizer(RandomizerConfig[] randomizerConfigs)
     {
         Graph = new Graph();
         _start = Graph.NewVertex(new()
@@ -77,10 +77,10 @@ public sealed class Randomizer
         };
         _collectedItems = new Inventory();
 
-        _worlds = new World[configs.Length];
-        foreach (var (i, config) in configs.Select((c, i) => (i, c)))
+        _worlds = new World[randomizerConfigs.Length];
+        for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
-            _worlds[i] = new World(i, config);
+            _worlds[i] = new World(i, randomizerConfigs[i]);
             _collectedItems = _collectedItems.Merge(_worlds[i].CollectedItems);
 
             var shop_filler = new ShopFiller(_worlds[i]);
@@ -178,11 +178,7 @@ public sealed class Randomizer
      */
     public World[] Randomize()
     {
-        var filler = new RandomAssumedFiller(this, new()
-        {
-            { "accessibility", _worlds.Select((world, idx) => (Key: idx, Value: world.Config<string>("accessibility"))).ToDictionary(k => k.Key, v => (object)v.Value) },
-        });
-
+        var filler = new RandomAssumedFiller(this);
         var sets = new ItemPooler(_worlds).GetPool();
 
         filler.FillGraph(sets);
@@ -476,5 +472,10 @@ public sealed class Randomizer
     {
         var items = GetItems(locations);
         return new Inventory(items.ToArray());
+    }
+
+    public RandomizerConfig GetConfiguration(int world_id)
+    {
+        return _worlds[world_id].RandomizerConfig;
     }
 }

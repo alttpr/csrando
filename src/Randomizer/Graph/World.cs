@@ -1,7 +1,5 @@
 namespace AlttpRandomizer.Graph;
 
-using System.Collections.Concurrent;
-
 /**
  * Model of a world in which a player would be playing.
  */
@@ -11,7 +9,7 @@ public sealed class World
     public Graph Graph { get; }
     private readonly HashSet<Vertex> _vertices = new();
     public Inventory CollectedItems { get; }
-    private readonly ConcurrentDictionary<string, object> _config;
+    public RandomizerConfig RandomizerConfig { get; }
 
     /**
      * Add all the vertices to the graph for this region.
@@ -21,15 +19,10 @@ public sealed class World
      *
      * @return void
      */
-    public World(int id = 0, Dictionary<string, object>? config = null)
+    public World(int id = 0, RandomizerConfig randomizerConfig = null)
     {
+        this.RandomizerConfig = randomizerConfig;
         Id = id;
-        config ??= new();
-        config.TryAdd("difficulty", "normal");
-        config.TryAdd("logic", "NoGlitches");
-        config.TryAdd("goal", "ganon");
-        config.TryAdd("enemizer.enemyShuffle", "none");
-        _config = new(config);
 
         Graph = new Graph();
         var start = Graph.NewVertex(new()
@@ -59,16 +52,12 @@ public sealed class World
             $"fixed:{Id}",
             $"hop:{Id}",
         };
-        items.AddRange((Item[]?)config.GetValueOrDefault("equipment") ?? new[] {
-            Item.Get("BossHeartContainer", Id),
-            Item.Get("BossHeartContainer", Id),
-            Item.Get("BossHeartContainer", Id),
-        });
-        if (Config<string>("mode.state") == "standard")
+        items.AddRange(randomizerConfig.StartingEquipment.Select(x => Item.Get(x, Id)));
+        if (RandomizerConfig.State == StateOption.Standard)
         {
             items.Add($"EscapeLamp:{Id}");
         }
-        if (Config<string>("accessibility") != "locations")
+        if (RandomizerConfig.Accessibility != AccessibilityOption.Locations)
         {
             items.Add($"KeyForKey:{Id}");
         }
@@ -122,26 +111,26 @@ public sealed class World
         // set special edges
         if (Graph.GetVertex($"TowerEntry:{Id}") is Vertex towerEntry)
         {
-            string entry = Config("crystals.tower", 7) == 1
+            string entry = RandomizerConfig.CrystalsTower == 1
                 ? "Crystal:" + Id
-                : "Crystal:" + Id + "|" + Config("crystals.tower", 7);
+                : "Crystal:" + Id + "|" + RandomizerConfig.CrystalsTower;
 
             Graph.AddDirected(meta, towerEntry, entry);
         }
         if (Graph.GetVertex($"GanonVulnerable:{Id}") is Vertex ganonVulnerable)
         {
-            switch (Config<string>("goal"))
+            switch (RandomizerConfig.Goal)
             {
-                case "dungeons":
+                case GoalOption.Dungeons:
                     // this has no effect; likely a relic of GraphViz to show us it was AD.
                     //this.graph.newVertex(["AllDungeons"]);
                     break;
-                case "ganon":
-                case "fastganon":
+                case GoalOption.Ganon:
+                case GoalOption.FastGanon:
                 default:
-                    string vulnerable = Config("crystals.ganon", 7) == 1
+                    string vulnerable = RandomizerConfig.CrystalsGanon == 1
                         ? "Crystal:" + Id
-                        : "Crystal:" + Id + "|" + Config("crystals.ganon", 7);
+                        : "Crystal:" + Id + "|" + RandomizerConfig.CrystalsGanon;
 
                     Graph.AddDirected(meta, ganonVulnerable, vulnerable);
                     break;
@@ -181,18 +170,5 @@ public sealed class World
     public IEnumerable<Vertex> GetLocationsOfType(string type)
     {
         return _vertices.Where((Vertex vertex) => vertex.Type == type);
-    }
-
-    /**
-     * Get config value based on the currently set rules.
-     *
-     * @param string key dot notation key of config
-     * @param mixed|null default value to return if key is not found
-     *
-     * @return mixed
-     */
-    public T Config<T>(string key, T @default = default!)
-    {
-        return (T)_config.GetOrAdd(key, @default!);
     }
 }

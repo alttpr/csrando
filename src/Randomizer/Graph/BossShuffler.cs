@@ -111,7 +111,7 @@ internal sealed class BossShuffler
         };
 
         // force Kholdstare for swordless to be in Ice Palace
-        if (_world.Config<string>("mode.weapons") == "swordless")
+        if (_world.RandomizerConfig.Weapon == WeaponOption.Swordless)
         {
             // remove Ice Palace
             boss_locations.RemoveAt(9);
@@ -119,9 +119,9 @@ internal sealed class BossShuffler
         }
 
         List<string> place_bosses;
-        switch (_world.Config<string>("enemizer.bossShuffle"))
+        switch (_world.RandomizerConfig.BossShuffle)
         {
-            case "random":
+            case BossShuffleOption.Random:
                 foreach (string location in boss_locations)
                 {
                     var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
@@ -131,7 +131,7 @@ internal sealed class BossShuffler
                     PlaceBossItemInLocation(boss, location);
                 }
                 break;
-            case "full": // 1 copy of each, +3 other copies
+            case BossShuffleOption.Full: // 1 copy of each, +3 other copies
                 place_bosses = new()
                 {
                     "DefeatArmos",
@@ -157,7 +157,7 @@ internal sealed class BossShuffler
                     PlaceBossItemInLocation(boss, location);
                 }
                 break;
-            case "simple": // 1:1
+            case BossShuffleOption.Simple: // 1:1
                 place_bosses = new()
                 {
                     "DefeatArmos",
@@ -185,7 +185,7 @@ internal sealed class BossShuffler
                     PlaceBossItemInLocation(boss, location);
                 }
                 break;
-            case "none":
+            case BossShuffleOption.None:
             default:
                 PlaceBossItemInLocation("DefeatArmos", "Eastern Palace - Boss");
                 PlaceBossItemInLocation("DefeatLanmolas", "Desert Palace - Boss");

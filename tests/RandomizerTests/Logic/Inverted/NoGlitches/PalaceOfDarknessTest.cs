@@ -160,10 +160,10 @@ public class PalaceOfDarknessTest
     {
         var randomizer = new Randomizer(new[]
         {
-            new Dictionary<string, object>()
+            new RandomizerConfig
             {
-                { "mode.state", "inverted" },
-                { "logic", "NoGlitches" },
+                Glitches = GlitchesOption.None,
+                State = StateOption.Inverted,
             }
         });
         randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));

@@ -111,14 +111,14 @@ internal sealed class ItemPooler
             );
 
             if (
-                world.Config<string>("logic") != "None"
-                && (world.Config<string>("mode.state") == "inverted"
-                    || !(world.Config<string>("logic") is "OverworldGlitches" or "MajorGlitches"))
+                world.RandomizerConfig.Glitches != GlitchesOption.None
+                && (world.RandomizerConfig.State == StateOption.Inverted
+                    || !(world.RandomizerConfig.Glitches is GlitchesOption.Overworld or GlitchesOption.Major))
             )
             {
-                float crystal_ratio = world.Config("crystals.tower", 7) / 7f;
+                float crystal_ratio = world.RandomizerConfig.CrystalsTower / 7f;
                 int fill_count;
-                if (world.Config<string>("goal") is "triforce-hunt" or "pedestal")
+                if (world.RandomizerConfig.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal)
                 {
                     fill_count = PHP.get_random_int((int)(15 * crystal_ratio), (int)(25 * crystal_ratio));
                 }
@@ -302,7 +302,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.Config("region.wildKeys", false))
+        if (world.RandomizerConfig.RegionWildKeys)
         {
             return new ItemSet
             {
@@ -384,7 +384,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.Config("region.wildBigKeys", false))
+        if (world.RandomizerConfig.RegionWildBigKeys)
         {
             return new ItemSet
             {
@@ -471,7 +471,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.Config("region.wildMaps", false))
+        if (world.RandomizerConfig.RegionWildMaps)
         {
             return new ItemSet
             {
@@ -484,7 +484,7 @@ internal sealed class ItemPooler
             };
         }
 
-        if (world.Config<string>("accessibility") == "items")
+        if (world.RandomizerConfig.Accessibility == AccessibilityOption.Items)
         {
             foreach (var (_, parts) in maps)
             {
@@ -562,7 +562,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.Config("region.wildCompasses", false))
+        if (world.RandomizerConfig.RegionWildCompasses)
         {
             return new ItemSet
             {
@@ -575,7 +575,7 @@ internal sealed class ItemPooler
             };
         }
 
-        if (world.Config<string>("accessibility") == "items")
+        if (world.RandomizerConfig.Accessibility == AccessibilityOption.Items)
         {
             foreach (var (_, parts) in compasses)
             {
@@ -642,7 +642,7 @@ internal sealed class ItemPooler
      */
     private ItemSet GetShopItems(World world)
     {
-        if (world.Config<string>("region.shopSupply") != "shuffled")
+        if (world.RandomizerConfig.RegionShopSupply != ShopSupplyOption.Shuffled)
         {
             return new();
         }

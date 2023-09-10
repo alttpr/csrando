@@ -15,9 +15,9 @@ internal class EdgeCollector
     {
         var edges_data = YamlReader.LoadEdges("base");
 
-        switch (world.Config<string>("mode.state"))
+        switch (world.RandomizerConfig.State)
         {
-            case "standard":
+            case StateOption.Standard:
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("standard"));
                 edges_data["fixed"].Directed.Add(new() { "start", "Rain - Link's House" });
@@ -25,7 +25,7 @@ internal class EdgeCollector
                 // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
 
                 break;
-            case "inverted":
+            case StateOption.Inverted:
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("inverted"));
                 // @todo move these once we have the nodes made
                 edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
@@ -33,7 +33,7 @@ internal class EdgeCollector
                 // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
 
                 break;
-            case "open":
+            case StateOption.Open:
             default:
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("open"));
@@ -43,9 +43,14 @@ internal class EdgeCollector
                 break;
         }
 
-        foreach (string? tech in world.Config("tech", Enumerable.Empty<string>()))
+        foreach (var tech in world.RandomizerConfig.Techs)
         {
-            YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromTech(tech));
+            var file_name = tech switch
+            {
+                TechOption.DungeonBunnyRevival => "dungeon_bunny_revival",
+                _ => throw new Exception("Missing tech enum to file mapping for value: " + tech),
+            };
+            YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromTech(file_name));
         }
 
         var return_data = new Dictionary<string, DirectedUndirectedPair>();

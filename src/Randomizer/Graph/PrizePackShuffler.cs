@@ -23,7 +23,7 @@ internal sealed class PrizePackShuffler
     {
         var prizepacks = _world.GetLocationsOfType("prizepack");
 
-        if (!_world.Config("customPrizePacks", false))
+        if (!_world.RandomizerConfig.CustomPrizePacks)
         {
             var random_vanilla_packs = new Stack<string>(PHP.fy_shuffle(new[]
             {
@@ -57,10 +57,12 @@ internal sealed class PrizePackShuffler
             // TODO refactor this
             var drops = new List<Sprite>();
             // TODO: what is the type of "item.drop"?
+            // TODO: Rework this
+            /*
             foreach (var (sprite_name, count) in _world.Config("item.drop", Enumerable.Empty<(string SpriteName, int Count)>()))
             {
                 drops.AddRange(Enumerable.Repeat(Sprite.Get(sprite_name), Math.Min(_world.Config("drop.count." + sprite_name, count), 63)));
-            }
+            }*/
             var drop_pool = new Stack<Sprite>(PHP.fy_shuffle(drops.ToArray()));
 
             foreach (var pack in emptypacks)
@@ -71,7 +73,7 @@ internal sealed class PrizePackShuffler
         }
 
         // hard+ does not allow fairies/full magics
-        if (_world.Config("rom.HardMode", 0) >= 2)
+        if (_world.RandomizerConfig.RomHardMode >= 2)
         {
             var fairy = Sprite.Get("Fairy");
             var heart = Sprite.Get("Heart");
@@ -90,7 +92,7 @@ internal sealed class PrizePackShuffler
             }
         }
 
-        if (_world.Config("rom.rupeeBow", false))
+        if (_world.RandomizerConfig.RomRupeeBow)
         {
             var arrows5 = Sprite.Get("ArrowRefill5");
             var arrows10 = Sprite.Get("ArrowRefill10");

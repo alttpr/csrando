@@ -154,12 +154,12 @@ public class EastTest
     {
         var randomizer = new Randomizer(new[]
         {
-                new Dictionary<string, object>()
-                {
-                    { "mode.state", "open" },
-                    { "logic", "NoGlitches" },
-                }
-            });
+            new RandomizerConfig
+            {
+                Glitches = GlitchesOption.None,
+                State = StateOption.Open,
+            }
+        });
         randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
         Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
     }
@@ -169,12 +169,12 @@ public class EastTest
     {
         var randomizer = new Randomizer(new[]
         {
-                new Dictionary<string, object>()
-                {
-                    { "mode.state", "open" },
-                    { "logic", "NoGlitches" },
-                }
-            });
+            new RandomizerConfig
+            {
+                Glitches = GlitchesOption.None,
+                State = StateOption.Open,
+            }
+        });
         randomizer.AssumeItems(inventory.Concat(new[] { "TurtleRockEntry" + medallion }).Select(i => Item.Get(i, 0)));
         Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
     }

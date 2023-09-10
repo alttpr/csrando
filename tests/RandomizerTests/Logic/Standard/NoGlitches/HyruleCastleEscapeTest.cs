@@ -29,10 +29,10 @@ public class EastTest
     {
         var randomizer = new Randomizer(new[]
         {
-            new Dictionary<string, object>()
+            new RandomizerConfig
             {
-                { "mode.state", "standard" },
-                { "logic", "NoGlitches" },
+                Glitches = GlitchesOption.None,
+                State = StateOption.Standard,
             }
         });
         randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
