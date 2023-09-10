@@ -1,0 +1,28 @@
+rooms:
+  - roomid: 0x0112
+    nodes:
+      regions:
+        - name: "Lake Hylia Shop"
+          type: "shop"
+          shopkeeper: 0xA0
+          shopstyle: 0x03
+          inletid: 0x58
+
+      inventory:
+        - name: "Lake Hylia Shop - Left"
+          type: "shopitem"
+          cost: 150
+          item: "RedPotion"
+          itemset: ["lw", "shop"]
+
+        - name: "Lake Hylia Shop - Middle"
+          type: "shopitem"
+          cost: 10
+          item: "Heart"
+          itemset: ["lw", "shop"]
+
+        - name: "Lake Hylia Shop - Right"
+          type: "shopitem"
+          cost: 50
+          item: "TenBombs"
+          itemset: ["lw", "shop"]

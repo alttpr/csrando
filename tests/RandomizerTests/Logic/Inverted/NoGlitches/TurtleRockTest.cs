@@ -1,0 +1,186 @@
+using AlttpRandomizer.Graph;
+
+namespace RandomizerTests.Logic.Inverted.NoGlitches;
+
+[TestClass]
+public class TurtleRockTest
+{
+    public static IEnumerable<object[]> TestData => new[]
+    {
+        new object[] { "Turtle Rock - Chain Chomps", false, new string[] {  } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7" } },
+
+        new object[] { "Turtle Rock - Compass Chest", false, new string[] {  } },
+        new object[] { "Turtle Rock - Compass Chest", false, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria" } },
+
+        new object[] { "Turtle Rock - Roller Room - Left", false, new string[] {  } },
+        new object[] { "Turtle Rock - Roller Room - Left", false, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", false, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+
+        new object[] { "Turtle Rock - Roller Room - Right", false, new string[] {  } },
+        new object[] { "Turtle Rock - Roller Room - Right", false, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", false, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "FireRod" } },
+
+        new object[] { "Turtle Rock - Big Chest", false, new string[] {  } },
+        new object[] { "Turtle Rock - Big Chest", false, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Big Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+
+        new object[] { "Turtle Rock - Big Key Chest", false, new string[] {  } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+
+        new object[] { "Turtle Rock - Crystaroller Room Chest", false, new string[] {  } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "Lamp", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "MoonPearl", "OcarinaInactive", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Crystaroller Room Chest", true, new string[] { "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", false, new string[] {  } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", false, new string[] {  } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", false, new string[] {  } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", false, new string[] {  } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "Cape", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "Cape", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "CaneOfByrna", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "CaneOfByrna", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "MirrorShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "MirrorShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "MagicMirror", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "Lamp", "ProgressiveShield", "ProgressiveShield", "ProgressiveShield", "Hookshot", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+
+        new object[] { "Turtle Rock - Boss", false, new string[] {  } },
+        new object[] { "Turtle Rock - Boss", false, new string[] { "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "UncleSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", false, new string[] { "IceRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "UncleSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", false, new string[] { "IceRod", "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "UncleSword", "Bottle", "Bottle", "Bottle", "Bottle", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", false, new string[] { "IceRod", "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "UncleSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "L2Sword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "ProgressiveSword", "ProgressiveSword", "HalfMagic", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "L3Sword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "MagicMirror", "TitansMitt", "Quake", "L4Sword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "HalfMagic", "Bottle", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "HalfMagic", "Bottle", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
+    };
+    [TestMethod]
+    [DynamicData(nameof(TestData))]
+    public void TestLogic(string location, bool expected, string[] inventory)
+    {
+        var randomizer = new Randomizer(new[]
+        {
+            new Dictionary<string, object>()
+            {
+                { "mode.state", "inverted" },
+                { "logic", "NoGlitches" },
+            }
+        });
+        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
+        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+    }
+}
+

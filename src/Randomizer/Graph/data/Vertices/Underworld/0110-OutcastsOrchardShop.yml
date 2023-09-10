@@ -1,0 +1,33 @@
+rooms:
+  - roomid: 0x0110
+    nodes:
+      regions:
+        - name: "Outcasts Orchard Shop"
+          type: "shop"
+          inletid: 0x57
+
+      inventory:
+        - name: "Outcasts Orchard Shop - Left"
+          type: "shopitem"
+          cost: 500
+          item: "RedShield"
+          itemset: ["dw", "shop"]
+
+        - name: "Outcasts Orchard Shop - Middle"
+          type: "shopitem"
+          cost: 10
+          item: "Bee"
+          itemset: ["dw", "shop"]
+
+        - name: "Outcasts Orchard Shop - Right"
+          type: "shopitem"
+          cost: 30
+          item: "TenArrows"
+          itemset: ["dw", "shop"]
+
+      mobs:
+        - name: "Trough Shop - Shopkeeper"
+          position: { x: 0x07, y: 0x15, z: 0x00 }
+          sprite: "Salesman"
+          allow:
+            - "Salesman"
