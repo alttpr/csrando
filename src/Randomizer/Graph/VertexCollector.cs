@@ -43,7 +43,7 @@ internal class VertexCollector
     // TODO: this really needs to return typed data already...
     public List<Dictionary<string, object>> LoadYmlData(World world)
     {
-        var vertex_data = YamlReader.LoadVerticesFromDirectory();
+        var vertex_data = YamlReader.LoadVertices();
 
         int world_id = world.Id;
         bool inverted = world.Config<string>("mode.state") == "inverted";

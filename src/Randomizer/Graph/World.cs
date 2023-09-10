@@ -91,7 +91,7 @@ public sealed class World
         var edges = new EdgeCollector().GetForWorld(this);
         foreach (var (group, data) in edges)
         {
-            foreach (var edge_data in data.directed)
+            foreach (var edge_data in data.Directed)
             {
                 var from = Graph.GetVertex(edge_data[0]);
                 var to = Graph.GetVertex(edge_data[1]);
@@ -104,7 +104,7 @@ public sealed class World
                 }
                 Graph.AddDirected(from, to, group);
             }
-            foreach (var edge_data in data.undirected)
+            foreach (var edge_data in data.Undirected)
             {
                 var from = Graph.GetVertex(edge_data[0]);
                 var to = Graph.GetVertex(edge_data[1]);

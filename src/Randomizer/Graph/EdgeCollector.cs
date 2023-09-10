@@ -13,32 +13,32 @@ internal class EdgeCollector
      */
     public Dictionary<string, DirectedUndirectedPair> GetForWorld(World world)
     {
-        var edges_data = YamlReader.LoadEdgesFromDirectory("Edges/base");
+        var edges_data = YamlReader.LoadEdges("base");
 
         switch (world.Config<string>("mode.state"))
         {
             case "standard":
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromDirectory("Edges/normal"));
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromDirectory("Edges/standard"));
-                edges_data["fixed"].directed.Add(new() { "start", "Rain - Link's House" });
-                edges_data["RescueZelda"].directed.Add(new() { "start", "Sanctuary Hall" });
+                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
+                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("standard"));
+                edges_data["fixed"].Directed.Add(new() { "start", "Rain - Link's House" });
+                edges_data["RescueZelda"].Directed.Add(new() { "start", "Sanctuary Hall" });
                 // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
 
                 break;
             case "inverted":
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromDirectory("Edges/inverted"));
+                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("inverted"));
                 // @todo move these once we have the nodes made
-                edges_data["fixed"].directed.Add(new() { "start", "Link's House - Bedroom" });
-                edges_data["fixed"].directed.Add(new() { "start", "Dark Sanctuary" });
+                edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edges_data["fixed"].Directed.Add(new() { "start", "Dark Sanctuary" });
                 // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
 
                 break;
             case "open":
             default:
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromDirectory("Edges/normal"));
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromDirectory("Edges/open"));
-                edges_data["fixed"].directed.Add(new() { "start", "Link's House - Bedroom" });
-                edges_data["fixed"].directed.Add(new() { "start", "Sanctuary Hall" });
+                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
+                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("open"));
+                edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edges_data["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
                 // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
                 break;
         }
@@ -61,8 +61,8 @@ internal class EdgeCollector
 
             return_data[name] = new DirectedUndirectedPair
             {
-                directed = edges.directed.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
-                undirected = edges.undirected.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
+                Directed = edges.Directed.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
+                Undirected = edges.Undirected.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
             };
         }
 

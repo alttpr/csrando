@@ -11,7 +11,7 @@ public class YamlReader
         {
             if (_dataRoot == null)
             {
-                DirectoryInfo current_directory = new(Directory.GetCurrentDirectory());
+                DirectoryInfo? current_directory = new(Directory.GetCurrentDirectory());
 
                 do
                 {
@@ -22,7 +22,12 @@ public class YamlReader
                         break;
                     }
                     current_directory = current_directory.Parent;
-                } while (current_directory.Parent != null);
+                } while (current_directory != null);
+            }
+
+            if (_dataRoot == null)
+            {
+                throw new Exception("Could not find the data directory automatically. Set YamlReader.DataRoot before loading data.");
             }
             return _dataRoot;
         }
@@ -36,7 +41,9 @@ public class YamlReader
 
     private class YamlItem
     {
-        public byte[] bytes { get; set; }
+
+        [YamlMember(Alias = "bytes")]
+        public List<byte> Bytes { get; set; } = new();
     }
 
     public static Dictionary<string, byte[]> LoadItems()
@@ -52,7 +59,7 @@ public class YamlReader
 
             foreach (var item in res)
             {
-                result.Add(item.Key, item.Value.bytes);
+                result.Add(item.Key, item.Value.Bytes.ToArray());
             }
         }
 
@@ -75,11 +82,11 @@ public class YamlReader
         return deserializer.Deserialize<Dictionary<string, DirectedUndirectedPair>>(reader);
     }
 
-    public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromDirectory(string path)
+    public static Dictionary<string, DirectedUndirectedPair> LoadEdges(string name)
     {
         var result = new Dictionary<string, DirectedUndirectedPair>();
 
-        foreach (string file in Directory.GetFiles(Path.Combine(DataRoot, path), "*.yml", SearchOption.AllDirectories))
+        foreach (string file in Directory.GetFiles(Path.Combine(DataRoot, "Edges", name), "*.yml", SearchOption.AllDirectories))
         {
             var current_file_edges = LoadEdgesFromFile(file);
             MergeEdges(result, current_file_edges);
@@ -96,8 +103,8 @@ public class YamlReader
         {
             if (dest.TryGetValue(entry.Key, out var result_pair))
             {
-                result_pair.directed.AddRange(entry.Value.directed);
-                result_pair.undirected.AddRange(entry.Value.undirected);
+                result_pair.Directed.AddRange(entry.Value.Directed);
+                result_pair.Undirected.AddRange(entry.Value.Undirected);
             }
             else
             {
@@ -114,7 +121,7 @@ public class YamlReader
         return deserializer.Deserialize<Entrances>(reader);
     }
 
-    public static Vertices LoadVerticesFromFile(string path)
+    private static Vertices LoadVerticesFromFile(string path)
     {
         string vertices_yml = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
         using TextReader reader = File.OpenText(vertices_yml);
@@ -122,7 +129,7 @@ public class YamlReader
         return deserializer.Deserialize<Vertices>(reader);
     }
 
-    public static Vertices LoadVerticesFromDirectory()
+    public static Vertices LoadVertices()
     {
         Vertices result = new();
 
@@ -188,8 +195,12 @@ public class YamlSprite
 
 public class DirectedUndirectedPair
 {
-    public List<List<string>> undirected { get; set; }
-    public List<List<string>> directed { get; set; }
+
+    [YamlMember(Alias = "undirected")]
+    public List<List<string>> Undirected { get; set; } = new();
+
+    [YamlMember(Alias = "directed")]
+    public List<List<string>> Directed { get; set; } = new();
 }
 
 public class ConnectionGroup
@@ -379,7 +390,7 @@ public partial class Room
     public bool Dark { get; set; } = false;
 
     [YamlMember(Alias = "bosses")]
-    public object Bosses { get; set; }
+    public object? Bosses { get; set; }
 }
 
 public partial class RoomNodes
