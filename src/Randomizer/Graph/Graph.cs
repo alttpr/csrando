@@ -264,7 +264,7 @@ public sealed class Graph
                         queue.Enqueue(vertex);
                     }
                 }
-                if (vertex.Peg == "orange")
+                if (vertex.Peg == PegState.Orange)
                 {
                     continue;
                 }
@@ -288,7 +288,7 @@ public sealed class Graph
                         peg_queue.Enqueue(vertex);
                     }
                 }
-                if (vertex.Peg == "blue")
+                if (vertex.Peg == PegState.Blue)
                 {
                     continue;
                 }

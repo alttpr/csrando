@@ -268,7 +268,7 @@ internal sealed class EnemyShuffler
             _world.Graph.NewVertex(new()
             {
                 { "name", $"{token}:{world_id}" },
-                { "type", "meta" },
+                { "type", VertexType.Meta },
                 { "item", Item.Get(token, world_id) },
             });
         }

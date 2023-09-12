@@ -331,7 +331,7 @@ public partial class ItemEntry
     public List<long> Addresses { get; set; } = new();
 
     [YamlMember(Alias = "type")]
-    public string Type { get; set; }
+    public VertexType Type { get; set; }
 
     [YamlMember(Alias = "item")]
     public string? Item { get; set; }
@@ -459,7 +459,7 @@ public partial class InventoryEntry
     public string Name { get; set; }
 
     [YamlMember(Alias = "type")]
-    public string Type { get; set; }
+    public VertexType Type { get; set; }
 
     [YamlMember(Alias = "item")]
     public string Item { get; set; }
@@ -503,7 +503,7 @@ public partial class Entity
     public List<int> State { get; set; } = new();
 
     [YamlMember(Alias = "type")]
-    public string? Type { get; set; }
+    public VertexType? Type { get; set; }
 
     [YamlMember(Alias = "item")]
     public string? Item { get; set; }
@@ -528,7 +528,7 @@ public partial class Entity
             { "position", Position },
             //{ "sprite", Sprite }, // this one is turned into an actual sprite later.
         };
-        if (!string.IsNullOrWhiteSpace(Type))
+        if (Type != null)
             result.Add("type", Type);
         if (!string.IsNullOrWhiteSpace(Item))
             result.Add("item", Item);
@@ -568,10 +568,10 @@ public partial class Region
     public int? Inletid { get; set; }
 
     [YamlMember(Alias = "type")]
-    public string? Type { get; set; }
+    public VertexType? Type { get; set; }
 
     [YamlMember(Alias = "peg")]
-    public string? Peg { get; set; }
+    public PegState? Peg { get; set; }
 
     [YamlMember(Alias = "shopkeeper")]
     public int? Shopkeeper { get; set; }
@@ -590,9 +590,9 @@ public partial class Region
         };
         if (Inletid.HasValue)
             result.Add("inletid", Inletid.Value);
-        if (!string.IsNullOrWhiteSpace(Type))
+        if (Type != null)
             result.Add("type", Type);
-        if (!string.IsNullOrWhiteSpace(Peg))
+        if (Peg != null)
             result.Add("peg", Peg);
         if (Shopkeeper.HasValue)
             result.Add("shopkeeper", Shopkeeper.Value);

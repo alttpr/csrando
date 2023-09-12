@@ -56,7 +56,7 @@ internal sealed class BunnyGraphifier
         int world_id = world.Id;
         var moonpearl = graph.NewVertex(new() {
             { "name", "MoonPearl:" + world_id },
-            { "type", "meta" },
+            { "type", VertexType.Meta },
         });
         var meta = graph.GetVertex("Meta:" + world_id);
         graph.AddDirected(meta!, moonpearl, "MoonPearl:" + world_id);
@@ -65,7 +65,7 @@ internal sealed class BunnyGraphifier
         {
             var dark_vertex = graph.NewVertex(new() {
                 { "name", $"{dark_item}:{world_id}" },
-                { "type", "meta" },
+                { "type", VertexType.Meta },
                 { "item", Item.Get(dark_item, world_id) },
             });
 
