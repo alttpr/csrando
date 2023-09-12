@@ -312,15 +312,17 @@ public sealed class Graph
     }
     private Graph(Graph other)
     {
-        // FIXME: adjacency_matrix, marked/peg_marked and visited are not deep copies,
-        //        so they mutate a Graph that should be immutable
-        _adjacencyMatrix = new(other._adjacencyMatrix);
+        foreach (var (key, value) in other._adjacencyMatrix)
+            _adjacencyMatrix.TryAdd(key, new(value));
         _edges = new(other._edges);
-        _marked = new(other._marked);
-        _pegMarked = new(other._pegMarked);
+        foreach (var (key, value) in other._marked)
+            _marked.TryAdd(key, new(value));
+        foreach (var (key, value) in other._pegMarked)
+            _pegMarked.TryAdd(key, new(value));
         _recheckNodes = new(other._recheckNodes);
         _vertices = new(other._vertices);
         _verticesByName = new(other._verticesByName);
-        _visited = new(other._visited);
+        foreach (var (key, value) in other._visited)
+            _visited.TryAdd(key, new(value));
     }
 }
