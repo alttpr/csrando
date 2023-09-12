@@ -61,39 +61,39 @@ internal class VertexCollector
             foreach (var meta in map.Nodes.Meta)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "meta")
+                    .MergeOne("type", VertexType.Meta)
                     .Merge(meta.AsDictionary()));
             }
             foreach (var prizepack in map.Nodes.Prizepacks)
             {
                 vertices.Add(prizepack.AsDictionary()
-                    .MergeOne("type", "prizepack"));
+                    .MergeOne("type", VertexType.PrizePack));
             }
             foreach (var region in map.Nodes.Regions)
             {
                 vertices.Add(shared
                     .MergeOne("moonpearl", map.Moonpearl)
-                    .MergeOne("type", "region")
+                    .MergeOne("type", VertexType.Region)
                     .Merge(region.AsDictionary()));
             }
             foreach (var warp in map.Nodes.Warps)
             {
                 vertices.Add(shared
                     .MergeOne("moonpearl", map.Moonpearl)
-                    .MergeOne("type", "warp")
+                    .MergeOne("type", VertexType.Warp)
                     .Merge(warp.AsDictionary()));
             }
             foreach (var mob in map.Nodes.Mobs)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "mob")
+                    .MergeOne("type", VertexType.Mob)
                     .MergeOne("sprite", Sprite.Get(mob.Sprite))
                     .Merge(mob.AsDictionary()));
             }
             foreach (var item in map.Nodes.Items)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "item")
+                    .MergeOne("type", VertexType.Item)
                     .Merge(item.AsDictionary()));
             }
             foreach (var entrance in map.Nodes.Entrances)
@@ -102,11 +102,11 @@ internal class VertexCollector
                 vertices.Add(shared
                     .MergeOne("name", entrance.Name + " - In")
                     .MergeOne("entranceid", entrance.Entranceid)
-                    .MergeOne("type", "entrance"));
+                    .MergeOne("type", VertexType.Entrance));
                 vertices.Add(shared
                     .MergeOne("name", entrance.Name + " - Out")
                     .MergeOne("outletid", entrance.Outletid)
-                    .MergeOne("type", "outlet"));
+                    .MergeOne("type", VertexType.Outlet));
             }
             // consider merging Holes into entrances
             foreach (var entrance in map.Nodes.Holes)
@@ -114,7 +114,7 @@ internal class VertexCollector
                 vertices.Add(shared
                     .MergeOne("name", entrance.Name)
                     .MergeOne("entranceids", entrance.Entranceids)
-                    .MergeOne("type", "hole"));
+                    .MergeOne("type", VertexType.Hole));
             }
         }
 
@@ -130,50 +130,52 @@ internal class VertexCollector
             foreach (var region in room.Nodes.Regions)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "region")
+                    .MergeOne("type", VertexType.Region)
                     .Merge(region.AsDictionary()));
                 if (region.Inletid.HasValue)
                 {
                     vertices.Add(shared
                         .MergeOne("name", region.Name + " - Exit")
+                        // TODO: Check this is the correct type
+                        .MergeOne("type", VertexType.Entrance)
                         .MergeOne("inletid", region.Inletid.Value));
                 }
             }
             foreach (var mob in room.Nodes.Mobs)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "mob")
+                    .MergeOne("type", VertexType.Mob)
                     .MergeOne("sprite", Sprite.Get(mob.Sprite))
                     .Merge(mob.AsDictionary()));
             }
             foreach (var item in room.Nodes.Items)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "item")
+                    .MergeOne("type", VertexType.Item)
                     .Merge(item.AsDictionary()));
             }
             foreach (var keydoor in room.Nodes.Keydoors)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "keydoor")
+                    .MergeOne("type", VertexType.Keydoor)
                     .Merge(keydoor.AsDictionary()));
             }
             foreach (var bigkeydoor in room.Nodes.BigKeydoors)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "bigkeydoor")
+                    .MergeOne("type", VertexType.BigKeydoor)
                     .Merge(bigkeydoor.AsDictionary()));
             }
             foreach (var shutter in room.Nodes.Shutters)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "shutter")
+                    .MergeOne("type", VertexType.Shutter)
                     .Merge(shutter.AsDictionary()));
             }
             foreach (var pot in room.Nodes.Pots)
             {
                 vertices.Add(shared
-                    .MergeOne("type", "pot")
+                    .MergeOne("type", VertexType.Pot)
                     .Merge(pot.AsDictionary()));
             }
             // TODO: how do we want to handle this?

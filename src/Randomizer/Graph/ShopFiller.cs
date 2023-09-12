@@ -12,7 +12,7 @@ internal sealed class ShopFiller
      */
     public ShopFiller(World world)
     {
-        var shops = world.GetLocationsOfType("shop");
+        var shops = world.GetLocationsOfType(VertexType.Shop);
         var graph = world.Graph;
 
         if (world.RandomizerConfig.RegionShopSupply == ShopSupplyOption.Shuffled)
@@ -24,7 +24,7 @@ internal sealed class ShopFiller
                 {
                     continue;
                 }
-                var inventory = graph.GetTargets(shop).Where(target => target.Type == "shopitem");
+                var inventory = graph.GetTargets(shop).Where(target => target.Type == VertexType.ShopItem);
                 foreach (var shop_item in inventory)
                 {
                     shop_item.Item = null;

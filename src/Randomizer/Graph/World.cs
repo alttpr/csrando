@@ -28,13 +28,13 @@ public sealed class World
         var start = Graph.NewVertex(new()
         {
             { "name", "start:" + Id },
-            { "type", "meta" },
+            { "type", VertexType.Meta },
         });
 
         var meta = Graph.NewVertex(new()
         {
             { "name", "Meta:" + Id },
-            { "type", "meta" },
+            { "type", VertexType.Meta },
         });
         Graph.AddDirected(start, meta, $"fixed:{Id}");
 
@@ -167,7 +167,7 @@ public sealed class World
      * 
      * @return Collection<Vertex>
      */
-    public IEnumerable<Vertex> GetLocationsOfType(string type)
+    public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
     {
         return _vertices.Where((Vertex vertex) => vertex.Type == type);
     }

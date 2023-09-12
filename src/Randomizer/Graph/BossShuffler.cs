@@ -243,7 +243,7 @@ internal sealed class BossShuffler
             _world.Graph.NewVertex(
                 sprite_definition.AsDictionary().Merge(new Dictionary<string, object>()
                 {
-                    { "type", "mob" },
+                    { "type", VertexType.Mob },
                     //{ "sprite", Sprite.get(sprite_definition["sprite"]) },
                 }));
         }

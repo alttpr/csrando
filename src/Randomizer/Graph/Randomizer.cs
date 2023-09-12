@@ -11,22 +11,23 @@ using System.Collections.Concurrent;
  */
 public sealed class Randomizer
 {
-    private static readonly string[] ITEM_LOCATIONS = {
-        "bigchest",
-        "bonk",
-        "chest",
-        "drop",
-        "dig",
-        "event",
-        "npc",
-        //"mob", // enabling this will allow enemies for major items
-        "pot",
-        "shopitem",
-        "standing",
-        "prize",
-        "pedestal",
-        "refill",
-        "medallion",
+    private static readonly HashSet<VertexType> ITEM_LOCATIONS = new()
+    {
+        VertexType.BigChest,
+        VertexType.Bonk,
+        VertexType.Chest,
+        VertexType.Drop,
+        VertexType.Dig,
+        VertexType.Event,
+        VertexType.Medallion,
+        // VertexType.Mob // enabling this will allow enemies for major items
+        VertexType.Npc,
+        VertexType.Pedestal,
+        VertexType.Pot,
+        VertexType.Prize,
+        VertexType.Refill,
+        VertexType.ShopItem,
+        VertexType.Standing,
     };
 
     public Graph Graph { get; private set; }
@@ -68,7 +69,7 @@ public sealed class Randomizer
         _start = Graph.NewVertex(new()
         {
             { "name", "start" },
-            { "type", "meta" },
+            { "type", VertexType.Meta },
         });
 
         _vertices = new Dictionary<string, Vertex>

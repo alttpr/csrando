@@ -12,19 +12,57 @@ public record class Sprite(string Name)
     }
 }
 
+public enum PegState
+{
+    Orange,
+    Blue,
+}
+
+public enum VertexType
+{
+    BigChest,
+    BigKeydoor,
+    Bonk,
+    Chest,
+    Drop,
+    Dig,
+    Entrance,
+    Event,
+    Follower,
+    Hole,
+    Item,
+    Keydoor,
+    Medallion,
+    Meta,
+    Mob,
+    Npc,
+    Outlet,
+    Pedestal,
+    Pot,
+    Prize,
+    PrizePack,
+    Shop,
+    ShopItem,
+    Shutter,
+    Standing,
+    Refill,
+    Region,
+    Warp,
+}
+
 /**
  * Vertex in Graph.
  */
 [DebuggerDisplay("{Name} ({Type})")]
 public sealed class Vertex
 {
-    public string Type { get; }
+    public VertexType Type { get; }
     public string Name { get; }
     public bool Switch { get; }
     public int? Cost { get; set; }
     public Item? Item { get; set; }
     public Item? Trophy { get; }
-    public string? Peg { get; }
+    public PegState? Peg { get; }
     public Sprite? Sprite { get; set; }
     public string? EnemizerBoss { get; set; }
     public int? Roomid { get; }
@@ -47,9 +85,9 @@ public sealed class Vertex
     {
         attributes ??= new();
         Switch = (bool)(attributes.GetValueOrDefault("switch") ?? false);
-        Peg = (string?)attributes.GetValueOrDefault("peg");
+        Peg = (PegState?)attributes.GetValueOrDefault("peg");
         Cost = (int?)attributes.GetValueOrDefault("cost");
-        Type = (string?)attributes.GetValueOrDefault("type") ?? "unknown";
+        Type = (VertexType?)attributes.GetValueOrDefault("type") ?? throw new Exception("Unknown type");
         Name = (string?)attributes.GetValueOrDefault("name") ?? $"vertex{GetHashCode()}";
         if (attributes.TryGetValue("sprite", out object? spriteObj))
         {

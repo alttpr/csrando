@@ -21,7 +21,7 @@ internal sealed class PrizePackShuffler
      */
     public void AdjustEdges()
     {
-        var prizepacks = _world.GetLocationsOfType("prizepack");
+        var prizepacks = _world.GetLocationsOfType(VertexType.PrizePack);
 
         if (!_world.RandomizerConfig.CustomPrizePacks)
         {
