@@ -226,10 +226,10 @@ public sealed class Randomizer
                 {
                     if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item, searchGraph))
                     {
-                        collected = collected.AddItem(Item.Get("BigRedBombActive", item.WorldId));
+                        collected.AddItem(Item.Get("BigRedBombActive", item.WorldId));
                     }
                     newItemsFound = true;
-                    collected = collected.AddItem(item);
+                    collected.AddItem(item);
                 }
             }
         } while (newItemsFound);

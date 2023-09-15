@@ -9,9 +9,9 @@ using System.Collections.Concurrent;
  */
 public sealed class Inventory
 {
-    private readonly ConcurrentDictionary<string, int> _itemCount = new();
+    private readonly Dictionary<string, int> _itemCount = new();
     /** @var array<float> */
-    private readonly ConcurrentDictionary<int, float> _health = new();
+    private readonly Dictionary<int, float> _health = new();
 
     /**
      * Create new Inventory instance.
@@ -38,12 +38,9 @@ public sealed class Inventory
      *
      * @param Item|string item item to add
      */
-    public Inventory AddItem(object item)
+    public void AddItem(object item)
     {
-        var newInventory = new Inventory(this);
-        newInventory.AddItemByName(item is Item i ? i.Name : (string)item);
-
-        return newInventory;
+        AddItemByName(item is Item i ? i.Name : (string)item);
     }
 
     /**
@@ -53,21 +50,21 @@ public sealed class Inventory
      */
     private void AddItemByName(string item_name)
     {
-        int newCount = _itemCount.AddOrUpdate(item_name, 1, (_, v) => v + 1);
+        _itemCount[item_name] = _itemCount.GetValueOrDefault(item_name, 0) + 1;
 
         if (item_name.StartsWith("HeartContainer"))
         {
             string[] parts = item_name.Split(':');
             if (!int.TryParse(parts.Skip(1).FirstOrDefault(), out int world_id))
                 world_id = 0;
-            _health.AddOrUpdate(world_id, 1, (_, v) => v + 1);
+            _health[world_id] = _health.GetValueOrDefault(world_id, 0) + 1;
         }
         else if (item_name.StartsWith("PieceOfHeart"))
         {
             string[] parts = item_name.Split(':');
             if (!int.TryParse(parts.Skip(1).FirstOrDefault(), out int world_id))
                 world_id = 0;
-            _health.AddOrUpdate(world_id, 0.25f, (_, v) => v + 0.25f);
+            _health[world_id] = _health.GetValueOrDefault(world_id, 0) + 0.25f;
         }
         else if (item_name.StartsWith("Bottle"))
         {
@@ -77,6 +74,7 @@ public sealed class Inventory
             AddItemByName($"LogicalBottle:{world_id}");
         }
 
+        var newCount = _itemCount[item_name];
         if (newCount > 1)
         {
             _itemCount[item_name + "|" + newCount] = 1;
@@ -127,7 +125,8 @@ public sealed class Inventory
                 continue;
             }
 
-            int newCount = newInventory._itemCount.AddOrUpdate(key, count, (_, v) => v + count);
+            newInventory._itemCount[key] = newInventory._itemCount.GetValueOrDefault(key, 0) + count;
+            int newCount = newInventory._itemCount[key];
 
             for (int i = 2; i <= newCount; ++i)
             {
