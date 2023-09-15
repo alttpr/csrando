@@ -334,17 +334,13 @@ public sealed class Graph
     }
     private Graph(Graph other)
     {
-        foreach (var (key, value) in other._adjacencyMatrix)
-            _adjacencyMatrix.TryAdd(key, new(value));
+        _adjacencyMatrix = other._adjacencyMatrix.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
         _edges = new(other._edges);
-        foreach (var (key, value) in other._marked)
-            _marked.TryAdd(key, new(value));
-        foreach (var (key, value) in other._pegMarked)
-            _pegMarked.TryAdd(key, new(value));
+        _marked = other._marked.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
+        _pegMarked = other._pegMarked.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
         _recheckNodes = new(other._recheckNodes);
         _vertices = new(other._vertices);
         _verticesByName = new(other._verticesByName);
-        foreach (var (key, value) in other._visited)
-            _visited.TryAdd(key, new(value));
+        _visited = other._visited.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
     }
 }
