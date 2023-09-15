@@ -185,6 +185,23 @@ public sealed class Graph
         return newGraph;
     }
 
+    public void MergeWith(params Graph[] graphs)
+    {
+        foreach (var graph in graphs)
+        {
+            foreach (var edge in graph._edges)
+            {
+                if (_edges.Contains(edge))
+                {
+                    continue;
+                }
+
+                AddEdge(edge);
+                _recheckNodes.Add(edge.From);
+            }
+        }
+    }
+
     /**
      * Get new graph with certain edge groups excluded.
      * 

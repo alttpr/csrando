@@ -216,7 +216,7 @@ public sealed class Randomizer
                 }
             }
 
-            searchGraph = searchGraph.Merge(sub_graphs.ToArray());
+            searchGraph.MergeWith(sub_graphs.ToArray());
             searchGraph.Search(_start);
 
             newItemsFound = false;
