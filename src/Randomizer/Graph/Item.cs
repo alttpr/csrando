@@ -13,7 +13,9 @@ public sealed class Item
     public int WorldId { get; }
     public bool Meta { get; private set; }
 
-    private static readonly Dictionary<int, Dictionary<string, Item>> _items = new();
+    [ThreadStatic]
+    private static Dictionary<int, Dictionary<string, Item>> _items = new();
+    [ThreadStatic]
     private static Dictionary<string, byte[]> _rawItems = null!;
 
 
@@ -48,6 +50,13 @@ public sealed class Item
      */
     public static Dictionary<string, Item> All(int worldId)
     {
+        // ThreadStatic variables are initialized with the default constructor only once,
+        // so we may have to do it again for each thread when running unit tests in parallel.
+        if (_items == null)
+        {
+            _items = new();
+        }
+
         if (_items.TryGetValue(worldId, out var itemsForWorld))
         {
             return itemsForWorld;
