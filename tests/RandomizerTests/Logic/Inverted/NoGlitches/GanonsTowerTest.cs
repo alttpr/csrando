@@ -242,7 +242,7 @@ public class GanonsTowerTest
         new object[] { "Ganon's Tower - Moldorm Chest", true, new string[] { "BowAndArrows", "UncleSword", "BigKeyA2", "KeyA2", "KeyA2", "KeyA2", "KeyA2", "MoonPearl", "TitansMitt", "Hookshot", "FireRod", "Crystal1", "Crystal2", "Crystal3", "Crystal4", "Crystal5", "Crystal6", "Crystal7" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

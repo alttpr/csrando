@@ -168,7 +168,7 @@ public class TurtleRockTest
         new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "Lamp", "Hookshot", "TitansMitt", "Hammer", "Quake", "HalfMagic", "Bottle", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

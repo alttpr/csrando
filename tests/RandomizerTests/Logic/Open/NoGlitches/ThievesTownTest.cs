@@ -118,7 +118,7 @@ public class ThievesTownTest
         new object[] { "Thieves' Town - Boss", true, new string[] { "KeyD4", "MoonPearl", "AgahnimDefeated", "Flippers", "Hookshot", "BigKeyD4", "Hammer" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

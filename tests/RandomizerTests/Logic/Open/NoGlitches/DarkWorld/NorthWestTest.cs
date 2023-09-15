@@ -68,7 +68,7 @@ public class NorthWestTest
         new object[] { "Purple Chest", true, new string[] { "MoonPearl", "TitansMitt" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

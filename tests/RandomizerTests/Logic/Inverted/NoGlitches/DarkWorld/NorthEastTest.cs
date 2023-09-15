@@ -39,7 +39,7 @@ public class NorthEastTest
         new object[] { "Pyramid Fairy - Right", true, new string[] { "AgahnimDefeated", "Crystal5", "Crystal6", "MagicMirror", "TitansMitt", "Flippers" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

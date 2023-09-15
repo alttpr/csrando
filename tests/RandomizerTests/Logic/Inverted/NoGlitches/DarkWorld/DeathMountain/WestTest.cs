@@ -49,7 +49,7 @@ public class WestTest
         new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "OcarinaInactive", "MoonPearl", "CaneOfByrna" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

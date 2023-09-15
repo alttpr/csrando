@@ -81,7 +81,7 @@ public class HyruleCastleEscapeTest
         new object[] { "Hyrule Castle - Zelda's Cell", true, new string[] { "KeyH2", "MoonPearl", "TitansMitt" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

@@ -86,7 +86,7 @@ public class TowerOfHeraTest
         new object[] { "Tower Of Hera - Boss", true, new string[] { "TitansMitt", "Lamp", "Hookshot", "Hammer", "BigKeyP3" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

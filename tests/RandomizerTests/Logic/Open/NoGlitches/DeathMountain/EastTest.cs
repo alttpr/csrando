@@ -149,7 +149,7 @@ public class EastTest
         new object[] { "Floating Island", true, new string[] { "MoonPearl", "TitansMitt", "Lamp", "MagicMirror", "Hammer" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

@@ -22,7 +22,7 @@ public class MireTest
         new object[] { "Mire Shed - Right", true, new string[] { "MoonPearl", "OcarinaActive", "TitansMitt" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

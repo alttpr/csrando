@@ -1,4 +1,5 @@
 using AlttpRandomizer.Graph;
+using System.Reflection;
 
 namespace RandomizerTests.Logic.Open.NoGlitches;
 
@@ -38,6 +39,7 @@ public class DesertPalaceTest
         new object[] { "Desert Palace - Big Key Chest", true, new string[] { "OcarinaActive", "MagicMirror", "TitansMitt", "KeyP2" } },
 
         new object[] { "Desert Palace - Boss", false, new string[] {  } },
+        new object[] { "Desert Palace - Boss", false, new string[] { "UncleSword", "BookOfMudora", "Lamp", "ProgressiveGlove", "BigKeyP2" } },
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BookOfMudora", "Lamp", "ProgressiveGlove", "BigKeyP2" } },
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BookOfMudora", "Lamp", "PowerGlove", "BigKeyP2" } },
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BookOfMudora", "Lamp", "TitansMitt", "BigKeyP2" } },
@@ -50,7 +52,8 @@ public class DesertPalaceTest
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "OcarinaActive", "MagicMirror", "FireRod", "TitansMitt", "BigKeyP2" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

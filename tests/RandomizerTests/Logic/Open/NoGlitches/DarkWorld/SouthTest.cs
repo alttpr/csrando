@@ -85,7 +85,7 @@ public class SouthTest
         new object[] { "Digging Game - Item", true, new string[] { "MoonPearl", "AgahnimDefeated", "Flippers", "Hookshot" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

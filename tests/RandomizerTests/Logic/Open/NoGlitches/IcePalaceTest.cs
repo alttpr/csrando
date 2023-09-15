@@ -290,7 +290,7 @@ public class IcePalaceTest
         new object[] { "Ice Palace - Boss", true, new string[] { "BigKeyD5", "MoonPearl", "Flippers", "TitansMitt", "Bombos", "L4Sword", "Hammer", "CaneOfSomaria", "KeyD5" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

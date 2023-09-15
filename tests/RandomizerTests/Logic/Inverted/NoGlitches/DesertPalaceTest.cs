@@ -77,7 +77,7 @@ public class DeserPalaceTest
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "MoonPearl", "TitansMitt", "KeyP2", "BookOfMudora", "FireRod", "BigKeyP2" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]

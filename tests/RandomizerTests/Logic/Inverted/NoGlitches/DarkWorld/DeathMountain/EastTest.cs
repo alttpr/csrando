@@ -44,7 +44,7 @@ public class EastTest
         new object[] { "Hookshot Cave - Top Right", true, new string[] { "ProgressiveGlove", "Hammer", "MoonPearl", "OcarinaInactive", "Hookshot" } },
     };
     [TestMethod]
-    [DynamicData(nameof(TestData))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
         var randomizer = new Randomizer(new[]
