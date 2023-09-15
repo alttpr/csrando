@@ -13,7 +13,8 @@ internal class EdgeCollector
      */
     public Dictionary<string, DirectedUndirectedPair> GetForWorld(World world)
     {
-        var edges_data = YamlReader.LoadEdges("base");
+        var edges_data = new Dictionary<string, DirectedUndirectedPair>();
+        YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("base"));
 
         switch (world.RandomizerConfig.State)
         {
