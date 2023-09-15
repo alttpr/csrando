@@ -1,6 +1,7 @@
 namespace AlttpRandomizer.Graph;
 
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 
 /**
  * Matrix backed graph. Instead of using a full graph library, this is an
@@ -12,11 +13,11 @@ public sealed class Graph
 {
     private readonly HashSet<Vertex> _vertices = new();
     private readonly Dictionary<string, Vertex> _verticesByName = new();
-    private readonly ConcurrentDictionary<Vertex, HashSet<Vertex>> _visited = new();
+    private readonly Dictionary<Vertex, HashSet<Vertex>> _visited = new();
     private readonly Dictionary<Vertex, HashSet<Vertex>> _adjacencyMatrix = new();
     private readonly HashSet<Edge> _edges = new();
-    private readonly ConcurrentDictionary<Vertex, HashSet<Vertex>> _marked = new();
-    private readonly ConcurrentDictionary<Vertex, HashSet<Vertex>> _pegMarked = new();
+    private readonly Dictionary<Vertex, HashSet<Vertex>> _marked = new();
+    private readonly Dictionary<Vertex, HashSet<Vertex>> _pegMarked = new();
     private readonly List<Vertex> _recheckNodes = new();
 
     /**
@@ -292,8 +293,10 @@ public sealed class Graph
                         peg_queue.Enqueue(next_vertex);
                     }
                 }
-                _visited.GetOrAdd(start, _ => new()).Add(vertex);
-                _pegMarked.GetOrAdd(start, _ => new()).Add(vertex);
+
+                // Avoids double key lookups
+                CollectionsMarshal.GetValueRefOrAddDefault(_visited, start, out _).Add(vertex);
+                CollectionsMarshal.GetValueRefOrAddDefault(_pegMarked, start, out _).Add(vertex);
             }
 
             while (queue.TryDequeue(out var vertex))
@@ -316,8 +319,10 @@ public sealed class Graph
                         queue.Enqueue(next_vertex);
                     }
                 }
-                _visited.GetOrAdd(start, _ => new()).Add(vertex);
-                _marked.GetOrAdd(start, _ => new()).Add(vertex);
+
+                // Avoids double key lookups
+                CollectionsMarshal.GetValueRefOrAddDefault(_visited, start, out _).Add(vertex);
+                CollectionsMarshal.GetValueRefOrAddDefault(_marked, start, out _).Add(vertex);
             }
         } while (queue.Any() || peg_queue.Any());
 
