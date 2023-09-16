@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 public class PRNG
 {
-    private Random _random = new Random();
+    private readonly Random _random = new Random();
     public Int32 Seed { get; private set; }
 
     public PRNG(Int32? seed)
