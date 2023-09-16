@@ -1,8 +1,5 @@
 namespace Randomizer.Graph;
 
-using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
-
 /**
  * Matrix backed graph. Instead of using a full graph library, this is an
  * attempt at one that is more tuned to our needs. We only allow additions to
@@ -13,12 +10,8 @@ public sealed class Graph
 {
     private readonly HashSet<Vertex> _vertices = new();
     private readonly Dictionary<string, Vertex> _verticesByName = new();
-    private readonly Dictionary<Vertex, HashSet<Vertex>> _visited = new();
     private readonly Dictionary<Vertex, HashSet<Vertex>> _adjacencyMatrix = new();
     private readonly HashSet<Edge> _edges = new();
-    private readonly Dictionary<Vertex, HashSet<Vertex>> _marked = new();
-    private readonly Dictionary<Vertex, HashSet<Vertex>> _pegMarked = new();
-    private readonly List<Vertex> _recheckNodes = new();
 
     /**
      * Get the Vertices in the Graph.
@@ -38,33 +31,14 @@ public sealed class Graph
         return _verticesByName.GetValueOrDefault(name);
     }
 
+    public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
+
     /**
      * Get the Edges in the Graph.
      */
     public IEnumerable<Edge> GetEdges()
     {
         return _edges;
-    }
-
-    /**
-     * Get the Items found is last search of the Graph.
-     * 
-     * @param Vertex start where the search was started from
-     * @param callable filter if we should filter the items
-     */
-    public IEnumerable<Item> GetItems(Vertex start)
-    {
-        foreach (var vertex in _visited[start])
-        {
-            if (vertex.Item is not null)
-            {
-                yield return vertex.Item;
-            }
-            if (vertex.Trophy is not null)
-            {
-                yield return vertex.Trophy;
-            }
-        }
     }
 
     /**
@@ -184,7 +158,6 @@ public sealed class Graph
                 }
 
                 newGraph.AddEdge(edge);
-                newGraph._recheckNodes.Add(edge.From);
             }
         }
 
@@ -203,7 +176,6 @@ public sealed class Graph
                 }
 
                 AddEdge(edge);
-                _recheckNodes.Add(edge.From);
             }
         }
     }
@@ -230,110 +202,6 @@ public sealed class Graph
         return newGraph;
     }
 
-    /**
-     * Get all vertices that were visited in a given search (which has been
-     * called first) from a set starting point.
-     *
-     * @param Vertex start vertex where search was started from
-     */
-    public IEnumerable<Vertex> GetVisited(Vertex start)
-    {
-        return _visited.GetValueOrDefault(start) ?? Enumerable.Empty<Vertex>();
-    }
-
-    /**
-     * Perform a search of reachable Vertices from a given start. This is really
-     * meat an potatoes of the whole class... I"m sure you were expecting good
-     * documentation. Eventually my friend, eventually.
-     *
-     * @param Vertex start vertex to start search from
-     */
-    public IEnumerable<Vertex> Search(Vertex start)
-    {
-        if (!_vertices.Contains(start))
-        {
-            return Enumerable.Empty<Vertex>();
-        }
-
-        if (!_visited.ContainsKey(start))
-        {
-            _visited.TryAdd(start, new() { start });
-            _pegMarked.TryAdd(start, new());
-            _marked.TryAdd(start, new() { start });
-        }
-        var queue = new Queue<Vertex>();
-        var peg_queue = new Queue<Vertex>();
-        queue.Enqueue(start);
-        foreach (var vertex in _marked[start])
-        {
-            if (_recheckNodes.Contains(vertex))
-                queue.Enqueue(vertex);
-        }
-        foreach (var vertex in _pegMarked[start])
-        {
-            if (_recheckNodes.Contains(vertex))
-                queue.Enqueue(vertex);
-        }
-        _recheckNodes.Clear();
-
-        do
-        {
-            while (peg_queue.TryDequeue(out var vertex))
-            {
-                if (vertex.Switch)
-                {
-                    if (!_marked.TryGetValue(start, out var markedFromStart) || !markedFromStart.Contains(vertex))
-                    {
-                        queue.Enqueue(vertex);
-                    }
-                }
-                if (vertex.Peg == PegState.Orange)
-                {
-                    continue;
-                }
-                foreach (var next_vertex in _adjacencyMatrix.GetValueOrDefault(vertex, new()))
-                {
-                    if (!_pegMarked.TryGetValue(start, out var pegMarkedFromStart) || !pegMarkedFromStart.Contains(next_vertex))
-                    {
-                        peg_queue.Enqueue(next_vertex);
-                    }
-                }
-
-                // Avoids double key lookups
-                CollectionsMarshal.GetValueRefOrAddDefault(_visited, start, out _).Add(vertex);
-                CollectionsMarshal.GetValueRefOrAddDefault(_pegMarked, start, out _).Add(vertex);
-            }
-
-            while (queue.TryDequeue(out var vertex))
-            {
-                if (vertex.Switch)
-                {
-                    if (!_pegMarked.TryGetValue(start, out var pegMarkedFromStart) || !pegMarkedFromStart.Contains(vertex))
-                    {
-                        peg_queue.Enqueue(vertex);
-                    }
-                }
-                if (vertex.Peg == PegState.Blue)
-                {
-                    continue;
-                }
-                foreach (var next_vertex in _adjacencyMatrix.GetValueOrDefault(vertex, new()))
-                {
-                    if (!_marked.TryGetValue(start, out var markedFromStart) || !markedFromStart.Contains(next_vertex))
-                    {
-                        queue.Enqueue(next_vertex);
-                    }
-                }
-
-                // Avoids double key lookups
-                CollectionsMarshal.GetValueRefOrAddDefault(_visited, start, out _).Add(vertex);
-                CollectionsMarshal.GetValueRefOrAddDefault(_marked, start, out _).Add(vertex);
-            }
-        } while (queue.Any() || peg_queue.Any());
-
-        return _visited.GetValueOrDefault(start) ?? Enumerable.Empty<Vertex>();
-    }
-
     public Graph()
     {
     }
@@ -341,11 +209,7 @@ public sealed class Graph
     {
         _adjacencyMatrix = other._adjacencyMatrix.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
         _edges = new(other._edges);
-        _marked = other._marked.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
-        _pegMarked = other._pegMarked.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
-        _recheckNodes = new(other._recheckNodes);
         _vertices = new(other._vertices);
         _verticesByName = new(other._verticesByName);
-        _visited = other._visited.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
     }
 }

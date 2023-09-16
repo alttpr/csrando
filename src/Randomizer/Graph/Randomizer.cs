@@ -165,7 +165,8 @@ public sealed class Randomizer
 
         // TODO: handle multiworld
         _startingGraph = _graphs[new(_worlds[0].GetItem("fixed"), 1)];
-        _startingGraph = SearchGraph(_collectedItems);
+        var initialSearcher = SearchGraph(_collectedItems);
+        _startingGraph = initialSearcher.Graph;
     }
 
     /**
@@ -196,11 +197,12 @@ public sealed class Randomizer
      * @param Graph? starting_graph A graph that is already partially searched
      * @param array collected_item_map a listing of locations that are already accounted for in collected
      */
-    private Graph SearchGraph(Inventory collected, Graph? startingGraph = null)
+    private Searcher SearchGraph(Inventory collected, Graph? startingGraph = null)
     {
         var searchGraph = startingGraph ?? _startingGraph;
         var graphs = new Dictionary<ItemCondition, Graph>(_graphs);
         bool newItemsFound;
+        Searcher searcher;
         do
         {
             var sub_graphs = new List<Graph>();
@@ -214,10 +216,11 @@ public sealed class Randomizer
             }
 
             searchGraph.MergeWith(sub_graphs.ToArray());
-            searchGraph.Search(_start);
+            searcher = new Searcher(searchGraph, _start);
+            searcher.Search();
 
             newItemsFound = false;
-            foreach (var item in searchGraph.GetItems(_start))
+            foreach (var item in searcher.GetItems())
             {
                 if (!collected.Has(item))
                 {
@@ -231,7 +234,7 @@ public sealed class Randomizer
             }
         } while (newItemsFound);
 
-        return searchGraph;
+        return searcher;
     }
 
     private bool DropOffSearch(Item item, Graph searchGraph)
@@ -245,9 +248,10 @@ public sealed class Randomizer
             item.World.GetItem("DarkFlippers"),
         };
         var bomb_search_graph = searchGraph.Exclude(exclude);
-        bomb_search_graph.Search(start);
+        var bombSearcher = new Searcher(bomb_search_graph, start);
+        var visited = bombSearcher.Search();
 
-        return bomb_search_graph.GetVisited(start).Contains(end);
+        return visited.Contains(end);
     }
 
     /**
@@ -275,11 +279,12 @@ public sealed class Randomizer
         if (collected.GetCount(key) >= _keyDoors[key].Count)
         {
             var door_graphs = _keyDoorEdges.Where(door_id => _keyDoors[key].Contains(door_id.Key)).Select(k => k.Value).ToArray();
-            var graph = SearchGraph(collected, searchGraph.Merge(door_graphs));
-            return graph.GetVisited(_start);
+            var searcher = SearchGraph(collected, searchGraph.Merge(door_graphs));
+            return searcher.GetVisited();
         }
 
-        var in_graph_locations = searchGraph.GetVisited(_start);
+        var initialKeySearcher = new Searcher(searchGraph, _start);
+        var in_graph_locations = initialKeySearcher.Search();
         var sub_found_locations = new Dictionary<Vertex, List<Vertex>>();
         chain ??= Enumerable.Empty<Vertex>();
         found = found.ToArray();
@@ -292,8 +297,8 @@ public sealed class Randomizer
                 sub_found_locations.Add(door, door_chain);
                 continue;
             }
-            var graph = SearchGraph(collected, searchGraph.Merge(_keyDoorEdges[door]));
-            var found_locations = graph.GetVisited(_start).ToList();
+            var keySearcher = SearchGraph(collected, searchGraph.Merge(_keyDoorEdges[door]));
+            var found_locations = keySearcher.GetVisited().ToList();
             var new_collected = collected.Merge(CollectItems(found_locations.Except(found)));
             sub_found_locations.Add(door, found_locations);
             int new_found_keys = new_collected.GetCount(key);
@@ -303,7 +308,7 @@ public sealed class Randomizer
                 // TODO: should this be overwriting the door search result?
                 //sub_found_locations.Add(door, this.recursiveDoorSearch(
                 sub_found_locations[door] = RecursiveDoorSearch(
-                    graph,
+                    keySearcher.Graph,
                     all_found,
                     new_collected,
                     lockedDoors.Except(new[] { door }).ToArray(),
@@ -334,8 +339,8 @@ public sealed class Randomizer
      */
     public IEnumerable<Vertex> GetStrongLocations(Inventory collected)
     {
-        var search_graph = SearchGraph(collected);
-        var found_locations = search_graph.GetVisited(_start).ToHashSet();
+        var searcher = SearchGraph(collected);
+        var found_locations = searcher.GetVisited().ToHashSet();
         var new_found_locations = new HashSet<Vertex>();
         do
         {
@@ -343,13 +348,13 @@ public sealed class Randomizer
             new_found_locations.Clear();
             var new_items = CollectItems(found_locations);
             var new_collected = collected.Merge(new_items);
-            search_graph = SearchGraph(new_collected, null);
+            searcher = SearchGraph(new_collected);
             foreach (var (key, doors) in _keyDoors)
             {
                 if (new_collected.Has(key))
                 {
                     var strong_locations = RecursiveDoorSearch(
-                        search_graph,
+                        searcher.Graph,
                         found_locations,
                         new_collected,
                         doors,
