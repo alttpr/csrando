@@ -53,7 +53,7 @@ public class YamlReader
     private const string EnemiesPath = "Enemizer/enemies.yml";
     private const string SpriteLocationsPath = "Bosses/SpriteLocations.yml";
 
-    private static object _dataLock = new object();
+    private static readonly object _dataLock = new object();
     private static string? _dataRoot;
     private static Vertices? _cachedVertices = null;
     private static Dictionary<string, List<string>>? _cachedEnemies = null;
@@ -61,9 +61,9 @@ public class YamlReader
     private static Dictionary<string, byte[]>? _cachedItems = null;
     private static Dictionary<string, Dictionary<string, List<YamlSprite>>>? _cachedSpriteLocations = null;
 
-    private static ReaderWriterLockSlim _cachedEdgesLock = new ReaderWriterLockSlim();
-    private static Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
-    private static Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
+    private static readonly ReaderWriterLockSlim _cachedEdgesLock = new ReaderWriterLockSlim();
+    private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
+    private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
     private class YamlItem
     {
