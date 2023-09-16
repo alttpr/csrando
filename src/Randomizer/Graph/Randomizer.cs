@@ -126,8 +126,8 @@ public sealed class Randomizer
 
         // @todo this needs simplified!
         var graphs = new Dictionary<string, Graph>();
-        var edge_groups = Graph.GetEdges().Select(edge => edge.Group);
-        foreach (string? group in edge_groups)
+        var edgesByGroup = Graph.GetEdges().ToLookup(edge => edge.Group);
+        foreach (var (group, edges) in edgesByGroup)
         {
             if (graphs.ContainsKey(group))
             {
@@ -136,7 +136,7 @@ public sealed class Randomizer
 
             if (group.StartsWith("Key") && !group.StartsWith("KeyForKey"))
             {
-                var key_edges = Graph.GetEdges().Where(edge => edge.Group == group);
+                var key_edges = edges;
 
                 var keyDoorsForGroup = _keyDoors.GetOrAdd(group, _ => new());
                 foreach (var edge in key_edges)
@@ -478,5 +478,15 @@ public sealed class Randomizer
     public RandomizerConfig GetConfiguration(int world_id)
     {
         return _worlds[world_id].RandomizerConfig;
+    }
+}
+
+internal static class LookupExtensions
+{
+    // .NET 8 has this in the PCL, .NET 7 does not.
+    public static void Deconstruct<TKey, TElement>(this IGrouping<TKey, TElement> grouping, out TKey key, out IEnumerable<TElement> elements)
+    {
+        key = grouping.Key;
+        elements = grouping;
     }
 }
