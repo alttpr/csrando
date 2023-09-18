@@ -48,6 +48,7 @@ public sealed class Randomizer
     private readonly Dictionary<string, List<Vertex>> _setLocations = new() { { "*", new() } };
     private readonly World[] _worlds;
     private readonly Dictionary<string, List<Vertex>> _doorChains = new();
+    private readonly PRNG _prng;
     //static array door_cache = [];
 
     /**
@@ -63,8 +64,11 @@ public sealed class Randomizer
      *
      * @return void
      */
-    public Randomizer(RandomizerConfig[] randomizerConfigs)
+    public Randomizer(RandomizerConfig[] randomizerConfigs, Int32? seed = null)
     {
+        _prng = new PRNG(seed);
+        System.Console.WriteLine($"Using seed: {_prng.Seed}");
+
         Graph = new Graph();
         _start = Graph.NewVertex(new()
         {
@@ -81,6 +85,12 @@ public sealed class Randomizer
         _worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
+            if (randomizerConfigs[i].CrystalsGanon == RandomizerConfig.RandomCrystals)
+                randomizerConfigs[i].CrystalsGanon = _prng.GetRandomInt(7 + 1);
+
+            if (randomizerConfigs[i].CrystalsTower == RandomizerConfig.RandomCrystals)
+                randomizerConfigs[i].CrystalsTower = _prng.GetRandomInt(7 + 1);
+
             _worlds[i] = new World(i, randomizerConfigs[i]);
             _collectedItems = _collectedItems.Merge(_worlds[i].CollectedItems);
 
@@ -92,7 +102,7 @@ public sealed class Randomizer
 
             // boss shuffler must be called before enemy shuffler as enemy
             // shuffler will update sprite GFX sheets.
-            var boss_shuffler = new BossShuffler(_worlds[i]);
+            var boss_shuffler = new BossShuffler(_worlds[i], _prng);
             boss_shuffler.AdjustEdges();
 
             // This will handle challenge rooms
@@ -102,7 +112,7 @@ public sealed class Randomizer
             var bunnifier = new BunnyGraphifier(_worlds[i]);
             bunnifier.AdjustEdges();
 
-            var prizepack_shuffler = new PrizePackShuffler(_worlds[i]);
+            var prizepack_shuffler = new PrizePackShuffler(_worlds[i], _prng);
             prizepack_shuffler.AdjustEdges();
 
             Graph = Graph.Merge(_worlds[i].Graph);
@@ -179,8 +189,8 @@ public sealed class Randomizer
      */
     public World[] Randomize()
     {
-        var filler = new RandomAssumedFiller(this);
-        var sets = new ItemPooler(_worlds).GetPool();
+        var filler = new RandomAssumedFiller(this, _prng);
+        var sets = new ItemPooler(_worlds, _prng).GetPool();
 
         filler.FillGraph(sets);
 
@@ -441,27 +451,18 @@ public sealed class Randomizer
      *
      * @param array? locations filtered locations to check, otherwise all locations
      */
-    public IEnumerable<Vertex> LocationsWithItems(IEnumerable<Vertex>? locations = null)
+    public IEnumerable<Item> ItemsFromLocations(IEnumerable<Vertex>? locations = null)
     {
-        return (locations ?? _foundLocations).Where((location) => location.Item is not null || location.Trophy is not null);
+        return (locations ?? _foundLocations)
+            .Where((location) => location.Item is not null || location.Trophy is not null)
+            .Select(location => location.Item ?? location.Trophy!);
     }
 
     // return all items for locations that have items
     private List<Item> GetItems(IEnumerable<Vertex>? locations = null)
     {
         var items = new List<Item>();
-        var locationsWithItems = LocationsWithItems(locations);
-        foreach (var location in locationsWithItems)
-        {
-            if (location.Item is not null)
-            {
-                items.Add(location.Item);
-            }
-            if (location.Trophy is not null)
-            {
-                items.Add(location.Trophy);
-            }
-        }
+        items.AddRange(ItemsFromLocations(locations));
         return items;
     }
     /**

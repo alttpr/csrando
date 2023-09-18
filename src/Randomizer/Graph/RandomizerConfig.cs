@@ -4,12 +4,15 @@ using System.Collections.Generic;
 
 public class RandomizerConfig
 {
+    public const int RandomCrystals = -1;
+
     // TODO: Align this with current website which broke it down to multiple settings.
     // See https://github.com/sporchia/alttp_vt_randomizer/pull/951
     public int RomHardMode { get; init; } = 0;
 
-    public int CrystalsGanon { get; init; } = 7;
-    public int CrystalsTower { get; init; } = 7;
+    // Use RandomizerConfig.RandomCrystals value for randomizing the number of crystals
+    public int CrystalsGanon { get; set; } = 7;
+    public int CrystalsTower { get; set; } = 7;
 
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 

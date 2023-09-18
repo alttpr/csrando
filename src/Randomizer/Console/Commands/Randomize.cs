@@ -23,6 +23,7 @@ internal sealed class Randomize : Command
     private readonly Option<string> _crystals_tower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
     private readonly Option<int> _bulk = new("bulk", "generate multiple ROMs");
+    private readonly Option<Int32?> _seed = new("seed", "set starting seed");
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
     {
@@ -38,6 +39,7 @@ internal sealed class Randomize : Command
         Add(_crystals_tower);
         Add(_tech);
         Add(_bulk);
+        Add(_seed);
 
         this.SetHandler(context => context.ExitCode = Handle(context));
     }
@@ -54,12 +56,11 @@ internal sealed class Randomize : Command
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
-            string? crystals_ganonS = context.ParseResult.GetValueForOption(_crystals_ganon);
-            if (crystals_ganonS == "random" || !int.TryParse(crystals_ganonS, out int crystals_ganon))
-                crystals_ganon = PHP.get_random_int(0, 7);
-            string? crystals_towerS = context.ParseResult.GetValueForOption(_crystals_tower);
-            if (crystals_towerS == "random" || !int.TryParse(crystals_towerS, out int crystals_tower))
-                crystals_tower = PHP.get_random_int(0, 7);
+            string crystals_ganonS = context.ParseResult.GetValueForOption(_crystals_ganon)!;
+            int crystals_ganon = crystals_ganonS == "random" ? RandomizerConfig.RandomCrystals : int.Parse(crystals_ganonS);
+
+            string crystals_towerS = context.ParseResult.GetValueForOption(_crystals_tower)!;
+            int crystals_tower = crystals_towerS == "random" ? RandomizerConfig.RandomCrystals : int.Parse(crystals_towerS);
 
             var randomizer = new Randomizer(
             new[]
@@ -78,7 +79,7 @@ internal sealed class Randomize : Command
                     Weapon = context.ParseResult.GetValueForOption(_weapons),
                     Techs = context.ParseResult.GetValueForOption(_tech) ?? new(),
                 },
-            });
+            }, context.ParseResult.GetValueForOption(_seed));
             var worlds = randomizer.Randomize();
             if (!randomizer.CollectItems().Has("Triforce:0"))
             {

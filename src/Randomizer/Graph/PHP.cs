@@ -28,45 +28,4 @@ internal static class PHP
 
         return result;
     }
-
-    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
-    {
-        return source.OrderBy(_ => Random.Shared.Next());
-    }
-
-    private static Random _rns = Random.Shared;
-    public static void SetRandomizer(Random source) { _rns = source ?? throw new ArgumentNullException(nameof(source)); }
-    public static int get_random_int(int max)
-    {
-        return get_random_int(min: 0, max);
-    }
-
-    public static int get_random_int(int min, int max)
-    {
-        return _rns.Next(min, max);
-    }
-
-    public static T[] fy_shuffle<T>(T[] array)
-    {
-        var new_array = new T[array.Length];
-        Array.Copy(array, new_array, array.Length);
-        int count = array.Length;
-
-        for (int i = count - 1; i >= 0; --i)
-        {
-            int r = get_random_int(0, i);
-            (new_array[i], new_array[r]) = (new_array[r], new_array[i]);
-        }
-
-        return new_array;
-    }
-    public static T get_random_element<T>(T[] array)
-    {
-        return array[get_random_int(array.Length)];
-    }
-
-    public static T get_random_element<T>(IEnumerable<T> array)
-    {
-        return array.ElementAt(get_random_int(array.Count()));
-    }
 }

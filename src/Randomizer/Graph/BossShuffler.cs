@@ -72,6 +72,7 @@ internal sealed class BossShuffler
 
     private readonly Dictionary<string, Dictionary<string, List<YamlSprite>>> _bossLocationMap;
     private readonly World _world;
+    private readonly PRNG _prng;
 
     /**
      * Add all the vertices to the graph for this region.
@@ -80,9 +81,10 @@ internal sealed class BossShuffler
      *
      * @return void
      */
-    public BossShuffler(World world)
+    public BossShuffler(World world, PRNG prng)
     {
         _world = world;
+        _prng = prng;
         _bossLocationMap = YamlReader.LoadSpriteLocations()
             .ToDictionary(x => $"{x.Key}:{world.Id}", x => x.Value);
     }
@@ -127,7 +129,7 @@ internal sealed class BossShuffler
                     var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
                         ? BOSS_ITEMS.Values.Except(noPlaceLocations).Except(NEVER_PLACE)
                         : BOSS_ITEMS.Values.Except(NEVER_PLACE);
-                    string boss = bosses.Shuffle().First();
+                    string boss = _prng.Shuffle(bosses).First();
                     PlaceBossItemInLocation(boss, location);
                 }
                 break;
@@ -145,14 +147,14 @@ internal sealed class BossShuffler
                     "DefeatVitreous",
                     "DefeatTrinexx",
                 };
-                place_bosses.AddRange(place_bosses.Shuffle().Take(3));
+                place_bosses.AddRange(_prng.Shuffle(place_bosses).Take(3));
 
                 foreach (string location in boss_locations)
                 {
                     var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
                         ? place_bosses.Except(noPlaceLocations).Except(NEVER_PLACE)
                         : place_bosses.Except(NEVER_PLACE);
-                    string boss = bosses.Shuffle().First();
+                    string boss = _prng.Shuffle(bosses).First();
                     place_bosses.Remove(boss);
                     PlaceBossItemInLocation(boss, location);
                 }
@@ -180,7 +182,7 @@ internal sealed class BossShuffler
                     var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
                         ? place_bosses.Except(noPlaceLocations).Except(NEVER_PLACE)
                         : place_bosses.Except(NEVER_PLACE);
-                    string boss = bosses.Shuffle().First();
+                    string boss = _prng.Shuffle(bosses).First();
                     place_bosses.Remove(boss);
                     PlaceBossItemInLocation(boss, location);
                 }

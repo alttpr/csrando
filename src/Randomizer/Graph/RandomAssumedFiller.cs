@@ -9,14 +9,16 @@ using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>
 internal sealed class RandomAssumedFiller
 {
     private readonly Randomizer _randomizer;
+    private readonly PRNG _prng;
     /**
      * Create graph filler.
      * 
      * @return void
      */
-    public RandomAssumedFiller(Randomizer randomizer)
+    public RandomAssumedFiller(Randomizer randomizer, PRNG prng)
     {
         _randomizer = randomizer;
+        _prng = prng;
     }
 
     /**
@@ -41,7 +43,7 @@ internal sealed class RandomAssumedFiller
             .SelectMany(set => set.Value.SelectMany(weight => weight.Value
                 .Select(item => (Set: set.Key, Weight: weight.Key, Item: item))))
             .ToArray();
-        flat_items_a = PHP.fy_shuffle(flat_items_a).OrderBy(i => i.Weight).ToArray();
+        flat_items_a = _prng.Shuffle(flat_items_a).OrderBy(i => i.Weight).ToArray();
         // fix placement groups
         //Array.Sort(flat_items_a, (a, b) => a.Weight - b.Weight);
         var flat_items = flat_items_a.ToList();
@@ -67,7 +69,7 @@ internal sealed class RandomAssumedFiller
                 throw new Exception($"No locations for: {item}");
             }
 
-            var location = PHP.get_random_element(locations);
+            var location = _prng.GetRandomElement(locations);
             System.Console.WriteLine("[{0}] [{1}] Placing `{2}` in `{3}` ({4}:{5})",
                 item_weight,
                 required ? "R" : " ",
@@ -109,7 +111,7 @@ internal sealed class RandomAssumedFiller
         {
             if (current_key != item_set)
             {
-                locations = PHP.fy_shuffle(_randomizer.GetEmptyLocationsInSet(item_set, null, false).ToArray()).ToList();
+                locations = _prng.Shuffle(_randomizer.GetEmptyLocationsInSet(item_set, null, false).ToArray()).ToList();
                 current_key = item_set;
             }
 
