@@ -1,10 +1,7 @@
-using AlttpRandomizer.Graph;
-using System.Reflection;
-
 namespace RandomizerTests.Logic.Open.NoGlitches;
 
 [TestClass]
-public class DesertPalaceTest
+public class DesertPalaceTest : OpenNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -51,20 +48,11 @@ public class DesertPalaceTest
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "OcarinaActive", "MagicMirror", "FireRod", "ProgressiveGlove", "ProgressiveGlove", "BigKeyP2" } },
         new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "OcarinaActive", "MagicMirror", "FireRod", "TitansMitt", "BigKeyP2" } },
     };
-    [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
 
+    [TestMethod]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Open,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
 }

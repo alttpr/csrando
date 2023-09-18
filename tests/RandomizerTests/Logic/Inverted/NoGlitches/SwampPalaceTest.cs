@@ -3,7 +3,7 @@ using AlttpRandomizer.Graph;
 namespace RandomizerTests.Logic.Inverted.NoGlitches;
 
 [TestClass]
-public class SwampPalaceTest
+public class SwampPalaceTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -113,25 +113,18 @@ public class SwampPalaceTest
         new object[] { "Swamp Palace - Boss", true, new string[] { "KeyD2", "MagicMirror", "MoonPearl", "Flippers", "PowerGlove", "Hammer", "Hookshot" } },
         new object[] { "Swamp Palace - Boss", true, new string[] { "KeyD2", "MagicMirror", "MoonPearl", "Flippers", "AgahnimDefeated", "Hammer", "Hookshot" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
+
     [TestMethod]
     public void TestKeyForKey()
     {
-        var randomizer = new Randomizer(new[]
+        RunLogicTest(new[]
         {
             new RandomizerConfig
             {
@@ -139,8 +132,6 @@ public class SwampPalaceTest
                 Glitches = GlitchesOption.None,
                 State = StateOption.Inverted,
             }
-        });
-        randomizer.AssumeItems(new[] { "KeyD2", "MagicMirror", "MoonPearl", "Flippers", "TitansMitt", "Hammer" }.Select(i => Item.Get(i, 0)));
-        Assert.IsTrue(randomizer.CanReachLocation("Swamp Palace - Big Chest:0"));
+        }, "Swamp Palace - Big Chest:0", true, new[] { "KeyD2", "MagicMirror", "MoonPearl", "Flippers", "TitansMitt", "Hammer" });
     }
 }
