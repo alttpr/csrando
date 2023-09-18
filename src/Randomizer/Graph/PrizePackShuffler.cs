@@ -6,14 +6,16 @@ namespace AlttpRandomizer.Graph;
 internal sealed class PrizePackShuffler
 {
     private readonly World _world;
+    private readonly PRNG _prng;
     /**
      * @param World world 
      *
      * @return void
      */
-    public PrizePackShuffler(World world)
+    public PrizePackShuffler(World world, PRNG prng)
     {
         _world = world;
+        _prng = prng;
     }
 
     /**
@@ -25,7 +27,7 @@ internal sealed class PrizePackShuffler
 
         if (!_world.RandomizerConfig.CustomPrizePacks)
         {
-            var random_vanilla_packs = new Stack<string>(PHP.fy_shuffle(new[]
+            var random_vanilla_packs = new Stack<string>(_prng.Shuffle(new[]
             {
                 new[] { "Heart", "Heart", "Heart", "Heart", "RupeeGreen", "Heart", "Heart", "RupeeGreen" },
                 new[] { "RupeeBlue", "RupeeGreen", "RupeeBlue", "RupeeRed", "RupeeBlue", "RupeeGreen", "RupeeBlue", "RupeeBlue" },
@@ -63,7 +65,7 @@ internal sealed class PrizePackShuffler
             {
                 drops.AddRange(Enumerable.Repeat(Sprite.Get(sprite_name), Math.Min(_world.Config("drop.count." + sprite_name, count), 63)));
             }*/
-            var drop_pool = new Stack<Sprite>(PHP.fy_shuffle(drops.ToArray()));
+            var drop_pool = new Stack<Sprite>(_prng.Shuffle(drops.ToArray()));
 
             foreach (var pack in emptypacks)
             {

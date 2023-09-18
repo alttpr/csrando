@@ -9,14 +9,16 @@ using WeightedSet = Dictionary<int, List<Item>>;
 internal sealed class ItemPooler
 {
     private readonly World[] _worlds;
+    private readonly PRNG _prng;
     /**
      * Create new Item Pooler.
      * 
      * @param World[] worlds worlds to get Item pools for
      */
-    public ItemPooler(World[] worlds)
+    public ItemPooler(World[] worlds, PRNG prng)
     {
         _worlds = worlds;
+        _prng = prng;
     }
 
     /**
@@ -120,15 +122,15 @@ internal sealed class ItemPooler
                 int fill_count;
                 if (world.RandomizerConfig.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal)
                 {
-                    fill_count = PHP.get_random_int((int)(15 * crystal_ratio), (int)(25 * crystal_ratio));
+                    fill_count = _prng.GetRandomInt((int)(15 * crystal_ratio), (int)(25 * crystal_ratio));
                 }
                 else
                 {
-                    fill_count = PHP.get_random_int((int)(15 * crystal_ratio));
+                    fill_count = _prng.GetRandomInt((int)(15 * crystal_ratio));
                 }
                 if (fill_count > 0)
                 {
-                    var junkFill = world_set["*"][9999].Shuffle().Take(fill_count).ToArray();
+                    var junkFill = _prng.Shuffle(world_set["*"][9999]).Take(fill_count).ToArray();
                     foreach (var key in junkFill)
                     {
                         world_set["gt:" + world.Id].TryAdd(2, new());
@@ -184,7 +186,7 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                         {
-                            Item.Get(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" }[PHP.get_random_int(2)], world.Id),
+                            Item.Get(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" }[_prng.GetRandomInt(2)], world.Id),
                         }
                     },
                 }
@@ -193,7 +195,7 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                         {
-                            Item.Get(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" }[PHP.get_random_int(2)], world.Id),
+                            Item.Get(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" }[_prng.GetRandomInt(2)], world.Id),
                         }
                     },
                 }
@@ -611,8 +613,8 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                          {
-                             Item.Get("Fairy" + bottles[PHP.get_random_int(bottles.Length)], world.Id),
-                             Item.Get("Fairy" + bottles[PHP.get_random_int(bottles.Length)], world.Id),
+                             Item.Get("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
+                             Item.Get("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
                          }
                     },
                 }
@@ -620,12 +622,12 @@ internal sealed class ItemPooler
             { "*",
                 new WeightedSet()
                 {
-                    { 3, new List<Item> { Item.Get(bottles[PHP.get_random_int(bottles.Length)], world.Id) } },
+                    { 3, new List<Item> { Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id) } },
                     { 9001, new List<Item>
                             {
-                                Item.Get(bottles[PHP.get_random_int(bottles.Length)], world.Id),
-                                Item.Get(bottles[PHP.get_random_int(bottles.Length)], world.Id),
-                                Item.Get(bottles[PHP.get_random_int(bottles.Length)], world.Id),
+                                Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
+                                Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
+                                Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
                             }
                     },
                 }
