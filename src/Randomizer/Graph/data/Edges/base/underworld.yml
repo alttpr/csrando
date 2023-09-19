@@ -250,6 +250,7 @@ Lamp:
   directed:
     - ["Old Man Cave Ledge darkness", "Old Man Cave Ledge"]
     - ["Old Man Maze darkness", "Old Man Maze"]
+    - ["Old Man Maze", "Old Man Maze darkness - Exit"]
     - ["Death Mountain Descent Cave Left darkness", "Death Mountain Descent Cave Left"]
     - ["Death Mountain Descent Cave Right darkness", "Death Mountain Descent Cave Right"]
   undirected: []
