@@ -1,9 +1,7 @@
-using AlttpRandomizer.Graph;
-
 namespace RandomizerTests.Logic.Inverted.NoGlitches;
 
 [TestClass]
-public class ThievesTownTest
+public class ThievesTownTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -33,19 +31,11 @@ public class ThievesTownTest
         new object[] { "Thieves' Town - Boss", false, new string[] { "BigKeyD4" } },
         new object[] { "Thieves' Town - Boss", true, new string[] { "L1Sword", "KeyD4", "BigKeyD4" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
 }

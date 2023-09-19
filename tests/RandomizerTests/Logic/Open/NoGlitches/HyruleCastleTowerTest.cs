@@ -1,9 +1,7 @@
-using AlttpRandomizer.Graph;
-
 namespace RandomizerTests.Logic.Open.NoGlitches;
 
 [TestClass]
-public class HyruleCastleTowerTest
+public class HyruleCastleTowerTest : OpenNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -21,19 +19,11 @@ public class HyruleCastleTowerTest
         new object[] { "Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L2Sword", "Lamp" } },
         new object[] { "Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "Cape", "Lamp" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Open,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
 }

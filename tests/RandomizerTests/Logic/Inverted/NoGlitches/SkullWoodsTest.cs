@@ -3,7 +3,7 @@ using AlttpRandomizer.Graph;
 namespace RandomizerTests.Logic.Inverted.NoGlitches;
 
 [TestClass]
-public class SkullWoodsTest
+public class SkullWoodsTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -31,25 +31,18 @@ public class SkullWoodsTest
         new object[] { "Skull Woods - Boss", true, new string[] { "KeyD3", "KeyD3", "KeyD3", "FireRod", "L3Sword" } },
         new object[] { "Skull Woods - Boss", true, new string[] { "KeyD3", "KeyD3", "KeyD3", "FireRod", "L4Sword" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
+
     [TestMethod]
     public void TestKeyForKey()
     {
-        var randomizer = new Randomizer(new[]
+        RunLogicTest(new[]
         {
             new RandomizerConfig
             {
@@ -57,8 +50,6 @@ public class SkullWoodsTest
                 Glitches = GlitchesOption.None,
                 State = StateOption.Inverted,
             }
-        });
-        randomizer.AssumeItems(new Item[0]);
-        Assert.IsTrue(randomizer.CanReachLocation("Skull Woods - Big Chest:0"));
+        }, "Skull Woods - Big Chest:0", true, new string[0]);
     }
 }

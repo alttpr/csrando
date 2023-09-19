@@ -1,9 +1,7 @@
-using AlttpRandomizer.Graph;
-
 namespace RandomizerTests.Logic.Inverted.NoGlitches;
 
 [TestClass]
-public class PalaceOfDarknessTest
+public class PalaceOfDarknessTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -154,19 +152,11 @@ public class PalaceOfDarknessTest
         new object[] { "Palace of Darkness - Boss", false, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "Lamp", "Hammer", "BowAndArrows" } },
         new object[] { "Palace of Darkness - Boss", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "BigKeyD1", "Lamp", "Hammer", "BowAndArrows" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
 }

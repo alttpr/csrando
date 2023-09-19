@@ -1,9 +1,7 @@
-using AlttpRandomizer.Graph;
-
 namespace RandomizerTests.Logic.Open.NoGlitches.DarkWorld;
 
 [TestClass]
-public class MireTest
+public class MireTest : OpenNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -21,19 +19,11 @@ public class MireTest
         new object[] { "Mire Shed - Right", true, new string[] { "MoonPearl", "OcarinaActive", "ProgressiveGlove", "ProgressiveGlove" } },
         new object[] { "Mire Shed - Right", true, new string[] { "MoonPearl", "OcarinaActive", "TitansMitt" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Open,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
 }

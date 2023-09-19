@@ -3,7 +3,7 @@ using AlttpRandomizer.Graph;
 namespace RandomizerTests.Logic.Inverted.NoGlitches;
 
 [TestClass]
-public class TowerOfHeraTest
+public class TowerOfHeraTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -76,25 +76,18 @@ public class TowerOfHeraTest
         new object[] { "Tower Of Hera - Boss", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl", "Lamp", "Hammer", "BigKeyP3" } },
         new object[] { "Tower Of Hera - Boss", true, new string[] { "TitansMitt", "MoonPearl", "Lamp", "Hammer", "BigKeyP3" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
+
     [TestMethod]
     public void TestKeyForKey()
     {
-        var randomizer = new Randomizer(new[]
+        RunLogicTest(new[]
         {
             new RandomizerConfig
             {
@@ -102,9 +95,7 @@ public class TowerOfHeraTest
                 Glitches = GlitchesOption.None,
                 State = StateOption.Inverted,
             }
-        });
-        randomizer.AssumeItems(new[] { "Lamp", "Hammer", "MoonPearl", "OcarinaActive", "Hookshot" }.Select(i => Item.Get(i, 0)));
-        Assert.IsTrue(randomizer.CanReachLocation("Tower Of Hera - Big Key Chest:0"));
+        }, "Tower Of Hera - Big Key Chest:0", true, new[] { "Lamp", "Hammer", "MoonPearl", "OcarinaActive", "Hookshot" });
     }
 
 }

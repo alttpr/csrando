@@ -1,9 +1,7 @@
-using AlttpRandomizer.Graph;
-
 namespace RandomizerTests.Logic.Open.NoGlitches;
 
 [TestClass]
-public class GanonsTowerTest
+public class GanonsTowerTest : OpenNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
@@ -299,19 +297,11 @@ public class GanonsTowerTest
         new object[] { "Ganon's Tower - Moldorm Chest", true, new string[] { "BowAndArrows", "UncleSword", "BigKeyA2", "KeyA2", "KeyA2", "KeyA2", "KeyA2", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove", "Lamp", "Hookshot", "Crystal1", "Crystal2", "Crystal3", "Crystal4", "Crystal5", "Crystal6", "Crystal7" } },
         new object[] { "Ganon's Tower - Moldorm Chest", true, new string[] { "BowAndArrows", "UncleSword", "BigKeyA2", "KeyA2", "KeyA2", "KeyA2", "KeyA2", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove", "OcarinaActive", "Hookshot", "Hammer", "FireRod", "Crystal1", "Crystal2", "Crystal3", "Crystal4", "Crystal5", "Crystal6", "Crystal7" } },
     };
+
     [TestMethod]
-    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(TestUtils.GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(TestUtils))]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public void TestLogic(string location, bool expected, string[] inventory)
     {
-        var randomizer = new Randomizer(new[]
-        {
-            new RandomizerConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Open,
-            }
-        });
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        base.TestLogic(location, expected, inventory);
     }
 }
