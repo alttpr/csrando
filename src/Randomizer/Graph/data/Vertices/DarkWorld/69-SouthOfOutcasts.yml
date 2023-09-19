@@ -18,3 +18,8 @@ maps:
           position: { x: 0x06, y: 0x09 }
           sprite: "DwarfSmith"
           state: [1, 2]
+
+      items:
+        - name: "LostSmith"
+          item: "LostSmith"
+          itemset: ["smith"]
