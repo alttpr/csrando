@@ -269,7 +269,7 @@ internal sealed class EnemyShuffler
             {
                 { "name", $"{token}:{world_id}" },
                 { "type", VertexType.Meta },
-                { "item", Item.Get(token, world_id) },
+                { "item", world.GetItem(token) },
             });
         }
     }

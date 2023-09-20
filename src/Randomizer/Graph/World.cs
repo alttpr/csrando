@@ -10,6 +10,7 @@ public sealed class World
     private readonly HashSet<Vertex> _vertices = new();
     public Inventory CollectedItems { get; }
     public WorldConfig Config { get; }
+    private readonly Dictionary<string, Item> _allItems = new();
 
     /**
      * Add all the vertices to the graph for this region.
@@ -40,19 +41,19 @@ public sealed class World
 
         var items = new List<object>
         {
-            Item.Get("MagicBar", Id),
-            Item.Get("LiftBush", Id),
-            Item.Get("LiftPot", Id),
-            Item.Get("UseBomb", Id),
-            Item.Get("OpenChest", Id),
-            Item.Get("BombUpgrade10", Id),
-            Item.Get("ArrowUpgrade10", Id),
-            Item.Get("ArrowUpgrade10", Id),
-            Item.Get("ArrowUpgrade10", Id),
+            GetItem("MagicBar"),
+            GetItem("LiftBush"),
+            GetItem("LiftPot"),
+            GetItem("UseBomb"),
+            GetItem("OpenChest"),
+            GetItem("BombUpgrade10"),
+            GetItem("ArrowUpgrade10"),
+            GetItem("ArrowUpgrade10"),
+            GetItem("ArrowUpgrade10"),
             $"fixed:{Id}",
             $"hop:{Id}",
         };
-        items.AddRange(randomizerConfig.StartingEquipment.Select(x => Item.Get(x, Id)));
+        items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
         if (Config.State == StateOption.Standard)
         {
             items.Add($"EscapeLamp:{Id}");
@@ -68,11 +69,11 @@ public sealed class World
         {
             if (data.TryGetValue("item", out object? item) && item is string itemKey)
             {
-                data["item"] = Item.Get(itemKey, Id);
+                data["item"] = GetItem(itemKey);
             }
             if (data.TryGetValue("trophy", out object? trophy) && trophy is string trophyKey)
             {
-                data["trophy"] = Item.Get(trophyKey, Id);
+                data["trophy"] = GetItem(trophyKey);
             }
             Graph.NewVertex(data);
         });
@@ -170,5 +171,21 @@ public sealed class World
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
     {
         return _vertices.Where((Vertex vertex) => vertex.Type == type);
+    }
+
+    public Item GetItem(string name)
+    {
+        string world_name = name + ":" + Id;
+
+        if (_allItems.TryGetValue(world_name, out var matchingItem))
+        {
+            return matchingItem;
+        }
+
+        // allow made up items
+        var item = new Item(name, Id);
+        _allItems.Add(item.Name, item);
+
+        return item;
     }
 }

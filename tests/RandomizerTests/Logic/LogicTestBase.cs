@@ -12,7 +12,7 @@ public abstract class LogicTestBase
     protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
         var randomizer = new Randomizer(config);
-        randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));
+        randomizer.AssumeItems(inventory.Select(i => randomizer.GetItemForWorld(i, 0)));
         Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
     }
     

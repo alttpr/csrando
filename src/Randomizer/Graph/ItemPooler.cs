@@ -46,65 +46,65 @@ internal sealed class ItemPooler
                             // placing behind keys for now.
                             { 3, new List<Item>
                                 {
-                                    Item.Get("Hammer", world.Id),
-                                    Item.Get("Hookshot", world.Id),
-                                    Item.Get("Flippers", world.Id),
-                                    Item.Get("FireRod", world.Id),
-                                    Item.Get("IceRod", world.Id),
-                                    Item.Get("ProgressiveBow", world.Id),
-                                    Item.Get("ProgressiveBow", world.Id),
-                                    Item.Get("ProgressiveSword", world.Id),
-                                    Item.Get("ProgressiveSword", world.Id),
-                                    Item.Get("ProgressiveShield", world.Id),
-                                    Item.Get("ProgressiveShield", world.Id),
-                                    Item.Get("ProgressiveShield", world.Id),
-                                    Item.Get("PegasusBoots", world.Id),
-                                    Item.Get("BookOfMudora", world.Id),
-                                    Item.Get("ProgressiveGlove", world.Id),
-                                    Item.Get("ProgressiveGlove", world.Id),
-                                    Item.Get("CaneOfSomaria", world.Id),
-                                    Item.Get("CaneOfByrna", world.Id),
-                                    Item.Get("Cape", world.Id),
-                                    Item.Get("Lamp", world.Id),
-                                    Item.Get("Bombos", world.Id),
-                                    Item.Get("Ether", world.Id),
-                                    Item.Get("Quake", world.Id),
-                                    Item.Get("Mushroom", world.Id),
-                                    Item.Get("MoonPearl", world.Id),
-                                    Item.Get("MagicMirror", world.Id),
-                                    Item.Get("OcarinaInactive", world.Id),
-                                    Item.Get("Shovel", world.Id),
-                                    Item.Get("BugCatchingNet", world.Id),
-                                    Item.Get("Powder", world.Id),
-                                    Item.Get("HalfMagic", world.Id),
+                                    world.GetItem("Hammer"),
+                                    world.GetItem("Hookshot"),
+                                    world.GetItem("Flippers"),
+                                    world.GetItem("FireRod"),
+                                    world.GetItem("IceRod"),
+                                    world.GetItem("ProgressiveBow"),
+                                    world.GetItem("ProgressiveBow"),
+                                    world.GetItem("ProgressiveSword"),
+                                    world.GetItem("ProgressiveSword"),
+                                    world.GetItem("ProgressiveShield"),
+                                    world.GetItem("ProgressiveShield"),
+                                    world.GetItem("ProgressiveShield"),
+                                    world.GetItem("PegasusBoots"),
+                                    world.GetItem("BookOfMudora"),
+                                    world.GetItem("ProgressiveGlove"),
+                                    world.GetItem("ProgressiveGlove"),
+                                    world.GetItem("CaneOfSomaria"),
+                                    world.GetItem("CaneOfByrna"),
+                                    world.GetItem("Cape"),
+                                    world.GetItem("Lamp"),
+                                    world.GetItem("Bombos"),
+                                    world.GetItem("Ether"),
+                                    world.GetItem("Quake"),
+                                    world.GetItem("Mushroom"),
+                                    world.GetItem("MoonPearl"),
+                                    world.GetItem("MagicMirror"),
+                                    world.GetItem("OcarinaInactive"),
+                                    world.GetItem("Shovel"),
+                                    world.GetItem("BugCatchingNet"),
+                                    world.GetItem("Powder"),
+                                    world.GetItem("HalfMagic"),
                                 }
                             },
                             { 9001, new[]
                                 {
-                                    Item.Get("Boomerang", world.Id),
-                                    Item.Get("RedBoomerang", world.Id),
-                                    Item.Get("HeartContainer", world.Id),
+                                    world.GetItem("Boomerang"),
+                                    world.GetItem("RedBoomerang"),
+                                    world.GetItem("HeartContainer"),
                                 }
-                                .Concat(Enumerable.Repeat(Item.Get("ProgressiveSword", world.Id), 2))
-                                .Concat(Enumerable.Repeat(Item.Get("ProgressiveArmor", world.Id), 2))
-                                .Concat(Enumerable.Repeat(Item.Get("BossHeartContainer", world.Id), 10))
-                                .Concat(Enumerable.Repeat(Item.Get("PieceOfHeart", world.Id), 24))
+                                .Concat(Enumerable.Repeat(world.GetItem("ProgressiveSword"), 2))
+                                .Concat(Enumerable.Repeat(world.GetItem("ProgressiveArmor"), 2))
+                                .Concat(Enumerable.Repeat(world.GetItem("BossHeartContainer"), 10))
+                                .Concat(Enumerable.Repeat(world.GetItem("PieceOfHeart"), 24))
                                 .ToList()
                             },
                             // order here matters, items at end may get lopped off
                             // if too many items to place
                             { 9999, new[]
                                 {
-                                    Item.Get("Arrow", world.Id),
-                                    Item.Get("OneHundredRupees", world.Id),
+                                    world.GetItem("Arrow"),
+                                    world.GetItem("OneHundredRupees"),
                                 }
-                                .Concat(Enumerable.Repeat(Item.Get("TenArrows", world.Id), 12))
-                                .Concat(Enumerable.Repeat(Item.Get("ThreeBombs", world.Id), 17))
-                                .Concat(Enumerable.Repeat(Item.Get("OneRupee", world.Id), 2))
-                                .Concat(Enumerable.Repeat(Item.Get("FiveRupees", world.Id), 4))
-                                .Concat(Enumerable.Repeat(Item.Get("TwentyRupees", world.Id), 28))
-                                .Concat(Enumerable.Repeat(Item.Get("FiftyRupees", world.Id), 7))
-                                .Concat(Enumerable.Repeat(Item.Get("ThreeHundredRupees", world.Id), 5))
+                                .Concat(Enumerable.Repeat(world.GetItem("TenArrows"), 12))
+                                .Concat(Enumerable.Repeat(world.GetItem("ThreeBombs"), 17))
+                                .Concat(Enumerable.Repeat(world.GetItem("OneRupee"), 2))
+                                .Concat(Enumerable.Repeat(world.GetItem("FiveRupees"), 4))
+                                .Concat(Enumerable.Repeat(world.GetItem("TwentyRupees"), 28))
+                                .Concat(Enumerable.Repeat(world.GetItem("FiftyRupees"), 7))
+                                .Concat(Enumerable.Repeat(world.GetItem("ThreeHundredRupees"), 5))
                                 .ToList()
                             },
                         }
@@ -186,7 +186,7 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                         {
-                            Item.Get(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" }[_prng.GetRandomInt(2)], world.Id),
+                            world.GetItem(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" }[_prng.GetRandomInt(2)]),
                         }
                     },
                 }
@@ -195,7 +195,7 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                         {
-                            Item.Get(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" }[_prng.GetRandomInt(2)], world.Id),
+                            world.GetItem(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" }[_prng.GetRandomInt(2)]),
                         }
                     },
                 }
@@ -216,16 +216,16 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                          {
-                             Item.Get("PendantOfCourage", world.Id),
-                             Item.Get("PendantOfWisdom", world.Id),
-                             Item.Get("PendantOfPower", world.Id),
-                             Item.Get("Crystal1", world.Id),
-                             Item.Get("Crystal2", world.Id),
-                             Item.Get("Crystal3", world.Id),
-                             Item.Get("Crystal4", world.Id),
-                             Item.Get("Crystal5", world.Id),
-                             Item.Get("Crystal6", world.Id),
-                             Item.Get("Crystal7", world.Id),
+                             world.GetItem("PendantOfCourage"),
+                             world.GetItem("PendantOfWisdom"),
+                             world.GetItem("PendantOfPower"),
+                             world.GetItem("Crystal1"),
+                             world.GetItem("Crystal2"),
+                             world.GetItem("Crystal3"),
+                             world.GetItem("Crystal4"),
+                             world.GetItem("Crystal5"),
+                             world.GetItem("Crystal6"),
+                             world.GetItem("Crystal7"),
                          }
                     },
                 }
@@ -244,62 +244,62 @@ internal sealed class ItemPooler
         {
             { "escape:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("KeyH2", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("KeyH2") } },
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("KeyP2", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("KeyP2") } },
                 }
             },
             { "hera:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("KeyP3", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("KeyP3") } },
                 }
             },
             { "agahnim:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyA1", world.Id), 2).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyA1"), 2).ToList() },
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyD1", world.Id), 6).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyD1"), 6).ToList() },
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("KeyD2", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("KeyD2") } },
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyD3", world.Id), 3).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyD3"), 3).ToList() },
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("KeyD4", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("KeyD4") } },
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyD5", world.Id), 2).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyD5"), 2).ToList() },
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyD6", world.Id), 3).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyD6"), 3).ToList() },
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyD7", world.Id), 4).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyD7"), 4).ToList() },
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(Item.Get("KeyA2", world.Id), 4).ToList() },
+                    { 1, Enumerable.Repeat(world.GetItem("KeyA2"), 4).ToList() },
                 }
             },
         };
@@ -331,57 +331,57 @@ internal sealed class ItemPooler
         {
             { "eastern:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyP1", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyP1") } },
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyP2", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyP2") } },
                 }
             },
             { "hera:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyP3", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyP3") } },
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyD1", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyD1") } },
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 2, new List<Item> { Item.Get("BigKeyD2", world.Id) } },
+                    { 2, new List<Item> { world.GetItem("BigKeyD2") } },
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 2, new List<Item> { Item.Get("BigKeyD3", world.Id) } },
+                    { 2, new List<Item> { world.GetItem("BigKeyD3") } },
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyD4", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyD4") } },
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyD5", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyD5") } },
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyD6", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyD6") } },
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { Item.Get("BigKeyD7", world.Id) } },
+                    { 1, new List<Item> { world.GetItem("BigKeyD7") } },
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 0, new List<Item> { Item.Get("BigKeyA2", world.Id) } },
+                    { 0, new List<Item> { world.GetItem("BigKeyA2") } },
                 }
             },
         };
@@ -413,62 +413,62 @@ internal sealed class ItemPooler
         {
             { "escape:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapH2", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapH2") } },
                 }
             },
             { "eastern:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapP1", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapP1") } },
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapP2", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapP2") } },
                 }
             },
             { "hera:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapP3", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapP3") } },
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD1", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD1") } },
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD2", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD2") } },
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD3", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD3") } },
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD4", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD4") } },
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD5", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD5") } },
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD6", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD6") } },
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapD7", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapD7") } },
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("MapA2", world.Id) } },
+                    { 9010, new List<Item> { world.GetItem("MapA2") } },
                 }
             },
         };
@@ -509,57 +509,57 @@ internal sealed class ItemPooler
         {
             { "eastern:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassP1", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassP1") } }
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassP2", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassP2") } }
                 }
             },
             { "hera:"+world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassP3", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassP3") } }
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD1", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD1") } }
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD2", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD2") } }
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD3", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD3") } }
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD4", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD4") } }
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD5", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD5") } }
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD6", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD6") } }
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassD7", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassD7") } }
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { Item.Get("CompassA2", world.Id) } }
+                    { 9010, new List<Item> { world.GetItem("CompassA2") } }
                 }
             },
         };
@@ -613,8 +613,8 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                          {
-                             Item.Get("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
-                             Item.Get("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
+                             world.GetItem("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)]),
+                             world.GetItem("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)]),
                          }
                     },
                 }
@@ -622,12 +622,12 @@ internal sealed class ItemPooler
             { "*",
                 new WeightedSet()
                 {
-                    { 3, new List<Item> { Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id) } },
+                    { 3, new List<Item> { world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]) } },
                     { 9001, new List<Item>
                             {
-                                Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
-                                Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
-                                Item.Get(bottles[_prng.GetRandomInt(bottles.Length)], world.Id),
+                                world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]),
+                                world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]),
+                                world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]),
                             }
                     },
                 }
@@ -653,13 +653,13 @@ internal sealed class ItemPooler
         {
             { "*", new WeightedSet()
                 {
-                    { 9999, Enumerable.Repeat(Item.Get("RedPotion", world.Id), 6)
-                        .Concat(Enumerable.Repeat(Item.Get("GreenPotion", world.Id), 1))
-                        .Concat(Enumerable.Repeat(Item.Get("BluePotion", world.Id), 6))
-                        .Concat(Enumerable.Repeat(Item.Get("Heart", world.Id), 10))
-                        .Concat(Enumerable.Repeat(Item.Get("TenBombs", world.Id), 10))
-                        .Concat(Enumerable.Repeat(Item.Get("BlueShield", world.Id), 2))
-                        .Concat(Enumerable.Repeat(Item.Get("RedShield", world.Id), 1))
+                    { 9999, Enumerable.Repeat(world.GetItem("RedPotion"), 6)
+                        .Concat(Enumerable.Repeat(world.GetItem("GreenPotion"), 1))
+                        .Concat(Enumerable.Repeat(world.GetItem("BluePotion"), 6))
+                        .Concat(Enumerable.Repeat(world.GetItem("Heart"), 10))
+                        .Concat(Enumerable.Repeat(world.GetItem("TenBombs"), 10))
+                        .Concat(Enumerable.Repeat(world.GetItem("BlueShield"), 2))
+                        .Concat(Enumerable.Repeat(world.GetItem("RedShield"), 1))
                         .ToList()
                     },
                 }
