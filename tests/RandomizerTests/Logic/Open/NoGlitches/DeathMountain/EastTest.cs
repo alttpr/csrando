@@ -162,7 +162,7 @@ public class EastTest : OpenNoGlitchesLogicTests
     {
         RunLogicTest(new[]
         {
-            new RandomizerConfig
+            new WorldConfig
             {
                 Glitches = GlitchesOption.None,
                 State = StateOption.Open,

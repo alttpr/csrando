@@ -46,8 +46,8 @@ internal class VertexCollector
         var vertex_data = YamlReader.LoadVertices();
 
         int world_id = world.Id;
-        bool inverted = world.RandomizerConfig.State == StateOption.Inverted;
-        bool bunny_revive = world.RandomizerConfig.Techs.Contains(TechOption.DungeonBunnyRevival);
+        bool inverted = world.Config.State == StateOption.Inverted;
+        bool bunny_revive = world.Config.Techs.Contains(TechOption.DungeonBunnyRevival);
         var names = new HashSet<string>();
         var vertices = new List<Dictionary<string, object>>();
 

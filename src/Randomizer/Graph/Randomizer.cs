@@ -64,7 +64,7 @@ public sealed class Randomizer
      *
      * @return void
      */
-    public Randomizer(RandomizerConfig[] randomizerConfigs, Int32? seed = null)
+    public Randomizer(WorldConfig[] randomizerConfigs, Int32? seed = null)
     {
         _prng = new PRNG(seed);
         System.Console.WriteLine($"Using seed: {_prng.Seed}");
@@ -85,10 +85,10 @@ public sealed class Randomizer
         _worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
-            if (randomizerConfigs[i].CrystalsGanon == RandomizerConfig.RandomCrystals)
+            if (randomizerConfigs[i].CrystalsGanon == WorldConfig.RandomCrystals)
                 randomizerConfigs[i].CrystalsGanon = _prng.GetRandomInt(7 + 1);
 
-            if (randomizerConfigs[i].CrystalsTower == RandomizerConfig.RandomCrystals)
+            if (randomizerConfigs[i].CrystalsTower == WorldConfig.RandomCrystals)
                 randomizerConfigs[i].CrystalsTower = _prng.GetRandomInt(7 + 1);
 
             _worlds[i] = new World(i, randomizerConfigs[i]);
@@ -476,9 +476,9 @@ public sealed class Randomizer
         return new Inventory(items.ToArray());
     }
 
-    public RandomizerConfig GetConfiguration(int world_id)
+    public WorldConfig GetConfiguration(int world_id)
     {
-        return _worlds[world_id].RandomizerConfig;
+        return _worlds[world_id].Config;
     }
 }
 

@@ -113,14 +113,14 @@ internal sealed class ItemPooler
             );
 
             if (
-                world.RandomizerConfig.Glitches != GlitchesOption.None
-                && (world.RandomizerConfig.State == StateOption.Inverted
-                    || !(world.RandomizerConfig.Glitches is GlitchesOption.Overworld or GlitchesOption.Major))
+                world.Config.Glitches != GlitchesOption.None
+                && (world.Config.State == StateOption.Inverted
+                    || !(world.Config.Glitches is GlitchesOption.Overworld or GlitchesOption.Major))
             )
             {
-                float crystal_ratio = world.RandomizerConfig.CrystalsTower / 7f;
+                float crystal_ratio = world.Config.CrystalsTower / 7f;
                 int fill_count;
-                if (world.RandomizerConfig.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal)
+                if (world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal)
                 {
                     fill_count = _prng.GetRandomInt((int)(15 * crystal_ratio), (int)(25 * crystal_ratio));
                 }
@@ -304,7 +304,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.RandomizerConfig.RegionWildKeys)
+        if (world.Config.RegionWildKeys)
         {
             return new ItemSet
             {
@@ -386,7 +386,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.RandomizerConfig.RegionWildBigKeys)
+        if (world.Config.RegionWildBigKeys)
         {
             return new ItemSet
             {
@@ -473,7 +473,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.RandomizerConfig.RegionWildMaps)
+        if (world.Config.RegionWildMaps)
         {
             return new ItemSet
             {
@@ -486,7 +486,7 @@ internal sealed class ItemPooler
             };
         }
 
-        if (world.RandomizerConfig.Accessibility == AccessibilityOption.Items)
+        if (world.Config.Accessibility == AccessibilityOption.Items)
         {
             foreach (var (_, parts) in maps)
             {
@@ -564,7 +564,7 @@ internal sealed class ItemPooler
             },
         };
 
-        if (world.RandomizerConfig.RegionWildCompasses)
+        if (world.Config.RegionWildCompasses)
         {
             return new ItemSet
             {
@@ -577,7 +577,7 @@ internal sealed class ItemPooler
             };
         }
 
-        if (world.RandomizerConfig.Accessibility == AccessibilityOption.Items)
+        if (world.Config.Accessibility == AccessibilityOption.Items)
         {
             foreach (var (_, parts) in compasses)
             {
@@ -644,7 +644,7 @@ internal sealed class ItemPooler
      */
     private ItemSet GetShopItems(World world)
     {
-        if (world.RandomizerConfig.RegionShopSupply != ShopSupplyOption.Shuffled)
+        if (world.Config.RegionShopSupply != ShopSupplyOption.Shuffled)
         {
             return new();
         }

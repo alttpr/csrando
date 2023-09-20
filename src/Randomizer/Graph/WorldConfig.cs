@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-public class RandomizerConfig
+public class WorldConfig
 {
     public const int RandomCrystals = -1;
 

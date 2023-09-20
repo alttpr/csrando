@@ -57,15 +57,15 @@ internal sealed class Randomize : Command
         for (int i = 0; i < bulk; i++)
         {
             string crystals_ganonS = context.ParseResult.GetValueForOption(_crystals_ganon)!;
-            int crystals_ganon = crystals_ganonS == "random" ? RandomizerConfig.RandomCrystals : int.Parse(crystals_ganonS);
+            int crystals_ganon = crystals_ganonS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystals_ganonS);
 
             string crystals_towerS = context.ParseResult.GetValueForOption(_crystals_tower)!;
-            int crystals_tower = crystals_towerS == "random" ? RandomizerConfig.RandomCrystals : int.Parse(crystals_towerS);
+            int crystals_tower = crystals_towerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystals_towerS);
 
             var randomizer = new Randomizer(
             new[]
             {
-                new RandomizerConfig
+                new WorldConfig
                 {
                     Accessibility = context.ParseResult.GetValueForOption(_accessibility),
                     Goal = context.ParseResult.GetValueForOption(_goal),

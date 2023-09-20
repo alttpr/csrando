@@ -9,7 +9,7 @@ public sealed class World
     public Graph Graph { get; }
     private readonly HashSet<Vertex> _vertices = new();
     public Inventory CollectedItems { get; }
-    public RandomizerConfig RandomizerConfig { get; }
+    public WorldConfig Config { get; }
 
     /**
      * Add all the vertices to the graph for this region.
@@ -19,10 +19,10 @@ public sealed class World
      *
      * @return void
      */
-    public World(int id = 0, RandomizerConfig randomizerConfig = null)
+    public World(int id, WorldConfig randomizerConfig)
     {
-        this.RandomizerConfig = randomizerConfig;
         Id = id;
+        Config = randomizerConfig;
 
         Graph = new Graph();
         var start = Graph.NewVertex(new()
@@ -53,11 +53,11 @@ public sealed class World
             $"hop:{Id}",
         };
         items.AddRange(randomizerConfig.StartingEquipment.Select(x => Item.Get(x, Id)));
-        if (RandomizerConfig.State == StateOption.Standard)
+        if (Config.State == StateOption.Standard)
         {
             items.Add($"EscapeLamp:{Id}");
         }
-        if (RandomizerConfig.Accessibility != AccessibilityOption.Locations)
+        if (Config.Accessibility != AccessibilityOption.Locations)
         {
             items.Add($"KeyForKey:{Id}");
         }
@@ -111,15 +111,15 @@ public sealed class World
         // set special edges
         if (Graph.GetVertex($"TowerEntry:{Id}") is Vertex towerEntry)
         {
-            string entry = RandomizerConfig.CrystalsTower == 1
+            string entry = Config.CrystalsTower == 1
                 ? "Crystal:" + Id
-                : "Crystal:" + Id + "|" + RandomizerConfig.CrystalsTower;
+                : "Crystal:" + Id + "|" + Config.CrystalsTower;
 
             Graph.AddDirected(meta, towerEntry, entry);
         }
         if (Graph.GetVertex($"GanonVulnerable:{Id}") is Vertex ganonVulnerable)
         {
-            switch (RandomizerConfig.Goal)
+            switch (Config.Goal)
             {
                 case GoalOption.Dungeons:
                     // this has no effect; likely a relic of GraphViz to show us it was AD.
@@ -128,9 +128,9 @@ public sealed class World
                 case GoalOption.Ganon:
                 case GoalOption.FastGanon:
                 default:
-                    string vulnerable = RandomizerConfig.CrystalsGanon == 1
+                    string vulnerable = Config.CrystalsGanon == 1
                         ? "Crystal:" + Id
-                        : "Crystal:" + Id + "|" + RandomizerConfig.CrystalsGanon;
+                        : "Crystal:" + Id + "|" + Config.CrystalsGanon;
 
                     Graph.AddDirected(meta, ganonVulnerable, vulnerable);
                     break;
