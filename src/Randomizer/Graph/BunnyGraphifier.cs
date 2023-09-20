@@ -66,7 +66,7 @@ internal sealed class BunnyGraphifier
             var dark_vertex = graph.NewVertex(new() {
                 { "name", $"{dark_item}:{world_id}" },
                 { "type", VertexType.Meta },
-                { "item", Item.Get(dark_item, world_id) },
+                { "item", _world.GetItem(dark_item) },
             });
 
             _world.Graph.AddDirected(moonpearl, dark_vertex, $"{light_item}:{world_id}");

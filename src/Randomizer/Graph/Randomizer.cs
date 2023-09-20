@@ -236,7 +236,7 @@ public sealed class Randomizer
                 {
                     if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item, searchGraph))
                     {
-                        collected.AddItem(Item.Get("BigRedBombActive", item.WorldId));
+                        collected.AddItem(GetItemForWorld("BigRedBombActive", item.WorldId));
                     }
                     newItemsFound = true;
                     collected.AddItem(item);
@@ -476,9 +476,14 @@ public sealed class Randomizer
         return new Inventory(items.ToArray());
     }
 
-    public WorldConfig GetConfiguration(int world_id)
+    public WorldConfig GetConfiguration(int worldId)
     {
-        return _worlds[world_id].Config;
+        return _worlds[worldId].Config;
+    }
+
+    public Item GetItemForWorld(string name, int worldId)
+    {
+        return _worlds[worldId].GetItem(name);
     }
 }
 
