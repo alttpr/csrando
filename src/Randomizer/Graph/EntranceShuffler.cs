@@ -18,7 +18,7 @@ internal sealed class EntranceShuffler
     public EntranceShuffler(World world)
     {
         _world = world;
-        string definition_name = world.RandomizerConfig.EntranceShuffle switch
+        string definition_name = world.Config.EntranceShuffle switch
         {
             EntranceShuffleOption.Simple => "simple",
             EntranceShuffleOption.Restricted => "vanilla",
@@ -26,7 +26,7 @@ internal sealed class EntranceShuffler
             EntranceShuffleOption.Crossed => "vanilla",
             EntranceShuffleOption.Insanity => "vanilla",
             EntranceShuffleOption.None => "vanilla",
-            _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.RandomizerConfig.EntranceShuffle)
+            _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.Config.EntranceShuffle)
         };
 
         _definition = YamlReader.LoadEntrances(definition_name);

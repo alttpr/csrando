@@ -126,7 +126,7 @@ public class SwampPalaceTest : InvertedNoGlitchesLogicTests
     {
         RunLogicTest(new[]
         {
-            new RandomizerConfig
+            new WorldConfig
             {
                 Accessibility = AccessibilityOption.Items,
                 Glitches = GlitchesOption.None,

@@ -25,7 +25,7 @@ internal sealed class PrizePackShuffler
     {
         var prizepacks = _world.GetLocationsOfType(VertexType.PrizePack);
 
-        if (!_world.RandomizerConfig.CustomPrizePacks)
+        if (!_world.Config.CustomPrizePacks)
         {
             var random_vanilla_packs = new Stack<string>(_prng.Shuffle(new[]
             {
@@ -75,7 +75,7 @@ internal sealed class PrizePackShuffler
         }
 
         // hard+ does not allow fairies/full magics
-        if (_world.RandomizerConfig.RomHardMode >= 2)
+        if (_world.Config.RomHardMode >= 2)
         {
             var fairy = Sprite.Get("Fairy");
             var heart = Sprite.Get("Heart");
@@ -94,7 +94,7 @@ internal sealed class PrizePackShuffler
             }
         }
 
-        if (_world.RandomizerConfig.RomRupeeBow)
+        if (_world.Config.RomRupeeBow)
         {
             var arrows5 = Sprite.Get("ArrowRefill5");
             var arrows10 = Sprite.Get("ArrowRefill10");

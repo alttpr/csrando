@@ -15,7 +15,7 @@ internal sealed class ShopFiller
         var shops = world.GetLocationsOfType(VertexType.Shop);
         var graph = world.Graph;
 
-        if (world.RandomizerConfig.RegionShopSupply == ShopSupplyOption.Shuffled)
+        if (world.Config.RegionShopSupply == ShopSupplyOption.Shuffled)
         {
             foreach (var shop in shops)
             {
@@ -33,7 +33,7 @@ internal sealed class ShopFiller
             }
         }
 
-        if (world.RandomizerConfig.State == StateOption.Inverted)
+        if (world.Config.State == StateOption.Inverted)
         {
             // put blue potion in DW shop.
         }

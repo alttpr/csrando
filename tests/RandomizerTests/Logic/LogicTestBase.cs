@@ -7,9 +7,9 @@ using System.Reflection;
 
 public abstract class LogicTestBase
 {
-    protected abstract RandomizerConfig GetWorldConfig();
+    protected abstract WorldConfig GetWorldConfig();
 
-    protected void RunLogicTest(RandomizerConfig[] config, string location, bool expected, IEnumerable<string> inventory)
+    protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
         var randomizer = new Randomizer(config);
         randomizer.AssumeItems(inventory.Select(i => Item.Get(i, 0)));

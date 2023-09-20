@@ -113,7 +113,7 @@ internal sealed class BossShuffler
         };
 
         // force Kholdstare for swordless to be in Ice Palace
-        if (_world.RandomizerConfig.Weapon == WeaponOption.Swordless)
+        if (_world.Config.Weapon == WeaponOption.Swordless)
         {
             // remove Ice Palace
             boss_locations.RemoveAt(9);
@@ -121,7 +121,7 @@ internal sealed class BossShuffler
         }
 
         List<string> place_bosses;
-        switch (_world.RandomizerConfig.BossShuffle)
+        switch (_world.Config.BossShuffle)
         {
             case BossShuffleOption.Random:
                 foreach (string location in boss_locations)

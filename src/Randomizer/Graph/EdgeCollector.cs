@@ -16,7 +16,7 @@ internal class EdgeCollector
         var edges_data = new Dictionary<string, DirectedUndirectedPair>();
         YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("base"));
 
-        switch (world.RandomizerConfig.State)
+        switch (world.Config.State)
         {
             case StateOption.Standard:
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
@@ -44,7 +44,7 @@ internal class EdgeCollector
                 break;
         }
 
-        foreach (var tech in world.RandomizerConfig.Techs)
+        foreach (var tech in world.Config.Techs)
         {
             var file_name = tech switch
             {
