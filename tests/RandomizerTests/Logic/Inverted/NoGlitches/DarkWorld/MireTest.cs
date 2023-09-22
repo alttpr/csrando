@@ -22,7 +22,7 @@ public class MireTest : InvertedNoGlitchesLogicTests
 
     [TestMethod]
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
-    public void TestLogic(string location, bool expected, string[] inventory)
+    public override void TestLogic(string location, bool expected, string[] inventory)
     {
         base.TestLogic(location, expected, inventory);
     }

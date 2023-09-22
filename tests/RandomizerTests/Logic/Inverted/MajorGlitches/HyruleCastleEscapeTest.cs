@@ -1,0 +1,120 @@
+namespace RandomizerTests.Logic.Inverted.MajorGlitches;
+
+[TestClass]
+public sealed class HyruleCastleEscapeTest : InvertedMajorGlitchesLogicTests
+{
+    [TestMethod]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
+    public override void TestLogic(string location, bool expected, string[] inventory)
+    {
+        base.TestLogic(location, expected, inventory);
+    }
+
+    public static IEnumerable<object[]> TestData => new[]
+    {
+        new object[] { "Sanctuary", false, new string[] {  } },
+        new object[] { "Sanctuary", true, new string[] { "Lamp", "KeyH2" } },
+        new object[] { "Sanctuary", true, new string[] { "MoonPearl" } },
+        new object[] { "Sanctuary", true, new string[] { "MagicMirror" } },
+        new object[] { "Sanctuary", true, new string[] { "BottleWithBee" } },
+        new object[] { "Sanctuary", true, new string[] { "BottleWithFairy" } },
+        new object[] { "Sanctuary", true, new string[] { "BottleWithRedPotion" } },
+        new object[] { "Sanctuary", true, new string[] { "BottleWithGreenPotion" } },
+        new object[] { "Sanctuary", true, new string[] { "BottleWithBluePotion" } },
+        new object[] { "Sanctuary", true, new string[] { "Bottle" } },
+        new object[] { "Sanctuary", true, new string[] { "BottleWithGoldBee" } },
+
+        new object[] { "Sewers - Secret Room - Left", false, new string[] {  } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "MoonPearl", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "MoonPearl", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "MoonPearl", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithBee", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithBee", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithBee", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithFairy", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithFairy", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithFairy", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithRedPotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithRedPotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithRedPotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithGreenPotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithGreenPotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithGreenPotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithBluePotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithBluePotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithBluePotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "Bottle", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "Bottle", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "Bottle", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithGoldBee", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithGoldBee", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "BottleWithGoldBee", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Left", true, new string[] { "Lamp", "KeyH2" } },
+
+        new object[] { "Sewers - Secret Room - Middle", false, new string[] {  } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "MoonPearl", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "MoonPearl", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "MoonPearl", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithBee", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithBee", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithBee", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithFairy", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithFairy", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithFairy", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithRedPotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithRedPotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithRedPotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithGreenPotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithGreenPotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithGreenPotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithBluePotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithBluePotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithBluePotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "Bottle", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "Bottle", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "Bottle", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithGoldBee", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithGoldBee", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "BottleWithGoldBee", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "Lamp", "KeyH2" } },
+
+        new object[] { "Sewers - Secret Room - Right", false, new string[] {  } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "MoonPearl", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "MoonPearl", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "MoonPearl", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithBee", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithBee", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithBee", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithFairy", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithFairy", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithFairy", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithRedPotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithRedPotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithRedPotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithGreenPotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithGreenPotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithGreenPotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithBluePotion", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithBluePotion", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithBluePotion", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "Bottle", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "Bottle", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "Bottle", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithGoldBee", "ProgressiveGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithGoldBee", "PowerGlove" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "BottleWithGoldBee", "TitansMitt" } },
+        new object[] { "Sewers - Secret Room - Right", true, new string[] { "Lamp", "KeyH2" } },
+
+        new object[] { "Sewers - Dark Cross", false, new string[] {  } },
+        new object[] { "Sewers - Dark Cross", true, new string[] { "Lamp" } },
+
+        new object[] { "Hyrule Castle - Boomerang Chest", false, new string[] {  } },
+        new object[] { "Hyrule Castle - Boomerang Chest", true, new string[] { "KeyH2" } },
+
+        new object[] { "Hyrule Castle - Map Chest", true, new string[] {  } },
+        new object[] { "Hyrule Castle - Map Chest", true, new string[] { "DefeatAgahnim" } },
+
+        new object[] { "Hyrule Castle - Zelda's Cell", false, new string[] {  } },
+        new object[] { "Hyrule Castle - Zelda's Cell", true, new string[] { "KeyH2" } },
+    };
+}

@@ -1,5 +1,3 @@
-using AlttpRandomizer.Graph;
-
 namespace RandomizerTests.Logic.Open.NoGlitches.DeathMountain;
 
 [TestClass]
@@ -151,7 +149,7 @@ public class EastTest : OpenNoGlitchesLogicTests
 
     [TestMethod]
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
-    public void TestLogic(string location, bool expected, string[] inventory)
+    public override void TestLogic(string location, bool expected, string[] inventory)
     {
         base.TestLogic(location, expected, inventory);
     }
@@ -160,13 +158,6 @@ public class EastTest : OpenNoGlitchesLogicTests
     [DynamicData(nameof(TestDataWithMedallion))]
     public void TestLogicWithMedallion(string location, bool expected, string medallion, string[] inventory)
     {
-        RunLogicTest(new[]
-        {
-            new WorldConfig
-            {
-                Glitches = GlitchesOption.None,
-                State = StateOption.Open,
-            }
-        }, location, expected, inventory.Concat(new[] { "TurtleRockEntry" + medallion }));
+        base.TestLogic(location, expected, inventory.Concat(new[] { "TurtleRockEntry" + medallion }).ToArray());
     }
 }
