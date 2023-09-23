@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using System.ComponentModel;
+
 public class Searcher
 {
     private readonly HashSet<Vertex> _visited = new();
@@ -49,7 +51,7 @@ public class Searcher
      * meat an potatoes of the whole class... I"m sure you were expecting good
      * documentation. Eventually my friend, eventually.
      */
-    public IEnumerable<Vertex> Search()
+    public IEnumerable<Vertex> InternalSearch()
     {
         if (!Graph.HasVertex(_start))
         {
@@ -121,5 +123,138 @@ public class Searcher
         } while (queue.Any() || peg_queue.Any());
 
         return _visited;
+    }
+
+
+    public Searcher Search(Inventory collected)
+    {
+        bool newItemsFound;
+        do
+        {
+            InternalSearch();
+
+            newItemsFound = false;
+            foreach (var item in GetItems())
+            {
+                if (!collected.Has(item))
+                {
+                    if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
+                    {
+                        collected.AddItem(item.World.GetItem("BigRedBombActive"));
+                    }
+                    newItemsFound = true;
+                    collected.AddItem(item);
+                }
+            }
+        } while (newItemsFound);
+
+        return searcher;
+    }
+
+    private bool DropOffSearch(Item item)
+    {
+        var start = _vertices["Bomb Shoppe Lobby:" + item.World.Id];
+        var end = _vertices["Pyramid:" + item.World.Id];
+        //visited.Contains(end);
+        return true;
+    }
+
+    private IEnumerable<Vertex> RecursiveDoorSearch(
+        Graph searchGraph,
+        IEnumerable<Vertex> found,
+        Inventory collected,
+        IEnumerable<Vertex> lockedDoors,
+        Item key,
+        int recursionLevel,
+        IEnumerable<Vertex>? chain = null
+    )
+    {
+        if (collected.GetCount(key) >= _keyDoors[key].Count)
+        {
+            var door_graphs = _keyDoorEdges.Where(door_id => _keyDoors[key].Contains(door_id.Key)).Select(k => k.Value).ToArray();
+            var searcher = SearchGraph(collected, searchGraph.Merge(door_graphs));
+            return searcher.GetVisited();
+        }
+
+        var initialKeySearcher = new Searcher(searchGraph, _start);
+        var in_graph_locations = initialKeySearcher.Search();
+        var sub_found_locations = new Dictionary<Vertex, List<Vertex>>();
+        chain ??= Enumerable.Empty<Vertex>();
+        found = found.ToArray();
+        foreach (var door in lockedDoors.Where(location => in_graph_locations.Contains(location)))
+        {
+            var current_chain = chain.Concat(new[] { door }).ToArray();
+            string chain_id = string.Join('-', current_chain.Select(v => v.GetHashCode()).OrderBy(h => h));
+            if (_doorChains.TryGetValue(chain_id, out var door_chain))
+            {
+                sub_found_locations.Add(door, door_chain);
+                continue;
+            }
+            var keySearcher = SearchGraph(collected, searchGraph.Merge(_keyDoorEdges[door]));
+            var found_locations = keySearcher.GetVisited().ToList();
+            var new_collected = collected.Merge(CollectItems(found_locations.Except(found)));
+            sub_found_locations.Add(door, found_locations);
+            int new_found_keys = new_collected.GetCount(key);
+            if (lockedDoors.Count() > 1 && new_found_keys > recursionLevel)
+            {
+                var all_found = found_locations.Concat(found).ToArray();
+                // TODO: should this be overwriting the door search result?
+                //sub_found_locations.Add(door, this.recursiveDoorSearch(
+                sub_found_locations[door] = RecursiveDoorSearch(
+                    keySearcher.Graph,
+                    all_found,
+                    new_collected,
+                    lockedDoors.Except(new[] { door }).ToArray(),
+                    key,
+                    recursionLevel + 1,
+                    current_chain
+                ).ToList();
+            }
+            _doorChains.Add(chain_id, sub_found_locations[door]);
+        }
+
+        if (sub_found_locations.Any())
+        {
+            IEnumerable<Vertex> result = sub_found_locations.Values.First();
+            foreach (var other in sub_found_locations.Values.Skip(1))
+                result = result.Intersect(other);
+            return result;
+        }
+
+        return found;
+    }
+
+    public IEnumerable<Vertex> GetStrongLocations(Inventory collected)
+    {
+        var searcher = SearchGraph(collected);
+        var found_locations = searcher.GetVisited().ToHashSet();
+        var new_found_locations = new HashSet<Vertex>();
+        do
+        {
+            _doorChains.Clear();
+            new_found_locations.Clear();
+            var new_items = CollectItems(found_locations);
+            var new_collected = collected.Merge(new_items);
+            searcher = SearchGraph(new_collected);
+            foreach (var (key, doors) in _keyDoors)
+            {
+                if (new_collected.Has(key))
+                {
+                    var strong_locations = RecursiveDoorSearch(
+                        searcher.Graph,
+                        found_locations,
+                        new_collected,
+                        doors,
+                        key,
+                        1
+                    ).ToHashSet();
+                    strong_locations.ExceptWith(found_locations);
+                    found_locations.UnionWith(strong_locations);
+                    new_found_locations.UnionWith(strong_locations);
+                }
+            }
+        } while (new_found_locations.Any());
+
+        return found_locations;
     }
 }
