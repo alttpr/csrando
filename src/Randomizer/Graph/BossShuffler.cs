@@ -220,7 +220,7 @@ internal sealed class BossShuffler
      */
     private void PlaceBossItemInLocation(string bossItem, string location)
     {
-        string world_boss_item = bossItem + ":" + _world.Id;
+        var world_boss_item = _world.GetItem(bossItem);
         string from_location = BOSS_FROM_LOCATION[location] + ":" + _world.Id;
         var from = _world.Graph.GetVertex(from_location);
         location = location + ":" + _world.Id;

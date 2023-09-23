@@ -11,7 +11,7 @@ internal class EdgeCollector
      *
      * @param World world world to attach preset items to
      */
-    public Dictionary<string, DirectedUndirectedPair> GetForWorld(World world)
+    public Dictionary<ItemCondition, DirectedUndirectedPair> GetForWorld(World world)
     {
         var edges_data = new Dictionary<string, DirectedUndirectedPair>();
         YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("base"));
@@ -54,18 +54,15 @@ internal class EdgeCollector
             YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromTech(file_name));
         }
 
-        var return_data = new Dictionary<string, DirectedUndirectedPair>();
+        var return_data = new Dictionary<ItemCondition, DirectedUndirectedPair>();
         int world_id = world.Id;
-        foreach (var (group, edges) in edges_data)
+        foreach (var (conditionString, edges) in edges_data)
         {
-            string name = group + ":" + world_id;
+            var parts = conditionString.Split("|");
+            var item = world.GetItem(parts[0]);
+            var itemCountPair = new ItemCondition(item, parts.Length > 1 ? int.Parse(parts[1]) : 1);
 
-            if (group.Contains('|'))
-            {
-                name = group.Replace("|", ":" + world_id + "|");
-            }
-
-            return_data[name] = new DirectedUndirectedPair
+            return_data[itemCountPair] = new DirectedUndirectedPair
             {
                 Directed = edges.Directed.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
                 Undirected = edges.Undirected.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),

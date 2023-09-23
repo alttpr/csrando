@@ -288,7 +288,7 @@ internal sealed class EnemyShuffler
             var to = _world.Graph.GetVertex($"{token}:{world_id}");
             foreach (string item in items)
             {
-                _world.Graph.AddDirected(from, to, $"{item}:{world_id}");
+                _world.Graph.AddDirected(from, to, _world.GetItem(item));
             }
         }
 
@@ -302,8 +302,7 @@ internal sealed class EnemyShuffler
                 {
                     throw new Exception($"Cannot find location for {enemy}: {to}");
                 }
-                string take = $"Defeat{to.Sprite.Name}:{world_id}";
-                _world.Graph.AddDirected(from, to, take);
+                _world.Graph.AddDirected(from, to, _world.GetItem($"Defeat{to.Sprite.Name}"));
             }
         }
     }

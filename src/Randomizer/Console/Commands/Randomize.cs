@@ -81,9 +81,12 @@ internal sealed class Randomize : Command
                 },
             }, context.ParseResult.GetValueForOption(_seed));
             var worlds = randomizer.Randomize();
-            if (!randomizer.CollectItems().Has("Triforce:0"))
+            foreach (var world in worlds)
             {
-                throw new Exception("Game Unwinnable");
+                if (!randomizer.CollectItems().Has(world.GetItem("Triforce")))
+                {
+                    throw new Exception($"Game Unwinnable for world {world.Id}");
+                }
             }
 
             // this contains the randomized worlds that would go into a ROM/BPS

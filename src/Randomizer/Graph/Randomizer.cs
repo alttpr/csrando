@@ -32,8 +32,8 @@ public sealed class Randomizer
 
     public Graph Graph { get; private set; }
     private readonly Graph _startingGraph;
-    private readonly Dictionary<string, Graph> _graphs;
-    private readonly ConcurrentDictionary<string, HashSet<Vertex>> _keyDoors = new();
+    private readonly Dictionary<ItemCondition, Graph> _graphs;
+    private readonly ConcurrentDictionary<Item, HashSet<Vertex>> _keyDoors = new();
     /**
      * Key edges for just this door.
      */
@@ -80,9 +80,9 @@ public sealed class Randomizer
         {
             { _start.Name, _start },
         };
-        _collectedItems = new Inventory();
 
         _worlds = new World[randomizerConfigs.Length];
+        _collectedItems = new Inventory(_worlds);
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
             if (randomizerConfigs[i].CrystalsGanon == WorldConfig.RandomCrystals)
@@ -116,7 +116,7 @@ public sealed class Randomizer
             prizepack_shuffler.AdjustEdges();
 
             Graph = Graph.Merge(_worlds[i].Graph);
-            Graph.AddDirected(_start, Graph.GetVertex($"start:{i}"), "fixed");
+            Graph.AddDirected(_start, Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
         }
 
         foreach (var location in Graph.GetVertices())
@@ -135,20 +135,20 @@ public sealed class Randomizer
         }
 
         // @todo this needs simplified!
-        var graphs = new Dictionary<string, Graph>();
-        var edgesByGroup = Graph.GetEdges().ToLookup(edge => edge.Group);
-        foreach (var (group, edges) in edgesByGroup)
+        var graphs = new Dictionary<ItemCondition, Graph>();
+        var edgesByGroup = Graph.GetEdges().ToLookup(edge => edge.Condition);
+        foreach (var (condition, edges) in edgesByGroup)
         {
-            if (graphs.ContainsKey(group))
+            if (graphs.ContainsKey(condition))
             {
                 continue;
             }
 
-            if (group.StartsWith("Key") && !group.StartsWith("KeyForKey"))
+            if (condition.Item.Name.StartsWith("Key") && !condition.Item.Name.StartsWith("KeyForKey"))
             {
                 var key_edges = edges;
 
-                var keyDoorsForGroup = _keyDoors.GetOrAdd(group, _ => new());
+                var keyDoorsForGroup = _keyDoors.GetOrAdd(condition.Item, _ => new());
                 foreach (var edge in key_edges)
                 {
                     keyDoorsForGroup.Add(edge.From);
@@ -171,13 +171,14 @@ public sealed class Randomizer
             }
             else
             {
-                graphs.Add(group, Graph.GetSubgraph(group));
+                graphs.Add(condition, Graph.GetSubgraph(condition));
             }
         }
 
         _graphs = graphs;
 
-        _startingGraph = _graphs["fixed"];
+        // TODO: handle multiworld
+        _startingGraph = _graphs[new(GetItemForWorld("fixed", 0), 1)];
         _startingGraph = SearchGraph(_collectedItems);
     }
 
@@ -212,17 +213,17 @@ public sealed class Randomizer
     private Graph SearchGraph(Inventory collected, Graph? startingGraph = null)
     {
         var searchGraph = startingGraph ?? _startingGraph;
-        var graphs = new Dictionary<string, Graph>(_graphs);
+        var graphs = new Dictionary<ItemCondition, Graph>(_graphs);
         bool newItemsFound;
         do
         {
             var sub_graphs = new List<Graph>();
-            foreach (var (item, sub_graph) in graphs)
+            foreach (var (condition, sub_graph) in graphs)
             {
-                if (collected.Has(item))
+                if (collected.HasAtLeast(condition.Item, condition.Count))
                 {
                     sub_graphs.Add(sub_graph);
-                    graphs.Remove(item);
+                    graphs.Remove(condition);
                 }
             }
 
@@ -232,7 +233,7 @@ public sealed class Randomizer
             newItemsFound = false;
             foreach (var item in searchGraph.GetItems(_start))
             {
-                if (!collected.Has(item.Name))
+                if (!collected.Has(item))
                 {
                     if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item, searchGraph))
                     {
@@ -252,10 +253,10 @@ public sealed class Randomizer
         var start = _vertices["Bomb Shoppe Lobby:" + item.WorldId];
         var end = _vertices["Pyramid:" + item.WorldId];
         // @todo tidy up this exclude by only being hops/entrances.
-        string[] exclude = {
-            $"hop:{item.WorldId}",
-            $"Flippers:{item.WorldId}",
-            $"DarkFlippers:{item.WorldId}",
+        Item[] exclude = {
+            GetItemForWorld("hop", item.WorldId),
+            GetItemForWorld("Flippers", item.WorldId),
+            GetItemForWorld("DarkFlippers", item.WorldId),
         };
         var bomb_search_graph = searchGraph.Exclude(exclude);
         bomb_search_graph.Search(start);
@@ -280,7 +281,7 @@ public sealed class Randomizer
         IEnumerable<Vertex> found,
         Inventory collected,
         IEnumerable<Vertex> lockedDoors,
-        string key,
+        Item key,
         int recursionLevel,
         IEnumerable<Vertex>? chain = null
     )
@@ -386,7 +387,7 @@ public sealed class Randomizer
      */
     public void AssumeItems(IEnumerable<Item> items)
     {
-        _assumedItems = new Inventory(items.ToArray());
+        _assumedItems = new Inventory(_worlds, items.ToArray());
         _foundLocations = GetStrongLocations(_collectedItems.Merge(_assumedItems)).ToHashSet();
     }
 
@@ -473,7 +474,7 @@ public sealed class Randomizer
     public Inventory CollectItems(IEnumerable<Vertex>? locations = null)
     {
         var items = GetItems(locations);
-        return new Inventory(items.ToArray());
+        return new Inventory(_worlds, items.ToArray());
     }
 
     public WorldConfig GetConfiguration(int worldId)
