@@ -1,7 +1,5 @@
 namespace AlttpRandomizer.Graph;
 
-using System.Collections.Concurrent;
-
 /**
  * Representation of Players inventory for graph based traversal.
  *
@@ -9,9 +7,10 @@ using System.Collections.Concurrent;
  */
 public sealed class Inventory
 {
-    private readonly Dictionary<string, int> _itemCount = new();
+    private readonly Dictionary<Item, int> _itemCount = new();
     /** @var array<float> */
     private readonly Dictionary<int, float> _health = new();
+    private readonly World[] _worlds;
 
     /**
      * Create new Inventory instance.
@@ -20,17 +19,19 @@ public sealed class Inventory
      *
      * @return void
      */
-    public Inventory(params object[] items)
+    public Inventory(World[] worlds, params Item[] items)
     {
-        foreach (object item in items)
+        _worlds = worlds;
+        foreach (var item in items)
         {
-            AddItemByName(item is Item i ? i.Name : (string)item);
+            AddItem(item);
         }
     }
     private Inventory(Inventory other)
     {
         _itemCount = new(other._itemCount);
         _health = new(other._health);
+        _worlds = other._worlds;
     }
 
     /**
@@ -38,46 +39,24 @@ public sealed class Inventory
      *
      * @param Item|string item item to add
      */
-    public void AddItem(object item)
+    public void AddItem(Item item, int count = 1)
     {
-        AddItemByName(item is Item i ? i.Name : (string)item);
-    }
-
-    /**
-     * Add an item to this by name.
-     *
-     * @param string item_name name of item
-     */
-    private void AddItemByName(string item_name)
-    {
-        _itemCount[item_name] = _itemCount.GetValueOrDefault(item_name, 0) + 1;
-
-        if (item_name.StartsWith("HeartContainer"))
+        if (item.Name.StartsWith("HeartContainer"))
         {
-            string[] parts = item_name.Split(':');
-            if (!int.TryParse(parts.Skip(1).FirstOrDefault(), out int world_id))
-                world_id = 0;
-            _health[world_id] = _health.GetValueOrDefault(world_id, 0) + 1;
+            _health[item.WorldId] = _health.GetValueOrDefault(item.WorldId, 0) + 1;
         }
-        else if (item_name.StartsWith("PieceOfHeart"))
+        else if (item.Name.StartsWith("PieceOfHeart"))
         {
-            string[] parts = item_name.Split(':');
-            if (!int.TryParse(parts.Skip(1).FirstOrDefault(), out int world_id))
-                world_id = 0;
-            _health[world_id] = _health.GetValueOrDefault(world_id, 0) + 0.25f;
+            _health[item.WorldId] = _health.GetValueOrDefault(item.WorldId, 0) + 0.25f;
         }
-        else if (item_name.StartsWith("Bottle"))
+        else if (item.Name.StartsWith("Bottle"))
         {
-            string[] parts = item_name.Split(':');
-            if (!int.TryParse(parts.Skip(1).FirstOrDefault(), out int world_id))
-                world_id = 0;
-            AddItemByName($"LogicalBottle:{world_id}");
+            AddItem(_worlds.Where(w => w.Id == item.WorldId).First().GetItem("LogicalBottle"));
         }
 
-        var newCount = _itemCount[item_name];
-        if (newCount > 1)
+        if (!_itemCount.TryAdd(item, count))
         {
-            _itemCount[item_name + "|" + newCount] = 1;
+            _itemCount[item] += count;
         }
     }
 
@@ -86,27 +65,24 @@ public sealed class Inventory
      * 
      * @param string key item name to search for
      */
-    public int GetCount(string key)
+    public int GetCount(Item item)
     {
-        if (key.StartsWith("Bottle"))
+        if (item.Name.StartsWith("Bottle"))
         {
-            string[] itemParts = key.Split(':');
-            if (!int.TryParse(itemParts.Skip(1).FirstOrDefault(), out int world_id))
-                world_id = 0;
-            key = $"LogicalBottle:{world_id}";
+            return _itemCount.Where(i => i.Key.Name == "LogicalBottle" && i.Key.WorldId == item.WorldId).FirstOrDefault().Value;
         }
 
-        return _itemCount.GetValueOrDefault(key, 0);
+        return _itemCount.GetValueOrDefault(item, 0);
     }
 
-    /**
-     * Verify if item is in inventory.
-     *
-     * @param string item_name
-     */
-    public bool Has(string itemName)
+    public bool Has(Item item)
     {
-        return _itemCount.GetValueOrDefault(itemName, 0) > 0;
+        return _itemCount.ContainsKey(item);
+    }
+
+    public bool HasAtLeast(Item item, int count)
+    {
+        return _itemCount.GetValueOrDefault(item, 0) >= count;
     }
 
     /**
@@ -118,20 +94,9 @@ public sealed class Inventory
     {
         var newInventory = new Inventory(this);
 
-        foreach (var (key, count) in inventory._itemCount)
+        foreach (var (item, count) in inventory._itemCount)
         {
-            if (key.Contains('|'))
-            {
-                continue;
-            }
-
-            newInventory._itemCount[key] = newInventory._itemCount.GetValueOrDefault(key, 0) + count;
-            int newCount = newInventory._itemCount[key];
-
-            for (int i = 2; i <= newCount; ++i)
-            {
-                newInventory._itemCount[key + "|" + i] = 1;
-            }
+            newInventory._itemCount[item] = newInventory._itemCount.GetValueOrDefault(item, 0) + count;
         }
 
         return newInventory;

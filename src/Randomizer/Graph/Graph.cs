@@ -105,12 +105,17 @@ public sealed class Graph
      * @param Vertex to to vertex
      * @param string group edge grouping
      */
-    public Edge AddDirected(Vertex from, Vertex to, string group)
+    public Edge AddDirected(Vertex from, Vertex to, Item item, int itemCount = 1)
     {
-        var edge = new Edge(from, to, group);
-
+        var edge = new Edge(from, to, item, itemCount);
         AddEdge(edge);
+        return edge;
+    }
 
+    public Edge AddDirected(Vertex from, Vertex to, ItemCondition condition)
+    {
+        var edge = new Edge(from, to, condition);
+        AddEdge(edge);
         return edge;
     }
 
@@ -142,13 +147,13 @@ public sealed class Graph
      * 
      * @param string group name of group
      */
-    public Graph GetSubgraph(string group)
+    public Graph GetSubgraph(ItemCondition condition)
     {
         var newGraph = new Graph();
 
         foreach (var edge in _edges)
         {
-            if (edge.Group != group)
+            if (edge.Condition != condition)
             {
                 continue;
             }
@@ -208,13 +213,13 @@ public sealed class Graph
      * 
      * @param string ...groups edge groups to exclude
      */
-    public Graph Exclude(params string[] groups)
+    public Graph Exclude(params Item[] items)
     {
         var newGraph = new Graph();
 
         foreach (var edge in _edges)
         {
-            if (groups.Contains(edge.Group))
+            if (items.Contains(edge.Condition.Item))
             {
                 continue;
             }

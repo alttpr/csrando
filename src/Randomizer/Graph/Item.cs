@@ -5,7 +5,6 @@ namespace AlttpRandomizer.Graph;
  */
 public sealed class Item
 {
-    public string RawName { get; }
     public string Name { get; }
     public string NiceName { get; }
     public string I18NName { get; }
@@ -23,8 +22,7 @@ public sealed class Item
      */
     public Item(string name, int worldId)
     {
-        RawName = name;
-        Name = name + ":" + worldId;
+        Name = name;
         I18NName = "item." + name;
         string? formatted = __(I18NName);
         NiceName = formatted ?? "";
@@ -42,6 +40,6 @@ public sealed class Item
      */
     public override string ToString()
     {
-        return Name;
+        return $"{Name}:{WorldId}";
     }
 }

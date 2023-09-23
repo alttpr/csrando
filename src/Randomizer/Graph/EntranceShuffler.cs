@@ -42,7 +42,7 @@ internal sealed class EntranceShuffler
         {
             var from = _world.Graph.GetVertex($"{connection[0]}:{world_id}");
             var to = _world.Graph.GetVertex($"{connection[1]}:{world_id}");
-            _world.Graph.AddDirected(from, to, $"fixed:{world_id}");
+            _world.Graph.AddDirected(from, to, _world.GetItem("fixed"));
         }
         /* TODO: Let's only do vanilla in the meantime...
         foreach (var group in this.definition.Connections) {

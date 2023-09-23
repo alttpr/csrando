@@ -37,9 +37,9 @@ public sealed class World
             { "name", "Meta:" + Id },
             { "type", VertexType.Meta },
         });
-        Graph.AddDirected(start, meta, $"fixed:{Id}");
+        Graph.AddDirected(start, meta, GetItem("fixed"));
 
-        var items = new List<object>
+        var items = new List<Item>
         {
             GetItem("MagicBar"),
             GetItem("LiftBush"),
@@ -50,19 +50,19 @@ public sealed class World
             GetItem("ArrowUpgrade10"),
             GetItem("ArrowUpgrade10"),
             GetItem("ArrowUpgrade10"),
-            $"fixed:{Id}",
-            $"hop:{Id}",
+            GetItem("fixed"),
+            GetItem("hop"),
         };
         items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
         if (Config.State == StateOption.Standard)
         {
-            items.Add($"EscapeLamp:{Id}");
+            items.Add(GetItem("EscapeLamp"));
         }
         if (Config.Accessibility != AccessibilityOption.Locations)
         {
-            items.Add($"KeyForKey:{Id}");
+            items.Add(GetItem("KeyForKey"));
         }
-        CollectedItems = new Inventory(items.ToArray());
+        CollectedItems = new Inventory(new[] { this }, items.ToArray());
 
         var vertices = new VertexCollector().LoadYmlData(this);
         vertices.ForEach(data =>
@@ -79,7 +79,7 @@ public sealed class World
         });
 
         var edges = new EdgeCollector().GetForWorld(this);
-        foreach (var (group, data) in edges)
+        foreach (var (condition, data) in edges)
         {
             foreach (var edge_data in data.Directed)
             {
@@ -92,7 +92,7 @@ public sealed class World
                         $"({edge_data[0]}, {edge_data[1]}) => " +
                         $"({from}, {to})");
                 }
-                Graph.AddDirected(from, to, group);
+                Graph.AddDirected(from, to, condition);
             }
             foreach (var edge_data in data.Undirected)
             {
@@ -105,18 +105,21 @@ public sealed class World
                         $"({edge_data[0]}, {edge_data[1]}) => " +
                         $"({from}, {to})");
                 }
-                Graph.AddDirected(from, to, group);
-                Graph.AddDirected(to, from, group);
+                Graph.AddDirected(from, to, condition);
+                Graph.AddDirected(to, from, condition);
             }
         }
         // set special edges
         if (Graph.GetVertex($"TowerEntry:{Id}") is Vertex towerEntry)
         {
-            string entry = Config.CrystalsTower == 1
-                ? "Crystal:" + Id
-                : "Crystal:" + Id + "|" + Config.CrystalsTower;
-
-            Graph.AddDirected(meta, towerEntry, entry);
+            if (Config.CrystalsTower == 0)
+            {
+                Graph.AddDirected(meta, towerEntry, GetItem("fixed"));
+            }
+            else
+            {
+                Graph.AddDirected(meta, towerEntry, GetItem("Crystal"), Config.CrystalsTower);
+            }
         }
         if (Graph.GetVertex($"GanonVulnerable:{Id}") is Vertex ganonVulnerable)
         {
@@ -129,11 +132,14 @@ public sealed class World
                 case GoalOption.Ganon:
                 case GoalOption.FastGanon:
                 default:
-                    string vulnerable = Config.CrystalsGanon == 1
-                        ? "Crystal:" + Id
-                        : "Crystal:" + Id + "|" + Config.CrystalsGanon;
-
-                    Graph.AddDirected(meta, ganonVulnerable, vulnerable);
+                    if (Config.CrystalsGanon == 0)
+                    {
+                        Graph.AddDirected(meta, ganonVulnerable, GetItem("fixed"));
+                    }
+                    else
+                    {
+                        Graph.AddDirected(meta, ganonVulnerable, GetItem("Crystal"), Config.CrystalsGanon);
+                    }
                     break;
             }
         }
@@ -175,9 +181,7 @@ public sealed class World
 
     public Item GetItem(string name)
     {
-        string world_name = name + ":" + Id;
-
-        if (_allItems.TryGetValue(world_name, out var matchingItem))
+        if (_allItems.TryGetValue(name, out var matchingItem))
         {
             return matchingItem;
         }

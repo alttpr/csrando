@@ -59,7 +59,7 @@ internal sealed class BunnyGraphifier
             { "type", VertexType.Meta },
         });
         var meta = graph.GetVertex("Meta:" + world_id);
-        graph.AddDirected(meta!, moonpearl, "MoonPearl:" + world_id);
+        graph.AddDirected(meta!, moonpearl, _world.GetItem("MoonPearl"));
 
         foreach (var (light_item, dark_item) in ITEM_MAP)
         {
@@ -69,7 +69,7 @@ internal sealed class BunnyGraphifier
                 { "item", _world.GetItem(dark_item) },
             });
 
-            _world.Graph.AddDirected(moonpearl, dark_vertex, $"{light_item}:{world_id}");
+            _world.Graph.AddDirected(moonpearl, dark_vertex, _world.GetItem(light_item));
         }
     }
 
@@ -111,13 +111,12 @@ internal sealed class BunnyGraphifier
                 if (alt_node.MoonPearl != false)
                 {
                     work_queue.Enqueue(alt_node);
-                    string group = Regex.Replace(edge.Group, ":\\d+", "");
-                    if (!ITEM_MAP.ContainsKey(group))
+                    if (!ITEM_MAP.ContainsKey(edge.Condition.Item.Name))
                     {
                         continue;
                     }
 
-                    edge.Group = ITEM_MAP[group] + ":" + _world.Id;
+                    edge.Condition = new(_world.GetItem(ITEM_MAP[edge.Condition.Item.Name]), edge.Condition.Count);
                 }
             }
         }
