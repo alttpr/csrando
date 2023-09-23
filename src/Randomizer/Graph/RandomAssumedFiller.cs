@@ -59,8 +59,8 @@ internal sealed class RandomAssumedFiller
 
             flat_items.Remove(item_key);
             _randomizer.AssumeItems(flat_items.Where(i => i.Weight <= 9000).Select(i => i.Item).ToList());
-            bool required = _randomizer.GetConfiguration(item.WorldId).Accessibility != AccessibilityOption.None
-                || !_randomizer.CollectItems().Has(_randomizer.GetItemForWorld("Triforce", item.WorldId));
+            bool required = item.World.Config.Accessibility != AccessibilityOption.None
+                || !_randomizer.CollectItems().Has(item.World.GetItem("Triforce"));
             var locations = _randomizer.GetEmptyLocationsInSet(item_set, set_counts, required);
 
             if (!locations.Any())

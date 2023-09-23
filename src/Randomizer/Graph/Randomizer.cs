@@ -82,7 +82,7 @@ public sealed class Randomizer
         };
 
         _worlds = new World[randomizerConfigs.Length];
-        _collectedItems = new Inventory(_worlds);
+        _collectedItems = new Inventory();
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
             if (randomizerConfigs[i].CrystalsGanon == WorldConfig.RandomCrystals)
@@ -178,7 +178,7 @@ public sealed class Randomizer
         _graphs = graphs;
 
         // TODO: handle multiworld
-        _startingGraph = _graphs[new(GetItemForWorld("fixed", 0), 1)];
+        _startingGraph = _graphs[new(_worlds[0].GetItem("fixed"), 1)];
         _startingGraph = SearchGraph(_collectedItems);
     }
 
@@ -237,7 +237,7 @@ public sealed class Randomizer
                 {
                     if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item, searchGraph))
                     {
-                        collected.AddItem(GetItemForWorld("BigRedBombActive", item.WorldId));
+                        collected.AddItem(item.World.GetItem("BigRedBombActive"));
                     }
                     newItemsFound = true;
                     collected.AddItem(item);
@@ -250,13 +250,13 @@ public sealed class Randomizer
 
     private bool DropOffSearch(Item item, Graph searchGraph)
     {
-        var start = _vertices["Bomb Shoppe Lobby:" + item.WorldId];
-        var end = _vertices["Pyramid:" + item.WorldId];
+        var start = _vertices["Bomb Shoppe Lobby:" + item.World.Id];
+        var end = _vertices["Pyramid:" + item.World.Id];
         // @todo tidy up this exclude by only being hops/entrances.
         Item[] exclude = {
-            GetItemForWorld("hop", item.WorldId),
-            GetItemForWorld("Flippers", item.WorldId),
-            GetItemForWorld("DarkFlippers", item.WorldId),
+            item.World.GetItem("hop"),
+            item.World.GetItem("Flippers"),
+            item.World.GetItem("DarkFlippers"),
         };
         var bomb_search_graph = searchGraph.Exclude(exclude);
         bomb_search_graph.Search(start);
@@ -387,7 +387,7 @@ public sealed class Randomizer
      */
     public void AssumeItems(IEnumerable<Item> items)
     {
-        _assumedItems = new Inventory(_worlds, items.ToArray());
+        _assumedItems = new Inventory(items.ToArray());
         _foundLocations = GetStrongLocations(_collectedItems.Merge(_assumedItems)).ToHashSet();
     }
 
@@ -474,12 +474,7 @@ public sealed class Randomizer
     public Inventory CollectItems(IEnumerable<Vertex>? locations = null)
     {
         var items = GetItems(locations);
-        return new Inventory(_worlds, items.ToArray());
-    }
-
-    public WorldConfig GetConfiguration(int worldId)
-    {
-        return _worlds[worldId].Config;
+        return new Inventory(items.ToArray());
     }
 
     public Item GetItemForWorld(string name, int worldId)
