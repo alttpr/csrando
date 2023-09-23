@@ -8,7 +8,7 @@ public sealed class Item
     public string Name { get; }
     public string NiceName { get; }
     public string I18NName { get; }
-    public int WorldId { get; }
+    public World World { get; }
     public bool Meta { get; private set; }
 
     /**
@@ -20,13 +20,13 @@ public sealed class Item
      *
      * @return void
      */
-    public Item(string name, int worldId)
+    public Item(string name, World world)
     {
         Name = name;
         I18NName = "item." + name;
         string? formatted = __(I18NName);
         NiceName = formatted ?? "";
-        WorldId = worldId;
+        World = world;
     }
     private static string? __(string name)
     {
@@ -40,6 +40,6 @@ public sealed class Item
      */
     public override string ToString()
     {
-        return $"{Name}:{WorldId}";
+        return $"{Name}:{World.Id}";
     }
 }

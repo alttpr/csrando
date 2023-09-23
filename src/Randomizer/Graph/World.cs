@@ -62,7 +62,7 @@ public sealed class World
         {
             items.Add(GetItem("KeyForKey"));
         }
-        CollectedItems = new Inventory(new[] { this }, items.ToArray());
+        CollectedItems = new Inventory(items.ToArray());
 
         var vertices = new VertexCollector().LoadYmlData(this);
         vertices.ForEach(data =>
@@ -187,7 +187,7 @@ public sealed class World
         }
 
         // allow made up items
-        var item = new Item(name, Id);
+        var item = new Item(name, this);
         _allItems.Add(item.Name, item);
 
         return item;

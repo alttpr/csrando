@@ -9,8 +9,7 @@ public sealed class Inventory
 {
     private readonly Dictionary<Item, int> _itemCount = new();
     /** @var array<float> */
-    private readonly Dictionary<int, float> _health = new();
-    private readonly World[] _worlds;
+    private readonly Dictionary<World, float> _health = new();
 
     /**
      * Create new Inventory instance.
@@ -19,9 +18,8 @@ public sealed class Inventory
      *
      * @return void
      */
-    public Inventory(World[] worlds, params Item[] items)
+    public Inventory(params Item[] items)
     {
-        _worlds = worlds;
         foreach (var item in items)
         {
             AddItem(item);
@@ -31,7 +29,6 @@ public sealed class Inventory
     {
         _itemCount = new(other._itemCount);
         _health = new(other._health);
-        _worlds = other._worlds;
     }
 
     /**
@@ -43,15 +40,15 @@ public sealed class Inventory
     {
         if (item.Name.StartsWith("HeartContainer"))
         {
-            _health[item.WorldId] = _health.GetValueOrDefault(item.WorldId, 0) + 1;
+            _health[item.World] = _health.GetValueOrDefault(item.World, 0) + 1;
         }
         else if (item.Name.StartsWith("PieceOfHeart"))
         {
-            _health[item.WorldId] = _health.GetValueOrDefault(item.WorldId, 0) + 0.25f;
+            _health[item.World] = _health.GetValueOrDefault(item.World, 0) + 0.25f;
         }
         else if (item.Name.StartsWith("Bottle"))
         {
-            AddItem(_worlds.Where(w => w.Id == item.WorldId).First().GetItem("LogicalBottle"));
+            AddItem(item.World.GetItem("LogicalBottle"));
         }
 
         if (!_itemCount.TryAdd(item, count))
@@ -69,7 +66,7 @@ public sealed class Inventory
     {
         if (item.Name.StartsWith("Bottle"))
         {
-            return _itemCount.Where(i => i.Key.Name == "LogicalBottle" && i.Key.WorldId == item.WorldId).FirstOrDefault().Value;
+            return _itemCount.GetValueOrDefault(item.World.GetItem("LogicalBottle"), 0);
         }
 
         return _itemCount.GetValueOrDefault(item, 0);
@@ -107,8 +104,8 @@ public sealed class Inventory
      * 
      * @param int world_id world id for which we care about count
      */
-    public float HeartCount(int worldId)
+    public float HeartCount(World world)
     {
-        return _health.GetValueOrDefault(worldId, 0);
+        return _health.GetValueOrDefault(world, 0);
     }
 }
