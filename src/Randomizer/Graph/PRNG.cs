@@ -7,11 +7,11 @@ using System.Security.Cryptography;
 public class PRNG
 {
     private readonly Random _random = new Random();
-    public Int32 Seed { get; private set; }
+    public int Seed { get; private set; }
 
-    public PRNG(Int32? seed)
+    public PRNG(int? seed)
     {
-        Seed = seed ?? RandomNumberGenerator.GetInt32(Int32.MaxValue);
+        Seed = seed ?? RandomNumberGenerator.GetInt32(int.MaxValue);
         _random = new Random(Seed);
     }
 

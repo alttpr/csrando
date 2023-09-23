@@ -64,7 +64,7 @@ public sealed class Randomizer
      *
      * @return void
      */
-    public Randomizer(WorldConfig[] randomizerConfigs, Int32? seed = null)
+    public Randomizer(WorldConfig[] randomizerConfigs, int? seed = null)
     {
         _prng = new PRNG(seed);
         System.Console.WriteLine($"Using seed: {_prng.Seed}");
