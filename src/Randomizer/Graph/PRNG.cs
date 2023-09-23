@@ -1,4 +1,4 @@
-﻿namespace AlttpRandomizer.Graph;
+﻿namespace Randomizer.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,9 +1,9 @@
-namespace AlttpRandomizer.Console.Commands;
+namespace Randomizer.Console.Commands;
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics;
-using AlttpRandomizer.Graph;
+using Randomizer.Graph;
 
 /**
  * Run randomizer as command.

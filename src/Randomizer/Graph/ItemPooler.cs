@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;

@@ -1,6 +1,6 @@
 ﻿namespace RandomizerTests.Logic.Open.NoGlitches;
 
-using AlttpRandomizer.Graph;
+using Randomizer.Graph;
 
 public abstract class OpenNoGlitchesLogicTests : LogicTestBase
 {

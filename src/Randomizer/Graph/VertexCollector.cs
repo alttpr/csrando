@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 /**
  * Container for all the vertices.

@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 /**
  * Modify Prizepacks based on configuration.

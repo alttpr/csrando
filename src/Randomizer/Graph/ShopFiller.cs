@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 /**
  * Fill initial shop state.

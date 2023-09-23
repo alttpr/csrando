@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 /**
  * Representation of Players inventory for graph based traversal.

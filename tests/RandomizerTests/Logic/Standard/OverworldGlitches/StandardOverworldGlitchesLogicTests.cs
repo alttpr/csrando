@@ -1,4 +1,4 @@
-using AlttpRandomizer.Graph;
+using Randomizer.Graph;
 
 namespace RandomizerTests.Logic.Standard.OverworldGlitches;
 
