@@ -1,11 +1,8 @@
 namespace Randomizer.Graph;
-
-using System.Text.RegularExpressions;
-
 /**
  * Modify the edges of the graph to deal with MoonPearl/Bunny state.
  */
-internal sealed class BunnyGraphifier
+internal sealed class BunnyGraphifier : IWorldModifier
 {
     private static readonly Dictionary<string, string> ITEM_MAP = new()
     {
@@ -39,19 +36,12 @@ internal sealed class BunnyGraphifier
         { "OpenChest", "DarkOpenChest" },
     };
 
-    private readonly World _world;
-
     /**
-     * Add all the vertices to the graph for Bunny Dark world.
-     *
-     * @param World world world to reduce graph for
-     * 
-     * @return void
+     * Add edges for new dark items required based on dark world and moon pearl.
      */
-    public BunnyGraphifier(World world)
+    public static void AdjustEdges(World world, PRNG prng)
     {
-        _world = world;
-        var graph = _world.Graph;
+        var graph = world.Graph;
 
         int world_id = world.Id;
         var moonpearl = graph.NewVertex(new() {
@@ -59,31 +49,25 @@ internal sealed class BunnyGraphifier
             { "type", VertexType.Meta },
         });
         var meta = graph.GetVertex("Meta:" + world_id);
-        graph.AddDirected(meta!, moonpearl, _world.GetItem("MoonPearl"));
+        graph.AddDirected(meta!, moonpearl, world.GetItem("MoonPearl"));
 
         foreach (var (light_item, dark_item) in ITEM_MAP)
         {
             var dark_vertex = graph.NewVertex(new() {
                 { "name", $"{dark_item}:{world_id}" },
                 { "type", VertexType.Meta },
-                { "item", _world.GetItem(dark_item) },
+                { "item", world.GetItem(dark_item) },
             });
 
-            _world.Graph.AddDirected(moonpearl, dark_vertex, _world.GetItem(light_item));
+            world.Graph.AddDirected(moonpearl, dark_vertex, world.GetItem(light_item));
         }
-    }
 
-    /**
-     * Add edges for new dark items required based on dark world and moon pearl.
-     */
-    public void AdjustEdges()
-    {
         var dark_nodes =
-            from vertex in _world.Graph.GetVertices()
+            from vertex in world.Graph.GetVertices()
             where vertex.MoonPearl == true
             select vertex;
 
-        var edge_map = _world.Graph.GetEdges()
+        var edge_map = world.Graph.GetEdges()
             .GroupBy(o => o.From)
             .ToDictionary(g => g.Key, g => g.ToList());
         //.ToLookup(o => o.From);
@@ -116,7 +100,7 @@ internal sealed class BunnyGraphifier
                         continue;
                     }
 
-                    edge.Condition = new(_world.GetItem(ITEM_MAP[edge.Condition.Item.Name]), edge.Condition.Count);
+                    edge.Condition = new(world.GetItem(ITEM_MAP[edge.Condition.Item.Name]), edge.Condition.Count);
                 }
             }
         }

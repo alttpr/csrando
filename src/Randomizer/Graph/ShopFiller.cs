@@ -3,14 +3,9 @@ namespace Randomizer.Graph;
 /**
  * Fill initial shop state.
  */
-internal sealed class ShopFiller
+internal sealed class ShopFiller: IWorldModifier
 {
-    /**
-     * @param World world world to reduce graph for
-     * 
-     * @return void
-     */
-    public ShopFiller(World world)
+    public static void AdjustEdges(World world, PRNG prng)
     {
         var shops = world.GetLocationsOfType(VertexType.Shop);
         var graph = world.Graph;
@@ -37,12 +32,5 @@ internal sealed class ShopFiller
         {
             // put blue potion in DW shop.
         }
-    }
-
-    /**
-     * No edge adjustment is necessary with shop inventories.
-     */
-    public void AdjustEdges()
-    {
     }
 }

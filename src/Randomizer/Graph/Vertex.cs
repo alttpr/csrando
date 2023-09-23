@@ -68,7 +68,7 @@ public sealed class Vertex
     public int? Roomid { get; }
     public int? Map { get; }
     public bool? MoonPearl { get; }
-    public string[]? ItemSet { get; }
+    public string[] ItemSet { get; }
     public long[]? Addresses { get; }
     public int? Offset { get; }
     public Position? Position { get; }
@@ -101,7 +101,7 @@ public sealed class Vertex
         Roomid = (int?)attributes.GetValueOrDefault("roomid");
         Map = (int?)attributes.GetValueOrDefault("map");
         MoonPearl = (bool?)attributes.GetValueOrDefault("moonpearl");
-        ItemSet = (string[]?)attributes.GetValueOrDefault("itemset");
+        ItemSet = (string[])attributes.GetValueOrDefault("itemset", new string[0]);
         Addresses = ((List<long>?)attributes.GetValueOrDefault("addresses"))?.ToArray();
         Offset = (byte?)attributes.GetValueOrDefault("offset");
         if (attributes.TryGetValue("position", out object? positionObj) && positionObj is Position position)

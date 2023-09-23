@@ -3,21 +3,13 @@ namespace Randomizer.Graph;
 /**
  * Modify the edges of the graph to shuffle entrances.
  */
-internal sealed class EntranceShuffler
+internal sealed class EntranceShuffler: IWorldModifier
 {
-    private readonly Entrances _definition;
-    private readonly World _world;
-
     /**
-     * Add all the vertices to the graph for this region.
-     *
-     * @param World world world to reduce graph for
-     *
-     * @return void
+     * Connect Entrances, Exits, Outlets, and rooms based on World settings.
      */
-    public EntranceShuffler(World world)
+    public static void AdjustEdges(World world, PRNG prng)
     {
-        _world = world;
         string definition_name = world.Config.EntranceShuffle switch
         {
             EntranceShuffleOption.Simple => "simple",
@@ -29,20 +21,14 @@ internal sealed class EntranceShuffler
             _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.Config.EntranceShuffle)
         };
 
-        _definition = YamlReader.LoadEntrances(definition_name);
-    }
+        var definition = YamlReader.LoadEntrances(definition_name);
 
-    /**
-     * Connect Entrances, Exits, Outlets, and rooms based on World settings.
-     */
-    public void AdjustEdges()
-    {
-        int world_id = _world.Id;
-        foreach (var connection in _definition.Fixed)
+        int world_id = world.Id;
+        foreach (var connection in definition.Fixed)
         {
-            var from = _world.Graph.GetVertex($"{connection[0]}:{world_id}");
-            var to = _world.Graph.GetVertex($"{connection[1]}:{world_id}");
-            _world.Graph.AddDirected(from, to, _world.GetItem("fixed"));
+            var from = world.Graph.GetVertex($"{connection[0]}:{world_id}");
+            var to = world.Graph.GetVertex($"{connection[1]}:{world_id}");
+            world.Graph.AddDirected(from, to, world.GetItem("fixed"));
         }
         /* TODO: Let's only do vanilla in the meantime...
         foreach (var group in this.definition.Connections) {

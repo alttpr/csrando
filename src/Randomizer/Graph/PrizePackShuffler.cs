@@ -3,31 +3,18 @@ namespace Randomizer.Graph;
 /**
  * Modify Prizepacks based on configuration.
  */
-internal sealed class PrizePackShuffler
+internal sealed class PrizePackShuffler : IWorldModifier
 {
-    private readonly World _world;
-    private readonly PRNG _prng;
-    /**
-     * @param World world 
-     *
-     * @return void
-     */
-    public PrizePackShuffler(World world, PRNG prng)
-    {
-        _world = world;
-        _prng = prng;
-    }
-
     /**
      * Pick items for each prize pack.
      */
-    public void AdjustEdges()
+    public static void AdjustEdges(World world, PRNG prng)
     {
-        var prizepacks = _world.GetLocationsOfType(VertexType.PrizePack);
+        var prizepacks = world.GetLocationsOfType(VertexType.PrizePack);
 
-        if (!_world.Config.CustomPrizePacks)
+        if (!world.Config.CustomPrizePacks)
         {
-            var random_vanilla_packs = new Stack<string>(_prng.Shuffle(new[]
+            var random_vanilla_packs = new Stack<string>(prng.Shuffle(new[]
             {
                 new[] { "Heart", "Heart", "Heart", "Heart", "RupeeGreen", "Heart", "Heart", "RupeeGreen" },
                 new[] { "RupeeBlue", "RupeeGreen", "RupeeBlue", "RupeeRed", "RupeeBlue", "RupeeGreen", "RupeeBlue", "RupeeBlue" },
@@ -65,7 +52,7 @@ internal sealed class PrizePackShuffler
             {
                 drops.AddRange(Enumerable.Repeat(Sprite.Get(sprite_name), Math.Min(_world.Config("drop.count." + sprite_name, count), 63)));
             }*/
-            var drop_pool = new Stack<Sprite>(_prng.Shuffle(drops.ToArray()));
+            var drop_pool = new Stack<Sprite>(prng.Shuffle(drops.ToArray()));
 
             foreach (var pack in emptypacks)
             {
@@ -75,7 +62,7 @@ internal sealed class PrizePackShuffler
         }
 
         // hard+ does not allow fairies/full magics
-        if (_world.Config.RomHardMode >= 2)
+        if (world.Config.RomHardMode >= 2)
         {
             var fairy = Sprite.Get("Fairy");
             var heart = Sprite.Get("Heart");
@@ -94,7 +81,7 @@ internal sealed class PrizePackShuffler
             }
         }
 
-        if (_world.Config.RomRupeeBow)
+        if (world.Config.RomRupeeBow)
         {
             var arrows5 = Sprite.Get("ArrowRefill5");
             var arrows10 = Sprite.Get("ArrowRefill10");

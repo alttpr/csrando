@@ -94,26 +94,12 @@ public sealed class Randomizer
             _worlds[i] = new World(i, randomizerConfigs[i]);
             _collectedItems = _collectedItems.Merge(_worlds[i].CollectedItems);
 
-            var shop_filler = new ShopFiller(_worlds[i]);
-            shop_filler.AdjustEdges();
-
-            var entrance_shuffler = new EntranceShuffler(_worlds[i]);
-            entrance_shuffler.AdjustEdges();
-
-            // boss shuffler must be called before enemy shuffler as enemy
-            // shuffler will update sprite GFX sheets.
-            var boss_shuffler = new BossShuffler(_worlds[i], _prng);
-            boss_shuffler.AdjustEdges();
-
-            // This will handle challenge rooms
-            var enemy_shuffler = new EnemyShuffler(_worlds[i]);
-            enemy_shuffler.AdjustEdges();
-
-            var bunnifier = new BunnyGraphifier(_worlds[i]);
-            bunnifier.AdjustEdges();
-
-            var prizepack_shuffler = new PrizePackShuffler(_worlds[i], _prng);
-            prizepack_shuffler.AdjustEdges();
+            ShopFiller.AdjustEdges(_worlds[i], _prng);
+            EntranceShuffler.AdjustEdges(_worlds[i], _prng);
+            BossShuffler.AdjustEdges(_worlds[i], _prng);
+            EnemyShuffler.AdjustEdges(_worlds[i], _prng);
+            BunnyGraphifier.AdjustEdges(_worlds[i], _prng);
+            PrizePackShuffler.AdjustEdges(_worlds[i], _prng);
 
             Graph = Graph.Merge(_worlds[i].Graph);
             Graph.AddDirected(_start, Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
