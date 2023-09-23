@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 // NOTE: same as in ItemPooler, except we cannot reuse aliases this way
 using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;

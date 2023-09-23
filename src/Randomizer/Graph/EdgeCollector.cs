@@ -1,4 +1,4 @@
-namespace AlttpRandomizer.Graph;
+namespace Randomizer.Graph;
 
 /**
  * Pull data files to create all edges for a given world configuration.

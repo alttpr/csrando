@@ -1,4 +1,4 @@
-﻿namespace AlttpRandomizer.Graph;
+﻿namespace Randomizer.Graph;
 
 using YamlDotNet.Serialization;
 
