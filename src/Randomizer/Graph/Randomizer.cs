@@ -95,6 +95,7 @@ public sealed class Randomizer
             {
                 continue;
             }
+
             _setLocations["*"].Add(location);
             foreach (string set in location.ItemSet)
             {
@@ -132,18 +133,18 @@ public sealed class Randomizer
         _foundLocations = searcher.Search(_collectedItems.Merge(_assumedItems)).ToHashSet();
     }
 
-    /**
-     * Get locations in an item set, one may toggle reachability of these
-     * locations.
-     *
-     * @param string item_set contrain results to item set
-     * @param array item_sets counts of items required in each set
-     * @param bool reachable only return reachable locations
-     *
-     * @throws Exception if there are no available locations in a set
-     *
-     * @return array<Vertex>
-     */
+    public Searcher GetSearcherForInventory(IEnumerable<Item> items)
+    {
+        Searcher searcher = new(Graph, _start);
+        searcher.Search(_collectedItems.Merge(new Inventory(items.ToArray())));
+
+        return searcher;
+    }
+
+    /// <summary>Get a set of Locations without items that match the given itemSet. Available counts in itemSets is required.</summary>
+    /// <param name="itemSet">constrain results to item set</param> 
+    /// <param name="itemSets">counts of items required in each sett</param> 
+    /// <param name="reachable">reachable only return reachable locations</param> 
     public IEnumerable<Vertex> GetEmptyLocationsInSet(string itemSet = "*", Dictionary<string, int>? itemSets = null, bool reachable = true)
     {
         var empty_locations = _setLocations[itemSet].Where((vertex) =>
@@ -158,10 +159,7 @@ public sealed class Randomizer
             {
                 continue;
             }
-            var set_locations = _setLocations[set_name].Where(static (location) =>
-            {
-                return location.Item == null;
-            });
+            var set_locations = _setLocations[set_name].Where(static (location) => location.Item == null);
             if (set_locations.Count() < set_count)
             {
                 throw new Exception($"Not enough set locations available: {set_name}");
