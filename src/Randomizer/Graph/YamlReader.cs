@@ -40,7 +40,8 @@ public class YamlReader
             }
             return _dataRoot;
         }
-        set {
+        set
+        {
             lock (_dataLock)
             {
                 _dataRoot = value;
@@ -187,7 +188,8 @@ public class YamlReader
             }
             else
             {
-                dest.Add(entry.Key, new() {
+                dest.Add(entry.Key, new()
+                {
                     Directed = entry.Value.Directed.ToList(),
                     Undirected = entry.Value.Undirected.ToList(),
                 });

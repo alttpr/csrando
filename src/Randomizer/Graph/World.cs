@@ -176,7 +176,7 @@ public sealed class World
      */
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
     {
-        return _vertices.Where((Vertex vertex) => vertex.Type == type);
+        return _vertices.Where(vertex => vertex.Type == type);
     }
 
     public Item GetItem(string name)

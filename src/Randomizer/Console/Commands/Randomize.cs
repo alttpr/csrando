@@ -23,7 +23,7 @@ internal sealed class Randomize : Command
     private readonly Option<string> _crystals_tower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
     private readonly Option<int> _bulk = new("bulk", "generate multiple ROMs");
-    private readonly Option<Int32?> _seed = new("seed", "set starting seed");
+    private readonly Option<int?> _seed = new("seed", "set starting seed");
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
     {
