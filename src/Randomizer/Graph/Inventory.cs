@@ -77,6 +77,11 @@ public sealed class Inventory
         return _itemCount.ContainsKey(item);
     }
 
+    public bool Has(ItemCondition condition)
+    {
+        return HasAtLeast(condition.Item, condition.Count);
+    }
+
     public bool HasAtLeast(Item item, int count)
     {
         return _itemCount.GetValueOrDefault(item, 0) >= count;

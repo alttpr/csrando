@@ -81,6 +81,8 @@ public sealed class Vertex
     public int? Shopkeeper { get; }
     public int? Group { get; }
 
+    public List<Edge> Edges = new();
+
     public Vertex(Dictionary<string, object>? attributes = null)
     {
         attributes ??= new();
@@ -114,5 +116,11 @@ public sealed class Vertex
         ShopStyle = (int?)attributes.GetValueOrDefault("shopstyle");
         Shopkeeper = (int?)attributes.GetValueOrDefault("shopkeeper");
         Group = (int?)attributes.GetValueOrDefault("group");
+    }
+
+
+    public IEnumerable<Vertex> GetTargets(Inventory items)
+    {
+        return this.Edges.Where(edge => items.Has(edge.Condition)).Select(edge => edge.To) ?? Enumerable.Empty<Vertex>();
     }
 }

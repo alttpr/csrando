@@ -11,7 +11,9 @@ public class Searcher
         _start = start;
     }
 
-    /// <summary>Get the Items found is last search of the Graph.</summary>
+    /// <summary>
+    /// Get the Items found is last search of the Graph.
+    /// </summary>
     public IEnumerable<Item> GetItems()
     {
         foreach (var vertex in _visited)
@@ -27,20 +29,16 @@ public class Searcher
         }
     }
 
-
-    /// <summary>Get all vertices that were visited in a given search (which has been called first) from a set starting point.</summary>
+    /// <summary>
+    /// Get all vertices that were visited in a given search (which has been called first) from a set starting point.
+    /// </summary>
     public IEnumerable<Vertex> GetVisited()
     {
         return _visited;
     }
 
-    private void InternalSearch()
+    private void InternalSearch(Inventory collected)
     {
-        if (!_graph.HasVertex(_start))
-        {
-            return;
-        }
-
         var marked = new HashSet<Vertex>();
         var pegMarked = new HashSet<Vertex>();
         if (!_visited.Contains(_start))
@@ -67,7 +65,7 @@ public class Searcher
                 {
                     continue;
                 }
-                foreach (var next_vertex in _graph.GetTargets(vertex))
+                foreach (var next_vertex in vertex.GetTargets(collected))
                 {
                     if (!pegMarked.Contains(next_vertex))
                     {
@@ -92,7 +90,7 @@ public class Searcher
                 {
                     continue;
                 }
-                foreach (var next_vertex in _graph.GetTargets(vertex))
+                foreach (var next_vertex in vertex.GetTargets(collected))
                 {
                     if (!marked.Contains(next_vertex))
                     {
@@ -106,13 +104,17 @@ public class Searcher
         } while (queue.Any() || peg_queue.Any());
     }
 
-
     public Searcher Search(Inventory collected)
     {
+        if (!_graph.HasVertex(_start))
+        {
+            return this;
+        }
+
         bool newItemsFound;
         do
         {
-            InternalSearch();
+            InternalSearch(collected);
 
             newItemsFound = false;
             foreach (var item in GetItems())
@@ -140,17 +142,40 @@ public class Searcher
         return true;
     }
 
-    private IEnumerable<Vertex> RecursiveDoorSearch(
-        IEnumerable<Vertex> found
-    )
+    /// <summary>
+    /// Get a set of Locations without items that match the given itemSet. Available counts in itemSets is required.
+    /// </summary>
+    /// 
+    /// <param name="itemSet">constrain results to item set</param> 
+    /// <param name="itemSets">counts of items required in each sett</param> 
+    /// <param name="reachable">reachable only return reachable locations</param> 
+    public IEnumerable<Vertex> GetEmptyLocationsInSet(string itemSet = "*", Dictionary<string, int>? itemSets = null, bool reachable = true)
     {
-        return found;
-    }
+        var empty_locations = _graph.GetSetLocations(itemSet).Where((vertex) =>
+        {
+            return (!reachable || _visited.Contains(vertex)) && vertex.Item == null;
+        }).ToList();
 
-    public IEnumerable<Vertex> GetStrongLocations(Inventory collected)
-    {
-        var searcher = new Searcher(this._graph, this._start);
-        var found_locations = searcher.GetVisited().ToHashSet();
-        return found_locations;
+        itemSets ??= new();
+        foreach (var (set_name, set_count) in itemSets)
+        {
+            if (set_name == "*")
+            {
+                continue;
+            }
+            var set_locations = _graph.GetSetLocations(set_name).Where(static (location) => location.Item == null);
+            if (set_locations.Count() < set_count)
+            {
+                throw new Exception($"Not enough set locations available: {set_name}");
+            }
+            // if a set has the same number of items to place as set locations
+            // left, remove it from this return.
+            if (itemSet != set_name && set_locations.Count() == set_count)
+            {
+                empty_locations.RemoveAll(set_locations.Contains);
+            }
+        }
+
+        return empty_locations.ToArray();
     }
 }

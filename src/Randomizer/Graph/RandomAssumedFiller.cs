@@ -58,10 +58,10 @@ internal sealed class RandomAssumedFiller
             }
 
             flat_items.Remove(item_key);
-            _randomizer.AssumeItems(flat_items.Where(i => i.Weight <= 9000).Select(i => i.Item).ToList());
+            var searcher = _randomizer.GetSearcherForInventory(flat_items.Where(i => i.Weight <= 9000).Select(i => i.Item).ToList());
             bool required = item.World.Config.Accessibility != AccessibilityOption.None
-                || !_randomizer.CollectItems().Has(item.World.GetItem("Triforce"));
-            var locations = _randomizer.GetEmptyLocationsInSet(item_set, set_counts, required);
+                || !searcher.GetItems().Contains(item.World.GetItem("Triforce"));
+            var locations = searcher.GetEmptyLocationsInSet(item_set, set_counts, required);
 
             if (!locations.Any())
             {
@@ -81,9 +81,6 @@ internal sealed class RandomAssumedFiller
             location.Item = item;
             set_counts[item_set]--;
         }
-
-        // assume items after last placement to sort the graph out.
-        _randomizer.AssumeItems(flat_items.Select(i => i.Item).ToList());
 
         FastFillItemsInLocations(flat_items);
     }
@@ -105,12 +102,13 @@ internal sealed class RandomAssumedFiller
         });
 
         string current_key = "";
+        var searcher = _randomizer.GetSearcherForInventory(Enumerable.Empty<Item>());
         var locations = new List<Vertex>();
         foreach (var (item_set, _, item) in fillItems)
         {
             if (current_key != item_set)
             {
-                locations = _prng.Shuffle(_randomizer.GetEmptyLocationsInSet(item_set, null, false).ToArray()).ToList();
+                locations = _prng.Shuffle(searcher.GetEmptyLocationsInSet(item_set, null, false).ToArray()).ToList();
                 current_key = item_set;
             }
 
