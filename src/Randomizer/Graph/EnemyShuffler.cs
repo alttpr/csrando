@@ -3,7 +3,7 @@ namespace Randomizer.Graph;
 /**
  * Modify the edges of the graph to shuffle entrances.
  */
-internal sealed class EnemyShuffler
+internal sealed class EnemyShuffler : IWorldModifier
 {
     private static readonly Dictionary<string, string[]> CHALLENGE_ROOMS = new()
     {
@@ -242,67 +242,51 @@ internal sealed class EnemyShuffler
             "Mimic Cave Entrance - Green Eyegore BR",
         }},
     };
-    private readonly Dictionary<string, List<string>> _defeats = new();
-    private readonly World _world;
 
     /**
-     * Add all the vertices to the graph for this region.
+     * Swap Edges based on new enemy locations settings.
      * 
      * 1) Rearrange all the sprite sheet sets
      * 2) find out which sprites can be placed with each set now
      * 3) pick a random sheet for a room
      * 4) pick random sprites for room
-     *
-     * @param World world world to reduce graph for
-     *
-     * @return void
      */
-    public EnemyShuffler(World world)
+    public static void AdjustEdges(World world, PRNG prng)
     {
-        _world = world;
-        _defeats = YamlReader.LoadEnemies();
+        var defeats = YamlReader.LoadEnemies();
 
-        int world_id = _world.Id;
-        foreach (string token in _defeats.Keys)
+        int world_id = world.Id;
+        foreach (string token in defeats.Keys)
         {
-            _world.Graph.NewVertex(new()
+            world.Graph.NewVertex(new()
             {
                 { "name", $"{token}:{world_id}" },
                 { "type", VertexType.Meta },
                 { "item", world.GetItem(token) },
             });
         }
-    }
 
-    /**
-     * Swap Edges based on new enemy locations settings.
-     * 
-     * @todo is this going to have a problem with the BunnyGraphifier??
-     */
-    public void AdjustEdges()
-    {
-        var from = _world.GetLocation("Meta");
-        int world_id = _world.Id;
-        foreach (var (token, items) in _defeats)
+        var from = world.GetLocation("Meta");
+        foreach (var (token, items) in defeats)
         {
-            var to = _world.Graph.GetVertex($"{token}:{world_id}");
+            var to = world.Graph.GetVertex($"{token}:{world_id}");
             foreach (string item in items)
             {
-                _world.Graph.AddDirected(from, to, _world.GetItem(item));
+                world.Graph.AddDirected(from, to, world.GetItem(item));
             }
         }
 
         foreach (var (room, enemies) in CHALLENGE_ROOMS)
         {
-            from = _world.GetLocation(room);
+            from = world.GetLocation(room);
             foreach (string enemy in enemies)
             {
-                var to = _world.GetLocation(enemy);
+                var to = world.GetLocation(enemy);
                 if (to is null)
                 {
                     throw new Exception($"Cannot find location for {enemy}: {to}");
                 }
-                _world.Graph.AddDirected(from, to, _world.GetItem($"Defeat{to.Sprite.Name}"));
+                world.Graph.AddDirected(from, to, world.GetItem($"Defeat{to.Sprite.Name}"));
             }
         }
     }
