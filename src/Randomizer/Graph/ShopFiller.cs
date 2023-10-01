@@ -19,12 +19,14 @@ internal sealed class ShopFiller: IWorldModifier
                 {
                     continue;
                 }
-                var inventory = graph.GetTargets(shop).Where(target => target.Type == VertexType.ShopItem);
-                foreach (var shop_item in inventory)
-                {
-                    shop_item.Item = null;
-                    shop_item.Cost = null;
-                }
+
+                // TODO: Fix
+                // var inventory = graph.GetTargets(shop).Where(target => target.Type == VertexType.ShopItem);
+                // foreach (var shop_item in inventory)
+                // {
+                //     shop_item.Item = null;
+                //     shop_item.Cost = null;
+                // }
             }
         }
 

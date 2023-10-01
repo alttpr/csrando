@@ -56,10 +56,7 @@ public sealed class Graph
     public Vertex NewVertex(Dictionary<string, object>? attributes = null)
     {
         var vertex = new Vertex(attributes);
-
-        _vertices.Add(vertex);
-        _verticesByName[vertex.Name] = vertex;
-
+        AddVertex(vertex);
         return vertex;
     }
 

@@ -1,6 +1,6 @@
-using Randomizer.Graph;
-
 namespace RandomizerTests.Logic.Standard.OverworldGlitches;
+
+using Randomizer.Graph;
 
 public abstract class StandardOverworldGlitchesLogicTests : LogicTestBase
 {

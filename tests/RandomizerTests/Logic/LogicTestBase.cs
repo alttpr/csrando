@@ -12,8 +12,8 @@ public abstract class LogicTestBase
     protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
         var randomizer = new Randomizer(config);
-        randomizer.AssumeItems(inventory.Select(i => randomizer.GetItemForWorld(i, 0)));
-        Assert.AreEqual(expected, randomizer.CanReachLocation($"{location}:0"));
+        var searcher = randomizer.GetSearcherForInventory(inventory.Select(i => randomizer.GetItemForWorld(i, 0)));
+        Assert.AreEqual(expected, searcher.GetVisited().Any(v => v.Name == $"{location}:0"));
     }
 
     public static string GetLogicTestDisplayNames(MethodInfo methodInfo, object[] values)

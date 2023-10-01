@@ -1,6 +1,6 @@
-using Randomizer.Graph;
-
 namespace RandomizerTests.Logic.Open.MajorGlitches;
+
+using Randomizer.Graph;
 
 public abstract class OpenMajorGlitchesLogicTests : LogicTestBase
 {

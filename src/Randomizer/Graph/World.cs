@@ -20,12 +20,12 @@ public sealed class World
      *
      * @return void
      */
-    public World(int id, WorldConfig randomizerConfig)
+    public World(int id, WorldConfig randomizerConfig, Graph graph)
     {
         Id = id;
         Config = randomizerConfig;
+        Graph = graph;
 
-        Graph = new Graph();
         var start = Graph.NewVertex(new()
         {
             { "name", "start:" + Id },

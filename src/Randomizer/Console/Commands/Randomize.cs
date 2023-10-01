@@ -80,14 +80,11 @@ internal sealed class Randomize : Command
                     Techs = context.ParseResult.GetValueForOption(_tech) ?? new(),
                 },
             }, context.ParseResult.GetValueForOption(_seed));
-            var worlds = randomizer.Randomize();
+            randomizer.Randomize();
             if (!randomizer.IsWinnable())
             {
-                throw new Exception($"Game Unwinnable for world {world.Id}");
+                throw new Exception($"Game Unwinnable.");
             }
-
-            // this contains the randomized worlds that would go into a ROM/BPS
-            _ = worlds;
         }
         info("Randomization took {0}", sw.Elapsed);
 
