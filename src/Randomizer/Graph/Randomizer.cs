@@ -76,10 +76,7 @@ public sealed class Randomizer
     /// </summary>
     public Searcher GetSearcherForInventory(IEnumerable<Item> items)
     {
-        Searcher searcher = new(Graph, _start);
-        searcher.Search(_startingItems.Merge(new Inventory(items.ToArray())));
-
-        return searcher;
+        return new(Graph, _start, _startingItems.Merge(new Inventory(items.ToArray())));
     }
 
     public Item GetItemForWorld(string name, int worldId)
@@ -92,8 +89,7 @@ public sealed class Randomizer
     /// </summary>
     public bool IsWinnable()
     {
-        Searcher searcher = new(Graph, _start);
-        searcher.Search(_startingItems);
+        Searcher searcher = new(Graph, _start, _startingItems);
 
         foreach (var world in _worlds)
         {

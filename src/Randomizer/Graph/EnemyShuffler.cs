@@ -5,6 +5,9 @@ namespace Randomizer.Graph;
  */
 internal sealed class EnemyShuffler : IWorldModifier
 {
+    /// <summary>
+    /// @todo move this to YAML by adding trophy to the region.
+    /// </summary>
     private static readonly Dictionary<string, string[]> CHALLENGE_ROOMS = new()
     {
         { "Mini Moldorm Cave Entrance", new[] {

@@ -1,5 +1,6 @@
 Nothing:
   bytes: [0x5A]
+  type: Meta
 L1Sword:
   bytes: [0x49]
 L1SwordAndShield:
@@ -42,16 +43,22 @@ Quake:
   bytes: [0x11]
 MireEntryBombos:
   bytes: [0x00, 0x31, 0x80, 0x00]
+  type: Meta
 MireEntryEther:
   bytes: [0x01, 0x13, 0x9F, 0xF1]
+  type: Meta
 MireEntryQuake:
   bytes: [0x02, 0x31, 0x88, 0x00]
+  type: Meta
 TurtleRockEntryBombos:
   bytes: [0x00, 0x31, 0x90, 0x00]
+  type: Meta
 TurtleRockEntryEther:
   bytes: [0x01, 0x31, 0x98, 0x00]
+  type: Meta
 TurtleRockEntryQuake:
   bytes: [0x02, 0x14, 0xEF, 0xC4]
+  type: Meta
 Lamp:
   bytes: [0x12]
 Shovel:
@@ -90,8 +97,10 @@ RedMail:
   bytes: [0x23]
 Key:
   bytes: [0x24]
+  type: SmallKey
 Compass:
   bytes: [0x25]
+  type: Compass
 HeartContainerNoAnimation:
   bytes: [0x26]
 Bomb:
@@ -124,8 +133,10 @@ TenBombs:
   bytes: [0x31]
 BigKey:
   bytes: [0x32]
+  type: BigKey
 Map:
   bytes: [0x33]
+  type: Map
 OneRupee:
   bytes: [0x34]
 FiveRupees:
@@ -238,124 +249,184 @@ TriforcePiece:
   bytes: [0x6C]
 MapLW:
   bytes: [0x70]
+  type: Map
 MapDW:
   bytes: [0x71]
+  type: Map
 MapA2:
   bytes: [0x72]
+  type: Map
 MapD7:
   bytes: [0x73]
+  type: Map
 MapD4:
   bytes: [0x74]
+  type: Map
 MapP3:
   bytes: [0x75]
+  type: Map
 MapD5:
   bytes: [0x76]
+  type: Map
 MapD3:
   bytes: [0x77]
+  type: Map
 MapD6:
   bytes: [0x78]
+  type: Map
 MapD1:
   bytes: [0x79]
+  type: Map
 MapD2:
   bytes: [0x7A]
+  type: Map
 MapA1:
   bytes: [0x7B]
+  type: Map
 MapP2:
   bytes: [0x7C]
+  type: Map
 MapP1:
   bytes: [0x7D]
+  type: Map
 MapH1:
   bytes: [0x7E]
+  type: Map
 MapH2:
   bytes: [0x7F]
+  type: Map
 CompassA2:
   bytes: [0x82]
+  type: Compass
 CompassD7:
   bytes: [0x83]
+  type: Compass
 CompassD4:
   bytes: [0x84]
+  type: Compass
 CompassP3:
   bytes: [0x85]
+  type: Compass
 CompassD5:
   bytes: [0x86]
+  type: Compass
 CompassD3:
   bytes: [0x87]
+  type: Compass
 CompassD6:
   bytes: [0x88]
+  type: Compass
 CompassD1:
   bytes: [0x89]
+  type: Compass
 CompassD2:
   bytes: [0x8A]
+  type: Compass
 CompassA1:
   bytes: [0x8B]
+  type: Compass
 CompassP2:
   bytes: [0x8C]
+  type: Compass
 CompassP1:
   bytes: [0x8D]
+  type: Compass
 CompassH1:
   bytes: [0x8E]
+  type: Compass
 CompassH2:
   bytes: [0x8F]
+  type: Compass
 BigKeyA2:
   bytes: [0x92]
+  type: BigKey
 BigKeyD7:
   bytes: [0x93]
+  type: BigKey
 BigKeyD4:
   bytes: [0x94]
+  type: BigKey
 BigKeyP3:
   bytes: [0x95]
+  type: BigKey
 BigKeyD5:
   bytes: [0x96]
+  type: BigKey
 BigKeyD3:
   bytes: [0x97]
+  type: BigKey
 BigKeyD6:
   bytes: [0x98]
+  type: BigKey
 BigKeyD1:
   bytes: [0x99]
+  type: BigKey
 BigKeyD2:
   bytes: [0x9A]
+  type: BigKey
 BigKeyA1:
   bytes: [0x9B]
+  type: BigKey
 BigKeyP2:
   bytes: [0x9C]
+  type: BigKey
 BigKeyP1:
   bytes: [0x9D]
+  type: BigKey
 BigKeyH1:
   bytes: [0x9E]
+  type: BigKey
 BigKeyH2:
   bytes: [0x9F]
+  type: BigKey
 KeyH2:
   bytes: [0xA0]
+  type: SmallKey
 KeyH1:
   bytes: [0xA1]
+  type: SmallKey
 KeyP1:
   bytes: [0xA2]
+  type: SmallKey
 KeyP2:
   bytes: [0xA3]
+  type: SmallKey
 KeyA1:
   bytes: [0xA4]
+  type: SmallKey
 KeyD2:
   bytes: [0xA5]
+  type: SmallKey
 KeyD1:
   bytes: [0xA6]
+  type: SmallKey
 KeyD6:
   bytes: [0xA7]
+  type: SmallKey
 KeyD3:
   bytes: [0xA8]
+  type: SmallKey
 KeyD5:
   bytes: [0xA9]
+  type: SmallKey
 KeyP3:
   bytes: [0xAA]
+  type: SmallKey
 KeyD4:
   bytes: [0xAB]
+  type: SmallKey
 KeyD7:
   bytes: [0xAC]
+  type: SmallKey
 KeyA2:
   bytes: [0xAD]
+  type: SmallKey
 KeyGK:
   bytes: [0xAF]
+  type: SmallKey
 ShopKey:
   bytes: [0xAF]
+  type: SmallKey
 Crystal1:
   bytes: [0xB1, 0x02, 0x34, 0x64, 0x40, 0x7F, 0x06]
 Crystal2:

@@ -59,21 +59,22 @@ public class YamlReader
     private static Vertices? _cachedVertices = null;
     private static Dictionary<string, List<string>>? _cachedEnemies = null;
     private static Entrances? _cachedEntrances = null;
-    private static Dictionary<string, byte[]>? _cachedItems = null;
+    private static Dictionary<string, YamlItem>? _cachedItems = null;
     private static Dictionary<string, Dictionary<string, List<YamlSprite>>>? _cachedSpriteLocations = null;
 
     private static readonly ReaderWriterLockSlim _cachedEdgesLock = new ReaderWriterLockSlim();
     private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
     private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
-    private class YamlItem
+    public class YamlItem
     {
-
         [YamlMember(Alias = "bytes")]
         public List<byte> Bytes { get; set; } = new();
+        [YamlMember(Alias = "type")]
+        public string Type { get; set; } = string.Empty;
     }
 
-    public static Dictionary<string, byte[]> LoadItems()
+    public static Dictionary<string, YamlItem> LoadItems()
     {
         if (_cachedItems != null) { return _cachedItems; }
 
@@ -83,17 +84,12 @@ public class YamlReader
 
             string items_yml = Path.Combine(DataRoot, ItemsPath);
 
-            var result = new Dictionary<string, byte[]>();
+            var result = new Dictionary<string, YamlItem>();
 
             var deserializer = new DeserializerBuilder().Build();
             using (TextReader reader = File.OpenText(items_yml))
             {
-                var res = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
-
-                foreach (var item in res)
-                {
-                    result.Add(item.Key, item.Value.Bytes.ToArray());
-                }
+                result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
             }
 
             _cachedItems = result;

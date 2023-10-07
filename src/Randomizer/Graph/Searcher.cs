@@ -5,10 +5,35 @@ public class Searcher
     private readonly Graph _graph;
     private readonly Vertex _start;
 
-    public Searcher(Graph graph, Vertex start)
+    public Searcher(Graph graph, Vertex start, Inventory collected)
     {
         _graph = graph;
         _start = start;
+
+        if (!_graph.HasVertex(_start))
+        {
+            throw new Exception("Start vertex not in graph");
+        }
+
+        bool newItemsFound;
+        do
+        {
+            InternalSearch(collected);
+
+            newItemsFound = false;
+            foreach (var item in GetItems())
+            {
+                if (!collected.Has(item))
+                {
+                    if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
+                    {
+                        collected.AddItem(item.World.GetItem("BigRedBombActive"));
+                    }
+                    newItemsFound = true;
+                    collected.AddItem(item);
+                }
+            }
+        } while (newItemsFound);
     }
 
     /// <summary>
@@ -65,7 +90,7 @@ public class Searcher
                 {
                     continue;
                 }
-                foreach (var next_vertex in vertex.GetTargets(collected))
+                foreach (var next_vertex in vertex.GetTargetsAccessibleWithInventory(collected))
                 {
                     if (!pegMarked.Contains(next_vertex))
                     {
@@ -90,7 +115,7 @@ public class Searcher
                 {
                     continue;
                 }
-                foreach (var next_vertex in vertex.GetTargets(collected))
+                foreach (var next_vertex in vertex.GetTargetsAccessibleWithInventory(collected))
                 {
                     if (!marked.Contains(next_vertex))
                     {
@@ -102,36 +127,6 @@ public class Searcher
                 marked.Add(vertex);
             }
         } while (queue.Any() || peg_queue.Any());
-    }
-
-    public Searcher Search(Inventory collected)
-    {
-        if (!_graph.HasVertex(_start))
-        {
-            return this;
-        }
-
-        bool newItemsFound;
-        do
-        {
-            InternalSearch(collected);
-
-            newItemsFound = false;
-            foreach (var item in GetItems())
-            {
-                if (!collected.Has(item))
-                {
-                    if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
-                    {
-                        collected.AddItem(item.World.GetItem("BigRedBombActive"));
-                    }
-                    newItemsFound = true;
-                    collected.AddItem(item);
-                }
-            }
-        } while (newItemsFound);
-
-        return this;
     }
 
     private bool DropOffSearch(Item item)
