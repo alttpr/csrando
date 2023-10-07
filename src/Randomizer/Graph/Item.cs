@@ -12,7 +12,6 @@ public enum ItemType
     Compass,
 }
 
-[DebuggerDisplay("{Name}|{World.Id}")]
 public sealed class Item
 {
     public string Name { get; }
@@ -38,4 +37,6 @@ public sealed class Item
         }
         Type = itemType;
     }
+
+    public override string ToString() => $"{Name}:{World.Id}";
 }
