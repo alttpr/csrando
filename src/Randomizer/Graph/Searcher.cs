@@ -90,7 +90,7 @@ public class Searcher
                 {
                     continue;
                 }
-                foreach (var next_vertex in vertex.GetTargetsAccessibleWithInventory(collected))
+                foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
                 {
                     if (!pegMarked.Contains(next_vertex))
                     {
@@ -115,7 +115,7 @@ public class Searcher
                 {
                     continue;
                 }
-                foreach (var next_vertex in vertex.GetTargetsAccessibleWithInventory(collected))
+                foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
                 {
                     if (!marked.Contains(next_vertex))
                     {
@@ -127,6 +127,14 @@ public class Searcher
                 marked.Add(vertex);
             }
         } while (queue.Any() || peg_queue.Any());
+
+        bool reachableWithoutKeys(Edge edge)
+        {
+            if (edge.Condition.Item.Type == ItemType.SmallKey)
+                return false;
+
+            return collected.Has(edge.Condition);
+        }
     }
 
     private bool DropOffSearch(Item item)

@@ -119,8 +119,8 @@ public sealed class Vertex
     }
 
 
-    public IEnumerable<Vertex> GetTargetsAccessibleWithInventory(Inventory items)
+    public IEnumerable<Vertex> GetTargets(Predicate<Edge> condition)
     {
-        return this.Edges.Where(edge => items.Has(edge.Condition)).Select(edge => edge.To) ?? Enumerable.Empty<Vertex>();
+        return this.Edges.Where(edge => condition(edge)).Select(edge => edge.To) ?? Enumerable.Empty<Vertex>();
     }
 }
