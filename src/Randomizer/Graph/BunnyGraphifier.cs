@@ -44,20 +44,20 @@ internal sealed class BunnyGraphifier : IWorldModifier
         var graph = world.Graph;
 
         int world_id = world.Id;
-        var moonpearl = graph.NewVertex(new() {
+        var moonpearl = graph.AddVertex(new Vertex(new() {
             { "name", "MoonPearl:" + world_id },
             { "type", VertexType.Meta },
-        });
+        }));
         var meta = graph.GetVertex("Meta:" + world_id);
         graph.AddDirected(meta!, moonpearl, world.GetItem("MoonPearl"));
 
         foreach (var (light_item, dark_item) in ITEM_MAP)
         {
-            var dark_vertex = graph.NewVertex(new() {
+            var dark_vertex = graph.AddVertex(new Vertex(new() {
                 { "name", $"{dark_item}:{world_id}" },
                 { "type", VertexType.Meta },
                 { "item", world.GetItem(dark_item) },
-            });
+            }));
 
             world.Graph.AddDirected(moonpearl, dark_vertex, world.GetItem(light_item));
         }

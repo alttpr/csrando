@@ -16,7 +16,7 @@ public sealed class Graph
         VertexType.Dig,
         VertexType.Event,
         VertexType.Medallion,
-        // VertexType.Mob // enabling this will allow enemies for major items
+        VertexType.Mob,
         VertexType.Npc,
         VertexType.Pedestal,
         VertexType.Pot,
@@ -53,10 +53,26 @@ public sealed class Graph
         return _edges;
     }
 
-    public Vertex NewVertex(Dictionary<string, object>? attributes = null)
+    /// <summary>
+    /// Add Vertex to the graph.
+    /// </summary>
+    /// 
+    /// <param name="vertex">source Vertex</param> 
+    public Vertex AddVertex(Vertex vertex)
     {
-        var vertex = new Vertex(attributes);
-        AddVertex(vertex);
+        _vertices.Add(vertex);
+        _verticesByName[vertex.Name] = vertex;
+
+        if (ITEM_LOCATIONS.Contains(vertex.Type))
+        {
+            _setLocations["*"].Add(vertex);
+            foreach (string set in vertex.ItemSet)
+            {
+                _setLocations.TryAdd(set, new());
+                _setLocations[set].Add(vertex);
+            }
+        }
+
         return vertex;
     }
 
@@ -85,32 +101,6 @@ public sealed class Graph
     {
         var edge = new Edge(from, to, condition);
 
-        AddVertex(from);
-
         return edge;
-    }
-
-    private void AddVertex(Vertex vertex)
-    {
-        _vertices.Add(vertex);
-        _verticesByName[vertex.Name] = vertex;
-
-        if (ITEM_LOCATIONS.Contains(vertex.Type))
-        {
-            _setLocations["*"].Add(vertex);
-            foreach (string set in vertex.ItemSet)
-            {
-                _setLocations.TryAdd(set, new());
-                _setLocations[set].Add(vertex);
-            }
-        }
-
-        foreach (var edge in vertex.Edges)
-        {
-            if (!_vertices.Contains(edge.To))
-            {
-                AddVertex(edge.To);
-            }
-        }
     }
 }

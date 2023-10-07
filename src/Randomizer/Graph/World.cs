@@ -26,17 +26,17 @@ public sealed class World
         Config = randomizerConfig;
         Graph = graph;
 
-        var start = Graph.NewVertex(new()
+        var start = Graph.AddVertex(new Vertex(new()
         {
             { "name", "start:" + Id },
             { "type", VertexType.Meta },
-        });
+        }));
 
-        var meta = Graph.NewVertex(new()
+        var meta = Graph.AddVertex(new Vertex(new()
         {
             { "name", "Meta:" + Id },
             { "type", VertexType.Meta },
-        });
+        }));
         Graph.AddDirected(start, meta, GetItem("fixed"));
 
         var items = new List<Item>
@@ -75,7 +75,7 @@ public sealed class World
             {
                 data["trophy"] = GetItem(trophyKey);
             }
-            Graph.NewVertex(data);
+            Graph.AddVertex(new Vertex(data));
         });
 
         var edges = new EdgeCollector().GetForWorld(this);

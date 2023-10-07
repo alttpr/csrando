@@ -226,12 +226,12 @@ internal sealed class BossShuffler : IWorldModifier
     {
         foreach (var sprite_definition in bossLocationMap[bossRoom.Name][boss])
         {
-            world.Graph.NewVertex(
-                sprite_definition.AsDictionary().Merge(new Dictionary<string, object>()
+            world.Graph.AddVertex(
+                new Vertex(sprite_definition.AsDictionary().Merge(new Dictionary<string, object>()
                 {
                     { "type", VertexType.Mob },
                     //{ "sprite", Sprite.get(sprite_definition["sprite"]) },
-                }));
+                })));
         }
     }
 }

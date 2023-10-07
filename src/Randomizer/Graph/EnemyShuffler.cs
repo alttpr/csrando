@@ -258,12 +258,12 @@ internal sealed class EnemyShuffler : IWorldModifier
         int world_id = world.Id;
         foreach (string token in defeats.Keys)
         {
-            world.Graph.NewVertex(new()
+            world.Graph.AddVertex(new Vertex(new()
             {
                 { "name", $"{token}:{world_id}" },
                 { "type", VertexType.Meta },
                 { "item", world.GetItem(token) },
-            });
+            }));
         }
 
         var from = world.GetLocation("Meta");

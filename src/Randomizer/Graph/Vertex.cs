@@ -50,9 +50,9 @@ public enum VertexType
     Warp,
 }
 
-/**
- * Vertex in Graph.
- */
+/// <summary>
+/// Vertex in Graph.
+/// </summary>
 [DebuggerDisplay("{Name} ({Type})")]
 public sealed class Vertex
 {

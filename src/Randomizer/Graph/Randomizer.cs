@@ -30,11 +30,11 @@ public sealed class Randomizer
         System.Console.WriteLine($"Using seed: {_prng.Seed}");
 
         Graph = new Graph();
-        _start = Graph.NewVertex(new()
+        _start = Graph.AddVertex(new Vertex(new()
         {
             { "name", "start" },
             { "type", VertexType.Meta },
-        });
+        }));
 
         _worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)
@@ -71,6 +71,9 @@ public sealed class Randomizer
         filler.FillGraph(sets);
     }
 
+    /// <summary>
+    /// Get a graph searched based on the items in the inventory.
+    /// </summary>
     public Searcher GetSearcherForInventory(IEnumerable<Item> items)
     {
         Searcher searcher = new(Graph, _start);
