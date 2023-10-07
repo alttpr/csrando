@@ -5,7 +5,7 @@ using System.Diagnostics;
 /**
  * Edge in Graph.
  */
-[DebuggerDisplay("{Item}|{ItemCount}: {From.Name} -> {To.Name}")]
+[DebuggerDisplay("{Condition}: {From.Name} -> {To.Name}")]
 public sealed class Edge
 {
     public Vertex From { get; }
@@ -20,5 +20,5 @@ public sealed class Edge
     }
 }
 
-[DebuggerDisplay("{Item.Name}:{Item.WorldId} >= {Count}")]
+[DebuggerDisplay("{Item.Name}:{Item.World.Id} >= {Count}")]
 public record ItemCondition(Item Item, int Count);
