@@ -2,13 +2,16 @@ namespace Randomizer.Graph;
 public class Searcher
 {
     private readonly HashSet<Vertex> _visited = new();
+    private readonly HashSet<Vertex> _collected = new();
     private readonly Graph _graph;
     private readonly Vertex _start;
+    private readonly Inventory _inventory;
 
-    public Searcher(Graph graph, Vertex start, Inventory collected)
+    public Searcher(Graph graph, Vertex start, Inventory inventory)
     {
         _graph = graph;
         _start = start;
+        _inventory = inventory;
 
         if (!_graph.HasVertex(_start))
         {
@@ -18,41 +21,39 @@ public class Searcher
         bool newItemsFound;
         do
         {
-            InternalSearch(collected);
+            InternalSearch(inventory);
 
             newItemsFound = false;
-            foreach (var item in GetItems())
+            foreach (var itemLocation in _visited.Except(_collected))
             {
-                if (!collected.Has(item))
+                bool foundNewItem = false;
+                _collected.Add(itemLocation);
+                if (itemLocation.Item is not null)
+                {
+                    foundNewItem = true;
+                    inventory.AddItem(itemLocation.Item);
+                }
+                if (itemLocation.Trophy is not null)
+                {
+                    foundNewItem = true;
+                    inventory.AddItem(itemLocation.Trophy);
+                }
+                if (foundNewItem)
+                    newItemsFound = true;
+
+                if (foundNewItem && itemLocation.Item is { } item)
                 {
                     if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
                     {
-                        collected.AddItem(item.World.GetItem("BigRedBombActive"));
+                        inventory.AddItem(item.World.GetItem("BigRedBombActive"));
                     }
                     newItemsFound = true;
-                    collected.AddItem(item);
                 }
             }
         } while (newItemsFound);
     }
 
-    /// <summary>
-    /// Get the Items found is last search of the Graph.
-    /// </summary>
-    public IEnumerable<Item> GetItems()
-    {
-        foreach (var vertex in _visited)
-        {
-            if (vertex.Item is not null)
-            {
-                yield return vertex.Item;
-            }
-            if (vertex.Trophy is not null)
-            {
-                yield return vertex.Trophy;
-            }
-        }
-    }
+    public bool HasFound(Item item) => _inventory.Has(item);
 
     /// <summary>
     /// Get all vertices that were visited in a given search (which has been called first) from a set starting point.

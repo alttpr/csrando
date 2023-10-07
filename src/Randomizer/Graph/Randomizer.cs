@@ -93,7 +93,7 @@ public sealed class Randomizer
 
         foreach (var world in _worlds)
         {
-            if (!searcher.GetItems().Contains(world.GetItem("Triforce")))
+            if (!searcher.HasFound(world.GetItem("Triforce")))
             {
                 return false;
             }

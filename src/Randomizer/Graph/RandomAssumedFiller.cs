@@ -60,7 +60,7 @@ internal sealed class RandomAssumedFiller
             flat_items.Remove(item_key);
             var searcher = _randomizer.GetSearcherForInventory(flat_items.Where(i => i.Weight <= 9000).Select(i => i.Item).ToList());
             bool required = item.World.Config.Accessibility != AccessibilityOption.None
-                || !searcher.GetItems().Contains(item.World.GetItem("Triforce"));
+                || !searcher.HasFound(item.World.GetItem("Triforce"));
             var locations = searcher.GetEmptyLocationsInSet(item_set, set_counts, required);
 
             if (!locations.Any())
