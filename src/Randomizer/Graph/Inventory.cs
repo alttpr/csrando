@@ -1,23 +1,13 @@
 namespace Randomizer.Graph;
 
-/**
- * Representation of Players inventory for graph based traversal.
- *
- * @immutable
- */
+/// <summary>
+/// Representation of Players inventory for graph based traversal.
+/// </summary>
 public sealed class Inventory
 {
     private readonly Dictionary<Item, int> _itemCount = new();
-    /** @var array<float> */
     private readonly Dictionary<World, float> _health = new();
 
-    /**
-     * Create new Inventory instance.
-     *
-     * @param iterable<Item|string> items items to add
-     *
-     * @return void
-     */
     public Inventory(params Item[] items)
     {
         foreach (var item in items)
@@ -31,11 +21,6 @@ public sealed class Inventory
         _health = new(other._health);
     }
 
-    /**
-     * Add item to inventory.
-     *
-     * @param Item|string item item to add
-     */
     public void AddItem(Item item, int count = 1)
     {
         if (item.Name.StartsWith("HeartContainer"))
@@ -57,11 +42,10 @@ public sealed class Inventory
         }
     }
 
-    /**
-     * Determine how many of a particular item are in inventory.
-     * 
-     * @param string key item name to search for
-     */
+    /// <summary>
+    /// Determine how many of a particular item are in inventory.
+    /// </summary>
+    /// <param name="item">Item to check</param>
     public int GetCount(Item item)
     {
         if (item.Name.StartsWith("Bottle"))
@@ -87,11 +71,10 @@ public sealed class Inventory
         return _itemCount.GetValueOrDefault(item, 0) >= count;
     }
 
-    /**
-     * Get new Inventory with merge from another Inventory.
-     *
-     * @param self inventory Inventory to merge
-     */
+    /// <summary>
+    /// Get new Inventory with merge from another Inventory.
+    /// </summary>
+    /// <param name="inventory">Inventory to merge</param>
     public Inventory Merge(Inventory inventory)
     {
         var newInventory = new Inventory(this);
@@ -104,11 +87,10 @@ public sealed class Inventory
         return newInventory;
     }
 
-    /**
-     * Get the health value available based on items in this world.
-     * 
-     * @param int world_id world id for which we care about count
-     */
+    /// <summary>
+    /// Get the health value available based on items in this world.
+    /// </summary>
+    /// <param name="world">World for which we care about count</param>
     public float HeartCount(World world)
     {
         return _health.GetValueOrDefault(world, 0);

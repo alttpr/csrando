@@ -99,8 +99,6 @@ public sealed class Graph
     /// <param name="condition">ItemCondition required to traverse edge</param>
     public Edge AddDirected(Vertex from, Vertex to, ItemCondition condition)
     {
-        var edge = new Edge(from, to, condition);
-
-        return edge;
+        return new Edge(from, to, condition);
     }
 }
