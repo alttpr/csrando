@@ -68,6 +68,8 @@ public sealed class World
         {
             Graph.AddVertex(vertex);
         }
+        var subtypes = Graph.GetVertices().Select(v => v.SubType).ToHashSet();
+        var mobs_with_items = Graph.GetVertices().Where(v => v.Type == VertexType.Mob && v.Item != null).ToHashSet();
 
         var edges = new EdgeCollector().GetForWorld(this);
         foreach (var (condition, data) in edges)
@@ -82,6 +84,10 @@ public sealed class World
                         "Name Connection Mismatch: " +
                         $"({edge_data[0]}, {edge_data[1]}) => " +
                         $"({from}, {to})");
+                }
+                if (from.Type != VertexType.Meta && to.Type == VertexType.Item)
+                {
+                    System.Console.WriteLine($"Edge added from {from.Name} to item {to.Name}");
                 }
                 Graph.AddDirected(from, to, condition);
             }
@@ -162,7 +168,7 @@ public sealed class World
      * Get a vertices by type.
      *
      * @param string type type to search for
-     * 
+     *
      * @return Collection<Vertex>
      */
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type)

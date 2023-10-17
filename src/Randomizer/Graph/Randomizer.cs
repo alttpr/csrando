@@ -58,6 +58,90 @@ public sealed class Randomizer
 
             Graph.AddDirected(_start, _worlds[i].Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
         }
+
+        SanityCheck();
+    }
+
+    public void SanityCheck()
+    {
+        HashSet<Vertex> visited = new();
+        Queue<Vertex> vertexQueue = new();
+
+        vertexQueue.Enqueue(_start);
+
+        while (vertexQueue.Any())
+        {
+            Vertex v = vertexQueue.Dequeue();
+            visited.Add(v);
+
+            foreach (var edge in v.Edges)
+            {
+                if (!visited.Contains(edge.To))
+                {
+                    vertexQueue.Enqueue(edge.To);
+                }
+            }
+        }
+
+        var unvisited = Graph.GetVertices().ToHashSet().Except(visited).ToHashSet()
+            .GroupBy(v => v.Type).ToDictionary(key => key, value => new HashSet<Vertex>(value));
+        var visitedByType = visited.ToLookup(v => v.Type);
+
+        var connectedGroups = new Dictionary<Vertex, HashSet<Vertex>>();
+        foreach (var vertex in Graph.GetVertices())
+        {
+            if (connectedGroups.ContainsKey(vertex))
+                continue;
+
+            HashSet<Vertex> currentGroup = new();
+            vertexQueue.Enqueue(vertex);
+
+            while (vertexQueue.Any())
+            {
+                Vertex v = vertexQueue.Dequeue();
+
+                if (connectedGroups.ContainsKey(v))
+                    continue;
+
+                connectedGroups[v] = currentGroup;
+                currentGroup.Add(v);
+
+                foreach (var edge in v.Edges)
+                {
+                    if (connectedGroups.ContainsKey(edge.To))
+                    {
+                        var otherGroup = connectedGroups[edge.To];
+                        foreach (var v2 in currentGroup)
+                        {
+                            connectedGroups[v2] = otherGroup;
+                        }
+                        otherGroup.UnionWith(currentGroup);
+                        currentGroup = otherGroup;
+                    }
+                    else
+                    {
+                        vertexQueue.Enqueue(edge.To);
+                    }
+                }
+            }
+        }
+
+        var allGroups = connectedGroups.Values.ToHashSet().ToList().OrderByDescending(l => l.Count).ToList();
+        var firstGroupByType = allGroups.First().GroupBy(v => v.Type);
+
+        var badEntrances = Graph.GetVertices().Where(v => v.Type == VertexType.Entrance && v.Edges.Count == 0).ToList();
+        var allOutlets = Graph.GetVertices().Where(v => v.Type == VertexType.Outlet).ToHashSet();
+        var usedOutlets = Graph.GetVertices().SelectMany(v => v.Edges.Select(v2 => v2.To).Where(v2 => v2.Type == VertexType.Outlet)).ToHashSet();
+        var unusedOutlets = allOutlets.Except(usedOutlets).ToList();
+
+        // Those are regions from the overworld directly connected to an underworld room
+        // that are not holes (they are directly connected for now)
+        var badEdges = Graph.GetVertices().SelectMany(v => v.Edges).Where(e => e.From.Map.HasValue && e.From.Type != VertexType.Entrance && e.From.Type != VertexType.Hole && e.To.RoomId.HasValue).ToList();
+
+        if (unvisited.Any())
+        {
+           //throw new Exception("Unreachable vertices found");
+        }
     }
 
     /// <summary>
