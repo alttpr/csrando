@@ -30,11 +30,11 @@ public sealed class Randomizer
         System.Console.WriteLine($"Using seed: {_prng.Seed}");
 
         Graph = new Graph();
-        _start = Graph.AddVertex(new Vertex(new()
+        _start = Graph.AddVertex(new Vertex
         {
-            { "name", "start" },
-            { "type", VertexType.Meta },
-        }));
+            Name = "start",
+            Type = VertexType.Meta,
+        });
 
         _worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)

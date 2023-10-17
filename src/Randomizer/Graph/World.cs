@@ -26,17 +26,17 @@ public sealed class World
         Config = randomizerConfig;
         Graph = graph;
 
-        var start = Graph.AddVertex(new Vertex(new()
+        var start = Graph.AddVertex(new Vertex
         {
-            { "name", "start:" + Id },
-            { "type", VertexType.Meta },
-        }));
+            Name = $"start:{Id}",
+            Type = VertexType.Meta,
+        });
 
-        var meta = Graph.AddVertex(new Vertex(new()
+        var meta = Graph.AddVertex(new Vertex
         {
-            { "name", "Meta:" + Id },
-            { "type", VertexType.Meta },
-        }));
+            Name = $"Meta:{Id}",
+            Type = VertexType.Meta,
+        });
         Graph.AddDirected(start, meta, GetItem("fixed"));
 
         var items = new List<Item>
@@ -64,19 +64,10 @@ public sealed class World
         }
         CollectedItems = new Inventory(items.ToArray());
 
-        var vertices = new VertexCollector().LoadYmlData(this);
-        vertices.ForEach(data =>
+        foreach (var vertex in VertexCollector.LoadYmlData(this))
         {
-            if (data.TryGetValue("item", out object? item) && item is string itemKey)
-            {
-                data["item"] = GetItem(itemKey);
-            }
-            if (data.TryGetValue("trophy", out object? trophy) && trophy is string trophyKey)
-            {
-                data["trophy"] = GetItem(trophyKey);
-            }
-            Graph.AddVertex(new Vertex(data));
-        });
+            Graph.AddVertex(vertex);
+        }
 
         var edges = new EdgeCollector().GetForWorld(this);
         foreach (var (condition, data) in edges)
@@ -191,5 +182,12 @@ public sealed class World
         _allItems.Add(item.Name, item);
 
         return item;
+    }
+
+    public Item? GetItemOrNull(string? name)
+    {
+        if (name != null)
+            return GetItem(name);
+        return null;
     }
 }

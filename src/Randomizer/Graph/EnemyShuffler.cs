@@ -258,21 +258,24 @@ internal sealed class EnemyShuffler : IWorldModifier
     {
         var defeats = YamlReader.LoadEnemies();
 
-        int world_id = world.Id;
         foreach (string token in defeats.Keys)
         {
-            world.Graph.AddVertex(new Vertex(new()
+            string vertexName = $"{token}:{world.Id}";
+            if (!world.Graph.HasVertex(vertexName))
             {
-                { "name", $"{token}:{world_id}" },
-                { "type", VertexType.Meta },
-                { "item", world.GetItem(token) },
-            }));
+                world.Graph.AddVertex(new Vertex
+                {
+                    Name = vertexName,
+                    Type = VertexType.Meta,
+                    Item = world.GetItem(token),
+                });
+            }
         }
 
         var from = world.GetLocation("Meta");
         foreach (var (token, items) in defeats)
         {
-            var to = world.Graph.GetVertex($"{token}:{world_id}");
+            var to = world.Graph.GetVertex($"{token}:{world.Id}");
             foreach (string item in items)
             {
                 world.Graph.AddDirected(from, to, world.GetItem(item));

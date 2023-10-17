@@ -47,6 +47,7 @@ public sealed class Graph
     }
 
     public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
+    public bool HasVertex(string name) => _verticesByName.ContainsKey(name);
 
     public IEnumerable<Edge> GetEdges()
     {
@@ -61,7 +62,7 @@ public sealed class Graph
     public Vertex AddVertex(Vertex vertex)
     {
         _vertices.Add(vertex);
-        _verticesByName[vertex.Name] = vertex;
+        _verticesByName.Add(vertex.Name, vertex);
 
         if (ITEM_LOCATIONS.Contains(vertex.Type))
         {

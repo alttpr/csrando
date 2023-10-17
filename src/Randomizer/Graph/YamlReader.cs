@@ -290,23 +290,10 @@ public class YamlSprite
     public Position Position { get; set; }
 
     [YamlMember(Alias = "roomid")]
-    public int Roomid { get; set; }
+    public int RoomId { get; set; }
 
     [YamlMember(Alias = "sprite")]
     public string Sprite { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        var result = new Dictionary<string, object>
-        {
-            { "name", Name },
-            { "position", Position },
-            { "roomid", Roomid },
-            { "sprite", Sprite },
-        };
-
-        return result;
-    }
 }
 
 public class DirectedUndirectedPair
@@ -381,18 +368,6 @@ public class MetaEntry
 
     [YamlMember(Alias = "item")]
     public string? Item { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        var result = new Dictionary<string, object>
-        {
-            { "name", Name },
-        };
-        if (!string.IsNullOrWhiteSpace(Item))
-            result.Add("item", Item);
-
-        return result;
-    }
 }
 
 public class Prizepack
@@ -405,16 +380,6 @@ public class Prizepack
 
     [YamlMember(Alias = "sprite")]
     public string Sprite { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        return new()
-    {
-        { "name", Name },
-        { "offset", Offset },
-        { "sprite", Sprite },
-    };
-    }
 }
 
 public partial class Entrance
@@ -423,10 +388,10 @@ public partial class Entrance
     public string Name { get; set; }
 
     [YamlMember(Alias = "entranceid")]
-    public int Entranceid { get; set; }
+    public int EntranceId { get; set; }
 
     [YamlMember(Alias = "outletid")]
-    public int Outletid { get; set; }
+    public int OutletId { get; set; }
 }
 
 public partial class Hole
@@ -435,7 +400,7 @@ public partial class Hole
     public string Name { get; set; }
 
     [YamlMember(Alias = "entranceids")]
-    public List<int> Entranceids { get; set; } = new();
+    public List<int> EntranceIds { get; set; } = new();
 }
 
 public partial class ItemEntry
@@ -453,24 +418,7 @@ public partial class ItemEntry
     public string? Item { get; set; }
 
     [YamlMember(Alias = "itemset")]
-    public List<string> Itemset { get; set; } = new();
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        var result = new Dictionary<string, object>
-        {
-            { "name", Name },
-            { "type", Type },
-        };
-        if (!string.IsNullOrWhiteSpace(Item))
-            result.Add("item", Item);
-        if (Addresses.Any())
-            result.Add("addresses", Addresses);
-        if (Itemset.Any())
-            result.Add("itemset", Itemset);
-
-        return result;
-    }
+    public List<string> ItemSet { get; set; } = new();
 }
 
 public partial class Warp
@@ -480,15 +428,6 @@ public partial class Warp
 
     [YamlMember(Alias = "position")]
     public Position Position { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        return new Dictionary<string, object>
-    {
-        { "name", Name },
-        { "position", Position },
-    };
-    }
 }
 
 public partial class Room
@@ -544,29 +483,12 @@ public partial class Keydoor
 
     [YamlMember(Alias = "key")]
     public string Key { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        return new()
-    {
-        { "name", Name },
-        { "key", Key },
-    };
-    }
 }
 
 public partial class Shutter
 {
     [YamlMember(Alias = "name")]
     public string Name { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        return new()
-    {
-        { "name", Name },
-    };
-    }
 }
 
 public partial class InventoryEntry
@@ -584,22 +506,7 @@ public partial class InventoryEntry
     public int Cost { get; set; }
 
     [YamlMember(Alias = "itemset")]
-    public List<string> Itemset { get; set; } = new();
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        var result = new Dictionary<string, object>
-        {
-            { "name", Name },
-            { "type", Type },
-            { "item", Item },
-            { "cost", Cost },
-        };
-        if (Itemset.Any())
-            result.Add("itemset", Itemset);
-
-        return result;
-    }
+    public List<string> ItemSet { get; set; } = new();
 }
 
 public partial class Entity
@@ -635,32 +542,6 @@ public partial class Entity
 
     [YamlMember(Alias = "trophy")]
     public string? Trophy { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        var result = new Dictionary<string, object>
-        {
-            { "name", Name },
-            { "position", Position },
-            //{ "sprite", Sprite }, // this one is turned into an actual sprite later.
-        };
-        if (Type != null)
-            result.Add("type", Type);
-        if (!string.IsNullOrWhiteSpace(Item))
-            result.Add("item", Item);
-        if (State.Any())
-            result.Add("state", State);
-        if (ItemSet.Any())
-            result.Add("itemset", ItemSet);
-        if (Deny.Any())
-            result.Add("deny", Deny);
-        if (Allow.Any())
-            result.Add("allow", Allow);
-        if (!string.IsNullOrWhiteSpace(Trophy))
-            result.Add("trophy", Trophy);
-
-        return result;
-    }
 }
 
 public partial class Position
@@ -681,7 +562,7 @@ public partial class Region
     public string Name { get; set; }
 
     [YamlMember(Alias = "inletid")]
-    public int? Inletid { get; set; }
+    public int? InletId { get; set; }
 
     [YamlMember(Alias = "type")]
     public VertexType? Type { get; set; }
@@ -697,28 +578,6 @@ public partial class Region
 
     [YamlMember(Alias = "switch")]
     public bool? Switch { get; set; }
-
-    public Dictionary<string, object> AsDictionary()
-    {
-        var result = new Dictionary<string, object>
-        {
-            { "name", Name },
-        };
-        if (Inletid.HasValue)
-            result.Add("inletid", Inletid.Value);
-        if (Type != null)
-            result.Add("type", Type);
-        if (Peg != null)
-            result.Add("peg", Peg);
-        if (Shopkeeper.HasValue)
-            result.Add("shopkeeper", Shopkeeper.Value);
-        if (Shopstyle.HasValue)
-            result.Add("shopstyle", Shopstyle.Value);
-        if (Switch.HasValue)
-            result.Add("switch", Switch.Value);
-
-        return result;
-    }
 }
 
 public class Vertices

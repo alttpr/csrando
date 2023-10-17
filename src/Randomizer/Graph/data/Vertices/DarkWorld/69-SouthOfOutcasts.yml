@@ -22,4 +22,5 @@ maps:
       items:
         - name: "LostSmith"
           item: "LostSmith"
+          type: npc
           itemset: ["smith"]

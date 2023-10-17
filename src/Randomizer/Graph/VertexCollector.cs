@@ -8,7 +8,7 @@ internal class VertexCollector
     /**
      * This does not account for door rando.
      */
-    private static readonly string[] BUNNY_REVIVE =
+    private static readonly HashSet<string> BUNNY_REVIVE = new()
     {
         "Eastern Palace - Entrance",
         "Desert Palace - Main Room - Center",
@@ -41,15 +41,24 @@ internal class VertexCollector
      * @throws Exception if unable to read data files
      */
     // TODO: this really needs to return typed data already...
-    public List<Dictionary<string, object>> LoadYmlData(World world)
+    public static IEnumerable<Vertex> LoadYmlData(World world)
     {
         var vertex_data = YamlReader.LoadVertices();
+        var structured_vertices = new Dictionary<string, Vertex>();
 
-        int world_id = world.Id;
-        bool inverted = world.Config.State == StateOption.Inverted;
-        bool bunny_revive = world.Config.Techs.Contains(TechOption.DungeonBunnyRevival);
-        var names = new HashSet<string>();
-        var vertices = new List<Dictionary<string, object>>();
+        var MoonPearlTransform = (bool moonpearl, string name) => {
+            bool result = moonpearl;
+            if (world.Config.State == StateOption.Inverted)
+            {
+                result = !moonpearl;
+            }
+
+            if (world.Config.Techs.Contains(TechOption.DungeonBunnyRevival) && BUNNY_REVIVE.Contains(name))
+            {
+                result = false;
+            }
+            return result;
+        };
 
         // overworld
         foreach (var map in vertex_data.Maps)
@@ -60,61 +69,116 @@ internal class VertexCollector
             };
             foreach (var meta in map.Nodes.Meta)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Meta)
-                    .Merge(meta.AsDictionary()));
+                string name = $"{meta.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Meta,
+                    Name = name,
+                    Item = world.GetItemOrNull(meta.Item),
+                });
             }
             foreach (var prizepack in map.Nodes.Prizepacks)
             {
-                vertices.Add(prizepack.AsDictionary()
-                    .MergeOne("type", VertexType.PrizePack));
+                string name = $"{prizepack.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.PrizePack,
+                    Name = name,
+                    Offset = prizepack.Offset,
+                    Sprite = Sprite.Get(prizepack.Sprite),
+                });
             }
             foreach (var region in map.Nodes.Regions)
             {
-                vertices.Add(shared
-                    .MergeOne("moonpearl", map.Moonpearl)
-                    .MergeOne("type", VertexType.Region)
-                    .Merge(region.AsDictionary()));
+                string name = $"{region.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = region.Type ?? VertexType.Region,
+                    Name = name,
+                    Map = map.MapMap,
+                    InletId = region.InletId,
+                    Peg = region.Peg,
+                    Shopkeeper = region.Shopkeeper,
+                    ShopStyle = region.Shopstyle,
+                    Switch = region.Switch ?? false,
+                    MoonPearl = MoonPearlTransform(map.Moonpearl, name),
+                });
             }
             foreach (var warp in map.Nodes.Warps)
             {
-                vertices.Add(shared
-                    .MergeOne("moonpearl", map.Moonpearl)
-                    .MergeOne("type", VertexType.Warp)
-                    .Merge(warp.AsDictionary()));
+                string name = $"{warp.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Warp,
+                    Name = name,
+                    Map = map.MapMap,
+                    Position = warp.Position,
+                    MoonPearl = MoonPearlTransform(map.Moonpearl, name),
+                });
             }
             foreach (var mob in map.Nodes.Mobs)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Mob)
-                    .MergeOne("sprite", Sprite.Get(mob.Sprite))
-                    .Merge(mob.AsDictionary()));
+                string name = $"{mob.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Mob,
+                    Name = name,
+                    Map = map.MapMap,
+                    Sprite = Sprite.Get(mob.Sprite),
+                    Item = world.GetItemOrNull(mob.Item),
+                    State = mob.State.ToArray(),
+                    ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    Trophy = world.GetItemOrNull(mob.Trophy),
+                    // TODO: Add deny, allow to Vertex.
+                    // Deny = mob.Deny,
+                    // Allow = mob.Allow,
+                });
             }
             foreach (var item in map.Nodes.Items)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Item)
-                    .Merge(item.AsDictionary()));
+                string name = $"{item.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = item.Type,
+                    Name = name,
+                    Map = map.MapMap,
+                    Item = world.GetItemOrNull(item.Item),
+                    ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    Addresses = item.Addresses.ToArray(),
+                });
             }
             foreach (var entrance in map.Nodes.Entrances)
             {
                 // TODO: the old code had conditional access to entranceid and outletid; are there entrances without them?
-                vertices.Add(shared
-                    .MergeOne("name", entrance.Name + " - In")
-                    .MergeOne("entranceid", entrance.Entranceid)
-                    .MergeOne("type", VertexType.Entrance));
-                vertices.Add(shared
-                    .MergeOne("name", entrance.Name + " - Out")
-                    .MergeOne("outletid", entrance.Outletid)
-                    .MergeOne("type", VertexType.Outlet));
+                string nameIn = $"{entrance.Name} - In:{world.Id}";
+                string nameOut = $"{entrance.Name} - Out:{world.Id}";
+                structured_vertices.Add(nameIn, new Vertex
+                {
+                    Type = VertexType.Entrance,
+                    Name = nameIn,
+                    Map = map.MapMap,
+                    EntranceId = entrance.EntranceId,
+                    VanillaOutletName = nameOut,
+                });
+                structured_vertices.Add(nameOut, new Vertex
+                {
+                    Type = VertexType.Outlet,
+                    Name = nameOut,
+                    Map = map.MapMap,
+                    OutletId = entrance.OutletId,
+                });
             }
             // consider merging Holes into entrances
-            foreach (var entrance in map.Nodes.Holes)
+            foreach (var hole in map.Nodes.Holes)
             {
-                vertices.Add(shared
-                    .MergeOne("name", entrance.Name)
-                    .MergeOne("entranceids", entrance.Entranceids)
-                    .MergeOne("type", VertexType.Hole));
+                string name = $"{hole.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Hole,
+                    Name = name,
+                    Map = map.MapMap,
+                    EntranceIds = hole.EntranceIds.ToArray(),
+                });
             }
         }
 
@@ -129,60 +193,148 @@ internal class VertexCollector
             };
             foreach (var region in room.Nodes.Regions)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Region)
-                    .Merge(region.AsDictionary()));
-                if (region.Inletid.HasValue)
+                string name = $"{region.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
                 {
-                    vertices.Add(shared
-                        .MergeOne("name", region.Name + " - Exit")
-                        // TODO: Check this is the correct type
-                        .MergeOne("type", VertexType.Entrance)
-                        .MergeOne("inletid", region.Inletid.Value));
+                    Type = region.Type ?? VertexType.Region,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    InletId = region.InletId,
+                    Peg = region.Peg,
+                    Shopkeeper = region.Shopkeeper,
+                    ShopStyle = region.Shopstyle,
+                    Switch = region.Switch ?? false,
+                });
+
+                if (region.InletId.HasValue)
+                {
+                    string nameExit = $"{region.Name} - Exit:{world.Id}";
+                    structured_vertices.Add(nameExit, new Vertex
+                    {
+                        Type = VertexType.Entrance,
+                        Name = nameExit,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        InletId = region.InletId,
+                    });
                 }
             }
             foreach (var mob in room.Nodes.Mobs)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Mob)
-                    .MergeOne("sprite", Sprite.Get(mob.Sprite))
-                    .Merge(mob.AsDictionary()));
+                string name = $"{mob.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Mob,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    Sprite = Sprite.Get(mob.Sprite),
+                    Item = world.GetItemOrNull(mob.Item),
+                    State = mob.State.ToArray(),
+                    ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    Trophy = world.GetItemOrNull(mob.Trophy),
+                });
             }
             foreach (var item in room.Nodes.Items)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Item)
-                    .Merge(item.AsDictionary()));
+                string name = $"{item.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = item.Type,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    Item = world.GetItemOrNull(item.Item),
+                    ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    Addresses = item.Addresses.ToArray(),
+                });
             }
-            foreach (var keydoor in room.Nodes.Keydoors)
+            foreach (var keyDoor in room.Nodes.Keydoors)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Keydoor)
-                    .Merge(keydoor.AsDictionary()));
+                string name = $"{keyDoor.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Keydoor,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    Key = world.GetItem(keyDoor.Key),
+                });
             }
-            foreach (var bigkeydoor in room.Nodes.BigKeydoors)
+            foreach (var bigKeyDoor in room.Nodes.BigKeydoors)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.BigKeydoor)
-                    .Merge(bigkeydoor.AsDictionary()));
+                string name = $"{bigKeyDoor.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.BigKeydoor,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    Key = world.GetItem(bigKeyDoor.Key),
+                });
             }
             foreach (var shutter in room.Nodes.Shutters)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Shutter)
-                    .Merge(shutter.AsDictionary()));
+                string name = $"{shutter.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Shutter,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                });
             }
             foreach (var pot in room.Nodes.Pots)
             {
-                vertices.Add(shared
-                    .MergeOne("type", VertexType.Pot)
-                    .Merge(pot.AsDictionary()));
+                string name = $"{pot.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = VertexType.Pot,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    Item = world.GetItemOrNull(pot.Item),
+                    State = pot.State.ToArray(),
+                    ItemSet = pot.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    Trophy = world.GetItemOrNull(pot.Trophy),
+                    // TODO: Add deny, allow to Vertex.
+                    // Deny = pot.Deny,
+                    // Allow = pot.Allow,
+                });
             }
             // TODO: how do we want to handle this?
             foreach (var item in room.Nodes.Inventory)
             {
-                vertices.Add(shared
-                    .Merge(item.AsDictionary()));
+                string name = $"{item.Name}:{world.Id}";
+                structured_vertices.Add(name, new Vertex
+                {
+                    Type = item.Type,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    // TODO: Dark is unused?!
+                    // Dark = room.Dark,
+                    Item = world.GetItemOrNull(item.Item),
+                    Cost = item.Cost,
+                    ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                });
             }
 
             //if (room["bosses"] ?? false)
@@ -193,33 +345,6 @@ internal class VertexCollector
             //}
         }
 
-        return vertices.Select((v) =>
-        {
-            if (v.TryGetValue("itemset", out object? itemSetO) && itemSetO is List<string> itemSet)
-            {
-                v["itemset"] = itemSet.Select((set) => $"{set}:{world_id}").ToArray();
-            }
-            if (v.TryGetValue("key", out object? keyO) && keyO is string key)
-            {
-                v["key"] = $"{key}:{world_id}";
-            }
-            if (inverted && v.TryGetValue("moonpearl", out object? moonpearlO) && moonpearlO is bool moonpearl)
-            {
-                v["moonpearl"] = !moonpearl;
-            }
-
-            if (bunny_revive && BUNNY_REVIVE.Contains(v["name"]))
-            {
-                v["moonpearl"] = false;
-            }
-            string new_name = $"{v["name"]}:{world_id}";
-            if (!names.Add(new_name))
-            {
-                throw new Exception($"Vertex Name collision `{new_name}`");
-            }
-
-            v["name"] = $"{v["name"]}:{world_id}";
-            return v;
-        }).ToList();
+        return structured_vertices.Values;
     }
 }

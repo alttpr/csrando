@@ -56,68 +56,34 @@ public enum VertexType
 [DebuggerDisplay("{Name} ({Type})")]
 public sealed class Vertex
 {
-    public VertexType Type { get; }
-    public string Name { get; }
-    public bool Switch { get; }
+    public required VertexType Type { get; init; }
+    public required string Name { get; init; }
+    public bool Switch { get; init; }
     public int? Cost { get; set; }
     public Item? Item { get; set; }
-    public Item? Trophy { get; }
-    public PegState? Peg { get; }
+    public Item? Trophy { get; init; }
+    public PegState? Peg { get; init; }
     public Sprite? Sprite { get; set; }
     public string? EnemizerBoss { get; set; }
-    public int? Roomid { get; }
-    public int? Map { get; }
-    public bool? MoonPearl { get; }
-    public string[] ItemSet { get; }
-    public long[]? Addresses { get; }
-    public int? Offset { get; }
-    public Position? Position { get; }
-    public int[]? State { get; }
-    public int? EntranceId { get; }
-    public int? OutletId { get; }
-    public int? InletId { get; }
-    public int[]? EntranceIds { get; }
-    public int? ShopStyle { get; }
-    public int? Shopkeeper { get; }
-    public int? Group { get; }
+    public int? RoomId { get; init; }
+    public int? Map { get; init; }
+    public bool? MoonPearl { get; init; }
+    public string[] ItemSet { get; init; } = new string[0];
+    public long[]? Addresses { get; init; }
+    public int? Offset { get; init; }
+    public Position? Position { get; init; }
+    public int[]? State { get; init; }
+    public int? EntranceId { get; init; }
+    public int? OutletId { get; init; }
+    public int? InletId { get; init; }
+    public string? VanillaOutletName { get; init; }
+    public int[]? EntranceIds { get; init; }
+    public int? ShopStyle { get; init; }
+    public int? Shopkeeper { get; init; }
+    public int? Group { get; init; }
+    public Item? Key { get; init; }
 
     public List<Edge> Edges = new();
-
-    public Vertex(Dictionary<string, object>? attributes = null)
-    {
-        attributes ??= new();
-        Switch = (bool)(attributes.GetValueOrDefault("switch") ?? false);
-        Peg = (PegState?)attributes.GetValueOrDefault("peg");
-        Cost = (int?)attributes.GetValueOrDefault("cost");
-        Type = (VertexType?)attributes.GetValueOrDefault("type") ?? throw new Exception("Unknown type");
-        Name = (string?)attributes.GetValueOrDefault("name") ?? $"vertex{GetHashCode()}";
-        if (attributes.TryGetValue("sprite", out object? spriteObj))
-        {
-            if (spriteObj is Sprite sprite)
-                Sprite = sprite;
-            else if (spriteObj is string spriteName)
-                Sprite = Sprite.Get(spriteName);
-        }
-        Item = (Item?)attributes.GetValueOrDefault("item");
-        Trophy = (Item?)attributes.GetValueOrDefault("trophy");
-        Roomid = (int?)attributes.GetValueOrDefault("roomid");
-        Map = (int?)attributes.GetValueOrDefault("map");
-        MoonPearl = (bool?)attributes.GetValueOrDefault("moonpearl");
-        ItemSet = (string[])attributes.GetValueOrDefault("itemset", new string[0]);
-        Addresses = ((List<long>?)attributes.GetValueOrDefault("addresses"))?.ToArray();
-        Offset = (byte?)attributes.GetValueOrDefault("offset");
-        if (attributes.TryGetValue("position", out object? positionObj) && positionObj is Position position)
-            Position = position;
-        State = ((List<int>?)attributes.GetValueOrDefault("state"))?.ToArray();
-        EntranceId = (int?)attributes.GetValueOrDefault("entranceid");
-        OutletId = (int?)attributes.GetValueOrDefault("outletid");
-        InletId = (int?)attributes.GetValueOrDefault("inletid");
-        EntranceIds = ((List<int>?)attributes.GetValueOrDefault("entranceids"))?.ToArray();
-        ShopStyle = (int?)attributes.GetValueOrDefault("shopstyle");
-        Shopkeeper = (int?)attributes.GetValueOrDefault("shopkeeper");
-        Group = (int?)attributes.GetValueOrDefault("group");
-    }
-
 
     public IEnumerable<Vertex> GetTargets(Predicate<Edge> condition)
     {
