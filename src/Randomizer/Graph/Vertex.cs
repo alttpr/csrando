@@ -76,7 +76,6 @@ public sealed class Vertex
     public int? EntranceId { get; init; }
     public int? OutletId { get; init; }
     public int? InletId { get; init; }
-    public string? VanillaOutletName { get; init; }
     public int[]? EntranceIds { get; init; }
     public int? ShopStyle { get; init; }
     public int? Shopkeeper { get; init; }

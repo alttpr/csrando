@@ -392,6 +392,9 @@ public partial class Entrance
 
     [YamlMember(Alias = "outletid")]
     public int OutletId { get; set; }
+
+    [YamlMember(Alias = "conditions")]
+    public List<string> Conditions { get; set; } = new();
 }
 
 public partial class Hole
@@ -401,6 +404,9 @@ public partial class Hole
 
     [YamlMember(Alias = "entranceids")]
     public List<int> EntranceIds { get; set; } = new();
+
+    [YamlMember(Alias = "conditions")]
+    public List<string> Conditions { get; set; } = new();
 }
 
 public partial class ItemEntry
@@ -419,6 +425,9 @@ public partial class ItemEntry
 
     [YamlMember(Alias = "itemset")]
     public List<string> ItemSet { get; set; } = new();
+
+    [YamlMember(Alias = "conditions")]
+    public List<string> Conditions { get; set; } = new();
 }
 
 public partial class Warp
@@ -578,6 +587,27 @@ public partial class Region
 
     [YamlMember(Alias = "switch")]
     public bool? Switch { get; set; }
+
+    [YamlMember(Alias = "mobs")]
+    public List<Entity> Mobs { get; set; } = new();
+
+    [YamlMember(Alias = "entrances")]
+    public List<Entrance> Entrances { get; set; } = new();
+
+    [YamlMember(Alias = "holes")]
+    public List<Hole> Holes { get; set; } = new();
+
+    [YamlMember(Alias = "warps")]
+    public List<Warp> Warps { get; set; } = new();
+
+    [YamlMember(Alias = "items")]
+    public List<ItemEntry> Items { get; set; } = new();
+
+    [YamlMember(Alias = "pots")]
+    public List<Entity> Pots { get; set; } = new();
+
+    [YamlMember(Alias = "inventory")]
+    public List<InventoryEntry> Inventory { get; set; } = new();
 }
 
 public class Vertices

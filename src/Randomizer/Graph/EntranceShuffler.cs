@@ -3,7 +3,7 @@ namespace Randomizer.Graph;
 /**
  * Modify the edges of the graph to shuffle entrances.
  */
-internal sealed class EntranceShuffler: IWorldModifier
+internal sealed class EntranceShuffler : IWorldModifier
 {
     /**
      * Connect Entrances, Exits, Outlets, and rooms based on World settings.
@@ -22,13 +22,14 @@ internal sealed class EntranceShuffler: IWorldModifier
         };
 
         var definition = YamlReader.LoadEntrances(definition_name);
+        var fixedItem = world.GetItem("fixed");
 
         int world_id = world.Id;
         foreach (var connection in definition.Fixed)
         {
             var from = world.Graph.GetVertex($"{connection[0]}:{world_id}");
             var to = world.Graph.GetVertex($"{connection[1]}:{world_id}");
-            world.Graph.AddDirected(from, to, world.GetItem("fixed"));
+            world.Graph.AddDirected(from, to, fixedItem);
         }
         /* TODO: Let's only do vanilla in the meantime...
         foreach (var group in this.definition.Connections) {

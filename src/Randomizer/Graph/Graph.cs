@@ -100,6 +100,8 @@ public sealed class Graph
     /// <param name="condition">ItemCondition required to traverse edge</param>
     public Edge AddDirected(Vertex from, Vertex to, ItemCondition condition)
     {
-        return new Edge(from, to, condition);
+        var edge = new Edge(from, to, condition);
+        from.Edges.Add(edge);
+        return edge;
     }
 }

@@ -45,8 +45,10 @@ internal class VertexCollector
     {
         var vertex_data = YamlReader.LoadVertices();
         var structured_vertices = new Dictionary<string, Vertex>();
+        var fixedCondition = new ItemCondition(world.GetItem("fixed"), 1);
 
-        var MoonPearlTransform = (bool moonpearl, string name) => {
+        var MoonPearlTransform = (bool moonpearl, string name) =>
+        {
             bool result = moonpearl;
             if (world.Config.State == StateOption.Inverted)
             {
@@ -91,7 +93,7 @@ internal class VertexCollector
             foreach (var region in map.Nodes.Regions)
             {
                 string name = $"{region.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
+                var regionVertex = new Vertex
                 {
                     Type = region.Type ?? VertexType.Region,
                     Name = name,
@@ -102,7 +104,109 @@ internal class VertexCollector
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
                     MoonPearl = MoonPearlTransform(map.Moonpearl, name),
-                });
+                };
+                structured_vertices.Add(name, regionVertex);
+
+                foreach (var mob in region.Mobs)
+                {
+                    string mobName = $"{mob.Name}:{world.Id}";
+                    var mobVertex = new Vertex
+                    {
+                        Type = VertexType.Mob,
+                        Name = mobName,
+                        Map = map.MapMap,
+                        Sprite = Sprite.Get(mob.Sprite),
+                        Item = world.GetItemOrNull(mob.Item),
+                        State = mob.State.ToArray(),
+                        ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        Trophy = world.GetItemOrNull(mob.Trophy),
+                        // TODO: Add deny, allow to Vertex.
+                        // Deny = mob.Deny,
+                        // Allow = mob.Allow,
+                    };
+                    structured_vertices.Add(mobName, mobVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
+                }
+
+                foreach (var entrance in region.Entrances)
+                {
+                    // TODO: the old code had conditional access to entranceid and outletid; are there entrances without them?
+                    string nameIn = $"{entrance.Name} - In:{world.Id}";
+                    string nameOut = $"{entrance.Name} - Out:{world.Id}";
+                    var entranceInVertex = new Vertex
+                    {
+                        Type = VertexType.Entrance,
+                        Name = nameIn,
+                        Map = map.MapMap,
+                        EntranceId = entrance.EntranceId,
+                    };
+                    structured_vertices.Add(nameIn, entranceInVertex);
+                    var entranceOutVertex = new Vertex
+                    {
+                        Type = VertexType.Outlet,
+                        Name = nameOut,
+                        Map = map.MapMap,
+                        OutletId = entrance.OutletId,
+                    };
+                    structured_vertices.Add(nameOut, entranceOutVertex);
+                    foreach (var condition in entrance.Conditions.DefaultIfEmpty("fixed"))
+                    {
+                        regionVertex.Edges.Add(new Edge(regionVertex, entranceInVertex, new ItemCondition(world.GetItem(condition), 1)));
+                    }
+                    entranceOutVertex.Edges.Add(new Edge(entranceOutVertex, regionVertex, fixedCondition));
+                }
+
+                foreach (var item in region.Items)
+                {
+                    string itemName = $"{item.Name}:{world.Id}";
+                    var itemVertex = new Vertex
+                    {
+                        Type = item.Type,
+                        Name = itemName,
+                        Map = map.MapMap,
+                        Item = world.GetItemOrNull(item.Item),
+                        ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        Addresses = item.Addresses.ToArray(),
+                    };
+                    structured_vertices.Add(itemName, itemVertex);
+                    foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
+                    {
+                        regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, new ItemCondition(world.GetItem(condition), 1)));
+                    }
+                }
+
+                foreach (var hole in region.Holes)
+                {
+                    string holeName = $"{hole.Name}:{world.Id}";
+                    var holeVertex = new Vertex
+                    {
+                        Type = VertexType.Hole,
+                        Name = holeName,
+                        Map = map.MapMap,
+                        EntranceIds = hole.EntranceIds.ToArray(),
+                    };
+                    structured_vertices.Add(holeName, holeVertex);
+                    foreach (var condition in hole.Conditions.DefaultIfEmpty("fixed"))
+                    {
+                        regionVertex.Edges.Add(new Edge(regionVertex, holeVertex, new ItemCondition(world.GetItem(condition), 1)));
+                    }
+                }
+
+                foreach (var warp in region.Warps)
+                {
+                    string warpName = $"{warp.Name}:{world.Id}";
+                    var warpVertex = new Vertex
+                    {
+                        Type = VertexType.Warp,
+                        Name = warpName,
+                        Map = map.MapMap,
+                        Position = warp.Position,
+                        MoonPearl = MoonPearlTransform(map.Moonpearl, warpName),
+                    };
+                    structured_vertices.Add(warpName, warpVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, warpVertex, fixedCondition));
+                    warpVertex.Edges.Add(new Edge(warpVertex, regionVertex, fixedCondition));
+                }
             }
             foreach (var warp in map.Nodes.Warps)
             {
@@ -158,7 +262,6 @@ internal class VertexCollector
                     Name = nameIn,
                     Map = map.MapMap,
                     EntranceId = entrance.EntranceId,
-                    VanillaOutletName = nameOut,
                 });
                 structured_vertices.Add(nameOut, new Vertex
                 {
@@ -194,7 +297,7 @@ internal class VertexCollector
             foreach (var region in room.Nodes.Regions)
             {
                 string name = $"{region.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
+                var regionVertex = new Vertex
                 {
                     Type = region.Type ?? VertexType.Region,
                     Name = name,
@@ -207,12 +310,13 @@ internal class VertexCollector
                     Shopkeeper = region.Shopkeeper,
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
-                });
+                };
+                structured_vertices.Add(name, regionVertex);
 
                 if (region.InletId.HasValue)
                 {
                     string nameExit = $"{region.Name} - Exit:{world.Id}";
-                    structured_vertices.Add(nameExit, new Vertex
+                    var exitVertex = new Vertex
                     {
                         Type = VertexType.Entrance,
                         Name = nameExit,
@@ -221,7 +325,129 @@ internal class VertexCollector
                         // TODO: Dark is unused?!
                         // Dark = room.Dark,
                         InletId = region.InletId,
-                    });
+                    };
+                    structured_vertices.Add(nameExit, exitVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, exitVertex, fixedCondition));
+                }
+
+                foreach (var mob in region.Mobs)
+                {
+                    string mobName = $"{mob.Name}:{world.Id}";
+                    var mobVertex = new Vertex
+                    {
+                        Type = VertexType.Mob,
+                        Name = mobName,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        Sprite = Sprite.Get(mob.Sprite),
+                        Item = world.GetItemOrNull(mob.Item),
+                        State = mob.State.ToArray(),
+                        ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        Trophy = world.GetItemOrNull(mob.Trophy),
+                        // TODO: Add deny, allow to Vertex.
+                        // Deny = mob.Deny,
+                        // Allow = mob.Allow,
+                    };
+                    structured_vertices.Add(mobName, mobVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
+                }
+
+                foreach (var entrance in region.Entrances)
+                {
+                    // TODO: the old code had conditional access to entranceid and outletid; are there entrances without them?
+                    string nameIn = $"{entrance.Name} - In:{world.Id}";
+                    string nameOut = $"{entrance.Name} - Out:{world.Id}";
+                    var entranceInVertex = new Vertex
+                    {
+                        Type = VertexType.Entrance,
+                        Name = nameIn,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        EntranceId = entrance.EntranceId,
+                    };
+                    structured_vertices.Add(nameIn, entranceInVertex);
+                    var entranceOutVertex = new Vertex
+                    {
+                        Type = VertexType.Outlet,
+                        Name = nameOut,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        OutletId = entrance.OutletId,
+                    };
+                    structured_vertices.Add(nameOut, entranceOutVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, entranceInVertex, fixedCondition));
+                    entranceInVertex.Edges.Add(new Edge(entranceOutVertex, regionVertex, fixedCondition));
+                }
+
+                foreach (var item in region.Items)
+                {
+                    string itemName = $"{item.Name}:{world.Id}";
+                    var itemVertex = new Vertex
+                    {
+                        Type = item.Type,
+                        Name = itemName,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        Item = world.GetItemOrNull(item.Item),
+                        ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        Addresses = item.Addresses.ToArray(),
+                    };
+                    structured_vertices.Add(itemName, itemVertex);
+
+                    foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
+                    {
+                        regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, new ItemCondition(world.GetItem(condition), 1)));
+                    }
+                }
+
+                foreach (var item in region.Inventory)
+                {
+                    string inventoryName = $"{item.Name}:{world.Id}";
+                    var inventoryVertex = new Vertex
+                    {
+                        Type = item.Type,
+                        Name = inventoryName,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        Item = world.GetItemOrNull(item.Item),
+                        Cost = item.Cost,
+                        ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    };
+                    structured_vertices.Add(inventoryName, inventoryVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, inventoryVertex, new ItemCondition(world.GetItem("BuyItem"), 1)));
+                }
+
+                foreach (var pot in region.Pots)
+                {
+                    string potName = $"{pot.Name}:{world.Id}";
+                    var potVertex = new Vertex
+                    {
+                        Type = VertexType.Pot,
+                        Name = potName,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        // TODO: Dark is unused?!
+                        // Dark = room.Dark,
+                        Item = world.GetItemOrNull(pot.Item),
+                        State = pot.State.ToArray(),
+                        ItemSet = pot.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        Trophy = world.GetItemOrNull(pot.Trophy),
+                        // TODO: Add deny, allow to Vertex.
+                        // Deny = pot.Deny,
+                        // Allow = pot.Allow,
+                    };
+                    structured_vertices.Add(potName, potVertex);
+                    regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
                 }
             }
             foreach (var mob in room.Nodes.Mobs)
