@@ -16,9 +16,6 @@ maps:
         - name: "TurtleRockEntry"
           item: "TurtleRockEntry"
 
-        - name: "TurtleRockOpen"
-          item: "TurtleRockOpen"
-
         - name: "MireEntry"
           item: "MireEntry"
 

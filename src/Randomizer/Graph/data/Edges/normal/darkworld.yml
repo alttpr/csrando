@@ -1,10 +1,6 @@
-fixed:
-  directed:
-    - ["Bomb Shoppe", "Bomb Shoppe Lobby"]
-    - ["Bumper Cave Entrance", "Bumper Cave Bottom"]
-    - ["Bumper Cave Ledge", "Bumper Cave Top Exit"]
-  undirected: []
 TowerEntry:
   directed:
-    - ["West Dark Death Mountain Summit", "Ganon's Tower - Lobby"]
+    # TODO: Add transition from stairs to summit after it has opened. Maybe not relevant since to open it,
+    # you need to be at the summit already?
+    - ["West Dark Death Mountain Summit", "West Dark Death Mountain Ganon Tower Stairs"]
   undirected: []

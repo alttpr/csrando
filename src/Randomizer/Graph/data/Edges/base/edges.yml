@@ -12,20 +12,16 @@ fixed:
     - ["Pyramid Southern Ledge", "Bomb Shoppe"]
     - ["West of Bomb Shoppe", "Bomb Shoppe"]
     - ["Hammer Bridge River", "Dark Lake Hylia River Bend"]
-    - ["Swamplands Totems", "Swamplands Ravine"]
     - ["Swamplands Palace Entrance", "Swamplands Ravine"]
     - ["Swamplands Ravine", "Dark Lake Hylia Southwest Ledge"]
 LiftBush:
   directed:
-    []
-    #- ["Outcasts Orchard Shop Yard", "Outcasts Orchard Shop Yard Nook"]
+    - ["Outcasts Orchard Intermediate Jump", "Outcasts Orchard Shop Yard Nook"]
   undirected:
     - ["Kakariko Village", "Kakariko Village Bomb Hut"]
     - ["Kakariko Village", "Kakariko Village Bush House"]
     - ["East Dark Death Mountain Running Man", "East Dark Death Mountain Running Man's Tail"]
-    - ["Outcasts Orchard", "Outcasts Orchard Northeast Tree Niche"]
     - ["Village of Outcasts", "Village of Outcasts Broken Hut"]
-    - ["Digging Game Ledge", "Digging Game Bush Niche"]
 Flippers:
   directed:
     - ["Dark Lake Hylia Waterfall The Falls", "Dark Lake Hylia Waterfall Brook"]

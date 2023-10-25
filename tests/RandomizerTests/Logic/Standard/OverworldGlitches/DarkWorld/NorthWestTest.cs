@@ -24,13 +24,13 @@ public sealed class NorthWestTest : StandardOverworldGlitchesLogicTests
         new object[] { "Chest Game", true, new string[] { "MoonPearl", "PegasusBoots" } },
         new object[] { "Chest Game", true, new string[] { "MagicMirror", "PegasusBoots" } },
 
-        new object[] { "Hammer Pegs", false, new string[] {  } },
-        new object[] { "Hammer Pegs", false, new string[] { "MoonPearl", "PegasusBoots" } },
-        new object[] { "Hammer Pegs", false, new string[] { "Hammer", "PegasusBoots" } },
-        new object[] { "Hammer Pegs", true, new string[] { "MoonPearl", "Hammer", "PegasusBoots" } },
+        new object[] { "Hammer Pegs Item", false, new string[] {  } },
+        new object[] { "Hammer Pegs Item", false, new string[] { "MoonPearl", "PegasusBoots" } },
+        new object[] { "Hammer Pegs Item", false, new string[] { "Hammer", "PegasusBoots" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "MoonPearl", "Hammer", "PegasusBoots" } },
 
-        new object[] { "Bumper Cave", false, new string[] {  } },
-        new object[] { "Bumper Cave", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        new object[] { "Bumper Cave Item", false, new string[] {  } },
+        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "PegasusBoots" } },
 
         new object[] { "Blacksmith", false, new string[] {  } },
         new object[] { "Blacksmith", false, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },

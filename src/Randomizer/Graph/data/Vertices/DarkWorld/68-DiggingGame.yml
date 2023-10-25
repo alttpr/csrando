@@ -4,19 +4,21 @@ maps:
     nodes:
       regions:
         - name: "Digging Game"
+          mobs:
+            - name: "Digging Game - Digging Game Proprietor"
+              position: { x: 0x0e, y: 0x11 }
+              sprite: "DiggingGameNPC"
+              state: [1, 2]
+
         - name: "Digging Game Arena"
+          items:
+            # TODO: Is this the right condition?
+            - name: "Digging Game - Item"
+              conditions: ["LiftBush"]
+              addresses: [0x180148]
+              type: "dig"
+              itemset: ["dw"]
+
         - name: "Digging Game Bush Niche"
         - name: "Digging Game Fencehop"
         - name: "Digging Game Ledge"
-
-      items:
-        - name: "Digging Game - Item"
-          addresses: [0x180148]
-          type: "dig"
-          itemset: ["dw"]
-
-      mobs:
-        - name: "Digging Game - Digging Game Proprietor"
-          position: { x: 0x0e, y: 0x11 }
-          sprite: "DiggingGameNPC"
-          state: [1, 2]

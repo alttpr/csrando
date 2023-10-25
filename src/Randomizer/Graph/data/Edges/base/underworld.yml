@@ -59,26 +59,13 @@ fixed:
     - ["Spectacle Rock Cave Top", "Spectacle Rock Cave Fairies"]
     - ["Spectacle Rock Cave Ledge", "Spectacle Rock Cave Fairies"]
     - ["Spectacle Rock Cave Ledge", "Spectacle Rock Cave"]
-    - ["Hype Cave Entrance", "Swamplands Totems"]
     - ["Hype Cave Entrance", "Hype Cave - NPC"]
     - ["Mimic Cave Back", "Mimic Cave Back - Shutter Door"]
     - ["Super Bunny Hallway Bottom", "Super Bunny Entrance Middle"]
     - ["Super Bunny Hallway Top", "Super Bunny Entrance Middle"]
     - ["Super Bunny Entrance Middle", "Super Bunny Entrance Top"]
     - ["Super Bunny Refill", "Super Bunny Treasure"]
-    - ["Super Bunny Exit", "East Dark Death Mountain Summit"]
-    - ["Super Bunny Entrance Bottom", "East Dark Death Mountain Running Man"]
-    - ["Hookshot Cave Corner", "East Dark Death Mountain Floating Island"]
-    - ["Hookshot Cave", "East Dark Death Mountain Summit"]
-    - ["Chest Game Room", "Village of Outcasts"]
-    - ["Brewery Room", "Village of Outcasts"]
-    - ["C-Shaped House C", "Village of Outcasts"]
-    - ["Peg Cave", "Hammer Pegs"]
-    - ["Peg Cave", "Village Peg Puzzle East"]
     - ["Blacksmith House", "Smith's House"]
-    - ["Dark Sanctuary", "Dark Sanctuary Cave"]
-    - ["Spike Cave Entrance", "West Dark Death Mountain Byrna Ledge"]
-    - ["Pyramid Fairy", "Pyramid"]
     - ["Ganon's Room", "Ganon"]
     - ["Checkerboard Cave - Entrance", "Checkerboard Cave"]
   undirected:
@@ -273,8 +260,4 @@ ReturnedSmith:
 RedCrystals:
   directed:
     - ["Bomb Shoppe Lobby", "Bomb Shoppe Item"]
-  undirected: []
-Agahnim2Defeated:
-  directed:
-    - ["Pyramid", "Ganon's Room"]
   undirected: []

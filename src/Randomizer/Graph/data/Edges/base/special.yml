@@ -30,19 +30,15 @@ MireEntryQuake:
   undirected: []
 TurtleRockEntryBombos:
   directed:
-    - ["ActiveBombos", "TurtleRockOpen"]
+    - ["ActiveBombos", "TurtleRockEntry"]
   undirected: []
 TurtleRockEntryEther:
   directed:
-    - ["ActiveEther", "TurtleRockOpen"]
+    - ["ActiveEther", "TurtleRockEntry"]
   undirected: []
 TurtleRockEntryQuake:
   directed:
-    - ["ActiveQuake", "TurtleRockOpen"]
-  undirected: []
-TurtleRockOpen:
-  directed:
-    - ["Turtle Peak Shellback", "TurtleRockEntry"]
+    - ["ActiveQuake", "TurtleRockEntry"]
   undirected: []
 BookOfMudora:
   directed:

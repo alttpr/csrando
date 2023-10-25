@@ -406,8 +406,8 @@ fixed:
   - ["Broccoli House - Exit", "Bonzai Cave - Out"]
 
   # Map 0x62
-  - ["Hammer Pegs - In", "Peg Cave"]
-  - ["Peg Cave - Exit", "Hammer Pegs - Out"]
+  - ["Peg Cave - In", "Peg Cave"]
+  - ["Peg Cave - Exit", "Peg Cave - Out"]
 
   # Map 0x69
   - ["Arrow Game - In", "Arrow Game"]
@@ -457,8 +457,8 @@ fixed:
   - ["Dark Shopping Mall Big Fairy - In", "Shopping Mall Big Fairy"]
   - ["Shopping Mall Big Fairy - Exit", "Dark Shopping Mall Big Fairy - Out"]
 
-  - ["Power Glove - In", "Hint Giver Cave - Glove"]
-  - ["Hint Giver Cave - Glove - Exit", "Power Glove - Out"]
+  - ["Hint Giver Cave - In", "Hint Giver Cave - Glove"]
+  - ["Hint Giver Cave - Glove - Exit", "Hint Giver Cave - Out"]
 
   - ["Dev Cave - In", "Dev Cave"]
   - ["Dev Cave - Exit", "Dev Cave - Out"]

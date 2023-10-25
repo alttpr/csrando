@@ -1,38 +1,23 @@
 fixed:
   directed:
-    - ["Turtle Rock Outside Bridge", "Turtle Rock - Laser Entrance"]
-    - ["Turtle Rock Outside Bridge", "Turtle Rock - Big Chest Entrance"]
-    - ["Dark East Death Mountain Lonely Ledge", "Turtle Rock - Eye Bridge"]
-    - ["Skull Woods Southeast Branch", "Skull Woods - Main Entrance"]
-    - ["Skull Woods Southeast Branch", "Skull Woods - Pinball Room"]
-    - ["Skull Woods Southeast Branch", "Skull Woods - Firebar Pits"]
-    - ["Skull Woods Southeast Branch", "Skull Woods - Statue Puzzle"]
-    - ["Skull Woods Back", "Skull Woods - Bumper Buddy"]
-    - ["Skull Woods North East Pit Branch", "Skull Woods - Dumb Switches Bottom"]
     - ["Mire Warp Ledge", "Mire"]
     - ["West Dark Death Mountain", "West Dark Death Mountain Byrna Ledge"]
     - ["West Dark Death Mountain Byrna Ledge", "West Dark Death Mountain"]
     - ["West Dark Death Mountain Summit", "West Dark Death Mountain"]
     - ["Pyramid", "Pyramid Ledge"]
     - ["Pyramid Ledge", "Pyramid"]
-    - ["Pyramid Ledge", "Pyramid Item"]
     - ["Pyramid Ganon Fail", "Pyramid"]
     - ["Swamplands Palace Entrance", "Swamp Palace - Entrance Drained"]
     - ["South of Outcasts North", "South of Outcasts South"]
-    - ["Stumpy Grove", "Stumpy"]
-    - ["Dark Lake Hylia Ice Palace Entrance", "Ice Palace - Entrance"]
     - ["Turtle Peak Shellback", "Turtle Peak"]
-    - ["Mire", "Mire Shed"]
-    - ["East Dark Death Mountain Running Man", "Super Bunny Entrance Bottom"]
-    - ["East Dark Death Mountain Summit", "Super Bunny Exit"]
     - ["East Dark Death Mountain Summit", "East Dark Death Mountain Running Man"]
-    - ["East Dark Death Mountain Floating Island", "Hookshot Cave Corner"]
     - ["East Dark Death Mountain Floating Island", "East Dark Death Mountain Summit"]
-    - ["Village of Outcasts", "Chest Game Room"]
-    - ["Village of Outcasts", "Brewery Room"]
-    - ["Village of Outcasts", "C-Shaped House C"]
-    - ["Bumper Cave Ledge", "Bumper Cave"]
-    - ["West Dark Death Mountain Byrna Ledge", "Spike Cave Entrance"]
+    - ["Bumper Cave Entrance", "Bumper Cave Passway"]
+    - ["Outcasts Orchard", "Outcasts Orchard Intermediate Jump"]
+    - ["Outcasts Orchard Intermediate Jump", "Outcasts Orchard Shop Yard Nook"]
+    - ["Outcasts Orchard Shop Yard Nook", "Outcasts Orchard"]
+    - ["Digging Game Fencehop", "Digging Game Ledge"]
+    - ["Dark Lake Hylia Waterfall Brook", "Dark Lake Hylia Waterfall"]
   undirected:
     - ["Skull Woods Useless Divider", "Dark Lumber Shop"]
     - ["Skull Woods Southeast Branch", "North of Outcasts"]
@@ -50,13 +35,13 @@ fixed:
     - ["Village of Outcasts", "Skull Woods Alcove West"]
     - ["Swamplands Portal East", "Swamplands Totems"]
     - ["Swamplands Portal East", "Swamplands Palace Entrance"]
-    - ["South of Outcasts Frog Prison", "LostSmith"]
     - ["South of Outcasts South", "Digging Game Ledge"]
     - ["South of Outcasts South", "Digging Game"]
     - ["South of Outcasts South", "Stumpy Grove Corner"]
     - ["Stumpy Grove Corner", "Stumpy Grove Entrance"]
     - ["Stumpy Grove Entrance Transition Nook", "Stumpy Grove"]
     - ["Stumpy Grove Entrance", "Swamplands Portal West"]
+    - ["Swamplands Totems", "Swamplands Ravine"]
     - ["Swamplands Palace Entrance", "West of Swamplands"]
     - ["Hammer Bridge North", "Dark Lake Hylia River Bend Ledge"]
     - ["Hammer Bridge North", "Dark Lake Hylia Northwest Ledge"]
@@ -69,33 +54,19 @@ fixed:
     - ["Bumper Cave Passway", "Dark Northwest Pond"]
     - ["Dark Northwest Pond", "North of Outcasts"]
     - ["Dark Northwest Pond", "Outcasts Orchard"]
-    - ["Dark Northwest Pond", "Dark Sanctuary Cave"]
-    - ["Dark Sanctuary Cave", "Dark Graveyard"]
+    - ["Dark Northwest Pond", "Dark Sanctuary Cave Entrance"]
+    - ["Dark Sanctuary Cave Entrance", "Dark Graveyard"]
     - ["Dark Lumber Shop", "Bumper Cave Passway"]
     - ["Dark Hylia River Bend West", "Dark Graveyard"]
     - ["Dark Hylia River Bend East", "Dark World Northeast Shop"]
     - ["Dark Lake Hylia River Bend Ledge", "Dark Lake Hylia Northeast Ledge"]
     - ["Dark Lake Hylia Southeast Ledge", "Dark Lake Hylia Waterfall"]
-    - ["Dark Lake Hylia Waterfall", "Dark Lake Hylia River End"]
+    - ["Dark Lake Hylia Waterfall", "Dark Shopping Mall"]
     - ["Dark World Northeast Shop Rockblock Nook", "Dark Octorok Pit"]
     - ["Dark Octorok Pit", "Lake of Bad Omen"]
-    - ["Dark Hylia River Bend", "Dark Hylia River Bend whirlpool"]
-MireEntry:
-  directed:
-    - ["Mire", "Misery Mire - Entrance"]
-  undirected: []
-UseBomb:
-  directed:
-    - ["Swamplands Totems", "Hype Cave Entrance"]
-  undirected: []
 LiftBush:
   directed:
-    - ["Village of Outcasts", "Thieves' Town - Grand Room SW"] # the same thing that lets you lift bushes is what we consider for pulling on entrance... for now.
-    - ["East Dark World Maze", "East Dark World Maze - Kiki"] # the same thing that lets you lift bushes is what we consider getting kiki... for now.
     - ["Digging Game", "Digging Game Arena"] # the same thing that lets you lift bushes is what we consider for starting this game... for now.
-    - ["Digging Game Arena", "Digging Game - Item"] # the same thing that lets you lift bushes is what we consider for starting this game... for now.
-    - ["Skull Woods Southeast Branch", "Skull Woods - Hourglass Top"]
-    - ["Lake of Bad Omen", "Catfish"]
   undirected:
     - ["Skull Woods Southwest Corner", "Skull Woods Useless Divider"]
     - ["Skull Woods Back", "Skull Woods North East Pit Branch"]
@@ -117,9 +88,10 @@ LiftBush:
     - ["Stumpy Grove Entrance", "Stumpy Grove Entrance Transition Nook"]
     - ["North of Outcasts", "North of Outcasts Southwest Tree Niche"]
     - ["North of Outcasts", "North of Outcasts Niche Next to the Psychic"]
+    - ["Outcasts Orchard", "Outcasts Orchard Northeast Tree Niche"]
+    - ["Digging Game Ledge", "Digging Game Bush Niche"]
 PowerGlove:
-  directed:
-    - ["East Dark Death Mountain Summit", "Hookshot Cave"]
+  directed: []
   undirected:
     - ["Skull Woods Southwest Nook", "Skull Woods Southeast Branch"]
     - ["Dark Hylia River Peninsula Northeast Nook", "Dark Hylia River Peninsula Two Square Niche"]
@@ -133,13 +105,10 @@ TitansMitt:
     - ["South of Outcasts South", "South of Outcasts North"]
     - ["South of Outcasts Frog Prison", "South of Outcasts North"]
     - ["South of Outcasts Fencehop", "South of Outcasts North"]
+    - ["Digging Game Arena", "Digging Game Fencehop"]
 FillSwamp:
   directed:
     - ["Swamplands Palace Entrance", "Swamp Palace - Entrance Filled"]
-  undirected: []
-FireRod:
-  directed:
-    - ["Skull Woods Back", "Skull Woods - Bridge Room"]
   undirected: []
 Flippers:
   directed:
@@ -171,27 +140,16 @@ Flippers:
     - ["Dark Hylia River Bend", "Dark World Northeast Shop Waters"]
     - ["Dark World Northeast Shop Waters", "Dark Octorok Pit Waters"]
     - ["Lake of Bad Omen", "Lake of Bad Omen Waters"]
+    - ["Dark Lake Hylia River End Brook", "Dark Shopping Mall"]
 Hammer:
-  directed:
-    - ["Village Peg Puzzle East", "Peg Cave"]
+  directed: []
   undirected:
     - ["Dark Hylia River Peninsula Northeast Nook", "Dark Hylia River Peninsula Lonely Square"]
     - ["Village of Outcasts", "Village of Outcasts Storefront"]
     - ["Swamplands Portal Nook", "Swamplands Portal East"]
     - ["Hammer Bridge North", "Hammer Bridge South"]
+    - ["East Dark World Portal Way", "East Dark World Portal Way Cage"]
 Hookshot:
   directed:
     - ["Dark Hylia River Peninsula Northeast Nook", "Dark Hylia River Peninsula"]
-  undirected: []
-LostKiki:
-  directed:
-    - ["East Dark World Maze", "Palace of Darkness - Lobby"]
-  undirected: []
-TurtleRockEntry:
-  directed:
-    - ["Turtle Peak", "Turtle Rock - Entrance"]
-  undirected: []
-BigRedBombActive:
-  directed:
-    - ["Pyramid", "Pyramid Fairy"]
   undirected: []

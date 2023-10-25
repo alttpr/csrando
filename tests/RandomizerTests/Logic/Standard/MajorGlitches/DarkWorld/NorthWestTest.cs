@@ -26,17 +26,17 @@ public sealed class NorthWestTest : StandardMajorGlitchesLogicTests
 
         new object[] { "Chest Game", true, new string[] {  } },
 
-        new object[] { "Hammer Pegs", false, new string[] {  } },
-        new object[] { "Hammer Pegs", true, new string[] { "MoonPearl", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "BottleWithBee", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "BottleWithFairy", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "BottleWithRedPotion", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "BottleWithGreenPotion", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "BottleWithBluePotion", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "Bottle", "Hammer" } },
-        new object[] { "Hammer Pegs", true, new string[] { "BottleWithGoldBee", "Hammer" } },
+        new object[] { "Hammer Pegs Item", false, new string[] {  } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "MoonPearl", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "BottleWithBee", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "BottleWithFairy", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "BottleWithRedPotion", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "BottleWithGreenPotion", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "BottleWithBluePotion", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "Bottle", "Hammer" } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "BottleWithGoldBee", "Hammer" } },
 
-        new object[] { "Bumper Cave", true, new string[] {  } },
+        new object[] { "Bumper Cave Item", true, new string[] {  } },
 
         new object[] { "Blacksmith", false, new string[] {  } },
         new object[] { "Blacksmith", true, new string[] { "MoonPearl", "ProgressiveGlove", "ProgressiveGlove" } },

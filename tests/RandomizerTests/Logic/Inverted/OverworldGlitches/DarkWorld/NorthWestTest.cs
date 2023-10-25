@@ -18,11 +18,11 @@ public sealed class NorthWestTest : InvertedOverworldGlitchesLogicTests
 
         new object[] { "Chest Game", true, new string[] {  } },
 
-        new object[] { "Hammer Pegs", false, new string[] {  } },
-        new object[] { "Hammer Pegs", true, new string[] { "Hammer", "PegasusBoots" } },
+        new object[] { "Hammer Pegs Item", false, new string[] {  } },
+        new object[] { "Hammer Pegs Item", true, new string[] { "Hammer", "PegasusBoots" } },
 
-        new object[] { "Bumper Cave", false, new string[] {  } },
-        new object[] { "Bumper Cave", true, new string[] { "PegasusBoots" } },
+        new object[] { "Bumper Cave Item", false, new string[] {  } },
+        new object[] { "Bumper Cave Item", true, new string[] { "PegasusBoots" } },
 
         new object[] { "Blacksmith", false, new string[] {  } },
         new object[] { "Blacksmith", true, new string[] { "MagicMirror", "PegasusBoots" } },

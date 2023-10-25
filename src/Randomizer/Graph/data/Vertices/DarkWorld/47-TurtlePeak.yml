@@ -4,21 +4,20 @@ maps:
     nodes:
       regions:
         - name: "Turtle Peak"
+          entrances:
+            - name: "Turtle Rock"
+              conditions: ["TurtleRockEntry"]
+              entranceid: 0x34
+              outletid: 0x34
+
         - name: "Turtle Peak Shellback"
-
-      entrances:
-        - name: "Turtle Rock"
-          entranceid: 0x34
-          outletid: 0x34
-
-      items:
-        - name: "Turtle Rock - Entry"
-          type: "medallion"
-          itemset: ["tr-medallion"]
-          addresses: [0x180023, 0x5020, 0x50FF, 0x51DE]
-
-      mobs:
-        - name: "Turtle Peak - Rupee Pull"
-          position: { x: 0x16, y: 0x14 }
-          sprite: "PullForRupees"
-          state: [1, 2]
+          items:
+            - name: "Turtle Rock - Entry"
+              type: "medallion"
+              itemset: ["tr-medallion"]
+              addresses: [0x180023, 0x5020, 0x50FF, 0x51DE]
+          mobs:
+            - name: "Turtle Peak - Rupee Pull"
+              position: { x: 0x16, y: 0x14 }
+              sprite: "PullForRupees"
+              state: [1, 2]

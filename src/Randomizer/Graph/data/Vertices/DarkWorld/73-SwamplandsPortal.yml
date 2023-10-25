@@ -4,32 +4,30 @@ maps:
     nodes:
       regions:
         - name: "Swamplands Portal East"
+          mobs:
+            - name: "Swamplands Portal East - Pikit"
+              position: { x: 0x17, y: 0x0c }
+              sprite: "Pikit"
+              state: [1, 2]
+            - name: "Swamplands Portal East - Green Zirro 1"
+              position: { x: 0x14, y: 0x0e }
+              sprite: "ZirroGreen"
+              state: [1, 2]
+            - name: "Swamplands Portal East - Green Zirro 2"
+              position: { x: 0x15, y: 0x1a }
+              sprite: "ZirroGreen"
+              state: [1, 2]
+            - name: "Swamplands Portal East - Blue Zirro"
+              position: { x: 0x1b, y: 0x1b }
+              sprite: "ZirroBlue"
+              state: [1, 2]
+
         - name: "Swamplands Portal West"
+          mobs:
+            - name: "Swamplands Portal East - Moblin"
+              position: { x: 0x09, y: 0x0d }
+              sprite: "Moblin"
+              state: [1, 2]
+
         - name: "Swamplands Portal Nook"
         - name: "Swamplands Portal Pond"
-
-      mobs:
-        - name: "Swamplands Portal East - Pikit"
-          position: { x: 0x17, y: 0x0c }
-          sprite: "Pikit"
-          state: [1, 2]
-
-        - name: "Swamplands Portal East - Moblin"
-          position: { x: 0x09, y: 0x0d }
-          sprite: "Moblin"
-          state: [1, 2]
-
-        - name: "Swamplands Portal East - Green Zirro 1"
-          position: { x: 0x14, y: 0x0e }
-          sprite: "ZirroGreen"
-          state: [1, 2]
-
-        - name: "Swamplands Portal East - Green Zirro 2"
-          position: { x: 0x15, y: 0x1a }
-          sprite: "ZirroGreen"
-          state: [1, 2]
-
-        - name: "Swamplands Portal East - Blue Zirro"
-          position: { x: 0x1b, y: 0x1b }
-          sprite: "ZirroBlue"
-          state: [1, 2]
