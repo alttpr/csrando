@@ -1,8 +1,5 @@
 fixed:
   directed:
-    - ["Hyrule Castle - Courtyard NE Nook", "Secret Passage Stairs - In"]
-    - ["Secret Passage Stairs - Out", "Hyrule Castle - Courtyard NE Nook"]
-
     - ["Hyrule Castle - Wall Walk", "Hyrule Castle - Courtyard"]
 
     - ["Hyrule Castle - Courtyard", "Hyrule Castle - Main Entrance - In"]
@@ -41,5 +38,5 @@ LiftBush:
   undirected: []
 Flippers:
   directed:
-    - ["Lake Hylia", "Lake Hylia Island"]
+    - ["Lake Hylia", "Lake Hylia Island Item"]
   undirected: []

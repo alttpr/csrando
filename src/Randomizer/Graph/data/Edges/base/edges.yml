@@ -29,7 +29,7 @@ LiftBush:
 Flippers:
   directed:
     - ["Dark Lake Hylia Waterfall The Falls", "Dark Lake Hylia Waterfall Brook"]
-    - ["Lake Hylia Island", "Lake Hylia"]
+    - ["Lake Hylia Small Island", "Lake Hylia"]
   undirected:
     - ["Hammer Bridge North", "Hammer Bridge River"]
     - ["Hammer Bridge River", "Hammer Bridge Shallow Splotch"]

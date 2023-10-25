@@ -4,16 +4,13 @@ maps:
     nodes:
       regions:
         - name: "Under the Bridge"
-
-      items:
-        - name: "Hobo"
-          addresses: [0x33E7D]
-          type: "npc"
-          itemset: ["lw"]
-
-      # TODO: should this item be on the mob?
-      mobs:
-        - name: "Under the Bridge - Hobo"
-          position: { x: 0x16, y: 0x04 }
-          sprite: "Hobo"
-          state: [1, 2]
+          items:
+            - name: "Hobo"
+              addresses: [0x33E7D]
+              type: "npc"
+              itemset: ["lw"]
+          mobs:
+            - name: "Under the Bridge - Hobo"
+              position: { x: 0x16, y: 0x04 }
+              sprite: "Hobo"
+              state: [1, 2]

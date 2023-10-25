@@ -71,7 +71,7 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
 
         new object[] { "Ice Rod Cave", true, new string[] {  } },
 
-        new object[] { "Bottle Merchant", true, new string[] {  } },
+        new object[] { "Bottle Merchant Item", true, new string[] {  } },
 
         new object[] { "Sahasrahla's Hut - Sahasrahla", false, new string[] {  } },
         new object[] { "Sahasrahla's Hut - Sahasrahla", true, new string[] { "PendantOfCourage" } },
@@ -89,6 +89,8 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
         new object[] { "Sick Kid", true, new string[] { "BottleWithBluePotion" } },
         new object[] { "Sick Kid", true, new string[] { "Bottle" } },
         new object[] { "Sick Kid", true, new string[] { "BottleWithGoldBee" } },
+
+        new object[] { "Bomb Hut", true, new string[] { } },
 
         new object[] { "Hobo", false, new string[] {  } },
         new object[] { "Hobo", true, new string[] { "Flippers" } },
@@ -158,8 +160,8 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
 
         new object[] { "Mini Moldorm Cave - NPC", true, new string[] {  } },
 
-        new object[] { "Library", false, new string[] {  } },
-        new object[] { "Library", true, new string[] { "PegasusBoots" } },
+        new object[] { "Library Item", false, new string[] {  } },
+        new object[] { "Library Item", true, new string[] { "PegasusBoots" } },
 
         new object[] { "Mushroom", true, new string[] {  } },
 
@@ -173,12 +175,12 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
         new object[] { "Desert Ledge - Item", true, new string[] { "OcarinaActive", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
         new object[] { "Desert Ledge - Item", true, new string[] { "OcarinaActive", "MagicMirror", "TitansMitt" } },
 
-        new object[] { "Lake Hylia Island", false, new string[] {  } },
-        new object[] { "Lake Hylia Island", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Lake Hylia Island", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "TitansMitt" } },
-        new object[] { "Lake Hylia Island", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Lake Hylia Island", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "PowerGlove", "Hammer" } },
-        new object[] { "Lake Hylia Island", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "AgahnimDefeated" } },
+        new object[] { "Lake Hylia Island Item", false, new string[] {  } },
+        new object[] { "Lake Hylia Island Item", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
+        new object[] { "Lake Hylia Island Item", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "TitansMitt" } },
+        new object[] { "Lake Hylia Island Item", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "ProgressiveGlove", "Hammer" } },
+        new object[] { "Lake Hylia Island Item", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "PowerGlove", "Hammer" } },
+        new object[] { "Lake Hylia Island Item", true, new string[] { "Flippers", "MoonPearl", "MagicMirror", "AgahnimDefeated" } },
 
         new object[] { "Sunken Treasure", true, new string[] {  } },
 

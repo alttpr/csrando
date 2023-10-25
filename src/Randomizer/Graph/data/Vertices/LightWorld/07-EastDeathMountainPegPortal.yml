@@ -4,30 +4,26 @@ maps:
     nodes:
       regions:
         - name: "East Death Mountain Peg Portal"
+          mobs:
+            - name: "East Death Mountain Peg Portal - Deadrock 1"
+              position: { x: 0x0e, y: 0x07 }
+              sprite: "Deadrock"
+              state: [1, 2]
+            - name: "East Death Mountain Peg Portal - Deadrock 2"
+              position: { x: 0x0a, y: 0x0d }
+              sprite: "Deadrock"
+              state: [1, 2]
+            - name: "East Death Mountain Peg Portal - Deadrock 3"
+              position: { x: 0x17, y: 0x15 }
+              sprite: "Deadrock"
+              state: [1, 2]
+            - name: "East Death Mountain Peg Portal - Deadrock 4"
+              position: { x: 0x0f, y: 0x16 }
+              sprite: "Deadrock"
+              state: [1, 2]
+            - name: "East Death Mountain Peg Portal - Deadrock 5"
+              position: { x: 0x12, y: 0x16 }
+              sprite: "Deadrock"
+              state: [1, 2]
+
         - name: "East Death Mountain Peg Portal Top"
-
-      mobs:
-        - name: "East Death Mountain Peg Portal - Deadrock 1"
-          position: { x: 0x0e, y: 0x07 }
-          sprite: "Deadrock"
-          state: [1, 2]
-
-        - name: "East Death Mountain Peg Portal - Deadrock 2"
-          position: { x: 0x0a, y: 0x0d }
-          sprite: "Deadrock"
-          state: [1, 2]
-
-        - name: "East Death Mountain Peg Portal - Deadrock 3"
-          position: { x: 0x17, y: 0x15 }
-          sprite: "Deadrock"
-          state: [1, 2]
-
-        - name: "East Death Mountain Peg Portal - Deadrock 4"
-          position: { x: 0x0f, y: 0x16 }
-          sprite: "Deadrock"
-          state: [1, 2]
-
-        - name: "East Death Mountain Peg Portal - Deadrock 5"
-          position: { x: 0x12, y: 0x16 }
-          sprite: "Deadrock"
-          state: [1, 2]

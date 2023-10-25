@@ -1,7 +1,9 @@
 MagicMirror:
   directed:
     - ["Mire", "Desert Ledge"]
-    - ["Mire", "Desert Ledge - Part 2"]
+    - ["Mire", "Desert Ledge - Inside Rocks"]
+    - ["Mire", "Desert Ledge - Rocks Right"]
+    - ["Mire", "Desert Stairs"]
     - ["Mire", "Checkerboard Ledge"]
     - ["Mire Warp Ledge", "Desert Rocks Ledge"]
     - ["West Dark Death Mountain Summit", "West Death Mountain Summit"]
@@ -18,7 +20,7 @@ MagicMirror:
     - ["West of Swamplands", "Bombos Tablet Ledge East"]
     - ["Turtle Rock Outside Bridge", "East Death Mountain Spiral Cave Balcony"]
     - ["Turtle Rock Outside Bridge", "East Death Mountain Mimic Balcony"]
-    - ["East Dark Death Mountain Floating Island", "East Death Mountain FLoating Island"]
+    - ["East Dark Death Mountain Floating Island", "East Death Mountain Floating Island"]
     - ["Bomb Shoppe", "Link's House"]
     # special case for filling swamp
     - ["Swamplands Palace Entrance", "FillSwamp"] # disable this in entrance

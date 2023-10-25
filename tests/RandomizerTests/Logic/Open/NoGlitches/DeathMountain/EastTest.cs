@@ -142,9 +142,9 @@ public class EastTest : OpenNoGlitchesLogicTests
         new object[] { "Paradox Cave Upper - Right", true, new string[] { "TitansMitt", "Lamp", "MagicMirror", "Hammer" } },
         new object[] { "Paradox Cave Upper - Right", true, new string[] { "OcarinaActive", "MagicMirror", "Hammer" } },
 
-        new object[] { "Floating Island", false, new string[] {  } },
-        new object[] { "Floating Island", false, new string[] { "TitansMitt", "Lamp", "MagicMirror", "Hammer" } },
-        new object[] { "Floating Island", true, new string[] { "MoonPearl", "TitansMitt", "Lamp", "MagicMirror", "Hammer" } },
+        new object[] { "Floating Island Item", false, new string[] {  } },
+        new object[] { "Floating Island Item", false, new string[] { "TitansMitt", "Lamp", "MagicMirror", "Hammer" } },
+        new object[] { "Floating Island Item", true, new string[] { "MoonPearl", "TitansMitt", "Lamp", "MagicMirror", "Hammer" } },
     };
 
     [TestMethod]

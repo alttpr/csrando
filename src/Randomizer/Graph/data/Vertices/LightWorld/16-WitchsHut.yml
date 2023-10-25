@@ -4,32 +4,31 @@ maps:
     nodes:
       regions:
         - name: "Witch's Hut"
+          entrances:
+            - name: "Witch's Hut"
+              entranceid: 0x4B
+              outletid: 0x5B
+          items:
+            - name: "Witch's Hut Item"
+              conditions: ["Mushroom"]
+              type: "npc"
+              item: "MushroomReturned"
+              itemset: ["lw"]
+          mobs:
+            - name: "Witch's Hut - Buzzblob 1"
+              position: { x: 0x0d, y: 0x0a }
+              sprite: "Buzzblob"
+              state: [1, 2]
+
+            - name: "Witch's Hut - Witch"
+              position: { x: 0x0f, y: 0x15 }
+              sprite: "Witch"
+              state: [1, 2]
+
+            - name: "Witch's Hut - Buzzblob 2"
+              position: { x: 0x06, y: 0x18 }
+              sprite: "Buzzblob"
+              state: [1, 2]
+
         - name: "Witch's Hut Northeast Nook"
         - name: "Witch's Hut River"
-
-      entrances:
-        - name: "Witch's Hut"
-          entranceid: 0x4B
-          outletid: 0x5B
-
-      items:
-        - name: "Witch's Hut Witch"
-          type: "npc"
-          item: "MushroomReturned"
-          itemset: ["lw"]
-
-      mobs:
-        - name: "Witch's Hut - Buzzblob 1"
-          position: { x: 0x0d, y: 0x0a }
-          sprite: "Buzzblob"
-          state: [1, 2]
-
-        - name: "Witch's Hut - Witch"
-          position: { x: 0x0f, y: 0x15 }
-          sprite: "Witch"
-          state: [1, 2]
-
-        - name: "Witch's Hut - Buzzblob 2"
-          position: { x: 0x06, y: 0x18 }
-          sprite: "Buzzblob"
-          state: [1, 2]

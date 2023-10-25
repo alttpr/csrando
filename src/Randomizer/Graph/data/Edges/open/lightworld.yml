@@ -1,8 +1,6 @@
 fixed:
   directed:
     - ["Hyrule Castle - Wall Walk", "Hyrule Castle - Courtyard"]
-    - ["Hyrule Castle - Courtyard NE Nook", "Secret Passage Stairs - In"]
-    - ["Secret Passage Stairs - Out", "Hyrule Castle - Courtyard NE Nook"]
     - ["Hyrule Castle - Courtyard", "Hyrule Castle - Main Entrance - In"]
     - ["Hyrule Castle - Wall Walk", "Hyrule Castle - East Entrance - In"]
     - ["Hyrule Castle - Wall Walk", "Hyrule Castle - West Entrance - In"]

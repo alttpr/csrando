@@ -3,7 +3,7 @@ MagicMirror:
     - ["Eastern Ruins", "East Dark World Maze"]
     - ["Desert Rocks Ledge", "Mire Warp Ledge"]
     - ["Desert Ledge", "Mire"]
-    - ["Desert Ledge - Part 2", "Mire"]
+    - ["Desert Ledge - Inside Rocks", "Mire"]
     - ["Desert", "Mire"]
     - ["Link's House", "Bomb Shoppe"]
     - ["Smith's House", "Village Peg Puzzle East"]
@@ -23,7 +23,7 @@ MagicMirror:
     # - ["West of Swamplands", "Bombos Tablet Ledge East"]
     # - ["Turtle Rock Outside Bridge", "East Death Mountain Spiral Cave Balcony"]
     # - ["Turtle Rock Outside Bridge", "East Death Mountain Mimic Balcony"]
-    # - ["East Dark Death Mountain Floating Island", "East Death Mountain FLoating Island"]
+    # - ["East Dark Death Mountain Floating Island", "East Death Mountain Floating Island"]
     # special case for filling swamp
     - ["Wetlands Dam", "FillSwamp"] # disable this in entrance
   undirected: []

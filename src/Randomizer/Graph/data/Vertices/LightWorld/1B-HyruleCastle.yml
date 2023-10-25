@@ -3,39 +3,49 @@ maps:
     moonpearl: false
     nodes:
       regions:
+        # Outside the castle
         - name: "Hyrule Castle - Outer Court"
+
+        # Small area east blocked by a white rock
         - name: "Hyrule Castle - Outer Court East"
+          holes:
+            - name: "Secret Passage Uncle - Hole"
+              conditions: ["LiftBush"]
+              entranceids: [0x0c]
+
+        # Small area with door connected to uncle's location
         - name: "Hyrule Castle - Courtyard NE Nook"
+          entrances:
+            - name: "Secret Passage Stairs"
+              entranceid: 0x31
+              outletid: 0x33
+
+        # Inner courtyard
         - name: "Hyrule Castle - Courtyard"
+          entrances:
+            - name: "Hyrule Castle - Main Entrance"
+              entranceid: 0x03
+              outletid: 0x03
+
+        # Upper area
         - name: "Hyrule Castle - Wall Walk"
+          entrances:
+            - name: "Hyrule Castle - West Entrance"
+              entranceid: 0x02
+              outletid: 0x02
+
+            - name: "Hyrule Castle - East Entrance"
+              entranceid: 0x04
+              outletid: 0x04
+
+            - name: "Hyrule Castle - Agahnim's Tower Entrance"
+              conditions: ["L2Sword", "Cape"]
+              entranceid: 0x23
+              outletid: 0x25
+
         - name: "Rain - Hyrule Castle - Outer Court"
         - name: "Rain - Hyrule Castle - Courtyard"
         - name: "Rain - Hyrule Castle - Wall Walk"
-
-      entrances:
-        - name: "Hyrule Castle - Main Entrance"
-          entranceid: 0x03
-          outletid: 0x03
-
-        - name: "Hyrule Castle - West Entrance"
-          entranceid: 0x02
-          outletid: 0x02
-
-        - name: "Hyrule Castle - East Entrance"
-          entranceid: 0x04
-          outletid: 0x04
-
-        - name: "Secret Passage Stairs"
-          entranceid: 0x31
-          outletid: 0x33
-
-        - name: "Hyrule Castle - Agahnim's Tower Entrance"
-          entranceid: 0x23
-          outletid: 0x25
-
-      holes:
-        - name: "Secret Passage Uncle - Hole"
-          entranceids: [0x0c]
 
       mobs:
         - name: "Hyrule Castle - Courtyard - Lightning Lock"
