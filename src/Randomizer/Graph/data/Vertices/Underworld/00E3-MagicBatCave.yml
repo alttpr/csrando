@@ -4,26 +4,26 @@ rooms:
       regions:
         - name: "Magic Bat Entry"
           inletid: 0x7e
+          pots:
+            - name: "Magic Bat Entry - Pot 1"
+              position: 0x3964
+              sprite: "@RupeeGreen"
+            - name: "Magic Bat Entry - Pot 2"
+              position: 0x3758
+
         - name: "Magic Bat Altar"
+          items:
+            - name: "Magic Bat Item"
+              conditions: ["Powder"]
+              addresses: [0x180015]
+              type: "npc"
+              itemset: ["lw"]
+          mobs:
+            - name: "Magic Bat Altar - Bat"
+              position: { x: 0x17, y: 0x05, z: 0x01 }
+              sprite: "MagicBat"
+              allow:
+                - "MagicBat"
+
         - name: "Magic Bat Left"
           inletid: 0x11
-
-      items:
-        - name: "Magic Bat"
-          addresses: [0x180015]
-          type: "npc"
-          itemset: ["lw"]
-
-      pots:
-        - name: "Magic Bat Entry - Pot 1"
-          position: 0x3964
-          sprite: "@RupeeGreen"
-        - name: "Magic Bat Entry - Pot 2"
-          position: 0x3758
-
-      mobs:
-        - name: "Magic Bat Altar - Bat"
-          position: { x: 0x17, y: 0x05, z: 0x01 }
-          sprite: "MagicBat"
-          allow:
-            - "MagicBat"

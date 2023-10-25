@@ -26,9 +26,9 @@ public sealed class LightWorldTest : StandardMajorGlitchesLogicTests
 
         new object[] { "Link's House", true, new string[] {  } },
 
-        new object[] { "Kakariko Tavern", true, new string[] {  } },
+        new object[] { "Kakariko Tavern Item", true, new string[] {  } },
 
-        new object[] { "Chicken House", true, new string[] {  } },
+        new object[] { "Chicken House Item", true, new string[] {  } },
 
         new object[] { "Aginah's Cave", true, new string[] {  } },
 
@@ -58,8 +58,8 @@ public sealed class LightWorldTest : StandardMajorGlitchesLogicTests
 
         new object[] { "Blind's Hideout - Far Right", true, new string[] {  } },
 
-        new object[] { "Pegasus Rocks", false, new string[] {  } },
-        new object[] { "Pegasus Rocks", true, new string[] { "PegasusBoots" } },
+        new object[] { "Bonk Rocks Item", false, new string[] {  } },
+        new object[] { "Bonk Rocks Item", true, new string[] { "PegasusBoots" } },
 
         new object[] { "Mini Moldorm Cave - Far Left", true, new string[] {  } },
 
@@ -69,24 +69,24 @@ public sealed class LightWorldTest : StandardMajorGlitchesLogicTests
 
         new object[] { "Mini Moldorm Cave - Far Right", true, new string[] {  } },
 
-        new object[] { "Ice Rod Cave", true, new string[] {  } },
+        new object[] { "Ice Rod Cave Item", true, new string[] {  } },
 
         new object[] { "Bottle Merchant", true, new string[] {  } },
 
         new object[] { "Sahasrahla's Hut - Sahasrahla", false, new string[] {  } },
         new object[] { "Sahasrahla's Hut - Sahasrahla", true, new string[] { "PendantOfCourage" } },
 
-        new object[] { "Magic Bat", false, new string[] {  } },
-        new object[] { "Magic Bat", true, new string[] { "Powder" } },
+        new object[] { "Magic Bat Item", false, new string[] {  } },
+        new object[] { "Magic Bat Item", true, new string[] { "Powder" } },
 
-        new object[] { "Sick Kid", false, new string[] {  } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithBee" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithFairy" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithRedPotion" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithGreenPotion" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithBluePotion" } },
-        new object[] { "Sick Kid", true, new string[] { "Bottle" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithGoldBee" } },
+        new object[] { "Sick Kid Item", false, new string[] {  } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithBee" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithFairy" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithRedPotion" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithGreenPotion" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithBluePotion" } },
+        new object[] { "Sick Kid Item", true, new string[] { "Bottle" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithGoldBee" } },
 
         new object[] { "Hobo", true, new string[] {  } },
 
@@ -98,19 +98,19 @@ public sealed class LightWorldTest : StandardMajorGlitchesLogicTests
 
         new object[] { "King Zora", true, new string[] {  } },
 
-        new object[] { "Lost Woods Hideout", true, new string[] {  } },
+        new object[] { "Lost Woods Hideout Item", true, new string[] {  } },
 
         new object[] { "Lumberjack Tree", false, new string[] {  } },
         new object[] { "Lumberjack Tree", true, new string[] { "PegasusBoots", "DefeatAgahnim" } },
 
-        new object[] { "Cave 45", true, new string[] {  } },
+        new object[] { "Cave 45 Item", true, new string[] {  } },
 
         new object[] { "Graveyard Ledge", true, new string[] {  } },
 
-        new object[] { "Checkerboard Cave", false, new string[] {  } },
-        new object[] { "Checkerboard Cave", true, new string[] { "ProgressiveGlove" } },
-        new object[] { "Checkerboard Cave", true, new string[] { "PowerGlove" } },
-        new object[] { "Checkerboard Cave", true, new string[] { "TitansMitt" } },
+        new object[] { "Checkerboard Cave Item", false, new string[] {  } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "ProgressiveGlove" } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "PowerGlove" } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "TitansMitt" } },
 
         new object[] { "Mini Moldorm Cave - NPC", true, new string[] {  } },
 

@@ -16,7 +16,7 @@ maps:
               outletid: 0x89
 
           items:
-            - name: "Purple Chest"
+            - name: "Purple Chest Item"
               conditions: ["LostPurpleChest"]
               addresses: [0x33D68]
               type: "npc"

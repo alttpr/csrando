@@ -4,9 +4,9 @@ rooms:
       regions:
         - name: "Bonk Rocks"
           inletid: 0x6e
-
-      items:
-        - name: "Pegasus Rocks"
-          addresses: [0xEB3F]
-          type: "chest"
-          itemset: ["lw"]
+          items:
+            - name: "Bonk Rocks Item"
+              conditions: ["OpenChest"]
+              addresses: [0xEB3F]
+              type: "chest"
+              itemset: ["lw"]

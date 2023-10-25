@@ -20,7 +20,7 @@ public sealed class SouthTest : InvertedMajorGlitchesLogicTests
 
         new object[] { "Hype Cave - Bottom", true, new string[] {  } },
 
-        new object[] { "Hype Cave - NPC", true, new string[] {  } },
+        new object[] { "Hype Cave - NPC Item", true, new string[] {  } },
 
         new object[] { "Stumpy", true, new string[] {  } },
 

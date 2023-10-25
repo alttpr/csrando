@@ -38,8 +38,8 @@ fixed:
   - ["Old Man Home - In", "Old Man Home"]
   - ["Old Man Home - Exit", "Old Man Home - Out"]
 
-  - ["Old Man Home Circle - In", "Old Man Home Circle"]
-  - ["Old Man Home Circle - Exit", "Old Man Home Circle - Out"]
+  - ["Old Man Home Circle - In", "Old Man Home Circle darkness"]
+  - ["Old Man Home Circle darkness - Exit", "Old Man Home Circle - Out"]
 
   - ["Old Man Maze - In", "Old Man Maze darkness"]
   - ["Old Man Maze darkness - Exit", "Old Man Maze - Out"]

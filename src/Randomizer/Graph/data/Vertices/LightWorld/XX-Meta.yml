@@ -80,9 +80,6 @@ maps:
         - name: "ReturnedSmith"
           item: "ReturnedSmith"
 
-        - name: "LostPurpleChest"
-          item: "LostPurpleChest"
-
         # Boss beating metas
         - name: "DefeatArmos"
           item: "DefeatArmos"

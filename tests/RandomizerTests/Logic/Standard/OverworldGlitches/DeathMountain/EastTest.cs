@@ -12,8 +12,8 @@ public sealed class EastTest : StandardOverworldGlitchesLogicTests
 
     public static IEnumerable<object[]> TestData => new[]
     {
-        new object[] { "Spiral Cave", false, new string[] {  } },
-        new object[] { "Spiral Cave", true, new string[] { "PegasusBoots" } },
+        new object[] { "Spiral Cave Item", false, new string[] {  } },
+        new object[] { "Spiral Cave Item", true, new string[] { "PegasusBoots" } },
 
         new object[] { "Paradox Cave Lower - Far Left", false, new string[] {  } },
         new object[] { "Paradox Cave Lower - Far Left", true, new string[] { "PegasusBoots" } },

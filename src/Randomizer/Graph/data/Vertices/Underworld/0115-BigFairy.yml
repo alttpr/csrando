@@ -16,10 +16,10 @@ rooms:
           inletid: 0x5e
         - name: "Death Mountain Big Fairy"
           inletid: 0x5e
-
-      mobs:
-        - name: "Big Fairy - Fairy"
-          position: { x: 0x17, y: 0x16, z: 0x00 }
-          sprite: "FairyBig"
-          allow:
-            - "FairyBig"
+          # This is the only reference to the big fairy, but the room content is shared
+          mobs:
+            - name: "Big Fairy - Fairy"
+              position: { x: 0x17, y: 0x16, z: 0x00 }
+              sprite: "FairyBig"
+              allow:
+                - "FairyBig"

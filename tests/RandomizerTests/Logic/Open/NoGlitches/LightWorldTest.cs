@@ -26,9 +26,9 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
 
         new object[] { "Link's House - Chest", true, new string[] {  } },
 
-        new object[] { "Kakariko Tavern", true, new string[] {  } },
+        new object[] { "Kakariko Tavern Item", true, new string[] {  } },
 
-        new object[] { "Chicken House", true, new string[] {  } },
+        new object[] { "Chicken House Item", true, new string[] {  } },
 
         new object[] { "Aginah's Cave", true, new string[] {  } },
 
@@ -58,8 +58,8 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
 
         new object[] { "Blind's Hideout - Far Right", true, new string[] {  } },
 
-        new object[] { "Pegasus Rocks", false, new string[] {  } },
-        new object[] { "Pegasus Rocks", true, new string[] { "PegasusBoots" } },
+        new object[] { "Bonk Rocks Item", false, new string[] {  } },
+        new object[] { "Bonk Rocks Item", true, new string[] { "PegasusBoots" } },
 
         new object[] { "Mini Moldorm Cave - Far Left", true, new string[] {  } },
 
@@ -69,26 +69,26 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
 
         new object[] { "Mini Moldorm Cave - Far Right", true, new string[] {  } },
 
-        new object[] { "Ice Rod Cave", true, new string[] {  } },
+        new object[] { "Ice Rod Cave Item", true, new string[] {  } },
 
         new object[] { "Bottle Merchant Item", true, new string[] {  } },
 
         new object[] { "Sahasrahla's Hut - Sahasrahla", false, new string[] {  } },
         new object[] { "Sahasrahla's Hut - Sahasrahla", true, new string[] { "PendantOfCourage" } },
 
-        new object[] { "Magic Bat", false, new string[] {  } },
-        new object[] { "Magic Bat", true, new string[] { "Powder", "Hammer" } },
-        new object[] { "Magic Bat", true, new string[] { "Powder", "ProgressiveGlove", "ProgressiveGlove", "MoonPearl", "MagicMirror" } },
-        new object[] { "Magic Bat", true, new string[] { "Powder", "TitansMitt", "MoonPearl", "MagicMirror" } },
+        new object[] { "Magic Bat Item", false, new string[] {  } },
+        new object[] { "Magic Bat Item", true, new string[] { "Powder", "Hammer" } },
+        new object[] { "Magic Bat Item", true, new string[] { "Powder", "ProgressiveGlove", "ProgressiveGlove", "MoonPearl", "MagicMirror" } },
+        new object[] { "Magic Bat Item", true, new string[] { "Powder", "TitansMitt", "MoonPearl", "MagicMirror" } },
 
-        new object[] { "Sick Kid", false, new string[] {  } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithBee" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithFairy" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithRedPotion" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithGreenPotion" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithBluePotion" } },
-        new object[] { "Sick Kid", true, new string[] { "Bottle" } },
-        new object[] { "Sick Kid", true, new string[] { "BottleWithGoldBee" } },
+        new object[] { "Sick Kid Item", false, new string[] {  } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithBee" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithFairy" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithRedPotion" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithGreenPotion" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithBluePotion" } },
+        new object[] { "Sick Kid Item", true, new string[] { "Bottle" } },
+        new object[] { "Sick Kid Item", true, new string[] { "BottleWithGoldBee" } },
 
         new object[] { "Bomb Hut", true, new string[] { } },
 
@@ -131,19 +131,19 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
         new object[] { "King Zora", true, new string[] { "PowerGlove" } },
         new object[] { "King Zora", true, new string[] { "TitansMitt" } },
 
-        new object[] { "Lost Woods Hideout", true, new string[] {  } },
+        new object[] { "Lost Woods Hideout Item", true, new string[] {  } },
 
         new object[] { "Lumberjack Tree", false, new string[] {  } },
         new object[] { "Lumberjack Tree", true, new string[] { "PegasusBoots", "AgahnimDefeated" } },
 
-        new object[] { "Cave 45", false, new string[] {  } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "TitansMitt" } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "PowerGlove", "Hammer" } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "Hammer" } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "ProgressiveGlove", "Hookshot" } },
-        new object[] { "Cave 45", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "Flippers", "Hookshot" } },
+        new object[] { "Cave 45 Item", false, new string[] {  } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "TitansMitt" } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "Hammer" } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "PowerGlove", "Hammer" } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "Hammer" } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "ProgressiveGlove", "Hookshot" } },
+        new object[] { "Cave 45 Item", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "Flippers", "Hookshot" } },
 
         new object[] { "Graveyard Cave Item", false, new string[] {  } },
         new object[] { "Graveyard Cave Item", true, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
@@ -154,9 +154,9 @@ public class LightWorldTest : OpenNoGlitchesLogicTests
         new object[] { "Graveyard Cave Item", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "ProgressiveGlove", "Hookshot" } },
         new object[] { "Graveyard Cave Item", true, new string[] { "MoonPearl", "MagicMirror", "AgahnimDefeated", "Flippers", "Hookshot" } },
 
-        new object[] { "Checkerboard Cave", false, new string[] {  } },
-        new object[] { "Checkerboard Cave", true, new string[] { "OcarinaActive", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Checkerboard Cave", true, new string[] { "OcarinaActive", "MagicMirror", "TitansMitt" } },
+        new object[] { "Checkerboard Cave Item", false, new string[] {  } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "OcarinaActive", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "OcarinaActive", "MagicMirror", "TitansMitt" } },
 
         new object[] { "Mini Moldorm Cave - NPC", true, new string[] {  } },
 

@@ -4,18 +4,18 @@ rooms:
       regions:
         - name: "Fortune Teller"
           inletid: 0x65
+          mobs:
+            - name: "Fortune Teller - Fortune Teller"
+              position: { x: 0x07, y: 0x18, z: 0x00 }
+              sprite: "FortuneTeller"
+              allow:
+                - "FortuneTeller"
+
         - name: "Fortune Teller Dark"
           inletid: 0x66
-
-      mobs:
-        - name: "Fortune Teller - Fortune Teller"
-          position: { x: 0x07, y: 0x18, z: 0x00 }
-          sprite: "FortuneTeller"
-          allow:
-            - "FortuneTeller"
-
-        - name: "Fortune Teller Dark - Fortune Teller"
-          position: { x: 0x17, y: 0x18, z: 0x00 }
-          sprite: "FortuneTeller"
-          allow:
-            - "FortuneTeller"
+          mobs:
+            - name: "Fortune Teller Dark - Fortune Teller"
+              position: { x: 0x17, y: 0x18, z: 0x00 }
+              sprite: "FortuneTeller"
+              allow:
+                - "FortuneTeller"

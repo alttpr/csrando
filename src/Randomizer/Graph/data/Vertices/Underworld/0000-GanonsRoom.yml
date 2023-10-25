@@ -5,10 +5,10 @@ rooms:
         - name: "Ganon's Room"
           inletid: 0x7B
 
-      # perhaps move triforce to next room and make mobs in here carry trophy.
-      mobs:
-        - name: "Ganon"
-          position: { x: 0x17, y: 0x05, z: 0x00 }
-          sprite: "Ganon"
-          allow: ["Ganon"]
-          item: "Triforce"
+          # perhaps move triforce to next room and make mobs in here carry trophy.
+          mobs:
+            - name: "Ganon"
+              position: { x: 0x17, y: 0x05, z: 0x00 }
+              sprite: "Ganon"
+              allow: ["Ganon"]
+              item: "Triforce"

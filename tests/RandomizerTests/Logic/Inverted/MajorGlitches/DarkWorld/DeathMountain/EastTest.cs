@@ -16,17 +16,17 @@ public sealed class EastTest : InvertedMajorGlitchesLogicTests
 
         new object[] { "Superbunny Cave - Bottom", true, new string[] {  } },
 
-        new object[] { "Hookshot Cave - Bottom Right", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Bottom Right", true, new string[] { "PegasusBoots" } },
-        new object[] { "Hookshot Cave - Bottom Right", true, new string[] { "Hookshot" } },
+        new object[] { "Hookshot Cave - Bottom Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Bottom Chest", true, new string[] { "PegasusBoots" } },
+        new object[] { "Hookshot Cave - Bottom Chest", true, new string[] { "Hookshot" } },
 
-        new object[] { "Hookshot Cave - Bottom Left", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Bottom Left", true, new string[] { "Hookshot" } },
+        new object[] { "Hookshot Cave - Middle South Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Middle South Chest", true, new string[] { "Hookshot" } },
 
-        new object[] { "Hookshot Cave - Top Left", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Top Left", true, new string[] { "Hookshot" } },
+        new object[] { "Hookshot Cave - Middle North Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Middle North Chest", true, new string[] { "Hookshot" } },
 
-        new object[] { "Hookshot Cave - Top Right", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Top Right", true, new string[] { "Hookshot" } },
+        new object[] { "Hookshot Cave - Top Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Top Chest", true, new string[] { "Hookshot" } },
     };
 }

@@ -4,10 +4,9 @@ rooms:
       regions:
         - name: "Money Making Game Library"
           inletid: 0x67
-
-      mobs:
-        - name: "Money Making Game Library - Shopkeeper"
-          position: { x: 0x19, y: 0x1b, z: 0x00 }
-          sprite: "Salesman"
-          allow:
-            - "Salesman"
+          mobs:
+            - name: "Money Making Game Library - Shopkeeper"
+              position: { x: 0x19, y: 0x1b, z: 0x00 }
+              sprite: "Salesman"
+              allow:
+                - "Salesman"

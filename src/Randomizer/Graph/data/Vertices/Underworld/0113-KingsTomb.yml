@@ -4,9 +4,9 @@ rooms:
       regions:
         - name: "King's Tomb"
           inletid: 0x5b
-
-      items:
-        - name: "King's Tomb Chest"
-          addresses: [0xE97A]
-          type: "chest"
-          itemset: ["lw"]
+          items:
+            - name: "King's Tomb Chest"
+              conditions: ["OpenChest"]
+              addresses: [0xE97A]
+              type: "chest"
+              itemset: ["lw"]

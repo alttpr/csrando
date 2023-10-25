@@ -4,24 +4,22 @@ rooms:
       regions:
         - name: "Ice Cave - West"
           inletid: 0x84
+          items:
+            - name: "Ice Rod Cave Item"
+              conditions: ["OpenChest"]
+              addresses: [0xEB4E]
+              type: "chest"
+              itemset: ["lw"]
+
         - name: "Ice Cave - East"
           inletid: 0x56
-
-      items:
-        - name: "Ice Rod Cave"
-          addresses: [0xEB4E]
-          type: "chest"
-          itemset: ["lw"]
-
-      mobs:
-        - name: "Ice Cave - Good Bee"
-          position: { x: 0x17, y: 0x07, z: 0x00 }
-          sprite: "BeeGood"
-
-        - name: "Ice Cave - Fairy 1"
-          position: { x: 0x1b, y: 0x08, z: 0x00 }
-          sprite: "Fairy"
-
-        - name: "Ice Cave - Fairy 2"
-          position: { x: 0x1a, y: 0x09, z: 0x00 }
-          sprite: "Fairy"
+          mobs:
+            - name: "Ice Cave - Good Bee"
+              position: { x: 0x17, y: 0x07, z: 0x00 }
+              sprite: "BeeGood"
+            - name: "Ice Cave - Fairy 1"
+              position: { x: 0x1b, y: 0x08, z: 0x00 }
+              sprite: "Fairy"
+            - name: "Ice Cave - Fairy 2"
+              position: { x: 0x1a, y: 0x09, z: 0x00 }
+              sprite: "Fairy"

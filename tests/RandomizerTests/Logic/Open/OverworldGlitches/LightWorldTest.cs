@@ -13,8 +13,8 @@ public sealed class LightWorldTest : OpenOverworldGlitchesLogicTests
     public static IEnumerable<object[]> TestData => new[]
     {
             // @todo figure out where the boots clip drops one off?
-            // new object[] { "Magic Bat", false, new string[] {  } },
-            // new object[] { "Magic Bat", true, new string[] { "Powder", "PegasusBoots" } },
+            // new object[] { "Magic Bat Item", false, new string[] {  } },
+            // new object[] { "Magic Bat Item", true, new string[] { "Powder", "PegasusBoots" } },
 
         new object[] { "Hobo", true, new string[] {  } },
 
@@ -24,16 +24,16 @@ public sealed class LightWorldTest : OpenOverworldGlitchesLogicTests
         new object[] { "King Zora", true, new string[] {  } },
 
 
-        new object[] { "Cave 45", false, new string[] {  } },
-        new object[] { "Cave 45", true, new string[] { "PegasusBoots" } },
+        new object[] { "Cave 45 Item", false, new string[] {  } },
+        new object[] { "Cave 45 Item", true, new string[] { "PegasusBoots" } },
 
         new object[] { "Graveyard Cave Item", false, new string[] {  } },
         new object[] { "Graveyard Cave Item", true, new string[] { "PegasusBoots" } },
 
-        new object[] { "Checkerboard Cave", false, new string[] {  } },
-        new object[] { "Checkerboard Cave", true, new string[] { "PegasusBoots", "ProgressiveGlove" } },
-        new object[] { "Checkerboard Cave", true, new string[] { "PegasusBoots", "PowerGlove" } },
-        new object[] { "Checkerboard Cave", true, new string[] { "PegasusBoots", "TitansMitt" } },
+        new object[] { "Checkerboard Cave Item", false, new string[] {  } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "PegasusBoots", "ProgressiveGlove" } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "PegasusBoots", "PowerGlove" } },
+        new object[] { "Checkerboard Cave Item", true, new string[] { "PegasusBoots", "TitansMitt" } },
 
         new object[] { "Maze Race", true, new string[] {  } },
 

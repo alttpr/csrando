@@ -4,16 +4,16 @@ rooms:
       regions:
         - name: "Aginah's Cave"
           inletid: 0x4D
+          mobs:
+            - name: "Desert Cave - Aginah"
+              position: { x: 0x19, y: 0x04, z: 0x00 }
+              sprite: "Sahasrahla"
+              allow: ["Sahasrahla"]
+
         - name: "Aginah's Cave - Chest Room"
-
-      items:
-        - name: "Aginah's Cave - Chest"
-          addresses: [0xE9F2]
-          type: "chest"
-          itemset: ["lw"]
-
-      mobs:
-        - name: "Desert Cave - Aginah"
-          position: { x: 0x19, y: 0x04, z: 0x00 }
-          sprite: "Sahasrahla"
-          allow: ["Sahasrahla"]
+          items:
+            - name: "Aginah's Cave - Chest"
+              conditions: ["OpenChest"]
+              addresses: [0xE9F2]
+              type: "chest"
+              itemset: ["lw"]

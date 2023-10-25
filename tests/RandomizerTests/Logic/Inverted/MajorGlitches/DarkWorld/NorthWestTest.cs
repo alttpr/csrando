@@ -12,9 +12,9 @@ public sealed class NorthWestTest : InvertedMajorGlitchesLogicTests
 
     public static IEnumerable<object[]> TestData => new[]
     {
-        new object[] { "Brewery", true, new string[] {  } },
+        new object[] { "Brewery Item", true, new string[] {  } },
 
-        new object[] { "C-Shaped House", true, new string[] {  } },
+        new object[] { "C-Shaped House Item", true, new string[] {  } },
 
         new object[] { "Chest Game", true, new string[] {  } },
 
@@ -23,14 +23,14 @@ public sealed class NorthWestTest : InvertedMajorGlitchesLogicTests
 
         new object[] { "Bumper Cave Item", true, new string[] {  } },
 
-        new object[] { "Blacksmith", false, new string[] {  } },
-        new object[] { "Blacksmith", true, new string[] { "MagicMirror" } },
-        new object[] { "Blacksmith", true, new string[] { "Bottle" } },
-        new object[] { "Blacksmith", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
+        new object[] { "Blacksmith Item", false, new string[] {  } },
+        new object[] { "Blacksmith Item", true, new string[] { "MagicMirror" } },
+        new object[] { "Blacksmith Item", true, new string[] { "Bottle" } },
+        new object[] { "Blacksmith Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
 
-        new object[] { "Purple Chest", false, new string[] {  } },
-        new object[] { "Purple Chest", true, new string[] { "MagicMirror" } },
-        new object[] { "Purple Chest", true, new string[] { "Bottle" } },
-        new object[] { "Purple Chest", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
+        new object[] { "Purple Chest Item", false, new string[] {  } },
+        new object[] { "Purple Chest Item", true, new string[] { "MagicMirror" } },
+        new object[] { "Purple Chest Item", true, new string[] { "Bottle" } },
+        new object[] { "Purple Chest Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
     };
 }

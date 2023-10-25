@@ -9,7 +9,7 @@ maps:
           items:
             - name: "LostSmith"
               item: "LostSmith"
-              type: npc
+              type: "npc"
               itemset: ["smith"]
           mobs:
             - name: "South of Outcasts North - Dwarf Smith"

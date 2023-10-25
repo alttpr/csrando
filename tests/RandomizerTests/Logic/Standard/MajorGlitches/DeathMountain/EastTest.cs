@@ -12,7 +12,7 @@ public sealed class EastTest : StandardMajorGlitchesLogicTests
 
     public static IEnumerable<object[]> TestData => new[]
     {
-        new object[] { "Spiral Cave", true, new string[] {  } },
+        new object[] { "Spiral Cave Item", true, new string[] {  } },
 
         new object[] { "Paradox Cave Lower - Far Left", true, new string[] {  } },
 

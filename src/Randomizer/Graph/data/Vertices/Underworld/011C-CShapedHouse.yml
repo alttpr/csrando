@@ -4,9 +4,9 @@ rooms:
       regions:
         - name: "C-Shaped House C"
           inletid: 0x54
-
-      items:
-        - name: "C-Shaped House"
-          addresses: [0xE9EF]
-          type: "chest"
-          itemset: ["dw"]
+          items:
+            - name: "C-Shaped House Item"
+              conditions: ["OpenChest"]
+              addresses: [0xE9EF]
+              type: "chest"
+              itemset: ["dw"]

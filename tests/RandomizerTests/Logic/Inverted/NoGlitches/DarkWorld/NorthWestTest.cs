@@ -5,9 +5,9 @@ public class NorthWestTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => new[]
     {
-        new object[] { "Brewery", true, new string[] {  } },
+        new object[] { "Brewery Item", true, new string[] {  } },
 
-        new object[] { "C-Shaped House", true, new string[] {  } },
+        new object[] { "C-Shaped House Item", true, new string[] {  } },
 
         new object[] { "Chest Game", true, new string[] {  } },
 
@@ -30,17 +30,17 @@ public class NorthWestTest : InvertedNoGlitchesLogicTests
         new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "AgahnimDefeated", "ProgressiveGlove" } },
         new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "AgahnimDefeated", "PowerGlove" } },
 
-        new object[] { "Blacksmith", false, new string[] {  } },
-        new object[] { "Blacksmith", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" } },
-        new object[] { "Blacksmith", true, new string[] { "TitansMitt", "MoonPearl" } },
-        new object[] { "Blacksmith", true, new string[] { "AgahnimDefeated", "MagicMirror" } },
-        new object[] { "Blacksmith", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" } },
+        new object[] { "Blacksmith Item", false, new string[] {  } },
+        new object[] { "Blacksmith Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" } },
+        new object[] { "Blacksmith Item", true, new string[] { "TitansMitt", "MoonPearl" } },
+        new object[] { "Blacksmith Item", true, new string[] { "AgahnimDefeated", "MagicMirror" } },
+        new object[] { "Blacksmith Item", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" } },
 
-        new object[] { "Purple Chest", false, new string[] {  } },
-        new object[] { "Purple Chest", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" } },
-        new object[] { "Purple Chest", true, new string[] { "TitansMitt", "MoonPearl" } },
-        new object[] { "Purple Chest", true, new string[] { "AgahnimDefeated", "MagicMirror" } },
-        new object[] { "Purple Chest", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" } },
+        new object[] { "Purple Chest Item", false, new string[] {  } },
+        new object[] { "Purple Chest Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" } },
+        new object[] { "Purple Chest Item", true, new string[] { "TitansMitt", "MoonPearl" } },
+        new object[] { "Purple Chest Item", true, new string[] { "AgahnimDefeated", "MagicMirror" } },
+        new object[] { "Purple Chest Item", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" } },
     };
 
     [TestMethod]

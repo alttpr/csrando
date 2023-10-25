@@ -4,13 +4,11 @@ rooms:
       regions:
         - name: "Library - Entrance"
           inletid: 0x49
-
           items:
             - name: "Library Item"
               addresses: [0x180012]
               type: "bonk"
               itemset: ["lw"]
-
           mobs:
             - name: "Library - Dash Item"
               position: { x: 0x03, y: 0x15, z: 0x00 }

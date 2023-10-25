@@ -45,11 +45,11 @@ public sealed class WestTest : OpenNoGlitchesLogicTests
         new object[] { "Old Man", true, new string[] { "PowerGlove", "Lamp" } },
         new object[] { "Old Man", true, new string[] { "TitansMitt", "Lamp" } },
 
-        new object[] { "Spectacle Rock Cave", false, new string[] {  } },
-        new object[] { "Spectacle Rock Cave", true, new string[] { "OcarinaActive" } },
-        new object[] { "Spectacle Rock Cave", true, new string[] { "ProgressiveGlove", "Lamp" } },
-        new object[] { "Spectacle Rock Cave", true, new string[] { "PowerGlove", "Lamp" } },
-        new object[] { "Spectacle Rock Cave", true, new string[] { "TitansMitt", "Lamp" } },
+        new object[] { "Spectacle Rock Cave Item", false, new string[] {  } },
+        new object[] { "Spectacle Rock Cave Item", true, new string[] { "OcarinaActive" } },
+        new object[] { "Spectacle Rock Cave Item", true, new string[] { "ProgressiveGlove", "Lamp" } },
+        new object[] { "Spectacle Rock Cave Item", true, new string[] { "PowerGlove", "Lamp" } },
+        new object[] { "Spectacle Rock Cave Item", true, new string[] { "TitansMitt", "Lamp" } },
 
         new object[] { "Spectacle Rock", false, new string[] {  } },
         new object[] { "Spectacle Rock", true, new string[] { "OcarinaActive", "MagicMirror" } },

@@ -4,33 +4,37 @@ rooms:
       regions:
         - name: "Hype Cave Entrance"
           inletid: 0x3D
+          items:
+            - name: "Hype Cave - NPC Item"
+              addresses: [0x180011]
+              type: "npc"
+              itemset: ["dw"]
+          mobs:
+            - name: "Hype Cave - Shopkeeper"
+              position: { x: 0x18, y: 0x16, z: 0x00 }
+              sprite: "Salesman"
+              allow:
+                - "Salesman"
+
         - name: "Hype Cave"
-
-      items:
-        - name: "Hype Cave - NPC"
-          addresses: [0x180011]
-          type: "npc"
-          itemset: ["dw"]
-        - name: "Hype Cave - Top"
-          addresses: [0xEB1E]
-          type: "chest"
-          itemset: ["dw"]
-        - name: "Hype Cave - Middle Right"
-          addresses: [0xEB21]
-          type: "chest"
-          itemset: ["dw"]
-        - name: "Hype Cave - Middle Left"
-          addresses: [0xEB24]
-          type: "chest"
-          itemset: ["dw"]
-        - name: "Hype Cave - Bottom"
-          addresses: [0xEB27]
-          type: "chest"
-          itemset: ["dw"]
-
-      mobs:
-        - name: "Hype Cave - Shopkeeper"
-          position: { x: 0x18, y: 0x16, z: 0x00 }
-          sprite: "Salesman"
-          allow:
-            - "Salesman"
+          items:
+            - name: "Hype Cave - Top"
+              conditions: ["OpenChest"]
+              addresses: [0xEB1E]
+              type: "chest"
+              itemset: ["dw"]
+            - name: "Hype Cave - Middle Right"
+              conditions: ["OpenChest"]
+              addresses: [0xEB21]
+              type: "chest"
+              itemset: ["dw"]
+            - name: "Hype Cave - Middle Left"
+              conditions: ["OpenChest"]
+              addresses: [0xEB24]
+              type: "chest"
+              itemset: ["dw"]
+            - name: "Hype Cave - Bottom"
+              conditions: ["OpenChest"]
+              addresses: [0xEB27]
+              type: "chest"
+              itemset: ["dw"]

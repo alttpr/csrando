@@ -15,6 +15,6 @@ public sealed class WestTest : InvertedMajorGlitchesLogicTests
         new object[] { "Old Man", false, new string[] {  } },
         new object[] { "Old Man", true, new string[] { "Lamp" } },
 
-        new object[] { "Spectacle Rock Cave", true, new string[] {  } },
+        new object[] { "Spectacle Rock Cave Item", true, new string[] {  } },
     };
 }

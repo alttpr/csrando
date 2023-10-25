@@ -10,6 +10,12 @@ maps:
               conditions: ["Hammer"]
               entranceid: 0x7E
               outletid: 0x90
+          items:
+            - name: "Lost Purple Chest"
+              conditions: ["ReturnedSmith"]
+              item: "LostPurpleChest"
+              type: "follower"
+              itemset: ["purplechest"]
           mobs:
             - name: "Village Peg Puzzle West - Purple Chest"
               position: { x: 0x0d, y: 0x05 }

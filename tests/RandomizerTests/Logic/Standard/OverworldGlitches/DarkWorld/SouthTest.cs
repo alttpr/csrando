@@ -25,8 +25,8 @@ public sealed class SouthTest : StandardOverworldGlitchesLogicTests
         new object[] { "Hype Cave - Bottom", false, new string[] {  } },
         new object[] { "Hype Cave - Bottom", true, new string[] { "MoonPearl", "PegasusBoots" } },
 
-        new object[] { "Hype Cave - NPC", false, new string[] {  } },
-        new object[] { "Hype Cave - NPC", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        new object[] { "Hype Cave - NPC Item", false, new string[] {  } },
+        new object[] { "Hype Cave - NPC Item", true, new string[] { "MoonPearl", "PegasusBoots" } },
 
         new object[] { "Stumpy", false, new string[] {  } },
         new object[] { "Stumpy", true, new string[] { "MoonPearl", "PegasusBoots" } },

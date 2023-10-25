@@ -4,16 +4,15 @@ rooms:
       regions:
         - name: "Chest Game Room"
           inletid: 0x47
-
-      items:
-        - name: "Chest Game"
-          addresses: [0xEDA8]
-          type: "chest"
-          itemset: ["dw"]
-
-      mobs:
-        - name: "Brewery Room - Shopkeeper"
-          position: { x: 0x08, y: 0x1b, z: 0x00 }
-          sprite: "Salesman"
-          allow:
-            - "Salesman"
+          items:
+            - name: "Chest Game"
+              conditions: ["OpenChest"]
+              addresses: [0xEDA8]
+              type: "chest"
+              itemset: ["dw"]
+          mobs:
+            - name: "Brewery Room - Shopkeeper"
+              position: { x: 0x08, y: 0x1b, z: 0x00 }
+              sprite: "Salesman"
+              allow:
+                - "Salesman"

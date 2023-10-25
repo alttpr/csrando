@@ -91,10 +91,6 @@ fixed:
     - ["Hylia River Peninsula", "Hylia River Peninsula South River"]
     - ["Witch's Hut River", "Octorok Pit River"]
     - ["Lake Hylia Fairy Island", "Lake Hylia"]
-OpenChest:
-  directed:
-    - ["Floodgate", "Floodgate Chest"]
-  undirected: []
 BookOfMudora:
   directed:
     - ["Desert", "Desert Stairs"]

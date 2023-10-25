@@ -12,12 +12,12 @@ public sealed class EastTest : InvertedMajorGlitchesLogicTests
 
     public static IEnumerable<object[]> TestData => new[]
     {
-        new object[] { "Spiral Cave", false, new string[] {  } },
-        new object[] { "Spiral Cave", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "Lamp", "UncleSword" } },
-        new object[] { "Spiral Cave", true, new string[] { "MagicMirror", "TitansMitt", "Lamp", "UncleSword" } },
-        new object[] { "Spiral Cave", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "PegasusBoots", "UncleSword" } },
-        new object[] { "Spiral Cave", true, new string[] { "MagicMirror", "TitansMitt", "PegasusBoots", "UncleSword" } },
-        new object[] { "Spiral Cave", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        new object[] { "Spiral Cave Item", false, new string[] {  } },
+        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "Lamp", "UncleSword" } },
+        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "TitansMitt", "Lamp", "UncleSword" } },
+        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "PegasusBoots", "UncleSword" } },
+        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "TitansMitt", "PegasusBoots", "UncleSword" } },
+        new object[] { "Spiral Cave Item", true, new string[] { "MoonPearl", "PegasusBoots" } },
 
         new object[] { "Paradox Cave Lower - Far Left", false, new string[] {  } },
         new object[] { "Paradox Cave Lower - Far Left", true, new string[] { "MoonPearl" } },

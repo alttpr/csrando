@@ -4,10 +4,9 @@ rooms:
       regions:
         - name: "Brothers House Right"
           inletid: 0x10
-
-      mobs:
-        - name: "Brothers House Right - Angry Brother"
-          position: { x: 0x08, y: 0x14, z: 0x00 }
-          sprite: "AngryBrother"
-          allow:
-            - "AngryBrother"
+          mobs:
+            - name: "Brothers House Right - Angry Brother"
+              position: { x: 0x08, y: 0x14, z: 0x00 }
+              sprite: "AngryBrother"
+              allow:
+                - "AngryBrother"

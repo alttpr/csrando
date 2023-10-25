@@ -16,17 +16,14 @@ maps:
               position: { x: 0x17, y: 0x12 }
               sprite: "GreenSwordGuard"
               state: [1]
-
             - name: "Smith's House - Chicken 1"
               position: { x: 0x0c, y: 0x14 }
               sprite: "Chicken"
               state: [2]
-
             - name: "Smith's House - Bunny Beam"
               position: { x: 0x0c, y: 0x04 }
               sprite: "BunnyBeam"
               state: [1, 2]
-
             - name: "Smith's House - Chicken"
               position: { x: 0x12, y: 0x14 }
               sprite: "Chicken"

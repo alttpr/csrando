@@ -24,16 +24,16 @@ public sealed class EastTest : StandardOverworldGlitchesLogicTests
         new object[] { "Superbunny Cave - Bottom", true, new string[] { "Hammer", "PegasusBoots" } },
         new object[] { "Superbunny Cave - Bottom", true, new string[] { "MoonPearl", "PegasusBoots" } },
 
-        new object[] { "Hookshot Cave - Bottom Right", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Bottom Right", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        new object[] { "Hookshot Cave - Bottom Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Bottom Chest", true, new string[] { "MoonPearl", "PegasusBoots" } },
 
-        new object[] { "Hookshot Cave - Bottom Left", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Bottom Left", true, new string[] { "MoonPearl", "PegasusBoots", "Hookshot" } },
+        new object[] { "Hookshot Cave - Middle South Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Middle South Chest", true, new string[] { "MoonPearl", "PegasusBoots", "Hookshot" } },
 
-        new object[] { "Hookshot Cave - Top Left", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Top Left", true, new string[] { "MoonPearl", "PegasusBoots", "Hookshot" } },
+        new object[] { "Hookshot Cave - Middle North Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Middle North Chest", true, new string[] { "MoonPearl", "PegasusBoots", "Hookshot" } },
 
-        new object[] { "Hookshot Cave - Top Right", false, new string[] {  } },
-        new object[] { "Hookshot Cave - Top Right", true, new string[] { "MoonPearl", "PegasusBoots", "Hookshot" } },
+        new object[] { "Hookshot Cave - Top Chest", false, new string[] {  } },
+        new object[] { "Hookshot Cave - Top Chest", true, new string[] { "MoonPearl", "PegasusBoots", "Hookshot" } },
     };
 }
