@@ -4,31 +4,36 @@ rooms:
     nodes:
       regions:
         - name: "Eastern Palace - Eyegore Switches"
+          connections:
+            fixed:
+              - "Eastern Palace - Dodgeball"
+              - "Eastern Palace - Antifairy Playground"
+          pots:
+            - name: "Eastern Palace - Dodgeball - Pot 1"
+              position: 0x145c
+              sprite: "@ArrowRefill5"
+            - name: "Eastern Palace - Dodgeball - Pot 2"
+              position: 0x1c5c
+              sprite: "@Heart"
+          mobs:
+            - name: "Eastern Palace - Dodgeball - Green Eyegore 1"
+              position: { x: 0x18, y: 0x15, z: 0x00 }
+              sprite: "EyegoreGreen"
+              deny:
+                - "RollerHR"
+            - name: "Eastern Palace - Dodgeball - Green Eyegore 2"
+              position: { x: 0x18, y: 0x18, z: 0x00 }
+              sprite: "EyegoreGreen"
+            - name: "Eastern Palace - Dodgeball - Green Eyegore 3"
+              position: { x: 0x18, y: 0x1b, z: 0x00 }
+              sprite: "EyegoreGreen"
+
         - name: "Eastern Palace - Dodgeball"
-
-      pots:
-        - name: "Eastern Palace - Dodgeball - Pot 1"
-          position: 0x145c
-          sprite: "@ArrowRefill5"
-        - name: "Eastern Palace - Dodgeball - Pot 2"
-          position: 0x1c5c
-          sprite: "@Heart"
-
-      mobs:
-        - name: "Eastern Palace - Dodgeball - Cannonballs"
-          position: { x: 0x0c, y: 0x14, z: 0x00 }
-          sprite: "FullRoomCannons"
-
-        - name: "Eastern Palace - Dodgeball - Green Eyegore 1"
-          position: { x: 0x18, y: 0x15, z: 0x00 }
-          sprite: "EyegoreGreen"
-          deny:
-            - "RollerHR"
-
-        - name: "Eastern Palace - Dodgeball - Green Eyegore 2"
-          position: { x: 0x18, y: 0x18, z: 0x00 }
-          sprite: "EyegoreGreen"
-
-        - name: "Eastern Palace - Dodgeball - Green Eyegore 3"
-          position: { x: 0x18, y: 0x1b, z: 0x00 }
-          sprite: "EyegoreGreen"
+          connections:
+            fixed:
+              - "Eastern Palace - Kill Room 1"
+              - "Eastern Palace - Eyegore Switches"
+          mobs:
+            - name: "Eastern Palace - Dodgeball - Cannonballs"
+              position: { x: 0x0c, y: 0x14, z: 0x00 }
+              sprite: "FullRoomCannons"

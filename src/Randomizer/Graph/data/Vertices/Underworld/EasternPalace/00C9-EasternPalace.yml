@@ -5,28 +5,34 @@ rooms:
       regions:
         - name: "Eastern Palace - Entrance"
           inletid: 0x08
+          connections:
+            LiftPot:
+              - "Eastern Palace - Popo Switch"
+          pots:
+            - name: "Eastern Palace - Entrance - Pot 1"
+              position: 0x161e
+              sprite: "@RupeeGreen"
+            - name: "Eastern Palace - Entrance - Pot 2"
+              position: 0x165e
+              sprite: "@RupeeGreen"
+            - name: "Eastern Palace - Entrance - Pot 3"
+              position: 0x163c
+              sprite: "FloorSwitch"
+
         - name: "Eastern Palace - Popo Switch"
+          connections:
+            fixed:
+              - "Eastern Palace - Entrance"
+              - "Eastern Palace - Cannonball Room"
+          mobs:
+            - name: "Eastern Palace - Entrance - Popo B 1"
+              position: { x: 0x10, y: 0x05, z: 0x00 }
+              sprite: "Popo2"
 
-      pots:
-        - name: "Eastern Palace - Entrance - Pot 1"
-          position: 0x161e
-          sprite: "@RupeeGreen"
-        - name: "Eastern Palace - Entrance - Pot 2"
-          position: 0x165e
-          sprite: "@RupeeGreen"
-        - name: "Eastern Palace - Entrance - Pot 3"
-          position: 0x163c
-          sprite: "FloorSwitch"
+            - name: "Eastern Palace - Entrance - Popo B 2"
+              position: { x: 0x0f, y: 0x06, z: 0x00 }
+              sprite: "Popo2"
 
-      mobs:
-        - name: "Eastern Palace - Entrance - Popo B 1"
-          position: { x: 0x10, y: 0x05, z: 0x00 }
-          sprite: "Popo2"
-
-        - name: "Eastern Palace - Entrance - Popo B 2"
-          position: { x: 0x0f, y: 0x06, z: 0x00 }
-          sprite: "Popo2"
-
-        - name: "Eastern Palace - Entrance - Popo B 3"
-          position: { x: 0x10, y: 0x07, z: 0x00 }
-          sprite: "Popo2"
+            - name: "Eastern Palace - Entrance - Popo B 3"
+              position: { x: 0x10, y: 0x07, z: 0x00 }
+              sprite: "Popo2"

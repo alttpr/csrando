@@ -4,29 +4,36 @@ rooms:
     nodes:
       regions:
         - name: "Eastern Palace - Cannonball Room"
+          connections:
+            fixed:
+              - "Eastern Palace - Main Room - Balcony"
+              - "Eastern Palace - Popo Switch"
+          items:
+            - name: "Eastern Palace - Cannonball Chest"
+              addresses: [0xE9B3]
+              type: "chest"
+              itemset: ["eastern"]
+          pots:
+            - name: "Eastern Palace - Cannonball Room - Pot 1"
+              position: 0x125c
+              sprite: "@RupeeGreen"
+            - name: "Eastern Palace - Cannonball Room - Pot 2"
+              position: 0x1260
+              sprite: "@RupeeBlue"
+            - name: "Eastern Palace - Cannonball Room - Pot 3"
+              position: 0x1268
+              sprite: "@RupeeBlue"
+            - name: "Eastern Palace - Cannonball Room - Pot 4"
+              position: 0x126c
+              sprite: "@RupeeGreen"
+          mobs:
+            - name: "Eastern Palace - Cannonball Room - Empty"
+              position: { x: 0x11, y: 0x05, z: 0x01 }
+              sprite: "VerticalCannon"
+
         - name: "Eastern Palace - Cannonball Bridge"
-
-      items:
-        - name: "Eastern Palace - Cannonball Chest"
-          addresses: [0xE9B3]
-          type: "chest"
-          itemset: ["eastern"]
-
-      pots:
-        - name: "Eastern Palace - Cannonball Room - Pot 1"
-          position: 0x125c
-          sprite: "@RupeeGreen"
-        - name: "Eastern Palace - Cannonball Room - Pot 2"
-          position: 0x1260
-          sprite: "@RupeeBlue"
-        - name: "Eastern Palace - Cannonball Room - Pot 3"
-          position: 0x1268
-          sprite: "@RupeeBlue"
-        - name: "Eastern Palace - Cannonball Room - Pot 4"
-          position: 0x126c
-          sprite: "@RupeeGreen"
-
-      mobs:
-        - name: "Eastern Palace - Cannonball Room - Empty"
-          position: { x: 0x11, y: 0x05, z: 0x01 }
-          sprite: "VerticalCannon"
+          connections:
+            fixed:
+              - "Eastern Palace - Antifairy Circle"
+            KeyP1:
+              - "Eastern Palace - Dark Antifairy Circle"
