@@ -12,7 +12,7 @@ internal sealed class ItemPooler
     private readonly PRNG _prng;
     /**
      * Create new Item Pooler.
-     * 
+     *
      * @param World[] worlds worlds to get Item pools for
      */
     public ItemPooler(World[] worlds, PRNG prng)
@@ -186,7 +186,7 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                         {
-                            world.GetItem(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" }[_prng.GetRandomInt(2)]),
+                            world.GetItem(_prng.GetRandomElement(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" })),
                         }
                     },
                 }
@@ -195,7 +195,7 @@ internal sealed class ItemPooler
                 {
                     { 0, new List<Item>
                         {
-                            world.GetItem(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" }[_prng.GetRandomInt(2)]),
+                            world.GetItem(_prng.GetRandomElement(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" })),
                         }
                     },
                 }
@@ -637,7 +637,7 @@ internal sealed class ItemPooler
 
     /**
      * Get Shop Items for world in proper placement groups.
-     * 
+     *
      * @todo verify these counts, they are definitely wrong
      *
      * @param World world world to get items for
