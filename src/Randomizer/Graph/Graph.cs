@@ -57,14 +57,14 @@ public sealed class Graph
     /// <summary>
     /// Add Vertex to the graph.
     /// </summary>
-    /// 
-    /// <param name="vertex">source Vertex</param> 
+    ///
+    /// <param name="vertex">source Vertex</param>
     public Vertex AddVertex(Vertex vertex)
     {
         _vertices.Add(vertex);
         _verticesByName.Add(vertex.Name, vertex);
 
-        if (ITEM_LOCATIONS.Contains(vertex.Type))
+        if (ITEM_LOCATIONS.Contains(vertex.SubType ?? vertex.Type))
         {
             _setLocations["*"].Add(vertex);
             foreach (string set in vertex.ItemSet)
@@ -81,9 +81,9 @@ public sealed class Graph
     /// <summary>
     /// Create a new Directed Edge in the graph.
     /// </summary>
-    /// 
-    /// <param name="from">source Vertex</param> 
-    /// <param name="to">target Vertex</param> 
+    ///
+    /// <param name="from">source Vertex</param>
+    /// <param name="to">target Vertex</param>
     /// <param name="item">Item required to traverse edge</param>
     /// <param name="itemCount">flow of Item to traverse</param>
     public Edge AddDirected(Vertex from, Vertex to, Item item, int itemCount = 1)
@@ -94,9 +94,9 @@ public sealed class Graph
     /// <summary>
     /// Create a new Directed Edge in the graph.
     /// </summary>
-    /// 
-    /// <param name="from">source Vertex</param> 
-    /// <param name="to">target Vertex</param> 
+    ///
+    /// <param name="from">source Vertex</param>
+    /// <param name="to">target Vertex</param>
     /// <param name="condition">ItemCondition required to traverse edge</param>
     public Edge AddDirected(Vertex from, Vertex to, ItemCondition condition)
     {

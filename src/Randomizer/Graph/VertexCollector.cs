@@ -161,7 +161,8 @@ internal class VertexCollector
                     string itemName = $"{item.Name}:{world.Id}";
                     var itemVertex = new Vertex
                     {
-                        Type = item.Type,
+                        Type = VertexType.Item,
+                        SubType = item.Type,
                         Name = itemName,
                         Map = map.MapMap,
                         Item = world.GetItemOrNull(item.Item),
@@ -243,7 +244,8 @@ internal class VertexCollector
                 string name = $"{item.Name}:{world.Id}";
                 structured_vertices.Add(name, new Vertex
                 {
-                    Type = item.Type,
+                    Type = VertexType.Item,
+                    SubType = item.Type,
                     Name = name,
                     Map = map.MapMap,
                     Item = world.GetItemOrNull(item.Item),
@@ -390,7 +392,8 @@ internal class VertexCollector
                     string itemName = $"{item.Name}:{world.Id}";
                     var itemVertex = new Vertex
                     {
-                        Type = item.Type,
+                        Type = VertexType.Item,
+                        SubType = item.Type,
                         Name = itemName,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
@@ -473,7 +476,8 @@ internal class VertexCollector
                 string name = $"{item.Name}:{world.Id}";
                 structured_vertices.Add(name, new Vertex
                 {
-                    Type = item.Type,
+                    Type = VertexType.Item,
+                    SubType = item.Type,
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
