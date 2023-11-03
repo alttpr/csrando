@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Haunted Grove Entrance"
+          connections:
+            fixed:
+              - "Wetlands Portal West"
+              - "South Kakariko"
+            LiftBush:
+              - "Haunted Grove"
           mobs:
             - name: "Cave 45 Ledge - Bomb Refill (1)"
               position: { x: 0x1a, y: 0x09 }
@@ -51,6 +57,9 @@ maps:
               state: [1, 2]
 
         - name: "Cave 45 Ledge"
+          connections:
+            fixed:
+              - "Haunted Grove Entrance"
           entrances:
             - name: "Cave 45"
               entranceid: 0x50

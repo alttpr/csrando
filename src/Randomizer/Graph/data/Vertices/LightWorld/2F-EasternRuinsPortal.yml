@@ -4,28 +4,28 @@ maps:
     nodes:
       regions:
         - name: "Eastern Ruins Portal"
-
+          connections:
+            fixed:
+              - "Eastern Ruins"
+            Hammer:
+              - "Eastern Ruins Portal Peg Circle"
           entrances:
             - name: "Eastern Ruins Fairy Cave"
               entranceid: 0x54
               outletid: 0x7E
-
           mobs:
             - name: "Eastern Ruins Portal - Blue Guard"
               position: { x: 0x0f, y: 0x0c }
               sprite: "BlueSwordGuard"
               state: [1]
-
             - name: "Eastern Ruins Portal - sprite.FastRedSpearGuard"
               position: { x: 0x0f, y: 0x0c }
               sprite: "FastRedSpearGuard"
               state: [2]
-
             - name: "Eastern Ruins Portal - Armos 1"
               position: { x: 0x07, y: 0x17 }
               sprite: "Armos"
               state: [1, 2]
-
             - name: "Eastern Ruins Portal - Armos 2"
               position: { x: 0x0c, y: 0x17 }
               sprite: "Armos"
@@ -33,3 +33,6 @@ maps:
 
         # TODO: Add portal to DW
         - name: "Eastern Ruins Portal Peg Circle"
+          connections:
+            Hammer:
+              - "Eastern Ruins Portal"

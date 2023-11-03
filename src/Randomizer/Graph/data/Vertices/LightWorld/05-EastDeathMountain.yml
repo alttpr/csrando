@@ -4,15 +4,34 @@ maps:
     nodes:
       regions:
         - name: "East Death Mountain Hammer Bridge"
+          connections:
+            fixed:
+              - "West Death Mountain Summit"
+            Hammer:
+              - "East Death Mountain Summit"
+
         - name: "East Death Mountain Hookshot Bridge"
+          connections:
+            fixed:
+              - "West Death Mountain"
+            Hookshot:
+              - "East Death Mountain Running Man"
 
         - name: "East Death Mountain Center Balcony"
+          connections:
+            fixed:
+              - "East Death Mountain Running Man's Tail"
           entrances:
             - name: "Fairy Ascension Cave - Pits Right"
               entranceid: 0x1A
               outletid: 0x1C
 
         - name: "East Death Mountain Running Man"
+          connections:
+            Hookshot:
+              - "East Death Mountain Hookshot Bridge"
+            TitansMitt:
+              - "East Death Mountain Running Man's Tail"
           entrances:
             - name: "Spiral Cave Exit"
               entranceid: 0x1B
@@ -53,12 +72,22 @@ maps:
               state: [1, 2]
 
         - name: "East Death Mountain Running Man's Tail"
+          connections:
+            fixed:
+              - "East Death Mountain Running Man"
           entrances:
             - name: "Fairy Ascension Cave - Bottom"
               entranceid: 0x19
               outletid: 0x1B
 
         - name: "East Death Mountain Summit"
+          connections:
+            fixed:
+              - "East Death Mountain Spiral Cave Balcony"
+              - "East Death Mountain Center Balcony"
+              - "East Death Mountain Peg Portal"
+            Hammer:
+              - "East Death Mountain Hammer Bridge"
           entrances:
             - name: "Paradox Cave - Top"
               entranceid: 0x1F

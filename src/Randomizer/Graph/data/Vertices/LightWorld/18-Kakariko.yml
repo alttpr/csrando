@@ -4,6 +4,15 @@ maps:
     nodes:
       regions:
         - name: "Kakariko Village"
+          connections:
+            fixed:
+              - "Kakariko Fortune Teller"
+              - "Lost Woods Alcove West"
+              - "Lost Woods Alcove Southeast"
+              - "Smith's House"
+            LiftBush:
+              - "Kakariko Village Bomb Hut"
+              - "Kakariko Village Bush House"
           entrances:
             - name: "Kakariko Well"
               entranceid: 0x38
@@ -142,6 +151,9 @@ maps:
               state: [1, 2]
 
         - name: "Kakariko Village Bomb Hut"
+          connections:
+            LiftBush:
+              - "Kakariko Village"
           entrances:
             - name: "Kakariko Village Bomb Hut"
               conditions: ["UseBomb"]
@@ -149,6 +161,9 @@ maps:
               outletid: 0x5a
 
         - name: "Kakariko Village Bush House"
+          connections:
+            LiftBush:
+              - "Kakariko Village"
           entrances:
             - name: "Kakariko Village Bush House"
               entranceid: 0x43

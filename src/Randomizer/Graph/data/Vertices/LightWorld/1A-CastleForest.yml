@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Castle Forest"
+          connections:
+            fixed:
+              - "Northwest Pond"
+              - "Hyrule Castle - Outer Court"
           mobs:
             - name: "Castle Forest - Fairy"
               position: { x: 0x0d, y: 0x11 }

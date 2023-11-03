@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "East Death Mountain Peg Portal"
+          connections:
+            fixed:
+              - "East Death Mountain Summit"
           mobs:
             - name: "East Death Mountain Peg Portal - Deadrock 1"
               position: { x: 0x0e, y: 0x07 }
@@ -27,3 +30,6 @@ maps:
               state: [1, 2]
 
         - name: "East Death Mountain Peg Portal Top"
+          connections:
+            Hammer:
+              - "Turtle Peak Shellback"

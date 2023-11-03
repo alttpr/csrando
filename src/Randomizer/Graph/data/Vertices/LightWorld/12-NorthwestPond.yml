@@ -4,6 +4,13 @@ maps:
     nodes:
       regions:
         - name: "Northwest Pond"
+          connections:
+            fixed:
+              - "Kakariko Fortune Teller"
+              - "Sanctuary"
+              - "Sanctuary Bonk Rocks"
+              - "Death Mountain Foot"
+              - "Castle Forest"
           warps:
             - name: "Northwest Pond whirlpool"
               position: { x: 0x0F, y: 0x10 }

@@ -4,6 +4,11 @@ rooms:
       regions:
         - name: "Brothers House Left"
           inletid: 0x0f
+          connections:
+            UseBomb:
+              - "Brothers House Right"
+            PegasusBoots:
+              - "Brothers House Right"
           mobs:
             - name: "Brothers House Left - Angry Brother"
               position: { x: 0x17, y: 0x14, z: 0x00 }

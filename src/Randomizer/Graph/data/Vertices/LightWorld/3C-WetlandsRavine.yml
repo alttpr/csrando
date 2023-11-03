@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Wetlands Ravine"
+          connections:
+            fixed:
+              - "Lake Hylia South Shore"
+              - "Wetlands Dam"
+              - "Wetlands Totems"
 
           mobs:
             - name: "Wetlands Ravine - Green Archer"

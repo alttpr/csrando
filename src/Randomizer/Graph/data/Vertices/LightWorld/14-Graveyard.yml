@@ -4,6 +4,16 @@ maps:
     nodes:
       regions:
         - name: "Graveyard"
+          connections:
+            fixed:
+              - "Sanctuary"
+              - "Hylia River North Bend West"
+            LiftBush:
+              - "Graveyard Northern Nook"
+            PowerGlove:
+              - "Graveyard Northwest Niche"
+            TitansMitt:
+              - "Graveyard King's Tomb"
           holes:
             - name: "Sewers - Block Puzzle - Hole"
               conditions: ["PowerGlove"]
@@ -55,6 +65,9 @@ maps:
               state: [2]
 
         - name: "Graveyard King's Tomb"
+          connections:
+            TitansMitt:
+              - "Graveyard"
           entrances:
             - name: "King's Tomb"
               conditions: ["PegasusBoots"]
@@ -62,11 +75,30 @@ maps:
               outletid: 0x6B
 
         - name: "Graveyard Ledge"
+          connections:
+            fixed:
+              - "Graveyard Northern Nook"
           entrances:
             - name: "Graveyard Cave"
               entranceid: 0x51
               outletid: 0x7C
 
         - name: "Graveyard Four Square Niche"
+          connections:
+            LiftBush:
+              - "Graveyard Northern Nook"
+
         - name: "Graveyard Northern Nook"
+          connections:
+            LiftBush:
+              - "Graveyard"
+              - "Graveyard Four Square Niche"
+              - "Graveyard Northwest Niche"
+
         - name: "Graveyard Northwest Niche"
+          connections:
+            LiftBush:
+              - "Graveyard Four Square Niche"
+              - "Graveyard Northern Nook"
+            PowerGlove:
+              - "Graveyard"

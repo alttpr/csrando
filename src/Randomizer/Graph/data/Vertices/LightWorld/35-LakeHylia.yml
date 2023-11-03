@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Lake Hylia"
+          connections:
+            fixed:
+              - "Lake Hylia River Bend"
+              - "Lake Hylia Fairy Island"
           warps:
             - name: "Lake Hylia whirlpool"
               position: { x: 0x29, y: 0x2B }
@@ -46,8 +50,18 @@ maps:
               state: [2]
 
         - name: "Lake Hylia North East Shore"
+          connections:
+            fixed:
+              - "South of Ruins"
+            Flippers:
+              - "Lake Hylia"
 
         - name: "Lake Hylia North West Shore"
+          connections:
+            fixed:
+              - "Hobo Bridge"
+            Flippers:
+              - "Lake Hylia"
           entrances:
             - name: "Lake Hylia Shop"
               entranceid: 0x57
@@ -78,6 +92,12 @@ maps:
               state: [1, 2]
 
         - name: "Lake Hylia South Shore"
+          connections:
+            fixed:
+              - "South Shore Falls"
+              - "Wetlands Ravine"
+            Flippers:
+              - "Lake Hylia"
           entrances:
             - name: "Mini Moldorm Cave"
               conditions: ["UseBomb"]
@@ -131,6 +151,9 @@ maps:
               state: [1, 2]
 
         - name: "Lake Hylia Fairy Island"
+          connections:
+            Flippers:
+              - "Lake Hylia"
           entrances:
             - name: "Pond of Happiness"
               entranceid: 0x5C
@@ -147,6 +170,9 @@ maps:
               state: [1, 2]
 
         - name: "Lake Hylia Small Island"
+          connections:
+            Flippers:
+              - "Lake Hylia"
           items:
             - name: "Lake Hylia Island Item"
               addresses: [0x180144]

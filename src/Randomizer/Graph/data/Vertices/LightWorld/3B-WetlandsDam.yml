@@ -5,6 +5,12 @@ maps:
       regions:
         - name: "Wetlands Dam"
 
+          connections:
+            fixed:
+              - "Desert Pass"
+              - "Wetlands Portal East"
+              - "Wetlands Ravine"
+
           entrances:
             - name: "Floodgate"
               entranceid: 0x4D

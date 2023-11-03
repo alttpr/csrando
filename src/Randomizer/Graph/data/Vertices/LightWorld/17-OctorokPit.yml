@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Octorok Pit"
+          connections:
+            fixed:
+              - "Witch's Hut Northeast Nook"
+              - "Zora's Falls"
+            Flippers:
+              - "Octorok Pit River"
           mobs:
             - name: "Octorok Pit - Buzzblob 3"
               position: { x: 0x0d, y: 0x0b }
@@ -31,3 +37,6 @@ maps:
               state: [1, 2]
 
         - name: "Octorok Pit River"
+          connections:
+            fixed:
+              - "Witch's Hut River"

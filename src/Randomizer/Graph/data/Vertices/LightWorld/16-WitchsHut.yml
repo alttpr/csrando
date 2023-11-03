@@ -4,6 +4,13 @@ maps:
     nodes:
       regions:
         - name: "Witch's Hut"
+          connections:
+            fixed:
+              - "Hylia River North Bend East"
+            Flippers:
+              - "Witch's Hut River"
+            PowerGlove:
+              - "Witch's Hut Northeast Nook"
           entrances:
             - name: "Witch's Hut"
               entranceid: 0x4B
@@ -31,4 +38,16 @@ maps:
               state: [1, 2]
 
         - name: "Witch's Hut Northeast Nook"
+          connections:
+            fixed:
+              - "Octorok Pit"
+            Flippers:
+              - "Witch's Hut River"
+            PowerGlove:
+              - "Witch's Hut"
+
         - name: "Witch's Hut River"
+          connections:
+            fixed:
+              - "Hylia River North Bend"
+              - "Octorok Pit River"

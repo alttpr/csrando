@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Smith's House"
+          connections:
+            fixed:
+              - "Kakariko Village"
+            Hammer:
+              - "Smith's House Bat Ledge"
           entrances:
             - name: "Blacksmith House"
               entranceid: 0x63
@@ -30,6 +35,9 @@ maps:
               state: [1, 2]
 
         - name: "Smith's House Bat Ledge"
+          connections:
+            Hammer:
+              - "Smith's House"
           holes:
             - name: "Magic Bat - Hole"
               entranceids: [0x0D, 0x0E]

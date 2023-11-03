@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Link's House"
+          connections:
+            fixed:
+              - "Hobo Bridge"
+              - "Hyrule Castle - Outer Court"
+              - "Link's House West Woods"
+              - "Wetlands Totems"
           entrances:
             - name: "Link's House"
               entranceid: 0x00

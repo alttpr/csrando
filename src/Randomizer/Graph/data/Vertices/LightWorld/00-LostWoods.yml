@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Lost Woods Main Arbor"
+          connections:
+            fixed:
+              - "Kakariko Fortune Teller"
+              - "Lumberjacks"
+            LiftBush:
+              - "Lost Woods Mushroom Niche"
           entrances:
             - name: "Thief Hideout"
               entranceid: 0x2B
@@ -82,6 +88,13 @@ maps:
               entranceids: [0x07]
 
         - name: "Lost Woods West Logs"
+          connections:
+            fixed:
+              - "Master Sword Grove"
+              - "Lost Woods Alcove Northeast"
+              - "Lost Woods Alcove West"
+            LiftBush:
+              - "Lost Woods Mushroom Niche"
           mobs:
             - name: "Lost Woods - Raven 1"
               position: { x: 0x12, y: 0x0b }
@@ -113,6 +126,10 @@ maps:
               state: [1, 2]
 
         - name: "Lost Woods Mushroom Niche"
+          connections:
+            LiftBush:
+              - "Lost Woods Main Arbor"
+              - "Lost Woods West Logs"
           items:
             - name: "Mushroom"
               addresses: [0x180013]

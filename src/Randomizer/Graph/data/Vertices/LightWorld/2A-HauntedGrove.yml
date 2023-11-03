@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "Haunted Grove"
+          connections:
+            LiftBush:
+              - "Haunted Grove Entrance"
           items:
             - name: "Flute Spot"
               conditions: ["Shovel"]

@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Zora's Domain"
+          connections:
+            fixed:
+              - "Zora's Falls"
+            Flippers:
+              - "Zora's Domain Ledge"
           items:
             - name: "King Zora"
               addresses: [0xEE1C3]
@@ -125,6 +130,9 @@ maps:
               state: [1, 2]
 
         - name: "Zora's Domain Ledge"
+          connections:
+            Flippers:
+              - "Zora's Domain"
           items:
             - name: "Zora's Domain Ledge Item"
               addresses: [0x180149]

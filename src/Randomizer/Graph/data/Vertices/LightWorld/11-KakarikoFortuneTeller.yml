@@ -4,6 +4,15 @@ maps:
     nodes:
       regions:
         - name: "Kakariko Fortune Teller"
+          connections:
+            fixed:
+              - "Kakariko Village"
+              - "Kakariko Fortune Teller Niche Next to the Psychic"
+              - "Northwest Pond"
+              - "Lost Woods Main Arbor"
+            LiftBush:
+              - "Kakariko Fortune Teller Southwest Tree Niche"
+              - "Kakariko Fortune Teller Niche Next to the Psychic"
           entrances:
             - name: "Kakariko Fortune Teller"
               entranceid: 0x64
@@ -35,7 +44,14 @@ maps:
               state: [1, 2]
 
         - name: "Kakariko Fortune Teller Niche Next to the Psychic"
+          connections:
+            LiftBush:
+              - "Kakariko Fortune Teller"
+
         - name: "Kakariko Fortune Teller Southwest Tree Niche"
+          connections:
+            LiftBush:
+              - "Kakariko Fortune Teller"
           mobs:
             - name: "Kakariko Fortune Teller - Chicken"
               position: { x: 0x08, y: 0x17 }

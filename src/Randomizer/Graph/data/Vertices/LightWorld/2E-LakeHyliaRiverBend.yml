@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "South of Ruins"
+          connections:
+            fixed:
+              - "Eastern Ruins"
+              - "Octorok Field"
+              - "Lake Hylia North East Shore"
           entrances:
             - name: "South of Ruins Big Fairy"
               entranceid: 0x5D
@@ -35,6 +40,10 @@ maps:
               state: [1, 2]
 
         - name: "Lake Hylia River Bend"
+          connections:
+            fixed:
+              - "Lake Hylia"
+              - "Hobo Bridge River"
           mobs:
             - name: "Lake Hylia River Bend - Fireball Zora"
               position: { x: 0x05, y: 0x12 }

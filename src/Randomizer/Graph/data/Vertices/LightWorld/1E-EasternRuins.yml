@@ -4,7 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Eastern Ruins"
-
+          connections:
+            fixed:
+              - "Eastern Ruins Portal"
+              - "South of Ruins"
           entrances:
             - name: "Eastern Palace"
               entranceid: 0x07

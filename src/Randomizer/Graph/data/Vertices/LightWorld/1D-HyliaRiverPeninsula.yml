@@ -4,6 +4,15 @@ maps:
     nodes:
       regions:
         - name: "Hylia River Peninsula"
+          connections:
+            fixed:
+              - "Octorok Field"
+              - "Hylia River North Bend West"
+            Flippers:
+              - "Hylia River Peninsula North River"
+              - "Hylia River Peninsula South River"
+            LiftBush:
+              - "Hylia River Peninsula Northeast Niche"
           mobs:
             - name: "Hylia River Peninsula - Apple"
               position: { x: 0x0b, y: 0x06 }
@@ -35,5 +44,20 @@ maps:
               state: [2]
 
         - name: "Hylia River Peninsula Northeast Niche"
+          connections:
+            fixed:
+              - "Hylia River North Bend East"
+            Flippers:
+              - "Hylia River Peninsula North River"
+            LiftBush:
+              - "Hylia River Peninsula"
+
         - name: "Hylia River Peninsula North River"
+          connections:
+            fixed:
+              - "Hylia River North Bend"
+
         - name: "Hylia River Peninsula South River"
+          connections:
+            fixed:
+              - "Hylia River Peninsula"

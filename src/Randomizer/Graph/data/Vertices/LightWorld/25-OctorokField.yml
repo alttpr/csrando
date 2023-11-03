@@ -4,7 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Octorok Field"
-
+          connections:
+            fixed:
+              - "Hylia River Peninsula"
+              - "Hobo Bridge"
+              - "Hyrule Castle - Outer Court East"
+              - "South of Ruins"
           mobs:
             - name: "Octorok Field - Octorok (One Way) 1"
               position: { x: 0x0f, y: 0x08 }

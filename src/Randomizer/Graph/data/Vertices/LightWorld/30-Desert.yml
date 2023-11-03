@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Desert"
+          connections:
+            fixed:
+              - "Desert Pass"
+            BookOfMudora:
+              - "Desert Stairs"
           entrances:
             - name: "Aginah's Cave"
               entranceid: 0x4C
@@ -105,6 +110,12 @@ maps:
               outletid: 0x0A
 
         - name: "Desert Ledge"
+          connections:
+            fixed:
+              - "Desert"
+            PowerGlove:
+              - "Desert Ledge - Inside Rocks"
+              - "Desert Ledge - Rocks Right"
           items:
             - name: "Desert Ledge - Item"
               addresses: [0x180143]
@@ -126,6 +137,9 @@ maps:
 
         # Small area to the back of Desert Palace
         - name: "Desert Ledge - Inside Rocks"
+          connections:
+            PowerGlove:
+              - "Desert Ledge"
           entrances:
             - name: "Desert Palace - Back"
               entranceid: 0x0B
@@ -133,15 +147,26 @@ maps:
 
         # Empty area right of the rocks
         - name: "Desert Ledge - Rocks Right"
+          connections:
+            fixed:
+              - "Desert"
+            PowerGlove:
+              - "Desert Ledge - Inside Rocks"
 
         # Small area in front of the right exit of Desert Palace
         - name: "Desert Ledge - Right"
+          connections:
+            fixed:
+              - "Desert"
           entrances:
             - name: "Desert Palace - East"
               entranceid: 0x09
               outletid: 0x0B
 
         - name: "Checkerboard Ledge"
+          connections:
+            fixed:
+              - "Desert"
           entrances:
             - name: "Checkerboard Cave"
               conditions: ["PowerGlove"]
@@ -149,6 +174,10 @@ maps:
               outletid: 0x8F
 
         - name: "Bombos Tablet Ledge West"
+          connections:
+            fixed:
+              - "Desert"
+              - "Bombos Tablet Ledge East"
           items:
             - name: "Bombos Tablet"
               conditions: ["ActiveBookOfMudora"]
@@ -163,3 +192,6 @@ maps:
 
         # Ledge with the dark world portal
         - name: "Desert Rocks Ledge"
+          connections:
+            fixed:
+              - "Desert"

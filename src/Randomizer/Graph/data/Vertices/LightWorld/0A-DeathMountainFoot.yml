@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Death Mountain Foot"
+          connections:
+            fixed:
+              - "Lumberjacks"
+              - "Northwest Pond"
+            PowerGlove:
+              - "Death Mountain Foot Cave Entrance"
           mobs:
             - name: "Death Mountain Foot - Rupee Pull"
               position: { x: 0x0e, y: 0x06 }
@@ -66,12 +72,18 @@ maps:
               state: [1, 2]
 
         - name: "Death Mountain Foot Cave Entrance"
+          connections:
+            PowerGlove:
+              - "Death Mountain Foot"
           entrances:
             - name: "Death Mountain Foot Cave Entrance"
               entranceid: 0x05
               outletid: 0x07
 
         - name: "Death Mountain Foot Descent Ledge"
+          connections:
+            fixed:
+              - "Death Mountain Foot"
           entrances:
             - name: "Death Mountain Foot Descent Ledge"
               entranceid: 0x2d

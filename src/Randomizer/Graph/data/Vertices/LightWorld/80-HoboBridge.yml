@@ -4,6 +4,15 @@ maps:
     nodes:
       regions:
         - name: "Under the Bridge"
+          connections:
+            fixed:
+              - "Hobo Bridge River"
+              - "Hobo Island"
+
+        - name: "Hobo Island"
+          connections:
+            Flippers:
+              - "Under the Bridge"
           items:
             - name: "Hobo"
               addresses: [0x33E7D]

@@ -4,6 +4,16 @@ maps:
     nodes:
       regions:
         - name: "Wetlands Portal East"
+          connections:
+            fixed:
+              - "Wetlands Dam"
+              - "Wetlands Totems"
+            Flippers:
+              - "Wetlands Portal East Pool"
+            Hammer:
+              - "Wetlands Portal Warp"
+            PowerGlove:
+              - "Wetlands Portal West"
           mobs:
             - name: "Wetlands Portal East - Green Archer"
               position: { x: 0x15, y: 0x0b }
@@ -37,6 +47,12 @@ maps:
               state: [1, 2]
 
         - name: "Wetlands Portal West"
+          connections:
+            fixed:
+              - "Haunted Grove Entrance"
+              - "Link's House West Woods"
+            PowerGlove:
+              - "Wetlands Portal East"
           mobs:
             - name: "Wetlands Portal East - Blue Archer"
               position: { x: 0x09, y: 0x0e }
@@ -44,3 +60,6 @@ maps:
               state: [1]
 
         - name: "Wetlands Portal Warp"
+          connections:
+            Hammer:
+              - "Wetlands Portal East"

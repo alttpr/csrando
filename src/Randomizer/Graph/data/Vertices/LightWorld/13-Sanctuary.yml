@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Sanctuary"
+          connections:
+            fixed:
+              - "Graveyard"
+              - "Northwest Pond"
           entrances:
             - name: "Sanctuary Hall"
               entranceid: 0x01
@@ -35,6 +39,10 @@ maps:
               state: [2]
 
         - name: "Sanctuary Bonk Rocks"
+          connections:
+            fixed:
+              - "Sanctuary"
+              - "Northwest Pond"
           entrances:
             - name: "Sanctuary Bonk Rocks"
               conditions: ["PegasusBoots"]

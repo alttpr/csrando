@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "Ice Cave Region"
+          connections:
+            fixed:
+              - "South Shore Falls"
           entrances:
             - name: "Ice Cave - West"
               conditions: ["UseBomb"]

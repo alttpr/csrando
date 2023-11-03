@@ -4,7 +4,17 @@ maps:
     nodes:
       regions:
         - name: "Lost Woods Alcove Portal"
+          connections:
+            TitansMitt:
+              - "Lost Woods Alcove Southeast"
+            Hammer:
+              - "Lost Woods Alcove Northeast"
+
         - name: "Lost Woods Alcove West"
+          connections:
+            fixed:
+              - "Kakariko Village"
+              - "Lost Woods West Logs"
           mobs:
             - name: "Lost Woods Alcove West - Green Guard 1"
               position: { x: 0x05, y: 0x0c }
@@ -37,7 +47,18 @@ maps:
               state: [1, 2]
 
         - name: "Lost Woods Alcove Southeast"
+          connections:
+            fixed:
+              - "Kakariko Village"
+            TitansMitt:
+              - "Lost Woods Alcove Portal"
+
         - name: "Lost Woods Alcove Northeast"
+          connections:
+            fixed:
+              - "Lost Woods West Logs"
+            Hammer:
+              - "Lost Woods Alcove Portal"
           mobs:
             - name: "Lost Woods Alcove West - Full Magic Refill"
               position: { x: 0x17, y: 0x0f }

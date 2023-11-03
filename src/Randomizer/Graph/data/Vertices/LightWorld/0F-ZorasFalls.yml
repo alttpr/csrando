@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Zora's Falls"
+          connections:
+            fixed:
+              - "Octorok Pit"
+              - "Zora's Domain"
+            Flippers:
+              - "Zora's Falls Pool"
           mobs:
             - name: "Zora's Falls - Raven"
               position: { x: 0x1c, y: 0x15 }
@@ -23,6 +29,9 @@ maps:
               state: [1, 2]
 
         - name: "Zora's Falls Pool"
+          connections:
+            fixed:
+              - "Zora's Falls"
           entrances:
             - name: "Waterfall of Wishing"
               entranceid: 0x5B

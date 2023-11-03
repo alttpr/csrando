@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "Maze Race Start"
+          connections:
+            fixed:
+              - "Race Game Lower"
           entrances:
             - name: "Brothers House Left"
               entranceid: 0x0E
@@ -36,3 +39,6 @@ maps:
               state: [1, 2]
 
         - name: "Race Game Lower"
+          connections:
+            fixed:
+              - "South Kakariko"

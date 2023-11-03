@@ -5,6 +5,11 @@ maps:
       regions:
         - name: "Link's House West Woods"
 
+          connections:
+            fixed:
+              - "Link's House"
+              - "Wetlands Portal West"
+
           entrances:
             - name: "West Woods Fairy Pond"
               conditions: ["PegasusBoots"]

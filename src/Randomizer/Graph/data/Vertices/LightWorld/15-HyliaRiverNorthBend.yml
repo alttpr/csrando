@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Hylia River North Bend"
+          connections:
+            fixed:
+              - "Witch's Hut River"
+              - "Hylia River Peninsula North River"
           warps:
             - name: "Hylia River North Bend whirlpool"
               position: { x: 0xFF, y: 0xFF }
@@ -14,6 +18,12 @@ maps:
               state: [1, 2]
 
         - name: "Hylia River North Bend East"
+          connections:
+            fixed:
+              - "Witch's Hut"
+              - "Hylia River Peninsula Northeast Niche"
+            Flippers:
+              - "Hylia River North Bend"
           mobs:
             - name: "Hylia River North Bend - sprite.FastRedSpearGuard"
               position: { x: 0x16, y: 0x0e }
@@ -29,6 +39,12 @@ maps:
               state: [1, 2]
 
         - name: "Hylia River North Bend West"
+          connections:
+            fixed:
+              - "Graveyard"
+              - "Hylia River Peninsula"
+            Flippers:
+              - "Hylia River North Bend"
           entrances:
             - name: "Drop Great Fairy"
               entranceid: 0x37

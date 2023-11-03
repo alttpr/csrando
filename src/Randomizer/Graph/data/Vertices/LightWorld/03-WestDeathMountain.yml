@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "West Death Mountain"
+          connections:
+            fixed:
+              - "East Death Mountain Hookshot Bridge"
           entrances:
             - name: "Spectacle Rock Cave Top"
               entranceid: 0x22
@@ -100,6 +103,10 @@ maps:
               state: [1, 2]
 
         - name: "West Death Mountain Spectacle Peak"
+          connections:
+            fixed:
+              - "West Death Mountain"
+              - "West Death Mountain Summit"
           items:
             - name: "Spectacle Rock"
               addresses: [0x180140]
@@ -112,6 +119,10 @@ maps:
               state: [1, 2]
 
         - name: "West Death Mountain Summit"
+          connections:
+            fixed:
+              - "West Death Mountain"
+              - "East Death Mountain Hammer Bridge"
           entrances:
             - name: "Tower Of Hera - Entrance"
               entranceid: 0x32

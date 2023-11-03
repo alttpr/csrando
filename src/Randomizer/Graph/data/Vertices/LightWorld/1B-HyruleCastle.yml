@@ -5,9 +5,20 @@ maps:
       regions:
         # Outside the castle
         - name: "Hyrule Castle - Outer Court"
+          connections:
+            fixed:
+              - "Link's House"
+              - "Castle Forest"
+            PowerGlove:
+              - "Hyrule Castle - Outer Court East"
 
         # Small area east blocked by a white rock
         - name: "Hyrule Castle - Outer Court East"
+          connections:
+            fixed:
+              - "Octorok Field"
+            PowerGlove:
+              - "Hyrule Castle - Outer Court"
           holes:
             - name: "Secret Passage Uncle - Hole"
               conditions: ["LiftBush"]
@@ -15,6 +26,9 @@ maps:
 
         # Small area with door connected to uncle's location
         - name: "Hyrule Castle - Courtyard NE Nook"
+          connections:
+            LiftBush:
+              - "Hyrule Castle - Courtyard"
           entrances:
             - name: "Secret Passage Stairs"
               entranceid: 0x31
@@ -22,6 +36,9 @@ maps:
 
         # Inner courtyard
         - name: "Hyrule Castle - Courtyard"
+          connections:
+            LiftBush:
+              - "Hyrule Castle - Courtyard NE Nook"
           entrances:
             - name: "Hyrule Castle - Main Entrance"
               entranceid: 0x03

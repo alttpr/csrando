@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Wetlands Totems"
+          connections:
+            fixed:
+              - "Link's House"
+              - "Wetlands Portal East"
+              - "Wetlands Ravine"
           entrances:
             - name: "Wetlands Big Fairy"
               conditions: ["UseBomb"]

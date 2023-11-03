@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Lumberjacks"
+          connections:
+            fixed:
+              - "Lost Woods Main Arbor"
+              - "Death Mountain Foot"
+            AgahnimDefeated:
+              - "Lumberjacks Tree"
           entrances:
             - name: "Lumberjacks Cave"
               entranceid: 0x11

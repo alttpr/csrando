@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "Master Sword Grove"
+          connections:
+            fixed:
+              - "Lost Woods West Logs"
           items:
             - name: "Master Sword Pedestal"
               conditions: ["AllPendants"]

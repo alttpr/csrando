@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "South Kakariko"
+          connections:
+            fixed:
+              - "Race Game Lower"
+              - "Haunted Grove Entrance"
           entrances:
             - name: "Library"
               entranceid: 0x48

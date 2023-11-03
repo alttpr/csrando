@@ -6,6 +6,7 @@ rooms:
           inletid: 0x49
           items:
             - name: "Library Item"
+              conditions: ["PegasusBoots"]
               addresses: [0x180012]
               type: "bonk"
               itemset: ["lw"]
