@@ -46,6 +46,7 @@ internal class VertexCollector
         var vertex_data = YamlReader.LoadVertices();
         var structured_vertices = new Dictionary<string, Vertex>();
         var fixedCondition = new ItemCondition(world.GetItem("fixed"), 1);
+        var pendingConnections = new List<(Vertex, string, ItemCondition)>();
 
         var MoonPearlTransform = (bool moonpearl, string name) =>
         {
@@ -207,6 +208,14 @@ internal class VertexCollector
                     structured_vertices.Add(warpName, warpVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, warpVertex, fixedCondition));
                     warpVertex.Edges.Add(new Edge(warpVertex, regionVertex, fixedCondition));
+                }
+
+                foreach (var connection in region.Connections)
+                {
+                    foreach (var target in connection.Value)
+                    {
+                        pendingConnections.Add((regionVertex, target, new ItemCondition(world.GetItem(connection.Key), 1)));
+                    }
                 }
             }
             foreach (var warp in map.Nodes.Warps)
@@ -452,6 +461,14 @@ internal class VertexCollector
                     structured_vertices.Add(potName, potVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
                 }
+
+                foreach (var connection in region.Connections)
+                {
+                    foreach (var target in connection.Value)
+                    {
+                        pendingConnections.Add((regionVertex, target, new ItemCondition(world.GetItem(connection.Key), 1)));
+                    }
+                }
             }
             foreach (var mob in room.Nodes.Mobs)
             {
@@ -573,6 +590,12 @@ internal class VertexCollector
             //        // do stuff
             //    }
             //}
+        }
+
+        // Link all the pending edges
+        foreach (var pendingEdge in pendingConnections)
+        {
+            pendingEdge.Item1.Edges.Add(new Edge(pendingEdge.Item1, structured_vertices[$"{pendingEdge.Item2}:{world.Id}"], pendingEdge.Item3));
         }
 
         return structured_vertices.Values;

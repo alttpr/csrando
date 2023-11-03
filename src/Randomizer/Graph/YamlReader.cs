@@ -608,6 +608,9 @@ public partial class Region
 
     [YamlMember(Alias = "inventory")]
     public List<InventoryEntry> Inventory { get; set; } = new();
+
+    [YamlMember(Alias = "connections")]
+    public Dictionary<string, List<string>> Connections { get; set; } = new();
 }
 
 public class Vertices
