@@ -1,6 +1,11 @@
 fixed:
   directed:
-    - ["Link's House - Bedroom", "Link's House"]
-    - ["Old Man Cave Ledge", "Death Mountain Foot Cave Entrance"]
-    - ["Bomb Shoppe Lobby", "Bomb Shoppe"]
+    - ["Link's House - In", "Link's House - Bedroom"]
+    - ["Link's House - Bedroom - Exit", "Link's House - Out"]
+
+    - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge"]
+    - ["Old Man Cave Ledge - Exit", "Death Mountain Foot Cave Entrance - Out"]
+
+    - ["Bomb Shoppe - Shoppe - In", "Bomb Shoppe Lobby"]
+    - ["Bomb Shoppe Lobby - Exit", "Bomb Shoppe - Shoppe - Out"]
   undirected: []
