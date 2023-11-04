@@ -26,15 +26,19 @@ rooms:
               trophy: "MimicCaveTrophy"
 
         - name: "Mimic Cave Back"
+          connections:
+            Hammer:
+              - "Mimic Cave Entrance"
+            "MimicCaveTrophy|4":
+              - "Mimic Cave Back Room"
 
         - name: "Mimic Cave Back Room"
+          connections:
+            fixed:
+              - "Mimic Cave Back"
           items:
             - name: "Mimic Cave"
               conditions: ["OpenChest"]
               addresses: [0xE9C5]
               type: "chest"
               itemset: ["lw"]
-
-      # TODO: Handle shutters
-      shutters:
-        - name: "Mimic Cave Back - Shutter Door"

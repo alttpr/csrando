@@ -1,17 +1,6 @@
 fixed:
   directed:
-    - ["Mini Moldorm Cave Entrance", "Mini Moldorm Cave - Shutter Door"]
-    - ["Mini Moldorm Cave", "Mini Moldorm Cave Entrance"]
-    - ["Mimic Cave Back", "Mimic Cave Back - Shutter Door"]
     - ["Ganon's Room", "Ganon"]
-  undirected: []
-MiniMoldormCaveTrophy|4:
-  directed:
-    - ["Mini Moldorm Cave - Shutter Door", "Mini Moldorm Cave"]
-  undirected: []
-MimicCaveTrophy|4:
-  directed:
-    - ["Mimic Cave Back - Shutter Door", "Mimic Cave Back Room"]
   undirected: []
 Flippers:
   directed:

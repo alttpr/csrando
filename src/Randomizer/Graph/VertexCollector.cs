@@ -5,6 +5,17 @@ namespace Randomizer.Graph;
  */
 internal class VertexCollector
 {
+    static ItemCondition ConditionFrom(World world, string condition)
+    {
+        var conditionSplit = condition.Split("|");
+        var itemCount = 1;
+
+        if (conditionSplit.Length > 1)
+            itemCount = int.Parse(conditionSplit[1]);
+
+        return new ItemCondition(world.GetItem(conditionSplit[0]), itemCount);
+    }
+
     /**
      * This does not account for door rando.
      */
@@ -152,7 +163,7 @@ internal class VertexCollector
                     structured_vertices.Add(nameOut, entranceOutVertex);
                     foreach (var condition in entrance.Conditions.DefaultIfEmpty("fixed"))
                     {
-                        regionVertex.Edges.Add(new Edge(regionVertex, entranceInVertex, new ItemCondition(world.GetItem(condition), 1)));
+                        regionVertex.Edges.Add(new Edge(regionVertex, entranceInVertex, ConditionFrom(world, condition)));
                     }
                     entranceOutVertex.Edges.Add(new Edge(entranceOutVertex, regionVertex, fixedCondition));
                 }
@@ -173,7 +184,7 @@ internal class VertexCollector
                     structured_vertices.Add(itemName, itemVertex);
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
                     {
-                        regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, new ItemCondition(world.GetItem(condition), 1)));
+                        regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, ConditionFrom(world, condition)));
                     }
                 }
 
@@ -190,7 +201,7 @@ internal class VertexCollector
                     structured_vertices.Add(holeName, holeVertex);
                     foreach (var condition in hole.Conditions.DefaultIfEmpty("fixed"))
                     {
-                        regionVertex.Edges.Add(new Edge(regionVertex, holeVertex, new ItemCondition(world.GetItem(condition), 1)));
+                        regionVertex.Edges.Add(new Edge(regionVertex, holeVertex, ConditionFrom(world, condition)));
                     }
                 }
 
@@ -214,7 +225,7 @@ internal class VertexCollector
                 {
                     foreach (var target in connection.Value)
                     {
-                        pendingConnections.Add((regionVertex, target, new ItemCondition(world.GetItem(connection.Key), 1)));
+                        pendingConnections.Add((regionVertex, target, ConditionFrom(world, connection.Key)));
                     }
                 }
             }
@@ -443,7 +454,7 @@ internal class VertexCollector
 
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
                     {
-                        regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, new ItemCondition(world.GetItem(condition), 1)));
+                        regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, ConditionFrom(world, condition)));
                     }
                 }
 
@@ -489,7 +500,7 @@ internal class VertexCollector
                 {
                     foreach (var target in connection.Value)
                     {
-                        pendingConnections.Add((regionVertex, target, new ItemCondition(world.GetItem(connection.Key), 1)));
+                        pendingConnections.Add((regionVertex, target, ConditionFrom(world, connection.Key)));
                     }
                 }
             }

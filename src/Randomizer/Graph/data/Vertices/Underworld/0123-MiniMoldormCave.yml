@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Mini Moldorm Cave Entrance"
           inletid: 0x6c
+          connections:
+            "MiniMoldormCaveTrophy|4":
+              - "Mini Moldorm Cave"
           mobs:
             - name: "Mini Moldorm Cave - Mini Moldorm 1"
               position: { x: 0x03, y: 0x16, z: 0x00 }
@@ -23,6 +26,9 @@ rooms:
               trophy: "MiniMoldormCaveTrophy"
 
         - name: "Mini Moldorm Cave"
+          connections:
+            fixed:
+              - "Mini Moldorm Cave Entrance"
           items:
             - name: "Mini Moldorm Cave - Far Left"
               conditions: ["OpenChest"]
@@ -54,7 +60,3 @@ rooms:
               sprite: "Salesman"
               allow:
                 - "Salesman"
-
-      # TODO: Handle shutters
-      shutters:
-        - name: "Mini Moldorm Cave - Shutter Door"
