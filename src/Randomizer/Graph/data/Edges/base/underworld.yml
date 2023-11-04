@@ -3,7 +3,6 @@ fixed:
     - ["Mini Moldorm Cave Entrance", "Mini Moldorm Cave - Shutter Door"]
     - ["Mini Moldorm Cave", "Mini Moldorm Cave Entrance"]
     - ["Mimic Cave Back", "Mimic Cave Back - Shutter Door"]
-    - ["Blacksmith House", "Smith's House"]
     - ["Ganon's Room", "Ganon"]
   undirected: []
 MiniMoldormCaveTrophy|4:
@@ -18,8 +17,4 @@ Flippers:
   directed:
     # TODO: Add intermediate region
     - ["Waterfall Fairy", "Zora's Falls Pool"]
-  undirected: []
-LostSmith:
-  directed:
-    - ["Blacksmith House", "ReturnedSmith"]
   undirected: []

@@ -6,10 +6,15 @@ rooms:
           inletid: 0x64
           items:
             - name: "Blacksmith Item"
-              conditions: ["ReturnedSmith"]
+              conditions: ["LostSmith"]
               addresses: [0x18002A]
               type: "npc"
               itemset: ["lw"]
+            - name: "Smith Returned"
+              conditions: ["LostSmith"]
+              item: "ReturnedSmith"
+              type: "meta"
+              itemset: ["event"]
           mobs:
             - name: "Blacksmith House - Dwarf Smith"
               position: { x: 0x04, y: 0x17, z: 0x00 }
