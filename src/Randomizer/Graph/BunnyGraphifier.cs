@@ -68,34 +68,25 @@ internal sealed class BunnyGraphifier : IWorldModifier
             where vertex.MoonPearl == true
             select vertex;
 
-        var edge_map = world.Graph.GetEdges()
-            .GroupBy(o => o.From)
-            .ToDictionary(g => g.Key, g => g.ToList());
-        //.ToLookup(o => o.From);
-
         var work_queue = new Queue<Vertex>(dark_nodes);
         var marked = new HashSet<Vertex>();
 
         while (work_queue.TryDequeue(out var node))
         {
+            if (node.Name.StartsWith("Lake of Bad Omen"))
+                node.ToString();
             if (marked.Contains(node))
             {
                 continue;
             }
             marked.Add(node);
 
-            if (!edge_map.ContainsKey(node))
+            foreach (var edge in node.Edges)
             {
-                continue;
-            }
-
-            for (int i = 0; i < edge_map[node].Count; ++i)
-            {
-                var edge = edge_map[node][i];
-                var alt_node = edge.To;
-                if (alt_node.MoonPearl != false)
+                var toNode = edge.To;
+                if (toNode.MoonPearl != false)
                 {
-                    work_queue.Enqueue(alt_node);
+                    work_queue.Enqueue(toNode);
                     if (!ITEM_MAP.ContainsKey(edge.Condition.Item.Name))
                     {
                         continue;

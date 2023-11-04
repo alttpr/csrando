@@ -28,7 +28,6 @@ public sealed class Graph
 
     private readonly HashSet<Vertex> _vertices = new();
     private readonly Dictionary<string, Vertex> _verticesByName = new();
-    private readonly HashSet<Edge> _edges = new();
     private readonly Dictionary<string, List<Vertex>> _setLocations = new() { { "*", new() } };
 
     public IEnumerable<Vertex> GetVertices()
@@ -48,11 +47,6 @@ public sealed class Graph
 
     public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
     public bool HasVertex(string name) => _verticesByName.ContainsKey(name);
-
-    public IEnumerable<Edge> GetEdges()
-    {
-        return _edges;
-    }
 
     /// <summary>
     /// Add Vertex to the graph.
