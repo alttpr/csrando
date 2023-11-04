@@ -7,6 +7,10 @@ maps:
           connections:
             fixed:
               - "Lake of Bad Omen"
+            PegasusBoots:
+              - "Dark Octorok Pit West"
+            TitansMitt:
+              - "Dark Octorok Pit West"
           mobs:
             - name: "Dark Octorok Pit - Octorok (One Way) 1"
               position: { x: 0x16, y: 0x08 }
@@ -37,12 +41,9 @@ maps:
           connections:
             fixed:
               - "Dark World Northeast Shop Rockblock Nook"
+              - "Dark Octorok Pit"
             Flippers:
               - "Dark Octorok Pit Waters"
-            PegasusBoots:
-              - "Dark Octorok Pit"
-            TitansMitt:
-              - "Dark Octorok Pit"
 
         - name: "Dark Octorok Pit Waters"
           connections:
