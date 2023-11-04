@@ -1,17 +1,11 @@
 fixed:
   directed:
-    - ["Old Man Cave Ledge", "Old Man Cave Lost Space darkness"]
-    - ["Old Man Home Back", "Old Man Home Circle darkness"]
-    - ["Death Mountain Descent Cave Left", "Death Mountain Foot Descent Ledge"]
     - ["Mini Moldorm Cave Entrance", "Mini Moldorm Cave - Shutter Door"]
     - ["Mini Moldorm Cave", "Mini Moldorm Cave Entrance"]
     - ["Mimic Cave Back", "Mimic Cave Back - Shutter Door"]
     - ["Blacksmith House", "Smith's House"]
     - ["Ganon's Room", "Ganon"]
-  undirected:
-    - ["Old Man Lost", "Old Man Maze"]
-    - ["Old Man Cave Lost Space", "Old Man Maze darkness"]
-    - ["Death Mountain Descent Cave Left", "Death Mountain Descent Cave Right"]
+  undirected: []
 MiniMoldormCaveTrophy|4:
   directed:
     - ["Mini Moldorm Cave - Shutter Door", "Mini Moldorm Cave"]
@@ -24,15 +18,6 @@ Flippers:
   directed:
     # TODO: Add intermediate region
     - ["Waterfall Fairy", "Zora's Falls Pool"]
-  undirected: []
-Lamp:
-  directed:
-    - ["Old Man Cave Ledge darkness", "Old Man Cave Ledge"]
-    - ["Old Man Cave Lost Space darkness", "Old Man Cave Lost Space"]
-    - ["Old Man Maze darkness", "Old Man Maze"]
-    - ["Death Mountain Descent Cave Left darkness", "Death Mountain Descent Cave Left"]
-    - ["Death Mountain Descent Cave Right darkness", "Death Mountain Descent Cave Right"]
-    - ["Old Man Home Circle darkness", "Old Man Home Circle"]
   undirected: []
 LostSmith:
   directed:

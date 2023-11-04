@@ -22,6 +22,7 @@ rooms:
           connections:
             fixed:
               - "Old Man Home"
+              - "Old Man Home Circle"
           pots:
             - name: "Old Man Home - Pot 2"
               position: 0x0a70

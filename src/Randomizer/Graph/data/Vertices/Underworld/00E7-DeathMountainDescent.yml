@@ -3,10 +3,11 @@ rooms:
     dark: true
     nodes:
       regions:
-        - name: "Death Mountain Descent Cave Right darkness"
-          inletid: 0x2f
-
         - name: "Death Mountain Descent Cave Right"
+          inletid: 0x2f
+          connections:
+            fixed:
+              - "Death Mountain Descent Cave Left"
           pots:
             - name: "Death Mountain Descent Cave Right - Pot 1"
               position: 0x0544

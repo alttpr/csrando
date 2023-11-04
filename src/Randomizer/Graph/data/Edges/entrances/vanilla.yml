@@ -31,18 +31,17 @@ fixed:
   - ["Spectacle Rock Cave Exit - In", "Spectacle Rock Cave Exit"]
   - ["Spectacle Rock Cave Exit - Exit", "Spectacle Rock Cave Exit - Out"]
 
-  - ["Death Mountain Descent Cave Left darkness - Exit", "Death Mountain Foot Descent Ledge - Out"]
-  - ["Death Mountain Descent - In", "Death Mountain Descent Cave Right darkness"]
-  - ["Death Mountain Descent Cave Right darkness - Exit", "Death Mountain Descent - Out"]
+  - ["Death Mountain Descent - In", "Death Mountain Descent Cave Right"]
+  - ["Death Mountain Descent Cave Right - Exit", "Death Mountain Descent - Out"]
 
   - ["Old Man Home - In", "Old Man Home"]
   - ["Old Man Home - Exit", "Old Man Home - Out"]
 
-  - ["Old Man Home Circle - In", "Old Man Home Circle darkness"]
-  - ["Old Man Home Circle darkness - Exit", "Old Man Home Circle - Out"]
+  - ["Old Man Home Circle - In", "Old Man Home Circle"]
+  - ["Old Man Home Circle - Exit", "Old Man Home Circle - Out"]
 
-  - ["Old Man Maze - In", "Old Man Maze darkness"]
-  - ["Old Man Maze darkness - Exit", "Old Man Maze - Out"]
+  - ["Old Man Maze - In", "Old Man Maze"]
+  - ["Old Man Maze - Exit", "Old Man Maze - Out"]
 
   # Map 0x05
   - ["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right"]
@@ -73,11 +72,9 @@ fixed:
   - ["Paradox Cave - Top - Exit", "Paradox Cave - Top - Out"]
 
   # Map 0x0A
-  - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge darkness"]
-  - ["Old Man Cave Ledge darkness - Exit", "Death Mountain Foot Cave Entrance - Out"]
-
-  - ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left darkness"]
-  - ["Death Mountain Descent Cave Left darkness - Exit", "Death Mountain Foot Descent Ledge - Out"]
+  # Old Man Cave connected in normal.yml
+  - ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left"]
+  - ["Death Mountain Descent Cave Left - Exit", "Death Mountain Foot Descent Ledge - Out"]
 
   # Map 0x0F
   - ["Waterfall of Wishing - In", "Waterfall Fairy"]
@@ -211,8 +208,7 @@ fixed:
   - ["West Woods Fairy Pond - Exit", "West Woods Fairy Pond - Out"]
 
   # Map 0x2C
-  - ["Link's House - In", "Link's House - Bedroom"]
-  - ["Link's House - Bedroom - Exit", "Link's House - Out"]
+  # Link's House connected in normal.yml
 
   - ["Houlihan Room - In", "Houlihan Room"]
   - ["Houlihan Room - Exit", "Houlihan Room - Out"]
@@ -418,8 +414,7 @@ fixed:
   - ["Fairy Refill - Exit", "West of Bomb Shoppe Fairy Pond - Out"]
 
   # Map 0x6C
-  - ["Bomb Shoppe - Shoppe - In", "Bomb Shoppe Lobby"]
-  - ["Bomb Shoppe Lobby - Exit", "Bomb Shoppe - Shoppe - Out"]
+  # Bomb Shoppe connected in normal.yml
 
   # Map 0x6E
   - ["Dark Lake Hylia River Bend Fairy - In", "South of POD Big Fairy"]

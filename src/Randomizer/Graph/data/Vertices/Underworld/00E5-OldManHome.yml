@@ -3,10 +3,11 @@ rooms:
     dark: true
     nodes:
       regions:
-        - name: "Old Man Home Circle darkness"
-          inletid: 0x31
-
         - name: "Old Man Home Circle"
+          inletid: 0x31
+          connections:
+            fixed:
+              - "Old Man Home Back"
           pots:
             - name: "Old Man Home Circle - Pot 1"
               position: 0x0430

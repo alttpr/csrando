@@ -307,22 +307,59 @@ internal class VertexCollector
             };
             foreach (var region in room.Nodes.Regions)
             {
-                string name = $"{region.Name}:{world.Id}";
-                var regionVertex = new Vertex
+                Vertex regionVertex;
+                Vertex? regionDarkVertex = null;
+                if (!room.Dark)
                 {
-                    Type = region.Type ?? VertexType.Region,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
-                    InletId = region.InletId,
-                    Peg = region.Peg,
-                    Shopkeeper = region.Shopkeeper,
-                    ShopStyle = region.Shopstyle,
-                    Switch = region.Switch ?? false,
-                };
-                structured_vertices.Add(name, regionVertex);
+                    string name = $"{region.Name}:{world.Id}";
+                    regionVertex = new Vertex
+                    {
+                        Type = region.Type ?? VertexType.Region,
+                        Name = name,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        Dark = room.Dark,
+                        InletId = region.InletId,
+                        Peg = region.Peg,
+                        Shopkeeper = region.Shopkeeper,
+                        ShopStyle = region.Shopstyle,
+                        Switch = region.Switch ?? false,
+                    };
+                    structured_vertices.Add(name, regionVertex);
+                }
+                else
+                {
+                    string nameDark = $"{region.Name}:{world.Id}";
+                    regionDarkVertex = new Vertex
+                    {
+                        Type = region.Type ?? VertexType.Region,
+                        Name = nameDark,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        Dark = true,
+                        InletId = region.InletId,
+                        Peg = region.Peg,
+                        Switch = region.Switch ?? false,
+                    };
+                    structured_vertices.Add(nameDark, regionDarkVertex);
+
+                    string nameLit = $"{region.Name} - Lit:{world.Id}";
+                    regionVertex = new Vertex
+                    {
+                        Type = region.Type ?? VertexType.Region,
+                        Name = nameLit,
+                        RoomId = room.Roomid,
+                        Group = room.Group.GetValueOrDefault(0),
+                        Dark = false,
+                        InletId = region.InletId,
+                        Peg = region.Peg,
+                        Switch = region.Switch ?? false,
+                    };
+                    structured_vertices.Add(nameLit, regionVertex);
+
+                    regionDarkVertex.Edges.Add(new Edge(regionDarkVertex, regionVertex,
+                                                        new ItemCondition(world.GetItem("Lamp"), 1)));
+                }
 
                 if (region.InletId.HasValue)
                 {
@@ -333,8 +370,6 @@ internal class VertexCollector
                         Name = nameExit,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         InletId = region.InletId,
                     };
                     structured_vertices.Add(nameExit, exitVertex);
@@ -350,8 +385,6 @@ internal class VertexCollector
                         Name = mobName,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         Sprite = Sprite.Get(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
                         State = mob.State.ToArray(),
@@ -376,8 +409,6 @@ internal class VertexCollector
                         Name = nameIn,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         EntranceId = entrance.EntranceId,
                     };
                     structured_vertices.Add(nameIn, entranceInVertex);
@@ -387,8 +418,6 @@ internal class VertexCollector
                         Name = nameOut,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         OutletId = entrance.OutletId,
                     };
                     structured_vertices.Add(nameOut, entranceOutVertex);
@@ -406,8 +435,6 @@ internal class VertexCollector
                         Name = itemName,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         Item = world.GetItemOrNull(item.Item),
                         ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
                         Addresses = item.Addresses.ToArray(),
@@ -429,8 +456,6 @@ internal class VertexCollector
                         Name = inventoryName,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         Item = world.GetItemOrNull(item.Item),
                         Cost = item.Cost,
                         ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
@@ -448,8 +473,6 @@ internal class VertexCollector
                         Name = potName,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
-                        // TODO: Dark is unused?!
-                        // Dark = room.Dark,
                         Item = world.GetItemOrNull(pot.Item),
                         State = pot.State.ToArray(),
                         ItemSet = pot.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
@@ -479,8 +502,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                     Sprite = Sprite.Get(mob.Sprite),
                     Item = world.GetItemOrNull(mob.Item),
                     State = mob.State.ToArray(),
@@ -498,8 +519,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                     Item = world.GetItemOrNull(item.Item),
                     ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
                     Addresses = item.Addresses.ToArray(),
@@ -514,8 +533,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                     Key = world.GetItem(keyDoor.Key),
                 });
             }
@@ -528,8 +545,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                     Key = world.GetItem(bigKeyDoor.Key),
                 });
             }
@@ -542,8 +557,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                 });
             }
             foreach (var pot in room.Nodes.Pots)
@@ -555,8 +568,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                     Item = world.GetItemOrNull(pot.Item),
                     State = pot.State.ToArray(),
                     ItemSet = pot.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
@@ -576,8 +587,6 @@ internal class VertexCollector
                     Name = name,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
-                    // TODO: Dark is unused?!
-                    // Dark = room.Dark,
                     Item = world.GetItemOrNull(item.Item),
                     Cost = item.Cost,
                     ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
