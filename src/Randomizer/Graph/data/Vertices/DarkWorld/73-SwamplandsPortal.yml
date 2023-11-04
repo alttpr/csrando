@@ -4,6 +4,16 @@ maps:
     nodes:
       regions:
         - name: "Swamplands Portal East"
+          connections:
+            fixed:
+              - "Swamplands Totems"
+              - "Swamplands Palace Entrance"
+            Flippers:
+              - "Swamplands Portal Pond"
+            Hammer:
+              - "Swamplands Portal Nook"
+            PowerGlove:
+              - "Swamplands Portal West"
           mobs:
             - name: "Swamplands Portal East - Pikit"
               position: { x: 0x17, y: 0x0c }
@@ -23,6 +33,12 @@ maps:
               state: [1, 2]
 
         - name: "Swamplands Portal West"
+          connections:
+            fixed:
+              - "Stumpy Grove Entrance"
+              - "West of Bomb Shoppe"
+            PowerGlove:
+              - "Swamplands Portal East"
           mobs:
             - name: "Swamplands Portal East - Moblin"
               position: { x: 0x09, y: 0x0d }
@@ -30,4 +46,12 @@ maps:
               state: [1, 2]
 
         - name: "Swamplands Portal Nook"
+          connections:
+            Hammer:
+              - "Swamplands Portal East"
+
         - name: "Swamplands Portal Pond"
+          connections:
+            fixed:
+              - "Swamplands Portal East"
+              - "Swamplands Totems Pond"

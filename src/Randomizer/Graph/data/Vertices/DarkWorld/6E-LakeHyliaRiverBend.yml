@@ -4,8 +4,17 @@ maps:
     nodes:
       regions:
         - name: "Dark Lake Hylia River Bend"
+          connections:
+            fixed:
+              - "Hammer Bridge River"
+              - "Dark Lake Hylia"
 
         - name: "Dark Lake Hylia River Bend Ledge"
+          connections:
+            fixed:
+              - "Hammer Bridge North"
+              - "East Dark World Maze"
+              - "Dark Lake Hylia Northeast Ledge"
           entrances:
             # outlet may be wrong here
             - name: "Dark Lake Hylia River Bend Fairy"

@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Dark Hylia River Bend"
+          connections:
+            fixed:
+              - "Dark World Northeast Shop Waters"
+              - "Dark Hylia River Peninsula Waters"
+              - "Dark Hylia River Bend East"
           warps:
             - name: "Dark Hylia River Bend whirlpool"
               position: { x: 0x11, y: 0x09 }
@@ -14,6 +19,12 @@ maps:
               state: [1, 2]
 
         - name: "Dark Hylia River Bend East"
+          connections:
+            fixed:
+              - "Dark World Northeast Shop"
+              - "Dark Hylia River Peninsula Northeast Nook"
+            Flippers:
+              - "Dark Hylia River Bend"
           mobs:
             - name: "Dark Hylia River Bend - Hinox 1"
               position: { x: 0x16, y: 0x0e }
@@ -33,6 +44,12 @@ maps:
               state: [1, 2]
 
         - name: "Dark Hylia River Bend West"
+          connections:
+            fixed:
+              - "Dark Hylia River Peninsula"
+              - "Dark Graveyard"
+            Flippers:
+              - "Dark Hylia River Bend"
           mobs:
             - name: "Dark Hylia River Bend - Hinox 2"
               position: { x: 0x07, y: 0x17 }

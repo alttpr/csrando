@@ -4,6 +4,13 @@ maps:
     nodes:
       regions:
         - name: "Stumpy Grove Entrance"
+          connections:
+            fixed:
+              - "Stumpy Grove Corner"
+              - "Swamplands Portal West"
+            LiftBush:
+              - "Stumpy Grove Entrance Circle of Bushes"
+              - "Stumpy Grove Entrance Transition Nook"
           mobs:
             - name: "Stumpy Grove Entrance - Talking Tree 1"
               position: { x: 0x1b, y: 0x0b }
@@ -27,4 +34,13 @@ maps:
               state: [1, 2]
 
         - name: "Stumpy Grove Entrance Circle of Bushes"
+          connections:
+            LiftBush:
+              - "Stumpy Grove Entrance"
+
         - name: "Stumpy Grove Entrance Transition Nook"
+          connections:
+            fixed:
+              - "Stumpy Grove"
+            LiftBush:
+              - "Stumpy Grove Entrance"

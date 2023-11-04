@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Boulder Field"
+          connections:
+            fixed:
+              - "Dark Hylia River Peninsula Eastern Ledge"
+              - "Hammer Bridge North"
+              - "Pyramid"
           mobs:
             - name: "Boulder Field - Moblin 1"
               position: { x: 0x13, y: 0x07 }

@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Dark Hylia River Peninsula"
+          connections:
+            fixed:
+              - "Dark Hylia River Bend West"
+            Flippers:
+              - "Dark Hylia River Peninsula Waters"
           mobs:
             - name: "Dark Hylia River Peninsula - Talking Tree"
               position: { x: 0x0b, y: 0x08 }
@@ -23,6 +28,14 @@ maps:
               state: [1, 2]
 
         - name: "Dark Hylia River Peninsula Eastern Ledge"
+          connections:
+            fixed:
+              - "Boulder Field"
+            Flippers:
+              - "Dark Hylia River Peninsula Waters"
+            LiftBush:
+              - "Dark Hylia River Peninsula Lonely Square"
+              - "Dark Hylia River Peninsula Two Square Niche"
           mobs:
             - name: "Dark Hylia River Peninsula - Moblin 1"
               position: { x: 0x18, y: 0x0b }
@@ -38,6 +51,33 @@ maps:
               state: [1, 2]
 
         - name: "Dark Hylia River Peninsula Lonely Square"
+          connections:
+            Hammer:
+              - "Dark Hylia River Peninsula Northeast Nook"
+            LiftBush:
+              - "Dark Hylia River Peninsula Eastern Ledge"
+
         - name: "Dark Hylia River Peninsula Northeast Nook"
+          connections:
+            fixed:
+              - "Dark Hylia River Bend East"
+            Flippers:
+              - "Dark Hylia River Peninsula Waters"
+            Hammer:
+              - "Dark Hylia River Peninsula Lonely Square"
+            Hookshot:
+              - "Dark Hylia River Peninsula"
+            PowerGlove:
+              - "Dark Hylia River Peninsula Two Square Niche"
+
         - name: "Dark Hylia River Peninsula Two Square Niche"
+          connections:
+            LiftBush:
+              - "Dark Hylia River Peninsula Eastern Ledge"
+            PowerGlove:
+              - "Dark Hylia River Peninsula Northeast Nook"
+
         - name: "Dark Hylia River Peninsula Waters"
+          connections:
+            fixed:
+              - "Dark Hylia River Bend"

@@ -3,9 +3,38 @@ maps:
     moonpearl: true
     nodes:
       regions:
+        - name: "South of Outcasts North"
+          connections:
+            fixed:
+              - "South of Outcasts South"
+              - "Village of Outcasts"
+            TitansMitt:
+              - "South of Outcasts South"
+              - "South of Outcasts Frog Prison"
+              - "South of Outcasts Fencehop"
+
+        - name: "South of Outcasts South"
+          connections:
+            fixed:
+              - "Digging Game"
+              - "Digging Game Ledge"
+              - "Stumpy Grove Corner"
+            TitansMitt:
+              - "South of Outcasts North"
+          entrances:
+            - name: "Arrow Game"
+              entranceid: 0x58
+              outletid: 0x67
+
         - name: "South of Outcasts Fencehop"
+          connections:
+            TitansMitt:
+              - "South of Outcasts North"
 
         - name: "South of Outcasts Frog Prison"
+          connections:
+            TitansMitt:
+              - "South of Outcasts North"
           items:
             - name: "LostSmith"
               item: "LostSmith"
@@ -16,11 +45,3 @@ maps:
               position: { x: 0x06, y: 0x09 }
               sprite: "DwarfSmith"
               state: [1, 2]
-
-        - name: "South of Outcasts North"
-
-        - name: "South of Outcasts South"
-          entrances:
-            - name: "Arrow Game"
-              entranceid: 0x58
-              outletid: 0x67

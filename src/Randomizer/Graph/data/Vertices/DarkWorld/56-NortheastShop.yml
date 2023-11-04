@@ -4,6 +4,13 @@ maps:
     nodes:
       regions:
         - name: "Dark World Northeast Shop"
+          connections:
+            fixed:
+              - "Dark Hylia River Bend East"
+            Flippers:
+              - "Dark World Northeast Shop Waters"
+            PowerGlove:
+              - "Dark World Northeast Shop Rockblock Nook"
           entrances:
             - name: "Dark World Northeast Shop"
               entranceid: 0x6E
@@ -23,8 +30,19 @@ maps:
               state: [1, 2]
 
         - name: "Dark World Northeast Shop Rockblock Nook"
+          connections:
+            fixed:
+              - "Dark Octorok Pit West"
+            Flippers:
+              - "Dark World Northeast Shop Waters"
+            PowerGlove:
+              - "Dark World Northeast Shop"
 
         - name: "Dark World Northeast Shop Waters"
+          connections:
+            fixed:
+              - "Dark Octorok Pit Waters"
+              - "Dark Hylia River Bend"
           mobs:
             - name: "Dark World Northeast Shop - Fireball Zora 1"
               position: { x: 0x0a, y: 0x06 }

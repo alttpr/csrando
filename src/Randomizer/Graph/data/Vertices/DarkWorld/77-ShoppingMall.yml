@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Dark Shopping Mall"
+          connections:
+            fixed:
+              - "Dark Lake Hylia Waterfall"
+            Flippers:
+              - "Dark Lake Hylia River End Brook"
           entrances:
             - name: "Dark Shopping Mall Big Fairy"
               conditions: ["UseBomb"]
@@ -43,3 +48,7 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia River End Brook"
+          connections:
+            fixed:
+              - "Dark Shopping Mall"
+              - "Dark Lake Hylia Waterfall The Falls"

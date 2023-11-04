@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Swamplands Palace Entrance"
+          connections:
+            fixed:
+              - "Swamplands Portal East"
+              - "Swamplands Ravine"
+              - "West of Swamplands"
           entrances:
             - name: "Swamp Palace"
               entranceid: 0x24

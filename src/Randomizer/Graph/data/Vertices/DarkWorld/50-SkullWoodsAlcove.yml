@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Skull Woods Alcove Northeast"
+          connections:
+            fixed:
+              - "Skull Woods Southwest Nook"
+            LiftBush:
+              - "Skull Woods Alcove West"
+              - "Skull Woods Alcove Portal Nook"
           mobs:
             - name: "Skull Woods Alcove West - Poe"
               position: { x: 0x16, y: 0x0b }
@@ -15,6 +21,12 @@ maps:
               state: [1, 2]
 
         - name: "Skull Woods Alcove West"
+          connections:
+            fixed:
+              - "Skull Woods Southwest Corner"
+              - "Village of Outcasts"
+            LiftBush:
+              - "Skull Woods Alcove Northeast"
           mobs:
             - name: "Skull Woods Alcove West - Moblin 1"
               position: { x: 0x05, y: 0x0c }
@@ -30,4 +42,15 @@ maps:
               state: [1, 2]
 
         - name: "Skull Woods Alcove Portal Nook"
+          connections:
+            LiftBush:
+              - "Skull Woods Alcove Northeast"
+            TitansMitt:
+              - "Skull Woods Alcove Southeast"
+
         - name: "Skull Woods Alcove Southeast"
+          connections:
+            fixed:
+              - "Village of Outcasts"
+            TitansMitt:
+              - "Skull Woods Alcove Portal Nook"

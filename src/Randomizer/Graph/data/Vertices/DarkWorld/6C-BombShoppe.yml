@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Bomb Shoppe"
+          connections:
+            fixed:
+              - "Hammer Bridge South"
+              - "Pyramid Southern Ledge"
+              - "Swamplands Totems"
+              - "West of Bomb Shoppe"
           entrances:
             - name: "Bomb Shoppe - Shoppe"
               entranceid: 0x52

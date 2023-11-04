@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Outcasts Orchard"
+          connections:
+            fixed:
+              - "Dark Northwest Pond"
+              - "Outcasts Orchard Intermediate Jump"
+            LiftBush:
+              - "Outcasts Orchard Northeast Tree Niche"
           mobs:
             - name: "Outcasts Orchard - Moblin 1"
               position: { x: 0x0f, y: 0x08 }
@@ -31,9 +37,19 @@ maps:
               state: [1, 2]
 
         - name: "Outcasts Orchard Intermediate Jump"
+          connections:
+            fixed:
+              - "Outcasts Orchard Shop Yard Nook"
+
         - name: "Outcasts Orchard Northeast Tree Niche"
+          connections:
+            LiftBush:
+              - "Outcasts Orchard"
 
         - name: "Outcasts Orchard Shop Yard Nook"
+          connections:
+            fixed:
+              - "Outcasts Orchard"
           entrances:
             - name: "Outcasts Orchard Shop"
               entranceid: 0x74

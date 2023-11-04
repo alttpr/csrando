@@ -4,12 +4,18 @@ maps:
     nodes:
       regions:
         - name: "East Dark Death Mountain Floating Island"
+          connections:
+            fixed:
+              - "East Dark Death Mountain Summit"
           entrances:
             - name: "Dark Floating Island"
               entranceid: 0x3A
               outletid: 0x3C
 
         - name: "East Dark Death Mountain Running Man"
+          connections:
+            LiftBush:
+              - "East Dark Death Mountain Running Man's Tail"
           entrances:
             - name: "East Dark Death Mountain Running Man Bunny"
               entranceid: 0x12
@@ -19,9 +25,21 @@ maps:
               outletid: 0x6A
 
         - name: "East Dark Death Mountain Running Man's Tail"
+          connections:
+            LiftBush:
+              - "East Dark Death Mountain Running Man"
+
         - name: "East Dark Death Mountain South East Cliff"
+          connections:
+            fixed:
+              - "West Dark Death Mountain"
 
         - name: "East Dark Death Mountain Summit"
+          connections:
+            fixed:
+              - "East Dark Death Mountain Running Man"
+              - "Turtle Peak"
+              - "West Dark Death Mountain Summit"
           entrances:
             - name: "East Dark Death Mountain Summit Rock"
               conditions: ["PowerGlove"]

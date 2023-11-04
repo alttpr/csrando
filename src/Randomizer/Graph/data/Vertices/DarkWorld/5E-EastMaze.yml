@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "East Dark World Maze"
+          connections:
+            fixed:
+              - "Dark Lake Hylia River Bend Ledge"
+              - "East Dark World Portal Way"
           entrances:
             - name: "Palace of Darkness Door"
               conditions: ["LostKiki"]

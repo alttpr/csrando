@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Swamplands Ravine"
+          connections:
+            fixed:
+              - "Swamplands Palace Entrance"
+              - "Swamplands Totems"
+              - "Dark Lake Hylia Southwest Ledge"
           mobs:
             - name: "Swamplands Ravine - Stal"
               position: { x: 0x03, y: 0x05 }

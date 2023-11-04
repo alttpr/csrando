@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Digging Game"
+          connections:
+            fixed:
+              - "South of Outcasts South"
+            LiftBush:
+              # We consider that lifting a bush is not a bunny and can play
+              - "Digging Game Arena"
           mobs:
             - name: "Digging Game - Digging Game Proprietor"
               position: { x: 0x0e, y: 0x11 }
@@ -11,6 +17,9 @@ maps:
               state: [1, 2]
 
         - name: "Digging Game Arena"
+          connections:
+            TitansMitt:
+              - "Digging Game Fencehop"
           items:
             # TODO: Is this the right condition?
             - name: "Digging Game - Item"
@@ -20,5 +29,20 @@ maps:
               itemset: ["dw"]
 
         - name: "Digging Game Bush Niche"
+          connections:
+            LiftBush:
+              - "Digging Game Ledge"
+
         - name: "Digging Game Fencehop"
+          connections:
+            fixed:
+              - "Digging Game Ledge"
+            TitansMitt:
+              - "Digging Game Arena"
+
         - name: "Digging Game Ledge"
+          connections:
+            fixed:
+              - "South of Outcasts South"
+            LiftBush:
+              - "Digging Game Bush Niche"

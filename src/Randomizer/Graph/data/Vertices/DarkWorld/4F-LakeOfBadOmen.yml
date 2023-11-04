@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "Lake of Bad Omen"
+          connections:
+            fixed:
+              - "Dark Octorok Pit"
+            Flippers:
+              - "Lake of Bad Omen Waters"
           items:
             - name: "Catfish"
               conditions: ["LiftBush"]
@@ -27,6 +32,9 @@ maps:
               state: [1, 2]
 
         - name: "Lake of Bad Omen Waters"
+          connections:
+            fixed:
+              - "Lake of Bad Omen"
           mobs:
             - name: "Lake of Bad Omen - Fireball Zora"
               position: { x: 0x19, y: 0x08 }

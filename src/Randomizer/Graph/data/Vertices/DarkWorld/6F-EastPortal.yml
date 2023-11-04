@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "East Dark World Portal Way"
+          connections:
+            fixed:
+              - "East Dark World Maze"
+            Hammer:
+              - "East Dark World Portal Way Cage"
           entrances:
             - name: "East Dark World Portal Cave"
               entranceid: 0x68
@@ -32,3 +37,6 @@ maps:
 
         # TODO: Add portal from LW
         - name: "East Dark World Portal Way Cage"
+          connections:
+            Hammer:
+              - "East Dark World Portal Way"

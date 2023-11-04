@@ -4,6 +4,14 @@ maps:
     nodes:
       regions:
         - name: "North of Outcasts"
+          connections:
+            fixed:
+              - "Dark Northwest Pond"
+              - "Skull Woods Southeast Branch"
+              - "Village of Outcasts"
+            LiftBush:
+              - "North of Outcasts Niche Next to the Psychic"
+              - "North of Outcasts Southwest Tree Niche"
           entrances:
             - name: "North of Outcasts Psychic"
               entranceid: 0x65
@@ -35,4 +43,11 @@ maps:
               state: [1, 2]
 
         - name: "North of Outcasts Niche Next to the Psychic"
+          connections:
+            LiftBush:
+              - "North of Outcasts"
+
         - name: "North of Outcasts Southwest Tree Niche"
+          connections:
+            LiftBush:
+              - "North of Outcasts"

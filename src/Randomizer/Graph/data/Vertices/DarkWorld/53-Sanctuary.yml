@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Dark Sanctuary Cave Entrance"
+          connections:
+            fixed:
+              - "Dark Graveyard"
+              - "Dark Northwest Pond"
           entrances:
             - name: "Dark Sanctuary"
               entranceid: 0x59

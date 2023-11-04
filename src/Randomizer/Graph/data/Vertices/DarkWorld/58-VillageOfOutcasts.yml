@@ -4,6 +4,17 @@ maps:
     nodes:
       regions:
         - name: "Village of Outcasts"
+          connections:
+            fixed:
+              - "North of Outcasts"
+              - "South of Outcasts North"
+              - "Skull Woods Alcove West"
+              - "Skull Woods Alcove Southeast"
+              - "Village Peg Puzzle West"
+            Hammer:
+              - "Village of Outcasts Storefront"
+            LiftBush:
+              - "Village of Outcasts Broken Hut"
           entrances:
             - name: "Thieves Town"
               # TODO: the same thing that lets you lift bushes is what we consider for pulling on entrance... for now.
@@ -87,12 +98,18 @@ maps:
               state: [1, 2]
 
         - name: "Village of Outcasts Storefront"
+          connections:
+            Hammer:
+              - "Village of Outcasts"
           entrances:
             - name: "Village of Outcasts Storefront"
               entranceid: 0x5F
               outletid: 0x64
 
         - name: "Village of Outcasts Broken Hut"
+          connections:
+            LiftBush:
+              - "Village of Outcasts"
           entrances:
             - name: "Brewery"
               entranceid: 0x47

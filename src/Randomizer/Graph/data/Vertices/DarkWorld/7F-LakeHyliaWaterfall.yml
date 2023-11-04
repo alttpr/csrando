@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Dark Lake Hylia Waterfall"
+          connections:
+            fixed:
+              - "Dark Shopping Mall"
+              - "Dark Lake Hylia Southeast Ledge"
+            Flippers:
+              - "Dark Lake Hylia Waterfall Brook"
           mobs:
             - name: "Dark Lake Hylia Waterfall - Green Zirro 1"
               position: { x: 0x10, y: 0x06 }
@@ -27,6 +33,10 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Waterfall Brook"
+          connections:
+            fixed:
+              - "Dark Lake Hylia Waterfall"
+              - "Dark Lake Hylia"
           warps:
             - name: "Dark Lake Hylia Waterfall whirlpool"
               # coords are wrong
@@ -42,3 +52,8 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Waterfall The Falls"
+          connections:
+            fixed:
+              - "Dark Lake Hylia River End Brook"
+              # TODO: Check if we need flippers when hoping from water to water
+              - "Dark Lake Hylia Waterfall Brook"

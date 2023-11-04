@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "Bumper Cave Ledge"
+          connections:
+            fixed:
+              - "Bumper Cave Passway"
           entrances:
             - name: "Bumper Cave Ledge Top"
               entranceid: 0x16
@@ -20,12 +23,21 @@ maps:
               state: [1, 2]
 
         - name: "Bumper Cave Entrance"
+          connections:
+            fixed:
+              - "Bumper Cave Passway"
           entrances:
             - name: "Bumper Cave Entrance Bottom"
               entranceid: 0x15
               outletid: 0x17
 
         - name: "Bumper Cave Passway"
+          connections:
+            fixed:
+              - "Dark Lumber Shop"
+              - "Dark Northwest Pond"
+            PowerGlove:
+              - "Bumper Cave Entrance"
           mobs:
             - name: "Bumper Cave Ledge - Rupee Pull"
               position: { x: 0x0e, y: 0x06 }

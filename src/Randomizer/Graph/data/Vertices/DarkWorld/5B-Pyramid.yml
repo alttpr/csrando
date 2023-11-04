@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Pyramid"
+          connections:
+            fixed:
+              - "Boulder Field"
+              - "Pyramid Ledge"
           entrances:
             - name: "Pyramid Fairy"
               conditions: ["BigRedBombActive"]
@@ -56,12 +60,18 @@ maps:
               state: [1, 2]
 
         - name: "Pyramid Ganon Fail"
+          connections:
+            fixed:
+              - "Pyramid"
           entrances:
             - name: "Pyramid Ganon Fail"
               entranceid: 0x35
               outletid: 0x37
 
         - name: "Pyramid Ledge"
+          connections:
+            fixed:
+              - "Pyramid"
           items:
             - name: "Pyramid Item"
               addresses: [0x180147]
@@ -74,3 +84,7 @@ maps:
               state: [1, 2]
 
         - name: "Pyramid Southern Ledge"
+          connections:
+            fixed:
+              - "Bomb Shoppe"
+              - "West of Bomb Shoppe"

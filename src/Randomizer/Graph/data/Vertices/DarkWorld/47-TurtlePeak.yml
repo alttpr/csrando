@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "Turtle Peak"
+          connections:
+            fixed:
+              - "East Dark Death Mountain Summit"
           entrances:
             - name: "Turtle Rock"
               conditions: ["TurtleRockEntry"]
@@ -11,6 +14,9 @@ maps:
               outletid: 0x34
 
         - name: "Turtle Peak Shellback"
+          connections:
+            fixed:
+              - "Turtle Peak"
           items:
             - name: "Turtle Rock - Entry"
               type: "medallion"

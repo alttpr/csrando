@@ -4,6 +4,12 @@ maps:
     nodes:
       regions:
         - name: "Dark Northwest Pond"
+          connections:
+            fixed:
+              - "Bumper Cave Passway"
+              - "Dark Sanctuary Cave Entrance"
+              - "North of Outcasts"
+              - "Outcasts Orchard"
           mobs:
             - name: "Dark Northwest Pond - Stal"
               position: { x: 0x12, y: 0x09 }

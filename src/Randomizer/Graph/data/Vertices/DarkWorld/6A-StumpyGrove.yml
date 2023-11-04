@@ -4,8 +4,15 @@ maps:
     nodes:
       regions:
         - name: "Stumpy Grove Corner"
+          connections:
+            fixed:
+              - "Stumpy Grove Entrance"
+              - "South of Outcasts South"
 
         - name: "Stumpy Grove"
+          connections:
+            fixed:
+              - "Stumpy Grove Entrance Transition Nook"
           items:
             - name: "Stumpy"
               addresses: [0x330C7]

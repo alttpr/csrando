@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "West Dark Death Mountain"
+          connections:
+            fixed:
+              - "West Dark Death Mountain Byrna Ledge"
+              - "East Dark Death Mountain South East Cliff"
           entrances:
             - name: "West Death Mountain Big Fairy"
               entranceid: 0x6F
@@ -15,12 +19,19 @@ maps:
               state: [1, 2]
 
         - name: "West Dark Death Mountain Byrna Ledge"
+          connections:
+            fixed:
+              - "West Dark Death Mountain"
           entrances:
             - name: "Spike Cave"
               entranceid: 0x40
               outletid: 0x77
 
         - name: "West Dark Death Mountain Summit"
+          connections:
+            fixed:
+              - "West Dark Death Mountain"
+              - "East Dark Death Mountain Summit"
           mobs:
             - name: "West Dark Death Mountain - Crystal Cut Scene"
               position: { x: 0x2f, y: 0x0c }

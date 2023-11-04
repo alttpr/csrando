@@ -4,6 +4,14 @@ maps:
     nodes:
       regions:
         - name: "Hammer Bridge North"
+          connections:
+            fixed:
+              - "Boulder Field"
+              - "Dark Lake Hylia River Bend Ledge"
+            Flippers:
+              - "Hammer Bridge River"
+            Hammer:
+              - "Hammer Bridge South"
           mobs:
             - name: "Hammer Bridge North - Ropa"
               position: { x: 0x0f, y: 0x05 }
@@ -23,9 +31,24 @@ maps:
               state: [1, 2]
 
         - name: "Hammer Bridge River"
+          connections:
+            fixed:
+              - "Hammer Bridge North"
+              - "Hammer Bridge Shallow Splotch"
+              - "Dark Lake Hylia River Bend"
+
         - name: "Hammer Bridge Shallow Splotch"
+          connections:
+            Flippers:
+              - "Hammer Bridge River"
 
         - name: "Hammer Bridge South"
+          connections:
+            fixed:
+              - "Bomb Shoppe"
+              - "Dark Lake Hylia Northwest Ledge"
+            Hammer:
+              - "Hammer Bridge North"
           mobs:
             - name: "Hammer Bridge North - Stal 1"
               position: { x: 0x10, y: 0x1a }

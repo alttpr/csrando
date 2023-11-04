@@ -4,6 +4,18 @@ maps:
     nodes:
       regions:
         - name: "Dark Lake Hylia"
+          connections:
+            fixed:
+              - "Dark Lake Hylia Waterfall Brook"
+              - "Dark Lake Hylia River Bend"
+              - "Dark Lake Hylia Northeast Ledge"
+              - "Dark Lake Hylia Splotch of Shallow Water That Is Naked"
+              - "Dark Lake Hylia Splotch of Shallow Water That Is Circumscribed by 10 Rocks"
+              - "Dark Lake Hylia Northern Tiny Island"
+              - "Dark Lake Hylia Southwest Peninsula"
+              - "Dark Lake Hylia Southern Tiny Island"
+              - "Dark Lake Hylia Southern Shallow Water Splotch"
+              - "Dark Lake Hylia Ice Palace Island"
           mobs:
             - name: "Dark Lake Hylia - Fireball Zora 1"
               position: { x: 0x30, y: 0x0c }
@@ -38,6 +50,9 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Ice Palace Island"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"
           mobs:
             - name: "Dark Lake Hylia - Pikit 4"
               position: { x: 0x2a, y: 0x26 }
@@ -57,8 +72,23 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Northeast Ledge"
+          connections:
+            fixed:
+              - "Dark Lake Hylia River Bend Ledge"
+            Flippers:
+              - "Dark Lake Hylia"
+
         - name: "Dark Lake Hylia Northern Tiny Island"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"
+
         - name: "Dark Lake Hylia Northwest Ledge"
+          connections:
+            fixed:
+              - "Hammer Bridge South"
+            Flippers:
+              - "Dark Lake Hylia"
           entrances:
             - name: "Dark Lake Hylia Shop"
               entranceid: 0x73
@@ -86,6 +116,11 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Southeast Ledge"
+          connections:
+            fixed:
+              - "Dark Lake Hylia Waterfall"
+            Flippers:
+              - "Dark Lake Hylia"
           mobs:
             - name: "Dark Lake Hylia - Octorok (One Way) 2"
               position: { x: 0x37, y: 0x39 }
@@ -93,9 +128,21 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Southern Shallow Water Splotch"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"
+
         - name: "Dark Lake Hylia Southern Tiny Island"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"
 
         - name: "Dark Lake Hylia Southwest Ledge"
+          connections:
+            fixed:
+              - "Swamplands Ravine"
+            Flippers:
+              - "Dark Lake Hylia"
           mobs:
             - name: "Dark Lake Hylia - Ropa"
               position: { x: 0x08, y: 0x39 }
@@ -107,6 +154,9 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Southwest Peninsula"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"
           mobs:
             - name: "Dark Lake Hylia - Pikit 3"
               position: { x: 0x16, y: 0x2e }
@@ -122,6 +172,9 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Splotch of Shallow Water That Is Circumscribed by 10 Rocks"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"
           mobs:
             - name: "Dark Lake Hylia - Green Zirro 1"
               position: { x: 0x18, y: 0x16 }
@@ -129,3 +182,6 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Splotch of Shallow Water That Is Naked"
+          connections:
+            Flippers:
+              - "Dark Lake Hylia"

@@ -4,7 +4,16 @@ maps:
     nodes:
       regions:
         - name: "Village Peg Puzzle West"
+          connections:
+            fixed:
+              - "Village of Outcasts"
+            TitansMitt:
+              - "Village Peg Puzzle East"
+
         - name: "Village Peg Puzzle East"
+          connections:
+            TitansMitt:
+              - "Village Peg Puzzle West"
           entrances:
             - name: "Peg Cave"
               conditions: ["Hammer"]

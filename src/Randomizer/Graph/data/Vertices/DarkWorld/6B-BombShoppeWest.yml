@@ -4,6 +4,11 @@ maps:
     nodes:
       regions:
         - name: "West of Bomb Shoppe"
+          connections:
+            fixed:
+              - "Bomb Shoppe"
+              - "Pyramid Southern Ledge"
+              - "Swamplands Portal West"
           entrances:
             - name: "West of Bomb Shoppe Fairy Pond"
               conditions: ["PegasusBoots"]

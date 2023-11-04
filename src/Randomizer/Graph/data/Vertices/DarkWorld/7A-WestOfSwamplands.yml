@@ -4,6 +4,9 @@ maps:
     nodes:
       regions:
         - name: "West of Swamplands"
+          connections:
+            fixed:
+              - "Swamplands Palace Entrance"
           mobs:
             - name: "West of Swamplands - Hinox"
               position: { x: 0x06, y: 0x07 }

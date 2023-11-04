@@ -4,6 +4,10 @@ maps:
     nodes:
       regions:
         - name: "Dark Lumber Shop"
+          connections:
+            fixed:
+              - "Bumper Cave Passway"
+              - "Skull Woods Useless Divider"
           entrances:
             - name: "Lumberjack Shop"
               entranceid: 0x56
