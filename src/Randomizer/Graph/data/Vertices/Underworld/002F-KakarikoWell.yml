@@ -4,6 +4,11 @@ rooms:
       regions:
         - name: "Kakariko Well"
           inletid: 0x80
+          connections:
+            fixed:
+              - "Kakariko Well - Water"
+            UseBomb:
+              - "Kakariko Well Hidden"
           items:
             - name: "Kakariko Well - Left"
               conditions: ["OpenChest"]
@@ -34,6 +39,9 @@ rooms:
               sprite: "@RupeeBlue"
 
         - name: "Kakariko Well Hidden"
+          connections:
+            UseBomb:
+              - "Kakariko Well"
           items:
             - name: "Kakariko Well - Top"
               conditions: ["OpenChest"]

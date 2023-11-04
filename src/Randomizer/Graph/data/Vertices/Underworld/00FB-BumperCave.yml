@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Bumper Cave Bottom"
           inletid: 0x16
+          connections:
+            fixed:
+              - "Bumper Cave Top Stairs Ledge"
           mobs:
             - name: "Bumper Cave Bottom - Bumper"
               position: { x: 0x17, y: 0x0d, z: 0x00 }

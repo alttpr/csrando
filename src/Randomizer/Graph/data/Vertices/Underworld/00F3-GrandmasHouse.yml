@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Grandma's House Right"
           inletid: 0x0e
+          connections:
+            UseBomb:
+              - "Grandma's House Left"
           pots:
             - name: "Grandma's House Right - Pot 1"
               position: 0x1428

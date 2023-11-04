@@ -4,8 +4,15 @@ rooms:
       regions:
         - name: "Super Bunny Exit"
           inletid: 0x14
+          connections:
+            fixed:
+              - "Super Bunny Treasure"
 
         - name: "Super Bunny Refill"
+          connections:
+            fixed:
+              - "Super Bunny Entrance Top"
+              - "Super Bunny Treasure"
           pots:
             - name: "Super Bunny Exit - Pot"
               position: 0x0460
@@ -27,6 +34,10 @@ rooms:
               sprite: "HardhatBeetle"
 
         - name: "Super Bunny Hallway Top"
+          connections:
+            fixed:
+              - "Super Bunny Entrance Top"
+              - "Super Bunny Entrance Middle"
           mobs:
             - name: "Super Bunny Exit - Hardhat Beetle 1"
               position: { x: 0x07, y: 0x05, z: 0x00 }
@@ -41,6 +52,10 @@ rooms:
                 - "Bumper"
 
         - name: "Super Bunny Hallway Bottom"
+          connections:
+            fixed:
+              - "Super Bunny Entrance Bottom"
+              - "Super Bunny Entrance Middle"
           mobs:
             - name: "Super Bunny Exit - Hardhat Beetle 3"
               position: { x: 0x07, y: 0x0c, z: 0x00 }

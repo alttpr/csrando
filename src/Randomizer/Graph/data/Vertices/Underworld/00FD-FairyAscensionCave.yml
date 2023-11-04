@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Fairy Ascension Cave - Bottom"
           inletid: 0x1a
+          connections:
+            fixed:
+              - "Fairy Ascension Cave - Pits Left"
           mobs:
             - name: "Fairy Ascension Cave - Bottom - Mini Moldorm"
               position: { x: 0x09, y: 0x0e, z: 0x00 }
@@ -18,6 +21,9 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Fairy Ascension Cave - Bottom Right"
+          connections:
+            fixed:
+              - "Fairy Ascension Cave - Bottom"
           pots:
             - name: "Fairy Ascension Cave - Bottom - Pot 3"
               position: 0x1754
@@ -27,6 +33,9 @@ rooms:
               sprite: "@RupeeBlue"
 
         - name: "Fairy Ascension Cave - Fairy Alcove"
+          connections:
+            fixed:
+              - "Fairy Ascension Cave - Pits Right"
           mobs:
             - name: "Fairy Ascension Cave - Bottom - Fairy 1"
               position: { x: 0x16, y: 0x08, z: 0x00 }

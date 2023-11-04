@@ -4,6 +4,20 @@ rooms:
       regions:
         - name: "Watto Cave"
           inletid: 0x62
+          connections:
+            UseBomb:
+              - "Watto Cave Back"
+          mobs:
+            - name: "Watto Cave - Storyteller"
+              position: { x: 0x19, y: 0x14, z: 0x00 }
+              sprite: "Storyteller"
+              allow:
+                - "Storyteller"
+
+        - name: "Watto Cave Back"
+          connections:
+            UseBomb:
+              - "Watto Cave"
           pots:
             - name: "Watto Cave - Pot 1"
               position: 0x045c
@@ -23,9 +37,3 @@ rooms:
             - name: "Watto Cave - Pot 6"
               position: 0x0a60
               sprite: "@Heart"
-          mobs:
-            - name: "Watto Cave - Storyteller"
-              position: { x: 0x19, y: 0x14, z: 0x00 }
-              sprite: "Storyteller"
-              allow:
-                - "Storyteller"

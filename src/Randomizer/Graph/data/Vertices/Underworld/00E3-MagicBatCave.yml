@@ -4,6 +4,10 @@ rooms:
       regions:
         - name: "Magic Bat Entry"
           inletid: 0x7e
+          connections:
+            fixed:
+              - "Magic Bat Left"
+              - "Magic Bat Altar"
           pots:
             - name: "Magic Bat Entry - Pot 1"
               position: 0x3964
@@ -12,6 +16,9 @@ rooms:
               position: 0x3758
 
         - name: "Magic Bat Altar"
+          connections:
+            fixed:
+              - "Magic Bat Entry"
           items:
             - name: "Magic Bat Item"
               conditions: ["Powder"]

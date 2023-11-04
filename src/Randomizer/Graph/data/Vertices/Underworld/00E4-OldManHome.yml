@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Old Man Home"
           inletid: 0x30
+          connections:
+            fixed:
+              - "Old Man Home Back"
           pots:
             - name: "Old Man Home - Pot 1"
               position: 0x0920
@@ -16,6 +19,9 @@ rooms:
                 - "LostOldMan"
 
         - name: "Old Man Home Back"
+          connections:
+            fixed:
+              - "Old Man Home"
           pots:
             - name: "Old Man Home - Pot 2"
               position: 0x0a70

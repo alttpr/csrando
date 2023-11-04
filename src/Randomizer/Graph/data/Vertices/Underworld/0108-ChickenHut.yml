@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Chicken Hut"
           inletid: 0x4b
+          connections:
+            UseBomb:
+              - "Chicken Hut Hidden Room"
           pots:
             - name: "Chicken Hut - Pot"
               position: 0x13a6
@@ -23,6 +26,9 @@ rooms:
               sprite: "Chicken"
 
         - name: "Chicken Hut Hidden Room"
+          connections:
+            UseBomb:
+              - "Chicken Hut"
           items:
             - name: "Chicken House Item"
               conditions: ["OpenChest"]

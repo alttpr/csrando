@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Blind's Hideout Upstairs"
           inletid: 0x61
+          connections:
+            fixed:
+              - "Blind's Hideout Trove"
           pots:
             - name: "Blind's Hideout Upstairs - Pot 1"
               position: 0x1c2c

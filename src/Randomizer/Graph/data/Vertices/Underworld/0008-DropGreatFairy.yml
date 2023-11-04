@@ -3,6 +3,10 @@ rooms:
     nodes:
       regions:
         - name: "Drop Great Fairy"
+          connections:
+            fixed:
+              - "Drop Great Fairy Exit"
+              - "Drop Great Fairy Antechamber"
           mobs:
             - name: "Drop Great Fairy - Fairy Queen"
               position: { x: 0x07, y: 0x16, z: 0x00 }

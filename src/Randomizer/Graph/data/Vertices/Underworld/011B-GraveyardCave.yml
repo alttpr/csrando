@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Graveyard Cave"
           inletid: 0x52
+          connections:
+            LiftPot:
+              - "Graveyard Cave - Back"
           pots:
             - name: "Graveyard Cave - Pot 1"
               position: 0x165c
@@ -30,7 +33,17 @@ rooms:
               position: 0x1960
               sprite: "@Heart"
 
+        - name: "Graveyard Cave - Back"
+          connections:
+            LiftPot:
+              - "Graveyard Cave"
+            UseBomb:
+              - "Graveyard Cave - Hidden Room"
+
         - name: "Graveyard Cave - Hidden Room"
+          connections:
+            UseBomb:
+              - "Graveyard Cave - Back"
           items:
             - name: "Graveyard Cave Item"
               addresses: [0x180004]

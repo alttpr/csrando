@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Spectacle Rock Cave Exit"
           inletid: 0x21
+          connections:
+            fixed:
+              - "Spectacle Rock Cave Fairies"
           mobs:
             - name: "Spectacle Rock Cave Exit - Mini Moldorm 1"
               position: { x: 0x1a, y: 0x05, z: 0x00 }

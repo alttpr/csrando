@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Thief Hideout - Ledge"
           inletid: 0x7a
+          connections:
+            fixed:
+              - "Thief Hideout"
           items:
             - name: "Lost Woods Hideout Item"
               addresses: [0x180000]

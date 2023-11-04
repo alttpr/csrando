@@ -22,6 +22,9 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Spiral Cave Ledge"
+          connections:
+            fixed:
+              - "Spiral Cave Exit"
           items:
             - name: "Spiral Cave Item"
               conditions: ["OpenChest"]

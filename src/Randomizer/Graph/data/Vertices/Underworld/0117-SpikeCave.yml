@@ -4,11 +4,32 @@ rooms:
       regions:
         - name: "Spike Cave Entrance"
           inletid: 0x41
+          connections:
+            Hammer:
+              - "Spike Cave Spike Floor Start"
 
         - name: "Spike Cave Spike Floor Start"
+          connections:
+            Hammer:
+              - "Spike Cave Entrance"
+            Cape:
+              - "Spike Cave Spike Floor End"
+            CaneOfByrna:
+              - "Spike Cave Spike Floor End"
+
         - name: "Spike Cave Spike Floor End"
+          connections:
+            Cape:
+              - "Spike Cave Spike Floor Start"
+            CaneOfByrna:
+              - "Spike Cave Spike Floor Start"
+            PowerGlove:
+              - "Spike Cave Refill"
 
         - name: "Spike Cave Refill"
+          connections:
+            PowerGlove:
+              - "Spike Cave Spike Floor End"
           items:
             - name: "Spike Cave"
               conditions: ["OpenChest"]

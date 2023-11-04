@@ -3,18 +3,27 @@ rooms:
     nodes:
       regions:
         - name: "Paradox Cave - Bottom Entrance"
-          type: "shop"
-          shopkeeper: 0xA0
-          shopstyle: 0x03
           inletid: 0x1e
+          connections:
+            UseBomb:
+              - "Paradox Cave - Shop"
           pots:
             - name: "Paradox Cave - Shop - Pot 3"
               position: 0x1c70
               sprite: "@RupeeGreen"
 
         - name: "Paradox Cave - Bottom"
+          connections:
+            fixed:
+              - "Paradox Cave - Bottom Entrance"
+              - "Paradox Cave - Middle Ledge"
+            UseBomb:
+              - "Paradox Cave - Treasure"
 
         - name: "Paradox Cave - Treasure"
+          connections:
+            UseBomb:
+              - "Paradox Cave - Bottom"
           items:
             - name: "Paradox Cave Upper - Left"
               conditions: ["OpenChest"]
@@ -36,6 +45,12 @@ rooms:
               sprite: "@Heart"
 
         - name: "Paradox Cave - Shop"
+          type: "shop"
+          shopkeeper: 0xA0
+          shopstyle: 0x03
+          connections:
+            UseBomb:
+              - "Paradox Cave - Bottom Entrance"
           inventory:
             - name: "Paradox Cave - Shop - Left"
               type: "shopitem"

@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Cave 45 Right"
           inletid: 0x51
+          connections:
+            LiftPot:
+              - "Cave 45 Left"
           pots:
             - name: "Cave 45 - Pot 1"
               position: 0x3618
@@ -24,6 +27,9 @@ rooms:
               position: 0x3518
 
         - name: "Cave 45 Left"
+          connections:
+            LiftPot:
+              - "Cave 45 Right"
           items:
             - name: "Cave 45 Item"
               addresses: [0x180003]

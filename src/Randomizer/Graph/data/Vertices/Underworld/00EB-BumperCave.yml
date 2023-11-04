@@ -3,8 +3,18 @@ rooms:
     nodes:
       regions:
         - name: "Bumper Cave Top Stairs Ledge"
+          connections:
+            fixed:
+              - "Bumper Cave Bottom"
+            LiftPot:
+              - "Bumper Cave Top Refill"
 
         - name: "Bumper Cave Top Refill"
+          connections:
+            Cape:
+              - "Bumper Cave Top Exit"
+            LiftPot:
+              - "Bumper Cave Top Stairs Ledge"
           pots:
             - name: "Bumper Cave Top Exit - Pot 1"
               position: 0x08ce
@@ -24,6 +34,11 @@ rooms:
 
         - name: "Bumper Cave Top Exit"
           inletid: 0x17
+          connections:
+            Cape:
+              - "Bumper Cave Top Refill"
+            Hookshot:
+              - "Bumper Cave Top Refill"
           mobs:
             - name: "Bumper Cave Top Exit - Bumper"
               position: { x: 0x17, y: 0x14, z: 0x00 }

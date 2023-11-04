@@ -2,13 +2,29 @@ rooms:
   - roomid: 0x00F8
     nodes:
       regions:
+        # TODO: Add mirror / hookshot tech transitions
         - name: "Super Bunny Entrance Bottom"
           inletid: 0x13
+          connections:
+            fixed:
+              - "Super Bunny Hallway Bottom"
 
         - name: "Super Bunny Entrance Middle"
+          connections:
+            fixed:
+              - "Super Bunny Entrance Top"
+
         - name: "Super Bunny Entrance Top"
+          connections:
+            fixed:
+              - "Super Bunny Entrance Middle"
+              - "Super Bunny Hallway Top"
+              - "Super Bunny Refill"
 
         - name: "Super Bunny Treasure"
+          connections:
+            fixed:
+              - "Super Bunny Exit"
           items:
             - name: "Superbunny Cave - Top"
               conditions: ["OpenChest"]

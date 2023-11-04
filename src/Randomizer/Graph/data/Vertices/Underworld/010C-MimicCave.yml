@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Mimic Cave Entrance"
           inletid: 0x4f
+          connections:
+            Hammer:
+              - "Mimic Cave Back"
           mobs:
             - name: "Mimic Cave Entrance - Green Eyegore TL"
               position: { x: 0x07, y: 0x14, z: 0x00 }
@@ -23,6 +26,7 @@ rooms:
               trophy: "MimicCaveTrophy"
 
         - name: "Mimic Cave Back"
+
         - name: "Mimic Cave Back Room"
           items:
             - name: "Mimic Cave"

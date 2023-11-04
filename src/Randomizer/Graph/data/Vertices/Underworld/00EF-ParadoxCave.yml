@@ -4,8 +4,21 @@ rooms:
       regions:
         - name: "Paradox Cave - Middle"
           inletid: 0x1f
+          connections:
+            fixed:
+              - "Paradox Cave - Top"
+              - "Paradox Cave - Bottom"
+
         - name: "Paradox Cave - Middle Ledge"
+          connections:
+            fixed:
+              - "Paradox Cave - Bottom"
+              - "Paradox Cave - Moldorm Room"
+
         - name: "Paradox Cave - Moldorm Room"
+          connections:
+            fixed:
+              - "Paradox Cave - Middle Ledge"
           items:
             - name: "Paradox Cave Lower - Far Left"
               conditions: ["OpenChest"]

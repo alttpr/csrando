@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Hype Cave Entrance"
           inletid: 0x3D
+          connections:
+            UseBomb:
+              - "Hype Cave"
           items:
             - name: "Hype Cave - NPC Item"
               addresses: [0x180011]
@@ -17,6 +20,9 @@ rooms:
                 - "Salesman"
 
         - name: "Hype Cave"
+          connections:
+            UseBomb:
+              - "Hype Cave Entrance"
           items:
             - name: "Hype Cave - Top"
               conditions: ["OpenChest"]

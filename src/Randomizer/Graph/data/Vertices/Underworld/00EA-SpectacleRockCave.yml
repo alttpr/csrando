@@ -4,8 +4,15 @@ rooms:
       regions:
         - name: "Spectacle Rock Cave Top"
           inletid: 0x23
+          connections:
+            fixed:
+              - "Spectacle Rock Cave Fairies"
 
         - name: "Spectacle Rock Cave Ledge"
+          connections:
+            fixed:
+              - "Spectacle Rock Cave Middle"
+              - "Spectacle Rock Cave Fairies"
           items:
             - name: "Spectacle Rock Cave Item"
               addresses: [0x180002]

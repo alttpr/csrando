@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Lumberjacks Cave Fairies"
           inletid: 0x7f
+          connections:
+            fixed:
+              - "Lumberjacks Cave Ledge"
           mobs:
             - name: "Lumberjacks Cave - Fairy 1"
               position: { x: 0x07, y: 0x06, z: 0x00 }
@@ -19,6 +22,9 @@ rooms:
               sprite: "Fairy"
 
         - name: "Lumberjacks Cave Ledge"
+          connections:
+            fixed:
+              - "Lumberjacks Cave"
           items:
             - name: "Lumberjack Tree"
               addresses: [0x180001]

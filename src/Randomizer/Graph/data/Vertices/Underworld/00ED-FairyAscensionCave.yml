@@ -3,5 +3,14 @@ rooms:
     nodes:
       regions:
         - name: "Fairy Ascension Cave - Pits Left"
+          connections:
+            fixed:
+              - "Fairy Ascension Cave - Bottom"
+              - "Fairy Ascension Cave - Fairy Alcove"
+
         - name: "Fairy Ascension Cave - Pits Right"
           inletid: 0x1b
+          connections:
+            fixed:
+              - "Fairy Ascension Cave - Fairy Alcove"
+              - "Fairy Ascension Cave - Bottom Right"

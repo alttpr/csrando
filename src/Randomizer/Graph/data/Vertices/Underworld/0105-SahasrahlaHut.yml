@@ -4,6 +4,11 @@ rooms:
       regions:
         - name: "Sahasrahla's Room"
           inletid: 0x45
+          connections:
+            PegasusBoots:
+              - "Sahasrahla's Closet"
+            UseBomb:
+              - "Sahasrahla's Closet"
           items:
             - name: "Sahasrahla's Hut - Sahasrahla"
               conditions: ["PendantOfCourage"]
@@ -28,6 +33,11 @@ rooms:
                 - "Sahasrahla"
 
         - name: "Sahasrahla's Closet"
+          connections:
+            PegasusBoots:
+              - "Sahasrahla's Room"
+            UseBomb:
+              - "Sahasrahla's Room"
           items:
             - name: "Sahasrahla's Hut - Left"
               conditions: ["OpenChest"]

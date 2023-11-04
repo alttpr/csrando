@@ -3,6 +3,11 @@ rooms:
     nodes:
       regions:
         - name: "Blind's Hideout Trove"
+          connections:
+            fixed:
+              - "Blind's Hideout Upstairs"
+            UseBomb:
+              - "Blind's Hideout Hidden"
           items:
             - name: "Blind's Hideout - Left"
               conditions: ["OpenChest"]
@@ -26,6 +31,9 @@ rooms:
               itemset: ["lw"]
 
         - name: "Blind's Hideout Hidden"
+          connections:
+            UseBomb:
+              - "Blind's Hideout Trove"
           items:
             - name: "Blind's Hideout - Top"
               conditions: ["OpenChest"]

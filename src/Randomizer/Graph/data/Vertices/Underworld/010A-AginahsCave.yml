@@ -4,6 +4,9 @@ rooms:
       regions:
         - name: "Aginah's Cave"
           inletid: 0x4D
+          connections:
+            UseBomb:
+              - "Aginah's Cave - Chest Room"
           mobs:
             - name: "Desert Cave - Aginah"
               position: { x: 0x19, y: 0x04, z: 0x00 }
@@ -11,6 +14,9 @@ rooms:
               allow: ["Sahasrahla"]
 
         - name: "Aginah's Cave - Chest Room"
+          connections:
+            UseBomb:
+              - "Aginah's Cave"
           items:
             - name: "Aginah's Cave - Chest"
               conditions: ["OpenChest"]

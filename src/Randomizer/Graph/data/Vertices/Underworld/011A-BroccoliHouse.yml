@@ -4,6 +4,11 @@ rooms:
       regions:
         - name: "Broccoli House"
           inletid: 0x68
+          connections:
+            PegasusBoots:
+              - "Broccoli House Back"
+            UseBomb:
+              - "Broccoli House Back"
           mobs:
             - name: "Broccoli House - Broccoli"
               position: { x: 0x18, y: 0x17, z: 0x00 }
@@ -12,6 +17,11 @@ rooms:
                 - "Storyteller"
 
         - name: "Broccoli House Back"
+          connections:
+            PegasusBoots:
+              - "Broccoli House"
+            UseBomb:
+              - "Broccoli House"
           pots:
             - name: "Broccoli House - Pot 1"
               position: 0x0ad6

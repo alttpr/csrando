@@ -4,12 +4,22 @@ rooms:
       regions:
         - name: "Hookshot Cave"
           inletid: 0x3A
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Middle Right Pad"
+            PegasusBoots:
+              - "Hookshot Cave - Middle Right Pad"
+            UseBomb:
+              - "Hookshot Cave Cross"
           pots:
             - name: "Hookshot Cave - Pot 5"
               position: 0x1360
               sprite: "@Heart"
 
         - name: "Hookshot Cave - Top Left Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Top Right Pad"
           mobs:
             - name: "Hookshot Cave - Hardhat Beetle"
               position: { x: 0x09, y: 0x08, z: 0x00 }
@@ -20,6 +30,9 @@ rooms:
               sprite: "@MagicRefillSmall"
 
         - name: "Hookshot Cave - Top Right Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Middle Right Pad"
           items:
             - name: "Hookshot Cave - Top Chest"
               addresses: [0xEB51]
@@ -31,6 +44,10 @@ rooms:
               sprite: "@RupeeBlue"
 
         - name: "Hookshot Cave - Middle Left Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Top Left Pad"
+              - "Hookshot Cave - Middle Center South Pad"
           mobs:
             - name: "Hookshot Cave - Blue Bari 2"
               position: { x: 0x12, y: 0x14, z: 0x00 }
@@ -54,6 +71,9 @@ rooms:
               sprite: "@RupeeGreen"
 
         - name: "Hookshot Cave - Middle Center North Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Middle Left Pad"
           items:
             - name: "Hookshot Cave - Middle North Chest"
               addresses: [0xEB54]
@@ -61,6 +81,10 @@ rooms:
               itemset: ["dw"]
 
         - name: "Hookshot Cave - Middle Center South Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Middle Left Pad"
+              - "Hookshot Cave - Middle Right Pad"
           items:
             - name: "Hookshot Cave - Middle South Chest"
               addresses: [0xEB57]
@@ -83,6 +107,14 @@ rooms:
                 - "Bumper"
 
         - name: "Hookshot Cave - Middle Right Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave"
+              - "Hookshot Cave - Bottom Pad"
+              - "Hookshot Cave - Top Right Pad"
+              - "Hookshot Cave - Middle Center North Pad"
+            PegasusBoots:
+              - "Hookshot Cave - Bottom Pad"
           pots:
             # TODO: Check if those are correct
             - name: "Hookshot Cave - Pot 4"
@@ -94,6 +126,9 @@ rooms:
 
         # South pad accessible with boots
         - name: "Hookshot Cave - Bottom Pad"
+          connections:
+            Hookshot:
+              - "Hookshot Cave - Middle Right Pad"
           items:
             - name: "Hookshot Cave - Bottom Chest"
               addresses: [0xEB5A]

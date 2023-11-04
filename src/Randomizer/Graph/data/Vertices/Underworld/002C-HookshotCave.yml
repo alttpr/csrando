@@ -4,8 +4,17 @@ rooms:
       regions:
         - name: "Hookshot Cave Corner"
           inletid: 0x3B
+          connections:
+            UseBomb:
+              - "Hookshot Cave Fairies"
+              - "Hookshot Cave Cross"
 
         - name: "Hookshot Cave Cross"
+          connections:
+            UseBomb:
+              - "Hookshot Cave Corner"
+              - "Hookshot Cave Fairy"
+              - "Hookshot Cave"
           pots:
             - name: "Hookshot Cave Cross - Pot 1"
               position: 0x186c
@@ -15,6 +24,9 @@ rooms:
               sprite: "@Heart"
 
         - name: "Hookshot Cave Fairy"
+          connections:
+            UseBomb:
+              - "Hookshot Cave Cross"
           mobs:
             - name: "Hookshot Cave Cross - Fairy Queen"
               position: { x: 0x17, y: 0x05, z: 0x00 }
@@ -23,6 +35,9 @@ rooms:
                 - "FairyBig"
 
         - name: "Hookshot Cave Fairies"
+          connections:
+            UseBomb:
+              - "Hookshot Cave Corner"
           mobs:
             - name: "Hookshot Cave Cross - Fairy 1"
               position: { x: 0x09, y: 0x04, z: 0x00 }
