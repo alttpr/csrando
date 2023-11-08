@@ -4,6 +4,9 @@ rooms:
     nodes:
       regions:
         - name: "Tower Of Hera - Boss Room"
+          connections:
+            fixed:
+              - "Tower Of Hera - Bumper Room"
 
       items:
         - name: "Tower Of Hera - Boss"
