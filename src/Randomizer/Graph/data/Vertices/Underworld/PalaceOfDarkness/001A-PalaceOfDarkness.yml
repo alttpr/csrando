@@ -4,123 +4,145 @@ rooms:
     nodes:
       regions:
         - name: "Palace of Darkness - Falling Bridge Ledge"
+          connections:
+            LiftPot:
+              - "Palace of Darkness - Falling Bridge"
+            KeyD1:
+              - "Palace of Darkness - Arena North"
+
         - name: "Palace of Darkness - Falling Bridge"
+          connections:
+            LiftPot:
+              - "Palace of Darkness - Falling Bridge Ledge"
+              - "Palace of Darkness - Falling Bridge Top"
+          pots:
+            - name: "Palace of Darkness - Compass Room - Pot 1"
+              position: 0x051c
+              sprite: "@BombRefill1"
+            - name: "Palace of Darkness - Compass Room - Pot 2"
+              position: 0x0520
+              sprite: "@BombRefill1"
+            - name: "Palace of Darkness - Compass Room - Pot 3"
+              position: 0x1b1c
+              sprite: "@BombRefill1"
+            - name: "Palace of Darkness - Compass Room - Pot 4"
+              position: 0x1b20
+              sprite: "@BombRefill1"
+          mobs:
+            - name: "Palace of Darkness - Compass Room - Mini Helmasaur 1"
+              position: { x: 0x08, y: 0x06, z: 0x00 }
+              sprite: "MiniHelmasaur"
+              deny:
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVD"
+                - "RollerVU"
+                - "RollerHR"
+                - "RollerHL"
+                - "Beamos"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "FireBarCW"
+                - "FireBarCCW"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Palace of Darkness - Compass Room - Mini Helmasaur 2"
+              position: { x: 0x07, y: 0x10, z: 0x00 }
+              sprite: "MiniHelmasaur"
+              deny:
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVD"
+                - "RollerVU"
+                - "RollerHR"
+                - "RollerHL"
+                - "Beamos"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "FireBarCW"
+                - "FireBarCCW"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Palace of Darkness - Compass Room - Falling Bridge"
+              position: { x: 0x07, y: 0x1a, z: 0x00 }
+              sprite: "FallingBridge"
+
         - name: "Palace of Darkness - Falling Bridge Top"
+          connections:
+            fixed:
+              - "Palace of Darkness - Compass Room"
+            LiftPot:
+              - "Palace of Darkness - Falling Bridge"
+            KeyD1:
+              - "Palace of Darkness - Dark Maze"
+
         - name: "Palace of Darkness - Big Chest Balcony"
+          connections:
+            UseBomb:
+              - "Palace of Darkness - Dark Maze"
+          items:
+            - name: "Palace of Darkness - Big Chest"
+              addresses: [0xea40]
+              conditions: ["BigKeyD1"]
+              type: "bigchest"
+              itemset: ["pod"]
+
         - name: "Palace of Darkness - Compass Room"
+          connections:
+            fixed:
+              - "Palace of Darkness - Falling Bridge Top"
+              - "Palace of Darkness - Dark Basement"
+            KeyD1:
+              - "Palace of Darkness - Harmless Hellway"
+          items:
+            - name: "Palace of Darkness - Compass Chest"
+              addresses: [0xea43]
+              conditions: ["OpenChest"]
+              type: "chest"
+              itemset: ["pod"]
+          mobs:
+            - name: "Palace of Darkness - Compass Room - Terrorpin 1"
+              position: { x: 0x16, y: 0x06, z: 0x00 }
+              sprite: "Terrorpin"
+            - name: "Palace of Darkness - Compass Room - Terrorpin 2"
+              position: { x: 0x19, y: 0x06, z: 0x00 }
+              sprite: "Terrorpin"
+            - name: "Palace of Darkness - Compass Room - Terrorpin 3"
+              position: { x: 0x16, y: 0x0a, z: 0x00 }
+              sprite: "Terrorpin"
+            - name: "Palace of Darkness - Compass Room - Terrorpin 4"
+              position: { x: 0x19, y: 0x0a, z: 0x00 }
+              sprite: "Terrorpin"
+
         - name: "Palace of Darkness - Harmless Hellway"
-
-      keydoors:
-        - name: "Palace of Darkness - Falling Bridge Door"
-          key: "KeyD1"
-        - name: "Palace of Darkness - Compass Room Door"
-          key: "KeyD1"
-
-      items:
-        - name: "Palace of Darkness - Big Chest"
-          addresses: [0xea40]
-          type: "bigchest"
-          itemset: ["pod"]
-
-        - name: "Palace of Darkness - Compass Chest"
-          addresses: [0xea43]
-          type: "chest"
-          itemset: ["pod"]
-
-        - name: "Palace of Darkness - Harmless Hellway Chest"
-          addresses: [0xea46]
-          type: "chest"
-          itemset: ["pod"]
-
-      pots:
-        - name: "Palace of Darkness - Compass Room - Pot 1"
-          position: 0x051c
-          sprite: "@BombRefill1"
-        - name: "Palace of Darkness - Compass Room - Pot 2"
-          position: 0x0520
-          sprite: "@BombRefill1"
-        - name: "Palace of Darkness - Compass Room - Pot 3"
-          position: 0x1b1c
-          sprite: "@BombRefill1"
-        - name: "Palace of Darkness - Compass Room - Pot 4"
-          position: 0x1b20
-          sprite: "@BombRefill1"
-        - name: "Palace of Darkness - Compass Room - Pot 5"
-          position: 0x13d4
-        - name: "Palace of Darkness - Compass Room - Pot 6"
-          position: 0x13e8
-
-      mobs:
-        - name: "Palace of Darkness - Compass Room - Mini Helmasaur 1"
-          position: { x: 0x08, y: 0x06, z: 0x00 }
-          sprite: "MiniHelmasaur"
-          deny:
-            - "SparkCW"
-            - "SparkCCW"
-            - "RollerVD"
-            - "RollerVU"
-            - "RollerHR"
-            - "RollerHL"
-            - "Beamos"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "FireBarCW"
-            - "FireBarCCW"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Palace of Darkness - Compass Room - Terrorpin 1"
-          position: { x: 0x16, y: 0x06, z: 0x00 }
-          sprite: "Terrorpin"
-
-        - name: "Palace of Darkness - Compass Room - Terrorpin 2"
-          position: { x: 0x19, y: 0x06, z: 0x00 }
-          sprite: "Terrorpin"
-
-        - name: "Palace of Darkness - Compass Room - Terrorpin 3"
-          position: { x: 0x16, y: 0x0a, z: 0x00 }
-          sprite: "Terrorpin"
-
-        - name: "Palace of Darkness - Compass Room - Terrorpin 4"
-          position: { x: 0x19, y: 0x0a, z: 0x00 }
-          sprite: "Terrorpin"
-
-        - name: "Palace of Darkness - Compass Room - Mini Helmasaur 2"
-          position: { x: 0x07, y: 0x10, z: 0x00 }
-          sprite: "MiniHelmasaur"
-          deny:
-            - "SparkCW"
-            - "SparkCCW"
-            - "RollerVD"
-            - "RollerVU"
-            - "RollerHR"
-            - "RollerHL"
-            - "Beamos"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "FireBarCW"
-            - "FireBarCCW"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Palace of Darkness - Compass Room - Spike Trap 1"
-          position: { x: 0x16, y: 0x15, z: 0x00 }
-          sprite: "SpikeTrap"
-
-        - name: "Palace of Darkness - Compass Room - Spike Trap 2"
-          position: { x: 0x16, y: 0x17, z: 0x00 }
-          sprite: "SpikeTrap"
-
-        - name: "Palace of Darkness - Compass Room - Statue"
-          position: { x: 0x15, y: 0x19, z: 0x00 }
-          sprite: "Statue"
-          allow:
-            - "Statue"
-
-        - name: "Palace of Darkness - Compass Room - Spike Trap 3"
-          position: { x: 0x16, y: 0x19, z: 0x00 }
-          sprite: "SpikeTrap"
-
-        - name: "Palace of Darkness - Compass Room - Chicken"
-          position: { x: 0x07, y: 0x1a, z: 0x00 }
-          sprite: "FallingBridge"
+          connections:
+            fixed:
+              - "Palace of Darkness - Arena North"
+            KeyD1:
+              - "Palace of Darkness - Compass Room"
+          items:
+            - name: "Palace of Darkness - Harmless Hellway Chest"
+              addresses: [0xea46]
+              conditions: ["OpenChest"]
+              type: "chest"
+              itemset: ["pod"]
+          pots:
+            - name: "Palace of Darkness - Compass Room - Pot 5"
+              position: 0x13d4
+            - name: "Palace of Darkness - Compass Room - Pot 6"
+              position: 0x13e8
+          mobs:
+            - name: "Palace of Darkness - Compass Room - Spike Trap 1"
+              position: { x: 0x16, y: 0x15, z: 0x00 }
+              sprite: "SpikeTrap"
+            - name: "Palace of Darkness - Compass Room - Spike Trap 2"
+              position: { x: 0x16, y: 0x17, z: 0x00 }
+              sprite: "SpikeTrap"
+            - name: "Palace of Darkness - Compass Room - Statue"
+              position: { x: 0x15, y: 0x19, z: 0x00 }
+              sprite: "Statue"
+              allow:
+                - "Statue"
+            - name: "Palace of Darkness - Compass Room - Spike Trap 3"
+              position: { x: 0x16, y: 0x19, z: 0x00 }
+              sprite: "SpikeTrap"

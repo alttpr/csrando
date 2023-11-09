@@ -4,51 +4,58 @@ rooms:
     nodes:
       regions:
         - name: "Palace of Darkness - Mimics 2"
+          connections:
+            fixed:
+              - "Palace of Darkness - Sexy Statue"
+            "PalaceOfDarknessMimicsTwoTrophy|3":
+              - "Palace of Darkness - Bow Statue"
+          pots:
+            - name: "Palace of Darkness - Mimics 2 - Pot 1"
+              position: 0x1714
+              sprite: "@ArrowRefill5"
+            - name: "Palace of Darkness - Mimics 2 - Pot 2"
+              position: 0x1728
+              sprite: "@ArrowRefill5"
+          mobs:
+            - name: "Palace of Darkness - Mimics 2 - Red Eyegore"
+              position: { x: 0x07, y: 0x14, z: 0x00 }
+              sprite: "EyegoreRed"
+              trophy: "PalaceOfDarknessMimicsTwoTrophy"
+              deny:
+                - "Beamos"
+                - "AntifairyCircle"
+                - "Bumper"
+            - name: "Palace of Darkness - Mimics 2 - Green Eyegore L"
+              position: { x: 0x03, y: 0x1c, z: 0x00 }
+              sprite: "EyegoreGreen"
+              trophy: "PalaceOfDarknessMimicsTwoTrophy"
+              deny:
+                - "RollerVU"
+            - name: "Palace of Darkness - Mimics 2 - Green Eyegore R"
+              position: { x: 0x0c, y: 0x1c, z: 0x00 }
+              sprite: "EyegoreGreen"
+              trophy: "PalaceOfDarknessMimicsTwoTrophy"
+
         - name: "Palace of Darkness - Bow Statue"
+          connections:
+            fixed:
+              - "Palace of Darkness - Mimics 2"
+            BowAndArrows:
+              - "Palace of Darkness - Moving Walls"
+          mobs:
+            - name: "Palace of Darkness - Bow Statue - Crystal Switch"
+              position: { x: 0x07, y: 0x04, z: 0x00 }
+              sprite: "CrystalSwitch"
+              allow:
+                - "CrystalSwitch"
+            - name: "Palace of Darkness - Bow Statue - Arrow Target"
+              position: { x: 0x10, y: 0x04, z: 0x00 }
+              sprite: "ArrowTarget"
+            - name: "Palace of Darkness - Bow Statue - Spike Trap"
+              position: { x: 0x03, y: 0x0c, z: 0x00 }
+              sprite: "SpikeTrap"
 
-      shutters:
-        - name: "Palace of Darkness - Mimics 2 - Shutter Door"
-
-      pots:
-        - name: "Palace of Darkness - Mimics 2 - Pot 1"
-          position: 0x1714
-          sprite: "@ArrowRefill5"
-        - name: "Palace of Darkness - Mimics 2 - Pot 2"
-          position: 0x1728
-          sprite: "@ArrowRefill5"
-
-      mobs:
-        - name: "Palace of Darkness - Bow Statue - Crystal Switch"
-          position: { x: 0x07, y: 0x04, z: 0x00 }
-          sprite: "CrystalSwitch"
-          allow:
-            - "CrystalSwitch"
-
-        - name: "Palace of Darkness - Bow Statue - Arrow Target"
-          position: { x: 0x10, y: 0x04, z: 0x00 }
-          sprite: "ArrowTarget"
-
-        - name: "Palace of Darkness - Bow Statue - Spike Trap"
-          position: { x: 0x03, y: 0x0c, z: 0x00 }
-          sprite: "SpikeTrap"
-
-        - name: "Palace of Darkness - Mimics 2 - Red Eyegore"
-          position: { x: 0x07, y: 0x14, z: 0x00 }
-          sprite: "EyegoreRed"
-          trophy: "PalaceOfDarknessMimicsTwoTrophy"
-          deny:
-            - "Beamos"
-            - "AntifairyCircle"
-            - "Bumper"
-
-        - name: "Palace of Darkness - Mimics 2 - Green Eyegore L"
-          position: { x: 0x03, y: 0x1c, z: 0x00 }
-          sprite: "EyegoreGreen"
-          trophy: "PalaceOfDarknessMimicsTwoTrophy"
-          deny:
-            - "RollerVU"
-
-        - name: "Palace of Darkness - Mimics 2 - Green Eyegore R"
-          position: { x: 0x0c, y: 0x1c, z: 0x00 }
-          sprite: "EyegoreGreen"
-          trophy: "PalaceOfDarknessMimicsTwoTrophy"
+        - name: "Palace of Darkness - Moving Walls"
+          connections:
+            fixed:
+              - "Palace of Darkness - Dark Pegs Landing"
