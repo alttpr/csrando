@@ -4,30 +4,35 @@ rooms:
     nodes:
       regions:
         - name: "Hyrule Castle - Basement Playpit"
+          connections:
+            fixed:
+              - "Hyrule Castle - Basement Lonely Blue Guard"
+              - "Hyrule Castle - Basement Hallways"
+          pots:
+            - name: "Hyrule Castle - Basement Playpit - Pot 1"
+              position: 0x324c
+              sprite: "@Heart"
+            - name: "Hyrule Castle - Basement Playpit - Pot 2"
+              position: 0x2a32
+            - name: "Hyrule Castle - Basement Playpit - Pot 3"
+              position: 0x2532
+          mobs:
+            - name: "Hyrule Castle - Basement Playpit - Blue Guard 1"
+              position: { x: 0x09, y: 0x05, z: 0x01 }
+              sprite: "BlueSwordGuard1B"
+              deny:
+                - "RollerVD"
+            - name: "Hyrule Castle - Basement Playpit - Blue Guard 2"
+              position: { x: 0x10, y: 0x06, z: 0x01 }
+              sprite: "BlueSwordGuard03"
+            - name: "Hyrule Castle - Basement Playpit - Blue Guard 3"
+              position: { x: 0x15, y: 0x11, z: 0x01 }
+              sprite: "BlueSwordGuard03"
+              deny:
+                - "RollerVU"
+
         - name: "Hyrule Castle - Basement Playpit Overlook"
-
-      pots:
-        - name: "Hyrule Castle - Basement Playpit - Pot 1"
-          position: 0x324c
-          sprite: "@Heart"
-        - name: "Hyrule Castle - Basement Playpit - Pot 2"
-          position: 0x2a32
-        - name: "Hyrule Castle - Basement Playpit - Pot 3"
-          position: 0x2532
-
-      mobs:
-        - name: "Hyrule Castle - Basement Playpit - Blue Guard 1"
-          position: { x: 0x09, y: 0x05, z: 0x01 }
-          sprite: "BlueSwordGuard1B"
-          deny:
-            - "RollerVD"
-
-        - name: "Hyrule Castle - Basement Playpit - Blue Guard 2"
-          position: { x: 0x10, y: 0x06, z: 0x01 }
-          sprite: "BlueSwordGuard03"
-
-        - name: "Hyrule Castle - Basement Playpit - Blue Guard 3"
-          position: { x: 0x15, y: 0x11, z: 0x01 }
-          sprite: "BlueSwordGuard03"
-          deny:
-            - "RollerVU"
+          connections:
+            fixed:
+              - "Hyrule Castle - Basement Hallways"
+              - "Hyrule Castle - Basement Lonely Blue Guard Overlook"

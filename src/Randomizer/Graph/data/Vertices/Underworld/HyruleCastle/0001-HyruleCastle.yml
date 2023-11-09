@@ -4,3 +4,8 @@ rooms:
     nodes:
       regions:
         - name: "Hyrule Castle - Back Passage"
+          connections:
+            fixed:
+              - "Hyrule Castle - North East Passage"
+              - "Hyrule Castle - North West Passage"
+              - "Hyrule Castle - Basement Statue"

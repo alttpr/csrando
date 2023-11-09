@@ -4,26 +4,36 @@ rooms:
     nodes:
       regions:
         - name: "Hyrule Castle - Basement Statue"
+          connections:
+            fixed:
+              - "Hyrule Castle - Back Passage"
+            KeyH2:
+              - "Hyrule Castle - Basement Lonely Blue Guard"
+          items:
+            - name: "Hyrule Castle - Map Chest"
+              addresses: [0xEB0C]
+              type: "chest"
+              itemset: ["escape"]
+          mobs:
+            - name: "Hyrule Castle - Basement Statue - Guard Key"
+              position: { x: 0x11, y: 0x06, z: 0x00 }
+              sprite: "BlueSwordGuard05"
+              item: "KeyH2"
+              itemset: ["escape"]
+
         - name: "Hyrule Castle - Basement Lonely Blue Guard"
+          connections:
+            fixed:
+              - "Hyrule Castle - Basement Playpit"
+            KeyH2:
+              - "Hyrule Castle - Basement Statue"
+          mobs:
+            - name: "Hyrule Castle - Basement Statue - Blue Guard 2"
+              position: { x: 0x0a, y: 0x19, z: 0x01 }
+              sprite: "BlueSwordGuard01"
+
         - name: "Hyrule Castle - Basement Lonely Blue Guard Overlook"
-
-      keydoors:
-        - name: "Hyrule Castle - Basement Statue Door"
-          key: "KeyH2"
-
-      items:
-        - name: "Hyrule Castle - Map Chest"
-          addresses: [0xEB0C]
-          type: "chest"
-          itemset: ["escape"]
-
-      mobs:
-        - name: "Hyrule Castle - Basement Statue - Guard Key"
-          position: { x: 0x11, y: 0x06, z: 0x00 }
-          sprite: "BlueSwordGuard05"
-          item: "KeyH2"
-          itemset: ["escape"]
-
-        - name: "Hyrule Castle - Basement Statue - Blue Guard 2"
-          position: { x: 0x0a, y: 0x19, z: 0x01 }
-          sprite: "BlueSwordGuard01"
+          connections:
+            fixed:
+              - "Hyrule Castle - Basement Lonely Blue Guard"
+              - "Hyrule Castle - Basement Playpit Overlook"

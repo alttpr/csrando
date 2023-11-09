@@ -3,24 +3,28 @@ rooms:
     group: 1
     nodes:
       regions:
+        - name: "Sanctuary - Princess Dropoff"
+          connections:
+            fixed:
+              - "Sanctuary Hall"
+          items:
+            - name: "Sanctuary - Princess Rescued"
+              type: "event"
+              item: "RescueZelda"
+              itemset: ["event"]
+
         - name: "Sanctuary Hall"
           inletid: 0x02
-
-      items:
-        - name: "Sanctuary Chest"
-          addresses: [0xEA79]
-          type: "chest"
-          itemset: ["escape"]
-        - name: "Sanctuary - Princess Dropoff"
-          type: "event"
-          item: "RescueZelda"
-          itemset: ["event"]
-
-      mobs:
-        - name: "Sanctuary Hall - Priest"
-          position: { x: 0x0f, y: 0x07, z: 0x00 }
-          sprite: "Priest"
-
-        - name: "Sanctuary Hall - Princess Zelda"
-          position: { x: 0x10, y: 0x06, z: 0x00 }
-          sprite: "Zelda"
+          items:
+            - name: "Sanctuary Chest"
+              addresses: [0xEA79]
+              conditions: ["OpenChest"]
+              type: "chest"
+              itemset: ["escape"]
+          mobs:
+            - name: "Sanctuary Hall - Priest"
+              position: { x: 0x0f, y: 0x07, z: 0x00 }
+              sprite: "Priest"
+            - name: "Sanctuary Hall - Princess Zelda"
+              position: { x: 0x10, y: 0x06, z: 0x00 }
+              sprite: "Zelda"

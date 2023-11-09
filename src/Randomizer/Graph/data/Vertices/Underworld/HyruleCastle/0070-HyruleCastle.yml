@@ -4,3 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Hyrule Castle - Basement Cell Hall"
+          connections:
+            fixed:
+              - "Hyrule Castle - Basement Post Trap"
+              - "Hyrule Castle - Basement Cells"
