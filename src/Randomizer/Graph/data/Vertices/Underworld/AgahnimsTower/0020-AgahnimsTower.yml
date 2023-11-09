@@ -4,14 +4,12 @@ rooms:
     nodes:
       regions:
         - name: "Agahnims Tower - Boss Room"
-
-      items:
-        - name: "Agahnims Tower - Boss"
-          type: "event"
-          item: "AgahnimDefeated"
-          itemset: ["event"]
-
-      mobs:
-        - name: "Agahnims Tower - Boss Room - Agahnim"
-          position: { x: 0x07, y: 0x15, z: 0x00 }
-          sprite: "Agahnim"
+          connections:
+            AgahnimDefeated:
+              - "Pyramid"
+          mobs:
+            - name: "Agahnims Tower - Boss Room - Agahnim"
+              position: { x: 0x07, y: 0x15, z: 0x00 }
+              sprite: "Agahnim"
+              item: "AgahnimDefeated"
+              itemset: ["event"]

@@ -4,9 +4,18 @@ rooms:
     nodes:
       regions:
         - name: "Agahnims Tower - Antichamber"
-        - name: "Agahnims Tower - Bedroom"
+          connections:
+            fixed:
+              - "Agahnims Tower - Bedroom"
+              - "Agahnims Tower - Bridge"
 
-      mobs:
-        - name: "Agahnims Tower - Bedroom - Cutscene Agahnim"
-          position: { x: 0x07, y: 0x05, z: 0x00 }
-          sprite: "AgahnimCutscene"
+        - name: "Agahnims Tower - Bedroom"
+          connections:
+            fixed:
+              - "Agahnims Tower - Antichamber"
+            L1Sword:
+              - "Agahnims Tower - Boss Room"
+          mobs:
+            - name: "Agahnims Tower - Bedroom - Cutscene Agahnim"
+              position: { x: 0x07, y: 0x05, z: 0x00 }
+              sprite: "AgahnimCutscene"
