@@ -10,26 +10,25 @@ public sealed class WestTest : InvertedOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Spike Cave", false, new string[] {  } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "PegasusBoots", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "PegasusBoots", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "PegasusBoots", "CaneOfByrna" } },
-    };
+    public static IEnumerable<object[]> TestData => [
+        ["Spike Cave", false, new string[] {  }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "PegasusBoots", "Cape" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "PegasusBoots", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "PegasusBoots", "CaneOfByrna" }],
+    ];
 }

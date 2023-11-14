@@ -10,24 +10,23 @@ public sealed class DesertPalaceTest : InvertedMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Desert Palace - Map Chest", true, new string[] {  } },
+    public static IEnumerable<object[]> TestData => [
+        ["Desert Palace - Map Chest", true, new string[] {  }],
 
-        new object[] { "Desert Palace - Big Chest", false, new string[] {  } },
-        new object[] { "Desert Palace - Big Chest", true, new string[] { "BigKeyP2" } },
+        ["Desert Palace - Big Chest", false, new string[] {  }],
+        ["Desert Palace - Big Chest", true, new string[] { "BigKeyP2" }],
 
-        new object[] { "Desert Palace - Torch", false, new string[] {  } },
-        new object[] { "Desert Palace - Torch", true, new string[] { "PegasusBoots" } },
+        ["Desert Palace - Torch", false, new string[] {  }],
+        ["Desert Palace - Torch", true, new string[] { "PegasusBoots" }],
 
-        new object[] { "Desert Palace - Compass Chest", false, new string[] {  } },
-        new object[] { "Desert Palace - Compass Chest", true, new string[] { "KeyP2" } },
+        ["Desert Palace - Compass Chest", false, new string[] {  }],
+        ["Desert Palace - Compass Chest", true, new string[] { "KeyP2" }],
 
-        new object[] { "Desert Palace - Big Key Chest", false, new string[] {  } },
-        new object[] { "Desert Palace - Big Key Chest", true, new string[] { "KeyP2" } },
+        ["Desert Palace - Big Key Chest", false, new string[] {  }],
+        ["Desert Palace - Big Key Chest", true, new string[] { "KeyP2" }],
 
-        new object[] { "Desert Palace - Boss", false, new string[] {  } },
-        new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BigKeyP2", "Lamp" } },
-        new object[] { "Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BigKeyP2", "FireRod" } },
-    };
+        ["Desert Palace - Boss", false, new string[] {  }],
+        ["Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BigKeyP2", "Lamp" }],
+        ["Desert Palace - Boss", true, new string[] { "UncleSword", "KeyP2", "BigKeyP2", "FireRod" }],
+    ];
 }

@@ -10,28 +10,27 @@ public sealed class SouthTest : StandardOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Hype Cave - Top", false, new string[] {  } },
-        new object[] { "Hype Cave - Top", false, new string[] { "PegasusBoots" } },
-        new object[] { "Hype Cave - Top", true, new string[] { "MoonPearl", "PegasusBoots" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Hype Cave - Top", false, new string[] {  }],
+        ["Hype Cave - Top", false, new string[] { "PegasusBoots" }],
+        ["Hype Cave - Top", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Hype Cave - Middle Right", false, new string[] {  } },
-        new object[] { "Hype Cave - Middle Right", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Hype Cave - Middle Right", false, new string[] {  }],
+        ["Hype Cave - Middle Right", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Hype Cave - Middle Left", false, new string[] {  } },
-        new object[] { "Hype Cave - Middle Left", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Hype Cave - Middle Left", false, new string[] {  }],
+        ["Hype Cave - Middle Left", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Hype Cave - Bottom", false, new string[] {  } },
-        new object[] { "Hype Cave - Bottom", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Hype Cave - Bottom", false, new string[] {  }],
+        ["Hype Cave - Bottom", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Hype Cave - NPC Item", false, new string[] {  } },
-        new object[] { "Hype Cave - NPC Item", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Hype Cave - NPC Item", false, new string[] {  }],
+        ["Hype Cave - NPC Item", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Stumpy", false, new string[] {  } },
-        new object[] { "Stumpy", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Stumpy", false, new string[] {  }],
+        ["Stumpy", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Digging Game", false, new string[] {  } },
-        new object[] { "Digging Game", true, new string[] { "MoonPearl", "PegasusBoots" } },
-    };
+        ["Digging Game", false, new string[] {  }],
+        ["Digging Game", true, new string[] { "MoonPearl", "PegasusBoots" }],
+    ];
 }

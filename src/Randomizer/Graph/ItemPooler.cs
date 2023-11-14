@@ -596,7 +596,7 @@ internal sealed class ItemPooler
      */
     private ItemSet GetBottles(World world)
     {
-        string[] bottles = {
+        string[] bottles = [
             "Bottle",
             "BottleWithRedPotion",
             "BottleWithGreenPotion",
@@ -604,7 +604,7 @@ internal sealed class ItemPooler
             "BottleWithBee",
             "BottleWithGoldBee",
             "BottleWithFairy",
-        };
+        ];
 
         return new ItemSet()
         {

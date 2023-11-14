@@ -18,7 +18,7 @@ internal sealed class Randomize : Command
     private readonly Option<BossShuffleOption> _boss_shuffle = new("bossshuffle", () => BossShuffleOption.None, "set boss shuffle mode");
     private readonly Option<EntranceShuffleOption> _entrance_shuffle = new("entrance", () => EntranceShuffleOption.None, "set entrance shuffle mode");
     private readonly Option<ShopSupplyOption> _shop_supply = new("shopsupply", () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
-    private static readonly string[] _crystalAmount = { "random", "0", "1", "2", "3", "4", "5", "6", "7" };
+    private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
     private readonly Option<string> _crystals_ganon = new Option<string>("crystals_ganon", () => "7", "set ganon crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<string> _crystals_tower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
@@ -63,8 +63,7 @@ internal sealed class Randomize : Command
             int crystals_tower = crystals_towerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystals_towerS);
 
             var randomizer = new Randomizer(
-            new[]
-            {
+            [
                 new WorldConfig
                 {
                     Accessibility = context.ParseResult.GetValueForOption(_accessibility),
@@ -79,7 +78,7 @@ internal sealed class Randomize : Command
                     Weapon = context.ParseResult.GetValueForOption(_weapons),
                     Techs = context.ParseResult.GetValueForOption(_tech) ?? new(),
                 },
-            }, context.ParseResult.GetValueForOption(_seed));
+            ], context.ParseResult.GetValueForOption(_seed));
             randomizer.Randomize();
             if (!randomizer.IsWinnable())
             {

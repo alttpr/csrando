@@ -10,17 +10,16 @@ public sealed class NorthEastTest : InvertedOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Catfish", false, new string[] {  } },
-        new object[] { "Catfish", true, new string[] { "PegasusBoots" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Catfish", false, new string[] {  }],
+        ["Catfish", true, new string[] { "PegasusBoots" }],
 
-        new object[] { "Pyramid", true, new string[] {  } },
+        ["Pyramid", true, new string[] {  }],
 
-        new object[] { "Pyramid Fairy - Left", false, new string[] {  } },
-        new object[] { "Pyramid Fairy - Left", true, new string[] { "BigRedBomb", "MagicMirror", "PegasusBoots" } },
+        ["Pyramid Fairy - Left", false, new string[] {  }],
+        ["Pyramid Fairy - Left", true, new string[] { "BigRedBomb", "MagicMirror", "PegasusBoots" }],
 
-        new object[] { "Pyramid Fairy - Right", false, new string[] {  } },
-        new object[] { "Pyramid Fairy - Right", true, new string[] { "BigRedBomb", "MagicMirror", "PegasusBoots" } },
-    };
+        ["Pyramid Fairy - Right", false, new string[] {  }],
+        ["Pyramid Fairy - Right", true, new string[] { "BigRedBomb", "MagicMirror", "PegasusBoots" }],
+    ];
 }

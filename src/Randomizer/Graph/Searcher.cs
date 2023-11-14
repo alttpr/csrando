@@ -149,10 +149,10 @@ public class Searcher
     /// <summary>
     /// Get a set of Locations without items that match the given itemSet. Available counts in itemSets is required.
     /// </summary>
-    /// 
-    /// <param name="itemSet">constrain results to item set</param> 
-    /// <param name="itemSets">counts of items required in each sett</param> 
-    /// <param name="reachable">reachable only return reachable locations</param> 
+    ///
+    /// <param name="itemSet">constrain results to item set</param>
+    /// <param name="itemSets">counts of items required in each sett</param>
+    /// <param name="reachable">reachable only return reachable locations</param>
     public IEnumerable<Vertex> GetEmptyLocationsInSet(string itemSet = "*", Dictionary<string, int>? itemSets = null, bool reachable = true)
     {
         var empty_locations = _graph.GetSetLocations(itemSet).Where((vertex) =>

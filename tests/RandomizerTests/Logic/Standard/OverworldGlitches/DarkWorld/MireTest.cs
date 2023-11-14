@@ -10,16 +10,15 @@ public sealed class MireTest : StandardOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Mire Shed - Left", false, new string[] {  } },
-        new object[] { "Mire Shed - Left", true, new string[] { "MoonPearl", "PegasusBoots" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "MagicMirror", "Flute", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "MagicMirror", "Flute", "TitansMitt" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Mire Shed - Left", false, new string[] {  }],
+        ["Mire Shed - Left", true, new string[] { "MoonPearl", "PegasusBoots" }],
+        ["Mire Shed - Left", true, new string[] { "MagicMirror", "Flute", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Mire Shed - Left", true, new string[] { "MagicMirror", "Flute", "TitansMitt" }],
 
-        new object[] { "Mire Shed - Right", false, new string[] {  } },
-        new object[] { "Mire Shed - Right", true, new string[] { "MoonPearl", "PegasusBoots" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "MagicMirror", "Flute", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "MagicMirror", "Flute", "TitansMitt" } },
-    };
+        ["Mire Shed - Right", false, new string[] {  }],
+        ["Mire Shed - Right", true, new string[] { "MoonPearl", "PegasusBoots" }],
+        ["Mire Shed - Right", true, new string[] { "MagicMirror", "Flute", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Mire Shed - Right", true, new string[] { "MagicMirror", "Flute", "TitansMitt" }],
+    ];
 }

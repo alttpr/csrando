@@ -34,9 +34,9 @@ public abstract class LogicTestBase
 
     public virtual void TestLogic(string location, bool expected, string[] inventory)
     {
-        RunLogicTest(new[]
-        {
+        RunLogicTest(
+        [
             GetWorldConfig(),
-        }, location, expected, inventory);
+        ], location, expected, inventory);
     }
 }

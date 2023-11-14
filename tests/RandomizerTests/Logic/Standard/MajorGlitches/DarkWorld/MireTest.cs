@@ -10,28 +10,27 @@ public sealed class MireTest : StandardMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Mire Shed - Left", false, new string[] {  } },
-        new object[] { "Mire Shed - Left", true, new string[] { "MoonPearl" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "BottleWithBee" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "BottleWithFairy" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "BottleWithRedPotion" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "BottleWithGreenPotion" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "BottleWithBluePotion" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "Bottle" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "BottleWithGoldBee" } },
-        new object[] { "Mire Shed - Left", true, new string[] { "MagicMirror" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Mire Shed - Left", false, new string[] {  }],
+        ["Mire Shed - Left", true, new string[] { "MoonPearl" }],
+        ["Mire Shed - Left", true, new string[] { "BottleWithBee" }],
+        ["Mire Shed - Left", true, new string[] { "BottleWithFairy" }],
+        ["Mire Shed - Left", true, new string[] { "BottleWithRedPotion" }],
+        ["Mire Shed - Left", true, new string[] { "BottleWithGreenPotion" }],
+        ["Mire Shed - Left", true, new string[] { "BottleWithBluePotion" }],
+        ["Mire Shed - Left", true, new string[] { "Bottle" }],
+        ["Mire Shed - Left", true, new string[] { "BottleWithGoldBee" }],
+        ["Mire Shed - Left", true, new string[] { "MagicMirror" }],
 
-        new object[] { "Mire Shed - Right", false, new string[] {  } },
-        new object[] { "Mire Shed - Right", true, new string[] { "MoonPearl" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "BottleWithBee" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "BottleWithFairy" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "BottleWithRedPotion" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "BottleWithGreenPotion" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "BottleWithBluePotion" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "Bottle" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "BottleWithGoldBee" } },
-        new object[] { "Mire Shed - Right", true, new string[] { "MagicMirror" } },
-    };
+        ["Mire Shed - Right", false, new string[] {  }],
+        ["Mire Shed - Right", true, new string[] { "MoonPearl" }],
+        ["Mire Shed - Right", true, new string[] { "BottleWithBee" }],
+        ["Mire Shed - Right", true, new string[] { "BottleWithFairy" }],
+        ["Mire Shed - Right", true, new string[] { "BottleWithRedPotion" }],
+        ["Mire Shed - Right", true, new string[] { "BottleWithGreenPotion" }],
+        ["Mire Shed - Right", true, new string[] { "BottleWithBluePotion" }],
+        ["Mire Shed - Right", true, new string[] { "Bottle" }],
+        ["Mire Shed - Right", true, new string[] { "BottleWithGoldBee" }],
+        ["Mire Shed - Right", true, new string[] { "MagicMirror" }],
+    ];
 }

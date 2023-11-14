@@ -10,11 +10,10 @@ public sealed class WestTest : InvertedMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Old Man", false, new string[] {  } },
-        new object[] { "Old Man", true, new string[] { "Lamp" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Old Man", false, new string[] {  }],
+        ["Old Man", true, new string[] { "Lamp" }],
 
-        new object[] { "Spectacle Rock Cave Item", true, new string[] {  } },
-    };
+        ["Spectacle Rock Cave Item", true, new string[] {  }],
+    ];
 }

@@ -10,50 +10,49 @@ public sealed class TurtleRockTest : InvertedOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory.Concat(new[] { "TurtleRockEntryQuake" }).ToArray());
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Turtle Rock - Chain Chomps", false, new string[] {  } },
-        new object[] { "Turtle Rock - Chain Chomps", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Turtle Rock - Chain Chomps", false, new string[] {  }],
+        ["Turtle Rock - Chain Chomps", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" }],
 
-        new object[] { "Turtle Rock - Compass Chest", false, new string[] {  } },
-        new object[] { "Turtle Rock - Compass Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        ["Turtle Rock - Compass Chest", false, new string[] {  }],
+        ["Turtle Rock - Compass Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7" }],
 
-        new object[] { "Turtle Rock - Roller Room - Left", false, new string[] {  } },
-        new object[] { "Turtle Rock - Roller Room - Left", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "FireRod", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        ["Turtle Rock - Roller Room - Left", false, new string[] {  }],
+        ["Turtle Rock - Roller Room - Left", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "FireRod", "KeyD7", "KeyD7", "KeyD7", "KeyD7" }],
 
-        new object[] { "Turtle Rock - Roller Room - Right", false, new string[] {  } },
-        new object[] { "Turtle Rock - Roller Room - Right", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "FireRod", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        ["Turtle Rock - Roller Room - Right", false, new string[] {  }],
+        ["Turtle Rock - Roller Room - Right", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "FireRod", "KeyD7", "KeyD7", "KeyD7", "KeyD7" }],
 
-        new object[] { "Turtle Rock - Big Chest", false, new string[] {  } },
-        new object[] { "Turtle Rock - Big Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "Hookshot", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Big Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "BigKeyD7" } },
+        ["Turtle Rock - Big Chest", false, new string[] {  }],
+        ["Turtle Rock - Big Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "Hookshot", "BigKeyD7" }],
+        ["Turtle Rock - Big Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "CaneOfSomaria", "BigKeyD7" }],
 
-        new object[] { "Turtle Rock - Big Key Chest", false, new string[] {  } },
-        new object[] { "Turtle Rock - Big Key Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "KeyD7", "KeyD7", "KeyD7", "KeyD7" } },
+        ["Turtle Rock - Big Key Chest", false, new string[] {  }],
+        ["Turtle Rock - Big Key Chest", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "KeyD7", "KeyD7", "KeyD7", "KeyD7" }],
 
-        new object[] { "Turtle Rock - Crystaroller Room", false, new string[] {  } },
-        new object[] { "Turtle Rock - Crystaroller Room", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Crystaroller Room", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "Lamp", "CaneOfSomaria" } },
+        ["Turtle Rock - Crystaroller Room", false, new string[] {  }],
+        ["Turtle Rock - Crystaroller Room", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "BigKeyD7" }],
+        ["Turtle Rock - Crystaroller Room", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl", "Lamp", "CaneOfSomaria" }],
 
-        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", false, new string[] {  } },
-        new object[] { "Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" } },
+        ["Turtle Rock - Eye Bridge - Bottom Left", false, new string[] {  }],
+        ["Turtle Rock - Eye Bridge - Bottom Left", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" }],
 
-        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", false, new string[] {  } },
-        new object[] { "Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" } },
+        ["Turtle Rock - Eye Bridge - Bottom Right", false, new string[] {  }],
+        ["Turtle Rock - Eye Bridge - Bottom Right", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" }],
 
-        new object[] { "Turtle Rock - Eye Bridge - Top Left", false, new string[] {  } },
-        new object[] { "Turtle Rock - Eye Bridge - Top Left", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" } },
+        ["Turtle Rock - Eye Bridge - Top Left", false, new string[] {  }],
+        ["Turtle Rock - Eye Bridge - Top Left", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" }],
 
-        new object[] { "Turtle Rock - Eye Bridge - Top Right", false, new string[] {  } },
-        new object[] { "Turtle Rock - Eye Bridge - Top Right", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" } },
+        ["Turtle Rock - Eye Bridge - Top Right", false, new string[] {  }],
+        ["Turtle Rock - Eye Bridge - Top Right", true, new string[] { "PegasusBoots", "MagicMirror", "MoonPearl" }],
 
-        new object[] { "Turtle Rock - Boss", false, new string[] {  } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "UncleSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "ProgressiveSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "MasterSword", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "ProgressiveSword", "ProgressiveSword", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "L3Sword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "L4Sword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-        new object[] { "Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "Hammer", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" } },
-    };
+        ["Turtle Rock - Boss", false, new string[] {  }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "UncleSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "ProgressiveSword", "Bottle", "Bottle", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "MasterSword", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "ProgressiveSword", "ProgressiveSword", "Bottle", "Bottle", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "L3Sword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "L4Sword", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Boss", true, new string[] { "IceRod", "FireRod", "PegasusBoots", "MagicMirror", "MoonPearl", "Hammer", "CaneOfSomaria", "KeyD7", "KeyD7", "KeyD7", "KeyD7", "BigKeyD7" }],
+    ];
 }

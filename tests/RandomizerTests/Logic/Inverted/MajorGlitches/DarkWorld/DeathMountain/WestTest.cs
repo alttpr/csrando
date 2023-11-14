@@ -10,26 +10,25 @@ public sealed class WestTest : InvertedMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Spike Cave", false, new string[] {  } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "Cape" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "CaneOfByrna" } },
-        new object[] { "Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "CaneOfByrna" } },
-    };
+    public static IEnumerable<object[]> TestData => [
+        ["Spike Cave", false, new string[] {  }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "Cape" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "Cape" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "Cape" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "PowerGlove", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "Bottle", "Hammer", "TitansMitt", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "Cape" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "Cape" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "Cape" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "ProgressiveGlove", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "PowerGlove", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "HalfMagic", "Hammer", "TitansMitt", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "Cape" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "Cape" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "Cape" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "ProgressiveGlove", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "PowerGlove", "CaneOfByrna" }],
+        ["Spike Cave", true, new string[] { "QuarterMagic", "Hammer", "TitansMitt", "CaneOfByrna" }],
+    ];
 }

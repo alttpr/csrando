@@ -3,28 +3,27 @@ namespace RandomizerTests.Logic.Inverted.NoGlitches.DeathMountain;
 [TestClass]
 public class WestTest : InvertedNoGlitchesLogicTests
 {
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Old Man", false, new string[] {  } },
-        new object[] { "Old Man", false, new string[] { "ProgressiveGlove" } },
-        new object[] { "Old Man", true, new string[] { "ProgressiveGlove", "Lamp" } },
-        new object[] { "Old Man", true, new string[] { "PowerGlove", "Lamp" } },
-        new object[] { "Old Man", true, new string[] { "TitansMitt", "Lamp" } },
-        new object[] { "Old Man", true, new string[] { "OcarinaActive", "Lamp" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Old Man", false, new string[] {  }],
+        ["Old Man", false, new string[] { "ProgressiveGlove" }],
+        ["Old Man", true, new string[] { "ProgressiveGlove", "Lamp" }],
+        ["Old Man", true, new string[] { "PowerGlove", "Lamp" }],
+        ["Old Man", true, new string[] { "TitansMitt", "Lamp" }],
+        ["Old Man", true, new string[] { "OcarinaActive", "Lamp" }],
 
-        new object[] { "Spectacle Rock Cave Item", false, new string[] {  } },
-        new object[] { "Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "PowerGlove", "Hammer" } },
-        new object[] { "Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "ProgressiveGlove", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "TitansMitt" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "PowerGlove", "Hammer" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "TitansMitt" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "ProgressiveGlove", "Lamp" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "PowerGlove", "Lamp" } },
-        new object[] { "Spectacle Rock Cave Item", true, new string[] { "TitansMitt", "Lamp" } },
-    };
+        ["Spectacle Rock Cave Item", false, new string[] {  }],
+        ["Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "ProgressiveGlove", "Hammer" }],
+        ["Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "PowerGlove", "Hammer" }],
+        ["Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "ProgressiveGlove", "ProgressiveGlove", "Hammer" }],
+        ["Spectacle Rock Cave Item", false, new string[] { "OcarinaInactive", "TitansMitt" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "ProgressiveGlove", "Hammer" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "PowerGlove", "Hammer" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove", "Hammer" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "OcarinaInactive", "MoonPearl", "TitansMitt" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "ProgressiveGlove", "Lamp" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "PowerGlove", "Lamp" }],
+        ["Spectacle Rock Cave Item", true, new string[] { "TitansMitt", "Lamp" }],
+    ];
 
     [TestMethod]
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]

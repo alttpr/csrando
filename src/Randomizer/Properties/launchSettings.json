@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Randomizer": {
+      "commandName": "Project",
+      "commandLineArgs": "randomize seed=-50"
+    }
+  }
+}

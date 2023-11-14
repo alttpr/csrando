@@ -10,10 +10,9 @@ public sealed class IcePalaceTest : OpenOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Ice Palace - Big Key Chest", false, new string[] {  } },
-        new object[] { "Ice Palace - Big Key Chest", true, new string[] { "FireRod", "CaneOfSomaria", "TitansMitt" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Ice Palace - Big Key Chest", false, new string[] {  }],
+        ["Ice Palace - Big Key Chest", true, new string[] { "FireRod", "CaneOfSomaria", "TitansMitt" }],
 
             //new object[] { "Ice Palace - Compass Chest", false, new string[] {  } },
             //new object[] { "Ice Palace - Compass Chest", true, new string[] { "MoonPearl", "PegasusBoots", "Flippers", "FireRod" } },
@@ -35,5 +34,5 @@ public sealed class IcePalaceTest : OpenOverworldGlitchesLogicTests
             //
             //new object[] { "Ice Palace - Boss", false, new string[] {  } },
             //new object[] { "Ice Palace - Boss", true, new string[] { "BigKeyD5", "TitansMitt", "Bombos", "L4Sword", "Hammer", "CaneOfSomaria", "KeyD5" } },
-    };
+    ];
 }

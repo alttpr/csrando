@@ -1,11 +1,12 @@
 namespace Randomizer.Graph;
 
+using System.Data.Common;
 using System.Diagnostics;
 
 // FIXME: we need a sprite class that does something.
 public record class Sprite(string Name)
 {
-    public byte?[] Sheets = new byte?[4] { null, null, null, null };
+    public byte?[] Sheets = [null, null, null, null];
     public static Sprite Get(string name)
     {
         return new(name);
@@ -70,7 +71,7 @@ public sealed class Vertex
     public int? RoomId { get; init; }
     public int? Map { get; init; }
     public bool? MoonPearl { get; init; }
-    public string[] ItemSet { get; init; } = new string[0];
+    public string[] ItemSet { get; init; } = [];
     public long[]? Addresses { get; init; }
     public int? Offset { get; init; }
     public Position? Position { get; init; }

@@ -3,45 +3,44 @@ namespace RandomizerTests.Logic.Inverted.NoGlitches.DarkWorld;
 [TestClass]
 public class NorthWestTest : InvertedNoGlitchesLogicTests
 {
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Brewery Item", true, new string[] {  } },
+    public static IEnumerable<object[]> TestData => [
+        ["Brewery Item", true, new string[] {  }],
 
-        new object[] { "C-Shaped House Item", true, new string[] {  } },
+        ["C-Shaped House Item", true, new string[] {  }],
 
-        new object[] { "Chest Game", true, new string[] {  } },
+        ["Chest Game", true, new string[] {  }],
 
-        new object[] { "Hammer Pegs Item", false, new string[] {  } },
-        new object[] { "Hammer Pegs Item", false, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Hammer Pegs Item", true, new string[] { "Hammer", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Hammer Pegs Item", true, new string[] { "Hammer", "TitansMitt" } },
-        new object[] { "Hammer Pegs Item", true, new string[] { "Hammer", "ProgressiveGlove", "MagicMirror", "MoonPearl" } },
-        new object[] { "Hammer Pegs Item", true, new string[] { "Hammer", "AgahnimDefeated", "MagicMirror" } },
+        ["Hammer Pegs Item", false, new string[] {  }],
+        ["Hammer Pegs Item", false, new string[] { "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Hammer Pegs Item", true, new string[] { "Hammer", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Hammer Pegs Item", true, new string[] { "Hammer", "TitansMitt" }],
+        ["Hammer Pegs Item", true, new string[] { "Hammer", "ProgressiveGlove", "MagicMirror", "MoonPearl" }],
+        ["Hammer Pegs Item", true, new string[] { "Hammer", "AgahnimDefeated", "MagicMirror" }],
 
-        new object[] { "Bumper Cave Item", false, new string[] {  } },
-        new object[] { "Bumper Cave Item", false, new string[] { "Cape", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Bumper Cave Item", false, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Bumper Cave Item", false, new string[] { "MoonPearl", "Cape", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Bumper Cave Item", false, new string[] { "MoonPearl", "Cape", "MagicMirror", "Hammer" } },
-        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" } },
-        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "ProgressiveGlove", "Hammer" } },
-        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "TitansMitt" } },
-        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "PowerGlove", "Hammer" } },
-        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "AgahnimDefeated", "ProgressiveGlove" } },
-        new object[] { "Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "AgahnimDefeated", "PowerGlove" } },
+        ["Bumper Cave Item", false, new string[] {  }],
+        ["Bumper Cave Item", false, new string[] { "Cape", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Bumper Cave Item", false, new string[] { "MoonPearl", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Bumper Cave Item", false, new string[] { "MoonPearl", "Cape", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Bumper Cave Item", false, new string[] { "MoonPearl", "Cape", "MagicMirror", "Hammer" }],
+        ["Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "ProgressiveGlove", "Hammer" }],
+        ["Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "TitansMitt" }],
+        ["Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "PowerGlove", "Hammer" }],
+        ["Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "AgahnimDefeated", "ProgressiveGlove" }],
+        ["Bumper Cave Item", true, new string[] { "MoonPearl", "Cape", "MagicMirror", "AgahnimDefeated", "PowerGlove" }],
 
-        new object[] { "Blacksmith Item", false, new string[] {  } },
-        new object[] { "Blacksmith Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" } },
-        new object[] { "Blacksmith Item", true, new string[] { "TitansMitt", "MoonPearl" } },
-        new object[] { "Blacksmith Item", true, new string[] { "AgahnimDefeated", "MagicMirror" } },
-        new object[] { "Blacksmith Item", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" } },
+        ["Blacksmith Item", false, new string[] {  }],
+        ["Blacksmith Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" }],
+        ["Blacksmith Item", true, new string[] { "TitansMitt", "MoonPearl" }],
+        ["Blacksmith Item", true, new string[] { "AgahnimDefeated", "MagicMirror" }],
+        ["Blacksmith Item", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" }],
 
-        new object[] { "Purple Chest Item", false, new string[] {  } },
-        new object[] { "Purple Chest Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" } },
-        new object[] { "Purple Chest Item", true, new string[] { "TitansMitt", "MoonPearl" } },
-        new object[] { "Purple Chest Item", true, new string[] { "AgahnimDefeated", "MagicMirror" } },
-        new object[] { "Purple Chest Item", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" } },
-    };
+        ["Purple Chest Item", false, new string[] {  }],
+        ["Purple Chest Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove", "MoonPearl" }],
+        ["Purple Chest Item", true, new string[] { "TitansMitt", "MoonPearl" }],
+        ["Purple Chest Item", true, new string[] { "AgahnimDefeated", "MagicMirror" }],
+        ["Purple Chest Item", true, new string[] { "ProgressiveGlove", "Hammer", "MagicMirror", "MoonPearl" }],
+    ];
 
     [TestMethod]
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]

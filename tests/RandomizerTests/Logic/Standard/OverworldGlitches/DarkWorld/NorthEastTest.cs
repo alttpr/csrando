@@ -10,21 +10,20 @@ public sealed class NorthEastTest : StandardOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Catfish", false, new string[] {  } },
-        new object[] { "Catfish", false, new string[] { "PegasusBoots" } },
-        new object[] { "Catfish", true, new string[] { "MoonPearl", "PegasusBoots" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Catfish", false, new string[] {  }],
+        ["Catfish", false, new string[] { "PegasusBoots" }],
+        ["Catfish", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Pyramid", false, new string[] {  } },
-        new object[] { "Pyramid", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Pyramid", false, new string[] {  }],
+        ["Pyramid", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Pyramid Fairy - Left", false, new string[] {  } },
-        new object[] { "Pyramid Fairy - Left", true, new string[] { "MagicMirror", "PegasusBoots" } },
+        ["Pyramid Fairy - Left", false, new string[] {  }],
+        ["Pyramid Fairy - Left", true, new string[] { "MagicMirror", "PegasusBoots" }],
 
-        new object[] { "Pyramid Fairy - Right", false, new string[] {  } },
-        new object[] { "Pyramid Fairy - Right", true, new string[] { "MagicMirror", "PegasusBoots" } },
+        ["Pyramid Fairy - Right", false, new string[] {  }],
+        ["Pyramid Fairy - Right", true, new string[] { "MagicMirror", "PegasusBoots" }],
 
-        new object[] { "Ganon", false, new string[] {  } },
-    };
+        ["Ganon", false, new string[] {  }],
+    ];
 }

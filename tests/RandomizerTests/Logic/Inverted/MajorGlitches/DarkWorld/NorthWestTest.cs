@@ -10,27 +10,26 @@ public sealed class NorthWestTest : InvertedMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Brewery Item", true, new string[] {  } },
+    public static IEnumerable<object[]> TestData => [
+        ["Brewery Item", true, new string[] {  }],
 
-        new object[] { "C-Shaped House Item", true, new string[] {  } },
+        ["C-Shaped House Item", true, new string[] {  }],
 
-        new object[] { "Chest Game", true, new string[] {  } },
+        ["Chest Game", true, new string[] {  }],
 
-        new object[] { "Hammer Pegs Item", false, new string[] {  } },
-        new object[] { "Hammer Pegs Item", true, new string[] { "Hammer" } },
+        ["Hammer Pegs Item", false, new string[] {  }],
+        ["Hammer Pegs Item", true, new string[] { "Hammer" }],
 
-        new object[] { "Bumper Cave Item", true, new string[] {  } },
+        ["Bumper Cave Item", true, new string[] {  }],
 
-        new object[] { "Blacksmith Item", false, new string[] {  } },
-        new object[] { "Blacksmith Item", true, new string[] { "MagicMirror" } },
-        new object[] { "Blacksmith Item", true, new string[] { "Bottle" } },
-        new object[] { "Blacksmith Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
+        ["Blacksmith Item", false, new string[] {  }],
+        ["Blacksmith Item", true, new string[] { "MagicMirror" }],
+        ["Blacksmith Item", true, new string[] { "Bottle" }],
+        ["Blacksmith Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" }],
 
-        new object[] { "Purple Chest Item", false, new string[] {  } },
-        new object[] { "Purple Chest Item", true, new string[] { "MagicMirror" } },
-        new object[] { "Purple Chest Item", true, new string[] { "Bottle" } },
-        new object[] { "Purple Chest Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" } },
-    };
+        ["Purple Chest Item", false, new string[] {  }],
+        ["Purple Chest Item", true, new string[] { "MagicMirror" }],
+        ["Purple Chest Item", true, new string[] { "Bottle" }],
+        ["Purple Chest Item", true, new string[] { "ProgressiveGlove", "ProgressiveGlove" }],
+    ];
 }

@@ -3,21 +3,20 @@ namespace RandomizerTests.Logic.Inverted.NoGlitches;
 [TestClass]
 public class HyruleCastleTowerTest : InvertedNoGlitchesLogicTests
 {
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Agahnims Tower - First Chest", false, new string[] {  } },
-        new object[] { "Agahnims Tower - First Chest", true, new string[] { "Lamp", "ProgressiveGlove" } },
-        new object[] { "Agahnims Tower - First Chest", true, new string[] { "OcarinaInactive", "TitansMitt", "MoonPearl" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Agahnims Tower - First Chest", false, new string[] {  }],
+        ["Agahnims Tower - First Chest", true, new string[] { "Lamp", "ProgressiveGlove" }],
+        ["Agahnims Tower - First Chest", true, new string[] { "OcarinaInactive", "TitansMitt", "MoonPearl" }],
 
-        new object[] { "Agahnims Tower - Second Chest", false, new string[] {  } },
-        new object[] { "Agahnims Tower - Second Chest", false, new string[] { "KeyA1", "OcarinaInactive", "TitansMitt", "MoonPearl" } },
-        new object[] { "Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Lamp", "ProgressiveGlove" } },
-        new object[] { "Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Lamp", "OcarinaInactive", "TitansMitt", "MoonPearl" } },
+        ["Agahnims Tower - Second Chest", false, new string[] {  }],
+        ["Agahnims Tower - Second Chest", false, new string[] { "KeyA1", "OcarinaInactive", "TitansMitt", "MoonPearl" }],
+        ["Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Lamp", "ProgressiveGlove" }],
+        ["Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Lamp", "OcarinaInactive", "TitansMitt", "MoonPearl" }],
 
-        new object[] { "Agahnims Tower - Boss", false, new string[] {  } },
-        new object[] { "Agahnims Tower - Boss", false, new string[] { "KeyA1", "KeyA1", "ProgressiveGlove", "Lamp" } },
-        new object[] { "Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "ProgressiveGlove", "Lamp" } },
-    };
+        ["Agahnims Tower - Boss", false, new string[] {  }],
+        ["Agahnims Tower - Boss", false, new string[] { "KeyA1", "KeyA1", "ProgressiveGlove", "Lamp" }],
+        ["Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "ProgressiveGlove", "Lamp" }],
+    ];
 
     [TestMethod]
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]

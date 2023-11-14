@@ -10,22 +10,21 @@ public sealed class EastTest : StandardMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Spiral Cave Item", true, new string[] {  } },
+    public static IEnumerable<object[]> TestData => [
+        ["Spiral Cave Item", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Lower - Far Left", true, new string[] {  } },
+        ["Paradox Cave Lower - Far Left", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Lower - Left", true, new string[] {  } },
+        ["Paradox Cave Lower - Left", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Lower - Middle", true, new string[] {  } },
+        ["Paradox Cave Lower - Middle", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Lower - Right", true, new string[] {  } },
+        ["Paradox Cave Lower - Right", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Lower - Far Right", true, new string[] {  } },
+        ["Paradox Cave Lower - Far Right", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Upper - Left", true, new string[] {  } },
+        ["Paradox Cave Upper - Left", true, new string[] {  }],
 
-        new object[] { "Paradox Cave Upper - Right", true, new string[] {  } },
-    };
+        ["Paradox Cave Upper - Right", true, new string[] {  }],
+    ];
 }

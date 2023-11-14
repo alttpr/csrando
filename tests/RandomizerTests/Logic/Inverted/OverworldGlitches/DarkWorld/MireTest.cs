@@ -10,12 +10,11 @@ public sealed class MireTest : InvertedOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Mire Shed - Left", false, new string[] {  } },
-        new object[] { "Mire Shed - Left", true, new string[] { "PegasusBoots" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Mire Shed - Left", false, new string[] {  }],
+        ["Mire Shed - Left", true, new string[] { "PegasusBoots" }],
 
-        new object[] { "Mire Shed - Right", false, new string[] {  } },
-        new object[] { "Mire Shed - Right", true, new string[] { "PegasusBoots" } },
-    };
+        ["Mire Shed - Right", false, new string[] {  }],
+        ["Mire Shed - Right", true, new string[] { "PegasusBoots" }],
+    ];
 }

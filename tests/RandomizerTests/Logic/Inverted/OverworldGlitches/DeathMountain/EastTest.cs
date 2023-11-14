@@ -10,46 +10,45 @@ public sealed class EastTest : InvertedOverworldGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Spiral Cave Item", false, new string[] {  } },
-        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "Lamp", "UncleSword" } },
-        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "TitansMitt", "Lamp", "UncleSword" } },
-        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "PegasusBoots", "UncleSword" } },
-        new object[] { "Spiral Cave Item", true, new string[] { "MagicMirror", "TitansMitt", "PegasusBoots", "UncleSword" } },
-        new object[] { "Spiral Cave Item", true, new string[] { "MoonPearl", "PegasusBoots" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Spiral Cave Item", false, new string[] {  }],
+        ["Spiral Cave Item", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "Lamp", "UncleSword" }],
+        ["Spiral Cave Item", true, new string[] { "MagicMirror", "TitansMitt", "Lamp", "UncleSword" }],
+        ["Spiral Cave Item", true, new string[] { "MagicMirror", "ProgressiveGlove", "ProgressiveGlove", "PegasusBoots", "UncleSword" }],
+        ["Spiral Cave Item", true, new string[] { "MagicMirror", "TitansMitt", "PegasusBoots", "UncleSword" }],
+        ["Spiral Cave Item", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Lower - Far Left", false, new string[] {  } },
-        new object[] { "Paradox Cave Lower - Far Left", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Lower - Far Left", false, new string[] {  }],
+        ["Paradox Cave Lower - Far Left", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Lower - Left", false, new string[] {  } },
-        new object[] { "Paradox Cave Lower - Left", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Lower - Left", false, new string[] {  }],
+        ["Paradox Cave Lower - Left", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Lower - Middle", false, new string[] {  } },
-        new object[] { "Paradox Cave Lower - Middle", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Lower - Middle", false, new string[] {  }],
+        ["Paradox Cave Lower - Middle", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Lower - Right", false, new string[] {  } },
-        new object[] { "Paradox Cave Lower - Right", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Lower - Right", false, new string[] {  }],
+        ["Paradox Cave Lower - Right", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Lower - Far Right", false, new string[] {  } },
-        new object[] { "Paradox Cave Lower - Far Right", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Lower - Far Right", false, new string[] {  }],
+        ["Paradox Cave Lower - Far Right", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Upper - Left", false, new string[] {  } },
-        new object[] { "Paradox Cave Upper - Left", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Upper - Left", false, new string[] {  }],
+        ["Paradox Cave Upper - Left", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Paradox Cave Upper - Right", false, new string[] {  } },
-        new object[] { "Paradox Cave Upper - Right", true, new string[] { "MoonPearl", "PegasusBoots" } },
+        ["Paradox Cave Upper - Right", false, new string[] {  }],
+        ["Paradox Cave Upper - Right", true, new string[] { "MoonPearl", "PegasusBoots" }],
 
-        new object[] { "Mimic Cave", false, new string[] {  } },
-        new object[] { "Mimic Cave", true, new string[] { "MoonPearl", "Hammer", "PegasusBoots" } },
+        ["Mimic Cave", false, new string[] {  }],
+        ["Mimic Cave", true, new string[] { "MoonPearl", "Hammer", "PegasusBoots" }],
 
-        new object[] { "Ether Tablet", false, new string[] {  } },
-        new object[] { "Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "ProgressiveSword", "ProgressiveSword" } },
-        new object[] { "Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "L2Sword" } },
-        new object[] { "Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "L3Sword" } },
-        new object[] { "Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "L4Sword" } },
+        ["Ether Tablet", false, new string[] {  }],
+        ["Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "ProgressiveSword", "ProgressiveSword" }],
+        ["Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "L2Sword" }],
+        ["Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "L3Sword" }],
+        ["Ether Tablet", true, new string[] { "PegasusBoots", "MoonPearl", "BookOfMudora", "L4Sword" }],
 
-        new object[] { "Spectacle Rock", false, new string[] {  } },
-        new object[] { "Spectacle Rock", true, new string[] { "MoonPearl", "PegasusBoots" } },
-    };
+        ["Spectacle Rock", false, new string[] {  }],
+        ["Spectacle Rock", true, new string[] { "MoonPearl", "PegasusBoots" }],
+    ];
 }

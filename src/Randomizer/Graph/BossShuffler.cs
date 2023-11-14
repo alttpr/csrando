@@ -21,12 +21,12 @@ internal sealed class BossShuffler : IWorldModifier
         { "Agahnim2", "DefeatAgahnim2" },
         { "Ganon", "DefeatGanon" },
     };
-    private static readonly string[] NEVER_PLACE = new[]
-    {
+    private static readonly string[] NEVER_PLACE =
+    [
         "DefeatAgahnim",
         "DefeatAgahnim2",
         "DefeatGanon",
-    };
+    ];
     private static readonly Dictionary<string, string[]> NO_PLACE = new()
     {
         {  "Ganon's Tower - Moldorm", new[] {
@@ -196,9 +196,9 @@ internal sealed class BossShuffler : IWorldModifier
 
     /**
      * Place Boss item in location.
-     * 
+     *
      * @throws Exception If Can't place boss in location
-     * 
+     *
      * @param string boss_item Boss item name
      * @param string location Location name
      */

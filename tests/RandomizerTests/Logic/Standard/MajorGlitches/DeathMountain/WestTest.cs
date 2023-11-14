@@ -10,19 +10,18 @@ public sealed class WestTest : StandardMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Ether Tablet", false, new string[] {  } },
-        new object[] { "Ether Tablet", true, new string[] { "BookOfMudora", "ProgressiveSword", "ProgressiveSword" } },
-        new object[] { "Ether Tablet", true, new string[] { "BookOfMudora", "L2Sword" } },
-        new object[] { "Ether Tablet", true, new string[] { "BookOfMudora", "L3Sword" } },
-        new object[] { "Ether Tablet", true, new string[] { "BookOfMudora", "L4Sword" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Ether Tablet", false, new string[] {  }],
+        ["Ether Tablet", true, new string[] { "BookOfMudora", "ProgressiveSword", "ProgressiveSword" }],
+        ["Ether Tablet", true, new string[] { "BookOfMudora", "L2Sword" }],
+        ["Ether Tablet", true, new string[] { "BookOfMudora", "L3Sword" }],
+        ["Ether Tablet", true, new string[] { "BookOfMudora", "L4Sword" }],
 
-        new object[] { "Old Man", false, new string[] {  } },
-        new object[] { "Old Man", true, new string[] { "Lamp" } },
+        ["Old Man", false, new string[] {  }],
+        ["Old Man", true, new string[] { "Lamp" }],
 
-        new object[] { "Spectacle Rock Cave Item", true, new string[] {  } },
+        ["Spectacle Rock Cave Item", true, new string[] {  }],
 
-        new object[] { "Spectacle Rock", true, new string[] {  } },
-    };
+        ["Spectacle Rock", true, new string[] {  }],
+    ];
 }

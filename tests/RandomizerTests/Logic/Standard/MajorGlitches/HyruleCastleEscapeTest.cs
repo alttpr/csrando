@@ -10,22 +10,21 @@ public sealed class HyruleCastleEscapeTest : StandardMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Sanctuary", true, new string[] { "UncleSword", "KeyH2" } },
+    public static IEnumerable<object[]> TestData => [
+        ["Sanctuary", true, new string[] { "UncleSword", "KeyH2" }],
 
-        new object[] { "Sewers - Secret Room - Left", true, new string[] { "UncleSword", "KeyH2" } },
+        ["Sewers - Secret Room - Left", true, new string[] { "UncleSword", "KeyH2" }],
 
-        new object[] { "Sewers - Secret Room - Middle", true, new string[] { "UncleSword", "KeyH2" } },
+        ["Sewers - Secret Room - Middle", true, new string[] { "UncleSword", "KeyH2" }],
 
-        new object[] { "Sewers - Secret Room - Right", true, new string[] { "UncleSword", "KeyH2" } },
+        ["Sewers - Secret Room - Right", true, new string[] { "UncleSword", "KeyH2" }],
 
-        new object[] { "Sewers - Dark Cross", true, new string[] { "UncleSword" } },
+        ["Sewers - Dark Cross", true, new string[] { "UncleSword" }],
 
-        new object[] { "Hyrule Castle - Boomerang Chest", true, new string[] { "UncleSword" } },
+        ["Hyrule Castle - Boomerang Chest", true, new string[] { "UncleSword" }],
 
-        new object[] { "Hyrule Castle - Map Chest", true, new string[] { "UncleSword" } },
+        ["Hyrule Castle - Map Chest", true, new string[] { "UncleSword" }],
 
-        new object[] { "Hyrule Castle - Zelda's Cell", true, new string[] { "UncleSword" } },
-    };
+        ["Hyrule Castle - Zelda's Cell", true, new string[] { "UncleSword" }],
+    ];
 }

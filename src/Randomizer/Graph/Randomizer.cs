@@ -4,7 +4,7 @@ namespace Randomizer.Graph;
 /// This is the primary entry point for randomization. A new object is created
 /// with a config array dictating how the worlds should be created and prepping
 /// all graph infomation for those worlds.
-/// 
+///
 /// Walk thru walls: 7E037F01
 /// </summary>
 public sealed class Randomizer
@@ -21,9 +21,9 @@ public sealed class Randomizer
     /// 2. Creating a starting vertex
     /// 3. and keeping track of all the vertices in the graph
     /// </summary>
-    /// 
-    /// <param name="randomizerConfigs">All the configuration for the each world generation</param> 
-    /// <param name="seed">Seeded again, eh?</param> 
+    ///
+    /// <param name="randomizerConfigs">All the configuration for the each world generation</param>
+    /// <param name="seed">Seeded again, eh?</param>
     public Randomizer(WorldConfig[] randomizerConfigs, int? seed = null)
     {
         _prng = new PRNG(seed);

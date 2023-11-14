@@ -10,20 +10,19 @@ public sealed class SouthTest : InvertedMajorGlitchesLogicTests
         base.TestLogic(location, expected, inventory);
     }
 
-    public static IEnumerable<object[]> TestData => new[]
-    {
-        new object[] { "Hype Cave - Top", true, new string[] {  } },
+    public static IEnumerable<object[]> TestData => [
+        ["Hype Cave - Top", true, new string[] {  }],
 
-        new object[] { "Hype Cave - Middle Right", true, new string[] {  } },
+        ["Hype Cave - Middle Right", true, new string[] {  }],
 
-        new object[] { "Hype Cave - Middle Left", true, new string[] {  } },
+        ["Hype Cave - Middle Left", true, new string[] {  }],
 
-        new object[] { "Hype Cave - Bottom", true, new string[] {  } },
+        ["Hype Cave - Bottom", true, new string[] {  }],
 
-        new object[] { "Hype Cave - NPC Item", true, new string[] {  } },
+        ["Hype Cave - NPC Item", true, new string[] {  }],
 
-        new object[] { "Stumpy", true, new string[] {  } },
+        ["Stumpy", true, new string[] {  }],
 
-        new object[] { "Digging Game", true, new string[] {  } },
-    };
+        ["Digging Game", true, new string[] {  }],
+    ];
 }
