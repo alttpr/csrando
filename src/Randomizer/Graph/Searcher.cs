@@ -6,6 +6,7 @@ public class Searcher
     private readonly Graph _graph;
     private readonly Vertex _start;
     private readonly Inventory _inventory;
+    private readonly Dictionary<Item, HashSet<(Vertex From, Vertex To)>> _doors = [];
 
     public Searcher(Graph graph, Vertex start, Inventory inventory)
     {
@@ -18,12 +19,14 @@ public class Searcher
             throw new Exception("Start vertex not in graph");
         }
 
+        FindDoors();
+
         bool newItemsFound;
         do
         {
-            InternalSearch(inventory);
+            InternalSearch(inventory, _visited, _start);
 
-            newItemsFound = false;
+            newItemsFound = RecursiveDoorSearch(inventory);
             foreach (var itemLocation in _visited.Except(_collected))
             {
                 bool foundNewItem = false;
@@ -63,18 +66,18 @@ public class Searcher
         return _visited;
     }
 
-    private void InternalSearch(Inventory collected)
+    private static void InternalSearch(Inventory collected, HashSet<Vertex> visited, params Vertex[] startAt)
     {
         var marked = new HashSet<Vertex>();
         var pegMarked = new HashSet<Vertex>();
-        if (!_visited.Contains(_start))
-        {
-            _visited.Add(_start);
-            marked.Add(_start);
-        }
         var queue = new Queue<Vertex>();
         var peg_queue = new Queue<Vertex>();
-        queue.Enqueue(_start);
+        foreach (var start in startAt)
+        {
+            if (visited.Add(start))
+                marked.Add(start);
+            queue.Enqueue(start);
+        }
 
         do
         {
@@ -99,7 +102,7 @@ public class Searcher
                     }
                 }
 
-                _visited.Add(vertex);
+                visited.Add(vertex);
                 pegMarked.Add(vertex);
             }
 
@@ -124,7 +127,7 @@ public class Searcher
                     }
                 }
 
-                _visited.Add(vertex);
+                visited.Add(vertex);
                 marked.Add(vertex);
             }
         } while (queue.Any() || peg_queue.Any());
@@ -137,6 +140,67 @@ public class Searcher
             return collected.Has(edge.Condition);
         }
     }
+    private bool RecursiveDoorSearch(Inventory inventory)
+    {
+        var visitedBeforeDoors = _visited.ToHashSet();
+        var strongLocations = new HashSet<Vertex>();
+        foreach (var (key, edges) in _doors)
+        {
+            int keyCount = inventory.GetCount(key);
+            if (keyCount == 0)
+                continue;
+
+            if (keyCount >= edges.Count)
+            {
+                // we have all keys, unlock everything.
+                var behindDoorLocations = edges.SelectMany(e => new[] { e.From, e.To }).ToHashSet();
+                InternalSearch(inventory, _visited, [.. behindDoorLocations]);
+                strongLocations.UnionWith(_visited.Except(visitedBeforeDoors));
+            }
+            else
+            {
+                strongLocations.UnionWith(RecursiveDoorSearchInternal(inventory, key, edges, keyCount, visitedBeforeDoors));
+            }
+            // reset visited
+            _visited.IntersectWith(visitedBeforeDoors);
+
+        }
+        _visited.UnionWith(strongLocations);
+
+        return strongLocations.Any();
+    }
+    private HashSet<Vertex> RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, params Vertex[] additionalStarts)
+    {
+        if (keyCount == 0)
+        {
+            var weakLocations = _visited.Except(visitedBeforeDoors).ToHashSet();
+            return weakLocations;
+        }
+
+        var reachableDoors = _visited.SelectMany(v => v.Edges)
+            .Where(e => e.Condition.Item == key && !_visited.Contains(e.To))
+            .ToHashSet();
+        HashSet<Vertex>? strongLocations = null;
+        foreach (var door in reachableDoors)
+        {
+            var visitedBeforeRecursion = _visited.ToHashSet();
+            Vertex[] startAt = [door.To, .. additionalStarts];
+            InternalSearch(inventory, _visited, startAt);
+            var weakLocations = RecursiveDoorSearchInternal(inventory, key, edges, keyCount - 1, visitedBeforeDoors, startAt);
+            // reset
+            _visited.IntersectWith(visitedBeforeRecursion);
+
+            if (weakLocations.Count == 0)
+                return [];
+
+            if (strongLocations != null)
+                strongLocations.IntersectWith(weakLocations);
+            else
+                strongLocations = weakLocations;
+        }
+
+        return strongLocations ?? [];
+    }
 
     private bool DropOffSearch(Item item)
     {
@@ -144,6 +208,36 @@ public class Searcher
         //var end = _vertices["Pyramid:" + item.World.Id];
         //visited.Contains(end);
         return true;
+    }
+
+    private void FindDoors()
+    {
+        foreach (var edge in _graph.GetVertices().SelectMany(v => v.Edges).Where(e => e.Condition.Item.Type == ItemType.SmallKey))
+        {
+            var first = edge.From;
+            var second = edge.To;
+
+            if (first.Name.Contains(" - Lit:"))
+            {
+                first = _graph.GetVertex(first.Name.Replace(" - Lit", ""));
+            }
+            if (second.Name.Contains(" - Lit:"))
+            {
+                second = _graph.GetVertex(second.Name.Replace(" - Lit", ""));
+            }
+
+            if (edge.From.Name.CompareTo(edge.To.Name) > 0)
+            {
+                (first, second) = (second, first);
+            }
+
+            if (!_doors.TryGetValue(edge.Condition.Item, out var doorsForKey))
+            {
+                doorsForKey = new();
+                _doors.Add(edge.Condition.Item, doorsForKey);
+            }
+            doorsForKey.Add((first, second));
+        }
     }
 
     /// <summary>
