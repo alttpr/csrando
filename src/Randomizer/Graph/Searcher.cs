@@ -239,6 +239,31 @@ public class Searcher
             }
             doorsForKey.Add((first, second));
         }
+
+        // sanity check
+        foreach (var (key, doors) in _doors)
+        {
+            int expectedCount = key.Name switch
+            {
+                "KeyA1" => 4,
+                "KeyA2" => 8,
+                "KeyH2" => 4,
+                "KeyP1" => 2,
+                "KeyP2" => 4,
+                "KeyP3" => 1,
+                "KeyD1" => 6,
+                "KeyD2" => 6,
+                "KeyD3" => 5,
+                "KeyD4" => 3,
+                "KeyD5" => 6,
+                "KeyD6" => 6,
+                "KeyD7" => 6,
+                _ => throw new NotSupportedException($"Unexpected key {key.Name}"),
+            };
+
+            if (doors.Count != expectedCount)
+                throw new Exception($"Key door mismatch for {key.Name}: expected {expectedCount} but found {doors.Count} doors");
+        }
     }
 
     /// <summary>
