@@ -142,6 +142,65 @@ public sealed class Randomizer
         {
            //throw new Exception("Unreachable vertices found");
         }
+
+        FindBridges();
+    }
+
+    private void FindBridges()
+    {
+        int vertexCount = Graph.GetVertices().Count();
+        var low = new int[vertexCount];
+        var pre = new int[vertexCount];
+        int cnt = 0;
+
+        Array.Fill(low, -1);
+        Array.Fill(pre, -1);
+
+        foreach (var vertex in Graph.GetVertices())
+        {
+            vertex.Id = cnt++;
+        }
+        cnt = 0;
+
+        foreach (var vertex in Graph.GetVertices())
+        {
+            if (pre[vertex.Id] == -1)
+            {
+                FindBridgesDfs(vertex, vertex, ref cnt, pre, low);
+            }
+        }
+        vertexCount++;
+    }
+
+    private void FindBridgesDfs(Vertex u, Vertex v, ref int cnt, int[] pre, int[] low)
+    {
+        pre[v.Id] = cnt++;
+        low[v.Id] = pre[v.Id];
+
+        foreach (Vertex w in v.Edges.Select(e => e.To))
+        {
+            if (pre[w.Id] == -1)
+            {
+                FindBridgesDfs(v, w, ref cnt, pre, low);
+                low[v.Id] = Math.Min(low[v.Id], low[w.Id]);
+                if (low[w.Id] == pre[w.Id])
+                {
+                    var keydoorBridge = v.Edges.Where(e => e.To == w && e.Condition.Item.Type == ItemType.SmallKey);
+                    if (keydoorBridge.Any())
+                        System.Console.WriteLine($"Found bridge between {v.Name} <-> {w.Name}");
+                    else
+                    {
+                        var keydoorBridgeRev = w.Edges.Where(e => e.To == v && e.Condition.Item.Type == ItemType.SmallKey);
+                        if (keydoorBridgeRev.Any())
+                            System.Console.WriteLine($"Found REV bridge between {v.Name} <-> {w.Name}");
+                    }
+                }
+            }
+            else if (w.Id != u.Id)
+            {
+                low[v.Id] = Math.Min(low[v.Id], pre[w.Id]);
+            }
+        }
     }
 
     /// <summary>

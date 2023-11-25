@@ -57,6 +57,8 @@ public enum VertexType
 [DebuggerDisplay("{Name} ({Type})")]
 public sealed class Vertex
 {
+    public int Id { get; set; }
+
     public required VertexType Type { get; init; }
     public VertexType? SubType { get; init; }
     public required string Name { get; init; }
