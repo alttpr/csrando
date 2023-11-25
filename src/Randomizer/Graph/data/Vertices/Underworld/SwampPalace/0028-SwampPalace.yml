@@ -5,14 +5,15 @@ rooms:
       regions:
         - name: "Swamp Palace - Entrance Drained"
           peg: "orange"
+
         - name: "Swamp Palace - Entrance Filled"
           peg: "orange"
           inletid: 0x25
-        - name: "Swamp Palace - Entrance Ledge"
 
-      keydoors:
-        - name: "Swamp Palace - Entrance Door"
-          key: "KeyD2"
+        - name: "Swamp Palace - Entrance Ledge"
+          connections:
+            KeyD2:
+              - "Swamp Palace - Long Hall"
 
       shutters:
         - name: "Swamp Palace - Entrance Ledge - Shutter Chest"

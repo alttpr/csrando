@@ -4,16 +4,24 @@ rooms:
     nodes:
       regions:
         - name: "Swamp Palace - Lobby"
+          connections:
+            fixed:
+              - "Swamp Palace - East Moat Left"
+            KeyD2:
+              - "Swamp Palace - West Lever"
+
         - name: "Swamp Palace - Lobby Key Ledge"
         - name: "Swamp Palace - Lobby Joke Ledge"
-        - name: "Swamp Palace - Lobby North Ledge"
-        - name: "Swamp Palace - Lobby West Ledge"
+          connections:
+            UseBomb:
+              - "Swamp Palace - Hammer Switch Left"
 
-      keydoors:
-        - name: "Swamp Palace - Lobby North Ledge Door"
-          key: "KeyD2"
-        - name: "Swamp Palace - Lobby North West Door"
-          key: "KeyD2"
+        - name: "Swamp Palace - Lobby North Ledge"
+          connections:
+            KeyD2:
+              - "Swamp Palace - Statue Puzzle"
+
+        - name: "Swamp Palace - Lobby West Ledge"
 
       items:
         - name: "Swamp Palace - Big Chest"

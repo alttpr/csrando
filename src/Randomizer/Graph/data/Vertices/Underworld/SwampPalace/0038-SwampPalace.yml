@@ -4,10 +4,13 @@ rooms:
     nodes:
       regions:
         - name: "Swamp Palace - Long Hall"
-
-      keydoors:
-        - name: "Swamp Palace - Long Hall Door"
-          key: "KeyD2"
+          connections:
+            fixed:
+              - "Swamp Palace - Entrance Ledge"
+            KeyD2:
+              - "Swamp Palace - East Moat Right"
+            UseBomb:
+              - "Swamp Palace - Map Chest Overlook"
 
       pots:
         - name: "Swamp Palace - Long Hall Key"

@@ -6,15 +6,20 @@ rooms:
         - name: "Swamp Palace - Tic Room C"
         - name: "Swamp Palace - Tic Room I"
         - name: "Swamp Palace - Tic Room T"
+          connections:
+            KeyD2:
+              - "Swamp Palace - Pool Left Ledge"
+
         - name: "Swamp Palace - Pool"
+
         - name: "Swamp Palace - Pool Left Ledge"
+          connections:
+            KeyD2:
+              - "Swamp Palace - Tic Room T"
+
         - name: "Swamp Palace - Pool Center Ledge"
         - name: "Swamp Palace - Pool Right Ledge"
         - name: "Swamp Palace - Pool Key Ledge"
-
-      keydoors:
-        - name: "Swamp Palace - Pool Door"
-          key: "KeyD2"
 
       pots:
         - name: "Swamp Palace - Pool Key Ledge Key"

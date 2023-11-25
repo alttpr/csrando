@@ -5,6 +5,10 @@ rooms:
       regions:
         - name: "Swamp Palace - West Lever"
           switch: true
+          connections:
+            KeyD2:
+              - "Swamp Palace - Lobby"
+
         - name: "Swamp Palace - West Lever Ditch"
         - name: "Swamp Palace - Water 2"
         - name: "Swamp Palace - Money Ledge"

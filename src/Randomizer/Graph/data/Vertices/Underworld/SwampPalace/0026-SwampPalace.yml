@@ -4,6 +4,10 @@ rooms:
     nodes:
       regions:
         - name: "Swamp Palace - Statue Puzzle"
+          connections:
+            KeyD2:
+              - "Swamp Palace - Lobby North Ledge"
+
         - name: "Swamp Palace - Forgotten Room"
         - name: "Swamp Palace - Little Spoon"
         - name: "Swamp Palace - Big Spoon"
