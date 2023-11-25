@@ -17,20 +17,33 @@ internal sealed class DarknessGraphifier : IWorldModifier
         var lightRooms = graph.GetVertices().Where(v => !v.Dark).ToList();
         foreach (var lightRoom in lightRooms)
         {
-            foreach (var edge in lightRoom.Edges.Where(e => e.To.Dark).ToList())
+            foreach (var edge in lightRoom.Edges.Where(e => e.To.Dark))
             {
                 var darkRoom = edge.To;
                 var transition = new Vertex
                 {
                     Type = VertexType.Region,
-                    Name = $"{lightRoom.Name} - {darkRoom.Name} - :Lit",
+                    Name = $"{lightRoom.Name} - {darkRoom.Name} - Dark Transition:{world.Id}",
                 };
+
+                var edgesToLight = darkRoom.Edges.Where(e => e.To == lightRoom);
 
                 world.Graph.AddVertex(transition);
                 edge.To = transition;
-                world.Graph.AddDirected(darkRoom, transition, world.GetItem("fixed"));
                 world.Graph.AddDirected(transition, darkRoom, world.GetItem("Lamp"));
                 world.Graph.AddDirected(transition, lightRoom, world.GetItem("fixed"));
+
+                if (edgesToLight.Count() > 1)
+                    throw new Exception("Uh oh, is the code really correct there?");
+
+                foreach (var edge2 in edgesToLight)
+                {
+                    edge2.To = transition;
+                    var oldCondition = edge2.Condition;
+                    edge2.Condition = new ItemCondition(world.GetItem("fixed"), 1);
+
+                    transition.Edges.Add(new Edge(transition, lightRoom, oldCondition));
+                }
             }
         }
     }
