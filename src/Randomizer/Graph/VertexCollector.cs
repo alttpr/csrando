@@ -319,61 +319,21 @@ internal class VertexCollector
             foreach (var region in room.Nodes.Regions)
             {
                 Vertex regionVertex;
-                Vertex? regionDarkVertex = null;
-                if (!room.Dark)
+                string name = $"{region.Name}:{world.Id}";
+                regionVertex = new Vertex
                 {
-                    string name = $"{region.Name}:{world.Id}";
-                    regionVertex = new Vertex
-                    {
-                        Type = region.Type ?? VertexType.Region,
-                        Name = name,
-                        RoomId = room.Roomid,
-                        Group = room.Group.GetValueOrDefault(0),
-                        Dark = room.Dark,
-                        InletId = region.InletId,
-                        Peg = region.Peg,
-                        Shopkeeper = region.Shopkeeper,
-                        ShopStyle = region.Shopstyle,
-                        Switch = region.Switch ?? false,
-                    };
-                    structured_vertices.Add(name, regionVertex);
-                }
-                else
-                {
-                    string nameDark = $"{region.Name}:{world.Id}";
-                    regionDarkVertex = new Vertex
-                    {
-                        Type = region.Type ?? VertexType.Region,
-                        Name = nameDark,
-                        RoomId = room.Roomid,
-                        Group = room.Group.GetValueOrDefault(0),
-                        Dark = true,
-                        InletId = region.InletId,
-                        Peg = region.Peg,
-                        Switch = region.Switch ?? false,
-                    };
-                    structured_vertices.Add(nameDark, regionDarkVertex);
-
-                    string nameLit = $"{region.Name} - Lit:{world.Id}";
-                    regionVertex = new Vertex
-                    {
-                        Type = region.Type ?? VertexType.Region,
-                        Name = nameLit,
-                        RoomId = room.Roomid,
-                        Group = room.Group.GetValueOrDefault(0),
-                        Dark = false,
-                        InletId = region.InletId,
-                        Peg = region.Peg,
-                        Switch = region.Switch ?? false,
-                    };
-                    structured_vertices.Add(nameLit, regionVertex);
-
-                    regionDarkVertex.Edges.Add(new Edge(
-                        regionDarkVertex,
-                        regionVertex,
-                        new ItemCondition(world.GetItem("Lamp"), 1)
-                    ));
-                }
+                    Type = region.Type ?? VertexType.Region,
+                    Name = name,
+                    RoomId = room.Roomid,
+                    Group = room.Group.GetValueOrDefault(0),
+                    Dark = room.Dark,
+                    InletId = region.InletId,
+                    Peg = region.Peg,
+                    Shopkeeper = region.Shopkeeper,
+                    ShopStyle = region.Shopstyle,
+                    Switch = region.Switch ?? false,
+                };
+                structured_vertices.Add(name, regionVertex);
 
                 if (region.InletId.HasValue)
                 {
