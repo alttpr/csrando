@@ -12,6 +12,8 @@ rooms:
 
         - name: "Turtle Rock - Chasm Bottom"
           connections:
+            fixed:
+              - "Turtle Rock - Switch Block Puzzle"
             CaneOfSomaria:
               - "Turtle Rock - Chasm Top"
           pots:

@@ -4,53 +4,97 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Lobby SSE"
+          connections:
+            fixed:
+              - "Turtle Rock - Entrance Platform"
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+
         - name: "Turtle Rock - Lobby SSW"
+          connections:
+            fixed:
+              - "Turtle Rock - Spike Room"
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+
         - name: "Turtle Rock - Lobby WSW"
+          connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+          pots:
+            - name: "Turtle Rock - Lobby SSE - Pot 2"
+              position: 0x190c
+              sprite: "@Heart"
+
         - name: "Turtle Rock - Lobby WNW"
+          connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+          pots:
+            - name: "Turtle Rock - Lobby SSE - Pot 1"
+              position: 0x070c
+              sprite: "@MagicRefillFull"
 
         - name: "Turtle Rock - Lobby NNW"
           connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
             KeyD7:
               - "Turtle Rock - Pokey Ambush"
+          mobs:
+            - name: "Turtle Rock - Lobby SSE - Stalfos 1"
+              position: { x: 0x0b, y: 0x04, z: 0x00 }
+              sprite: "Stalfos"
 
         - name: "Turtle Rock - Lobby NNE"
+          connections:
+            fixed:
+              - "Turtle Rock - Tile Room"
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+          mobs:
+            - name: "Turtle Rock - Lobby SSE - Stalfos 2"
+              position: { x: 0x15, y: 0x04, z: 0x00 }
+              sprite: "Stalfos"
+
         - name: "Turtle Rock - Lobby ENE"
+          connections:
+            fixed:
+              - "Turtle Rock - Torch Puzzle"
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+
         - name: "Turtle Rock - Lobby ESE"
+          connections:
+            fixed:
+              - "Turtle Rock - Torch Puzzle Overlook"
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby track"
+
         - name: "Turtle Rock - Lobby track"
-
-      pots:
-        - name: "Turtle Rock - Lobby SSE - Pot 1"
-          position: 0x070c
-          sprite: "@MagicRefillFull"
-        - name: "Turtle Rock - Lobby SSE - Pot 2"
-          position: 0x190c
-          sprite: "@Heart"
-
-      mobs:
-        - name: "Turtle Rock - Lobby SSE - Stalfos 1"
-          position: { x: 0x0b, y: 0x04, z: 0x00 }
-          sprite: "Stalfos"
-
-        - name: "Turtle Rock - Lobby SSE - Stalfos 2"
-          position: { x: 0x15, y: 0x04, z: 0x00 }
-          sprite: "Stalfos"
-
-        - name: "Turtle Rock - Lobby SSE - Blue Bari 1"
-          position: { x: 0x08, y: 0x09, z: 0x00 }
-          sprite: "BlueBari"
-
-        - name: "Turtle Rock - Lobby SSE - Blue Bari 2"
-          position: { x: 0x17, y: 0x09, z: 0x00 }
-          sprite: "BlueBari"
-
-        - name: "Turtle Rock - Lobby SSE - Green Stalfos"
-          position: { x: 0x10, y: 0x0e, z: 0x00 }
-          sprite: "GreenStalfos"
-
-        - name: "Turtle Rock - Lobby SSE - Blue Bari 3"
-          position: { x: 0x18, y: 0x14, z: 0x00 }
-          sprite: "BlueBari"
-
-        - name: "Turtle Rock - Lobby SSE - Blue Bari 4"
-          position: { x: 0x08, y: 0x17, z: 0x00 }
-          sprite: "BlueBari"
+          connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Lobby SSW"
+              - "Turtle Rock - Lobby SSE"
+              - "Turtle Rock - Lobby WNW"
+              - "Turtle Rock - Lobby WSW"
+              - "Turtle Rock - Lobby NNW"
+              - "Turtle Rock - Lobby NNE"
+              - "Turtle Rock - Lobby ENE"
+              - "Turtle Rock - Lobby ESE"
+          mobs:
+            - name: "Turtle Rock - Lobby SSE - Blue Bari 1"
+              position: { x: 0x08, y: 0x09, z: 0x00 }
+              sprite: "BlueBari"
+            - name: "Turtle Rock - Lobby SSE - Blue Bari 2"
+              position: { x: 0x17, y: 0x09, z: 0x00 }
+              sprite: "BlueBari"
+            - name: "Turtle Rock - Lobby SSE - Green Stalfos"
+              position: { x: 0x10, y: 0x0e, z: 0x00 }
+              sprite: "GreenStalfos"
+            - name: "Turtle Rock - Lobby SSE - Blue Bari 3"
+              position: { x: 0x18, y: 0x14, z: 0x00 }
+              sprite: "BlueBari"
+            - name: "Turtle Rock - Lobby SSE - Blue Bari 4"
+              position: { x: 0x08, y: 0x17, z: 0x00 }
+              sprite: "BlueBari"
