@@ -4,7 +4,16 @@ rooms:
     nodes:
       regions:
         - name: "Thieves' Town - Boss Room"
-        - name: "Thieves' Town - Boss Room Blinded"
+          connections:
+            LightHole:
+              - "Thieves' Town - Boss Room - Light"
+
+        - name: "Thieves' Town - Boss Room - Light"
+          connections:
+            LostBlind:
+              - "Thieves' Town - Boss Room - Blind Active"
+
+        - name: "Thieves' Town - Boss Room - Blind Active"
 
       items:
         - name: "Thieves' Town - Boss"
@@ -20,7 +29,7 @@ rooms:
     # this data might not end up living here?
     # but is not currently used, see data/Bosses/SpriteLocations.yml
     bosses:
-      "Thieves' Town - Boss Room":
+      "Thieves' Town - Boss Room - Blind Active":
         DefeatArmos:
           - name: "Thieves' Town - Boss Room - Armos Knight 1"
             position: { x: 0x14, y: 0x15, z: 0x00 }

@@ -4,10 +4,10 @@ namespace RandomizerTests.Logic.Inverted.NoGlitches;
 public class ThievesTownTest : InvertedNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => [
-        ["Thieves' Town - Attic", false, new string[] {  }],
-        ["Thieves' Town - Attic", false, new string[] { "BigKeyD4" }],
-        ["Thieves' Town - Attic", false, new string[] { "KeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BigKeyD4", "KeyD4" }],
+        ["Thieves' Town - Attic Chest", false, new string[] {  }],
+        ["Thieves' Town - Attic Chest", false, new string[] { "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", false, new string[] { "KeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BigKeyD4", "KeyD4" }],
 
         ["Thieves' Town - Big Key Chest", true, new string[] {  }],
 

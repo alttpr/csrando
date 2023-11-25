@@ -11,8 +11,8 @@ public sealed class ThievesTownTest : StandardOverworldGlitchesLogicTests
     }
 
     public static IEnumerable<object[]> TestData => [
-        ["Thieves' Town - Attic", false, new string[] {  }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "PegasusBoots", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", false, new string[] {  }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "PegasusBoots", "KeyD4", "BigKeyD4" }],
 
         ["Thieves' Town - Big Key Chest", false, new string[] {  }],
         ["Thieves' Town - Big Key Chest", true, new string[] { "MoonPearl", "PegasusBoots" }],
