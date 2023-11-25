@@ -1,8 +1,0 @@
-fixed:
-  directed:
-    - ["Swamplands Palace Entrance", "Swamp Palace - Entrance Drained"]
-  undirected: []
-FillSwamp:
-  directed:
-    - ["Swamplands Palace Entrance", "Swamp Palace - Entrance Filled"]
-  undirected: []

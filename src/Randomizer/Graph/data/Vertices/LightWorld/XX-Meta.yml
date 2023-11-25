@@ -153,9 +153,6 @@ maps:
         - name: "ActiveBookOfMudora"
           item: "ActiveBookOfMudora"
 
-        - name: "FillSwamp"
-          item: "FillSwamp"
-
         - name: "PowerGlove"
           item: "PowerGlove"
 

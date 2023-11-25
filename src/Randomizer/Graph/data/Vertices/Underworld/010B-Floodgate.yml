@@ -42,6 +42,8 @@ rooms:
                 - "BadSwitchBomb"
             - name: "Floodgate - Pull Switch (Good)"
               position: { x: 0x12, y: 0x03, z: 0x00 }
+              item: "SwampWaterEntrance"
+              itemset: ["event"]
               sprite: "PullSwitchGood"
               allow:
                 - "PullSwitchGood"

@@ -4,97 +4,122 @@ rooms:
     nodes:
       regions:
         - name: "Swamp Palace - West Wing"
+          connections:
+            fixed:
+              - "Swamp Palace - West Moat Left"
+              - "Swamp Palace - West Wing Attic"
+          mobs:
+            - name: "Swamp Palace - West Wing - Hover 1"
+              position: { x: 0x0f, y: 0x0b, z: 0x00 }
+              sprite: "Hover"
+              deny:
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Swamp Palace - West Wing - Hover 2"
+              position: { x: 0x10, y: 0x12, z: 0x00 }
+              sprite: "Hover"
+              deny:
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Swamp Palace - West Wing - Kyameron"
+              position: { x: 0x0f, y: 0x15, z: 0x00 }
+              sprite: "Kyameron"
+              deny:
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Swamp Palace - West Wing - Fire Snake"
+              position: { x: 0x19, y: 0x17, z: 0x00 }
+              sprite: "FireSnake"
+            - name: "Swamp Palace - West Wing - Zol"
+              position: { x: 0x03, y: 0x18, z: 0x00 }
+              sprite: "Zol"
+              deny:
+                - "Statue"
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "Beamos"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Swamp Palace - West Wing - Blue Bari"
+              position: { x: 0x14, y: 0x18, z: 0x00 }
+              sprite: "BlueBari"
+            - name: "Swamp Palace - West Wing - Stalfos"
+              position: { x: 0x16, y: 0x1a, z: 0x00 }
+              sprite: "Stalfos"
+
         - name: "Swamp Palace - West Wing Left Ledge"
-        - name: "Swamp Palace - West Wing Right Ledge - orange"
+          connections:
+            fixed:
+              - "Swamp Palace - West Wing"
+            Hookshot:
+              - "Swamp Palace - West Wing Right Ledge - Left"
+          items:
+            - name: "Swamp Palace - West Chest"
+              addresses: [0xEAA3]
+              type: "chest"
+              itemset: ["swamp"]
+
+        - name: "Swamp Palace - West Wing Right Ledge - Left"
+          connections:
+            fixed:
+              - "Swamp Palace - West Wing"
+              - "Swamp Palace - West Wing Right Ledge - Left - Orange"
+            Hookshot:
+              - "Swamp Palace - West Wing Left Ledge"
+          pots:
+            - name: "Swamp Palace - West Wing - Pot 1"
+              position: 0x084e
+              sprite: "@RupeeBlue"
+            - name: "Swamp Palace - West Wing - Pot 2"
+              position: 0x085c
+              sprite: "@RupeeBlue"
+
+        - name: "Swamp Palace - West Wing Right Ledge - Left - Orange"
           peg: "orange"
-        - name: "Swamp Palace - West Wing Right Ledge - blue"
-          peg: "blue"
+          connections:
+            fixed:
+              - "Swamp Palace - West Wing Right Ledge - Left"
+              - "Swamp Palace - West Wing Right Ledge - Right - Orange"
 
-      items:
-        - name: "Swamp Palace - West Chest"
-          addresses: [0xEAA3]
-          type: "chest"
-          itemset: ["swamp"]
+        - name: "Swamp Palace - West Wing Right Ledge - Right"
+          connections:
+            fixed:
+              - "Swamp Palace - Money Ledge"
+              - "Swamp Palace - West Wing Right Ledge - Right - Orange"
 
-      pots:
-        - name: "Swamp Palace - West Wing - Pot 1"
-          position: 0x084e
-          sprite: "@RupeeBlue"
-        - name: "Swamp Palace - West Wing - Pot 2"
-          position: 0x085c
-          sprite: "@RupeeBlue"
-
-      mobs:
-        - name: "Swamp Palace - West Wing - Hover 1"
-          position: { x: 0x0f, y: 0x0b, z: 0x00 }
-          sprite: "Hover"
-          deny:
-            - "SparkCW"
-            - "SparkCCW"
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Swamp Palace - West Wing - Hover 2"
-          position: { x: 0x10, y: 0x12, z: 0x00 }
-          sprite: "Hover"
-          deny:
-            - "SparkCW"
-            - "SparkCCW"
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Swamp Palace - West Wing - Kyameron"
-          position: { x: 0x0f, y: 0x15, z: 0x00 }
-          sprite: "Kyameron"
-          deny:
-            - "SparkCW"
-            - "SparkCCW"
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Swamp Palace - West Wing - Fire Snake"
-          position: { x: 0x19, y: 0x17, z: 0x00 }
-          sprite: "FireSnake"
-
-        - name: "Swamp Palace - West Wing - Zol"
-          position: { x: 0x03, y: 0x18, z: 0x00 }
-          sprite: "Zol"
-          deny:
-            - "Statue"
-            - "SparkCW"
-            - "SparkCCW"
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "Beamos"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Swamp Palace - West Wing - Blue Bari"
-          position: { x: 0x14, y: 0x18, z: 0x00 }
-          sprite: "BlueBari"
-
-        - name: "Swamp Palace - West Wing - Stalfos"
-          position: { x: 0x16, y: 0x1a, z: 0x00 }
-          sprite: "Stalfos"
+        - name: "Swamp Palace - West Wing Right Ledge - Right - Orange"
+          peg: "orange"
+          connections:
+            fixed:
+              - "Swamp Palace - West Wing Right Ledge - Right"
+              - "Swamp Palace - West Wing Right Ledge - Left - Orange"
