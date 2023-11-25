@@ -1,20 +1,23 @@
 namespace Randomizer.Graph;
+
+using SearchResult = (HashSet<Vertex> NewlyVisited, HashSet<Vertex> NewSearchStarts);
+
 public class Searcher
 {
     private readonly HashSet<Vertex> _visited = new();
     private readonly HashSet<Vertex> _collected = new();
     private readonly Graph _graph;
-    private readonly Vertex _start;
+    private readonly HashSet<Vertex> _searchStarts = new();
     private readonly Inventory _inventory;
     private readonly Dictionary<Item, HashSet<(Vertex From, Vertex To)>> _doors = [];
 
     public Searcher(Graph graph, Vertex start, Inventory inventory)
     {
         _graph = graph;
-        _start = start;
+        _searchStarts.Add(start);
         _inventory = inventory;
 
-        if (!_graph.HasVertex(_start))
+        if (!_graph.HasVertex(start))
         {
             throw new Exception("Start vertex not in graph");
         }
@@ -24,8 +27,10 @@ public class Searcher
         bool newItemsFound;
         do
         {
-            var newlyVisited = InternalSearch(inventory, _visited, _start);
+            var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, _searchStarts);
             _visited.UnionWith(newlyVisited);
+            _searchStarts.Clear();
+            _searchStarts.UnionWith(newSearchStarts);
 
             newItemsFound = RecursiveDoorSearch(inventory);
             foreach (var itemLocation in _visited.Except(_collected))
@@ -67,9 +72,12 @@ public class Searcher
         return _visited;
     }
 
-    private static HashSet<Vertex> InternalSearch(Inventory collected, HashSet<Vertex> visited, params Vertex[] startAt)
+    private static SearchResult InternalSearch(Inventory collected, HashSet<Vertex> visited, params Vertex[] startAt)
+        => InternalSearch(collected, visited, startAt.AsEnumerable());
+    private static SearchResult InternalSearch(Inventory collected, HashSet<Vertex> visited, IEnumerable<Vertex> startAt)
     {
         var newlyVisited = new HashSet<Vertex>();
+        var newSearchStarts = new HashSet<Vertex>();
         var marked = new HashSet<Vertex>();
         var pegMarked = new HashSet<Vertex>();
         var queue = new Queue<Vertex>();
@@ -99,14 +107,17 @@ public class Searcher
                 {
                     continue;
                 }
+                int unvisitedEdges = vertex.Edges.Count;
                 foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
                 {
+                    unvisitedEdges--;
                     if (!pegMarked.Contains(next_vertex))
                     {
                         peg_queue.Enqueue(next_vertex);
                     }
                 }
-
+                if (unvisitedEdges > 0)
+                    newSearchStarts.Add(vertex);
                 if (!visited.Contains(vertex))
                     newlyVisited.Add(vertex);
                 pegMarked.Add(vertex);
@@ -125,21 +136,24 @@ public class Searcher
                 {
                     continue;
                 }
+                int unvisitedEdges = vertex.Edges.Count;
                 foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
                 {
+                    unvisitedEdges--;
                     if (!marked.Contains(next_vertex))
                     {
                         queue.Enqueue(next_vertex);
                     }
                 }
-
+                if (unvisitedEdges > 0)
+                    newSearchStarts.Add(vertex);
                 if (!visited.Contains(vertex))
                     newlyVisited.Add(vertex);
                 marked.Add(vertex);
             }
         } while (queue.Any() || peg_queue.Any());
 
-        return newlyVisited;
+        return (newlyVisited, newSearchStarts);
 
         bool reachableWithoutKeys(Edge edge)
         {
@@ -152,6 +166,7 @@ public class Searcher
     private bool RecursiveDoorSearch(Inventory inventory)
     {
         var strongLocations = new HashSet<Vertex>();
+        var strongSearchStarts = new HashSet<Vertex>();
         foreach (var (key, edges) in _doors)
         {
             int keyCount = inventory.GetCount(key);
@@ -162,46 +177,60 @@ public class Searcher
             {
                 // we have all keys, unlock everything.
                 var behindDoorLocations = edges.SelectMany(e => new[] { e.From, e.To }).ToHashSet();
-                strongLocations.UnionWith(InternalSearch(inventory, _visited, [.. behindDoorLocations]));
+                var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, [.. behindDoorLocations]);
+                strongLocations.UnionWith(newlyVisited);
+                strongSearchStarts.UnionWith(newSearchStarts);
             }
             else
             {
-                strongLocations.UnionWith(RecursiveDoorSearchInternal(inventory, key, edges, keyCount, _visited));
+                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, edges, keyCount, _visited);
+                strongLocations.UnionWith(recursiveLocations);
+                strongSearchStarts.UnionWith(recursiveSearchStarts);
             }
         }
         _visited.UnionWith(strongLocations);
+        _searchStarts.UnionWith(strongSearchStarts);
 
         return strongLocations.Any();
     }
-    private HashSet<Vertex> RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, params Vertex[] additionalStarts)
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (keyCount == 0)
-            return [];
+            return ([], []);
 
         var reachableDoors = visitedBeforeDoors.SelectMany(v => v.Edges)
             .Where(e => e.Condition.Item == key && !visitedBeforeDoors.Contains(e.To))
             .ToHashSet();
         HashSet<Vertex>? strongLocations = null;
+        HashSet<Vertex>? strongSearchStarts = null;
         var visitedBeforeRecursion = visitedBeforeDoors.ToHashSet();
         foreach (var door in reachableDoors)
         {
             Vertex[] startAt = [door.To, .. additionalStarts];
-            var weakLocations = InternalSearch(inventory, _visited, startAt);
+            var (weakLocations, weakSearchStarts) = InternalSearch(inventory, _visited, startAt);
             visitedBeforeRecursion.UnionWith(weakLocations);
-            weakLocations.UnionWith(RecursiveDoorSearchInternal(inventory, key, edges, keyCount - 1, visitedBeforeRecursion, startAt));
+            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, edges, keyCount - 1, visitedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
             // reset
             visitedBeforeRecursion.IntersectWith(weakLocations);
+            weakLocations.UnionWith(recursiveLocations);
+            weakSearchStarts.UnionWith(recursiveSearchStarts);
 
             if (weakLocations.Count == 0)
-                return [];
+                return ([], []);
 
-            if (strongLocations != null)
+            if (strongLocations != null && strongSearchStarts != null)
+            {
                 strongLocations.IntersectWith(weakLocations);
+                strongSearchStarts.IntersectWith(weakSearchStarts);
+            }
             else
+            {
                 strongLocations = weakLocations;
+                strongSearchStarts = weakSearchStarts;
+            }
         }
 
-        return strongLocations ?? [];
+        return (strongLocations ?? [], strongSearchStarts ?? []);
     }
 
     private bool DropOffSearch(Item item)
