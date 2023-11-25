@@ -7,15 +7,16 @@ rooms:
         - name: "Turtle Rock - Lobby SSW"
         - name: "Turtle Rock - Lobby WSW"
         - name: "Turtle Rock - Lobby WNW"
+
         - name: "Turtle Rock - Lobby NNW"
+          connections:
+            KeyD7:
+              - "Turtle Rock - Pokey Ambush"
+
         - name: "Turtle Rock - Lobby NNE"
         - name: "Turtle Rock - Lobby ENE"
         - name: "Turtle Rock - Lobby ESE"
         - name: "Turtle Rock - Lobby track"
-
-      keydoors:
-        - name: "Turtle Rock - Lobby Door"
-          key: "KeyD7"
 
       pots:
         - name: "Turtle Rock - Lobby SSE - Pot 1"

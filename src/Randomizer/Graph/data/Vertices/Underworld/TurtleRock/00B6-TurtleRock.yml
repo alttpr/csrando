@@ -4,15 +4,20 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Pokey Ambush"
+          connections:
+            KeyD7:
+              - "Turtle Rock - Chain Chomps Room"
+              - "Turtle Rock - Lobby NNW"
+
         - name: "Turtle Rock - Chain Chomps Room"
+          switch: true
+          connections:
+            KeyD7:
+              - "Turtle Rock - Cold Tubes"
+              - "Turtle Rock - Pokey Ambush"
+
         - name: "Turtle Rock - Tile Room"
         - name: "Turtle Rock - Refill Room"
-
-      keydoors:
-        - name: "Turtle Rock - Pokey Door"
-          key: "KeyD7"
-        - name: "Turtle Rock - Chain Chomps Door"
-          key: "KeyD7"
 
       items:
         - name: "Turtle Rock - Chain Chomps"

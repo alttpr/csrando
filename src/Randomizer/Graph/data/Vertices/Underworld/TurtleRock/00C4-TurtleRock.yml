@@ -5,6 +5,9 @@ rooms:
       # regions may need to be broken up later for switches here
       regions:
         - name: "Turtle Rock - Switch Block Puzzle"
+          connections:
+            KeyD7:
+              - "Turtle Rock - Catwalk"
 
       pots:
         - name: "Turtle Rock - Switch Block Puzzle - Pot 1"

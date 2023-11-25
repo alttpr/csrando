@@ -4,10 +4,9 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Catwalk"
-
-      keydoors:
-        - name: "Turtle Rock - Catwalk Door"
-          key: "KeyD7"
+          connections:
+            KeyD7:
+              - "Turtle Rock - Switch Block Puzzle"
 
       mobs:
         - name: "Turtle Rock - Catwalk - Laser Eye (Left) 1"

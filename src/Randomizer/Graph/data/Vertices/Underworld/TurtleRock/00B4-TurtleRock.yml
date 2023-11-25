@@ -4,12 +4,20 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Chasm Top"
-        - name: "Turtle Rock - Chasm Bottom"
+          connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Chasm Bottom"
+            BigKeyD7:
+              - "Turtle Rock - Boss Room"
 
-      pots:
-        - name: "Turtle Rock - Chasm Top - Pot 1"
-          position: 0x1c2c
-          sprite: "@MagicRefillFull"
-        - name: "Turtle Rock - Chasm Top - Pot 2"
-          position: 0x1c30
-          sprite: "@Heart"
+        - name: "Turtle Rock - Chasm Bottom"
+          connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Chasm Top"
+          pots:
+            - name: "Turtle Rock - Chasm Top - Pot 1"
+              position: 0x1c2c
+              sprite: "@MagicRefillFull"
+            - name: "Turtle Rock - Chasm Top - Pot 2"
+              position: 0x1c30
+              sprite: "@Heart"
