@@ -4,7 +4,6 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Agahnim's Antichamber"
-
-      bigkeydoors:
-        - name: "Ganon's Tower - Agahnim's Antichamber - Door"
-          key: "BigKeyA2"
+          connections:
+            BigKeyA2:
+              - "Ganon's Tower - Boss Room"

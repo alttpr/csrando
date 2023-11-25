@@ -4,7 +4,11 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Randomizer Room"
+
         - name: "Ganon's Tower - Firebar Falling Bridge"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Bari Corridor"
 
       items:
         - name: "Ganon's Tower - Randomizer Room - Top Left"
