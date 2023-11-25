@@ -5,16 +5,24 @@ rooms:
       regions:
         - name: "Misery Mire - Mire-go-round"
           switch: true
+          connections:
+            KeyD6:
+              - "Misery Mire - Tile Room"
+              - "Misery Mire - Main Lobby"
+
         - name: "Misery Mire - Tile Room"
+          connections:
+            KeyD6:
+              - "Misery Mire - Mire-go-round"
+
         - name: "Misery Mire - Octogan - orange"
           peg: "orange"
         - name: "Misery Mire - Octogan - blue"
           peg: "blue"
         - name: "Misery Mire - 4 Rails"
-
-      keydoors:
-        - name: "Misery Mire - Mire-go-round Door"
-          key: "KeyD6"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby"
 
       items:
         - name: "Misery Mire - Compass Chest"

@@ -3,20 +3,38 @@ rooms:
     group: 14
     nodes:
       regions:
-        - name: "Misery Mire - Fish Room Top - orange"
+        - name: "Misery Mire - Fish Room Top"
           switch: true
-          peg: "orange"
-        - name: "Misery Mire - Fish Room Bottom - orange"
-          peg: "orange"
-        - name: "Misery Mire - Fish Room - blue"
-          switch: true
+          connections:
+            fixed:
+              - "Misery Mire - Fish Room Top - Blue"
+              - "Misery Mire - Bridge Room - Overpass"
+          pots:
+            - name: "Misery Mire - Fish Room - Eye Pot"
+              position: 0x0696
+              item: "KeyD6"
+              itemset: ["mire"]
+
+        - name: "Misery Mire - Fish Room Top - Blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - Fish Room Bottom - Blue"
+
+        - name: "Misery Mire - Fish Room Bottom"
+          connections:
+            fixed:
+              - "Misery Mire - Fish Room Bottom - Blue"
+            KeyD6:
+              - "Misery Mire - Hourglass"
+
+        - name: "Misery Mire - Fish Room Bottom - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - Fish Room Top - Blue"
 
       pots:
-        - name: "Misery Mire - Fish Room - Eye Pot"
-          position: 0x0696
-          item: "KeyD6"
-          itemset: ["mire"]
         - name: "Misery Mire - Fish Room - blue - Pot 1"
           position: 0x0b64
           sprite: "@MagicRefillSmall"

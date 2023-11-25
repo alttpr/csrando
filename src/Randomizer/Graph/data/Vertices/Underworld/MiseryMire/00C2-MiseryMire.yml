@@ -3,26 +3,67 @@ rooms:
     group: 14
     nodes:
       regions:
-        - name: "Misery Mire - Main Lobby - orange"
-          peg: "orange"
-        - name: "Misery Mire - Main Lobby North - orange"
-          peg: "orange"
-        - name: "Misery Mire - Main Lobby North East - orange"
-          peg: "orange"
-        - name: "Misery Mire - Main Lobby - blue"
+        - name: "Misery Mire - Main Lobby"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby - Blue"
+              - "Misery Mire - East Wing Middle"
+              - "Misery Mire - East Wing Bottom"
+              - "Misery Mire - Popo Push"
+              - "Misery Mire - 4 Rails"
+              - "Misery Mire - Mire 2"
+            KeyD6:
+              - "Misery Mire - Mire-go-round"
+
+        - name: "Misery Mire - Main Lobby - Blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby"
+              - "Misery Mire - Main Lobby North East - Blue"
+              - "Misery Mire - Main Lobby Between Pegs - Blue"
 
-      keydoors:
-        - name: "Misery Mire - Main Lobby Door"
-          key: "KeyD6"
-        - name: "Misery Mire - Main Lobby Top Right Door"
-          key: "KeyD6"
+        - name: "Misery Mire - Main Lobby North"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby North - Blue"
+              - "Misery Mire - Sluggula Cross"
 
-      items:
-        - name: "Misery Mire - Main Lobby Chest"
-          type: "chest"
-          addresses: [0xEA5E]
-          itemset: ["mire"]
+        - name: "Misery Mire - Main Lobby North - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby North"
+              - "Misery Mire - Main Lobby Between Pegs - Blue"
+
+        - name: "Misery Mire - Main Lobby North East"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby North East - Blue"
+              - "Misery Mire - Main Lobby - Blue"
+            KeyD6:
+              - "Misery Mire - East Wing Top Left"
+
+        - name: "Misery Mire - Main Lobby North East - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby North East"
+
+        - name: "Misery Mire - Main Lobby Between Pegs - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby - Blue"
+              - "Misery Mire - Main Lobby North - Blue"
+          # The chest is really in the north area, but you need to press the button
+          # under the pot first.
+          items:
+            - name: "Misery Mire - Main Lobby Chest"
+              type: "chest"
+              conditions: ["LiftPot"]
+              addresses: [0xEA5E]
+              itemset: ["mire"]
 
       pots:
         - name: "Misery Mire - Main Lobby - Pot 1"

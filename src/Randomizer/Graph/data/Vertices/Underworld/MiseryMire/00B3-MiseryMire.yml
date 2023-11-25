@@ -4,11 +4,16 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Spike Room"
-        - name: "Misery Mire - Mesh Bridge"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Middle"
+            KeyD6:
+              - "Misery Mire - Mesh Bridge"
 
-      keydoors:
-        - name: "Misery Mire - Spike Room Door"
-          key: "KeyD6"
+        - name: "Misery Mire - Mesh Bridge"
+          connections:
+            KeyD6:
+              - "Misery Mire - Spike Room"
 
       items:
         - name: "Misery Mire - Spike Chest"

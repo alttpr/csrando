@@ -4,16 +4,20 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Popo Push"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby"
+
         - name: "Misery Mire - Sluggula Cross"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby North"
+
         - name: "Misery Mire - Antifairy Refill Overpass"
         - name: "Misery Mire - Antifairy Refill"
 
       shutters:
         - name: "Misery Mire - Sluggula Cross - Shutter Door"
-
-      bigkeydoors:
-        - name: "Misery Mire - Antifairy Refill Door"
-          key: "BigKeyD6"
 
       pots:
         - name: "Misery Mire - Popo Push - Pot 1"

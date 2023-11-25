@@ -10,10 +10,6 @@ rooms:
         - name: "Misery Mire - Boss Antichamber - blue"
           peg: "blue"
 
-      bigkeydoors:
-        - name: "Misery Mire - Boss Antichamber Door"
-          key: "BigKeyD6"
-
       mobs:
         - name: "Misery Mire - Boss Antichamber - blue - Medusa"
           position: { x: 0x03, y: 0x08, z: 0x00 }

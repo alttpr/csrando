@@ -3,27 +3,81 @@ rooms:
     group: 14
     nodes:
       regions:
-        - name: "Misery Mire - East Wing Top Left - orange"
-          peg: "orange"
-        - name: "Misery Mire - East Wing Top Middle - orange"
-          peg: "orange"
-        - name: "Misery Mire - East Wing Top Right - orange"
-          peg: "orange"
-        - name: "Misery Mire - East Wing Top - blue"
-          peg: "blue"
-        - name: "Misery Mire - East Wing Middle"
-        - name: "Misery Mire - East Wing Bottom"
-        - name: "Misery Mire - Falling Bridge"
+        - name: "Misery Mire - East Wing Top Left"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Left - Blue"
+            KeyD6:
+              - "Misery Mire - Main Lobby North East"
+          items:
+            - name: "Misery Mire - Map Chest"
+              type: "chest"
+              addresses: [0xEA6A]
+              itemset: ["mire"]
 
-      items:
-        - name: "Misery Mire - Map Chest"
-          type: "chest"
-          addresses: [0xEA6A]
-          itemset: ["mire"]
-        - name: "Misery Mire - Big Chest"
-          type: "bigchest"
-          addresses: [0xEA67]
-          itemset: ["mire"]
+        - name: "Misery Mire - East Wing Top Left - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Left"
+              - "Misery Mire - East Wing Top Middle - Blue"
+
+        - name: "Misery Mire - East Wing Top Middle"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Middle - Blue"
+              - "Misery Mire - Spike Room"
+
+        - name: "Misery Mire - East Wing Top Middle - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Middle"
+              - "Misery Mire - East Wing Top Left - Blue"
+              - "Misery Mire - East Wing Top Right - Blue"
+
+        - name: "Misery Mire - East Wing Top Right"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Right - Blue"
+              - "Misery Mire - East Wing Bottom"
+
+        - name: "Misery Mire - East Wing Top Right - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Right"
+              - "Misery Mire - East Wing Top Middle - Blue"
+
+        - name: "Misery Mire - East Wing Middle"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby"
+
+        - name: "Misery Mire - East Wing Bottom"
+          connections:
+            fixed:
+              - "Misery Mire - Main Lobby"
+              - "Misery Mire - Falling Bridge South"
+
+        # TODO: If you arrive there from the middle door,
+        # you need boots or hookshot to make it to the top
+        - name: "Misery Mire - Falling Bridge South"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Middle"
+              - "Misery Mire - Falling Bridge North"
+
+        - name: "Misery Mire - Falling Bridge North"
+          connections:
+            fixed:
+              - "Misery Mire - East Wing Top Right"
+          items:
+            - name: "Misery Mire - Big Chest"
+              type: "bigchest"
+              conditions: ["BigKeyD6"]
+              addresses: [0xEA67]
+              itemset: ["mire"]
 
       pots:
         - name: "Misery Mire - Falling Bridge - Medusa 1"
