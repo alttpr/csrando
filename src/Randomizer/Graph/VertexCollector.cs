@@ -368,8 +368,11 @@ internal class VertexCollector
                     };
                     structured_vertices.Add(nameLit, regionVertex);
 
-                    regionDarkVertex.Edges.Add(new Edge(regionDarkVertex, regionVertex,
-                                                        new ItemCondition(world.GetItem("Lamp"), 1)));
+                    regionDarkVertex.Edges.Add(new Edge(
+                        regionDarkVertex,
+                        regionVertex,
+                        new ItemCondition(world.GetItem("Lamp"), 1)
+                    ));
                 }
 
                 if (region.InletId.HasValue)
