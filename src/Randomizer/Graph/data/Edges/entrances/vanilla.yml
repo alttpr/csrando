@@ -336,8 +336,8 @@ fixed:
   - ["Turtle Rock Outside Bridge West - In", "Turtle Rock - Laser Entrance"]
   - ["Turtle Rock - Laser Entrance - Exit", "Turtle Rock Outside Bridge West - Out"]
 
-  - ["Turtle Rock Outside Rest Area - In", "Turtle Rock - Eye Bridge"]
-  - ["Turtle Rock - Eye Bridge - Exit", "Turtle Rock Outside Rest Area - Out"]
+  - ["Turtle Rock Outside Rest Area - In", "Turtle Rock - Eye Bridge - Bomb Door"]
+  - ["Turtle Rock - Eye Bridge - Bomb Door - Exit", "Turtle Rock Outside Rest Area - Out"]
 
   - ["East Dark Death Mountain Shop - In", "Dark Death Mountain Shop"]
   - ["Dark Death Mountain Shop - Exit", "East Dark Death Mountain Shop - Out"]

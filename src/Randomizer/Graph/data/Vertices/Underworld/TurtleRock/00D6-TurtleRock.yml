@@ -5,34 +5,42 @@ rooms:
       regions:
         - name: "Turtle Rock - Entrance"
           inletid: 0x35
+          connections:
+            CaneOfSomaria:
+              - "Turtle Rock - Entrance Platform"
+          pots:
+            - name: "Turtle Rock - Entrance - Pot 1"
+              position: 0x165c
+              sprite: "@MagicRefillFull"
+            - name: "Turtle Rock - Entrance - Pot 2"
+              position: 0x1660
+              sprite: "@BombRefill1"
+
         - name: "Turtle Rock - Entrance Platform"
+          connections:
+            fixed:
+              - "Turtle Rock - Lobby SSE"
+            CaneOfSomaria:
+              - "Turtle Rock - Entrance"
+
         - name: "Turtle Rock - Spike Room"
-
-      items:
-        - name: "Turtle Rock - Compass Chest"
-          addresses: [0xEA22]
-          type: "chest"
-          itemset: ["turtlerock"]
-
-      pots:
-        - name: "Turtle Rock - Entrance - Pot 1"
-          position: 0x165c
-          sprite: "@MagicRefillFull"
-        - name: "Turtle Rock - Entrance - Pot 2"
-          position: 0x1660
-          sprite: "@BombRefill1"
-
-      mobs:
-        - name: "Turtle Rock - Entrance - Laser Eye (Down)"
-          position: { x: 0x07, y: 0x02, z: 0x00 }
-          sprite: "LaserEyeD"
-          allow:
-            - "LaserEyeD"
-
-        - name: "Turtle Rock - Entrance - Medusa 1"
-          position: { x: 0x03, y: 0x16, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Turtle Rock - Entrance - Medusa 2"
-          position: { x: 0x0c, y: 0x16, z: 0x00 }
-          sprite: "Medusa"
+          connections:
+            fixed:
+              - "Turtle Rock - Lobby SSW"
+          items:
+            - name: "Turtle Rock - Compass Chest"
+              addresses: [0xEA22]
+              type: "chest"
+              itemset: ["turtlerock"]
+          mobs:
+            - name: "Turtle Rock - Entrance - Laser Eye (Down)"
+              position: { x: 0x07, y: 0x02, z: 0x00 }
+              sprite: "LaserEyeD"
+              allow:
+                - "LaserEyeD"
+            - name: "Turtle Rock - Entrance - Medusa 1"
+              position: { x: 0x03, y: 0x16, z: 0x00 }
+              sprite: "Medusa"
+            - name: "Turtle Rock - Entrance - Medusa 2"
+              position: { x: 0x0c, y: 0x16, z: 0x00 }
+              sprite: "Medusa"
