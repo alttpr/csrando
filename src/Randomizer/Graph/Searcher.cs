@@ -24,7 +24,8 @@ public class Searcher
         bool newItemsFound;
         do
         {
-            InternalSearch(inventory, _visited, _start);
+            var newlyVisited = InternalSearch(inventory, _visited, _start);
+            _visited.UnionWith(newlyVisited);
 
             newItemsFound = RecursiveDoorSearch(inventory);
             foreach (var itemLocation in _visited.Except(_collected))
@@ -66,16 +67,20 @@ public class Searcher
         return _visited;
     }
 
-    private static void InternalSearch(Inventory collected, HashSet<Vertex> visited, params Vertex[] startAt)
+    private static HashSet<Vertex> InternalSearch(Inventory collected, HashSet<Vertex> visited, params Vertex[] startAt)
     {
+        var newlyVisited = new HashSet<Vertex>();
         var marked = new HashSet<Vertex>();
         var pegMarked = new HashSet<Vertex>();
         var queue = new Queue<Vertex>();
         var peg_queue = new Queue<Vertex>();
         foreach (var start in startAt)
         {
-            if (visited.Add(start))
+            if (!visited.Contains(start))
+            {
                 marked.Add(start);
+                newlyVisited.Add(start);
+            }
             queue.Enqueue(start);
         }
 
@@ -102,7 +107,8 @@ public class Searcher
                     }
                 }
 
-                visited.Add(vertex);
+                if (!visited.Contains(vertex))
+                    newlyVisited.Add(vertex);
                 pegMarked.Add(vertex);
             }
 
@@ -127,10 +133,13 @@ public class Searcher
                     }
                 }
 
-                visited.Add(vertex);
+                if (!visited.Contains(vertex))
+                    newlyVisited.Add(vertex);
                 marked.Add(vertex);
             }
         } while (queue.Any() || peg_queue.Any());
+
+        return newlyVisited;
 
         bool reachableWithoutKeys(Edge edge)
         {
@@ -142,7 +151,6 @@ public class Searcher
     }
     private bool RecursiveDoorSearch(Inventory inventory)
     {
-        var visitedBeforeDoors = _visited.ToHashSet();
         var strongLocations = new HashSet<Vertex>();
         foreach (var (key, edges) in _doors)
         {
@@ -154,16 +162,12 @@ public class Searcher
             {
                 // we have all keys, unlock everything.
                 var behindDoorLocations = edges.SelectMany(e => new[] { e.From, e.To }).ToHashSet();
-                InternalSearch(inventory, _visited, [.. behindDoorLocations]);
-                strongLocations.UnionWith(_visited.Except(visitedBeforeDoors));
+                strongLocations.UnionWith(InternalSearch(inventory, _visited, [.. behindDoorLocations]));
             }
             else
             {
-                strongLocations.UnionWith(RecursiveDoorSearchInternal(inventory, key, edges, keyCount, visitedBeforeDoors));
+                strongLocations.UnionWith(RecursiveDoorSearchInternal(inventory, key, edges, keyCount, _visited));
             }
-            // reset visited
-            _visited.IntersectWith(visitedBeforeDoors);
-
         }
         _visited.UnionWith(strongLocations);
 
@@ -172,23 +176,21 @@ public class Searcher
     private HashSet<Vertex> RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (keyCount == 0)
-        {
-            var weakLocations = _visited.Except(visitedBeforeDoors).ToHashSet();
-            return weakLocations;
-        }
+            return [];
 
-        var reachableDoors = _visited.SelectMany(v => v.Edges)
-            .Where(e => e.Condition.Item == key && !_visited.Contains(e.To))
+        var reachableDoors = visitedBeforeDoors.SelectMany(v => v.Edges)
+            .Where(e => e.Condition.Item == key && !visitedBeforeDoors.Contains(e.To))
             .ToHashSet();
         HashSet<Vertex>? strongLocations = null;
+        var visitedBeforeRecursion = visitedBeforeDoors.ToHashSet();
         foreach (var door in reachableDoors)
         {
-            var visitedBeforeRecursion = _visited.ToHashSet();
             Vertex[] startAt = [door.To, .. additionalStarts];
-            InternalSearch(inventory, _visited, startAt);
-            var weakLocations = RecursiveDoorSearchInternal(inventory, key, edges, keyCount - 1, visitedBeforeDoors, startAt);
+            var weakLocations = InternalSearch(inventory, _visited, startAt);
+            visitedBeforeRecursion.UnionWith(weakLocations);
+            weakLocations.UnionWith(RecursiveDoorSearchInternal(inventory, key, edges, keyCount - 1, visitedBeforeRecursion, startAt));
             // reset
-            _visited.IntersectWith(visitedBeforeRecursion);
+            visitedBeforeRecursion.IntersectWith(weakLocations);
 
             if (weakLocations.Count == 0)
                 return [];
