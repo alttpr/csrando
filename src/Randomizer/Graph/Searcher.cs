@@ -68,8 +68,6 @@ public class Searcher
         return _visited;
     }
 
-    private static SearchResult InternalSearch(Inventory collected, HashSet<Vertex> visited, params Vertex[] startAt)
-        => InternalSearch(collected, visited, startAt.AsEnumerable());
     private static SearchResult InternalSearch(Inventory collected, HashSet<Vertex> visited, IEnumerable<Vertex> startAt)
     {
         var newlyVisited = new HashSet<Vertex>();
@@ -155,7 +153,7 @@ public class Searcher
             {
                 // we have all keys, unlock everything.
                 var behindDoorLocations = edges.SelectMany(e => new[] { e.From, e.To }).ToHashSet();
-                var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, [.. behindDoorLocations]);
+                var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, behindDoorLocations);
                 strongLocations.UnionWith(newlyVisited);
                 strongSearchStarts.UnionWith(newSearchStarts);
             }
