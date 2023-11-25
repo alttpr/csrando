@@ -9,7 +9,7 @@ using System.Diagnostics;
 public sealed class Edge
 {
     public Vertex From { get; }
-    public Vertex To { get; }
+    public Vertex To { get; set; }
     public ItemCondition Condition { get; set; }
 
     public Edge(Vertex from, Vertex to, ItemCondition condition)
