@@ -3,11 +3,41 @@ rooms:
     group: 12
     nodes:
       regions:
-        - name: "Thieves' Town - Attic Gate - orange"
+        # TODO: Handle the button stuff
+        - name: "Thieves' Town - Attic Gate - Center"
+          connections:
+            fixed:
+              - "Thieves' Town - Attic Gate - Center - Orange"
+              - "Thieves' Town - Attic Gate - Center - Blue"
+              - "Thieves' Town - Attic Hall Left"
+              - "Thieves' Town - Spike Dodge"
+
+        - name: "Thieves' Town - Attic Gate - Center - Orange"
           peg: "orange"
-        - name: "Thieves' Town - Attic Gate - blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Attic Gate - Left Corner"
+
+        - name: "Thieves' Town - Attic Gate - Center - Blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Attic Gate - Right Corner"
+
+        - name: "Thieves' Town - Attic Gate - Left Corner"
+          connections:
+            fixed:
+              - "Thieves' Town - Attic Gate - Center - Orange"
+
+        - name: "Thieves' Town - Attic Gate - Right Corner"
+          connections:
+            fixed:
+              - "Thieves' Town - Attic Gate - Center - Blue"
+
         - name: "Thieves' Town - Attic Hall Left"
+          connections:
+            fixed:
+              - "Thieves' Town - Attic Gate - Center"
 
       pots:
         - name: "Thieves' Town - Attic Hall Left - Pot 1"

@@ -4,14 +4,19 @@ rooms:
     nodes:
       regions:
         - name: "Thieves' Town - Torch Hallway"
+          connections:
+            KeyD4:
+              - "Thieves' Town - Firesnake Room"
+
         - name: "Thieves' Town - Firesnake Room Top"
+
         - name: "Thieves' Town - Firesnake Room"
+          connections:
+            KeyD4:
+              - "Thieves' Town - Torch Hallway"
+
         - name: "Thieves' Town - Firesnake Room Bottom"
         - name: "Thieves' Town - Toilet"
-
-      keydoors:
-        - name: "Thieves' Town - Torch Hallway Door"
-          key: "keyD4"
 
       pots:
         - name: "Thieves' Town - Torch Hallway Pot Key"

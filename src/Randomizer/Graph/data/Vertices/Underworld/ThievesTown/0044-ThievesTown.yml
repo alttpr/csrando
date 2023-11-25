@@ -3,14 +3,19 @@ rooms:
     group: 12
     nodes:
       regions:
-        - name: "Thieves' Town - Conveyer Bridge"
-        - name: "Thieves' Town - Joke Room"
-        - name: "Thieves' Town - Mole Room"
-        - name: "Thieves' Town - Mole Room Platform"
+        - name: "Thieves' Town - Conveyor Bridge"
+          connections:
+            KeyD4:
+              - "Thieves' Town - Mole Room"
 
-      keydoors:
-        - name: "Thieves' Town - Big Chest Door"
-          key: "KeyD4"
+        - name: "Thieves' Town - Joke Room"
+
+        - name: "Thieves' Town - Mole Room"
+          connections:
+            KeyD4:
+              - "Thieves' Town - Conveyor Bridge"
+
+        - name: "Thieves' Town - Mole Room Platform"
 
       items:
         - name: "Thieves' Town - Big Chest"
@@ -19,7 +24,7 @@ rooms:
           itemset: ["thieves"]
 
       pots:
-        - name: "Thieves' Town - Conveyer Bridge - Block"
+        - name: "Thieves' Town - Conveyor Bridge - Block"
           position: 0x07cc
 
       mobs:

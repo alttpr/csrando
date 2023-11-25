@@ -5,10 +5,9 @@ rooms:
       regions:
         - name: "Thieves' Town - Spike Dodge"
           switch: true
-
-      keydoors:
-        - name: "Thieves' Town - Spike Dodge Door"
-          key: "keyD4"
+          connections:
+            KeyD4:
+              - "Thieves' Town - Attic Gate - Center"
 
       pots:
         - name: "Thieves' Town - Spike Dodge Pot Key"
