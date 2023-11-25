@@ -18,9 +18,7 @@ public class Searcher
         _inventory = inventory;
 
         if (!_graph.HasVertex(start))
-        {
             throw new Exception("Start vertex not in graph");
-        }
 
         FindDoors();
 
@@ -53,9 +51,7 @@ public class Searcher
                 if (foundNewItem && itemLocation.Item is { } item)
                 {
                     if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
-                    {
                         inventory.AddItem(item.World.GetItem("BigRedBombActive"));
-                    }
                     newItemsFound = true;
                 }
             }
@@ -96,25 +92,16 @@ public class Searcher
         {
             while (peg_queue.TryDequeue(out var vertex))
             {
-                if (vertex.Switch)
-                {
-                    if (!marked.Contains(vertex))
-                    {
-                        queue.Enqueue(vertex);
-                    }
-                }
+                if (vertex.Switch && !marked.Contains(vertex))
+                    queue.Enqueue(vertex);
                 if (vertex.Peg == PegState.Orange)
-                {
                     continue;
-                }
                 int unvisitedEdges = vertex.Edges.Count;
                 foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
                 {
                     unvisitedEdges--;
                     if (!pegMarked.Contains(next_vertex))
-                    {
                         peg_queue.Enqueue(next_vertex);
-                    }
                 }
                 if (unvisitedEdges > 0)
                     newSearchStarts.Add(vertex);
@@ -125,25 +112,16 @@ public class Searcher
 
             while (queue.TryDequeue(out var vertex))
             {
-                if (vertex.Switch)
-                {
-                    if (!pegMarked.Contains(vertex))
-                    {
-                        peg_queue.Enqueue(vertex);
-                    }
-                }
+                if (vertex.Switch && !pegMarked.Contains(vertex))
+                    peg_queue.Enqueue(vertex);
                 if (vertex.Peg == PegState.Blue)
-                {
                     continue;
-                }
                 int unvisitedEdges = vertex.Edges.Count;
                 foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
                 {
                     unvisitedEdges--;
                     if (!marked.Contains(next_vertex))
-                    {
                         queue.Enqueue(next_vertex);
-                    }
                 }
                 if (unvisitedEdges > 0)
                     newSearchStarts.Add(vertex);
@@ -249,18 +227,12 @@ public class Searcher
             var second = edge.To;
 
             if (first.Name.Contains(" - Lit:"))
-            {
                 first = _graph.GetVertex(first.Name.Replace(" - Lit", ""));
-            }
             if (second.Name.Contains(" - Lit:"))
-            {
                 second = _graph.GetVertex(second.Name.Replace(" - Lit", ""));
-            }
 
             if (edge.From.Name.CompareTo(edge.To.Name) > 0)
-            {
                 (first, second) = (second, first);
-            }
 
             if (!_doors.TryGetValue(edge.Condition.Item, out var doorsForKey))
             {
@@ -289,20 +261,15 @@ public class Searcher
         foreach (var (set_name, set_count) in itemSets)
         {
             if (set_name == "*")
-            {
                 continue;
-            }
+
             var set_locations = _graph.GetSetLocations(set_name).Where(static (location) => location.Item == null);
             if (set_locations.Count() < set_count)
-            {
                 throw new Exception($"Not enough set locations available: {set_name}");
-            }
             // if a set has the same number of items to place as set locations
             // left, remove it from this return.
             if (itemSet != set_name && set_locations.Count() == set_count)
-            {
                 empty_locations.RemoveAll(set_locations.Contains);
-            }
         }
 
         return empty_locations.ToArray();
