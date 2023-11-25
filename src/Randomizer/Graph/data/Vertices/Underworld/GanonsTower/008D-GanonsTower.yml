@@ -4,12 +4,16 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Tile Room"
-        - name: "Ganon's Tower - Long Torch Puzzle"
-        - name: "Ganon's Tower - Block Puzzle"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Long Torch Puzzle"
 
-      keydoors:
-        - name: "Ganon's Tower - Tile Room Door"
-          key: "KeyA2"
+        - name: "Ganon's Tower - Long Torch Puzzle"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Tile Room"
+
+        - name: "Ganon's Tower - Block Puzzle"
 
       shutters:
         - name: "Ganon's Tower - Tile Room - Shutter Chest"

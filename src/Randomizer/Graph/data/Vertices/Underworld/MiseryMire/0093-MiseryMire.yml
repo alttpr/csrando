@@ -6,12 +6,16 @@ rooms:
       regions:
         - name: "Misery Mire - Dark Switch darkness"
         - name: "Misery Mire - Dark Switch"
-        - name: "Misery Mire - Room 45"
-        - name: "Misery Mire - Big Block"
+          connections:
+            KeyD6:
+              - "Misery Mire - Room 45"
 
-      keydoors:
-        - name: "Misery Mire - Basement Door"
-          key: "KeyD6"
+        - name: "Misery Mire - Room 45"
+          connections:
+            KeyD6:
+              - "Misery Mire - Dark Switch"
+
+        - name: "Misery Mire - Big Block"
 
       pots:
         - name: "Misery Mire - Dark Switch - Pot 1"

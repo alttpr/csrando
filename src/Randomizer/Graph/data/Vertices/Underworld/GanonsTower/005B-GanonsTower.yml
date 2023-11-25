@@ -4,6 +4,9 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Spike Alley"
+          connections:
+            fixed:
+              - "Ganon's Tower - Dragmire Statues"
 
       pots:
         - name: "Ganon's Tower - Spike Alley - Pot 1"

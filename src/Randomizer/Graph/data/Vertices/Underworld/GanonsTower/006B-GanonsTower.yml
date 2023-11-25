@@ -6,11 +6,11 @@ rooms:
         - name: "Ganon's Tower - Spike Switches"
         - name: "Ganon's Tower - Mimics 1"
         - name: "Ganon's Tower - Mimics 2"
-        - name: "Ganon's Tower - Dragmire Statues"
 
-      bigkeydoors:
-        - name: "Ganon's Tower - Dragmire Statues - Big Door"
-          key: "BigKeyA2"
+        - name: "Ganon's Tower - Dragmire Statues"
+          connections:
+            BigKeyA2:
+              - "Ganon's Tower - Spike Alley"
 
       shutters:
         - name: "Ganon's Tower - Mimics 1 - Shutter Door"
@@ -64,17 +64,17 @@ rooms:
         - name: "Ganon's Tower - Mimics 1 - Statue"
           position: { x: 0x06, y: 0x15, z: 0x00 }
           sprite: "Statue"
-          trophy: 'GanonsTowerMimicsOneTrophy'
+          trophy: "GanonsTowerMimicsOneTrophy"
 
         - name: "Ganon's Tower - Mimics 1 - Red Eyegore 2"
           position: { x: 0x03, y: 0x18, z: 0x00 }
           sprite: "EyegoreRed"
-          trophy: 'GanonsTowerMimicsOneTrophy'
+          trophy: "GanonsTowerMimicsOneTrophy"
 
         - name: "Ganon's Tower - Mimics 1 - Spike Trap 1"
           position: { x: 0x04, y: 0x18, z: 0x00 }
           sprite: "SpikeTrap"
-          trophy: 'GanonsTowerMimicsOneTrophy'
+          trophy: "GanonsTowerMimicsOneTrophy"
           deny:
             - "RollerHL"
             - "Beamos"
@@ -84,29 +84,29 @@ rooms:
         - name: "Ganon's Tower - Mimics 1 - Spike Trap 2"
           position: { x: 0x04, y: 0x1b, z: 0x00 }
           sprite: "SpikeTrap"
-          trophy: 'GanonsTowerMimicsOneTrophy'
+          trophy: "GanonsTowerMimicsOneTrophy"
 
         - name: "Ganon's Tower - Mimics 1 - Red Eyegore 3"
           position: { x: 0x0c, y: 0x1b, z: 0x00 }
           sprite: "EyegoreRed"
-          trophy: 'GanonsTowerMimicsOneTrophy'
+          trophy: "GanonsTowerMimicsOneTrophy"
 
         - name: "Ganon's Tower - Mimics 2 - Red Eyegore T"
           position: { x: 0x17, y: 0x15, z: 0x00 }
           sprite: "EyegoreRed"
-          trophy: 'GanonsTowerMimicsTwoTrophy'
+          trophy: "GanonsTowerMimicsTwoTrophy"
 
         - name: "Ganon's Tower - Mimics 2 - Beamos TR"
           position: { x: 0x1b, y: 0x15, z: 0x00 }
           sprite: "Beamos"
-          trophy: 'GanonsTowerMimicsTwoTrophy'
+          trophy: "GanonsTowerMimicsTwoTrophy"
 
         - name: "Ganon's Tower - Mimics 2 - Beamos BL"
           position: { x: 0x14, y: 0x1b, z: 0x00 }
           sprite: "Beamos"
-          trophy: 'GanonsTowerMimicsTwoTrophy'
+          trophy: "GanonsTowerMimicsTwoTrophy"
 
         - name: "Ganon's Tower - Mimics 2 - Red Eyegore B"
           position: { x: 0x18, y: 0x1b, z: 0x00 }
           sprite: "EyegoreRed"
-          trophy: 'GanonsTowerMimicsTwoTrophy'
+          trophy: "GanonsTowerMimicsTwoTrophy"

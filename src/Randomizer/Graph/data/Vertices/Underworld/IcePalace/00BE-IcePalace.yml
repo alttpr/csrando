@@ -4,12 +4,16 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Lone Antifairy"
-        - name: "Ice Palace - Block Switch"
-        - name: "Ice Palace - Block Switch - block"
+          connections:
+            fixed:
+              - "Ice Palace - Fairy Drop"
 
-      keydoors:
-        - name: "Ice Palace - Restock Room Door"
-          key: "KeyD5"
+        - name: "Ice Palace - Block Switch"
+          connections:
+            KeyD5:
+              - "Ice Palace - Restock Room"
+
+        - name: "Ice Palace - Block Switch - block"
 
       pots:
         - name: "Ice Palace - Block Switch - Pot"

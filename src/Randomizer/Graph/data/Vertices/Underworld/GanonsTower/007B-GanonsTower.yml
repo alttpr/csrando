@@ -4,12 +4,13 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - DMs Room"
-        - name: "Ganon's Tower - Bari Corridor"
-        - name: "Ganon's Tower - Beetle Island"
 
-      keydoors:
-        - name: "Ganon's Tower - Bari Corridor Door"
-          key: "KeyA2"
+        - name: "Ganon's Tower - Bari Corridor"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Firebar Falling Bridge"
+
+        - name: "Ganon's Tower - Beetle Island"
 
       items:
         - name: "Ganon's Tower - DMs Room - Top Left"

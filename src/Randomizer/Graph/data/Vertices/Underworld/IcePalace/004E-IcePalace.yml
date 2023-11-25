@@ -3,13 +3,53 @@ rooms:
     group: 13
     nodes:
       regions:
-        - name: "Ice Palace - IPBJ - orange"
+        - name: "Ice Palace - IPBJ - Top"
+          connections:
+            fixed:
+              - "Ice Palace - IPBJ - Top - orange"
+            KeyD5:
+              - "Ice Palace - Conveyor"
+
+        - name: "Ice Palace - IPBJ - Top - orange"
           peg: "orange"
+          connections:
+            fixed:
+              - "Ice Palace - IPBJ - Top"
+              - "Ice Palace - IPBJ - Top Before Pot - orange"
+
+        - name: "Ice Palace - IPBJ - Top Before Pot"
+          connections:
+            fixed:
+              - "Ice Palace - IPBJ - Top Before Pot - orange"
+            LiftPot:
+              - "Ice Palace - IPBJ - Middle"
+
+        - name: "Ice Palace - IPBJ - Top Before Pot - orange"
+          peg: "orange"
+          connections:
+            fixed:
+              - "Ice Palace - IPBJ - Top Before Pot"
+              - "Ice Palace - IPBJ - Top - orange"
+
+        - name: "Ice Palace - IPBJ - Middle"
+          connections:
+            LiftPot:
+              - "Ice Palace - IPBJ - Right"
+
+        - name: "Ice Palace - IPBJ - Right"
+          connections:
+            LiftPot:
+              - "Ice Palace - IPBJ - Middle"
+              - "Ice Palace - Blob Alley"
+
         - name: "Ice Palace - IPBJ - blue top"
           peg: "blue"
         - name: "Ice Palace - IPBJ - blue right"
           peg: "blue"
         - name: "Ice Palace - Blob Alley"
+          connections:
+            fixed:
+              - "Ice Palace - IPBJ - Right"
 
       pots:
         - name: "Ice Palace - Blob Alley - Pot 1"

@@ -3,22 +3,59 @@ rooms:
     group: 16
     nodes:
       regions:
+        # TODO: Model the switch that is accessible from the south areas with bombs / boomerang / somaria
         - name: "Ganon's Tower - Whackamole"
         - name: "Ganon's Tower - Bonk Pits - Top"
         - name: "Ganon's Tower - Bonk Pits - Middle"
-        - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Orange"
+        - name: "Ganon's Tower - Bonk Pits - Bottom Upper"
           switch: true
+          connections:
+            fixed:
+              - "Ganon's Tower - Bonk Pits - Bottom Upper - Blue"
+            KeyA2:
+              - "Ganon's Tower - Map Room"
+
+        - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Ganon's Tower - Bonk Pits - Bottom Upper"
+              - "Ganon's Tower - Bonk Pits - Bottom Lower - Blue"
+
+        - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Orange"
           peg: "orange"
+          connections:
+            fixed:
+              - "Ganon's Tower - Bonk Pits - Bottom Upper"
+            UseBomb:
+              - "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
+            CaneOfSomaria:
+              - "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
+
+        - name: "Ganon's Tower - Bonk Pits - Bottom Lower"
+          connections:
+            fixed:
+              - "Ganon's Tower - Bonk Pits - Bottom Lower - Blue"
+              - "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
+              - "Ganon's Tower - Twin Switches Top"
+
+        - name: "Ganon's Tower - Bonk Pits - Bottom Lower - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Ganon's Tower - Bonk Pits - Bottom Lower"
+              - "Ganon's Tower - Bonk Pits - Bottom Upper - Blue"
+
         - name: "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
           peg: "orange"
-        - name: "Ganon's Tower - Bonk Pits - Bottom - Blue"
-          switch: true
-          peg: "blue"
-        - name: "Ganon's Tower - Map Room"
+          connections:
+            fixed:
+              - "Ganon's Tower - Bonk Pits - Bottom Lower"
 
-      keydoors:
-        - name: "Ganon's Tower - Map Door"
-          key: "KeyA2"
+        - name: "Ganon's Tower - Map Room"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Bonk Pits - Bottom Upper"
 
       items:
         - name: "Ganon's Tower - Map Chest"

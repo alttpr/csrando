@@ -3,32 +3,116 @@ rooms:
     group: 16
     nodes:
       regions:
-        - name: "Ganon's Tower - Twin Switches Left - Orange"
+        - name: "Ganon's Tower - Twin Switches Top"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Top - Orange"
+              - "Ganon's Tower - Bonk Pits - Bottom Lower"
+
+        - name: "Ganon's Tower - Twin Switches Top - Orange"
+          peg: "orange"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Top"
+              - "Ganon's Tower - Twin Switches Left - Orange"
+              - "Ganon's Tower - Twin Switches Top Right - Orange"
+
+        - name: "Ganon's Tower - Twin Switches Left"
           switch: true
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Left - Orange"
+          pots:
+            - name: "Ganon's Tower - Twin Switches Pot - Pot 1"
+              position: 0x0430
+              sprite: "@MagicRefillSmall"
+
+        - name: "Ganon's Tower - Twin Switches Left - Orange"
           peg: "orange"
-        - name: "Ganon's Tower - Twin Switches Right - Orange"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Left"
+              - "Ganon's Tower - Twin Switches Top - Orange"
+              - "Ganon's Tower - Twin Switches Bottom Right - Orange"
+
+        - name: "Ganon's Tower - Twin Switches Top Right"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Top Right - Orange"
+
+        - name: "Ganon's Tower - Twin Switches Top Right - Orange"
           peg: "orange"
-        - name: "Ganon's Tower - Twin Switches Top - Blue"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Top Right"
+              - "Ganon's Tower - Twin Switches Top"
+            UseBomb:
+              - "Ganon's Tower - Twin Switches Top Right - Orange Switch"
+            CaneOfSomaria:
+              - "Ganon's Tower - Twin Switches Top Right - Orange Switch"
+
+        - name: "Ganon's Tower - Twin Switches Top Right - Orange Switch"
+          switch: true
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Top Right - Blue"
+
+        - name: "Ganon's Tower - Twin Switches Top Right - Blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Top Right"
+              - "Ganon's Tower - Twin Switches Right - Blue"
+
+        - name: "Ganon's Tower - Twin Switches Right"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Right - Blue"
+            KeyA2:
+              - "Ganon's Tower - Spike Switch"
+
         - name: "Ganon's Tower - Twin Switches Right - Blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Right"
+              - "Ganon's Tower - Twin Switches Top Right - Blue"
+              - "Ganon's Tower - Twin Switches Bottom Right - Blue"
+
+        - name: "Ganon's Tower - Twin Switches Bottom Right"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Bottom Right - Orange"
+              - "Ganon's Tower - Twin Switches Bottom Right - Blue"
+          pots:
+            - name: "Ganon's Tower - Twin Switches Pot BR"
+              position: 0x0c30
+              item: "KeyA2"
+              itemset: ["gt"]
+
+        - name: "Ganon's Tower - Twin Switches Bottom Right - Orange"
+          peg: "orange"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Bottom Right"
+
+        - name: "Ganon's Tower - Twin Switches Bottom Right - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Ganon's Tower - Twin Switches Bottom Right"
+              - "Ganon's Tower - Twin Switches Right - Blue"
+
         - name: "Ganon's Tower - Spike Switch"
           switch: true
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Twin Switches Right"
+
         - name: "Ganon's Tower - Beetle Pits Left"
         - name: "Ganon's Tower - Beetle Pits Right"
 
-      keydoors:
-        - name: "Ganon's Tower - Twin Switches Door"
-          key: "KeyA2"
-
       pots:
-        - name: "Ganon's Tower - Twin Switches Pot BR"
-          position: 0x0c30
-          item: "KeyA2"
-          itemset: ["gt"]
-        - name: "Ganon's Tower - Spike Switch - Pot 1"
-          position: 0x0430
-          sprite: "@MagicRefillSmall"
         - name: "Ganon's Tower - Spike Switch - Pot 2"
           position: 0x1820
         - name: "Ganon's Tower - Spike Switch - Pot 3"

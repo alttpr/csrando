@@ -4,6 +4,10 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Blob Ambush"
+          connections:
+            fixed:
+              - "Ice Palace - Bari Key"
+
         - name: "Ice Palace - Cross Puzzle - Left"
         - name: "Ice Palace - Cross Puzzle - Bottom"
         - name: "Ice Palace - Cross Puzzle - Right"

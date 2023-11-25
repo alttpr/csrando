@@ -4,14 +4,18 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Torch Room"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Hope Room"
+
         - name: "Ganon's Tower - Big Chest Room - Upper Corner"
         - name: "Ganon's Tower - Big Chest Room"
         - name: "Ganon's Tower - Bob's Room"
-        - name: "Ganon's Tower - Hope Room"
 
-      keydoors:
-        - name: "Ganon's Tower - Useless Door"
-          key: "KeyA2"
+        - name: "Ganon's Tower - Hope Room"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Torch Room"
 
       items:
         - name: "Ganon's Tower - Bob's Torch"

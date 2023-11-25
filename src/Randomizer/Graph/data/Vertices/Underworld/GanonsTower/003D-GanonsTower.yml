@@ -5,14 +5,19 @@ rooms:
       regions:
         - name: "Ganon's Tower - Torches 2"
         - name: "Ganon's Tower - Mini Helmasaur Room"
-        - name: "Ganon's Tower - Conveyor Spikes"
-        - name: "Ganon's Tower - Pre-Moldorm"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Conveyor Spikes"
 
-      keydoors:
-        - name: "Ganon's Tower - Mini Helmasaur Door"
-          key: "KeyA2"
-        - name: "Ganon's Tower - Moldorm Door"
-          key: "KeyA2"
+        - name: "Ganon's Tower - Conveyor Spikes"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Mini Helmasaur Room"
+
+        - name: "Ganon's Tower - Pre-Moldorm"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Moldorm - Top Left Platform"
 
       items:
         - name: "Ganon's Tower - Mini Helmasaur Room - Left"

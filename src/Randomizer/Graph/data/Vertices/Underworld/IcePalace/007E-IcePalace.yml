@@ -4,6 +4,10 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Vanilla Ice"
+          connections:
+            KeyD5:
+              - "Ice Palace - Slime Party"
+
         - name: "Ice Palace - Freezor Room"
         - name: "Ice Palace - Freezor Room Ledge"
 

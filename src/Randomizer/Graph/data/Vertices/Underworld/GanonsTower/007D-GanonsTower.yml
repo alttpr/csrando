@@ -4,14 +4,19 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Fire Snakes Left"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Teleports"
+
         - name: "Ganon's Tower - Fire Snakes Right"
+
         - name: "Ganon's Tower - Teleports"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Fire Snakes Left"
+
         - name: "Ganon's Tower - The Zoo"
         - name: "Ganon's Tower - The Zoo - You"
-
-      keydoors:
-        - name: "Ganon's Tower - Firesnake Door"
-          key: "KeyA2"
 
       items:
         - name: "Ganon's Tower - Firesnake Room"

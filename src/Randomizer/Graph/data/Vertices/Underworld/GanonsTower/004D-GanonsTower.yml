@@ -4,6 +4,10 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Moldorm - Top Left Platform"
+          connections:
+            KeyA2:
+              - "Ganon's Tower - Pre-Moldorm"
+
         - name: "Ganon's Tower - Moldorm - Top Right Platform"
         - name: "Ganon's Tower - Moldorm - Kill Zone"
         - name: "Ganon's Tower - Moldorm"

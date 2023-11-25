@@ -4,16 +4,12 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Hourglass"
+          connections:
+            KeyD6:
+              - "Misery Mire - Fish Room Bottom"
+
         - name: "Misery Mire - Wizzrobe Ambush"
         - name: "Misery Mire - Lonely Teleport"
-
-      keydoors:
-        - name: "Misery Mire - Hourglass Door"
-          key: "KeyD6"
-
-      bigkeydoors:
-        - name: "Misery Mire - Wizzrobe Ambush Door"
-          key: "BigKeyD6"
 
       pots:
         - name: "Misery Mire - Hourglass - Pot 1"
