@@ -11,15 +11,15 @@ public sealed class ThievesTownTest : StandardMajorGlitchesLogicTests
     }
 
     public static IEnumerable<object[]> TestData => [
-        ["Thieves' Town - Attic", false, new string[] {  }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BottleWithBee", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BottleWithFairy", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BottleWithRedPotion", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BottleWithGreenPotion", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BottleWithBluePotion", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "Bottle", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "BottleWithGoldBee", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", false, new string[] {  }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BottleWithBee", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BottleWithFairy", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BottleWithRedPotion", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BottleWithGreenPotion", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BottleWithBluePotion", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "Bottle", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BottleWithGoldBee", "KeyD4", "BigKeyD4" }],
 
         ["Thieves' Town - Big Key Chest", false, new string[] {  }],
         ["Thieves' Town - Big Key Chest", true, new string[] { "MoonPearl" }],

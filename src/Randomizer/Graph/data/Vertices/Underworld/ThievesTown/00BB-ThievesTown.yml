@@ -4,104 +4,186 @@ rooms:
     nodes:
       regions:
         - name: "Thieves' Town - Spikeveyer"
-        - name: "Thieves' Town - Hellway - orange"
-          peg: "orange"
-        - name: "Thieves' Town - Hellway right - orange"
-          peg: "orange"
-        - name: "Thieves' Town - Hellway - blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Firesnake Room"
+              - "Thieves' Town - Pegblock Bottom"
+              - "Thieves' Town - Hellway Bottom Right"
+          mobs:
+            - name: "Thieves' Town - Spikeveyer - Gibo 5"
+              position: { x: 0x19, y: 0x15, z: 0x00 }
+              sprite: "Gibo"
+              deny:
+                - "RollerHL"
+                - "RollerHR"
+            - name: "Thieves' Town - Spikeveyer - Antifairy 2"
+              position: { x: 0x15, y: 0x16, z: 0x00 }
+              sprite: "Antifairy"
+              deny:
+                - "RollerHL"
+                - "RollerHR"
+            - name: "Thieves' Town - Spikeveyer - Gibo 6"
+              position: { x: 0x17, y: 0x1a, z: 0x00 }
+              sprite: "Gibo"
+
+        - name: "Thieves' Town - Hellway"
+          connections:
+            fixed:
+              - "Thieves' Town - Spike Dodge"
+              - "Thieves' Town - Hellway - Blue"
+              - "Thieves' Town - Hellway - Orange"
+          mobs:
+            - name: "Thieves' Town - Spikeveyer - Gibo 1"
+              position: { x: 0x06, y: 0x0a, z: 0x00 }
+              sprite: "Gibo"
+              deny:
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+            - name: "Thieves' Town - Spikeveyer - Antifairy 1"
+              position: { x: 0x08, y: 0x0c, z: 0x00 }
+              sprite: "Antifairy"
+              deny:
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "Bumper"
+            - name: "Thieves' Town - Spikeveyer - Gibo 3"
+              position: { x: 0x09, y: 0x0e, z: 0x00 }
+              sprite: "Gibo"
+              deny:
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"
+            - name: "Thieves' Town - Spikeveyer - Fire Snake"
+              position: { x: 0x07, y: 0x10, z: 0x00 }
+              sprite: "FireSnake"
+              deny:
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+            - name: "Thieves' Town - Spikeveyer - Gibo 4"
+              position: { x: 0x08, y: 0x14, z: 0x00 }
+              sprite: "Gibo"
+              deny:
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "SpikeTrap"
+                - "Bumper"
+
+        - name: "Thieves' Town - Hellway - Blue"
           peg: "blue"
-        - name: "Thieves' Town - Hellway right - blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway"
+              - "Thieves' Town - Hellway Top Right - Blue"
+
+        - name: "Thieves' Town - Hellway - Orange"
+          peg: "orange"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway"
+              - "Thieves' Town - Hellway Bottom Right - Orange"
+
+        - name: "Thieves' Town - Hellway Bottom Right"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway Bottom Right - Orange"
+              - "Thieves' Town - Spikeveyer"
+
+        - name: "Thieves' Town - Hellway Bottom Right - Orange"
+          peg: "orange"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway Bottom Right"
+              - "Thieves' Town - Hellway - Orange"
+
+        - name: "Thieves' Town - Hellway Top Right"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway Top Right - Blue"
+              - "Thieves' Town - Pegblock Left"
+
+        - name: "Thieves' Town - Hellway Top Right - Blue"
           peg: "blue"
-        - name: "Thieves' Town - Pegblock left - orange"
-          peg: "orange"
-        - name: "Thieves' Town - Pegblock right - orange"
-          peg: "orange"
-        - name: "Thieves' Town - Pegblock bottom - orange"
-          peg: "orange"
-        - name: "Thieves' Town - Pegblock - blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway Top Right"
+              - "Thieves' Town - Hellway - Blue"
+
+        - name: "Thieves' Town - Pegblock Left"
+          connections:
+            fixed:
+              - "Thieves' Town - Hellway Top Right"
+              - "Thieves' Town - Pegblock Left - Blue"
+
+        - name: "Thieves' Town - Pegblock Left - Blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Pegblock Left"
+              - "Thieves' Town - Pegblock Top - Blue"
+              - "Thieves' Town - Pegblock Bottom - Blue"
 
-      mobs:
-        - name: "Thieves' Town - Spikeveyer - Red Zazak 1"
-          position: { x: 0x1b, y: 0x04, z: 0x00 }
-          sprite: "ZazakRed"
+        - name: "Thieves' Town - Pegblock Top"
+          connections:
+            fixed:
+              - "Thieves' Town - Pegblock Top - Blue"
 
-        - name: "Thieves' Town - Spikeveyer - Gibo 1"
-          position: { x: 0x06, y: 0x0a, z: 0x00 }
-          sprite: "Gibo"
-          deny:
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
+        - name: "Thieves' Town - Pegblock Top - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Pegblock Top"
+              - "Thieves' Town - Pegblock Left - Blue"
+              - "Thieves' Town - Pegblock Right - Blue"
 
-        - name: "Thieves' Town - Spikeveyer - Red Zazak 2"
-          position: { x: 0x16, y: 0x0a, z: 0x00 }
-          sprite: "ZazakRed"
+        - name: "Thieves' Town - Pegblock Right"
+          connections:
+            fixed:
+              - "Thieves' Town - Toilet"
+              - "Thieves' Town - Pegblock Right - Blue"
 
-        - name: "Thieves' Town - Spikeveyer - Gibo 2"
-          position: { x: 0x19, y: 0x0a, z: 0x00 }
-          sprite: "Gibo"
+        - name: "Thieves' Town - Pegblock Right - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Pegblock Right"
+              - "Thieves' Town - Pegblock Top - Blue"
+              - "Thieves' Town - Pegblock Bottom - Blue"
 
-        - name: "Thieves' Town - Spikeveyer - Antifairy 1"
-          position: { x: 0x08, y: 0x0c, z: 0x00 }
-          sprite: "Antifairy"
-          deny:
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "Bumper"
+        - name: "Thieves' Town - Pegblock Bottom"
+          connections:
+            fixed:
+              - "Thieves' Town - Pegblock Bottom - Blue"
+              - "Thieves' Town - Spikeveyer"
+          mobs:
+            - name: "Thieves' Town - Spikeveyer - Red Zazak 1"
+              position: { x: 0x1b, y: 0x04, z: 0x00 }
+              sprite: "ZazakRed"
+            - name: "Thieves' Town - Spikeveyer - Red Zazak 2"
+              position: { x: 0x16, y: 0x0a, z: 0x00 }
+              sprite: "ZazakRed"
+            - name: "Thieves' Town - Spikeveyer - Gibo 2"
+              position: { x: 0x19, y: 0x0a, z: 0x00 }
+              sprite: "Gibo"
 
-        - name: "Thieves' Town - Spikeveyer - Gibo 3"
-          position: { x: 0x09, y: 0x0e, z: 0x00 }
-          sprite: "Gibo"
-          deny:
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Thieves' Town - Spikeveyer - Fire Snake"
-          position: { x: 0x07, y: 0x10, z: 0x00 }
-          sprite: "FireSnake"
-          deny:
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-
-        - name: "Thieves' Town - Spikeveyer - Gibo 4"
-          position: { x: 0x08, y: 0x14, z: 0x00 }
-          sprite: "Gibo"
-          deny:
-            - "RollerVU"
-            - "RollerVD"
-            - "RollerHL"
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Thieves' Town - Spikeveyer - Gibo 5"
-          position: { x: 0x19, y: 0x15, z: 0x00 }
-          sprite: "Gibo"
-          deny:
-            - "RollerHL"
-            - "RollerHR"
-
-        - name: "Thieves' Town - Spikeveyer - Antifairy 2"
-          position: { x: 0x15, y: 0x16, z: 0x00 }
-          sprite: "Antifairy"
-          deny:
-            - "RollerHL"
-            - "RollerHR"
-
-        - name: "Thieves' Town - Spikeveyer - Gibo 6"
-          position: { x: 0x17, y: 0x1a, z: 0x00 }
-          sprite: "Gibo"
+        - name: "Thieves' Town - Pegblock Bottom - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Thieves' Town - Pegblock Bottom"
+              - "Thieves' Town - Pegblock Left - Blue"
+              - "Thieves' Town - Pegblock Right - Blue"

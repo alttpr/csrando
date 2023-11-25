@@ -4,15 +4,15 @@ namespace RandomizerTests.Logic.Open.NoGlitches;
 public class ThievesTownTest : OpenNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => [
-        ["Thieves' Town - Attic", false, new string[] {  }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "TitansMitt", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "ProgressiveGlove", "ProgressiveGlove", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "ProgressiveGlove", "Hammer", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "PowerGlove", "Hammer", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "AgahnimDefeated", "Hammer", "Hookshot", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "AgahnimDefeated", "ProgressiveGlove", "Hookshot", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "AgahnimDefeated", "PowerGlove", "Hookshot", "KeyD4", "BigKeyD4" }],
-        ["Thieves' Town - Attic", true, new string[] { "MoonPearl", "AgahnimDefeated", "Flippers", "Hookshot", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", false, new string[] {  }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "TitansMitt", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "ProgressiveGlove", "ProgressiveGlove", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "ProgressiveGlove", "Hammer", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "PowerGlove", "Hammer", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "AgahnimDefeated", "Hammer", "Hookshot", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "AgahnimDefeated", "ProgressiveGlove", "Hookshot", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "AgahnimDefeated", "PowerGlove", "Hookshot", "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "MoonPearl", "AgahnimDefeated", "Flippers", "Hookshot", "KeyD4", "BigKeyD4" }],
 
         ["Thieves' Town - Big Key Chest", false, new string[] {  }],
         ["Thieves' Town - Big Key Chest", true, new string[] { "MoonPearl", "TitansMitt" }],
