@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 namespace Randomizer.Graph;
 
 using SearchResult = (HashSet<Vertex> NewlyVisited, HashSet<Vertex> NewSearchStarts);
@@ -9,7 +11,6 @@ public class Searcher
     private readonly Graph _graph;
     private readonly HashSet<Vertex> _searchStarts = new();
     private readonly Inventory _inventory;
-    private readonly Dictionary<Item, HashSet<(Vertex From, Vertex To)>> _doors = [];
 
     public Searcher(Graph graph, Vertex start, Inventory inventory)
     {
@@ -19,8 +20,6 @@ public class Searcher
 
         if (!_graph.HasVertex(start))
             throw new Exception("Start vertex not in graph");
-
-        FindDoors();
 
         bool newItemsFound;
         do
@@ -143,16 +142,18 @@ public class Searcher
     {
         var strongLocations = new HashSet<Vertex>();
         var strongSearchStarts = new HashSet<Vertex>();
-        foreach (var (key, edges) in _doors)
+        foreach (var (key, edges) in _graph.Doors)
         {
             int keyCount = inventory.GetCount(key);
             if (keyCount == 0)
                 continue;
 
-            if (keyCount >= edges.Count)
+            if (keyCount + _graph.FixedKeys[key].Count() >= edges.Count)
             {
                 // we have all keys, unlock everything.
-                var behindDoorLocations = edges.SelectMany(e => new[] { e.From, e.To }).ToHashSet();
+                var behindDoorLocations = edges.Where(e => _visited.Contains(e.From) || _visited.Contains(e.To))
+                    .SelectMany(e => new[] { e.From, e.To })
+                    .ToHashSet();
                 var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, behindDoorLocations);
                 strongLocations.UnionWith(newlyVisited);
                 strongSearchStarts.UnionWith(newSearchStarts);
@@ -215,55 +216,6 @@ public class Searcher
         //var end = _vertices["Pyramid:" + item.World.Id];
         //visited.Contains(end);
         return true;
-    }
-
-    private void FindDoors()
-    {
-        foreach (var edge in _graph.GetVertices().SelectMany(v => v.Edges).Where(e => e.Condition.Item.Type == ItemType.SmallKey))
-        {
-            var first = edge.From;
-            var second = edge.To;
-
-            if (first.Name.Contains(" - Lit:"))
-                first = _graph.GetVertex(first.Name.Replace(" - Lit", ""));
-            if (second.Name.Contains(" - Lit:"))
-                second = _graph.GetVertex(second.Name.Replace(" - Lit", ""));
-
-            if (edge.From.Name.CompareTo(edge.To.Name) > 0)
-                (first, second) = (second, first);
-
-            if (!_doors.TryGetValue(edge.Condition.Item, out var doorsForKey))
-            {
-                doorsForKey = new();
-                _doors.Add(edge.Condition.Item, doorsForKey);
-            }
-            doorsForKey.Add((first, second));
-        }
-
-        // sanity check
-        foreach (var (key, doors) in _doors)
-        {
-            int expectedCount = key.Name switch
-            {
-                "KeyA1" => 4,
-                "KeyA2" => 8,
-                "KeyH2" => 4,
-                "KeyP1" => 2,
-                "KeyP2" => 4,
-                "KeyP3" => 1,
-                "KeyD1" => 6,
-                "KeyD2" => 6,
-                "KeyD3" => 5,
-                "KeyD4" => 3,
-                "KeyD5" => 6,
-                "KeyD6" => 6,
-                "KeyD7" => 6,
-                _ => throw new NotSupportedException($"Unexpected key {key.Name}"),
-            };
-
-            if (doors.Count != expectedCount)
-                throw new Exception($"Key door mismatch for {key.Name}: expected {expectedCount} but found {doors.Count} doors");
-        }
     }
 
     /// <summary>
