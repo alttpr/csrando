@@ -18,7 +18,7 @@ maps:
 
           items:
             - name: "Sunken Treasure"
-              conditions: ["OpenChest"]
+              conditions: ["SwampWaterEntrance"]
               addresses: [0x180145]
               type: "standing"
               itemset: ["lw"]

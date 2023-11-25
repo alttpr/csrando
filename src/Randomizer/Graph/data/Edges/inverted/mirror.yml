@@ -24,6 +24,4 @@ MagicMirror:
     # - ["Turtle Rock Outside Bridge", "East Death Mountain Spiral Cave Balcony"]
     # - ["Turtle Rock Outside Bridge", "East Death Mountain Mimic Balcony"]
     # - ["East Dark Death Mountain Floating Island", "East Death Mountain Floating Island"]
-    # special case for filling swamp
-    - ["Wetlands Dam", "FillSwamp"] # disable this in entrance
   undirected: []

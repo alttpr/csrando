@@ -459,7 +459,7 @@ fixed:
   - ["Dev Cave - Exit", "Dev Cave - Out"]
 
   # Map 0x7B
-  - ["Swamp Palace - In", "Swamp Palace - Entrance Filled"]
-  - ["Swamp Palace - Entrance Filled - Exit", "Swamp Palace - Out"]
+  - ["Swamp Palace - In", "Swamp Palace - Entrance"]
+  - ["Swamp Palace - Entrance - Exit", "Swamp Palace - Out"]
 
 connections: []
