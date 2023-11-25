@@ -13,10 +13,10 @@ public class HyruleCastleTowerTest : OpenNoGlitchesLogicTests
         ["Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "L2Sword", "Lamp" }],
         ["Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Cape", "Lamp" }],
 
-        ["Agahnims Tower - Boss", false, new string[] {  }],
-        ["Agahnims Tower - Boss", false, new string[] { "KeyA1", "KeyA1", "Cape", "Lamp" }],
-        ["Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L2Sword", "Lamp" }],
-        ["Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "Cape", "Lamp" }],
+        ["Agahnims Tower - Boss Room - Agahnim", false, new string[] {  }],
+        ["Agahnims Tower - Boss Room - Agahnim", false, new string[] { "KeyA1", "KeyA1", "Cape", "Lamp" }],
+        ["Agahnims Tower - Boss Room - Agahnim", true, new string[] { "KeyA1", "KeyA1", "L2Sword", "Lamp" }],
+        ["Agahnims Tower - Boss Room - Agahnim", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "Cape", "Lamp" }],
     ];
 
     [TestMethod]
