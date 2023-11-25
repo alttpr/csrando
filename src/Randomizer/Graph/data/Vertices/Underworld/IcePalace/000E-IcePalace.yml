@@ -7,10 +7,9 @@ rooms:
           peg: "orange"
           inletid: 0x2D
         - name: "Ice Palace - Bari Key"
-
-      keydoors:
-        - name: "Ice Palace - Bari Key Door"
-          key: "KeyD5"
+          connections:
+            KeyD5:
+              - "Ice Palace - Blob Ambush"
 
       shutters:
         - name: "Ice Palace - Entrance - Shutter Door"

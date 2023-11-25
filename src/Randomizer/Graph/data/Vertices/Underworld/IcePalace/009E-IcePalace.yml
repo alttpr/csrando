@@ -5,24 +5,50 @@ rooms:
       regions:
         - name: "Ice Palace - Big Chest Room - left"
         - name: "Ice Palace - Big Chest Room - right"
+
+        - name: "Ice Palace - Block Drop Left"
+          connections:
+            fixed:
+              - "Ice Palace - Block Drop - left blue"
+              - "Ice Palace - Block Drop - orange"
+
+        - name: "Ice Palace - Block Drop Right"
+          connections:
+            fixed:
+              - "Ice Palace - Block Drop - right blue"
+              - "Ice Palace - Block Drop - orange"
+              - "Ice Palace - Pottery Barn"
+            BigKeyD5:
+              - "Ice Palace - Fairy Drop"
+
         - name: "Ice Palace - Block Drop - orange"
           peg: "orange"
+          connections:
+            fixed:
+              - "Ice Palace - Block Drop Right"
+
         - name: "Ice Palace - Block Drop - left blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Ice Palace - Block Drop Left"
+
         - name: "Ice Palace - Block Drop - right blue"
           peg: "blue"
+          connections:
+            fixed:
+              - "Ice Palace - Block Drop Right"
+
+        - name: "Ice Palace - Fairy Drop"
+          connections:
+            fixed:
+              - "Ice Palace - Fairy Drop - orange"
+              - "Ice Palace - Block Drop Right"
+            KeyD5:
+              - "Ice Palace - Lone Antifairy"
+
         - name: "Ice Palace - Fairy Drop - orange"
           peg: "orange"
-        - name: "Ice Palace - Fairy Drop - blue"
-          peg: "blue"
-
-      keydoors:
-        - name: "Ice Palace - Fairy Drop Door"
-          key: "KeyD5"
-
-      bigkeydoors:
-        - name: "Ice Palace - Block Drop - Big Key Door"
-          key: "BigKeyD5"
 
       items:
         - name: "Ice Palace - Big Chest"

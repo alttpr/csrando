@@ -4,12 +4,12 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Big Spike Cross"
+          connections:
+            KeyD5:
+              - "Ice Palace - Bari University"
+
         - name: "Ice Palace - Lonely Firebar"
         - name: "Ice Palace - Pit Trap"
-
-      keydoors:
-        - name: "Ice Palace - Big Spike Cross Door"
-          key: "KeyD5"
 
       pots:
         - name: "Ice Palace - Pit Trap - Pot 1"

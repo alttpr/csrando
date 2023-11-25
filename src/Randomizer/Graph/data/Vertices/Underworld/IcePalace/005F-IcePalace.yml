@@ -4,6 +4,9 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Bari University"
+          connections:
+            KeyD5:
+              - "Ice Palace - Big Spike Cross"
 
       items:
         - name: "Ice Palace - Spike Room"
