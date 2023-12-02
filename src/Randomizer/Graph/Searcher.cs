@@ -148,7 +148,7 @@ public class Searcher
             if (keyCount == 0)
                 continue;
 
-            if (keyCount + _graph.FixedKeys[key].Count() >= edges.Count)
+            if (keyCount + _graph.FixedKeys[key].Count(l => !_visited.Contains(l)) >= edges.Count)
             {
                 // we have all keys, unlock everything.
                 var behindDoorLocations = edges.Where(e => _visited.Contains(e.From) || _visited.Contains(e.To))
