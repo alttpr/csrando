@@ -1,5 +1,3 @@
-using System.Reflection.Metadata.Ecma335;
-
 namespace Randomizer.Graph;
 
 using SearchResult = (HashSet<Vertex> NewlyVisited, HashSet<Vertex> NewSearchStarts);
@@ -29,32 +27,41 @@ public class Searcher
             _searchStarts.Clear();
             _searchStarts.UnionWith(newSearchStarts);
 
-            newItemsFound = RecursiveDoorSearch(inventory);
-            foreach (var itemLocation in _visited.Except(_collected))
-            {
-                bool foundNewItem = false;
-                _collected.Add(itemLocation);
-                if (itemLocation.Item is not null)
-                {
-                    foundNewItem = true;
-                    inventory.AddItem(itemLocation.Item);
-                }
-                if (itemLocation.Trophy is not null)
-                {
-                    foundNewItem = true;
-                    inventory.AddItem(itemLocation.Trophy);
-                }
-                if (foundNewItem)
-                    newItemsFound = true;
-
-                if (foundNewItem && itemLocation.Item is { } item)
-                {
-                    if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
-                        inventory.AddItem(item.World.GetItem("BigRedBombActive"));
-                    newItemsFound = true;
-                }
-            }
+            newItemsFound = CollectItems(inventory, _visited, _collected);
+            if (RecursiveDoorSearch(inventory))
+                newItemsFound = true;
         } while (newItemsFound);
+    }
+
+    private bool CollectItems(Inventory inventory, HashSet<Vertex> visited, HashSet<Vertex> collected)
+    {
+        bool newItemsFound = false;
+        foreach (var itemLocation in visited.Except(collected))
+        {
+            bool foundNewItem = false;
+            collected.Add(itemLocation);
+            if (itemLocation.Item is not null)
+            {
+                foundNewItem = true;
+                inventory.AddItem(itemLocation.Item);
+            }
+            if (itemLocation.Trophy is not null)
+            {
+                foundNewItem = true;
+                inventory.AddItem(itemLocation.Trophy);
+            }
+            if (foundNewItem)
+                newItemsFound = true;
+
+            if (foundNewItem && itemLocation.Item is { } item)
+            {
+                if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
+                    inventory.AddItem(item.World.GetItem("BigRedBombActive"));
+                newItemsFound = true;
+            }
+        }
+
+        return newItemsFound;
     }
 
     public bool HasFound(Item item) => _inventory.Has(item);
