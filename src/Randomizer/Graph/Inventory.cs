@@ -86,6 +86,7 @@ public sealed class Inventory
 
         return newInventory;
     }
+    public Inventory Clone() => new(this);
 
     /// <summary>
     /// Get the health value available based on items in this world.
