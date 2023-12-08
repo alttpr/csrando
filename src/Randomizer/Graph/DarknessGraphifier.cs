@@ -23,7 +23,7 @@ internal sealed class DarknessGraphifier : IWorldModifier
                 var transition = new Vertex
                 {
                     Type = VertexType.Region,
-                    Name = $"{lightRoom.Name} - {darkRoom.Name} - Dark Transition:{world.Id}",
+                    Name = $"{darkRoom.Name} - Transition from {lightRoom.Name}:{world.Id}",
                 };
 
                 var edgesToLight = darkRoom.Edges.Where(e => e.To == lightRoom);
