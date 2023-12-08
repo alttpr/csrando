@@ -167,20 +167,21 @@ public class Searcher
             }
             else
             {
-                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, edges, keyCount, _visited);
+                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, edges, keyCount, _visited, _collected);
                 strongLocations.UnionWith(recursiveLocations);
                 strongSearchStarts.UnionWith(recursiveSearchStarts);
             }
         }
         _visited.UnionWith(strongLocations);
         _searchStarts.UnionWith(strongSearchStarts);
+        bool foundItems = CollectItems(inventory, _visited, _collected);
 
-        return strongLocations.Any();
+        return strongLocations.Any() || foundItems;
     }
-    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, params Vertex[] additionalStarts)
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, HashSet<Vertex> collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (keyCount == 0)
-            return ([], []);
+            return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
 
         var reachableDoors = visitedBeforeDoors.SelectMany(v => v.Edges)
             .Where(e => e.Condition.Item == key && !visitedBeforeDoors.Contains(e.To))
@@ -188,14 +189,23 @@ public class Searcher
         HashSet<Vertex>? strongLocations = null;
         HashSet<Vertex>? strongSearchStarts = null;
         var visitedBeforeRecursion = visitedBeforeDoors.ToHashSet();
+        var collectedBeforeRecursion = collectedBeforeDoors.ToHashSet();
         foreach (var door in reachableDoors)
         {
+            var inventoryForIteration = inventory.Clone();
             Vertex[] startAt = [door.To, .. additionalStarts];
-            var (weakLocations, weakSearchStarts) = InternalSearch(inventory, _visited, startAt);
+            var (weakLocations, weakSearchStarts) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
             visitedBeforeRecursion.UnionWith(weakLocations);
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, edges, keyCount - 1, visitedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
+            int keysBefore = inventoryForIteration.GetCount(key);
+            // TODO: can we stop recursing here if we didn't find anything?
+            CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion);
+            int keysAfter = inventoryForIteration.GetCount(key);
+            int keysFound = keysAfter - keysBefore;
+            int keysUsed = 1 - keysFound;
+            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, edges, keyCount - keysUsed, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
             // reset
-            visitedBeforeRecursion.IntersectWith(weakLocations);
+            visitedBeforeRecursion.IntersectWith(visitedBeforeDoors);
+            collectedBeforeRecursion.IntersectWith(collectedBeforeDoors);
             weakLocations.UnionWith(recursiveLocations);
             weakSearchStarts.UnionWith(recursiveSearchStarts);
 
