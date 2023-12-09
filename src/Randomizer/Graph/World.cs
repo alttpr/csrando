@@ -7,7 +7,6 @@ public sealed class World
 {
     public int Id { get; }
     public Graph Graph { get; }
-    private readonly HashSet<Vertex> _vertices = new();
     public Inventory CollectedItems { get; }
     public WorldConfig Config { get; }
     private readonly Dictionary<string, Item> _allItems = new();
@@ -140,14 +139,6 @@ public sealed class World
                     break;
             }
         }
-
-        RemapVertices();
-    }
-
-    public void RemapVertices()
-    {
-        _vertices.Clear();
-        _vertices.UnionWith(Graph.GetVertices());
     }
 
     /**
@@ -161,7 +152,7 @@ public sealed class World
         {
             locationName = locationName + ":" + Id;
         }
-        return _vertices.FirstOrDefault(v => v.Name == locationName);
+        return Graph.GetVertex(locationName);
     }
 
     /**
@@ -173,7 +164,7 @@ public sealed class World
      */
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
     {
-        return _vertices.Where(vertex => vertex.Type == type);
+        return Graph.GetVertices().Where(vertex => vertex.Type == type);
     }
 
     public Item GetItem(string name)
