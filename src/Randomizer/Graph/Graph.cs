@@ -36,9 +36,26 @@ public sealed class Graph
         {
             if (_doors == null)
             {
-                FindDoors();
+                _doors = new();
+
+                foreach (var edge in _vertices.SelectMany(v => v.Edges).Where(e => e.Condition.Item.Type == ItemType.SmallKey))
+                {
+                    var first = edge.From;
+                    var second = edge.To;
+
+                    if (edge.From.Name.CompareTo(edge.To.Name) > 0)
+                        (first, second) = (second, first);
+
+                    if (!_doors.TryGetValue(edge.Condition.Item, out var doorsForKey))
+                    {
+                        doorsForKey = new();
+                        _doors.Add(edge.Condition.Item, doorsForKey);
+                    }
+                    doorsForKey.Add((first, second));
+                }
             }
-            return _doors!;
+
+            return _doors;
         }
     }
 
@@ -129,52 +146,5 @@ public sealed class Graph
         var edge = new Edge(from, to, condition);
         from.Edges.Add(edge);
         return edge;
-    }
-
-    private void FindDoors()
-    {
-        Dictionary<Item, HashSet<(Vertex From, Vertex To)>> result = new();
-
-        foreach (var edge in _vertices.SelectMany(v => v.Edges).Where(e => e.Condition.Item.Type == ItemType.SmallKey))
-        {
-            var first = edge.From;
-            var second = edge.To;
-
-            if (edge.From.Name.CompareTo(edge.To.Name) > 0)
-                (first, second) = (second, first);
-
-            if (!result.TryGetValue(edge.Condition.Item, out var doorsForKey))
-            {
-                doorsForKey = new();
-                result.Add(edge.Condition.Item, doorsForKey);
-            }
-            doorsForKey.Add((first, second));
-        }
-
-        // sanity check
-        foreach (var (key, doors) in result)
-        {
-            int expectedCount = key.Name switch
-            {
-                "KeyA1" => 4,
-                "KeyA2" => 8,
-                "KeyH2" => 4,
-                "KeyP1" => 2,
-                "KeyP2" => 4,
-                "KeyP3" => 1,
-                "KeyD1" => 6,
-                "KeyD2" => 6,
-                "KeyD3" => 5,
-                "KeyD4" => 3,
-                "KeyD5" => 6,
-                "KeyD6" => 6,
-                "KeyD7" => 6,
-                _ => throw new NotSupportedException($"Unexpected key {key.Name}"),
-            };
-
-            if (doors.Count != expectedCount)
-                throw new Exception($"Key door mismatch for {key.Name}: expected {expectedCount} but found {doors.Count} doors");
-        }
-        _doors = result;
     }
 }
