@@ -44,10 +44,6 @@ BookOfMudora:
   directed:
     - ["MasterSword", "ActiveBookOfMudora"]
   undirected: []
-OcarinaActive:
-  directed:
-    - ["Meta", "Duck Airlines"]
-  undirected: []
 L1Sword:
   directed:
     - ["Meta", "DefeatArmos"]

@@ -368,6 +368,9 @@ public class MetaEntry
 
     [YamlMember(Alias = "item")]
     public string? Item { get; set; }
+
+    [YamlMember(Alias = "connections")]
+    public Dictionary<string, List<string>> Connections { get; set; } = new();
 }
 
 public class Prizepack

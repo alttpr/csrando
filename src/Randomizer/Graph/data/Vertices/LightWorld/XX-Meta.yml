@@ -2,7 +2,45 @@ maps:
   - map: 0x00
     nodes:
       meta:
+        - name: "start"
+          connections:
+            fixed:
+              - "Meta"
+
+        - name: "Meta"
+          connections:
+            OcarinaActive:
+              - "Duck Airlines"
+
         - name: "Duck Airlines"
+          connections:
+            ConfigWorldStateInverted:
+              - "West Dark Death Mountain"
+              - "Dark World Northeast Shop"
+              - "Village of Outcasts"
+              - "Bomb Shoppe"
+              - "East Dark World Portal Way"
+              - "Mire Warp Ledge"
+              - "Swamplands Palace Entrance"
+              - "Dark Lake Hylia Waterfall"
+            ConfigWorldStateOpen:
+              - "West Death Mountain"
+              - "Witch's Hut"
+              - "Kakariko Village"
+              - "Link's House"
+              - "Eastern Ruins Portal"
+              - "Desert Rocks Ledge"
+              - "Wetlands Dam"
+              - "South Shore Falls"
+            ConfigWorldStateStandard:
+              - "West Death Mountain"
+              - "Witch's Hut"
+              - "Kakariko Village"
+              - "Link's House"
+              - "Eastern Ruins Portal"
+              - "Desert Rocks Ledge"
+              - "Wetlands Dam"
+              - "South Shore Falls"
 
         - name: "ActiveBombos"
           item: "ActiveBombos"

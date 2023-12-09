@@ -25,19 +25,6 @@ public sealed class World
         Config = randomizerConfig;
         Graph = graph;
 
-        var start = Graph.AddVertex(new Vertex
-        {
-            Name = $"start:{Id}",
-            Type = VertexType.Meta,
-        });
-
-        var meta = Graph.AddVertex(new Vertex
-        {
-            Name = $"Meta:{Id}",
-            Type = VertexType.Meta,
-        });
-        Graph.AddDirected(start, meta, GetItem("fixed"));
-
         var items = new List<Item>
         {
             GetItem("MagicBar"),
@@ -57,6 +44,8 @@ public sealed class World
         {
             items.Add(GetItem("EscapeLamp"));
         }
+        // I'm so sorry....
+        items.Add(GetItem($"ConfigWorldState{Config.State}"));
         if (Config.Accessibility != AccessibilityOption.Locations)
         {
             items.Add(GetItem("KeyForKey"));
@@ -69,6 +58,8 @@ public sealed class World
         }
         var subtypes = Graph.GetVertices().Select(v => v.SubType).ToHashSet();
         var mobs_with_items = Graph.GetVertices().Where(v => v.Type == VertexType.Mob && v.Item != null).ToHashSet();
+
+        var meta = Graph.GetVertex($"Meta:{Id}");
 
         var edges = new EdgeCollector().GetForWorld(this);
         foreach (var (condition, data) in edges)
