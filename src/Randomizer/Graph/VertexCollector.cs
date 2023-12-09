@@ -84,12 +84,22 @@ internal class VertexCollector
             foreach (var meta in map.Nodes.Meta)
             {
                 string name = $"{meta.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
+                var metaVertex = new Vertex
                 {
                     Type = VertexType.Meta,
                     Name = name,
                     Item = world.GetItemOrNull(meta.Item),
-                });
+                };
+                structured_vertices.Add(name, metaVertex);
+
+                foreach (var connection in meta.Connections)
+                {
+                    foreach (var target in connection.Value)
+                    {
+                        pendingConnections.Add((metaVertex, target, ConditionFrom(world, connection.Key)));
+                    }
+                }
+
             }
             foreach (var prizepack in map.Nodes.Prizepacks)
             {
