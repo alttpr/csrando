@@ -188,10 +188,6 @@ internal sealed class BossShuffler : IWorldModifier
                 PlaceBossItemInLocation("DefeatMoldorm", "Ganon's Tower - Moldorm", world, bossLocationMap);
                 break;
         }
-
-        // since we added the bosses at this step we need to recache the
-        // vertices.
-        world.RemapVertices();
     }
 
     /**
