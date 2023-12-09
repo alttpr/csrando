@@ -9,8 +9,86 @@ maps:
 
         - name: "Meta"
           connections:
+            fixed:
+              - "Turtle Rock - Entry"
+              - "Misery Mire - Entry"
             OcarinaActive:
               - "Duck Airlines"
+            ProgressiveSword:
+              - "L1Sword"
+            UncleSword:
+              - "L1Sword"
+            L1Sword:
+              - "DefeatArmos"
+              - "DefeatLanmolas"
+              - "DefeatMoldorm"
+              - "DefeatAgahnim"
+              - "DefeatHelmasaur"
+              - "DefeatMothula"
+              - "DefeatBlind"
+              - "DefeatVitreous"
+            Crystal1:
+              - "Crystal1"
+            Crystal2:
+              - "Crystal2"
+            Crystal3:
+              - "Crystal3"
+            Crystal4:
+              - "Crystal4"
+            Crystal5:
+              - "Crystal5"
+            Crystal6:
+              - "Crystal6"
+            Crystal7:
+              - "Crystal7"
+            PendantOfCourage:
+              - "Pendant Of Courage"
+            PendantOfWisdom:
+              - "Pendant Of Wisdom"
+            PendantOfPower:
+              - "Pendant Of Power"
+            Pendant|3:
+              - "All Pendants"
+            HeartPiece|4:
+              - "PHeart1"
+            HeartPiece|8:
+              - "PHeart2"
+            HeartPiece|12:
+              - "PHeart3"
+            HeartPiece|16:
+              - "PHeart4"
+            HeartPiece|20:
+              - "PHeart5"
+            HeartPiece|24:
+              - "PHeart6"
+            HeartPiece|28:
+              - "PHeart7"
+            HeartPiece|32:
+              - "PHeart8"
+            HeartPiece|36:
+              - "PHeart9"
+            HeartPiece|40:
+              - "PHeart10"
+            HeartPiece|44:
+              - "PHeart11"
+            HeartPiece|48:
+              - "PHeart12"
+            HeartPiece|52:
+              - "PHeart13"
+            HeartPiece|56:
+              - "PHeart14"
+            HeartPiece|60:
+              - "PHeart15"
+            HeartPiece|64:
+              - "PHeart16"
+            HeartPiece|68:
+              - "PHeart17"
+            HeartPiece|72:
+              - "PHeart18"
+            HeartPiece|76:
+              - "PHeart19"
+            HeartPiece|80:
+              - "PHeart20"
 
         - name: "Duck Airlines"
           connections:
@@ -43,12 +121,27 @@ maps:
               - "South Shore Falls"
 
         - name: "ActiveBombos"
+          connections:
+            MireEntryBombos:
+              - "MireEntry"
+            TurtleRockEntryBombos:
+              - "TurtleRockEntry"
           item: "ActiveBombos"
 
         - name: "ActiveEther"
+          connections:
+            MireEntryEther:
+              - "MireEntry"
+            TurtleRockEntryEther:
+              - "TurtleRockEntry"
           item: "ActiveEther"
 
         - name: "ActiveQuake"
+          connections:
+            MireEntryQuake:
+              - "MireEntry"
+            TurtleRockEntryQuake:
+              - "TurtleRockEntry"
           item: "ActiveQuake"
 
         - name: "TurtleRockEntry"
@@ -81,18 +174,14 @@ maps:
         - name: "GanonVulnerable"
           item: "GanonVulnerable"
 
-        # Pendant Pseudo
-        - name: "1 Pendant C"
+        - name: "Pendant Of Courage"
+          item: "Pendant"
 
-        - name: "1 Pendant P"
+        - name: "Pendant Of Wisdom"
+          item: "Pendant"
 
-        - name: "1 Pendant W"
-
-        - name: "2 Pendant CP"
-
-        - name: "2 Pendant PW"
-
-        - name: "2 Pendant CW"
+        - name: "Pendant Of Power"
+          item: "Pendant"
 
         - name: "All Pendants"
           item: "AllPendants"
@@ -110,9 +199,19 @@ maps:
           item: "L3Sword"
 
         - name: "MasterSword"
+          connections:
+            BookOfMudora:
+              - "ActiveBookOfMudora"
           item: "L2Sword"
 
         - name: "L1Sword"
+          connections:
+            Bombos:
+              - "ActiveBombos"
+            Ether:
+              - "ActiveEther"
+            Quake:
+              - "ActiveQuake"
           item: "L1Sword"
 
         - name: "ReturnedSmith"
@@ -174,9 +273,15 @@ maps:
           item: "Crystal"
 
         - name: "Crystal5"
+          connections:
+            Crystal6:
+              - "Red Crystals"
           item: "Crystal"
 
         - name: "Crystal6"
+          connections:
+            Crystal5:
+              - "Red Crystals"
           item: "Crystal"
 
         - name: "Crystal7"
