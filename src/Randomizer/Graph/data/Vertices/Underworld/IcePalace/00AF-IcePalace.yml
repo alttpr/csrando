@@ -4,14 +4,18 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Ice Clock"
+          connections:
+            fixed:
+              - "Ice Palace - Pottery Barn"
+              - "Ice Palace - Ice T"
 
-      mobs:
-        - name: "Ice Palace - Ice Clock - Fire Bar (Clockwise)"
-          position: { x: 0x0a, y: 0x08, z: 0x00 }
-          sprite: "FireBarCW"
-          deny:
-            - "RollerHR"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
+          mobs:
+            - name: "Ice Palace - Ice Clock - Fire Bar (Clockwise)"
+              position: { x: 0x0a, y: 0x08, z: 0x00 }
+              sprite: "FireBarCW"
+              deny:
+                - "RollerHR"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"

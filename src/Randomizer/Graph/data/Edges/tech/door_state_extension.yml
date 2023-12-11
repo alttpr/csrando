@@ -1,6 +1,6 @@
 CaneOfSomaria:
   directed:
-    - ["Ice Palace - Big Key View", "Ice Palace - Big Key right"]
+    - ["Ice Palace - Big Key View", "Ice Palace - Big Key Right"]
   undirected: []
 PegasusBoots:
   directed:

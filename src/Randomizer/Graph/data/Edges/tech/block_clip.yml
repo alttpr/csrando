@@ -4,5 +4,5 @@ MagicMirror:
   undirected: []
 Hookshot:
   directed:
-    - ["Ice Palace - Big Chest Room - right", "Ice Palace - Big Chest Room - left"]
+    - ["Ice Palace - Big Chest Room - Right", "Ice Palace - Big Chest Room - Left"]
   undirected: []

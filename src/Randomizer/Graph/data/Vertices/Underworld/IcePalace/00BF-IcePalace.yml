@@ -3,13 +3,25 @@ rooms:
     group: 13
     nodes:
       regions:
-        # we need to model this more properly for getting pots
         - name: "Ice Palace - Restock Room"
           switch: true
           connections:
+            fixed:
+              - "Ice Palace - Restock Room - Blue"
             KeyD5:
               - "Ice Palace - Block Switch"
+          mobs:
+            - name: "Ice Palace - Restock Room - Crystal Switch"
+              position: { x: 0x0b, y: 0x18, z: 0x00 }
+              sprite: "CrystalSwitch"
+              allow:
+                - "CrystalSwitch"
 
+        - name: "Ice Palace - Restock Room - Blue"
+          peg: "blue"
+          connections:
+            fixed:
+              - "Ice Palace - Restock Room"
           pots:
             - name: "Ice Palace - Restock Room - Pot 1"
               position: 0x1428
@@ -29,14 +41,7 @@ rooms:
             - name: "Ice Palace - Restock Room - Pot 6"
               position: 0x1c30
               sprite: "@MagicRefillSmall"
-
           mobs:
-            - name: "Ice Palace - Restock Room - Crystal Switch"
-              position: { x: 0x0b, y: 0x18, z: 0x00 }
-              sprite: "CrystalSwitch"
-              allow:
-                - "CrystalSwitch"
-
             - name: "Ice Palace - Restock Room - Bunny Beam"
               position: { x: 0x0c, y: 0x15, z: 0x00 }
               sprite: "BunnyBeam"

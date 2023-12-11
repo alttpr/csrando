@@ -10,18 +10,6 @@ internal sealed class EnemyShuffler : IWorldModifier
     /// </summary>
     private static readonly Dictionary<string, string[]> CHALLENGE_ROOMS = new()
     {
-        { "Ice Palace - Entrance", new[] {
-            "Ice Palace - Entrance - Freezor",
-        }},
-        { "Ice Palace - Bari Key", new[] {
-            "Ice Palace - Bari Key - Top Bari",
-            "Ice Palace - Bari Key - Middle Bari",
-            "Ice Palace - Bari Key - Bottom Bari",
-        }},
-        { "Ice Palace - Stalfos Ambush", new[] {
-            "Ice Palace - Stalfos Ambush - Stalfos Knight T",
-            "Ice Palace - Stalfos Ambush - Stalfos Knight B",
-        }},
         { "Ganon's Tower - Mimics 1", new[] {
             "Ganon's Tower - Mimics 1 - Statue",
             "Ganon's Tower - Mimics 1 - Red Eyegore 2",
@@ -68,13 +56,6 @@ internal sealed class EnemyShuffler : IWorldModifier
             "Ganon's Tower - Gauntlet 5 - Spark",
         }},
         // "Ganon's Tower - Lanmolas" // covered by boss shuffle code for now.
-        { "Ice Palace - Penguin Line Up", new[] {
-            "Ice Palace - Penguin Line Up - Pengator 1",
-            "Ice Palace - Penguin Line Up - Pengator 2",
-            "Ice Palace - Penguin Line Up - Pengator 3",
-            "Ice Palace - Penguin Line Up - Pengator 4",
-            "Ice Palace - Penguin Line Up - Pengator 5",
-        }},
         { "Ganon's Tower - Tile Room", new[] { // chest
             "Ganon's Tower - Tile Room - Tiles",
             "Ganon's Tower - Tile Room - Yomo Medusa T",
