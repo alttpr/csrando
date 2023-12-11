@@ -4,6 +4,10 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Penguin Switch"
+          connections:
+            LiftPot:
+              - "Ice Palace - Cross Puzzle - Right"
+
         - name: "Ice Palace - Big Key View"
         - name: "Ice Palace - Big Key right"
 

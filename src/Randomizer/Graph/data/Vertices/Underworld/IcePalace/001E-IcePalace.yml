@@ -7,11 +7,34 @@ rooms:
           connections:
             fixed:
               - "Ice Palace - Bari Key"
+              - "Ice Palace - Cross Puzzle - Left"
 
         - name: "Ice Palace - Cross Puzzle - Left"
+          connections:
+            fixed:
+              - "Ice Palace - Penguin Chest"
+
         - name: "Ice Palace - Cross Puzzle - Bottom"
+          connections:
+            fixed:
+              - "Ice Palace - Penguin Chest"
+              - "Ice Palace - Blob Ambush"
+              - "Ice Palace - Penguin Switch"
+
         - name: "Ice Palace - Cross Puzzle - Right"
+          connections:
+            fixed:
+              - "Ice Palace - Penguin Switch"
+              - "Ice Palace - Penguin Chest"
+              - "Ice Palace - Bomb Switch"
+
         - name: "Ice Palace - Cross Puzzle - Top"
+          connections:
+            fixed:
+              - "Ice Palace - Bomb Switch"
+              - "Ice Palace - Blob Ambush"
+              - "Ice Palace - Penguin Switch"
+
         - name: "Ice Palace - Bomb Switch"
           switch: true
 

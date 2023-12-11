@@ -1,17 +1,7 @@
 fixed:
   directed:
-    - ["Ice Palace - Bari Key", "Ice Palace - Bari Key - Shutter Door"]
-    - ["Ice Palace - Entrance", "Ice Palace - Entrance - Shutter Door"]
     - ["Ice Palace - Bari Key", "Ice Palace - Bari Key - Bottom Bari"]
     - ["Ice Palace - Blob Ambush", "Ice Palace - Bari Key"]
-    - ["Ice Palace - Cross Puzzle - Left", "Ice Palace - Penguin Chest"]
-    - ["Ice Palace - Penguin Chest", "Ice Palace - Compass Chest"]
-    - ["Ice Palace - Cross Puzzle - Bottom", "Ice Palace - Blob Ambush"]
-    - ["Ice Palace - Cross Puzzle - Bottom", "Ice Palace - Penguin Switch"]
-    - ["Ice Palace - Cross Puzzle - Right", "Ice Palace - Penguin Chest"]
-    - ["Ice Palace - Cross Puzzle - Right", "Ice Palace - Bomb Switch"]
-    - ["Ice Palace - Cross Puzzle - Top", "Ice Palace - Penguin Switch"]
-    - ["Ice Palace - Cross Puzzle - Top", "Ice Palace - Blob Ambush"]
     - ["Ice Palace - Stalfos Ambush", "Ice Palace - Stalfos Ambush - Shutter Door"]
     - ["Ice Palace - Conveyor", "Ice Palace - Conveyor - Bari Key"]
     - ["Ice Palace - Penguin Line Up", "Ice Palace - Penguin Line Up - Shutter Door"]
@@ -31,11 +21,7 @@ fixed:
     - ["Ice Palace - Block Switch - block", "Ice Palace - Over Boss - top"]
     - ["Ice Palace - Boss", "Ice Palace - Prize"]
   undirected:
-    - ["Ice Palace - Blob Ambush", "Ice Palace - Cross Puzzle - Left"]
-    - ["Ice Palace - Penguin Chest", "Ice Palace - Cross Puzzle - Bottom"]
-    - ["Ice Palace - Penguin Switch", "Ice Palace - Cross Puzzle - Right"]
     - ["Ice Palace - Penguin Switch", "Ice Palace - Big Key View"]
-    - ["Ice Palace - Bomb Switch", "Ice Palace - Cross Puzzle - Top"]
     - ["Ice Palace - Penguin Line Up", "Ice Palace - Blob Alley"]
     - ["Ice Palace - Lonely Firebar", "Ice Palace - Big Spike Cross"]
     - ["Ice Palace - Lonely Firebar", "Ice Palace - Freezor Room"]
@@ -97,14 +83,6 @@ LiftPot:
 BigKeyD5:
   directed:
     - ["Ice Palace - Big Chest Room - left", "Ice Palace - Big Chest"]
-  undirected: []
-IcePalaceBariKeyTrophy|3:
-  directed:
-    - ["Ice Palace - Bari Key - Shutter Door", "Ice Palace - Entrance"]
-  undirected: []
-IcePalaceEntranceTrophy:
-  directed:
-    - ["Ice Palace - Entrance - Shutter Door", "Ice Palace - Bari Key"]
   undirected: []
 IcePalacePenguinTrophy|5:
   directed:
