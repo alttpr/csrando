@@ -101,8 +101,14 @@ public class Searcher
                 if (vertex.Peg == PegState.Orange)
                     continue;
                 int unvisitedEdges = vertex.Edges.Count;
-                foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
+                foreach (var edge in vertex.Edges)
                 {
+                    if (edge.Condition.Item.Type == ItemType.SmallKey)
+                        continue;
+                    if (!collected.Has(edge.Condition))
+                        continue;
+
+                    var next_vertex = edge.To;
                     unvisitedEdges--;
                     if (!pegMarked.Contains(next_vertex))
                         peg_queue.Enqueue(next_vertex);
@@ -120,13 +126,23 @@ public class Searcher
                     peg_queue.Enqueue(vertex);
                 if (vertex.Peg == PegState.Blue)
                     continue;
+
                 int unvisitedEdges = vertex.Edges.Count;
-                foreach (var next_vertex in vertex.GetTargets(reachableWithoutKeys))
+
+                foreach (var edge in vertex.Edges)
                 {
+                    if (edge.Condition.Item.Type == ItemType.SmallKey)
+                        continue;
+                    if (!collected.Has(edge.Condition))
+                        continue;
+
+                    var next_vertex = edge.To;
+
                     unvisitedEdges--;
                     if (!marked.Contains(next_vertex))
                         queue.Enqueue(next_vertex);
                 }
+
                 if (unvisitedEdges > 0)
                     newSearchStarts.Add(vertex);
                 if (!visited.Contains(vertex))
@@ -136,14 +152,6 @@ public class Searcher
         } while (queue.Any() || peg_queue.Any());
 
         return (newlyVisited, newSearchStarts);
-
-        bool reachableWithoutKeys(Edge edge)
-        {
-            if (edge.Condition.Item.Type == ItemType.SmallKey)
-                return false;
-
-            return collected.Has(edge.Condition);
-        }
     }
     private bool RecursiveDoorSearch(Inventory inventory)
     {

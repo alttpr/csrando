@@ -86,9 +86,4 @@ public sealed class Vertex
     public Item? Key { get; init; }
 
     public List<Edge> Edges = new();
-
-    public IEnumerable<Vertex> GetTargets(Predicate<Edge> condition)
-    {
-        return this.Edges.Where(edge => condition(edge)).Select(edge => edge.To) ?? Enumerable.Empty<Vertex>();
-    }
 }
