@@ -59,6 +59,8 @@ public sealed class Randomizer
             Graph.AddDirected(_start, _worlds[i].Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
         }
 
+        Graph.SetVertexIds();
+
         SanityCheck();
     }
 
@@ -155,12 +157,6 @@ public sealed class Randomizer
 
         Array.Fill(low, -1);
         Array.Fill(pre, -1);
-
-        foreach (var vertex in Graph.GetVertices())
-        {
-            vertex.Id = cnt++;
-        }
-        cnt = 0;
 
         foreach (var vertex in Graph.GetVertices())
         {

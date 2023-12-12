@@ -1,18 +1,21 @@
 namespace Randomizer.Graph;
 
-using SearchResult = (HashSet<Vertex> NewlyVisited, HashSet<Vertex> NewSearchStarts);
+using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
 public class Searcher
 {
-    private readonly HashSet<Vertex> _visited = new();
-    private readonly HashSet<Vertex> _collected = new();
+    private readonly VertexHashSet _visited;
+    private readonly VertexHashSet _collected;
     private readonly Graph _graph;
-    private readonly HashSet<Vertex> _searchStarts = new();
+    private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
 
     public Searcher(Graph graph, Vertex start, Inventory inventory)
     {
         _graph = graph;
+        _visited = new(graph);
+        _collected = new(graph);
+        _searchStarts = new(graph);
         _searchStarts.Add(start);
         _inventory = inventory;
 
@@ -33,10 +36,13 @@ public class Searcher
         } while (newItemsFound);
     }
 
-    private bool CollectItems(Inventory inventory, HashSet<Vertex> visited, HashSet<Vertex> collected)
+    private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
-        foreach (var itemLocation in visited.Except(collected))
+        var newlyVisited = visited.Clone();
+        newlyVisited.ExceptWith(collected);
+
+        foreach (var itemLocation in newlyVisited)
         {
             bool foundNewItem = false;
             collected.Add(itemLocation);
@@ -74,12 +80,12 @@ public class Searcher
         return _visited;
     }
 
-    private static SearchResult InternalSearch(Inventory collected, HashSet<Vertex> visited, IEnumerable<Vertex> startAt)
+    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
-        var newlyVisited = new HashSet<Vertex>();
-        var newSearchStarts = new HashSet<Vertex>();
-        var marked = new HashSet<Vertex>();
-        var pegMarked = new HashSet<Vertex>();
+        var newlyVisited = new VertexHashSet(visited.Graph);
+        var newSearchStarts = new VertexHashSet(visited.Graph);
+        var marked = new VertexHashSet(visited.Graph);
+        var pegMarked = new VertexHashSet(visited.Graph);
         var queue = new Queue<Vertex>();
         var peg_queue = new Queue<Vertex>();
         foreach (var start in startAt)
@@ -155,8 +161,8 @@ public class Searcher
     }
     private bool RecursiveDoorSearch(Inventory inventory)
     {
-        var strongLocations = new HashSet<Vertex>();
-        var strongSearchStarts = new HashSet<Vertex>();
+        var strongLocations = new VertexHashSet(_graph);
+        var strongSearchStarts = new VertexHashSet(_graph);
         foreach (var (key, edges) in _graph.Doors)
         {
             int keyCount = inventory.GetCount(key);
@@ -186,22 +192,26 @@ public class Searcher
 
         return strongLocations.Any() || foundItems;
     }
-    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, HashSet<Vertex> visitedBeforeDoors, HashSet<Vertex> collectedBeforeDoors, params Vertex[] additionalStarts)
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (keyCount == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
 
-        var reachableDoors = visitedBeforeDoors.SelectMany(v => v.Edges)
-            .Where(e => e.Condition.Item == key && !visitedBeforeDoors.Contains(e.To))
-            .ToHashSet();
-        HashSet<Vertex>? strongLocations = null;
-        HashSet<Vertex>? strongSearchStarts = null;
-        var visitedBeforeRecursion = visitedBeforeDoors.ToHashSet();
-        var collectedBeforeRecursion = collectedBeforeDoors.ToHashSet();
-        foreach (var door in reachableDoors)
-        {
+        VertexHashSet? strongLocations = null;
+        VertexHashSet? strongSearchStarts = null;
+        var visitedBeforeRecursion = visitedBeforeDoors.Clone();
+        var collectedBeforeRecursion = collectedBeforeDoors.Clone();
+        /** /
+        foreach (var doorsForKey in _graph.Doors[key]) {
+            bool seenA = visitedBeforeDoors.Contains(doorsForKey.From);
+            bool seenB = visitedBeforeDoors.Contains(doorsForKey.To);
+            if (!seenA && !seenB) continue;
+            if (seenA && seenB) continue;
+
+            var to = seenA ? doorsForKey.To : doorsForKey.From;
+
             var inventoryForIteration = inventory.Clone();
-            Vertex[] startAt = [door.To, .. additionalStarts];
+            Vertex[] startAt = [to, .. additionalStarts];
             var (weakLocations, weakSearchStarts) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
             visitedBeforeRecursion.UnionWith(weakLocations);
             int keysBefore = inventoryForIteration.GetCount(key);
@@ -218,7 +228,7 @@ public class Searcher
             weakSearchStarts.UnionWith(recursiveSearchStarts);
 
             if (weakLocations.Count == 0)
-                return ([], []);
+                return (new VertexHashSet(_graph), new VertexHashSet(_graph));
 
             if (strongLocations != null && strongSearchStarts != null)
             {
@@ -231,8 +241,70 @@ public class Searcher
                 strongSearchStarts = weakSearchStarts;
             }
         }
+        /**/
+        /**/
+        /*int nodesToCheck = visitedBeforeDoors.Count;
+        int actuallyChecked = 0;
+        int actuallyContains = 0;
+        int optimizedChecked = 0;
+        int optimizedContains = 0;*/
+        /*
+        foreach (var doorsForKey in _graph.Doors[key])
+        {
+            bool seenA = visitedBeforeDoors.Contains(doorsForKey.From);
+            bool seenB = visitedBeforeDoors.Contains(doorsForKey.To);
+            optimizedContains += 2;
+            if (!seenA && !seenB) continue;
+            if (seenA && seenB) continue;
 
-        return (strongLocations ?? [], strongSearchStarts ?? []);
+            var to = seenA ? doorsForKey.To : doorsForKey.From;
+            optimizedChecked++;
+        }*/
+        /**/
+        foreach (var visitedBeforeDoor in visitedBeforeDoors)
+        {
+            foreach (var door in visitedBeforeDoor.Edges)
+            {
+                if (door.Condition.Item != key) continue;
+                //actuallyContains++;
+                if(visitedBeforeDoors.Contains(door.To)) continue;
+                //actuallyChecked++;
+                var inventoryForIteration = inventory.Clone();
+                Vertex[] startAt = [door.To, .. additionalStarts];
+                var (weakLocations, weakSearchStarts) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
+                visitedBeforeRecursion.UnionWith(weakLocations);
+                int keysBefore = inventoryForIteration.GetCount(key);
+                // TODO: can we stop recursing here if we didn't find anything?
+                CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion);
+                int keysAfter = inventoryForIteration.GetCount(key);
+                int keysFound = keysAfter - keysBefore;
+                int keysUsed = 1 - keysFound;
+                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, edges, keyCount - keysUsed, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
+                // reset
+                visitedBeforeRecursion.IntersectWith(visitedBeforeDoors);
+                collectedBeforeRecursion.IntersectWith(collectedBeforeDoors);
+                weakLocations.UnionWith(recursiveLocations);
+                weakSearchStarts.UnionWith(recursiveSearchStarts);
+
+                if (weakLocations.Count == 0)
+                    return (new VertexHashSet(_graph), new VertexHashSet(_graph));
+
+                if (strongLocations != null && strongSearchStarts != null)
+                {
+                    strongLocations.IntersectWith(weakLocations);
+                    strongSearchStarts.IntersectWith(weakSearchStarts);
+                }
+                else
+                {
+                    strongLocations = weakLocations;
+                    strongSearchStarts = weakSearchStarts;
+                }
+            }
+        }
+        //System.Console.WriteLine($"{nodesToCheck} to check, {actuallyChecked} actually checked, {optimizedChecked} optimized, contains {actuallyContains} / {optimizedContains}");
+        /**/
+
+        return (strongLocations ?? new VertexHashSet(_graph), strongSearchStarts ?? new VertexHashSet(_graph));
     }
 
     private bool DropOffSearch(Item item)
