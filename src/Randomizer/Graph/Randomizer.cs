@@ -58,6 +58,8 @@ public sealed class Randomizer
 
             Graph.AddDirected(_start, _worlds[i].Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
         }
+
+        Graph.SetVertexIds();
     }
 
     /// <summary>

@@ -27,6 +27,7 @@ public sealed class Graph
     };
 
     private readonly HashSet<Vertex> _vertices = new();
+    private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = new();
     private readonly Dictionary<string, List<Vertex>> _setLocations = new() { { "*", new() } };
     private Dictionary<Item, HashSet<(Vertex From, Vertex To)>>? _doors;
@@ -94,6 +95,11 @@ public sealed class Graph
         return _verticesByName[name];
     }
 
+    public Vertex GetVertex(int id)
+    {
+        return _verticesById[id];
+    }
+
     public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
     public bool HasVertex(string name) => _verticesByName.ContainsKey(name);
 
@@ -104,6 +110,9 @@ public sealed class Graph
     /// <param name="vertex">source Vertex</param>
     public Vertex AddVertex(Vertex vertex)
     {
+        if (_verticesById.Length > 0)
+            throw new Exception("Adding a vertex after Ids are set");
+
         _vertices.Add(vertex);
         _verticesByName.Add(vertex.Name, vertex);
 
@@ -146,5 +155,16 @@ public sealed class Graph
         var edge = new Edge(from, to, condition);
         from.Edges.Add(edge);
         return edge;
+    }
+
+    public void SetVertexIds()
+    {
+        _verticesById = new Vertex[_vertices.Count];
+        int cnt = 0;
+        foreach (var vertex in _vertices)
+        {
+            vertex.Id = cnt++;
+            _verticesById[vertex.Id] = vertex;
+        }
     }
 }
