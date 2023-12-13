@@ -24,4 +24,17 @@ public sealed class Edge
 }
 
 [DebuggerDisplay("{Item.Name}:{Item.World.Id} >= {Count}")]
-public record ItemCondition(Item Item, int Count);
+//public record ItemCondition(Item Item, int Count);
+public class ItemCondition
+{
+    public Item Item;
+    public int Count;
+    public bool Fixed;
+
+    public ItemCondition(Item item, int count)
+    {
+        Item = item;
+        Count = count;
+        Fixed = item.Name.ToLower().Contains("fixed");
+    }
+}
