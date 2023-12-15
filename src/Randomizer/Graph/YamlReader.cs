@@ -66,14 +66,6 @@ public class YamlReader
     private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
     private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
-    public class YamlItem
-    {
-        [YamlMember(Alias = "bytes")]
-        public List<byte> Bytes { get; set; } = new();
-        [YamlMember(Alias = "type")]
-        public string Type { get; set; } = string.Empty;
-    }
-
     public static Dictionary<string, YamlItem> LoadItems()
     {
         if (_cachedItems != null) { return _cachedItems; }
@@ -279,6 +271,13 @@ public class YamlReader
             return result;
         }
     }
+}
+public class YamlItem
+{
+    [YamlMember(Alias = "bytes")]
+    public List<byte> Bytes { get; set; } = new();
+    [YamlMember(Alias = "type")]
+    public string Type { get; set; } = string.Empty;
 }
 
 public class YamlSprite
