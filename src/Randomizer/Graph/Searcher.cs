@@ -109,10 +109,13 @@ public class Searcher
                 int unvisitedEdges = vertex.Edges.Count;
                 foreach (var edge in vertex.Edges)
                 {
-                    if (edge.Condition.Item.Type == ItemType.SmallKey)
-                        continue;
-                    if (!collected.Has(edge.Condition))
-                        continue;
+                    if (!edge.Condition.IsUnconditional)
+                    {
+                        if (edge.Condition.Item.Type == ItemType.SmallKey)
+                            continue;
+                        if (!collected.Has(edge.Condition))
+                            continue;
+                    }
 
                     var next_vertex = edge.To;
                     unvisitedEdges--;
@@ -137,10 +140,13 @@ public class Searcher
 
                 foreach (var edge in vertex.Edges)
                 {
-                    if (edge.Condition.Item.Type == ItemType.SmallKey)
-                        continue;
-                    if (!collected.Has(edge.Condition))
-                        continue;
+                    if (!edge.Condition.IsUnconditional)
+                    {
+                        if (edge.Condition.Item.Type == ItemType.SmallKey)
+                            continue;
+                        if (!collected.Has(edge.Condition))
+                            continue;
+                    }
 
                     var next_vertex = edge.To;
 
