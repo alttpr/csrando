@@ -11,7 +11,7 @@ using System.Diagnostics;
 internal sealed class Randomize : Command
 {
     private readonly Option<GoalOption> _goal = new("goal", () => GoalOption.Ganon, "set game goal");
-    private readonly Option<StateOption> _state = new("state", () => StateOption.Standard, "set game state");
+    private readonly Option<StateOption> _state = new("state", () => StateOption.Open, "set game state");
     private readonly Option<WeaponOption> _weapons = new("weapons", () => WeaponOption.Randomized, "set weapons mode");
     private readonly Option<GlitchesOption> _glitches = new("glitches", () => GlitchesOption.None, "set glitches");
     private readonly Option<AccessibilityOption> _accessibility = new("accessibility", "set item/location accessibility");
