@@ -10,6 +10,12 @@ public class Searcher
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
 
+    /// <summary>
+    /// I'm a jerk and don't like useful messages.
+    /// </summary>
+    /// <param name="graph">The graph to search</param>
+    /// <param name="start">The starting point to search from</param>
+    /// <param name="inventory">The current inventory to use while searching</param>
     public Searcher(Graph graph, Vertex start, Inventory inventory)
     {
         _graph = graph;
@@ -18,9 +24,6 @@ public class Searcher
         _searchStarts = new(graph);
         _searchStarts.Add(start);
         _inventory = inventory;
-
-        if (!_graph.HasVertex(start))
-            throw new Exception("Start vertex not in graph");
 
         bool newItemsFound;
         do
@@ -31,7 +34,7 @@ public class Searcher
             _searchStarts.UnionWith(newSearchStarts);
 
             newItemsFound = CollectItems(inventory, _visited, _collected);
-            if (RecursiveDoorSearch(inventory))
+            if (DoorSearch(inventory))
                 newItemsFound = true;
         } while (newItemsFound);
     }
@@ -61,7 +64,7 @@ public class Searcher
 
             if (foundNewItem && itemLocation.Item is { } item)
             {
-                if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item))
+                if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item, inventory))
                     inventory.AddItem(item.World.GetItem("BigRedBombActive"));
                 newItemsFound = true;
             }
@@ -80,6 +83,12 @@ public class Searcher
         return _visited;
     }
 
+    /// <summary>
+    /// Basic graph searcher. Returns a set of vertices that are absolutely reachable from the given starting points.
+    /// </summary>
+    /// <param name="collected">Items to use in search, no collecting here</param>
+    /// <param name="visited">Locations we believe we have visited before</param>
+    /// <param name="startAt">Listy of starting Vertices to search from</param>
     private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
         var newlyVisited = new VertexHashSet(visited.Graph);
@@ -165,7 +174,7 @@ public class Searcher
 
         return (newlyVisited, newSearchStarts);
     }
-    private bool RecursiveDoorSearch(Inventory inventory)
+    private bool DoorSearch(Inventory inventory)
     {
         var strongLocations = new VertexHashSet(_graph);
         var strongSearchStarts = new VertexHashSet(_graph);
@@ -253,12 +262,14 @@ public class Searcher
         return (strongLocations ?? new VertexHashSet(_graph), strongSearchStarts ?? new VertexHashSet(_graph));
     }
 
-    private bool DropOffSearch(Item item)
+    private bool DropOffSearch(Item item, Inventory inventory)
     {
-        //var start = _vertices["Bomb Shoppe Lobby:" + item.World.Id];
-        //var end = _vertices["Pyramid:" + item.World.Id];
-        //visited.Contains(end);
-        return true;
+        if (item.Name == "BigRedBomb")
+        {
+            var (newlyVisited, newSearchStarts) = InternalSearch(inventory, new(_graph), new[] { _graph.GetVertex($"Bomb Shoppe Lobby:{item.World.Id}") });
+            return newlyVisited.Contains(_graph.GetVertex($"Pyramid:{item.World.Id}"));
+        }
+        return false;
     }
 
     /// <summary>
