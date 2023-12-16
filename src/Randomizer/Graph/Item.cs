@@ -14,6 +14,7 @@ public enum ItemType
 
 public sealed class Item
 {
+    public int Id { get; set; } = -1;
     public string Name { get; }
     public World World { get; }
     public ItemType Type { get; }
@@ -21,7 +22,7 @@ public sealed class Item
     /// <summary>
     /// Create a new Item.
     /// </summary>
-    /// 
+    ///
     /// <param name="name">Unique name of item</param>
     /// <param name="world">World this item is in</param>
     public Item(string name, World world)

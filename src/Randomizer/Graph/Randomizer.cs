@@ -46,7 +46,7 @@ public sealed class Randomizer
                 randomizerConfigs[i].CrystalsTower = _prng.GetRandomInt(7 + 1);
 
             _worlds[i] = new World(i, randomizerConfigs[i], Graph);
-            _startingItems = _startingItems.Merge(_worlds[i].CollectedItems);
+            _startingItems = _startingItems.Merge(_worlds[i].StartingItems);
 
             ShopFiller.AdjustEdges(_worlds[i], _prng);
             EntranceShuffler.AdjustEdges(_worlds[i], _prng);

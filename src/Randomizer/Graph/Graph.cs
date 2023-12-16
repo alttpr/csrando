@@ -80,6 +80,8 @@ public sealed class Graph
         }
     }
 
+    public HashSet<Item> AllItems { get; set; } = new();
+
     public IEnumerable<Vertex> GetVertices()
     {
         return _vertices;

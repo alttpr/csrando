@@ -7,7 +7,7 @@ public sealed class World
 {
     public int Id { get; }
     public Graph Graph { get; }
-    public Inventory CollectedItems { get; }
+    public Inventory StartingItems { get; }
     public WorldConfig Config { get; }
     private readonly Dictionary<string, Item> _allItems = new();
 
@@ -50,7 +50,7 @@ public sealed class World
         {
             items.Add(GetItem("KeyForKey"));
         }
-        CollectedItems = new Inventory(items.ToArray());
+        StartingItems = new Inventory(items.ToArray());
 
         foreach (var vertex in VertexCollector.LoadYmlData(this))
         {
@@ -158,6 +158,8 @@ public sealed class World
         // allow made up items
         var item = new Item(name, this);
         _allItems.Add(item.Name, item);
+        item.Id = Graph.AllItems.Count;
+        Graph.AllItems.Add(item);
 
         return item;
     }
@@ -167,5 +169,10 @@ public sealed class World
         if (name != null)
             return GetItem(name);
         return null;
+    }
+
+    public IEnumerable<Item> GetAllItems()
+    {
+        return _allItems.Values;
     }
 }
