@@ -85,16 +85,16 @@ internal sealed class Randomize : Command
                 throw new Exception($"Game Unwinnable.");
             }
         }
-        info("Randomization took {0}", sw.Elapsed);
+        Info("Randomization took {0}", sw.Elapsed);
 
         return 0;
     }
 
-    private void info(string format, params object[] args)
+    static private void Info(string format, params object[] args)
     {
         System.Console.WriteLine(format, args);
     }
-    private void error(string format, params object[] args)
+    static private void Error(string format, params object[] args)
     {
         var previousColor = System.Console.ForegroundColor;
         System.Console.ForegroundColor = ConsoleColor.Red;

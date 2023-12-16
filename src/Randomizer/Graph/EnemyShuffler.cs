@@ -1,8 +1,8 @@
 namespace Randomizer.Graph;
 
-/**
- * Modify the edges of the graph to shuffle entrances.
- */
+/// <summary>
+/// Modify the edges of the graph to shuffle entrances.
+/// </summary>
 internal sealed class EnemyShuffler : IWorldModifier
 {
     /// <summary>
@@ -246,14 +246,16 @@ internal sealed class EnemyShuffler : IWorldModifier
         }},
     };
 
-    /**
-     * Swap Edges based on new enemy locations settings.
-     * 
-     * 1) Rearrange all the sprite sheet sets
-     * 2) find out which sprites can be placed with each set now
-     * 3) pick a random sheet for a room
-     * 4) pick random sprites for room
-     */
+    /// <summary>
+    /// Swap Edges based on new enemy locations settings.
+    ///
+    /// 1) Rearrange all the sprite sheet sets
+    /// 2) find out which sprites can be placed with each set now
+    /// 3) pick a random sheet for a room
+    /// 4) pick random sprites for room
+    /// </summary>
+    /// <param name="world">World to modify</param>
+    /// <param name="prng">PRNG to use</param>
     public static void AdjustEdges(World world, PRNG prng)
     {
         var defeats = YamlReader.LoadEnemies();
@@ -288,10 +290,9 @@ internal sealed class EnemyShuffler : IWorldModifier
             foreach (string enemy in enemies)
             {
                 var to = world.GetLocation(enemy);
-                if (to is null)
-                {
-                    throw new Exception($"Cannot find location for {enemy}: {to}");
-                }
+                if (to.Sprite == null)
+                    throw new Exception($"No sprite for {enemy}");
+
                 world.Graph.AddDirected(from, to, world.GetItem($"Defeat{to.Sprite.Name}"));
             }
         }

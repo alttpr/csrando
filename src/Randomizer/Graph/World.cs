@@ -126,12 +126,11 @@ public sealed class World
         }
     }
 
-    /**
-     * Get a vertex by name.
-     *
-     * @param string location_name name to search for
-     */
-    public Vertex? GetLocation(string locationName)
+    /// <summary>
+    /// Get a vertex by name.
+    /// </summary>
+    /// <param name="locationName">name to search for</param>
+    public Vertex GetLocation(string locationName)
     {
         if (!locationName.Contains(':'))
         {
@@ -140,13 +139,10 @@ public sealed class World
         return Graph.GetVertex(locationName);
     }
 
-    /**
-     * Get a vertices by type.
-     *
-     * @param string type type to search for
-     * 
-     * @return Collection<Vertex>
-     */
+    /// <summary>
+    /// Get all vertices of a given type.
+    /// </summary>
+    /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
     {
         return Graph.GetVertices().Where(vertex => vertex.Type == type);
