@@ -1,5 +1,6 @@
 namespace Randomizer.Graph;
 
+using System.Runtime.InteropServices;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
 public class Searcher
@@ -116,7 +117,7 @@ public class Searcher
                 if (vertex.Peg == PegState.Orange)
                     continue;
                 int unvisitedEdges = vertex.Edges.Count;
-                foreach (var edge in vertex.Edges)
+                foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
                 {
                     if (!edge.Condition.IsUnconditional)
                     {
@@ -147,7 +148,7 @@ public class Searcher
 
                 int unvisitedEdges = vertex.Edges.Count;
 
-                foreach (var edge in vertex.Edges)
+                foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
                 {
                     if (!edge.Condition.IsUnconditional)
                     {
