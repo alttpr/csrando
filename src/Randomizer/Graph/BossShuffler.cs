@@ -225,7 +225,7 @@ internal sealed class BossShuffler : IWorldModifier
             world.Graph.AddVertex(new Vertex
             {
                 Type = VertexType.Mob,
-                Name = $"{sprite_definition.Name}",
+                Name = $"{sprite_definition.Name}:{world.Id}",
                 Position = sprite_definition.Position,
                 RoomId = sprite_definition.RoomId,
                 Sprite = Sprite.Get(sprite_definition.Sprite),

@@ -14,7 +14,7 @@ internal sealed class DarknessGraphifier : IWorldModifier
     public static void AdjustEdges(World world, PRNG prng)
     {
         var graph = world.Graph;
-        var lightRooms = graph.GetVertices().Where(v => !v.Dark).ToList();
+        var lightRooms = graph.GetVertices().Where(v => !v.Dark && v.Name.EndsWith($":{world.Id}")).ToList();
         foreach (var lightRoom in lightRooms)
         {
             foreach (var edge in lightRoom.Edges.Where(e => e.To.Dark))
