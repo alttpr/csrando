@@ -12,6 +12,15 @@ public abstract class LogicTestBase
     protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
         var randomizer = new Randomizer(config);
+        try
+        {
+            randomizer.Graph.GetVertex($"{location}:0");
+        }
+        catch (Exception e)
+        {
+            Assert.Fail($"Location \"{location}\" doesn't exist in the graph");
+        }
+
         var searcher = randomizer.GetSearcherForInventory(inventory.Select(i => randomizer.GetItemForWorld(i, 0)));
         Assert.AreEqual(expected, searcher.GetVisited().Any(v => v.Name == $"{location}:0"));
     }
