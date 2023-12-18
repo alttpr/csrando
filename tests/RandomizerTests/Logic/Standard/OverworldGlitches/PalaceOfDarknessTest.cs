@@ -21,11 +21,11 @@ public sealed class PalaceOfDarknessTest : StandardOverworldGlitchesLogicTests
         ["Palace of Darkness - The Arena - Ledge", true, new string[] { "BowAndArrows", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove" }],
         ["Palace of Darkness - The Arena - Ledge", true, new string[] { "BowAndArrows", "MoonPearl", "TitansMitt" }],
 
-        ["Palace of Darkness - The Arena - Bridge", false, new string[] {  }],
-        ["Palace of Darkness - The Arena - Bridge", true, new string[] { "KeyD1", "MoonPearl", "PegasusBoots" }],
-        ["Palace of Darkness - The Arena - Bridge", true, new string[] { "KeyD1", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove" }],
-        ["Palace of Darkness - The Arena - Bridge", true, new string[] { "KeyD1", "MoonPearl", "TitansMitt" }],
-        ["Palace of Darkness - The Arena - Bridge", true, new string[] { "BowAndArrows", "Hammer", "MoonPearl", "PegasusBoots" }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", false, new string[] {  }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", true, new string[] { "KeyD1", "MoonPearl", "PegasusBoots" }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", true, new string[] { "KeyD1", "MoonPearl", "ProgressiveGlove", "ProgressiveGlove" }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", true, new string[] { "KeyD1", "MoonPearl", "TitansMitt" }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", true, new string[] { "BowAndArrows", "Hammer", "MoonPearl", "PegasusBoots" }],
 
         ["Palace of Darkness - Big Chest", false, new string[] {  }],
         ["Palace of Darkness - Big Chest", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "BigKeyD1", "MoonPearl", "Lamp", "PegasusBoots" }],

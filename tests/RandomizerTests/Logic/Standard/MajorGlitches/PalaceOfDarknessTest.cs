@@ -17,9 +17,9 @@ public sealed class PalaceOfDarknessTest : StandardMajorGlitchesLogicTests
         ["Palace of Darkness - The Arena - Ledge", false, new string[] {  }],
         ["Palace of Darkness - The Arena - Ledge", true, new string[] { "BowAndArrows" }],
 
-        ["Palace of Darkness - The Arena - Bridge", false, new string[] {  }],
-        ["Palace of Darkness - The Arena - Bridge", true, new string[] { "KeyD1" }],
-        ["Palace of Darkness - The Arena - Bridge", true, new string[] { "BowAndArrows", "Hammer" }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", false, new string[] {  }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", true, new string[] { "KeyD1" }],
+        ["Palace of Darkness - The Arena - Bridge Ledge Chest", true, new string[] { "BowAndArrows", "Hammer" }],
 
         ["Palace of Darkness - Big Chest", false, new string[] {  }],
         ["Palace of Darkness - Big Chest", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "KeyD1", "BigKeyD1", "Lamp" }],
