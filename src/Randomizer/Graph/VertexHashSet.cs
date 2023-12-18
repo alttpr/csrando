@@ -77,7 +77,11 @@ public class VertexHashSet : ICollection<Vertex>
 
     public void CopyTo(Vertex[] array, int arrayIndex)
     {
-        throw new NotImplementedException();
+        var enumerator = GetEnumerator();
+        while (enumerator.MoveNext() && arrayIndex < array.Length)
+        {
+            array[arrayIndex++] = enumerator.Current;
+        }
     }
 
     public void IntersectWith(VertexHashSet other)
