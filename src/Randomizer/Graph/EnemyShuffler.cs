@@ -154,6 +154,24 @@ internal sealed class EnemyShuffler : IWorldModifier
             }
         }
 
+        // Replaces the fixed condition to mobs with a Defeat condition
+        // if one exists.
+        foreach (var vertex in world.Graph.GetVertices())
+        {
+            foreach (var edge in vertex.Edges)
+            {
+                if (edge.To.Type != VertexType.Mob)
+                    continue;
+                if (!edge.Condition.IsUnconditional)
+                    continue;
+                if (edge.To.Sprite == null)
+                    continue;
+
+                if (defeats.ContainsKey($"Defeat{edge.To.Sprite!.Name}"))
+                    edge.Condition = new ItemCondition(world.GetItem($"Defeat{edge.To.Sprite!.Name}"), 1);
+            }
+        }
+
         foreach (var (room, enemies) in CHALLENGE_ROOMS)
         {
             from = world.GetLocation(room);
