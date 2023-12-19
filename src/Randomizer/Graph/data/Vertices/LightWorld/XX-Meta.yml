@@ -89,6 +89,10 @@ maps:
               - "PHeart19"
             HeartPiece|80:
               - "PHeart20"
+            ConfigWorldStateOpen:
+              - "RescueZelda"
+            ConfigWorldStateInverted:
+              - "RescueZelda"
 
         - name: "Duck Airlines"
           connections:
@@ -210,6 +214,9 @@ maps:
             Quake:
               - "ActiveQuake"
           item: "L1Sword"
+
+        - name: "RescueZelda"
+          item: "RescueZelda"
 
         - name: "ReturnedSmith"
           item: "ReturnedSmith"

@@ -20,19 +20,13 @@ internal class EdgeCollector
         {
             case StateOption.Standard:
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("standard"));
-                edges_data["fixed"].Directed.Add(new() { "start", "Rain - Link's House" });
-                edges_data["RescueZelda"].Directed.Add(new() { "start", "Sanctuary Hall" });
-                // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
-
+                edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
                 break;
             case StateOption.Inverted:
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("inverted"));
                 // @todo move these once we have the nodes made
                 edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
                 edges_data["fixed"].Directed.Add(new() { "start", "Dark Sanctuary" });
-                // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
-
                 break;
             case StateOption.Open:
             default:
@@ -40,7 +34,6 @@ internal class EdgeCollector
                 YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("open"));
                 edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
                 edges_data["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
-                // edges_data["OldManFound"]["directed"][] = ["start", "Old Man Cave"];
                 break;
         }
 

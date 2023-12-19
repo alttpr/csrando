@@ -6,9 +6,10 @@ maps:
         - name: "Link's House"
           connections:
             fixed:
-              - "Hobo Bridge"
               - "Hyrule Castle - Outer Court"
               - "Link's House West Woods"
+            RescueZelda:
+              - "Hobo Bridge"
               - "Wetlands Totems"
           entrances:
             - name: "Link's House"
@@ -52,5 +53,3 @@ maps:
               position: { x: 0x18, y: 0x14 }
               sprite: "BlueSwordGuard"
               state: [2]
-
-        - name: "Rain - Link's House"

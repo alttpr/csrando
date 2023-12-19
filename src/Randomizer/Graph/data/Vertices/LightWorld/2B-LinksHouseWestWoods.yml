@@ -8,6 +8,7 @@ maps:
           connections:
             fixed:
               - "Link's House"
+            RescueZelda:
               - "Wetlands Portal West"
 
           entrances:

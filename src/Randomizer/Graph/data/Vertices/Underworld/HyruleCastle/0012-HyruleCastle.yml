@@ -7,11 +7,7 @@ rooms:
           connections:
             fixed:
               - "Sanctuary Hall"
-          items:
-            - name: "Sanctuary - Princess Rescued"
-              type: "event"
-              item: "RescueZelda"
-              itemset: ["event"]
+              - "RescueZelda"
 
         - name: "Sanctuary Hall"
           inletid: 0x02

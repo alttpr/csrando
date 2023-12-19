@@ -8,21 +8,25 @@ maps:
           connections:
             fixed:
               - "Link's House"
+            RescueZelda:
               - "Castle Forest"
+              - "Hyrule Castle - Courtyard"
             PowerGlove:
               - "Hyrule Castle - Outer Court East"
-
-        # Small area east blocked by a white rock
-        - name: "Hyrule Castle - Outer Court East"
-          connections:
-            fixed:
-              - "Octorok Field"
-            PowerGlove:
-              - "Hyrule Castle - Outer Court"
           holes:
             - name: "Secret Passage Uncle - Hole"
               conditions: ["LiftBush"]
               entranceids: [0x0c]
+
+        # Small area east blocked by a white rock
+        - name: "Hyrule Castle - Outer Court East"
+          connections:
+            # Not technically blocked by guards, but we want to prevent logic progression
+            # past that rock to ensure you get to save the princess.
+            RescueZelda:
+              - "Octorok Field"
+            PowerGlove:
+              - "Hyrule Castle - Outer Court"
 
         # Small area with door connected to uncle's location
         - name: "Hyrule Castle - Courtyard NE Nook"
@@ -39,6 +43,8 @@ maps:
           connections:
             LiftBush:
               - "Hyrule Castle - Courtyard NE Nook"
+            RescueZelda:
+              - "Hyrule Castle - Outer Court"
           entrances:
             - name: "Hyrule Castle - Main Entrance"
               entranceid: 0x03
@@ -46,6 +52,11 @@ maps:
 
         # Upper area
         - name: "Hyrule Castle - Wall Walk"
+          connections:
+            fixed:
+              - "Hyrule Castle - Courtyard"
+            RescueZelda:
+              - "Hyrule Castle - Outer Court"
           entrances:
             - name: "Hyrule Castle - West Entrance"
               entranceid: 0x02
@@ -59,10 +70,6 @@ maps:
               conditions: ["L2Sword", "Cape"]
               entranceid: 0x23
               outletid: 0x25
-
-        - name: "Rain - Hyrule Castle - Outer Court"
-        - name: "Rain - Hyrule Castle - Courtyard"
-        - name: "Rain - Hyrule Castle - Wall Walk"
 
       mobs:
         - name: "Hyrule Castle - Courtyard - Lightning Lock"

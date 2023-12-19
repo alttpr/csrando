@@ -8,6 +8,12 @@ rooms:
           connections:
             fixed:
               - "Hyrule Castle - Lobby"
+            LostZelda:
+              - "Hyrule Castle - Mantle"
+            ConfigWorldStateInverted:
+              - "Hyrule Castle - Mantle"
+            ConfigWorldStateOpen:
+              - "Hyrule Castle - Mantle"
           mobs:
             - name: "Hyrule Castle - Throne Room - Blue Guard 1"
               position: { x: 0x09, y: 0x17, z: 0x01 }
