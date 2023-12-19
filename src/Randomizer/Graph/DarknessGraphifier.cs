@@ -32,6 +32,10 @@ internal sealed class DarknessGraphifier : IWorldModifier
                 edge.To = transition;
                 world.Graph.AddDirected(darkRoom, transition, world.GetItem("fixed"));
                 world.Graph.AddDirected(transition, darkRoom, world.GetItem("Lamp"));
+                foreach (var extraLight in darkRoom.ExtraLight)
+                {
+                    world.Graph.AddDirected(transition, darkRoom, world.GetItem(extraLight));
+                }
 
                 if (edgesToLight.Count() > 1)
                     throw new Exception("Uh oh, is the code really correct there?");

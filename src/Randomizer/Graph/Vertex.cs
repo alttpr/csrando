@@ -62,6 +62,7 @@ public sealed class Vertex
     public VertexType? SubType { get; init; }
     public required string Name { get; init; }
     public bool Dark { get; init; }
+    public List<string> ExtraLight { get; init; } = [];
     public bool Switch { get; init; }
     public int? Cost { get; set; }
     public Item? Item { get; set; }

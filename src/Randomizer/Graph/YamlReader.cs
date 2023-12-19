@@ -455,6 +455,9 @@ public partial class Room
     [YamlMember(Alias = "dark")]
     public bool Dark { get; set; } = false;
 
+    [YamlMember(Alias = "extralight")]
+    public List<string> ExtraLight { get; set; } = new();
+
     [YamlMember(Alias = "bosses")]
     public object? Bosses { get; set; }
 }

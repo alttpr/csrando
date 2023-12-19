@@ -24,6 +24,7 @@ public class HyruleCastleEscapeTest : OpenNoGlitchesLogicTests
         ["Sewers - Secret Room - Right", true, new string[] { "TitansMitt" }],
         ["Sewers - Secret Room - Right", true, new string[] { "Lamp", "KeyH2" }],
 
+        ["Sewers - Dark Cross Chest", false, new string[] {  }],
         ["Sewers - Dark Cross Chest", true, new string[] { "Lamp" }],
 
         ["Hyrule Castle - Boomerang Chest", false, new string[] { "Lamp" }],

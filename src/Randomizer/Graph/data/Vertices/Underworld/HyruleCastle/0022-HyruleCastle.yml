@@ -2,6 +2,7 @@ rooms:
   - roomid: 0x22
     group: 1
     dark: true
+    extralight: ["ConfigWorldStateStandard"]
     nodes:
       regions:
         - name: "Sewers - Dark Three Islands"

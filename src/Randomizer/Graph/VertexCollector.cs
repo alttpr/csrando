@@ -320,12 +320,6 @@ internal class VertexCollector
         // underworld
         foreach (var room in vertex_data.Rooms)
         {
-            var shared = new Dictionary<string, object>()
-            {
-                { "roomid", room.Roomid },
-                { "group", room.Group.GetValueOrDefault(0) },
-                { "dark", room.Dark },
-            };
             foreach (var region in room.Nodes.Regions)
             {
                 Vertex regionVertex;
@@ -337,6 +331,7 @@ internal class VertexCollector
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
                     Dark = room.Dark,
+                    ExtraLight = room.ExtraLight,
                     InletId = region.InletId,
                     Peg = region.Peg,
                     Shopkeeper = region.Shopkeeper,
