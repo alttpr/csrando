@@ -82,7 +82,7 @@ maps:
 
         - name: "Death Mountain Foot Descent Ledge"
           connections:
-            fixed:
+            hop:
               - "Death Mountain Foot"
           entrances:
             - name: "Death Mountain Foot Descent Ledge"

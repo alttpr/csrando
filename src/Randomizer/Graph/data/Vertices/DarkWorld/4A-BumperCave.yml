@@ -5,7 +5,7 @@ maps:
       regions:
         - name: "Bumper Cave Ledge"
           connections:
-            fixed:
+            hop:
               - "Bumper Cave Passway"
           entrances:
             - name: "Bumper Cave Ledge Top"

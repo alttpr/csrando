@@ -6,8 +6,9 @@ maps:
         - name: "South of Outcasts North"
           connections:
             fixed:
-              - "South of Outcasts South"
               - "Village of Outcasts"
+            hop:
+              - "South of Outcasts South"
             TitansMitt:
               - "South of Outcasts South"
               - "South of Outcasts Frog Prison"

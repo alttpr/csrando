@@ -58,7 +58,7 @@ maps:
 
         - name: "Cave 45 Ledge"
           connections:
-            fixed:
+            hop:
               - "Haunted Grove Entrance"
           entrances:
             - name: "Cave 45"

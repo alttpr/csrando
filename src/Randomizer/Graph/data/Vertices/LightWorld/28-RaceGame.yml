@@ -5,7 +5,7 @@ maps:
       regions:
         - name: "Maze Race Start"
           connections:
-            fixed:
+            hop:
               - "Race Game Lower"
           entrances:
             - name: "Brothers House Left"
