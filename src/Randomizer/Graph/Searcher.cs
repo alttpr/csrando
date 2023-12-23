@@ -95,9 +95,9 @@ public class Searcher
         var newlyVisited = new VertexHashSet(visited.Graph);
         var newSearchStarts = new VertexHashSet(visited.Graph);
         var marked = new VertexHashSet(visited.Graph);
-        var pegMarked = new VertexHashSet(visited.Graph);
+        var markedBlue = new VertexHashSet(visited.Graph);
         var queue = new Queue<Vertex>();
-        var peg_queue = new Queue<Vertex>();
+        var queueBlue = new Queue<Vertex>();
         foreach (var start in startAt)
         {
             if (!visited.Contains(start))
@@ -110,7 +110,7 @@ public class Searcher
 
         do
         {
-            while (peg_queue.TryDequeue(out var vertex))
+            while (queueBlue.TryDequeue(out var vertex))
             {
                 if (vertex.Switch && !marked.Contains(vertex))
                     queue.Enqueue(vertex);
@@ -129,20 +129,20 @@ public class Searcher
 
                     var next_vertex = edge.To;
                     unvisitedEdges--;
-                    if (!pegMarked.Contains(next_vertex))
-                        peg_queue.Enqueue(next_vertex);
+                    if (!markedBlue.Contains(next_vertex))
+                        queueBlue.Enqueue(next_vertex);
                 }
                 if (unvisitedEdges > 0)
                     newSearchStarts.Add(vertex);
                 if (!visited.Contains(vertex))
                     newlyVisited.Add(vertex);
-                pegMarked.Add(vertex);
+                markedBlue.Add(vertex);
             }
 
             while (queue.TryDequeue(out var vertex))
             {
-                if (vertex.Switch && !pegMarked.Contains(vertex))
-                    peg_queue.Enqueue(vertex);
+                if (vertex.Switch && !markedBlue.Contains(vertex))
+                    queueBlue.Enqueue(vertex);
                 if (vertex.Peg == PegState.Blue)
                     continue;
 
@@ -171,7 +171,7 @@ public class Searcher
                     newlyVisited.Add(vertex);
                 marked.Add(vertex);
             }
-        } while (queue.Any() || peg_queue.Any());
+        } while (queue.Any() || queueBlue.Any());
 
         return (newlyVisited, newSearchStarts);
     }
