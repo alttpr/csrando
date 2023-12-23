@@ -40,6 +40,67 @@ public class Searcher
         } while (newItemsFound);
     }
 
+    /// <summary>
+    /// Spend keys from inventory for simple cases.
+    /// Case 1: If you have all randomized keys in a set, you should be able to eventually
+    /// reach all the fixed keys from pots and enemies and thus open all the doors.
+    /// Case 2: If you see both sides of a door, you should be able to burn a key there
+    /// to simulate the worst play.
+    /// </summary>
+    /// <param name="inventory">Current inventory</param>
+    /// <param name="visited">Currently visited nodes</param>
+    void SpendObviousKeys(Inventory inventory, VertexHashSet visited)
+    {
+        foreach (var (key, doors) in _graph.Doors)
+        {
+            int lockedDoorCount = doors.Where(d => !inventory.Has(d.Key)).Count();
+
+            // If all the doors are already opened, we don't have anything to do
+            if (lockedDoorCount == 0)
+                continue;
+
+            int keyCount = inventory.GetCount(key);
+
+            // If we have all the randomized keys, mark all the doors as unlockable and spend all the current keys
+            // as we would collect the fixed keys while exploring the rest of the dungeon if needed.
+            int uncollectedFixedKeys = _graph.FixedKeys[key].Count(v => !visited.Contains(v));
+            if (keyCount + uncollectedFixedKeys >= lockedDoorCount)
+            {
+                // System.Console.WriteLine($"Opening all doors with key {key}");
+                foreach (var door in doors)
+                {
+                    if (!inventory.Has(door.Key))
+                        inventory.AddItem(door.Key);
+                }
+                if (keyCount > 0)
+                    inventory.RemoveItem(key, keyCount);
+                continue;
+            }
+
+            // If we can see both sides of a door, spend a key.
+            foreach (var door in doors)
+            {
+                if (keyCount == 0)
+                    break;
+
+                if (inventory.Has(door.Key))
+                    continue;
+
+                foreach (var vertices in door.Value)
+                {
+                    if (_visited.Contains(vertices.A) && visited.Contains(vertices.B))
+                    {
+                        inventory.AddItem(door.Key);
+                        inventory.RemoveItem(key, 1);
+                        keyCount--;
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
     private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
@@ -86,12 +147,18 @@ public class Searcher
 
     /// <summary>
     /// Basic graph searcher. Returns a set of vertices that are absolutely reachable from the given starting points.
+    /// Will go through open doors.
     /// </summary>
     /// <param name="collected">Items to use in search, no collecting here</param>
     /// <param name="visited">Locations we believe we have visited before</param>
     /// <param name="startAt">Listy of starting Vertices to search from</param>
-    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
+    /// <returns>
+    /// Returns the list of new reachable nodes and nodes with remaining accessible regions.
+    /// </returns>
+    private SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
+        SpendObviousKeys(collected, visited);
+
         var newlyVisited = new VertexHashSet(visited.Graph);
         var newSearchStarts = new VertexHashSet(visited.Graph);
         var marked = new VertexHashSet(visited.Graph);
@@ -116,13 +183,22 @@ public class Searcher
                     queue.Enqueue(vertex);
                 if (vertex.Peg == PegState.Orange)
                     continue;
+
+                if (vertex.Name == "Ice Palace - Restock Room - Blue:0")
+                    vertex.ExtraLight.Any();
                 int unvisitedEdges = vertex.Edges.Count;
                 foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
                 {
                     if (!edge.Condition.IsUnconditional)
                     {
                         if (edge.Condition.Item.Type == ItemType.SmallKey)
+                        {
+                            if (marked.Contains(edge.To) && !markedBlue.Contains(edge.To))
+                            {
+                                queueBlue.Enqueue(edge.To);
+                            }
                             continue;
+                        }
                         if (!collected.Has(edge.Condition))
                             continue;
                     }
@@ -158,15 +234,17 @@ public class Searcher
                             continue;
                     }
 
-                    var next_vertex = edge.To;
-
                     unvisitedEdges--;
-                    if (!marked.Contains(next_vertex))
-                        queue.Enqueue(next_vertex);
+                    if (!marked.Contains(edge.To))
+                        queue.Enqueue(edge.To);
                 }
 
+                // We could remove nodes from newSearchStarts when we have visited
+                // all the edges, but the affected nodes are few and it's more
+                // work than time saved overall.
                 if (unvisitedEdges > 0)
                     newSearchStarts.Add(vertex);
+
                 if (!visited.Contains(vertex))
                     newlyVisited.Add(vertex);
                 marked.Add(vertex);
@@ -185,22 +263,9 @@ public class Searcher
             if (keyCount == 0)
                 continue;
 
-            if (keyCount + _graph.FixedKeys[key].Count(l => !_visited.Contains(l)) >= edges.Count)
-            {
-                // we have all keys, unlock everything.
-                var behindDoorLocations = edges.Where(e => _visited.Contains(e.From) || _visited.Contains(e.To))
-                    .SelectMany(e => new[] { e.From, e.To })
-                    .ToHashSet();
-                var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, behindDoorLocations);
-                strongLocations.UnionWith(newlyVisited);
-                strongSearchStarts.UnionWith(newSearchStarts);
-            }
-            else
-            {
-                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, edges, keyCount, _visited, _collected);
-                strongLocations.UnionWith(recursiveLocations);
-                strongSearchStarts.UnionWith(recursiveSearchStarts);
-            }
+            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
+            strongLocations.UnionWith(recursiveLocations);
+            strongSearchStarts.UnionWith(recursiveSearchStarts);
         }
 
         _visited.UnionWith(strongLocations);
@@ -209,36 +274,50 @@ public class Searcher
 
         return strongLocations.Any() || foundItems;
     }
-    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, HashSet<(Vertex From, Vertex To)> edges, int keyCount, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
-        if (keyCount == 0)
+        if (inventory.GetCount(key) == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
+
+        inventory = inventory.Clone();
 
         VertexHashSet? strongLocations = null;
         VertexHashSet? strongSearchStarts = null;
         var visitedBeforeRecursion = visitedBeforeDoors.Clone();
         var collectedBeforeRecursion = collectedBeforeDoors.Clone();
 
-        foreach (var doorsForKey in _graph.Doors[key])
+        foreach (var door in _graph.Doors[key])
         {
-            bool seenA = visitedBeforeDoors.Contains(doorsForKey.From);
-            bool seenB = visitedBeforeDoors.Contains(doorsForKey.To);
-            if (!seenA && !seenB) continue;
-            if (seenA && seenB) continue;
+            // Skip the door if it's already been opened
+            if (inventory.Has(door.Key))
+                continue;
 
-            var to = seenA ? doorsForKey.To : doorsForKey.From;
+            List<Vertex> newVerticesFromDoor = new();
+            foreach (var vs in door.Value)
+            {
+                bool seenA = visitedBeforeDoors.Contains(vs.A);
+                bool seenB = visitedBeforeDoors.Contains(vs.B);
+                if (seenA != seenB)
+                    newVerticesFromDoor.Add(seenA ? vs.B : vs.A);
+            }
+            if (!newVerticesFromDoor.Any())
+                continue;
 
             var inventoryForIteration = inventory.Clone();
-            Vertex[] startAt = [to, .. additionalStarts];
+
+            // Open the door, consume a key
+            inventoryForIteration.AddItem(door.Key);
+            inventoryForIteration.RemoveItem(key);
+
+            // Check what's behind the door
+            Vertex[] startAt = [.. newVerticesFromDoor, .. additionalStarts];
             var (weakLocations, weakSearchStarts) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
+
             visitedBeforeRecursion.UnionWith(weakLocations);
-            int keysBefore = inventoryForIteration.GetCount(key);
             // TODO: can we stop recursing here if we didn't find anything?
             CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion);
-            int keysAfter = inventoryForIteration.GetCount(key);
-            int keysFound = keysAfter - keysBefore;
-            int keysUsed = 1 - keysFound;
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, edges, keyCount - keysUsed, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
+            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
             // reset
             visitedBeforeRecursion.IntersectWith(visitedBeforeDoors);
             collectedBeforeRecursion.IntersectWith(collectedBeforeDoors);

@@ -30,56 +30,8 @@ public sealed class Graph
     private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = new();
     private readonly Dictionary<string, List<Vertex>> _setLocations = new() { { "*", new() } };
-    private Dictionary<Item, HashSet<(Vertex From, Vertex To)>>? _doors;
-    public Dictionary<Item, HashSet<(Vertex From, Vertex To)>> Doors
-    {
-        get
-        {
-            if (_doors == null)
-            {
-                _doors = new();
-
-                foreach (var edge in _vertices.SelectMany(v => v.Edges).Where(e => e.Condition.Item.Type == ItemType.SmallKey))
-                {
-                    var first = edge.From;
-                    var second = edge.To;
-
-                    if (edge.From.Name.CompareTo(edge.To.Name) > 0)
-                        (first, second) = (second, first);
-
-                    if (!_doors.TryGetValue(edge.Condition.Item, out var doorsForKey))
-                    {
-                        doorsForKey = new();
-                        _doors.Add(edge.Condition.Item, doorsForKey);
-                    }
-                    doorsForKey.Add((first, second));
-                }
-            }
-
-            return _doors;
-        }
-    }
-
-    private Dictionary<Item, HashSet<Vertex>>? _fixedKeys;
-    public Dictionary<Item, HashSet<Vertex>> FixedKeys
-    {
-        get
-        {
-            if (_fixedKeys == null)
-            {
-                _fixedKeys = _vertices
-                    .Where(v => v.Item?.Type == ItemType.SmallKey)
-                    .GroupBy(v => v.Item!)
-                    .ToDictionary(k => k.Key, v => v.ToHashSet());
-                foreach (var key in Doors)
-                {
-                    _fixedKeys.TryAdd(key.Key, new HashSet<Vertex>());
-                }
-            }
-            return _fixedKeys;
-        }
-    }
-
+    public Dictionary<Item, Dictionary<Item, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
+    public Dictionary<Item, HashSet<Vertex>> FixedKeys = new();
     public HashSet<Item> AllItems { get; set; } = new();
 
     public IEnumerable<Vertex> GetVertices()

@@ -43,8 +43,7 @@ public sealed class Inventory
     {
         if (item.Id >= _bits.Length)
         {
-            // Increase the size by chunks of 4 bytes or 32 values
-            _bits.Length = (item.Id / 31) * 32;
+            _bits.Length = item.Id + 1;
         }
         _bits.Set(item.Id, true);
 
@@ -64,6 +63,25 @@ public sealed class Inventory
         if (!_itemCount.TryAdd(item, count))
         {
             _itemCount[item] += count;
+        }
+    }
+
+    public void RemoveItem(Item item, int count = 1)
+    {
+        if (!_bits.Get(item.Id))
+        {
+            throw new Exception("Trying to remove an item not in inventory.");
+        }
+
+        var previousCount = _itemCount[item];
+        if (previousCount > count)
+        {
+            _itemCount[item] -= count;
+        }
+        else
+        {
+            _itemCount.Remove(item);
+            _bits.Set(item.Id, false);
         }
     }
 

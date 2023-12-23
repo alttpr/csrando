@@ -55,15 +55,15 @@ public enum VertexType
 /// Vertex in Graph.
 /// </summary>
 [DebuggerDisplay("{Name} ({Type})")]
-public sealed class Vertex
+public sealed class Vertex : ICloneable
 {
     public int Id { get; set; }
     public required VertexType Type { get; init; }
     public VertexType? SubType { get; init; }
-    public required string Name { get; init; }
+    public required string Name { get; set; }
     public bool Dark { get; init; }
     public List<string> ExtraLight { get; init; } = [];
-    public bool Switch { get; init; }
+    public bool Switch { get; set; }
     public int? Cost { get; set; }
     public Item? Item { get; set; }
     public Item? Trophy { get; init; }
@@ -88,4 +88,9 @@ public sealed class Vertex
     public Item? Key { get; init; }
 
     public List<Edge> Edges = new();
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+    }
 }

@@ -16,7 +16,7 @@ public abstract class LogicTestBase
         {
             randomizer.Graph.GetVertex($"{location}:0");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Assert.Fail($"Location \"{location}\" doesn't exist in the graph");
         }

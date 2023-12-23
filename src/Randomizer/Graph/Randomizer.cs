@@ -57,6 +57,8 @@ public sealed class Randomizer
             EnemyShuffler.AdjustEdges(_worlds[i], _prng);
             BunnyGraphifier.AdjustEdges(_worlds[i], _prng);
             PrizePackShuffler.AdjustEdges(_worlds[i], _prng);
+            DoorReplacer.AdjustEdges(_worlds[i], _prng);
+            DungeonPegStateCopier.AdjustEdges(_worlds[i], _prng);
 
             Graph.AddDirected(_start, _worlds[i].Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
         }
