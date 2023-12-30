@@ -2,8 +2,3 @@ fixed:
   directed:
     - ["Ganon's Room", "Ganon"]
   undirected: []
-Flippers:
-  directed:
-    # TODO: Add intermediate region
-    - ["Waterfall Fairy", "Zora's Falls Pool"]
-  undirected: []
