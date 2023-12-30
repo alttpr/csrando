@@ -56,6 +56,7 @@ internal sealed class CrystalSwitchGraphifier : IWorldModifier
 
         foreach (var dungeonsWithSwitches in groups.Where(i => i.Value.Any(v => v.Switch)))
         {
+            var entrances = dungeonsWithSwitches.Value.Where(v => v.EntranceId != null).ToArray();
             System.Console.WriteLine($"Found dungeon with switch that contains {dungeonsWithSwitches.Value.First().Name}");
         }
 

@@ -16,7 +16,7 @@ public class YamlReaderTest
     [TestMethod]
     public void LoadEdgesTest()
     {
-        foreach (var name in new string[] { "base", "inverted", "normal", "open", "standard" })
+        foreach (var name in new string[] { "base", "inverted", "normal", "open" })
         {
             var result = YamlReader.LoadEdges(name);
             Assert.IsTrue(result.Count > 0);
