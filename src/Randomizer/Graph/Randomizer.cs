@@ -49,7 +49,9 @@ public sealed class Randomizer
             _startingItems = _startingItems.Merge(_worlds[i].StartingItems);
 
             ShopFiller.AdjustEdges(_worlds[i], _prng);
+            DoorShuffler.AdjustEdges(_worlds[i], _prng);
             EntranceShuffler.AdjustEdges(_worlds[i], _prng);
+            CrystalSwitchGraphifier.AdjustEdges(_worlds[i], _prng);
             DarknessGraphifier.AdjustEdges(_worlds[i], _prng);
             BossShuffler.AdjustEdges(_worlds[i], _prng);
             EnemyShuffler.AdjustEdges(_worlds[i], _prng);
