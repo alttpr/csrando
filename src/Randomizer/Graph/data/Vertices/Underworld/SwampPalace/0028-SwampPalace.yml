@@ -4,7 +4,6 @@ rooms:
     nodes:
       regions:
         - name: "Swamp Palace - Entrance"
-          peg: "orange"
           inletid: 0x25
           connections:
             SwampWaterEntrance:
