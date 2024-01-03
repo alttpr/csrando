@@ -30,8 +30,10 @@ rooms:
           connections:
             fixed:
               - "Thieves' Town - Spike Dodge"
-              - "Thieves' Town - Hellway - Blue"
-              - "Thieves' Town - Hellway - Orange"
+            PegBlue:
+              - "Thieves' Town - Hellway Top Right"
+            PegOrange:
+              - "Thieves' Town - Hellway Bottom Right"
           mobs:
             - name: "Thieves' Town - Spikeveyer - Gibo 1"
               position: { x: 0x06, y: 0x0a, z: 0x00 }
@@ -83,92 +85,49 @@ rooms:
                 - "SpikeTrap"
                 - "Bumper"
 
-        - name: "Thieves' Town - Hellway - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Thieves' Town - Hellway"
-              - "Thieves' Town - Hellway Top Right - Blue"
-
-        - name: "Thieves' Town - Hellway - Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Thieves' Town - Hellway"
-              - "Thieves' Town - Hellway Bottom Right - Orange"
-
         - name: "Thieves' Town - Hellway Bottom Right"
           connections:
             fixed:
-              - "Thieves' Town - Hellway Bottom Right - Orange"
               - "Thieves' Town - Spikeveyer"
-
-        - name: "Thieves' Town - Hellway Bottom Right - Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Thieves' Town - Hellway Bottom Right"
-              - "Thieves' Town - Hellway - Orange"
+            PegOrange:
+              - "Thieves' Town - Hellway"
 
         - name: "Thieves' Town - Hellway Top Right"
           connections:
             fixed:
-              - "Thieves' Town - Hellway Top Right - Blue"
               - "Thieves' Town - Pegblock Left"
-
-        - name: "Thieves' Town - Hellway Top Right - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Thieves' Town - Hellway Top Right"
-              - "Thieves' Town - Hellway - Blue"
+            PegBlue:
+              - "Thieves' Town - Hellway"
 
         - name: "Thieves' Town - Pegblock Left"
           connections:
             fixed:
               - "Thieves' Town - Hellway Top Right"
-              - "Thieves' Town - Pegblock Left - Blue"
-
-        - name: "Thieves' Town - Pegblock Left - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Thieves' Town - Pegblock Left"
-              - "Thieves' Town - Pegblock Top - Blue"
-              - "Thieves' Town - Pegblock Bottom - Blue"
+            PegBlue:
+              - "Thieves' Town - Pegblock Top"
+              - "Thieves' Town - Pegblock Bottom"
 
         - name: "Thieves' Town - Pegblock Top"
           connections:
-            fixed:
-              - "Thieves' Town - Pegblock Top - Blue"
-
-        - name: "Thieves' Town - Pegblock Top - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Thieves' Town - Pegblock Top"
-              - "Thieves' Town - Pegblock Left - Blue"
-              - "Thieves' Town - Pegblock Right - Blue"
+            PegBlue:
+              - "Thieves' Town - Pegblock Left"
+              - "Thieves' Town - Pegblock Right"
 
         - name: "Thieves' Town - Pegblock Right"
           connections:
             fixed:
               - "Thieves' Town - Toilet"
-              - "Thieves' Town - Pegblock Right - Blue"
-
-        - name: "Thieves' Town - Pegblock Right - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Thieves' Town - Pegblock Right"
-              - "Thieves' Town - Pegblock Top - Blue"
-              - "Thieves' Town - Pegblock Bottom - Blue"
+            PegBlue:
+              - "Thieves' Town - Pegblock Top"
+              - "Thieves' Town - Pegblock Bottom"
 
         - name: "Thieves' Town - Pegblock Bottom"
           connections:
             fixed:
-              - "Thieves' Town - Pegblock Bottom - Blue"
               - "Thieves' Town - Spikeveyer"
+            PegBlue:
+              - "Thieves' Town - Pegblock Left"
+              - "Thieves' Town - Pegblock Right"
           mobs:
             - name: "Thieves' Town - Spikeveyer - Red Zazak 1"
               position: { x: 0x1b, y: 0x04, z: 0x00 }
@@ -179,11 +138,3 @@ rooms:
             - name: "Thieves' Town - Spikeveyer - Gibo 2"
               position: { x: 0x19, y: 0x0a, z: 0x00 }
               sprite: "Gibo"
-
-        - name: "Thieves' Town - Pegblock Bottom - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Thieves' Town - Pegblock Bottom"
-              - "Thieves' Town - Pegblock Left - Blue"
-              - "Thieves' Town - Pegblock Right - Blue"
