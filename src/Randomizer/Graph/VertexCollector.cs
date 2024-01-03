@@ -256,85 +256,6 @@ internal class VertexCollector
                     }
                 }
             }
-
-            // TODO: we have no maps that directly contain warps; they're all in regions.
-            //       can we remove this block, or are we missing data?
-            foreach (var warp in map.Nodes.Warps)
-            {
-                string name = $"{warp.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Warp,
-                    Name = name,
-                    Map = map.MapMap,
-                    Position = warp.Position,
-                    MoonPearl = MoonPearlTransform(map.Moonpearl, name),
-                });
-            }
-            foreach (var mob in map.Nodes.Mobs)
-            {
-                string name = $"{mob.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Mob,
-                    Name = name,
-                    Map = map.MapMap,
-                    Sprite = Sprite.Get(mob.Sprite),
-                    Item = world.GetItemOrNull(mob.Item),
-                    State = mob.State.ToArray(),
-                    ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
-                    Trophy = world.GetItemOrNull(mob.Trophy),
-                    // TODO: Add deny, allow to Vertex.
-                    // Deny = mob.Deny,
-                    // Allow = mob.Allow,
-                });
-            }
-            foreach (var item in map.Nodes.Items)
-            {
-                string name = $"{item.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Item,
-                    SubType = item.Type,
-                    Name = name,
-                    Map = map.MapMap,
-                    Item = world.GetItemOrNull(item.Item),
-                    ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
-                    Addresses = item.Addresses.ToArray(),
-                });
-            }
-            foreach (var entrance in map.Nodes.Entrances)
-            {
-                // TODO: the old code had conditional access to entranceid and outletid; are there entrances without them?
-                string nameIn = $"{entrance.Name} - In:{world.Id}";
-                string nameOut = $"{entrance.Name} - Out:{world.Id}";
-                structured_vertices.Add(nameIn, new Vertex
-                {
-                    Type = VertexType.Entrance,
-                    Name = nameIn,
-                    Map = map.MapMap,
-                    EntranceId = entrance.EntranceId,
-                });
-                structured_vertices.Add(nameOut, new Vertex
-                {
-                    Type = VertexType.Outlet,
-                    Name = nameOut,
-                    Map = map.MapMap,
-                    OutletId = entrance.OutletId,
-                });
-            }
-            // consider merging Holes into entrances
-            foreach (var hole in map.Nodes.Holes)
-            {
-                string name = $"{hole.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Hole,
-                    Name = name,
-                    Map = map.MapMap,
-                    EntranceIds = hole.EntranceIds.ToArray(),
-                });
-            }
         }
 
         // underworld
@@ -396,32 +317,8 @@ internal class VertexCollector
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
                 }
 
-                foreach (var entrance in region.Entrances)
-                {
-                    // TODO: the old code had conditional access to entranceid and outletid; are there entrances without them?
-                    string nameIn = $"{entrance.Name} - In:{world.Id}";
-                    string nameOut = $"{entrance.Name} - Out:{world.Id}";
-                    var entranceInVertex = new Vertex
-                    {
-                        Type = VertexType.Entrance,
-                        Name = nameIn,
-                        RoomId = room.Roomid,
-                        Group = room.Group.GetValueOrDefault(0),
-                        EntranceId = entrance.EntranceId,
-                    };
-                    structured_vertices.Add(nameIn, entranceInVertex);
-                    var entranceOutVertex = new Vertex
-                    {
-                        Type = VertexType.Outlet,
-                        Name = nameOut,
-                        RoomId = room.Roomid,
-                        Group = room.Group.GetValueOrDefault(0),
-                        OutletId = entrance.OutletId,
-                    };
-                    structured_vertices.Add(nameOut, entranceOutVertex);
-                    regionVertex.Edges.Add(new Edge(regionVertex, entranceInVertex, fixedCondition));
-                    entranceInVertex.Edges.Add(new Edge(entranceOutVertex, regionVertex, fixedCondition));
-                }
+                if (region.Entrances.Any())
+                    throw new Exception("Found old style entrance in underworld region node.");
 
                 foreach (var item in region.Items)
                 {
@@ -491,22 +388,7 @@ internal class VertexCollector
                     }
                 }
             }
-            foreach (var mob in room.Nodes.Mobs)
-            {
-                string name = $"{mob.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Mob,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                    Sprite = Sprite.Get(mob.Sprite),
-                    Item = world.GetItemOrNull(mob.Item),
-                    State = mob.State.ToArray(),
-                    ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
-                    Trophy = world.GetItemOrNull(mob.Trophy),
-                });
-            }
+
             foreach (var item in room.Nodes.Items)
             {
                 string name = $"{item.Name}:{world.Id}";
@@ -520,74 +402,6 @@ internal class VertexCollector
                     Item = world.GetItemOrNull(item.Item),
                     ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
                     Addresses = item.Addresses.ToArray(),
-                });
-            }
-            foreach (var keyDoor in room.Nodes.Keydoors)
-            {
-                string name = $"{keyDoor.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Keydoor,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                    Key = world.GetItem(keyDoor.Key),
-                });
-            }
-            foreach (var bigKeyDoor in room.Nodes.BigKeydoors)
-            {
-                string name = $"{bigKeyDoor.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.BigKeydoor,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                    Key = world.GetItem(bigKeyDoor.Key),
-                });
-            }
-            foreach (var shutter in room.Nodes.Shutters)
-            {
-                string name = $"{shutter.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Shutter,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                });
-            }
-            foreach (var pot in room.Nodes.Pots)
-            {
-                string name = $"{pot.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = VertexType.Pot,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                    Item = world.GetItemOrNull(pot.Item),
-                    State = pot.State.ToArray(),
-                    ItemSet = pot.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
-                    Trophy = world.GetItemOrNull(pot.Trophy),
-                    // TODO: Add deny, allow to Vertex.
-                    // Deny = pot.Deny,
-                    // Allow = pot.Allow,
-                });
-            }
-            // TODO: how do we want to handle this?
-            foreach (var item in room.Nodes.Inventory)
-            {
-                string name = $"{item.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
-                {
-                    Type = item.Type,
-                    Name = name,
-                    RoomId = room.Roomid,
-                    Group = room.Group.GetValueOrDefault(0),
-                    Item = world.GetItemOrNull(item.Item),
-                    Cost = item.Cost,
-                    ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
                 });
             }
 

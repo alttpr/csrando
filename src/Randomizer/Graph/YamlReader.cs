@@ -338,21 +338,6 @@ public partial class MapNodes
     [YamlMember(Alias = "regions")]
     public List<Region> Regions { get; set; } = new();
 
-    [YamlMember(Alias = "entrances")]
-    public List<Entrance> Entrances { get; set; } = new();
-
-    [YamlMember(Alias = "holes")]
-    public List<Hole> Holes { get; set; } = new();
-
-    [YamlMember(Alias = "items")]
-    public List<ItemEntry> Items { get; set; } = new();
-
-    [YamlMember(Alias = "warps")]
-    public List<Warp> Warps { get; set; } = new();
-
-    [YamlMember(Alias = "mobs")]
-    public List<Entity> Mobs { get; set; } = new();
-
     [YamlMember(Alias = "meta")]
     public List<MetaEntry> Meta { get; set; } = new();
 
@@ -470,23 +455,8 @@ public partial class RoomNodes
     [YamlMember(Alias = "regions")]
     public List<Region> Regions { get; set; } = new();
 
-    [YamlMember(Alias = "keydoors")]
-    public List<Keydoor> Keydoors { get; set; } = new();
-
-    [YamlMember(Alias = "bigkeydoors")]
-    public List<Keydoor> BigKeydoors { get; set; } = new();
-
-    [YamlMember(Alias = "shutters")]
-    public List<Shutter> Shutters { get; set; } = new();
-
     [YamlMember(Alias = "items")]
     public List<ItemEntry> Items { get; set; } = new();
-
-    [YamlMember(Alias = "inventory")]
-    public List<InventoryEntry> Inventory { get; set; } = new();
-
-    [YamlMember(Alias = "pots")]
-    public List<Entity> Pots { get; set; } = new();
 
     [YamlMember(Alias = "mobs")]
     public List<Entity> Mobs { get; set; } = new();
