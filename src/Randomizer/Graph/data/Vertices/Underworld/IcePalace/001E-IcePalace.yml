@@ -67,7 +67,8 @@ rooms:
           connections:
             fixed:
               - "Ice Palace - Cross Puzzle - Top"
-              - "Ice Palace - Bomb Switch Bottom - Blue"
+            PegBlue:
+              - "Ice Palace - Bomb Switch Top"
           pots:
             - name: "Ice Palace - Blob Ambush - Pot"
               position: 0x0954
@@ -98,17 +99,11 @@ rooms:
                 - "RollerHL"
                 - "BigSpikeTrap"
                 - "Bumper"
-        - name: "Ice Palace - Bomb Switch Bottom - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Ice Palace - Bomb Switch Bottom"
-              - "Ice Palace - Bomb Switch Top - Blue"
 
         - name: "Ice Palace - Bomb Switch Top"
           connections:
-            fixed:
-              - "Ice Palace - Bomb Switch Top - Blue"
+            PegBlue:
+              - "Ice Palace - Bomb Switch Bottom"
             UseBomb:
               - "Ice Palace - Stalfos Ambush"
           mobs:
@@ -118,10 +113,3 @@ rooms:
             - name: "Ice Palace - Blob Ambush - Red Bari 2"
               position: { x: 0x19, y: 0x05, z: 0x00 }
               sprite: "RedBari"
-
-        - name: "Ice Palace - Bomb Switch Top - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Ice Palace - Bomb Switch Top"
-              - "Ice Palace - Bomb Switch Bottom - Blue"

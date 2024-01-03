@@ -23,8 +23,10 @@ rooms:
           connections:
             fixed:
               - "Ice Palace - Big Chest Room - Right"
-              - "Ice Palace - Block Drop - Left Orange"
-              - "Ice Palace - Block Drop - Left Blue"
+            PegOrange:
+              - "Ice Palace - Block Drop - Right"
+            PegBlue:
+              - "Ice Palace - Block Drop - Good Block"
           mobs:
             - name: "Ice Palace - Block Drop - Freezor"
               position: { x: 0x14, y: 0x12, z: 0x00 }
@@ -32,52 +34,32 @@ rooms:
               allow:
                 - "Freezor"
 
-        - name: "Ice Palace - Block Drop - Left Blue"
-          peg: "blue"
+        - name: "Ice Palace - Block Drop - Good Block"
           connections:
             fixed:
-              - "Ice Palace - Block Drop - Left"
               - "Ice Palace - Block Switch"
           items:
             - name: "Ice Palace - Block Switch Good Block"
               type: "event"
               item: "IcePalaceBlockSwitchGoodBlock"
 
-        - name: "Ice Palace - Block Drop - Left Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Ice Palace - Block Drop - Left"
-              - "Ice Palace - Block Drop - Right Orange"
-
         - name: "Ice Palace - Block Drop - Right"
           connections:
             fixed:
-              - "Ice Palace - Block Drop - Right Blue"
-              - "Ice Palace - Block Drop - Right Orange"
               - "Ice Palace - Pottery Barn"
+            PegBlue:
+              - "Ice Palace - Block Switch"
+            PegOrange:
+              - "Ice Palace - Block Drop - Left"
             BigKeyD5:
               - "Ice Palace - Fairy Drop"
-
-        - name: "Ice Palace - Block Drop - Right Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Ice Palace - Block Drop - Right"
-              - "Ice Palace - Block Drop - Left Orange"
-
-        - name: "Ice Palace - Block Drop - Right Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Ice Palace - Block Drop - Right"
-              - "Ice Palace - Block Switch"
 
         - name: "Ice Palace - Fairy Drop"
           connections:
             fixed:
-              - "Ice Palace - Fairy Drop - Blue"
               - "Ice Palace - Block Drop - Right"
+            PegBlue:
+              - "Ice Palace - Fairy Restock"
             KeyD5:
               - "Ice Palace - Lone Antifairy"
           mobs:
@@ -127,10 +109,3 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-
-        - name: "Ice Palace - Fairy Drop - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Ice Palace - Fairy Drop"
-              - "Ice Palace - Fairy Restock"

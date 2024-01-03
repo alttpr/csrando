@@ -5,9 +5,10 @@ rooms:
       regions:
         - name: "Ice Palace - Slime Party"
           connections:
+            fixed:
+              - "Ice Palace - Ice T"
             KeyD5:
               - "Ice Palace - Vanilla Ice"
-              - "Ice Palace - Ice T"
 
           pots:
             - name: "Ice Palace - Slime Party - Top Pot"

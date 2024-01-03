@@ -5,31 +5,17 @@ rooms:
       regions:
         - name: "Ice Palace - IPBJ - Top"
           connections:
-            fixed:
-              - "Ice Palace - IPBJ - Top - Orange"
+            PegOrange:
+              - "Ice Palace - IPBJ - Top Before Pot"
             KeyD5:
               - "Ice Palace - Conveyor"
 
-        - name: "Ice Palace - IPBJ - Top - Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Ice Palace - IPBJ - Top"
-              - "Ice Palace - IPBJ - Top Before Pot - Orange"
-
         - name: "Ice Palace - IPBJ - Top Before Pot"
           connections:
-            fixed:
-              - "Ice Palace - IPBJ - Top Before Pot - Orange"
+            PegOrange:
+              - "Ice Palace - IPBJ - Top"
             LiftPot:
               - "Ice Palace - IPBJ - Middle"
-
-        - name: "Ice Palace - IPBJ - Top Before Pot - Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Ice Palace - IPBJ - Top Before Pot"
-              - "Ice Palace - IPBJ - Top - Orange"
 
         - name: "Ice Palace - IPBJ - Middle"
           connections:

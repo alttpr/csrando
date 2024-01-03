@@ -6,8 +6,8 @@ rooms:
         - name: "Ice Palace - Restock Room"
           switch: true
           connections:
-            fixed:
-              - "Ice Palace - Restock Room - Blue"
+            PegBlue:
+              - "Ice Palace - Restock Room - Sides"
             KeyD5:
               - "Ice Palace - Block Switch"
           mobs:
@@ -17,8 +17,7 @@ rooms:
               allow:
                 - "CrystalSwitch"
 
-        - name: "Ice Palace - Restock Room - Blue"
-          peg: "blue"
+        - name: "Ice Palace - Restock Room - Sides"
           connections:
             fixed:
               - "Ice Palace - Restock Room"

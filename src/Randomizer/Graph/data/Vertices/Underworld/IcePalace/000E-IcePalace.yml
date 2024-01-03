@@ -4,7 +4,6 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Entrance"
-          peg: "orange"
           inletid: 0x2D
           connections:
             IcePalaceEntranceTrophy|1:
