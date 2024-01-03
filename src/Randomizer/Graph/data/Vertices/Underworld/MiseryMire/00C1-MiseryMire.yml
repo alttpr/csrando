@@ -6,82 +6,90 @@ rooms:
         - name: "Misery Mire - Mire-go-round"
           switch: true
           connections:
+            fixed:
+              - "Misery Mire - Joke Room"
             KeyD6:
               - "Misery Mire - Tile Room"
               - "Misery Mire - Main Lobby"
+          mobs:
+            - name: "Misery Mire - 4 Rails - Crystal Switch"
+              position: { x: 0x15, y: 0x17, z: 0x00 }
+              sprite: "CrystalSwitch"
+              allow:
+                - "CrystalSwitch"
+            - name: "Misery Mire - Mire-go-round - Bari Key"
+              position: { x: 0x13, y: 0x1b, z: 0x00 }
+              sprite: "BlueBari"
+              item: "KeyD6"
+              itemset: ["mire"]
+            - name: "Misery Mire - 4 Rails - Green Stalfos 1"
+              position: { x: 0x17, y: 0x15, z: 0x00 }
+              sprite: "GreenStalfos"
+            - name: "Misery Mire - 4 Rails - Antifairy"
+              position: { x: 0x14, y: 0x19, z: 0x00 }
+              sprite: "Antifairy"
+            - name: "Misery Mire - 4 Rails - Yomo Medusa"
+              position: { x: 0x18, y: 0x1a, z: 0x00 }
+              sprite: "YomoMedusa"
+            - name: "Misery Mire - 4 Rails - Green Stalfos 2"
+              position: { x: 0x1b, y: 0x1b, z: 0x00 }
+              sprite: "GreenStalfos"
 
         - name: "Misery Mire - Tile Room"
           connections:
+            fixed:
+              - "Misery Mire - Sluggula"
+            Lamp:
+              - "Misery Mire - Octagon"
+            FireRod:
+              - "Misery Mire - Octagon"
             KeyD6:
               - "Misery Mire - Mire-go-round"
+          mobs:
+            - name: "Misery Mire - 4 Rails - Medusa 3"
+              position: { x: 0x09, y: 0x16, z: 0x00 }
+              sprite: "Medusa"
+            - name: "Misery Mire - 4 Rails - Tiles"
+              position: { x: 0x07, y: 0x18, z: 0x00 }
+              sprite: "TileRoom"
 
-        - name: "Misery Mire - Octogan - orange"
-          peg: "orange"
-        - name: "Misery Mire - Octogan - blue"
-          peg: "blue"
+        - name: "Misery Mire - Octagon"
+          connections:
+            fixed:
+              - "Misery Mire - Tile Room"
+              - "Misery Mire - 4 Rails"
+            PegBlue:
+              - "Misery Mire - Octagon - Chest"
+          mobs:
+            - name: "Misery Mire - 4 Rails - Stalfos 1"
+              position: { x: 0x06, y: 0x0b, z: 0x00 }
+              sprite: "Stalfos"
+              deny:
+                - "RollerVU"
+                - "RollerHL"
+
+        - name: "Misery Mire - Octagon - Chest"
+          connections:
+            PegBlue:
+              - "Misery Mire - Octagon"
+          items:
+            - name: "Misery Mire - Compass Chest"
+              type: "chest"
+              addresses: [0xEA64]
+              itemset: ["mire"]
+
         - name: "Misery Mire - 4 Rails"
           connections:
             fixed:
+              - "Misery Mire - Hourglass"
               - "Misery Mire - Main Lobby"
-
-      items:
-        - name: "Misery Mire - Compass Chest"
-          type: "chest"
-          addresses: [0xEA64]
-          itemset: ["mire"]
-
-      mobs:
-        - name: "Misery Mire - 4 Rails - Crystal Switch"
-          position: { x: 0x15, y: 0x17, z: 0x00 }
-          sprite: "CrystalSwitch"
-          allow:
-            - "CrystalSwitch"
-
-        - name: "Misery Mire - Mire-go-round - Bari Key"
-          position: { x: 0x13, y: 0x1b, z: 0x00 }
-          sprite: "BlueBari"
-          item: "KeyD6"
-          itemset: ["mire"]
-
-        - name: "Misery Mire - 4 Rails - Medusa 1"
-          position: { x: 0x14, y: 0x05, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Misery Mire - 4 Rails - Medusa 2"
-          position: { x: 0x1b, y: 0x05, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Misery Mire - 4 Rails - Stalfos 1"
-          position: { x: 0x06, y: 0x0b, z: 0x00 }
-          sprite: "Stalfos"
-          deny:
-            - "RollerVU"
-            - "RollerHL"
-
-        - name: "Misery Mire - 4 Rails - Stalfos 2"
-          position: { x: 0x15, y: 0x0b, z: 0x00 }
-          sprite: "Stalfos"
-
-        - name: "Misery Mire - 4 Rails - Green Stalfos 1"
-          position: { x: 0x17, y: 0x15, z: 0x00 }
-          sprite: "GreenStalfos"
-
-        - name: "Misery Mire - 4 Rails - Medusa 3"
-          position: { x: 0x09, y: 0x16, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Misery Mire - 4 Rails - Tiles"
-          position: { x: 0x07, y: 0x18, z: 0x00 }
-          sprite: "TileRoom"
-
-        - name: "Misery Mire - 4 Rails - Antifairy"
-          position: { x: 0x14, y: 0x19, z: 0x00 }
-          sprite: "Antifairy"
-
-        - name: "Misery Mire - 4 Rails - Yomo Medusa"
-          position: { x: 0x18, y: 0x1a, z: 0x00 }
-          sprite: "YomoMedusa"
-
-        - name: "Misery Mire - 4 Rails - Green Stalfos 2"
-          position: { x: 0x1b, y: 0x1b, z: 0x00 }
-          sprite: "GreenStalfos"
+          mobs:
+            - name: "Misery Mire - 4 Rails - Medusa 1"
+              position: { x: 0x14, y: 0x05, z: 0x00 }
+              sprite: "Medusa"
+            - name: "Misery Mire - 4 Rails - Medusa 2"
+              position: { x: 0x1b, y: 0x05, z: 0x00 }
+              sprite: "Medusa"
+            - name: "Misery Mire - 4 Rails - Stalfos 2"
+              position: { x: 0x15, y: 0x0b, z: 0x00 }
+              sprite: "Stalfos"

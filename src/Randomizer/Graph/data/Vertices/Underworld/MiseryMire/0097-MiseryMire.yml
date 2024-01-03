@@ -4,10 +4,34 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Torch Puzzle"
-        - name: "Misery Mire - Drop Hint"
-        - name: "Misery Mire - Drop Hole"
+          connections:
+            fixed:
+              - "Misery Mire - Drop Hint"
+              - "Misery Mire - Sluggula"
+              - "Misery Mire - Drop Chest Return"
+            Lamp:
+              - "Misery Mire - Torch Puzzle - Solved"
+            FireRod:
+              - "Misery Mire - Torch Puzzle - Solved"
+          mobs:
+            - name: "Misery Mire - Torch Puzzle - Wizzrobe Spawner"
+              position: { x: 0x0f, y: 0x0f, z: 0x00 }
+              sprite: "WizzrobeSpawner"
 
-      mobs:
-        - name: "Misery Mire - Torch Puzzle - Wizzrobe Spawner"
-          position: { x: 0x0f, y: 0x0f, z: 0x00 }
-          sprite: "WizzrobeSpawner"
+        - name: "Misery Mire - Torch Puzzle - Solved"
+          items:
+            - name: "MiseryMireTorchPuzzleSolved"
+              item: "MiseryMireTorchPuzzleSolved"
+              type: "event"
+
+        - name: "Misery Mire - Drop Hint"
+          connections:
+            fixed:
+              - "Misery Mire - Torch Puzzle"
+            MiseryMireTorchPuzzleSolved:
+              - "Misery Mire - Drop Hole"
+
+        - name: "Misery Mire - Drop Hole"
+          connections:
+            fixed:
+              - "Misery Mire - Drop Chest Room"

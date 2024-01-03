@@ -6,7 +6,6 @@ rooms:
         - name: "Misery Mire - Main Lobby"
           connections:
             fixed:
-              - "Misery Mire - Main Lobby - Blue"
               - "Misery Mire - East Wing Middle"
               - "Misery Mire - East Wing Bottom"
               - "Misery Mire - Popo Push"
@@ -14,103 +13,78 @@ rooms:
               - "Misery Mire - Mire 2"
             KeyD6:
               - "Misery Mire - Mire-go-round"
-
-        - name: "Misery Mire - Main Lobby - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Misery Mire - Main Lobby"
-              - "Misery Mire - Main Lobby North East - Blue"
-              - "Misery Mire - Main Lobby Between Pegs - Blue"
+            PegBlue:
+              - "Misery Mire - Main Lobby North East"
+              - "Misery Mire - Main Lobby Between Pegs"
+          pots:
+            - name: "Misery Mire - Main Lobby - Pot 3"
+              position: 0x3044
+              sprite: "@RupeeGreen"
+            - name: "Misery Mire - Main Lobby - Pot 4"
+              position: 0x3440
+              sprite: "@ArrowRefill5"
+          mobs:
+            - name: "Misery Mire - Main Lobby - Fire Snake 1"
+              position: { x: 0x15, y: 0x0b, z: 0x01 }
+              sprite: "FireSnake"
+              deny:
+                - "RollerHL"
+                - "RollerHR"
+            - name: "Misery Mire - Main Lobby - Fire Snake 2"
+              position: { x: 0x0b, y: 0x0c, z: 0x00 }
+              sprite: "FireSnake"
+            - name: "Misery Mire - Main Lobby - Medusa"
+              position: { x: 0x08, y: 0x10, z: 0x00 }
+              sprite: "Medusa"
+            - name: "Misery Mire - Main Lobby - Spark (Clockwise) 1"
+              position: { x: 0x10, y: 0x12, z: 0x01 }
+              sprite: "SparkCW"
+            - name: "Misery Mire - Main Lobby - Spark (Clockwise) 2"
+              position: { x: 0x19, y: 0x12, z: 0x01 }
+              sprite: "SparkCW"
+            - name: "Misery Mire - Main Lobby - Bunny Beam"
+              position: { x: 0x10, y: 0x14, z: 0x01 }
+              sprite: "BunnyBeam"
+            - name: "Misery Mire - Main Lobby - Fire Snake 3"
+              position: { x: 0x08, y: 0x16, z: 0x01 }
+              sprite: "FireSnake"
+            - name: "Misery Mire - Main Lobby - Spark (Clockwise) 3"
+              position: { x: 0x16, y: 0x16, z: 0x01 }
+              sprite: "SparkCW"
 
         - name: "Misery Mire - Main Lobby North"
           connections:
             fixed:
-              - "Misery Mire - Main Lobby North - Blue"
               - "Misery Mire - Sluggula Cross"
-
-        - name: "Misery Mire - Main Lobby North - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Misery Mire - Main Lobby North"
-              - "Misery Mire - Main Lobby Between Pegs - Blue"
+            PegBlue:
+              - "Misery Mire - Main Lobby Between Pegs"
 
         - name: "Misery Mire - Main Lobby North East"
           connections:
-            fixed:
-              - "Misery Mire - Main Lobby North East - Blue"
-              - "Misery Mire - Main Lobby - Blue"
+            PegBlue:
+              - "Misery Mire - Main Lobby"
             KeyD6:
               - "Misery Mire - East Wing Top Left"
+          pots:
+            - name: "Misery Mire - Main Lobby - Pot 2"
+              position: 0x2e64
+              sprite: "@MagicRefillSmall"
 
-        - name: "Misery Mire - Main Lobby North East - Blue"
-          peg: "blue"
+        - name: "Misery Mire - Main Lobby Between Pegs"
           connections:
-            fixed:
-              - "Misery Mire - Main Lobby North East"
-
-        - name: "Misery Mire - Main Lobby Between Pegs - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Misery Mire - Main Lobby - Blue"
-              - "Misery Mire - Main Lobby North - Blue"
+            PegBlue:
+              - "Misery Mire - Main Lobby"
+              - "Misery Mire - Main Lobby North"
           # The chest is really in the north area, but you need to press the button
           # under the pot first.
+          # TODO: Address this for pot shuffle
           items:
             - name: "Misery Mire - Main Lobby Chest"
               type: "chest"
               conditions: ["LiftPot"]
               addresses: [0xEA5E]
               itemset: ["mire"]
-
-      pots:
-        - name: "Misery Mire - Main Lobby - Pot 1"
-          position: 0x07b4
-          sprite: "FloorSwitch"
-        - name: "Misery Mire - Main Lobby - Pot 2"
-          position: 0x2e64
-          sprite: "@MagicRefillSmall"
-        - name: "Misery Mire - Main Lobby - Pot 3"
-          position: 0x3044
-          sprite: "@RupeeGreen"
-        - name: "Misery Mire - Main Lobby - Pot 4"
-          position: 0x3440
-          sprite: "@ArrowRefill5"
-
-      mobs:
-        - name: "Misery Mire - Main Lobby - Fire Snake 1"
-          position: { x: 0x15, y: 0x0b, z: 0x01 }
-          sprite: "FireSnake"
-          deny:
-            - "RollerHL"
-            - "RollerHR"
-
-        - name: "Misery Mire - Main Lobby - Fire Snake 2"
-          position: { x: 0x0b, y: 0x0c, z: 0x00 }
-          sprite: "FireSnake"
-
-        - name: "Misery Mire - Main Lobby - Medusa"
-          position: { x: 0x08, y: 0x10, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Misery Mire - Main Lobby - Spark (Clockwise) 1"
-          position: { x: 0x10, y: 0x12, z: 0x01 }
-          sprite: "SparkCW"
-
-        - name: "Misery Mire - Main Lobby - Spark (Clockwise) 2"
-          position: { x: 0x19, y: 0x12, z: 0x01 }
-          sprite: "SparkCW"
-
-        - name: "Misery Mire - Main Lobby - Bunny Beam"
-          position: { x: 0x10, y: 0x14, z: 0x01 }
-          sprite: "BunnyBeam"
-
-        - name: "Misery Mire - Main Lobby - Fire Snake 3"
-          position: { x: 0x08, y: 0x16, z: 0x01 }
-          sprite: "FireSnake"
-
-        - name: "Misery Mire - Main Lobby - Spark (Clockwise) 3"
-          position: { x: 0x16, y: 0x16, z: 0x01 }
-          sprite: "SparkCW"
+          pots:
+            - name: "Misery Mire - Main Lobby - Pot 1"
+              position: 0x07b4
+              sprite: "FloorSwitch"

@@ -7,17 +7,25 @@ rooms:
           connections:
             fixed:
               - "Misery Mire - Fish Room Top"
+              - "Misery Mire - Elbow"
 
         - name: "Misery Mire - Bridge Room - Left"
+          connections:
+            fixed:
+              - "Misery Mire - Dark Switch"
+            BigKeyD6:
+              - "Misery Mire - Antifairy Refill"
+          pots:
+            - name: "Misery Mire - Bridge Room - Left - Pot"
+              position: 0x1c0c
+              sprite: "@MagicRefillFull"
+
         - name: "Misery Mire - Bridge Room - Right"
-
-      items:
-        - name: "Misery Mire - Bridge Chest"
-          type: "chest"
-          addresses: [0xEA61]
-          itemset: ["mire"]
-
-      pots:
-        - name: "Misery Mire - Bridge Room - Left - Pot"
-          position: 0x1c0c
-          sprite: "@MagicRefillFull"
+          connections:
+            fixed:
+              - "Misery Mire - Antifairy Refill Overpass"
+          items:
+            - name: "Misery Mire - Bridge Chest"
+              type: "chest"
+              addresses: [0xEA61]
+              itemset: ["mire"]

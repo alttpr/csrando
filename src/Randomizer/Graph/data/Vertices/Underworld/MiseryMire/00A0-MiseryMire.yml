@@ -3,28 +3,33 @@ rooms:
     group: 14
     nodes:
       regions:
-        - name: "Misery Mire - Boss Antichamber Right - orange"
-          peg: "orange"
-        - name: "Misery Mire - Boss Antichamber Left - orange"
-          peg: "orange"
-        - name: "Misery Mire - Boss Antichamber - blue"
-          peg: "blue"
+        - name: "Misery Mire - Boss Antichamber Left"
+          connections:
+            BigKeyD6:
+              - "Misery Mire - Boss Room"
+            PegOrange:
+              - "Misery Mire - Boss Antichamber Right"
+          mobs:
+            - name: "Misery Mire - Boss Antichamber - blue - Medusa"
+              position: { x: 0x03, y: 0x08, z: 0x00 }
+              sprite: "Medusa"
+            - name: "Misery Mire - Boss Antichamber - blue - Antifairy"
+              position: { x: 0x0e, y: 0x08, z: 0x00 }
+              sprite: "Antifairy"
+              deny:
+                - "RollerHL"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "SpikeTrap"
+                - "Bumper"
 
-      mobs:
-        - name: "Misery Mire - Boss Antichamber - blue - Medusa"
-          position: { x: 0x03, y: 0x08, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Misery Mire - Boss Antichamber - blue - Antifairy"
-          position: { x: 0x0e, y: 0x08, z: 0x00 }
-          sprite: "Antifairy"
-          deny:
-            - "RollerHL"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "SpikeTrap"
-            - "Bumper"
-
-        - name: "Misery Mire - Boss Antichamber - blue - Fire Snake"
-          position: { x: 0x14, y: 0x0c, z: 0x00 }
-          sprite: "FireSnake"
+        - name: "Misery Mire - Boss Antichamber Right"
+          connections:
+            fixed:
+              - "Misery Mire - Basement"
+            PegOrange:
+              - "Misery Mire - Boss Antichamber Left"
+          mobs:
+            - name: "Misery Mire - Boss Antichamber - blue - Fire Snake"
+              position: { x: 0x14, y: 0x0c, z: 0x00 }
+              sprite: "FireSnake"

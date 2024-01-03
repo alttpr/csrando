@@ -5,49 +5,34 @@ rooms:
       regions:
         - name: "Misery Mire - East Wing Top Left"
           connections:
-            fixed:
-              - "Misery Mire - East Wing Top Left - Blue"
             KeyD6:
               - "Misery Mire - Main Lobby North East"
+            PegBlue:
+              - "Misery Mire - East Wing Top Middle"
           items:
             - name: "Misery Mire - Map Chest"
               type: "chest"
               addresses: [0xEA6A]
               itemset: ["mire"]
-
-        - name: "Misery Mire - East Wing Top Left - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Misery Mire - East Wing Top Left"
-              - "Misery Mire - East Wing Top Middle - Blue"
+          mobs:
+            - name: "Misery Mire - Falling Bridge - Medusa 1"
+              position: { x: 0x05, y: 0x06, z: 0x00 }
+              sprite: "Medusa"
 
         - name: "Misery Mire - East Wing Top Middle"
           connections:
             fixed:
-              - "Misery Mire - East Wing Top Middle - Blue"
               - "Misery Mire - Spike Room"
-
-        - name: "Misery Mire - East Wing Top Middle - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Misery Mire - East Wing Top Middle"
-              - "Misery Mire - East Wing Top Left - Blue"
-              - "Misery Mire - East Wing Top Right - Blue"
+            PegBlue:
+              - "Misery Mire - East Wing Top Left"
+              - "Misery Mire - East Wing Top Right"
 
         - name: "Misery Mire - East Wing Top Right"
           connections:
             fixed:
-              - "Misery Mire - East Wing Top Right - Blue"
               - "Misery Mire - East Wing Bottom"
-
-        - name: "Misery Mire - East Wing Top Right - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Misery Mire - East Wing Top Right"
-              - "Misery Mire - East Wing Top Middle - Blue"
+            PegBlue:
+              - "Misery Mire - East Wing Top Middle"
 
         - name: "Misery Mire - East Wing Middle"
           connections:
@@ -58,15 +43,65 @@ rooms:
           connections:
             fixed:
               - "Misery Mire - Main Lobby"
-              - "Misery Mire - Falling Bridge South"
+              - "Misery Mire - Falling Bridge South - Bottom Door"
+          mobs:
+            - name: "Misery Mire - Falling Bridge - Chicken"
+              position: { x: 0x17, y: 0x1a, z: 0x00 }
+              sprite: "FallingBridge"
+            - name: "Misery Mire - Falling Bridge - Antifairy"
+              position: { x: 0x0a, y: 0x1b, z: 0x00 }
+              sprite: "Antifairy"
+            - name: "Misery Mire - Falling Bridge - Medusa 2"
+              position: { x: 0x07, y: 0x1c, z: 0x00 }
+              sprite: "Medusa"
 
-        # TODO: If you arrive there from the middle door,
-        # you need boots or hookshot to make it to the top
+        - name: "Misery Mire - Falling Bridge South - Middle Door"
+          connections:
+            fixed:
+              - "Misery Mire - Falling Bridge South"
+              - "Misery Mire - East Wing Middle"
+
+        - name: "Misery Mire - Falling Bridge South - Bottom Door"
+          connections:
+            fixed:
+              - "Misery Mire - Falling Bridge South"
+          items:
+            # This item is used to make sure you can walk from the bottom door
+            # to the big chest, but not from the middle door
+            - name: "MiseryMireFallingBridgeSouthBottomDoor"
+              type: "event"
+
         - name: "Misery Mire - Falling Bridge South"
           connections:
             fixed:
-              - "Misery Mire - East Wing Middle"
+              - "Misery Mire - Falling Bridge South - Middle Door"
+            MiseryMireFallingBridgeSouthBottomDoor:
               - "Misery Mire - Falling Bridge North"
+            Hookshot:
+              - "Misery Mire - Falling Bridge North"
+            PegasusBoots:
+              - "Misery Mire - Falling Bridge North"
+          mobs:
+            - name: "Misery Mire - Falling Bridge - Laser Eye (Left) 1"
+              position: { x: 0x1e, y: 0x09, z: 0x00 }
+              sprite: "LaserEyeL"
+              deny:
+                - "Kodongo"
+            - name: "Misery Mire - Falling Bridge - Laser Eye (Right) 1"
+              position: { x: 0x11, y: 0x0d, z: 0x00 }
+              sprite: "LaserEyeR"
+              deny:
+                - "Kodongo"
+            - name: "Misery Mire - Falling Bridge - Laser Eye (Left) 2"
+              position: { x: 0x1e, y: 0x11, z: 0x00 }
+              sprite: "LaserEyeL"
+              deny:
+                - "Kodongo"
+            - name: "Misery Mire - Falling Bridge - Laser Eye (Right) 2"
+              position: { x: 0x11, y: 0x15, z: 0x00 }
+              sprite: "LaserEyeR"
+              deny:
+                - "Kodongo"
 
         - name: "Misery Mire - Falling Bridge North"
           connections:
@@ -78,44 +113,3 @@ rooms:
               conditions: ["BigKeyD6"]
               addresses: [0xEA67]
               itemset: ["mire"]
-
-      pots:
-        - name: "Misery Mire - Falling Bridge - Medusa 1"
-          position: { x: 0x05, y: 0x06, z: 0x00 }
-          sprite: "Medusa"
-
-        - name: "Misery Mire - Falling Bridge - Laser Eye (Left) 1"
-          position: { x: 0x1e, y: 0x09, z: 0x00 }
-          sprite: "LaserEyeL"
-          deny:
-            - "Kodongo"
-
-        - name: "Misery Mire - Falling Bridge - Laser Eye (Right) 1"
-          position: { x: 0x11, y: 0x0d, z: 0x00 }
-          sprite: "LaserEyeR"
-          deny:
-            - "Kodongo"
-
-        - name: "Misery Mire - Falling Bridge - Laser Eye (Left) 2"
-          position: { x: 0x1e, y: 0x11, z: 0x00 }
-          sprite: "LaserEyeL"
-          deny:
-            - "Kodongo"
-
-        - name: "Misery Mire - Falling Bridge - Laser Eye (Right) 2"
-          position: { x: 0x11, y: 0x15, z: 0x00 }
-          sprite: "LaserEyeR"
-          deny:
-            - "Kodongo"
-
-        - name: "Misery Mire - Falling Bridge - Chicken"
-          position: { x: 0x17, y: 0x1a, z: 0x00 }
-          sprite: "FallingBridge"
-
-        - name: "Misery Mire - Falling Bridge - Antifairy"
-          position: { x: 0x0a, y: 0x1b, z: 0x00 }
-          sprite: "Antifairy"
-
-        - name: "Misery Mire - Falling Bridge - Medusa 2"
-          position: { x: 0x07, y: 0x1c, z: 0x00 }
-          sprite: "Medusa"

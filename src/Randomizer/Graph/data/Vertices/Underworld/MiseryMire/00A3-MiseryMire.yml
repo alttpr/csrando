@@ -4,3 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Elbow"
+          connections:
+            fixed:
+              - "Misery Mire - Bridge Room - Overpass"
+              - "Misery Mire - Mesh Bridge"

@@ -5,6 +5,8 @@ rooms:
       regions:
         - name: "Misery Mire - Mire 2"
           connections:
+            fixed:
+              - "Misery Mire - Entrance Right"
             "MiseryMireTwoTrophy|10":
               - "Misery Mire - Main Lobby"
 
