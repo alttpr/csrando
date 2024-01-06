@@ -162,9 +162,7 @@ public class Searcher
         var newlyVisited = new VertexHashSet(visited.Graph);
         var newSearchStarts = new VertexHashSet(visited.Graph);
         var marked = new VertexHashSet(visited.Graph);
-        var markedBlue = new VertexHashSet(visited.Graph);
         var queue = new Queue<Vertex>();
-        var queueBlue = new Queue<Vertex>();
         foreach (var start in startAt)
         {
             if (!visited.Contains(start))
@@ -177,51 +175,8 @@ public class Searcher
 
         do
         {
-            while (queueBlue.TryDequeue(out var vertex))
-            {
-                if (vertex.Switch && !marked.Contains(vertex))
-                    queue.Enqueue(vertex);
-                if (vertex.Peg == PegState.Orange)
-                    continue;
-
-                if (vertex.Name == "Ice Palace - Restock Room - Blue:0")
-                    vertex.ExtraLight.Any();
-                int unvisitedEdges = vertex.Edges.Count;
-                foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
-                {
-                    if (!edge.Condition.IsUnconditional)
-                    {
-                        if (edge.Condition.Item.Type == ItemType.SmallKey)
-                        {
-                            if (marked.Contains(edge.To) && !markedBlue.Contains(edge.To))
-                            {
-                                queueBlue.Enqueue(edge.To);
-                            }
-                            continue;
-                        }
-                        if (!collected.Has(edge.Condition))
-                            continue;
-                    }
-
-                    var next_vertex = edge.To;
-                    unvisitedEdges--;
-                    if (!markedBlue.Contains(next_vertex))
-                        queueBlue.Enqueue(next_vertex);
-                }
-                if (unvisitedEdges > 0)
-                    newSearchStarts.Add(vertex);
-                if (!visited.Contains(vertex))
-                    newlyVisited.Add(vertex);
-                markedBlue.Add(vertex);
-            }
-
             while (queue.TryDequeue(out var vertex))
             {
-                if (vertex.Switch && !markedBlue.Contains(vertex))
-                    queueBlue.Enqueue(vertex);
-                if (vertex.Peg == PegState.Blue)
-                    continue;
-
                 int unvisitedEdges = vertex.Edges.Count;
 
                 foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
@@ -249,7 +204,7 @@ public class Searcher
                     newlyVisited.Add(vertex);
                 marked.Add(vertex);
             }
-        } while (queue.Any() || queueBlue.Any());
+        } while (queue.Any());
 
         return (newlyVisited, newSearchStarts);
     }
