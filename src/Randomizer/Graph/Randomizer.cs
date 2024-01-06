@@ -51,7 +51,6 @@ public sealed class Randomizer
             ShopFiller.AdjustEdges(_worlds[i], _prng);
             DoorShuffler.AdjustEdges(_worlds[i], _prng);
             EntranceShuffler.AdjustEdges(_worlds[i], _prng);
-            CrystalSwitchGraphifier.AdjustEdges(_worlds[i], _prng);
             DarknessGraphifier.AdjustEdges(_worlds[i], _prng);
             BossShuffler.AdjustEdges(_worlds[i], _prng);
             EnemyShuffler.AdjustEdges(_worlds[i], _prng);
