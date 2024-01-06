@@ -584,9 +584,6 @@ public partial class Region
     [YamlMember(Alias = "type")]
     public VertexType? Type { get; set; }
 
-    [YamlMember(Alias = "peg")]
-    public PegState? Peg { get; set; }
-
     [YamlMember(Alias = "shopkeeper")]
     public int? Shopkeeper { get; set; }
 

@@ -13,12 +13,6 @@ public record class Sprite(string Name)
     }
 }
 
-public enum PegState
-{
-    Orange,
-    Blue,
-}
-
 public enum VertexType
 {
     BigChest,
@@ -67,7 +61,6 @@ public sealed class Vertex : ICloneable
     public int? Cost { get; set; }
     public Item? Item { get; set; }
     public Item? Trophy { get; init; }
-    public PegState? Peg { get; init; }
     public Sprite? Sprite { get; set; }
     public string? EnemizerBoss { get; set; }
     public int? RoomId { get; init; }
