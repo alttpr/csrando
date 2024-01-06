@@ -4,133 +4,141 @@ rooms:
     nodes:
       regions:
         # TODO: Model the switch that is accessible from the south areas with bombs / boomerang / somaria
+        # TODO: Verify pots in all this file
         - name: "Ganon's Tower - Whackamole"
+          connections:
+            fixed:
+              - "Ganon's Tower - Torch Room"
+            Hammer:
+              - "Ganon's Tower - Bonk Pits - Middle"
+          pots:
+            - name: "Ganon's Tower - Map Room - Pot 3"
+              position: 0x0c4c
+            - name: "Ganon's Tower - Whackamole Pot BR"
+              position: 0x0c70
+              item: "KeyA2"
+              itemset: ["gt"]
+          mobs:
+            - name: "Ganon's Tower - Map Room - Bumper"
+              position: { x: 0x15, y: 0x07, z: 0x00 }
+              sprite: "Bumper"
+            - name: "Ganon's Tower - Map Room - Blue Bari"
+              position: { x: 0x1a, y: 0x04, z: 0x00 }
+              sprite: "BlueBari"
+
         - name: "Ganon's Tower - Bonk Pits - Top"
+          connections:
+            fixed:
+              - "Ganon's Tower - DMs Room"
+            Hookshot:
+              - "Ganon's Tower - Bonk Pits - Islands"
+
         - name: "Ganon's Tower - Bonk Pits - Middle"
+          connections:
+            Hookshot:
+              - "Ganon's Tower - Bonk Pits - Islands"
+            PegasusBoots:
+              - "Ganon's Tower - Bonk Pits - Islands"
+
+        - name: "Ganon's Tower - Bonk Pits - Islands"
+          connections:
+            Hookshot:
+              - "Ganon's Tower - Bonk Pits - Top"
+              - "Ganon's Tower - Bonk Pits - Middle"
+              - "Ganon's Tower - Bonk Pits - Bottom Upper"
+            PegasusBoots:
+              - "Ganon's Tower - Bonk Pits - Middle"
+              - "Ganon's Tower - Bonk Pits - Bottom Upper"
+          pots:
+            - name: "Ganon's Tower - Map Room - Pot 1"
+              position: 0x144c
+              sprite: "@MagicRefillSmall"
+          mobs:
+            - name: "Ganon's Tower - Map Room - Spike Trap"
+              position: { x: 0x03, y: 0x12, z: 0x00 }
+              sprite: "SpikeTrap"
+              deny:
+                - "Statue"
+                - "RollerVU"
+                - "RollerVD"
+                - "Beamos"
+                - "AntifairyCircle"
+                - "Bumper"
+
         - name: "Ganon's Tower - Bonk Pits - Bottom Upper"
           switch: true
           connections:
-            fixed:
-              - "Ganon's Tower - Bonk Pits - Bottom Upper - Blue"
+            Hookshot:
+              - "Ganon's Tower - Bonk Pits - Islands"
             KeyA2:
               - "Ganon's Tower - Map Room"
+            PegBlue:
+              - "Ganon's Tower - Bonk Pits - Bottom Lower"
+            PegOrange:
+              - "Ganon's Tower - Bonk Pits - Bottom Upper - Orange Transition"
+          pots:
+            - name: "Ganon's Tower - Map Room - Pot 5"
+              position: 0x171c
+            - name: "Ganon's Tower - Map Room - Pot 6"
+              position: 0x1720
+          mobs:
+            - name: "Ganon's Tower - Map Room - Crystal Switch 1"
+              position: { x: 0x04, y: 0x18, z: 0x00 }
+              sprite: "CrystalSwitch"
+              allow: ["CrystalSwitch"]
+            - name: "Ganon's Tower - Map Room - Crystal Switch 2"
+              position: { x: 0x0b, y: 0x18, z: 0x00 }
+              sprite: "CrystalSwitch"
+              allow: ["CrystalSwitch"]
+            - name: "Ganon's Tower - Map Room - Stalfos"
+              position: { x: 0x07, y: 0x18, z: 0x00 }
+              sprite: "Stalfos"
 
-        - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Blue"
-          peg: "blue"
+        # Only accessible from the switch area, used to allow transitioning as orange
+        # to the bottom area
+        - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Orange Transition"
           connections:
-            fixed:
-              - "Ganon's Tower - Bonk Pits - Bottom Upper"
-              - "Ganon's Tower - Bonk Pits - Bottom Lower - Blue"
-
-        - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Ganon's Tower - Bonk Pits - Bottom Upper"
             UseBomb:
-              - "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
+              - "Ganon's Tower - Bonk Pits - Bottom Lower"
             CaneOfSomaria:
-              - "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
+              - "Ganon's Tower - Bonk Pits - Bottom Lower"
 
         - name: "Ganon's Tower - Bonk Pits - Bottom Lower"
           connections:
             fixed:
-              - "Ganon's Tower - Bonk Pits - Bottom Lower - Blue"
-              - "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
               - "Ganon's Tower - Twin Switches Top"
-
-        - name: "Ganon's Tower - Bonk Pits - Bottom Lower - Blue"
-          peg: "blue"
-          connections:
-            fixed:
-              - "Ganon's Tower - Bonk Pits - Bottom Lower"
-              - "Ganon's Tower - Bonk Pits - Bottom Upper - Blue"
-
-        - name: "Ganon's Tower - Bonk Pits - Bottom Lower - Orange"
-          peg: "orange"
-          connections:
-            fixed:
-              - "Ganon's Tower - Bonk Pits - Bottom Lower"
+            PegBlue:
+              - "Ganon's Tower - Bonk Pits - Bottom Upper"
 
         - name: "Ganon's Tower - Map Room"
           connections:
             KeyA2:
               - "Ganon's Tower - Bonk Pits - Bottom Upper"
-
-      items:
-        - name: "Ganon's Tower - Map Chest"
-          type: "chest"
-          addresses: [0xEAD3]
-          itemset: ["gt"]
-
-      pots:
-        - name: "Ganon's Tower - Map Room - Pot 1"
-          position: 0x144c
-          sprite: "@MagicRefillSmall"
-        - name: "Ganon's Tower - Map Room - Pot 2"
-          position: 0x1c4c
-          sprite: "@Heart"
-        - name: "Ganon's Tower - Map Room - Pot 3"
-          position: 0x0c4c
-        - name: "Ganon's Tower - Map Room - Pot 4"
-          position: 0x0920
-        - name: "Ganon's Tower - Map Room - Pot 5"
-          position: 0x171c
-        - name: "Ganon's Tower - Map Room - Pot 6"
-          position: 0x1720
-        - name: "Ganon's Tower - Whackamole Pot BR"
-          position: 0x0c70
-          item: "KeyA2"
-          itemset: ["gt"]
-
-      mobs:
-        - name: "Ganon's Tower - Map Room - Bumper"
-          position: { x: 0x15, y: 0x07, z: 0x00 }
-          sprite: "Bumper"
-
-        - name: "Ganon's Tower - Map Room - Crystal Switch 1"
-          position: { x: 0x04, y: 0x18, z: 0x00 }
-          sprite: "CrystalSwitch"
-          allow: ["CrystalSwitch"]
-
-        - name: "Ganon's Tower - Map Room - Crystal Switch 2"
-          position: { x: 0x0b, y: 0x18, z: 0x00 }
-          sprite: "CrystalSwitch"
-          allow: ["CrystalSwitch"]
-
-        - name: "Ganon's Tower - Map Room - Blue Bari"
-          position: { x: 0x1a, y: 0x04, z: 0x00 }
-          sprite: "BlueBari"
-
-        - name: "Ganon's Tower - Map Room - Spike Trap"
-          position: { x: 0x03, y: 0x12, z: 0x00 }
-          sprite: "SpikeTrap"
-          deny:
-            - "Statue"
-            - "RollerVU"
-            - "RollerVD"
-            - "Beamos"
-            - "AntifairyCircle"
-            - "Bumper"
-
-        - name: "Ganon's Tower - Map Room - Stalfos"
-          position: { x: 0x07, y: 0x18, z: 0x00 }
-          sprite: "Stalfos"
-
-        - name: "Ganon's Tower - Map Room - Fire Bar (Clockwise)"
-          position: { x: 0x18, y: 0x18, z: 0x00 }
-          sprite: "FireBarCW"
-          deny:
-            - "Beamos"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "Bumper"
-
-        - name: "Ganon's Tower - Map Room - Fire Bar (Counterclockwise)"
-          position: { x: 0x18, y: 0x18, z: 0x00 }
-          sprite: "FireBarCCW"
-          deny:
-            - "Beamos"
-            - "AntifairyCircle"
-            - "BigSpikeTrap"
-            - "Bumper"
+          items:
+            - name: "Ganon's Tower - Map Chest"
+              type: "chest"
+              addresses: [0xEAD3]
+              itemset: ["gt"]
+          pots:
+            - name: "Ganon's Tower - Map Room - Pot 2"
+              position: 0x1c4c
+              sprite: "@Heart"
+            - name: "Ganon's Tower - Map Room - Pot 4"
+              position: 0x0920
+          mobs:
+            - name: "Ganon's Tower - Map Room - Fire Bar (Clockwise)"
+              position: { x: 0x18, y: 0x18, z: 0x00 }
+              sprite: "FireBarCW"
+              deny:
+                - "Beamos"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "Bumper"
+            - name: "Ganon's Tower - Map Room - Fire Bar (Counterclockwise)"
+              position: { x: 0x18, y: 0x18, z: 0x00 }
+              sprite: "FireBarCCW"
+              deny:
+                - "Beamos"
+                - "AntifairyCircle"
+                - "BigSpikeTrap"
+                - "Bumper"

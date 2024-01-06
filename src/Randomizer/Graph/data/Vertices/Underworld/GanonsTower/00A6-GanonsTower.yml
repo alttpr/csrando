@@ -4,12 +4,15 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Below Moldorm"
+          connections:
+            fixed:
+              - "Ganon's Tower - Moldorm - Top Right Platform"
 
-      mobs:
-        - name: "Ganon's Tower - Below Moldorm - Wizzrobe Spawner"
-          position: { x: 0x0f, y: 0x0f, z: 0x00 }
-          sprite: "WizzrobeSpawner"
+          mobs:
+            - name: "Ganon's Tower - Below Moldorm - Wizzrobe Spawner"
+              position: { x: 0x0f, y: 0x0f, z: 0x00 }
+              sprite: "WizzrobeSpawner"
 
-        - name: "Ganon's Tower - Below Moldorm - Antifairy"
-          position: { x: 0x0c, y: 0x0e, z: 0x00 }
-          sprite: "Antifairy"
+            - name: "Ganon's Tower - Below Moldorm - Antifairy"
+              position: { x: 0x0c, y: 0x0e, z: 0x00 }
+              sprite: "Antifairy"

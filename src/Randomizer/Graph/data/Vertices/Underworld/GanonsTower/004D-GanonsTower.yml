@@ -5,20 +5,41 @@ rooms:
       regions:
         - name: "Ganon's Tower - Moldorm - Top Left Platform"
           connections:
+            fixed:
+              - "Ganon's Tower - Moldorm - Kill Zone"
             KeyA2:
               - "Ganon's Tower - Pre-Moldorm"
 
         - name: "Ganon's Tower - Moldorm - Top Right Platform"
-        - name: "Ganon's Tower - Moldorm - Kill Zone"
-        - name: "Ganon's Tower - Moldorm"
-        - name: "Ganon's Tower - Moldorm - Chest Platform"
-        - name: "Ganon's Tower - Moldorm - Exit"
+          connections:
+            fixed:
+              - "Ganon's Tower - Below Moldorm"
+              - "Ganon's Tower - Moldorm - Kill Zone"
 
-      items:
-        - name: "Ganon's Tower - Moldorm Chest"
-          type: "chest"
-          addresses: [0xEB06]
-          itemset: ["gt"]
+        - name: "Ganon's Tower - Moldorm - Kill Zone"
+          connections:
+            fixed:
+              - "Ganon's Tower - Below Moldorm"
+            Hookshot:
+              - "Ganon's Tower - Moldorm - Chest Platform"
+
+        - name: "Ganon's Tower - Moldorm"
+
+        - name: "Ganon's Tower - Moldorm - Chest Platform"
+          connections:
+            fixed:
+              - "Ganon's Tower - Moldorm - Exit"
+              - "Ganon's Tower - Below Moldorm"
+          items:
+            - name: "Ganon's Tower - Moldorm Chest"
+              type: "chest"
+              addresses: [0xEB06]
+              itemset: ["gt"]
+
+        - name: "Ganon's Tower - Moldorm - Exit"
+          connections:
+            fixed:
+              - "Ganon's Tower - Mini Helmasaur Dash"
 
     # this data might not end up living here?
     # but is not currently used, see data/Bosses/SpriteLocations.yml

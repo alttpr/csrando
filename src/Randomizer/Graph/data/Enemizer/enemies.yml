@@ -192,8 +192,9 @@ DefeatMiniHelmasaur:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
+# Antifairies trophy count is fixed
 DefeatAntifairy:
-  - Powder
+  - fixed
 DefeatBushHoarder:
   - Boomerang
   - RedBoomerang
@@ -1000,11 +1001,9 @@ DefeatLynel:
   - L2Sword
   - Hammer
   - BowAndSilverArrows
+# Bunny beams trophy count is fixed
 DefeatBunnyBeam:
-  - Powder
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
+  - fixed
 DefeatStal:
   - Boomerang
   - RedBoomerang

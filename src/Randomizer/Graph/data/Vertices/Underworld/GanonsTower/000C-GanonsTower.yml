@@ -4,5 +4,9 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Lobby"
-          peg: "orange"
           inletid: 0x37
+          connections:
+            fixed:
+              - "Ganon's Tower - Torch Room"
+              - "Ganon's Tower - Hope Room"
+              - "Ganon's Tower - Spike Switches"

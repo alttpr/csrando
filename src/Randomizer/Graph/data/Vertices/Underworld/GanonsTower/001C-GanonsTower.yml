@@ -5,42 +5,56 @@ rooms:
       regions:
         - name: "Ganon's Tower - Ice Armos"
         - name: "Ganon's Tower - Ice Room"
+          connections:
+            fixed:
+              # TODO: Add boss killing condition
+              - "Ganon's Tower - Big Key Room"
+              - "Ganon's Tower - Empty Torch Room"
+
         - name: "Ganon's Tower - Empty Torch Room"
+          connections:
+            fixed:
+              - "Ganon's Tower - Big Chest Room - Upper Corner"
+            PegasusBoots:
+              - "Ganon's Tower - Fairy Pit"
+            UseBomb:
+              - "Ganon's Tower - Fairy Pit"
+
         - name: "Ganon's Tower - Fairy Pit"
+          connections:
+            fixed:
+              - "Ganon's Tower - Empty Torch Room"
+          mobs:
+            - name: "Ganon's Tower - Ice Room - Fairy 1"
+              position: { x: 0x07, y: 0x07, z: 0x00 }
+              sprite: "Fairy"
+            - name: "Ganon's Tower - Ice Room - Fairy 2"
+              position: { x: 0x08, y: 0x07, z: 0x00 }
+              sprite: "Fairy"
+            - name: "Ganon's Tower - Ice Room - Fairy 3"
+              position: { x: 0x07, y: 0x08, z: 0x00 }
+              sprite: "Fairy"
+            - name: "Ganon's Tower - Ice Room - Fairy 4"
+              position: { x: 0x08, y: 0x08, z: 0x00 }
+              sprite: "Fairy"
+
         - name: "Ganon's Tower - Big Key Room"
-
-      items:
-        - name: "Ganon's Tower - Big Key Chest"
-          type: "chest"
-          addresses: [0xEAF1]
-          itemset: ["gt"]
-
-        - name: "Ganon's Tower - Big Key Room - Left"
-          type: "chest"
-          addresses: [0xEAF4]
-          itemset: ["gt"]
-
-        - name: "Ganon's Tower - Big Key Room - Right"
-          type: "chest"
-          addresses: [0xEAF7]
-          itemset: ["gt"]
-
-      mobs:
-        - name: "Ganon's Tower - Ice Room - Fairy 1"
-          position: { x: 0x07, y: 0x07, z: 0x00 }
-          sprite: "Fairy"
-
-        - name: "Ganon's Tower - Ice Room - Fairy 2"
-          position: { x: 0x08, y: 0x07, z: 0x00 }
-          sprite: "Fairy"
-
-        - name: "Ganon's Tower - Ice Room - Fairy 3"
-          position: { x: 0x07, y: 0x08, z: 0x00 }
-          sprite: "Fairy"
-
-        - name: "Ganon's Tower - Ice Room - Fairy 4"
-          position: { x: 0x08, y: 0x08, z: 0x00 }
-          sprite: "Fairy"
+          connections:
+            fixed:
+              - "Ganon's Tower - Ice Room"
+          items:
+            - name: "Ganon's Tower - Big Key Chest"
+              type: "chest"
+              addresses: [0xEAF1]
+              itemset: ["gt"]
+            - name: "Ganon's Tower - Big Key Room - Left"
+              type: "chest"
+              addresses: [0xEAF4]
+              itemset: ["gt"]
+            - name: "Ganon's Tower - Big Key Room - Right"
+              type: "chest"
+              addresses: [0xEAF7]
+              itemset: ["gt"]
 
     # this data might not end up living here?
     # but is not currently used, see data/Bosses/SpriteLocations.yml

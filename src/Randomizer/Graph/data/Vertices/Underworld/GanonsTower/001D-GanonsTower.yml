@@ -5,5 +5,7 @@ rooms:
       regions:
         - name: "Ganon's Tower - Agahnim's Antichamber"
           connections:
+            fixed:
+              - "Ganon's Tower - Mini Helmasaur Dash"
             BigKeyA2:
               - "Ganon's Tower - Boss Room"

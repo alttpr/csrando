@@ -61,7 +61,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
         {
             System.Console.WriteLine($"Found dungeon with switch that contains {dungeonsWithSwitches.Value.First().Name}");
             // Ganon's Tower has not been updated yet.
-            if (dungeonsWithSwitches.Value.Any(v => !v.Name.Contains("Ganon")))
+            if (dungeonsWithSwitches.Value.Any())
                 TransformRegionWithPegs(world, dungeonsWithSwitches.Value);
         }
 
