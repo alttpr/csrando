@@ -17,7 +17,7 @@ maps:
               entranceid: 0x67
               outletid: 0x7A
           items:
-            # TODO: Add the right condition, we probably can't do this as a bunny
+            # TODO: Add the right condition, we can't do this as a bunny
             - name: "East Dark World Maze - Kiki Item"
               conditions: ["LiftBush"]
               type: "standing"

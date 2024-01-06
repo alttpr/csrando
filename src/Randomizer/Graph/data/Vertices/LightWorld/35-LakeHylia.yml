@@ -11,6 +11,9 @@ maps:
           warps:
             - name: "Lake Hylia whirlpool"
               position: { x: 0x29, y: 0x2B }
+              connections:
+                fixed:
+                  - "Zora's Falls whirlpool"
           mobs:
             - name: "Lake Hylia - Whirlpool"
               position: { x: 0x29, y: 0x2b }

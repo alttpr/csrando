@@ -10,7 +10,6 @@ rooms:
             "AgahnimsTowerThrowingGuardsTrophy|4":
               - "Agahnims Tower - Guards"
           mobs:
-            # TODO: Aren't the Keeses not included in the trophy?
             - name: "Agahnims Tower - Throwing Guards - Keese L"
               position: { x: 0x17, y: 0x07, z: 0x00 }
               sprite: "Keese"

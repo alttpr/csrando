@@ -8,6 +8,8 @@ rooms:
           connections:
             fixed:
               - "Super Bunny Hallway Bottom"
+            MirrorBlockRemoval:
+              - "Super Bunny Entrance Top"
 
         - name: "Super Bunny Entrance Middle"
           connections:

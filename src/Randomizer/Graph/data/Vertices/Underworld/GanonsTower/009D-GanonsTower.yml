@@ -3,7 +3,7 @@ rooms:
     group: 16
     nodes:
       regions:
-        # TODO: Do we want to allow bombs to go to the corner?
+        # TODO: Do we want to allow bombs to go to the corner? yes
         - name: "Ganon's Tower - Gibdo Airlock - Middle"
           connections:
             fixed:

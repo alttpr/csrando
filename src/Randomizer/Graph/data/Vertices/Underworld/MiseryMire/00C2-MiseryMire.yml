@@ -77,7 +77,6 @@ rooms:
               - "Misery Mire - Main Lobby North"
           # The chest is really in the north area, but you need to press the button
           # under the pot first.
-          # TODO: Address this for pot shuffle
           items:
             - name: "Misery Mire - Main Lobby Chest"
               type: "chest"

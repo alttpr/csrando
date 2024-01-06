@@ -123,7 +123,7 @@ rooms:
               position: { x: 0x13, y: 0x1b, z: 0x00 }
               sprite: "HardhatBeetle"
 
-        # TODO: Do we want any logic to get back to the left side to kill enemies?
+        # TODO: Do we want any logic to get back to the left side to kill enemies? Boots only
         - name: "Ganon's Tower - Beetle Pits Right"
           connections:
             fixed:

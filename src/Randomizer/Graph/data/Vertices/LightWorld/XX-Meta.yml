@@ -93,6 +93,11 @@ maps:
               - "RescueZelda"
             ConfigWorldStateInverted:
               - "RescueZelda"
+            ConfigMirrorBlockRemoval:
+              - "MirrorBlockRemoval"
+
+        - name: "MirrorBlockRemoval"
+          item: "MirrorBlockRemoval"
 
         - name: "Duck Airlines"
           connections:
