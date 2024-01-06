@@ -30,8 +30,8 @@ public sealed class Graph
     private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = new();
     private readonly Dictionary<string, List<Vertex>> _setLocations = new() { { "*", new() } };
-    public Dictionary<Item, Dictionary<Item, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
-    public Dictionary<Item, HashSet<Vertex>> FixedKeys = new();
+    public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
+    public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys = new();
     public HashSet<Item> AllItems { get; set; } = new();
 
     public IEnumerable<Vertex> GetVertices()

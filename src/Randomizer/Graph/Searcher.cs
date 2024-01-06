@@ -49,11 +49,11 @@ public class Searcher
     /// </summary>
     /// <param name="inventory">Current inventory</param>
     /// <param name="visited">Currently visited nodes</param>
-    void SpendObviousKeys(Inventory inventory, VertexHashSet visited)
+    private void SpendObviousKeys(Inventory inventory, VertexHashSet visited)
     {
         foreach (var (key, doors) in _graph.Doors)
         {
-            int lockedDoorCount = doors.Where(d => !inventory.Has(d.Key)).Count();
+            int lockedDoorCount = doors.Count(d => !inventory.Has(d.Key));
 
             // If all the doors are already opened, we don't have anything to do
             if (lockedDoorCount == 0)
@@ -86,9 +86,9 @@ public class Searcher
                 if (inventory.Has(door.Key))
                     continue;
 
-                foreach (var vertices in door.Value)
+                foreach (var (a, b) in door.Value)
                 {
-                    if (_visited.Contains(vertices.A) && visited.Contains(vertices.B))
+                    if (visited.Contains(a) && visited.Contains(b))
                     {
                         inventory.AddItem(door.Key);
                         inventory.RemoveItem(key, 1);
@@ -174,38 +174,35 @@ public class Searcher
             queue.Enqueue(start);
         }
 
-        do
+        while (queue.TryDequeue(out var vertex))
         {
-            while (queue.TryDequeue(out var vertex))
+            int unvisitedEdges = vertex.Edges.Count;
+
+            foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
             {
-                int unvisitedEdges = vertex.Edges.Count;
-
-                foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
+                if (!edge.Condition.IsUnconditional)
                 {
-                    if (!edge.Condition.IsUnconditional)
-                    {
-                        if (edge.Condition.Item.Type == ItemType.SmallKey)
-                            continue;
-                        if (!collected.Has(edge.Condition))
-                            continue;
-                    }
-
-                    unvisitedEdges--;
-                    if (!marked.Contains(edge.To))
-                        queue.Enqueue(edge.To);
+                    if (edge.Condition.Item.Type == ItemType.SmallKey)
+                        continue;
+                    if (!collected.Has(edge.Condition))
+                        continue;
                 }
 
-                // We could remove nodes from newSearchStarts when we have visited
-                // all the edges, but the affected nodes are few and it's more
-                // work than time saved overall.
-                if (unvisitedEdges > 0)
-                    newSearchStarts.Add(vertex);
-
-                if (!visited.Contains(vertex))
-                    newlyVisited.Add(vertex);
-                marked.Add(vertex);
+                unvisitedEdges--;
+                if (!marked.Contains(edge.To))
+                    queue.Enqueue(edge.To);
             }
-        } while (queue.Any());
+
+            // We could remove nodes from newSearchStarts when we have visited
+            // all the edges, but the affected nodes are few and it's more
+            // work than time saved overall.
+            if (unvisitedEdges > 0)
+                newSearchStarts.Add(vertex);
+
+            if (!visited.Contains(vertex))
+                newlyVisited.Add(vertex);
+            marked.Add(vertex);
+        }
 
         return (newlyVisited, newSearchStarts);
     }
@@ -250,12 +247,12 @@ public class Searcher
                 continue;
 
             List<Vertex> newVerticesFromDoor = new();
-            foreach (var vs in door.Value)
+            foreach (var (a, b) in door.Value)
             {
-                bool seenA = visitedBeforeDoors.Contains(vs.A);
-                bool seenB = visitedBeforeDoors.Contains(vs.B);
+                bool seenA = visitedBeforeDoors.Contains(a);
+                bool seenB = visitedBeforeDoors.Contains(b);
                 if (seenA != seenB)
-                    newVerticesFromDoor.Add(seenA ? vs.B : vs.A);
+                    newVerticesFromDoor.Add(seenA ? b : a);
             }
             if (!newVerticesFromDoor.Any())
                 continue;
