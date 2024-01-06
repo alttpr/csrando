@@ -107,27 +107,28 @@ public class Searcher
         var newlyVisited = visited.Clone();
         newlyVisited.ExceptWith(collected);
 
+        World? world = null;
         foreach (var itemLocation in newlyVisited)
         {
-            bool foundNewItem = false;
             collected.Add(itemLocation);
             if (itemLocation.Item is not null)
             {
-                foundNewItem = true;
+                newItemsFound = true;
                 inventory.AddItem(itemLocation.Item);
+                world ??= itemLocation.Item.World;
             }
             if (itemLocation.Trophy is not null)
             {
-                foundNewItem = true;
-                inventory.AddItem(itemLocation.Trophy);
-            }
-            if (foundNewItem)
                 newItemsFound = true;
+                inventory.AddItem(itemLocation.Trophy);
+                world ??= itemLocation.Trophy.World;
+            }
 
-            if (foundNewItem && itemLocation.Item is { } item)
+            if (newItemsFound && world is not null && inventory.Has(world.GetItem("BigRedBomb")))
             {
-                if (item.Name.StartsWith("BigRedBomb") && DropOffSearch(item, inventory))
-                    inventory.AddItem(item.World.GetItem("BigRedBombActive"));
+                var activeBomb = world.GetItem("BigRedBombActive");
+                if (!inventory.Has(activeBomb) && DropOffSearch(world, inventory))
+                    inventory.AddItem(activeBomb);
                 newItemsFound = true;
             }
         }
@@ -297,14 +298,18 @@ public class Searcher
         return (strongLocations ?? new VertexHashSet(_graph), strongSearchStarts ?? new VertexHashSet(_graph));
     }
 
-    private bool DropOffSearch(Item item, Inventory inventory)
+    private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
+    private bool DropOffSearch(World world, Inventory inventory)
     {
-        if (item.Name == "BigRedBomb")
+        var inventoryWithBombInTow = inventory.Clone();
+        foreach (string item in _noBombFollowerItems)
         {
-            var (newlyVisited, newSearchStarts) = InternalSearch(inventory, new(_graph), new[] { _graph.GetVertex($"Bomb Shoppe Lobby:{item.World.Id}") });
-            return newlyVisited.Contains(_graph.GetVertex($"Pyramid:{item.World.Id}"));
+            var itemToRemove = world.GetItem(item);
+            if (inventoryWithBombInTow.Has(itemToRemove))
+                inventoryWithBombInTow.RemoveItem(itemToRemove);
         }
-        return false;
+        var (newlyVisited, newSearchStarts) = InternalSearch(inventoryWithBombInTow, new(_graph), new[] { _graph.GetVertex($"Bomb Shoppe Lobby:{world.Id}") });
+        return newlyVisited.Contains(_graph.GetVertex($"Pyramid:{world.Id}"));
     }
 
     /// <summary>

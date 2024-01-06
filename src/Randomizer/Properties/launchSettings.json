@@ -2,7 +2,7 @@
   "profiles": {
     "Randomizer": {
       "commandName": "Project",
-      "commandLineArgs": "randomize seed=-50"
+      "commandLineArgs": "randomize seed=1234"
     }
   }
 }
