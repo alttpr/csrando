@@ -39,8 +39,12 @@ maps:
         - name: "Wetlands Portal East Pool"
           warps:
             - name: "Wetlands Portal East whirlpool"
-              position: { x: 0xFF, y: 0xFF }
+              position: { x: 0x17, y: 0x12 }
+              connections:
+                fixed:
+                  - "Hylia River North Bend whirlpool"
           mobs:
+            # TODO: do we need both the warp and the mob?
             - name: "Wetlands Portal East - Whirlpool"
               position: { x: 0x17, y: 0x12 }
               sprite: "Whirlpool"

@@ -14,7 +14,9 @@ maps:
           warps:
             - name: "Northwest Pond whirlpool"
               position: { x: 0x0F, y: 0x10 }
-
+              connections:
+                fixed:
+                  - "South Shore Falls whirlpool"
           mobs:
             - name: "Northwest Pond - Green Guard 1"
               position: { x: 0x15, y: 0x0e }
@@ -36,6 +38,7 @@ maps:
               sprite: "BlueSwordGuard"
               state: [2]
 
+            # TODO: do we need both the warp and the mob?
             - name: "Northwest Pond - Whirlpool"
               position: { x: 0x0f, y: 0x10 }
               sprite: "Whirlpool"

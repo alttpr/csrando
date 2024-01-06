@@ -35,7 +35,10 @@ maps:
         - name: "South Shore Falls Waters"
           warps:
             - name: "South Shore Falls whirlpool"
-              position: { x: 0xFF, y: 0xFF }
+              position: { x: 0x07, y: 0x0c }
+              connections:
+                fixed:
+                  - "Northwest Pond whirlpool"
           mobs:
             - name: "South Shore Falls - Fireball Zora 1"
               position: { x: 0x08, y: 0x0b }
@@ -47,6 +50,7 @@ maps:
               sprite: "FireballZora"
               state: [2]
 
+            # TODO: do we need both the warp and the mob?
             - name: "South Shore Falls - Whirlpool"
               position: { x: 0x07, y: 0x0c }
               sprite: "Whirlpool"
