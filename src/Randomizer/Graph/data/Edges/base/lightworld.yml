@@ -2,6 +2,5 @@ fixed:
   directed: []
   undirected:
     # whirlpools
-    - ["Lake Hylia whirlpool", "Zora's Falls whirlpool"]
     - ["South Shore Falls whirlpool", "Northwest Pond whirlpool"]
     - ["Hylia River North Bend whirlpool", "Wetlands Portal East whirlpool"]

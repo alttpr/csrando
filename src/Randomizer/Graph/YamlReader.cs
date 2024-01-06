@@ -439,6 +439,9 @@ public partial class Warp
 
     [YamlMember(Alias = "position")]
     public Position Position { get; set; }
+
+    [YamlMember(Alias = "connections")]
+    public Dictionary<string, List<string>> Connections { get; set; } = new();
 }
 
 public partial class Room

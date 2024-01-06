@@ -229,6 +229,14 @@ internal class VertexCollector
                     structured_vertices.Add(warpName, warpVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, warpVertex, fixedCondition));
                     warpVertex.Edges.Add(new Edge(warpVertex, regionVertex, fixedCondition));
+
+                    foreach (var connection in warp.Connections)
+                    {
+                        foreach (var target in connection.Value)
+                        {
+                            pendingConnections.Add((warpVertex, target, ConditionFrom(world, connection.Key)));
+                        }
+                    }
                 }
 
                 foreach (var connection in region.Connections)
@@ -239,6 +247,9 @@ internal class VertexCollector
                     }
                 }
             }
+
+            // TODO: we have no maps that directly contain warps; they're all in regions.
+            //       can we remove this block, or are we missing data?
             foreach (var warp in map.Nodes.Warps)
             {
                 string name = $"{warp.Name}:{world.Id}";
