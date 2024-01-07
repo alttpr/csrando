@@ -130,6 +130,8 @@ public sealed class Inventory
         return _itemCount.GetValueOrDefault(item, 0) >= count;
     }
 
+    internal IReadOnlyDictionary<Item, int> All() => _itemCount.AsReadOnly();
+
     /// <summary>
     /// Get new Inventory with merge from another Inventory.
     /// </summary>
