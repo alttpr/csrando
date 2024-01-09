@@ -103,6 +103,10 @@ public sealed class Inventory
     {
         if (_bits != null)
         {
+            if (item.Id >= _bits.Length)
+            {
+                _bits.Length = item.Id + 1;
+            }
             return _bits.Get(item.Id);
         }
         return _itemCount.ContainsKey(item);

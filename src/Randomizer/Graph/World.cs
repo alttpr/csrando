@@ -28,6 +28,8 @@ public sealed class World
         List<Item> items = [GetItem("fixed")];
         items.Add(GetItem($"ConfigWorldState{Config.State}"));
         items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
+        items.Add(GetItem($"ConfigWorldTowerEntryRequired{Config.CrystalsTower}"));
+        items.Add(GetItem($"ConfigWorldGanonVulnerableRequired{Config.CrystalsGanon}"));
 
         items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
         if (Config.Accessibility != AccessibilityOption.Locations)
@@ -40,8 +42,6 @@ public sealed class World
         {
             Graph.AddVertex(vertex);
         }
-
-        var meta = Graph.GetVertex($"Meta:{Id}");
 
         var edges = new EdgeCollector().GetForWorld(this);
         foreach (var (condition, data) in edges)
@@ -72,40 +72,6 @@ public sealed class World
                 }
                 Graph.AddDirected(from, to, condition);
                 Graph.AddDirected(to, from, condition);
-            }
-        }
-        // set special edges
-        if (Graph.GetVertex($"TowerEntry:{Id}") is Vertex towerEntry)
-        {
-            if (Config.CrystalsTower == 0)
-            {
-                Graph.AddDirected(meta, towerEntry, GetItem("fixed"));
-            }
-            else
-            {
-                Graph.AddDirected(meta, towerEntry, GetItem("Crystal"), Config.CrystalsTower);
-            }
-        }
-        if (Graph.GetVertex($"GanonVulnerable:{Id}") is Vertex ganonVulnerable)
-        {
-            switch (Config.Goal)
-            {
-                case GoalOption.Dungeons:
-                    // this has no effect; likely a relic of GraphViz to show us it was AD.
-                    //this.graph.newVertex(["AllDungeons"]);
-                    break;
-                case GoalOption.Ganon:
-                case GoalOption.FastGanon:
-                default:
-                    if (Config.CrystalsGanon == 0)
-                    {
-                        Graph.AddDirected(meta, ganonVulnerable, GetItem("fixed"));
-                    }
-                    else
-                    {
-                        Graph.AddDirected(meta, ganonVulnerable, GetItem("Crystal"), Config.CrystalsGanon);
-                    }
-                    break;
             }
         }
     }

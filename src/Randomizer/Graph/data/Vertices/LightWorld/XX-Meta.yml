@@ -13,6 +13,7 @@ maps:
               - "DefaultItems"
               - "Turtle Rock - Entry"
               - "Misery Mire - Entry"
+              - "Tower Entry - Check"
             OcarinaActive:
               - "Duck Airlines"
             ProgressiveSword:
@@ -183,6 +184,105 @@ maps:
         - name: "MireEntry"
           items: ["MireEntry"]
 
+        - name: "TowerEntry"
+          items: ["TowerEntry"]
+
+        - name: "Tower Entry - Check"
+          connections:
+            ConfigWorldTowerEntryRequired0:
+              - "TowerEntry"
+            ConfigWorldTowerEntryRequired1:
+              - "ConfigWorldTowerEntryRequired1"
+            ConfigWorldTowerEntryRequired2:
+              - "ConfigWorldTowerEntryRequired2"
+            ConfigWorldTowerEntryRequired3:
+              - "ConfigWorldTowerEntryRequired3"
+            ConfigWorldTowerEntryRequired4:
+              - "ConfigWorldTowerEntryRequired4"
+            ConfigWorldTowerEntryRequired5:
+              - "ConfigWorldTowerEntryRequired5"
+            ConfigWorldTowerEntryRequired6:
+              - "ConfigWorldTowerEntryRequired6"
+            ConfigWorldTowerEntryRequired7:
+              - "ConfigWorldTowerEntryRequired7"
+
+        - name: "ConfigWorldTowerEntryRequired1"
+          connections:
+            Crystal:
+              - TowerEntry
+        - name: "ConfigWorldTowerEntryRequired2"
+          connections:
+            Crystal|2:
+              - TowerEntry
+        - name: "ConfigWorldTowerEntryRequired3"
+          connections:
+            Crystal|3:
+              - TowerEntry
+        - name: "ConfigWorldTowerEntryRequired4"
+          connections:
+            Crystal|4:
+              - TowerEntry
+        - name: "ConfigWorldTowerEntryRequired5"
+          connections:
+            Crystal|5:
+              - TowerEntry
+        - name: "ConfigWorldTowerEntryRequired6"
+          connections:
+            Crystal|6:
+              - TowerEntry
+        - name: "ConfigWorldTowerEntryRequired7"
+          connections:
+            Crystal|7:
+              - TowerEntry
+
+        - name: "Ganon Vulnerable - Check"
+          connections:
+            ConfigWorldGanonVulnerableRequired0:
+              - "GanonVulnerable"
+            ConfigWorldGanonVulnerableRequired1:
+              - "ConfigWorldGanonVulnerableRequired1"
+            ConfigWorldGanonVulnerableRequired2:
+              - "ConfigWorldGanonVulnerableRequired2"
+            ConfigWorldGanonVulnerableRequired3:
+              - "ConfigWorldGanonVulnerableRequired3"
+            ConfigWorldGanonVulnerableRequired4:
+              - "ConfigWorldGanonVulnerableRequired4"
+            ConfigWorldGanonVulnerableRequired5:
+              - "ConfigWorldGanonVulnerableRequired5"
+            ConfigWorldGanonVulnerableRequired6:
+              - "ConfigWorldGanonVulnerableRequired6"
+            ConfigWorldGanonVulnerableRequired7:
+              - "ConfigWorldGanonVulnerableRequired7"
+
+        - name: "ConfigWorldGanonVulnerableRequired1"
+          connections:
+            Crystal:
+              - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequired2"
+          connections:
+            Crystal|2:
+              - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequired3"
+          connections:
+            Crystal|3:
+              - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequired4"
+          connections:
+            Crystal|4:
+              - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequired5"
+          connections:
+            Crystal|5:
+              - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequired6"
+          connections:
+            Crystal|6:
+              - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequired7"
+          connections:
+            Crystal|7:
+              - GanonVulnerable
+
         - name: "ActiveBookOfMudora"
           items: ["ActiveBookOfMudora"]
 
@@ -194,9 +294,6 @@ maps:
 
         - name: "MirrorShield"
           items: ["MirrorShield"]
-
-        - name: "TowerEntry"
-          items: ["TowerEntry"]
 
         - name: "BowAndSilverArrows"
           items: ["BowAndSilverArrows"]
