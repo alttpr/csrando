@@ -27,9 +27,14 @@ public sealed class World
 
         List<Item> items = [GetItem("fixed")];
         items.Add(GetItem($"ConfigWorldState{Config.State}"));
+        items.Add(GetItem($"ConfigWorldGlitches{Config.Glitches}"));
         items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
         items.Add(GetItem($"ConfigWorldTowerEntryRequired{Config.CrystalsTower}"));
         items.Add(GetItem($"ConfigWorldGanonVulnerableRequired{Config.CrystalsGanon}"));
+        foreach (var tech in Config.Techs)
+        {
+            items.Add(GetItem($"ConfigWorldTech{tech}"));
+        }
 
         items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
         if (Config.Accessibility != AccessibilityOption.Locations)
