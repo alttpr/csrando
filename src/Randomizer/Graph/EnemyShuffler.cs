@@ -60,18 +60,5 @@ internal sealed class EnemyShuffler : IWorldModifier
                     edge.Condition = new ItemCondition(world.GetItem($"Defeat{edge.To.Sprite!.Name}"), 1);
             }
         }
-
-        foreach (var (room, enemies) in CHALLENGE_ROOMS)
-        {
-            from = world.GetLocation(room);
-            foreach (string enemy in enemies)
-            {
-                var to = world.GetLocation(enemy);
-                if (to.Sprite == null)
-                    throw new Exception($"No sprite for {enemy}");
-
-                world.Graph.AddDirected(from, to, world.GetItem($"Defeat{to.Sprite.Name}"));
-            }
-        }
     }
 }

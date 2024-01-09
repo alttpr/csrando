@@ -3,10 +3,14 @@ rooms:
     group: 13
     nodes:
       regions:
+        # Players are expected to be able to take down the Stalfos Knights using only
+        # pots and bombs when the EnemyShuffler is not enabled.
         - name: "Ice Palace - Stalfos Ambush"
           connections:
             IcePalaceStalfosAmbushTrophy|2:
               - "Ice Palace - Conveyor"
+            ConfigWorldEnemyShuffleNone:
+              - "Ice Palace - Stalfos Ambush - Pot Bypass"
           pots:
             - name: "Ice Palace - Conveyor - Pot 1"
               position: 0x0660
@@ -25,11 +29,15 @@ rooms:
               position: { x: 0x19, y: 0x04, z: 0x00 }
               sprite: "StalfosKnight"
               trophy: "IcePalaceStalfosAmbushTrophy"
-
             - name: "Ice Palace - Stalfos Ambush - Stalfos Knight B"
               position: { x: 0x16, y: 0x0b, z: 0x00 }
               sprite: "StalfosKnight"
               trophy: "IcePalaceStalfosAmbushTrophy"
+
+        - name: "Ice Palace - Stalfos Ambush - Pot Bypass"
+          connections:
+            UseBomb:
+              - "Ice Palace - Conveyor"
 
         - name: "Ice Palace - Conveyor"
           switch: true

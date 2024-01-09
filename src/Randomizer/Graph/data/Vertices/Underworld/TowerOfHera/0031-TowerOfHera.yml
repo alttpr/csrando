@@ -9,6 +9,8 @@ rooms:
               - "Tower Of Hera - Entrance"
             "TowerOfHeraBeetleGateTrophy|3":
               - "Tower Of Hera - Beetle Trap"
+            ConfigWorldEnemyShuffleNone:
+              - "Tower Of Hera - Beetle Gate - Pot Bypass"
           pots:
             - name: "Tower Of Hera - Maze - Pot 1"
               position: 0x1c5c
@@ -33,6 +35,13 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+
+        # Players are expected to go through this room using pots only if necessary
+        # when the EnemyShuffle is disabled.
+        - name: "Tower Of Hera - Beetle Gate - Pot Bypass"
+          connections:
+            LiftPot:
+              - "Tower Of Hera - Beetle Trap"
 
         - name: "Tower Of Hera - Beetle Trap"
           connections:
