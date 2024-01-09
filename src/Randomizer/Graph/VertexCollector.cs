@@ -88,7 +88,6 @@ internal class VertexCollector
                 {
                     Type = VertexType.Meta,
                     Name = name,
-                    Item = world.GetItemOrNull(meta.Item),
                 };
                 structured_vertices.Add(name, metaVertex);
 
@@ -100,6 +99,17 @@ internal class VertexCollector
                     }
                 }
 
+                foreach (var (item, index) in meta.Items.Select((v, i) => (v, i)))
+                {
+                    var metaItemVertex = new Vertex
+                    {
+                        Type = VertexType.Meta,
+                        Name = $"{meta.Name} - {index} - {item}:{world.Id}",
+                        Item = world.GetItem(item),
+                    };
+                    structured_vertices.Add(metaItemVertex.Name, metaItemVertex);
+                    metaVertex.Edges.Add(new Edge(metaVertex, metaItemVertex, fixedCondition));
+                }
             }
             foreach (var prizepack in map.Nodes.Prizepacks)
             {

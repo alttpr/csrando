@@ -10,6 +10,7 @@ maps:
         - name: "Meta"
           connections:
             fixed:
+              - "DefaultItems"
               - "Turtle Rock - Entry"
               - "Misery Mire - Entry"
             OcarinaActive:
@@ -97,7 +98,7 @@ maps:
               - "MirrorBlockRemoval"
 
         - name: "MirrorBlockRemoval"
-          item: "MirrorBlockRemoval"
+          items: ["MirrorBlockRemoval"]
 
         - name: "Duck Airlines"
           connections:
@@ -129,13 +130,36 @@ maps:
               - "Wetlands Dam"
               - "South Shore Falls"
 
+        - name: "DefaultItems"
+          connections:
+            ConfigWorldStateStandard:
+              - "DefaultItemsStandard"
+          items:
+            - "BossHeartContainer"
+            - "BossHeartContainer"
+            - "BossHeartContainer"
+            - "MagicBar"
+            - "LiftBush"
+            - "LiftPot"
+            - "OpenChest"
+            - "UseBomb"
+            - "BombUpgrade10"
+            - "ArrayUpgrade10"
+            - "ArrayUpgrade10"
+            - "ArrayUpgrade10"
+            - "hop"
+
+        - name: "DefaultItemsStandard"
+          items:
+            - "EscapeLamp"
+
         - name: "ActiveBombos"
           connections:
             MireEntryBombos:
               - "MireEntry"
             TurtleRockEntryBombos:
               - "TurtleRockEntry"
-          item: "ActiveBombos"
+          items: ["ActiveBombos"]
 
         - name: "ActiveEther"
           connections:
@@ -143,7 +167,7 @@ maps:
               - "MireEntry"
             TurtleRockEntryEther:
               - "TurtleRockEntry"
-          item: "ActiveEther"
+          items: ["ActiveEther"]
 
         - name: "ActiveQuake"
           connections:
@@ -151,64 +175,64 @@ maps:
               - "MireEntry"
             TurtleRockEntryQuake:
               - "TurtleRockEntry"
-          item: "ActiveQuake"
+          items: ["ActiveQuake"]
 
         - name: "TurtleRockEntry"
-          item: "TurtleRockEntry"
+          items: ["TurtleRockEntry"]
 
         - name: "MireEntry"
-          item: "MireEntry"
+          items: ["MireEntry"]
 
         - name: "ActiveBookOfMudora"
-          item: "ActiveBookOfMudora"
+          items: ["ActiveBookOfMudora"]
 
         - name: "PowerGlove"
-          item: "PowerGlove"
+          items: ["PowerGlove"]
 
         - name: "TitansMitt"
-          item: "TitansMitt"
+          items: ["TitansMitt"]
 
         - name: "MirrorShield"
-          item: "MirrorShield"
+          items: ["MirrorShield"]
 
         - name: "TowerEntry"
-          item: "TowerEntry"
+          items: ["TowerEntry"]
 
         - name: "BowAndSilverArrows"
-          item: "BowAndSilverArrows"
+          items: ["BowAndSilverArrows"]
 
         - name: "GanonVulnerable"
-          item: "GanonVulnerable"
+          items: ["GanonVulnerable"]
 
         - name: "Pendant Of Courage"
-          item: "Pendant"
+          items: ["Pendant"]
 
         - name: "Pendant Of Wisdom"
-          item: "Pendant"
+          items: ["Pendant"]
 
         - name: "Pendant Of Power"
-          item: "Pendant"
+          items: ["Pendant"]
 
         - name: "All Pendants"
-          item: "AllPendants"
+          items: ["AllPendants"]
 
         - name: "Red Crystals"
-          item: "RedCrystals"
+          items: ["RedCrystals"]
 
         - name: "Bottle"
-          item: "Bottle"
+          items: ["Bottle"]
 
         - name: "BowAndArrows"
-          item: "BowAndArrows"
+          items: ["BowAndArrows"]
 
         - name: "L3Sword"
-          item: "L3Sword"
+          items: ["L3Sword"]
 
         - name: "MasterSword"
           connections:
             BookOfMudora:
               - "ActiveBookOfMudora"
-          item: "L2Sword"
+          items: ["L2Sword"]
 
         - name: "L1Sword"
           connections:
@@ -218,179 +242,179 @@ maps:
               - "ActiveEther"
             Quake:
               - "ActiveQuake"
-          item: "L1Sword"
+          items: ["L1Sword"]
 
         - name: "RescueZelda"
-          item: "RescueZelda"
+          items: ["RescueZelda"]
 
         - name: "ReturnedSmith"
-          item: "ReturnedSmith"
+          items: ["ReturnedSmith"]
 
         # Boss beating metas
         - name: "DefeatArmos"
-          item: "DefeatArmos"
+          items: ["DefeatArmos"]
 
         - name: "DefeatLanmolas"
-          item: "DefeatLanmolas"
+          items: ["DefeatLanmolas"]
 
         - name: "DefeatMoldorm"
-          item: "DefeatMoldorm"
+          items: ["DefeatMoldorm"]
 
         - name: "DefeatAgahnim"
-          item: "DefeatAgahnim"
+          items: ["DefeatAgahnim"]
 
         - name: "DefeatHelmasaur"
-          item: "DefeatHelmasaur"
+          items: ["DefeatHelmasaur"]
 
         - name: "ArrghusPullPuffs"
-          item: "ArrghusPullPuffs"
+          items: ["ArrghusPullPuffs"]
 
         - name: "DefeatArrghus"
-          item: "DefeatArrghus"
+          items: ["DefeatArrghus"]
 
         - name: "DefeatMothula"
-          item: "DefeatMothula"
+          items: ["DefeatMothula"]
 
         - name: "DefeatBlind"
-          item: "DefeatBlind"
+          items: ["DefeatBlind"]
 
         - name: "KholdstareShellMelt"
-          item: "KholdstareShellMelt"
+          items: ["KholdstareShellMelt"]
 
         - name: "DefeatKholdstare"
-          item: "DefeatKholdstare"
+          items: ["DefeatKholdstare"]
 
         - name: "DefeatVitreous"
-          item: "DefeatVitreous"
+          items: ["DefeatVitreous"]
 
         - name: "DefeatTrinexx"
-          item: "DefeatTrinexx"
+          items: ["DefeatTrinexx"]
 
         - name: "Pendant-1"
-          item: "Pendant"
+          items: ["Pendant"]
 
         - name: "Crystal1"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "Crystal2"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "Crystal3"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "Crystal4"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "Crystal5"
           connections:
             Crystal6:
               - "Red Crystals"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "Crystal6"
           connections:
             Crystal5:
               - "Red Crystals"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "Crystal7"
-          item: "Crystal"
+          items: ["Crystal"]
 
         - name: "BottleMagicBar1"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "BottleMagicBar2"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "BottleMagicBar3"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "BottleMagicBar4"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "HalfMagicBar"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "HalfMagicBar1"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "HalfMagicBar2"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "HalfMagicBar3"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "HalfMagicBar4"
-          item: "MagicBar"
+          items: ["MagicBar"]
 
         - name: "TrinexxMagic"
-          item: "TrinexxMagic"
+          items: ["TrinexxMagic"]
 
         - name: "TrinexxFireHead"
-          item: "TrinexxHead"
+          items: ["TrinexxHead"]
 
         - name: "TrinexxIceHead"
-          item: "TrinexxHead"
+          items: ["TrinexxHead"]
 
         - name: "TrinexxMainHead"
-          item: "TrinexxHead"
+          items: ["TrinexxHead"]
 
         - name: "PHeart1"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart2"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart3"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart4"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart5"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart6"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart7"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart8"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart9"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart10"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart11"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart12"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart13"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart14"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart15"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart16"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart17"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart18"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart19"
-          item: "HeartContainer"
+          items: ["HeartContainer"]
 
         - name: "PHeart20"
-          item: "HeartContainer"
+          items: ["HeartContainer"]

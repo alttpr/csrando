@@ -41,12 +41,7 @@ public class WorldConfig
     // TODO: Add configuration for custom prize packs
     public bool CustomPrizePacks { get; init; } = false;
 
-    public List<string> StartingEquipment { get; init; } = new()
-    {
-        "BossHeartContainer",
-        "BossHeartContainer",
-        "BossHeartContainer",
-    };
+    public List<string> StartingEquipment { get; init; } = new();
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt }

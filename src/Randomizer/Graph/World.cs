@@ -25,27 +25,11 @@ public sealed class World
         Config = randomizerConfig;
         Graph = graph;
 
-        var items = new List<Item>
-        {
-            GetItem("MagicBar"),
-            GetItem("LiftBush"),
-            GetItem("LiftPot"),
-            GetItem("UseBomb"),
-            GetItem("OpenChest"),
-            GetItem("BombUpgrade10"),
-            GetItem("ArrowUpgrade10"),
-            GetItem("ArrowUpgrade10"),
-            GetItem("ArrowUpgrade10"),
-            GetItem("fixed"),
-            GetItem("hop"),
-        };
-        items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
-        if (Config.State == StateOption.Standard)
-        {
-            items.Add(GetItem("EscapeLamp"));
-        }
-        // I'm so sorry....
+        List<Item> items = [GetItem("fixed")];
         items.Add(GetItem($"ConfigWorldState{Config.State}"));
+        items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
+
+        items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
         if (Config.Accessibility != AccessibilityOption.Locations)
         {
             items.Add(GetItem("KeyForKey"));

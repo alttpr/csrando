@@ -365,8 +365,8 @@ public class MetaEntry
     [YamlMember(Alias = "name")]
     public string Name { get; set; }
 
-    [YamlMember(Alias = "item")]
-    public string? Item { get; set; }
+    [YamlMember(Alias = "items")]
+    public List<string> Items { get; set; } = new();
 
     [YamlMember(Alias = "connections")]
     public Dictionary<string, List<string>> Connections { get; set; } = new();
