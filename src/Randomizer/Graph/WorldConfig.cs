@@ -28,6 +28,8 @@ public class WorldConfig
 
     public EntranceShuffleOption EntranceShuffle { get; init; } = EntranceShuffleOption.None;
 
+    public EnemyShuffleOption EnemyShuffle { get; init; } = EnemyShuffleOption.None;
+
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
     // TODO: Make it a bool? Do we have more planned there?
@@ -63,3 +65,4 @@ public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
 public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
 public enum BossShuffleOption { None, Simple, Full, Random }
 public enum ShopSupplyOption { Normal, Shuffled }
+public enum EnemyShuffleOption { None, Shuffled, Random }
