@@ -1,6 +1,7 @@
 namespace Randomizer.Console.Commands;
 
 using Randomizer.Graph;
+using Randomizer.RomModifications;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics;
@@ -24,6 +25,11 @@ internal sealed class Randomize : Command
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
     private readonly Option<int> _bulk = new("bulk", "generate multiple ROMs");
     private readonly Option<int?> _seed = new("seed", "set starting seed");
+    private readonly Option<FileInfo> _vanillaRom = new Option<FileInfo>("rom", "set vanilla rom (Japanese 1.0)").ExistingOnly();
+    // TODO: we should probably have the base rom patch "built in" and not require a path.
+    private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>("bps", "set base rom patch BPS").ExistingOnly();
+    private readonly Option<DirectoryInfo> _outputDirectory = new Option<DirectoryInfo>("outdir", "output directory for generated games");
+
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
     {
@@ -40,6 +46,9 @@ internal sealed class Randomize : Command
         Add(_tech);
         Add(_bulk);
         Add(_seed);
+        Add(_vanillaRom);
+        Add(_baseBPS);
+        Add(_outputDirectory);
 
         this.SetHandler(context => context.ExitCode = Handle(context));
     }
@@ -52,6 +61,9 @@ internal sealed class Randomize : Command
     public int Handle(InvocationContext context)
     {
         int bulk = Math.Max(context.ParseResult.GetValueForOption(_bulk), 1);
+        var vanillaRom = context.ParseResult.GetValueForOption(_vanillaRom);
+        var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
+        var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
@@ -83,6 +95,14 @@ internal sealed class Randomize : Command
             if (!randomizer.IsWinnable())
             {
                 throw new Exception($"Game Unwinnable.");
+            }
+
+            if (vanillaRom != null || baseBPS != null || outputDirectory != null)
+            {
+                if (vanillaRom != null && baseBPS != null && outputDirectory != null)
+                    RomWriter.Write(randomizer, vanillaRom, baseBPS, outputDirectory);
+                else
+                    System.Console.WriteLine("Writing a ROM requires all options: {0}", string.Join(", ", [_vanillaRom.Name, _baseBPS.Name, _outputDirectory.Name]));
             }
         }
         Info("Randomization took {0}", sw.Elapsed);

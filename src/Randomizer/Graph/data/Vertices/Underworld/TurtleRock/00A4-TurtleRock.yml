@@ -12,7 +12,7 @@ rooms:
           itemset: ["turtlerock"]
 
         - name: "Turtle Rock - Prize"
-          addresses: [null, 0x120A7, 0x53F24, 0x53F25, 0x18005C, 0x180079, 0xC708]
+          addresses: [0x120A7, 0x53F24, 0x53F25, 0x18005C, 0x180079, 0xC708]
           type: "prize"
           itemset: ["prize"]
 

@@ -12,7 +12,7 @@ rooms:
           itemset: ["ice"]
 
         - name: "Ice Palace - Prize"
-          addresses: [null, 0x120A4, 0x53F5A, 0x53F5B, 0x180059, 0x180073, 0xC705]
+          addresses: [0x120A4, 0x53F5A, 0x53F5B, 0x180059, 0x180073, 0xC705]
           type: "prize"
           itemset: ["prize"]
 

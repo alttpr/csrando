@@ -12,7 +12,7 @@ rooms:
           itemset: ["mire"]
 
         - name: "Misery Mire - Prize"
-          addresses: [null, 0x120A2, 0x53F48, 0x53F49, 0x180057, 0x180075, 0xC703]
+          addresses: [0x120A2, 0x53F48, 0x53F49, 0x180057, 0x180075, 0xC703]
           type: "prize"
           itemset: ["prize"]
 

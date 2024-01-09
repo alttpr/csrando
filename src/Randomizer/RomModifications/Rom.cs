@@ -1,5 +1,6 @@
 ﻿namespace Randomizer.RomModifications;
 
+using BpsNet;
 using Randomizer.Graph;
 using SpanDex;
 
@@ -31,6 +32,17 @@ public sealed class Rom : IDisposable
     /// <param name="size">number of bytes the ROM should be</param>
     public void Resize(int size = RomSize) => _rom.SetLength(size);
 
+    public void ApplyBasePatch(FileInfo baseBPS)
+    {
+        var patcher = new BpsPatch(File.ReadAllBytes(baseBPS.FullName));
+        _rom.Seek(0, SeekOrigin.Begin);
+        Span<byte> oldRom = new byte[_rom.Length];
+        _rom.ReadExactly(oldRom);
+        Span<byte> newRom = patcher.Apply(oldRom.ToArray());
+        _rom.Seek(0, SeekOrigin.Begin);
+        _rom.Write(newRom);
+    }
+
     /// <summary>Update the ROM's checksum to be proper</summary>
     public void UpdateChecksum()
     {
@@ -38,13 +50,13 @@ public sealed class Rom : IDisposable
 
         int sum = 0x1FE;
         Span<byte> block = stackalloc byte[1024];
-        for (int i = 0; i < _rom.Length; i += 1024)
+        for (int i = 0; i < _rom.Length; i += block.Length)
         {
             int bytesRead = _rom.Read(block);
             if (bytesRead == 0)
                 throw new Exception("Could not read block.");
 
-            for (int j = 0; j < 1024; ++j)
+            for (int j = 0; j < bytesRead; ++j)
             {
                 // this skip is true for LoROM, HiROM skips: 0xFFDC - 0xFFDF
                 if (j + i >= 0x7FDC && j + i < 0x7FE0)
@@ -110,6 +122,13 @@ public sealed class Rom : IDisposable
     /// <param name="enable">switch on or off</param>
     public void SetCaneOfByrnaInvulnerability(bool enable = true)
         => Write(0x18004F, [(byte)(enable ? 0x01 : 0x00)]);
+
+    /// <summary>Bryna magic amount used per "cycle"</summary>
+    /// <param name="normal">normal magic usage</param>
+    /// <param name="half">half magic usage</param>
+    /// <param name="quarter">quarter magic usage</param>
+    public void SetCaneOfByrnaMagicPerCycle(byte normal = 0x04, byte half = 0x02, byte quarter = 0x01)
+        => Write(0x45C42, [normal, half, quarter]);
 
     /// <summary>Set Cane of Byrna Cave and Misery Mire spike room Cape usage</summary>
     /// <param name="normal">normal magic usage</param>
@@ -533,6 +552,9 @@ public sealed class Rom : IDisposable
     /// <param name="sprite">id of sprite to drop</param>
     public void SetPowderedSpriteFairyPrize(byte sprite = 0xE3)
         => Write(0x36DD0, [sprite]);
+
+    public void SetPrizePacks(byte[] pack)
+        => Write(0x37A78, pack);
 
     /// <summary>Set pull tree prizes</summary>
     /// <param name="low">id of sprite to drop (0xD9 green rupee)</param>
@@ -1694,6 +1716,34 @@ public sealed class Rom : IDisposable
             return true;
         }
         catch { return false; }
+    }
+
+    public void WriteItem(Vertex location, Item? itemToWrite = null)
+    {
+        if (location?.Addresses == null)
+            return;
+
+        itemToWrite ??= location.Item;
+        if (itemToWrite == null)
+            return;
+
+        var itemBytes = itemToWrite.Bytes;
+        // probably a meta item...
+        // FIXME: or something that needs special handling?
+        if (itemBytes == null)
+            return;
+
+        for (int i = 0; i < Math.Min(itemBytes.Length, location.Addresses.Length); i++)
+        {
+            if (i >= location.Addresses.Length)
+                break;
+            long address = location.Addresses[i];
+            byte? itemByte = itemBytes.ElementAtOrDefault(i);
+            if (itemByte == null)
+                continue;
+
+            Write((Address)address, [itemByte.Value]);
+        }
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>

@@ -22,7 +22,7 @@ rooms:
           itemset: ["thieves"]
 
         - name: "Thieves' Town - Prize"
-          addresses: [null, 0x120A6, 0x53F36, 0x53F37, 0x18005B, 0x180077, 0xC707]
+          addresses: [0x120A6, 0x53F36, 0x53F37, 0x18005B, 0x180077, 0xC707]
           type: "prize"
           itemset: ["prize"]
 

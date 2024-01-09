@@ -1,7 +1,5 @@
 namespace Randomizer.Graph;
 
-using System.Diagnostics;
-
 public enum ItemType
 {
     Medallion,
@@ -18,6 +16,7 @@ public sealed class Item
     public string Name { get; }
     public World World { get; }
     public ItemType Type { get; }
+    public byte[]? Bytes { get; }
 
     /// <summary>
     /// Create a new Item.
@@ -31,12 +30,12 @@ public sealed class Item
         World = world;
 
         var yamlItems = YamlReader.LoadItems();
-        string typeString = yamlItems.GetValueOrDefault(name)?.Type ?? "Meta";
+        var yamlItem = yamlItems.GetValueOrDefault(name);
+        string typeString = yamlItem?.Type ?? "Meta";
         if (!Enum.TryParse<ItemType>(typeString, out var itemType))
-        {
             itemType = ItemType.Meta;
-        }
         Type = itemType;
+        Bytes = yamlItem?.Bytes.ToArray();
     }
 
     public override string ToString() => $"{Name}:{World.Id}";
