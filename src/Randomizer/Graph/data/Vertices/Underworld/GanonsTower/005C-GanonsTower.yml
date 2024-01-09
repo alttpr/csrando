@@ -9,7 +9,7 @@ rooms:
               - "Ganon's Tower - Spike Alley"
               - "Ganon's Tower - Gauntlet 1"
             PegasusBoots:
-              - "Ganon's Tower - Cannonball Z"
+              - "Ganon's Tower - Cannonball Z ledge"
           mobs:
             - name: "Ganon's Tower - Refill Room - Moving Cannon (Down)"
               position: { x: 0x0b, y: 0x02, z: 0x00 }
