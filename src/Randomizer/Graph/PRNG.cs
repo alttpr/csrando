@@ -1,4 +1,6 @@
 ﻿namespace Randomizer.Graph;
+
+using MathNet.Numerics.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +8,13 @@ using System.Security.Cryptography;
 
 public class PRNG
 {
-    private readonly Random _random = new Random();
+    private readonly RandomSource _random;
     public int Seed { get; private set; }
 
     public PRNG(int? seed)
     {
         Seed = seed ?? RandomNumberGenerator.GetInt32(int.MaxValue);
-        _random = new Random(Seed);
+        _random = new MersenneTwister(Seed);
     }
 
 
@@ -37,7 +39,7 @@ public class PRNG
         Array.Copy(array, new_array, array.Length);
         int count = array.Length;
 
-        for (int i = count - 1; i >= 0; --i)
+        for (int i = count - 1; i > 0; --i)
         {
             int r = GetRandomInt(0, i);
             (new_array[i], new_array[r]) = (new_array[r], new_array[i]);
