@@ -4,7 +4,6 @@ using MathNet.Numerics.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 
 public class PRNG
 {
@@ -13,7 +12,7 @@ public class PRNG
 
     public PRNG(int? seed)
     {
-        Seed = seed ?? RandomNumberGenerator.GetInt32(int.MaxValue);
+        Seed = seed ?? RandomSeed.Robust();
         _random = new MersenneTwister(Seed);
     }
 
