@@ -10,10 +10,11 @@ namespace Randomizer.Graph;
 public sealed class Randomizer
 {
     public Graph Graph { get; private set; }
+    public World[] Worlds { get; }
+    public PRNG PRNG { get; }
+
     private readonly Inventory _startingItems = new();
     private readonly Vertex _start;
-    private readonly World[] _worlds;
-    private readonly PRNG _prng;
 
     /// <summary>
     /// Set up the Randomizer. This involves:
@@ -26,8 +27,8 @@ public sealed class Randomizer
     /// <param name="seed">Seeded again, eh?</param>
     public Randomizer(WorldConfig[] randomizerConfigs, int? seed = null)
     {
-        _prng = new PRNG(seed);
-        System.Console.WriteLine($"Using seed: {_prng.Seed}");
+        PRNG = new PRNG(seed);
+        System.Console.WriteLine($"Using seed: {PRNG.Seed}");
 
         Graph = new Graph();
         _start = Graph.AddVertex(new Vertex
@@ -36,30 +37,30 @@ public sealed class Randomizer
             Type = VertexType.Meta,
         });
 
-        _worlds = new World[randomizerConfigs.Length];
+        Worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
             if (randomizerConfigs[i].CrystalsGanon == WorldConfig.RandomCrystals)
-                randomizerConfigs[i].CrystalsGanon = _prng.GetRandomInt(7 + 1);
+                randomizerConfigs[i].CrystalsGanon = PRNG.GetRandomInt(7 + 1);
 
             if (randomizerConfigs[i].CrystalsTower == WorldConfig.RandomCrystals)
-                randomizerConfigs[i].CrystalsTower = _prng.GetRandomInt(7 + 1);
+                randomizerConfigs[i].CrystalsTower = PRNG.GetRandomInt(7 + 1);
 
-            _worlds[i] = new World(i, randomizerConfigs[i], Graph);
-            _startingItems = _startingItems.Merge(_worlds[i].StartingItems);
+            Worlds[i] = new World(i, randomizerConfigs[i], Graph);
+            _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
 
-            ShopFiller.AdjustEdges(_worlds[i], _prng);
-            DoorShuffler.AdjustEdges(_worlds[i], _prng);
-            EntranceShuffler.AdjustEdges(_worlds[i], _prng);
-            DarknessGraphifier.AdjustEdges(_worlds[i], _prng);
-            BossShuffler.AdjustEdges(_worlds[i], _prng);
-            EnemyShuffler.AdjustEdges(_worlds[i], _prng);
-            BunnyGraphifier.AdjustEdges(_worlds[i], _prng);
-            PrizePackShuffler.AdjustEdges(_worlds[i], _prng);
-            DoorReplacer.AdjustEdges(_worlds[i], _prng);
-            DungeonPegStateCopier.AdjustEdges(_worlds[i], _prng);
+            ShopFiller.AdjustEdges(Worlds[i], PRNG);
+            DoorShuffler.AdjustEdges(Worlds[i], PRNG);
+            EntranceShuffler.AdjustEdges(Worlds[i], PRNG);
+            DarknessGraphifier.AdjustEdges(Worlds[i], PRNG);
+            BossShuffler.AdjustEdges(Worlds[i], PRNG);
+            EnemyShuffler.AdjustEdges(Worlds[i], PRNG);
+            BunnyGraphifier.AdjustEdges(Worlds[i], PRNG);
+            PrizePackShuffler.AdjustEdges(Worlds[i], PRNG);
+            DoorReplacer.AdjustEdges(Worlds[i], PRNG);
+            DungeonPegStateCopier.AdjustEdges(Worlds[i], PRNG);
 
-            Graph.AddDirected(_start, _worlds[i].Graph.GetVertex($"start:{i}"), _worlds[i].GetItem("fixed"));
+            Graph.AddDirected(_start, Worlds[i].Graph.GetVertex($"start:{i}"), Worlds[i].GetItem("fixed"));
         }
 
         Graph.SetVertexIds();
@@ -71,8 +72,8 @@ public sealed class Randomizer
     /// </summary>
     public void Randomize()
     {
-        var filler = new RandomAssumedFiller(this, _prng);
-        var sets = new ItemPooler(_worlds, _prng).GetPool();
+        var filler = new RandomAssumedFiller(this, PRNG);
+        var sets = new ItemPooler(Worlds, PRNG).GetPool();
 
         filler.FillGraph(sets);
     }
@@ -87,7 +88,7 @@ public sealed class Randomizer
 
     public Item GetItemForWorld(string name, int worldId)
     {
-        return _worlds[worldId].GetItem(name);
+        return Worlds[worldId].GetItem(name);
     }
 
     /// <summary>
@@ -97,7 +98,7 @@ public sealed class Randomizer
     {
         Searcher searcher = new(Graph, _start, _startingItems);
 
-        foreach (var world in _worlds)
+        foreach (var world in Worlds)
         {
             if (!searcher.HasFound(world.GetItem("Triforce")))
             {
