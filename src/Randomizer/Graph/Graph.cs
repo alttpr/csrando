@@ -7,6 +7,8 @@ namespace Randomizer.Graph;
 /// </summary>
 public sealed class Graph
 {
+    // TODO: this (and _setLocations) feel like they shouldn't be here.
+    //       they probably make more sense over in the ItemPooler.
     private static readonly HashSet<VertexType> ITEM_LOCATIONS = new()
     {
         VertexType.BigChest,
@@ -19,7 +21,7 @@ public sealed class Graph
         //VertexType.Mob,
         VertexType.Npc,
         VertexType.Pedestal,
-        VertexType.Pot,
+        //VertexType.Pot,
         VertexType.Prize,
         VertexType.Refill,
         VertexType.ShopItem,
