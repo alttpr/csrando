@@ -3,34 +3,18 @@ namespace Randomizer.Graph;
 using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
 
-/**
- * Get the sets of items to place.
- */
-internal sealed class ItemPooler
+/// <summary>Get the sets of items to place.</summary>
+/// <param name="worlds">worlds to get Item pools for</param>
+internal sealed class ItemPooler(World[] worlds, PRNG prng)
 {
-    private readonly World[] _worlds;
-    private readonly PRNG _prng;
-    /**
-     * Create new Item Pooler.
-     *
-     * @param World[] worlds worlds to get Item pools for
-     */
-    public ItemPooler(World[] worlds, PRNG prng)
-    {
-        _worlds = worlds;
-        _prng = prng;
-    }
-
-    /**
-     * Get list of all items in their weighted sets.
-     */
+    /// <summary>Get list of all items in their weighted sets.</summary>
     public ItemSet GetPool()
     {
         var sets = new ItemSet();
 
-        foreach (var world in _worlds)
+        foreach (var world in worlds)
         {
-            var world_set = array_merge_recursive(
+            var worldSet = RecursivelyMerge(
                 GetMedallions(world),
                 GetPrizes(world),
                 GetSmallKeys(world),
@@ -44,8 +28,7 @@ internal sealed class ItemPooler
                     { "*", new WeightedSet
                         {
                             // placing behind keys for now.
-                            { 3, new List<Item>
-                                {
+                            { 3, [
                                     world.GetItem("Hammer"),
                                     world.GetItem("Hookshot"),
                                     world.GetItem("Flippers"),
@@ -77,35 +60,31 @@ internal sealed class ItemPooler
                                     world.GetItem("BugCatchingNet"),
                                     world.GetItem("Powder"),
                                     world.GetItem("HalfMagic"),
-                                }
+                                ]
                             },
-                            { 9001, new[]
-                                {
+                            { 9001, [
                                     world.GetItem("Boomerang"),
                                     world.GetItem("RedBoomerang"),
                                     world.GetItem("HeartContainer"),
-                                }
-                                .Concat(Enumerable.Repeat(world.GetItem("ProgressiveSword"), 2))
-                                .Concat(Enumerable.Repeat(world.GetItem("ProgressiveArmor"), 2))
-                                .Concat(Enumerable.Repeat(world.GetItem("BossHeartContainer"), 10))
-                                .Concat(Enumerable.Repeat(world.GetItem("PieceOfHeart"), 24))
-                                .ToList()
+                                    .. Enumerable.Repeat(world.GetItem("ProgressiveSword"), 2),
+                                    .. Enumerable.Repeat(world.GetItem("ProgressiveArmor"), 2),
+                                    .. Enumerable.Repeat(world.GetItem("BossHeartContainer"), 10),
+                                    .. Enumerable.Repeat(world.GetItem("PieceOfHeart"), 24),
+                                ]
                             },
                             // order here matters, items at end may get lopped off
                             // if too many items to place
-                            { 9999, new[]
-                                {
+                            { 9999, [
                                     world.GetItem("Arrow"),
                                     world.GetItem("OneHundredRupees"),
-                                }
-                                .Concat(Enumerable.Repeat(world.GetItem("TenArrows"), 12))
-                                .Concat(Enumerable.Repeat(world.GetItem("ThreeBombs"), 17))
-                                .Concat(Enumerable.Repeat(world.GetItem("OneRupee"), 2))
-                                .Concat(Enumerable.Repeat(world.GetItem("FiveRupees"), 4))
-                                .Concat(Enumerable.Repeat(world.GetItem("TwentyRupees"), 28))
-                                .Concat(Enumerable.Repeat(world.GetItem("FiftyRupees"), 7))
-                                .Concat(Enumerable.Repeat(world.GetItem("ThreeHundredRupees"), 5))
-                                .ToList()
+                                    .. Enumerable.Repeat(world.GetItem("TenArrows"), 12),
+                                    .. Enumerable.Repeat(world.GetItem("ThreeBombs"), 17),
+                                    .. Enumerable.Repeat(world.GetItem("OneRupee"), 2),
+                                    .. Enumerable.Repeat(world.GetItem("FiveRupees"), 4),
+                                    .. Enumerable.Repeat(world.GetItem("TwentyRupees"), 28),
+                                    .. Enumerable.Repeat(world.GetItem("FiftyRupees"), 7),
+                                    .. Enumerable.Repeat(world.GetItem("ThreeHundredRupees"), 5),
+                                ]
                             },
                         }
                     },
@@ -118,38 +97,32 @@ internal sealed class ItemPooler
                     || !(world.Config.Glitches is GlitchesOption.Overworld or GlitchesOption.Major))
             )
             {
-                float crystal_ratio = world.Config.CrystalsTower / 7f;
-                int fill_count;
-                if (world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal)
+                float crystalRatio = world.Config.CrystalsTower / 7f;
+                int fillCount = world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal
+                    ? prng.GetRandomInt((int)(15 * crystalRatio), (int)(25 * crystalRatio))
+                    : prng.GetRandomInt((int)(15 * crystalRatio));
+                if (fillCount > 0)
                 {
-                    fill_count = _prng.GetRandomInt((int)(15 * crystal_ratio), (int)(25 * crystal_ratio));
-                }
-                else
-                {
-                    fill_count = _prng.GetRandomInt((int)(15 * crystal_ratio));
-                }
-                if (fill_count > 0)
-                {
-                    var junkFill = _prng.Shuffle(world_set["*"][9999]).Take(fill_count).ToArray();
+                    var junkFill = prng.Shuffle(worldSet["*"][9999]).Take(fillCount).ToArray();
                     foreach (var key in junkFill)
                     {
-                        world_set["gt:" + world.Id].TryAdd(2, new());
-                        world_set["gt:" + world.Id][2].Add(key);
-                        world_set["*"][9999].Remove(key);
+                        worldSet["gt:" + world.Id].TryAdd(2, []);
+                        worldSet["gt:" + world.Id][2].Add(key);
+                        worldSet["*"][9999].Remove(key);
                     }
                 }
             }
 
-            sets = array_merge_recursive(
+            sets = RecursivelyMerge(
                 sets,
-                world_set
+                worldSet
             );
         }
 
         return sets;
     }
 
-    private static ItemSet array_merge_recursive(params ItemSet[] itemSets)
+    private static ItemSet RecursivelyMerge(params ItemSet[] itemSets)
     {
         var result = new ItemSet();
 
@@ -158,11 +131,11 @@ internal sealed class ItemPooler
             foreach (var (location, prioritySets) in itemSet)
             {
                 if (!result.TryGetValue(location, out var locationSet))
-                    result[location] = locationSet = new WeightedSet();
+                    result[location] = locationSet = [];
                 foreach (var (priority, items) in prioritySets)
                 {
                     if (!locationSet.TryGetValue(priority, out var prioritySet))
-                        locationSet[priority] = prioritySet = new List<Item>();
+                        locationSet[priority] = prioritySet = [];
 
                     prioritySet.AddRange(items);
                 }
@@ -172,50 +145,39 @@ internal sealed class ItemPooler
         return result;
     }
 
-    /**
-     * Get Medallions meta locations for what ends up being required for TR/MM
-     * entry.
-     *
-     * @param World world world to get items for
-     */
+    private static readonly string[] _mireEntry = ["MireEntryBombos", "MireEntryEther", "MireEntryQuake"];
+    private static readonly string[] _trEntry = ["TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake"];
+    /// <summary>
+    /// Get Medallions meta locations for what ends up being required for TR/MM
+    /// entry.
+    /// </summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetMedallions(World world)
     {
         return new ItemSet
         {
             { "mm-medallion:" + world.Id, new WeightedSet
                 {
-                    { 0, new List<Item>
-                        {
-                            world.GetItem(_prng.GetRandomElement(new [] { "MireEntryBombos", "MireEntryEther", "MireEntryQuake" })),
-                        }
-                    },
+                    { 0, [ world.GetItem(prng.GetRandomElement(_mireEntry)) ] },
                 }
             },
             { "tr-medallion:" + world.Id, new WeightedSet
                 {
-                    { 0, new List<Item>
-                        {
-                            world.GetItem(_prng.GetRandomElement(new [] { "TurtleRockEntryBombos", "TurtleRockEntryEther", "TurtleRockEntryQuake" })),
-                        }
-                    },
+                    { 0, [ world.GetItem(prng.GetRandomElement(_trEntry)) ] },
                 }
             },
         };
     }
 
-    /**
-     * Get Prizes for a world.
-     *
-     * @param World world world to get items for
-     */
+    /// <summary>Get Prizes for a world.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetPrizes(World world)
     {
         return new ItemSet
         {
             { "prize:" + world.Id, new WeightedSet
                 {
-                    { 0, new List<Item>
-                         {
+                    { 0, [
                              world.GetItem("PendantOfCourage"),
                              world.GetItem("PendantOfWisdom"),
                              world.GetItem("PendantOfPower"),
@@ -226,80 +188,77 @@ internal sealed class ItemPooler
                              world.GetItem("Crystal5"),
                              world.GetItem("Crystal6"),
                              world.GetItem("Crystal7"),
-                         }
+                        ]
                     },
                 }
             },
         };
     }
 
-    /**
-     * Get Small keys for world in proper placement groups.
-     *
-     * @param World world world to get items for
-     */
+    /// <summary>Get Small keys for world in proper placement groups.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetSmallKeys(World world)
     {
         var keys = new ItemSet
         {
             { "escape:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("KeyH2") } },
+                    { 1, [ world.GetItem("KeyH2") ] },
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("KeyP2") } },
+                    { 1, [ world.GetItem("KeyP2") ] },
                 }
             },
             { "hera:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("KeyP3") } },
+                    { 1, [ world.GetItem("KeyP3") ] },
                 }
             },
             { "agahnim:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyA1"), 2).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyA1"), 2)] },
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyD1"), 6).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyD1"), 6)] },
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("KeyD2") } },
+                    { 1, [ world.GetItem("KeyD2") ] },
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyD3"), 3).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyD3"), 3)] },
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("KeyD4") } },
+                    { 1, [ world.GetItem("KeyD4") ] },
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyD5"), 2).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyD5"), 2)] },
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyD6"), 3).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyD6"), 3)] },
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyD7"), 4).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyD7"), 4)] },
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 1, Enumerable.Repeat(world.GetItem("KeyA2"), 4).ToList() },
+                    { 1, [.. Enumerable.Repeat(world.GetItem("KeyA2"), 4)] },
                 }
             },
         };
@@ -311,7 +270,7 @@ internal sealed class ItemPooler
                 { "*",
                     new WeightedSet
                     {
-                        { 3, keys.SelectMany(dungeon => dungeon.Value.SelectMany(priority => priority.Value)).ToList() }
+                        { 3, [.. keys.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
                     }
                 }
             };
@@ -320,68 +279,65 @@ internal sealed class ItemPooler
         return keys;
     }
 
-    /**
-     * Get Big keys for world in proper placement groups.
-     *
-     * @param World world world to get items for
-     */
+    /// <summary>Get Big keys for world in proper placement groups.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetBigKeys(World world)
     {
-        var big_keys = new ItemSet
+        var bigKeys = new ItemSet
         {
             { "eastern:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyP1") } },
+                    { 1, [ world.GetItem("BigKeyP1") ] },
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyP2") } },
+                    { 1, [ world.GetItem("BigKeyP2") ] },
                 }
             },
             { "hera:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyP3") } },
+                    { 1, [ world.GetItem("BigKeyP3") ] },
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyD1") } },
+                    { 1, [ world.GetItem("BigKeyD1") ] },
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 2, new List<Item> { world.GetItem("BigKeyD2") } },
+                    { 2, [ world.GetItem("BigKeyD2") ] },
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 2, new List<Item> { world.GetItem("BigKeyD3") } },
+                    { 2, [ world.GetItem("BigKeyD3") ] },
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyD4") } },
+                    { 1, [ world.GetItem("BigKeyD4") ] },
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyD5") } },
+                    { 1, [ world.GetItem("BigKeyD5") ] },
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyD6") } },
+                    { 1, [ world.GetItem("BigKeyD6") ] },
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 1, new List<Item> { world.GetItem("BigKeyD7") } },
+                    { 1, [ world.GetItem("BigKeyD7") ] },
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 0, new List<Item> { world.GetItem("BigKeyA2") } },
+                    { 0, [ world.GetItem("BigKeyA2") ] },
                 }
             },
         };
@@ -393,82 +349,79 @@ internal sealed class ItemPooler
                 { "*",
                     new WeightedSet
                     {
-                        { 3, big_keys.SelectMany(dungeon => dungeon.Value.SelectMany(priority => priority.Value)).ToList() }
+                        { 3, [.. bigKeys.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
                     }
                 }
             };
         }
 
-        return big_keys;
+        return bigKeys;
     }
 
-    /**
-     * Get Maps for world in proper placement groups.
-     *
-     * @param World world world to get items for
-     */
+    /// <summary>Get Maps for world in proper placement groups.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetMaps(World world)
     {
         var maps = new ItemSet
         {
             { "escape:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapH2") } },
+                    { 9010, [ world.GetItem("MapH2") ] },
                 }
             },
             { "eastern:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapP1") } },
+                    { 9010, [ world.GetItem("MapP1") ] },
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapP2") } },
+                    { 9010, [ world.GetItem("MapP2") ] },
                 }
             },
             { "hera:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapP3") } },
+                    { 9010, [ world.GetItem("MapP3") ] },
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD1") } },
+                    { 9010, [ world.GetItem("MapD1") ] },
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD2") } },
+                    { 9010, [ world.GetItem("MapD2") ] },
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD3") } },
+                    { 9010, [ world.GetItem("MapD3") ] },
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD4") } },
+                    { 9010, [ world.GetItem("MapD4") ] },
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD5") } },
+                    { 9010, [ world.GetItem("MapD5") ] },
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD6") } },
+                    { 9010, [ world.GetItem("MapD6") ] },
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapD7") } },
+                    { 9010, [ world.GetItem("MapD7") ] },
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("MapA2") } },
+                    { 9010, [ world.GetItem("MapA2") ] },
                 }
             },
         };
@@ -480,7 +433,7 @@ internal sealed class ItemPooler
                 { "*",
                     new WeightedSet
                     {
-                        { 3, maps.SelectMany(dungeon => dungeon.Value.SelectMany(priority => priority.Value)).ToList() }
+                        { 3, [.. maps.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
                     }
                 }
             };
@@ -498,68 +451,65 @@ internal sealed class ItemPooler
         return maps;
     }
 
-    /**
-     * Get Compasses for world in proper placement groups.
-     *
-     * @param World world world to get items for
-     */
+    /// <summary>Get Compasses for world in proper placement groups.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetCompasses(World world)
     {
         var compasses = new ItemSet
         {
             { "eastern:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassP1") } }
+                    { 9010, [ world.GetItem("CompassP1") ] }
                 }
             },
             { "desert:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassP2") } }
+                    { 9010, [ world.GetItem("CompassP2") ] }
                 }
             },
             { "hera:"+world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassP3") } }
+                    { 9010, [ world.GetItem("CompassP3") ] }
                 }
             },
             { "pod:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD1") } }
+                    { 9010, [ world.GetItem("CompassD1") ] }
                 }
             },
             { "swamp:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD2") } }
+                    { 9010, [ world.GetItem("CompassD2") ] }
                 }
             },
             { "skull:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD3") } }
+                    { 9010, [ world.GetItem("CompassD3") ] }
                 }
             },
             { "thieves:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD4") } }
+                    { 9010, [ world.GetItem("CompassD4") ] }
                 }
             },
             { "ice:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD5") } }
+                    { 9010, [ world.GetItem("CompassD5") ] }
                 }
             },
             { "mire:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD6") } }
+                    { 9010, [ world.GetItem("CompassD6") ] }
                 }
             },
             { "turtlerock:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassD7") } }
+                    { 9010, [ world.GetItem("CompassD7") ] }
                 }
             },
             { "gt:" + world.Id, new WeightedSet
                 {
-                    { 9010, new List<Item> { world.GetItem("CompassA2") } }
+                    { 9010, [ world.GetItem("CompassA2") ] }
                 }
             },
         };
@@ -571,7 +521,7 @@ internal sealed class ItemPooler
                 { "*",
                     new WeightedSet
                     {
-                        { 3, compasses.SelectMany(dungeon => dungeon.Value.SelectMany(priority => priority.Value)).ToList() }
+                        { 3,  [.. compasses.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
                     }
                 }
             };
@@ -589,78 +539,67 @@ internal sealed class ItemPooler
         return compasses;
     }
 
-    /**
-     * Get Bottles for world in proper placement groups.
-     *
-     * @param World world world to get items for
-     */
+    private static readonly string[] _bottles = [
+        "Bottle",
+        "BottleWithRedPotion",
+        "BottleWithGreenPotion",
+        "BottleWithBluePotion",
+        "BottleWithBee",
+        "BottleWithGoldBee",
+        "BottleWithFairy",
+    ];
+    /// <summary>Get Bottles for world in proper placement groups.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetBottles(World world)
     {
-        string[] bottles = [
-            "Bottle",
-            "BottleWithRedPotion",
-            "BottleWithGreenPotion",
-            "BottleWithBluePotion",
-            "BottleWithBee",
-            "BottleWithGoldBee",
-            "BottleWithFairy",
-        ];
-
         return new ItemSet()
         {
             { "bottle:" + world.Id,
                 new WeightedSet()
                 {
-                    { 0, new List<Item>
-                         {
-                             world.GetItem("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)]),
-                             world.GetItem("Fairy" + bottles[_prng.GetRandomInt(bottles.Length)]),
-                         }
+                    { 0, [
+                            world.GetItem("Fairy" + _bottles[prng.GetRandomInt(_bottles.Length)]),
+                            world.GetItem("Fairy" + _bottles[prng.GetRandomInt(_bottles.Length)]),
+                        ]
                     },
                 }
             },
             { "*",
                 new WeightedSet()
                 {
-                    { 3, new List<Item> { world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]) } },
-                    { 9001, new List<Item>
-                            {
-                                world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]),
-                                world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]),
-                                world.GetItem(bottles[_prng.GetRandomInt(bottles.Length)]),
-                            }
+                    { 3, [ world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]) ] },
+                    { 9001, [
+                            world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]),
+                            world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]),
+                            world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]),
+                        ]
                     },
                 }
             },
         };
     }
 
-    /**
-     * Get Shop Items for world in proper placement groups.
-     *
-     * @todo verify these counts, they are definitely wrong
-     *
-     * @param World world world to get items for
-     */
+    /// <summary>Get Shop Items for world in proper placement groups.</summary>
+    /// <param name="world">world to get items for</param>
     private ItemSet GetShopItems(World world)
     {
         if (world.Config.RegionShopSupply != ShopSupplyOption.Shuffled)
-        {
-            return new();
-        }
+            return [];
 
         return new ItemSet()
         {
             { "*", new WeightedSet()
                 {
-                    { 9999, Enumerable.Repeat(world.GetItem("RedPotion"), 6)
-                        .Concat(Enumerable.Repeat(world.GetItem("GreenPotion"), 1))
-                        .Concat(Enumerable.Repeat(world.GetItem("BluePotion"), 6))
-                        .Concat(Enumerable.Repeat(world.GetItem("Heart"), 10))
-                        .Concat(Enumerable.Repeat(world.GetItem("TenBombs"), 10))
-                        .Concat(Enumerable.Repeat(world.GetItem("BlueShield"), 2))
-                        .Concat(Enumerable.Repeat(world.GetItem("RedShield"), 1))
-                        .ToList()
+                    // TODO verify these counts, they are definitely wrong
+                    { 9999, [
+                        .. Enumerable.Repeat(world.GetItem("RedPotion"), 6),
+                        .. Enumerable.Repeat(world.GetItem("GreenPotion"), 1),
+                        .. Enumerable.Repeat(world.GetItem("BluePotion"), 6),
+                        .. Enumerable.Repeat(world.GetItem("Heart"), 10),
+                        .. Enumerable.Repeat(world.GetItem("TenBombs"), 10),
+                        .. Enumerable.Repeat(world.GetItem("BlueShield"), 2),
+                        .. Enumerable.Repeat(world.GetItem("RedShield"), 1)
+                        ]
                     },
                 }
             },
