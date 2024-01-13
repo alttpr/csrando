@@ -41,8 +41,6 @@ public static class RomWriter
                 var itemToWrite = location.Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
-                if (location.Trophy != null)
-                    rom.WriteItem(location, location.Trophy);
             }
         }
 
@@ -190,7 +188,6 @@ public static class RomWriter
         rom.SetCompassCountTotals();
         rom.SetFreeItemTextMode(); //rom.freeItemText
         rom.SetFreeItemMenu(); //rom.freeItemMenu
-        // FIXME: use PRNG from Randomizer instead?
         rom.SetDiggingGameRng((byte)prng.GetRandomInt(1, 30));
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));

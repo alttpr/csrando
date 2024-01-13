@@ -657,13 +657,23 @@ public sealed class Rom : IDisposable
     }
 
     /// <summary>Set Overworld dig prizes.</summary>
-    /// <param name="prizes">ids of sprites to dig up</param>
+    /// <param name="prizes">ids of sprites to dig up, 64 bytes</param>
     public void SetOverworldDigPrizes(byte[]? prizes = null)
     {
         prizes ??= [];
-        // FIXME: this should really truncate the data to not overwrite past the table!
-        //        ...but what is the size of this table?
-        Write(0x180100, prizes/*[.. tableSize]*/);
+        if (prizes.Length > 64)
+        {
+            prizes = prizes[..64];
+        }
+        else if (prizes.Length < 64)
+        {
+            int oldLength = prizes.Length;
+            Array.Resize(ref prizes, 64);
+            // pad with green rupees, until we find something more suitable.
+            Array.Fill(prizes, (byte)0x34, oldLength, prizes.Length - oldLength);
+        }
+
+        Write(0x180100, prizes);
     }
 
     // FIXME: temporary classes until we have something usable from elsewhere
