@@ -75,6 +75,7 @@ public class WorldConfig
     public bool CustomPrizePacks { get; init; } = false;
 
     public List<string> StartingEquipment { get; init; } = new();
+    public List<Game> Games { get; init; } = [Game.Alttp, Game.Metroid];
 
     public bool MapOnPickup { get; init; } = false;
     public bool EscapeAssist { get; init; } = false;
@@ -127,6 +128,7 @@ public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
 public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
 public enum BossShuffleOption { None, Simple, Full, Random }
 public enum ShopSupplyOption { Normal, Shuffled }
+public enum Game { Zelda, Metroid, Alttp, SuperMetroid }
 public enum EnemyShuffleOption { None, Shuffled, Random }
 public enum EnemyDamageOption { Default, Shuffled, Random }
 public enum EnemyHealthOption { Default, Easy, Medium, Hard, Expert }
