@@ -119,6 +119,7 @@ internal sealed class ItemPooler
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TwentyRupees")), 28),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("FiftyRupees")), 7),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("ThreeHundredRupees")), 5),
+            .. world.Config.Games.Contains(Game.Metroid) ? Combo.Metroid.MetroidWorld.GetItemSet(world) : []
         ];
 
         switch (world.Config.Weapon)

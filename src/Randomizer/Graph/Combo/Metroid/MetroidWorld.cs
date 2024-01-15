@@ -6,6 +6,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
+using WeightedSet = Dictionary<int, List<Item>>;
+
 internal class MetroidWorld
 {
     // Adjusts the world as needed to randomize Metroid
@@ -71,14 +74,34 @@ internal class MetroidWorld
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
 
-        // Set up temporary starting items so we can traverse the whole M1 world (more or less)
-        world.StartingItems.AddItem(world.GetItem("Morph"));
-        world.StartingItems.AddItem(world.GetItem("Bombs"));
-        world.StartingItems.AddItem(world.GetItem("Varia"));
-        world.StartingItems.AddItem(world.GetItem("HiJump"));
-        world.StartingItems.AddItem(world.GetItem("IceBeam"));
-        world.StartingItems.AddItem(world.GetItem("LongBeam"));
-        world.StartingItems.AddItem(world.GetItem("Missile"), 20);
+    }
 
+    public static ItemSet GetItemSet(World world)
+    {
+        return new ItemSet
+        {
+            { "*", new WeightedSet
+                {
+                    { 3, [
+                            world.GetItem("Morph"),
+                            world.GetItem("Bombs"),
+                            world.GetItem("Varia"),
+                            world.GetItem("HiJump"),
+                            world.GetItem("IceBeam"),
+                            world.GetItem("LongBeam"),
+                            world.GetItem("WaveBeam"),
+                            world.GetItem("ScrewAttack"),
+                            world.GetItem("EnergyTank"),
+                            world.GetItem("Missile"),
+                        ]
+                    },
+                    { 9001, [
+                            .. Enumerable.Repeat(world.GetItem("Missile"), 20),
+                            .. Enumerable.Repeat(world.GetItem("EnergyTank"), 7),
+                        ]
+                    }
+                }
+            }
+        };
     }
 }

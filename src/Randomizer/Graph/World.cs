@@ -82,6 +82,11 @@ public sealed class World
             }
         }
 
+        if (Config.Games.Contains(Game.Metroid))
+        {
+            Combo.Metroid.MetroidWorld.AdjustWorld(this);
+        }
+
         PruneConfigEdges();
     }
 
