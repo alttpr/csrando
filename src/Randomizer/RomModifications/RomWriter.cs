@@ -225,7 +225,7 @@ public static class RomWriter
                 rom.RemoveUnclesShield();
         }
 
-        var startingEquipment = new Inventory([.. config.StartingEquipment.Select(world.GetItem)]);
+        var startingEquipment = world.ComputeStartingItems();
         rom.InitialSram.SetStartingEquipment(startingEquipment, world);
         rom.SetBallNChainDungeon(0x02);
         rom.SetCapacityUpgradeFills(

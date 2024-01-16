@@ -81,6 +81,13 @@ public sealed class World
         }
     }
 
+    public Inventory ComputeStartingItems()
+    {
+        var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(GetItem)]);
+        var searcher = new Searcher(Graph, GetLocation($"DefaultItems:{Id}"), inventory);
+        return inventory;
+    }
+
     /// <summary>
     /// Get a vertex by name.
     /// </summary>

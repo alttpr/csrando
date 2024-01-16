@@ -136,18 +136,15 @@ maps:
             ConfigWorldStateStandard:
               - "DefaultItemsStandard"
           items:
-            - "BossHeartContainer"
-            - "BossHeartContainer"
-            - "BossHeartContainer"
             - "MagicBar"
             - "LiftBush"
             - "LiftPot"
             - "OpenChest"
             - "UseBomb"
             - "BombUpgrade10"
-            - "ArrayUpgrade10"
-            - "ArrayUpgrade10"
-            - "ArrayUpgrade10"
+            - "ArrowUpgrade10"
+            - "ArrowUpgrade10"
+            - "ArrowUpgrade10"
             - "hop"
 
         - name: "DefaultItemsStandard"
