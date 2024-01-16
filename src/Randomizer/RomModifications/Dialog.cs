@@ -223,7 +223,7 @@ public sealed class Dialog
         foreach (string l in lines)
         {
             string line = l.TrimEnd();
-            if (line.GetRuneLength() <= width)
+            if (line.Length <= width)
             {
                 wrapped.Add(line);
                 continue;
@@ -232,7 +232,7 @@ public sealed class Dialog
             string actual = "";
             foreach (string word in words)
             {
-                if ((actual + word).GetRuneLength() <= width)
+                if ((actual + word).Length <= width)
                 {
                     actual += word + ' ';
                 }
@@ -245,7 +245,7 @@ public sealed class Dialog
                     actual = word;
                     if (cut)
                     {
-                        while (actual.GetRuneLength() > width)
+                        while (actual.Length > width)
                         {
                             wrapped.Add(actual[..width]);
                             actual = actual[width..];

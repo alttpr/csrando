@@ -15,13 +15,4 @@ internal static class RomModificationExtensions
 
         return str[..maxLength];
     }
-
-    /// <summary>Returns the underlying byte-length of the passed UTF-8 string.</summary>
-    public static int GetRuneLength(this string? str)
-    {
-        if (string.IsNullOrEmpty(str))
-            return 0;
-
-        return str.EnumerateRunes().Sum(rune => rune.Utf8SequenceLength);
-    }
 }
