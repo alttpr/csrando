@@ -15,7 +15,7 @@ rooms:
           itemset: ["hera"]
 
         - name: "Tower Of Hera - Prize"
-          addresses: [0x120A5, 0x53F0A, 0x53F0B, 0x18005A, 0x18007A, 0xC706]
+          addresses: [0x120A5, 0x53E78, 0x53E79, 0x18005A, 0x180071, 0xC706]
           type: "prize"
           itemset: ["prize"]
 

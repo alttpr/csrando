@@ -12,7 +12,7 @@ rooms:
           itemset: ["skull"]
 
         - name: "Skull Woods - Prize"
-          addresses: [0x120A3, 0x53F12, 0x53F13, 0x180058, 0x18007B, 0xC704]
+          addresses: [0x120A3, 0x53E7E, 0x53E7F, 0x180058, 0x180074, 0xC704]
           type: "prize"
           itemset: ["prize"]
 

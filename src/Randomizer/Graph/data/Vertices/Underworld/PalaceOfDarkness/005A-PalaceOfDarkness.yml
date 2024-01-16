@@ -12,7 +12,7 @@ rooms:
           itemset: ["pod"]
 
         - name: "Palace of Darkness - Prize"
-          addresses: [0x120a1, 0x53f00, 0x53f01, 0x180056, 0x18007d, 0xc702]
+          addresses: [0x120A1, 0x53E7C, 0x53E7D, 0x180056, 0x180073, 0xC702]
           type: "prize"
           itemset: ["prize"]
 
