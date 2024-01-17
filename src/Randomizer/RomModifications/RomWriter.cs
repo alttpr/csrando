@@ -10,6 +10,7 @@ public static class RomWriter
             WriteForWorld(world, vanillaRom, baseBPS, outputDirectory, randomizer.PRNG);
     }
 
+    private static readonly string[] _heartColorOptions = ["blue", "green", "yellow", "red"];
     public static void WriteForWorld(World world, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory, PRNG prng)
     {
         var rom = new Rom(vanillaRom.FullName);
@@ -18,9 +19,31 @@ public static class RomWriter
         rom.Resize();
         rom.ApplyBasePatch(baseBPS);
 
-        // TODO: worry about other parameters that toggle non-randomization related stuff
+        string? heartColor = null; //option('heartcolor')
+        if (!string.IsNullOrWhiteSpace(heartColor))
+        {
+            if (heartColor == "random")
+                heartColor = prng.GetRandomElement(_heartColorOptions);
+            rom.SetHeartColors(heartColor);
+        }
+
+        string? heartBeep = null; //option('heartbeep')
+        if (!string.IsNullOrWhiteSpace(heartBeep))
+            rom.SetHeartBeepSpeed(heartBeep);
+
+        bool? quickSwap = null; //option('quickswap')
+        if (quickSwap.HasValue)
+            rom.SetQuickSwap(quickSwap.Value);
 
         WriteWorld(world, rom, prng);
+
+        bool? noMusic = null; //option('no-music')
+        rom.MuteMusic(noMusic.GetValueOrDefault());
+        rom.SetMenuSpeed("normal"); //option('menu-speed')
+
+        // TODO: patch in the sprite
+        // TODO: tournament mode
+
         rom.UpdateChecksum();
 
         outputDirectory.Create();
@@ -50,7 +73,7 @@ public static class RomWriter
         rom.SetGoalRequiredCount(0); //item.Goal.Required
         rom.SetGoalIcon("triforce"); //item.Goal.Icon
 
-        // Set item voidality settings
+        // Set item functionality settings
         rom.SetCaneOfByrnaSpikeCaveUsage();
         rom.SetCapeSpikeCaveUsage();
         rom.SetByrnaCaveSpikeDamage(0x08);
@@ -171,17 +194,19 @@ public static class RomWriter
                 break;
         }
 
-        //if (config("rom.mapOnPickup", false))
-        //{
-        //    green_pendant_region = getLocationsWithItem(Item::get("PendantOfCourage", this)).first().getRegion();
+        if (false) //rom.mapOnPickup
+        {
+            var locationByPrize = world.Graph.GetVertices()
+                .Where(v => v.Type == VertexType.Item && v.SubType == VertexType.Prize && v.Item != null)
+                .ToDictionary(v => v.Item!.Name);
 
-        //    rom.SetMapRevealSahasrahla(green_pendant_region.getMapReveal());
+            var greenPendant = locationByPrize.GetValueOrDefault("PendantOfCourage", null!).GetMapReveal();
+            rom.SetMapRevealSahasrahla(greenPendant);
 
-        //    crystal5_region = getLocationsWithItem(Item::get("Crystal5", this)).first().getRegion();
-        //    crystal6_region = getLocationsWithItem(Item::get("Crystal6", this)).first().getRegion();
-
-        //    rom.SetMapRevealBombShop(crystal5_region.getMapReveal() | crystal6_region.getMapReveal());
-        //}
+            var crystal5 = locationByPrize.GetValueOrDefault("Crystal5", null!).GetMapReveal();
+            var crystal6 = locationByPrize.GetValueOrDefault("Crystal6", null!).GetMapReveal();
+            rom.SetMapRevealBombShop((ushort)(crystal5 | crystal6));
+        }
 
         rom.SetMapMode(false); //rom.mapOnPickup
         rom.SetCompassMode("off"); //rom.dungeonCount
@@ -201,19 +226,19 @@ public static class RomWriter
         rom.SetSwordlessMode(config.Weapon == WeaponOption.Swordless);
         if (config.State != StateOption.Inverted)
         {
-            //switch (config("rom.logicMode", config["logic"]))
-            //{
-            //    case "MajorGlitches":
-            //    case "HybridMajorGlitches":
-            //    case "NoLogic":
-            //    case "OverworldGlitches":
-            //        rom.SetLockAgahnimDoorInEscape(false);
-            //        break;
-            //    case "NoGlitches":
-            //    default:
-            rom.SetLockAgahnimDoorInEscape(true);
-            //        break;
-            //}
+            switch (config.Glitches) //rom.logicMode
+            {
+                case GlitchesOption.Major:
+                //case GlitchesOption.HybridMajor:
+                case GlitchesOption.NoLogic:
+                case GlitchesOption.Overworld:
+                    rom.SetLockAgahnimDoorInEscape(false);
+                    break;
+                case GlitchesOption.None:
+                default:
+                    rom.SetLockAgahnimDoorInEscape(true);
+                    break;
+            }
         }
 
         var linksUncleItem = world.GetLocation("Link's Uncle").Item;
@@ -243,40 +268,40 @@ public static class RomWriter
         rom.SetGreenClock(0); //item.value.GreenClock
         rom.InitialSram.SetStartingTimer(0); //rom.timerStart
 
-        //switch (config("rom.logicMode", config["logic"]))
-        //{
-        //    case "HybridMajorGlitches":
-        //    case "MajorGlitches":
-        //    case "NoLogic":
-        //        rom.SetSwampWaterLevel(false);
-        //        rom.SetPreAgahnimDarkWorldDeathInDungeon(false);
-        //        rom.SetSaveAndQuitFromBossRoom(true);
-        //        rom.SetWorldOnAgahnimDeath(false);
-        //        rom.SetRandomizerSeedType("MajorGlitches");
-        //        rom.SetWarningFlags(requiresMinorGlitches: true, requiresMajorGlitches: true);
-        //        rom.SetAllowAccidentalMajorGlitch(true);
-        //        rom.SetSQEGFix(false);
-        //        rom.SetZeldaMirrorFix(false);
-        //        break;
-        //    case "OverworldGlitches":
-        //        rom.SetPreAgahnimDarkWorldDeathInDungeon(false);
-        //        rom.SetSaveAndQuitFromBossRoom(true);
-        //        rom.SetWorldOnAgahnimDeath(false);
-        //        rom.SetRandomizerSeedType("OverworldGlitches");
-        //        rom.SetWarningFlags(requiresMinorGlitches: true);
-        //        rom.SetAllowAccidentalMajorGlitch(true);
-        //        rom.SetSQEGFix(false);
-        //        rom.SetZeldaMirrorFix(false);
-        //        break;
-        //    case "NoGlitches":
-        //    default:
-        rom.SetSaveAndQuitFromBossRoom(true);
-        rom.SetWorldOnAgahnimDeath(true);
-        rom.SetAllowAccidentalMajorGlitch(false);
-        rom.SetSQEGFix(true);
-        rom.SetZeldaMirrorFix(true);
-        //        break;
-        //}
+        switch (config.Glitches) //rom.logicMode
+        {
+            //case GlitchesOption.HybridMajor:
+            case GlitchesOption.Major:
+            case GlitchesOption.NoLogic:
+                rom.SetSwampWaterLevel(false);
+                rom.SetPreAgahnimDarkWorldDeathInDungeon(false);
+                rom.SetSaveAndQuitFromBossRoom(true);
+                rom.SetWorldOnAgahnimDeath(false);
+                rom.SetRandomizerSeedType("MajorGlitches");
+                rom.SetWarningFlags(requiresMinorGlitches: true, requiresMajorGlitches: true);
+                rom.SetAllowAccidentalMajorGlitch(true);
+                rom.SetSQEGFix(false);
+                rom.SetZeldaMirrorFix(false);
+                break;
+            case GlitchesOption.Overworld:
+                rom.SetPreAgahnimDarkWorldDeathInDungeon(false);
+                rom.SetSaveAndQuitFromBossRoom(true);
+                rom.SetWorldOnAgahnimDeath(false);
+                rom.SetRandomizerSeedType("OverworldGlitches");
+                rom.SetWarningFlags(requiresMinorGlitches: true);
+                rom.SetAllowAccidentalMajorGlitch(true);
+                rom.SetSQEGFix(false);
+                rom.SetZeldaMirrorFix(false);
+                break;
+            case GlitchesOption.None:
+            default:
+                rom.SetSaveAndQuitFromBossRoom(true);
+                rom.SetWorldOnAgahnimDeath(true);
+                rom.SetAllowAccidentalMajorGlitch(false);
+                rom.SetSQEGFix(true);
+                rom.SetZeldaMirrorFix(true);
+                break;
+        }
 
         //bool triforce_hud = config.Goal is GoalOption.TriforceHunt or GoalOption.GanonHunt
         //    || (config("item.Goal.Required", 0) > 0);
@@ -300,6 +325,7 @@ public static class RomWriter
         //rom.SetTotalItemCount(getTotalItemCount());
 
         rom.SetSeedString("VT CSharp v32".PadRight(32));
+        // FIXME: is this a useful hash? it should be the same for the same seed...
         rom.SetStartScreenHash([
             (byte)prng.GetRandomInt(0xFF),
             (byte)prng.GetRandomInt(0xFF),
@@ -363,8 +389,8 @@ public static class RomWriter
                 0,
                 0
             );
-            //if (config('rom.EscapeAssist', false))
-            //    rom.SetEscapeAssist(infiniteMagic: true);
+            if (false) //rom.EscapeAssist
+                rom.SetEscapeAssist(infiniteMagic: true);
         }
         // FIXME: that bow check (probably) doesn't cover everything.
         else if (uncle_items.Has(world.GetItem("Bow")))
@@ -385,8 +411,8 @@ public static class RomWriter
                 0,
                 1 //rom.EscapeRefills.Mantle.Arrows
             );
-            //if (config('rom.EscapeAssist', false))
-            //    rom.SetEscapeAssist(infiniteArrows: true);
+            if (false) //rom.EscapeAssist
+                rom.SetEscapeAssist(infiniteArrows: true);
         }
         else if (uncle_items.Has(world.GetItem("TenBombs"))) // || config('logic') != 'NoLogic')
         {
@@ -407,8 +433,8 @@ public static class RomWriter
                 3, //rom.EscapeRefills.Mantle.Bombs
                 0
             );
-            //if (config('rom.EscapeAssist', false))
-            //    rom.SetEscapeAssist(infiniteBombs: true);
+            if (false) //rom.EscapeAssist
+                rom.SetEscapeAssist(infiniteBombs: true);
         }
     }
 

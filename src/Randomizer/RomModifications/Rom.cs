@@ -25,6 +25,7 @@ public sealed class Rom : IDisposable
         _rom = new FileStream(_tempRom, FileMode.Open, FileAccess.ReadWrite, FileShare.Read, bufferSize: 32 * 1024, FileOptions.RandomAccess | FileOptions.DeleteOnClose);
         InitialSram = new();
         _text = new();
+        _text.RemoveUnwanted();
         _credits = new();
     }
 
@@ -44,6 +45,7 @@ public sealed class Rom : IDisposable
     }
 
     /// <summary>Update the ROM's checksum to be proper</summary>
+    // TODO: this checksum isn't what emulators expect, but fortunately they ignore it.
     public void UpdateChecksum()
     {
         _rom.Seek(0, SeekOrigin.Begin);
@@ -58,7 +60,8 @@ public sealed class Rom : IDisposable
 
             for (int j = 0; j < bytesRead; ++j)
             {
-                // this skip is true for LoROM, HiROM skips: 0xFFDC - 0xFFDF
+                // this skips checksum/inverse in LoROM; HiROM has those at 0xFFDC - 0xFFDF
+                // during calculation, they assume 0x0000 and 0xFFFF (which is the initial 0x1FE sum)
                 if (j + i >= 0x7FDC && j + i < 0x7FE0)
                     continue;
                 sum += block[j];
