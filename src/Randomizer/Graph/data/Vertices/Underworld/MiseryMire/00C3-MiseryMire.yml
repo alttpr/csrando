@@ -69,6 +69,7 @@ rooms:
             # This item is used to make sure you can walk from the bottom door
             # to the big chest, but not from the middle door
             - name: "MiseryMireFallingBridgeSouthBottomDoor"
+              item: MiseryMireFallingBridgeSouthBottomDoor
               type: "event"
 
         - name: "Misery Mire - Falling Bridge South"
