@@ -151,7 +151,8 @@ public class YamlReader
 
             var result = new Dictionary<string, DirectedUndirectedPair>();
 
-            foreach (string file in Directory.GetFiles(Path.Combine(DataRoot, "Edges", name), "*.yml", SearchOption.AllDirectories))
+            var files = Directory.GetFiles(Path.Combine(DataRoot, "Edges", name), "*.yml", SearchOption.AllDirectories).Order();
+            foreach (string file in files)
             {
                 var current_file_edges = LoadEdgesFromFile(file);
                 MergeEdges(result, current_file_edges);
@@ -220,7 +221,8 @@ public class YamlReader
 
             Vertices result = new();
 
-            foreach (string file in Directory.GetFiles(Path.Combine(DataRoot, VerticesPath), "*.yml", SearchOption.AllDirectories))
+            var files = Directory.GetFiles(Path.Combine(DataRoot, VerticesPath), "*.yml", SearchOption.AllDirectories).Order();
+            foreach (string file in files)
             {
                 var current_file_edges = LoadVerticesFromFile(file);
                 MergeVertices(result, current_file_edges);

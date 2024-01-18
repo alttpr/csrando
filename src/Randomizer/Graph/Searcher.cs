@@ -323,7 +323,7 @@ public class Searcher
         var empty_locations = _graph.GetSetLocations(itemSet).Where((vertex) =>
         {
             return (!reachable || _visited.Contains(vertex)) && vertex.Item == null;
-        }).ToList();
+        }).OrderBy(v => v.Name).ToList();
 
         itemSets ??= new();
         foreach (var (set_name, set_count) in itemSets)
