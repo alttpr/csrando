@@ -86,6 +86,11 @@ public sealed class World
         {
             Combo.Metroid.MetroidWorld.AdjustWorld(this);
         }
+        
+        if (Config.Games.Contains(Game.Zelda))
+        {
+            Combo.Zelda.ZeldaWorld.AdjustWorld(this);
+        }
 
         PruneConfigEdges();
     }
