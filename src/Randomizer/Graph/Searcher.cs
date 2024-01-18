@@ -190,7 +190,10 @@ public class Searcher
 
                 unvisitedEdges--;
                 if (!marked.Contains(edge.To))
+                {
+                    marked.Add(edge.To);
                     queue.Enqueue(edge.To);
+                }
             }
 
             // We could remove nodes from newSearchStarts when we have visited
@@ -201,7 +204,6 @@ public class Searcher
 
             if (!visited.Contains(vertex))
                 newlyVisited.Add(vertex);
-            marked.Add(vertex);
         }
 
         return (newlyVisited, newSearchStarts);
