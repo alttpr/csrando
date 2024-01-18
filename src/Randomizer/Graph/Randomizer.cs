@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using System.Diagnostics;
+
 /// <summary>
 /// This is the primary entry point for randomization. A new object is created
 /// with a config array dictating how the worlds should be created and prepping
@@ -27,6 +29,7 @@ public sealed class Randomizer
     /// <param name="seed">Seeded again, eh?</param>
     public Randomizer(WorldConfig[] randomizerConfigs, int? seed = null)
     {
+        var sw = Stopwatch.StartNew();
         PRNG = new PRNG(seed);
         System.Console.WriteLine($"Using seed: {PRNG.Seed}");
 
@@ -64,6 +67,7 @@ public sealed class Randomizer
         }
 
         Graph.SetVertexIds();
+        System.Console.WriteLine($"Graph configuration took {sw.Elapsed}");
     }
 
     /// <summary>
