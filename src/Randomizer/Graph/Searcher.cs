@@ -1,5 +1,6 @@
 namespace Randomizer.Graph;
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
@@ -49,9 +50,9 @@ public class Searcher
     /// </summary>
     /// <param name="inventory">Current inventory</param>
     /// <param name="visited">Currently visited nodes</param>
-    private void SpendObviousKeys(Inventory inventory, VertexHashSet visited)
+    private static void SpendObviousKeys(Inventory inventory, VertexHashSet visited)
     {
-        foreach (var (key, doors) in _graph.Doors)
+        foreach (var (key, doors) in visited.Graph.Doors)
         {
             int lockedDoorCount = doors.Count(d => !inventory.Has(d.Key));
 
@@ -63,7 +64,7 @@ public class Searcher
 
             // If we have all the randomized keys, mark all the doors as unlockable and spend all the current keys
             // as we would collect the fixed keys while exploring the rest of the dungeon if needed.
-            int uncollectedFixedKeys = _graph.FixedKeys[key].Count(v => !visited.Contains(v));
+            int uncollectedFixedKeys = visited.Graph.FixedKeys[key].Count(v => !visited.Contains(v));
             if (keyCount + uncollectedFixedKeys >= lockedDoorCount)
             {
                 // System.Console.WriteLine($"Opening all doors with key {key}");
@@ -101,7 +102,7 @@ public class Searcher
         }
     }
 
-    private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
+    private static bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
         var newlyVisited = visited.Clone();
@@ -156,7 +157,7 @@ public class Searcher
     /// <returns>
     /// Returns the list of new reachable nodes and nodes with remaining accessible regions.
     /// </returns>
-    private SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
+    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
         SpendObviousKeys(collected, visited);
 
@@ -230,7 +231,7 @@ public class Searcher
         return strongLocations.Any() || foundItems;
     }
 
-    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (inventory.GetCount(key) == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
@@ -242,7 +243,7 @@ public class Searcher
         var visitedBeforeRecursion = visitedBeforeDoors.Clone();
         var collectedBeforeRecursion = collectedBeforeDoors.Clone();
 
-        foreach (var door in _graph.Doors[key])
+        foreach (var door in visitedBeforeDoors.Graph.Doors[key])
         {
             // Skip the door if it's already been opened
             if (inventory.Has(door.Key))
@@ -280,7 +281,7 @@ public class Searcher
             weakSearchStarts.UnionWith(recursiveSearchStarts);
 
             if (weakLocations.Count == 0)
-                return (new VertexHashSet(_graph), new VertexHashSet(_graph));
+                return (new VertexHashSet(visitedBeforeDoors.Graph), new VertexHashSet(visitedBeforeDoors.Graph));
 
             if (strongLocations != null && strongSearchStarts != null)
             {
@@ -294,11 +295,11 @@ public class Searcher
             }
         }
 
-        return (strongLocations ?? new VertexHashSet(_graph), strongSearchStarts ?? new VertexHashSet(_graph));
+        return (strongLocations ?? new VertexHashSet(visitedBeforeDoors.Graph), strongSearchStarts ?? new VertexHashSet(visitedBeforeDoors.Graph));
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
-    private bool DropOffSearch(World world, Inventory inventory)
+    private static bool DropOffSearch(World world, Inventory inventory)
     {
         var inventoryWithBombInTow = inventory.Clone();
         foreach (string item in _noBombFollowerItems)
@@ -307,8 +308,8 @@ public class Searcher
             if (inventoryWithBombInTow.Has(itemToRemove))
                 inventoryWithBombInTow.RemoveItem(itemToRemove);
         }
-        var (newlyVisited, newSearchStarts) = InternalSearch(inventoryWithBombInTow, new(_graph), new[] { _graph.GetVertex($"Bomb Shoppe Lobby:{world.Id}") });
-        return newlyVisited.Contains(_graph.GetVertex($"Pyramid:{world.Id}"));
+        var (newlyVisited, newSearchStarts) = InternalSearch(inventoryWithBombInTow, new(world.Graph), new[] { world.Graph.GetVertex($"Bomb Shoppe Lobby:{world.Id}") });
+        return newlyVisited.Contains(world.Graph.GetVertex($"Pyramid:{world.Id}"));
     }
 
     /// <summary>
