@@ -59,13 +59,9 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
 
         foreach (var dungeonsWithSwitches in groups.Where(i => i.Value.Any(v => v.Switch)))
         {
-            System.Console.WriteLine($"Found dungeon with switch that contains {dungeonsWithSwitches.Value.First().Name}");
-            // Ganon's Tower has not been updated yet.
             if (dungeonsWithSwitches.Value.Any())
                 TransformRegionWithPegs(world, dungeonsWithSwitches.Value);
         }
-
-        System.Console.WriteLine($"Found {groups.Count} groups");
     }
 
     static void TransformRegionWithPegs(World world, HashSet<Vertex> vertices)
