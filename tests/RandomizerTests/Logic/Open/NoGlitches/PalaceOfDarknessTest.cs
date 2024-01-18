@@ -46,6 +46,10 @@ public class PalaceOfDarknessTest : OpenNoGlitchesLogicTests
 
         ["Palace of Darkness - Compass Chest", false, new string[] {  }],
         ["Palace of Darkness - Compass Chest", false, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "AgahnimDefeated" }],
+        // With only 3 keys, the back of PoD becomes a strong location and you could find Bow and Hammer there.
+        ["Palace of Darkness - Compass Chest", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "MoonPearl", "AgahnimDefeated" }],
+        // But when you can see another door (the basement one to the boss), it's no longer a strong location.
+        ["Palace of Darkness - Compass Chest", false, new string[] { "KeyD1", "KeyD1", "KeyD1", "MoonPearl", "Lamp",  "BowAndArrows", "Hammer", "AgahnimDefeated" }],
         ["Palace of Darkness - Compass Chest", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "MoonPearl", "AgahnimDefeated" }],
         ["Palace of Darkness - Compass Chest", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "MoonPearl", "Hammer", "PowerGlove" }],
         ["Palace of Darkness - Compass Chest", true, new string[] { "KeyD1", "KeyD1", "KeyD1", "KeyD1", "MoonPearl", "Hammer", "TitansMitt" }],
