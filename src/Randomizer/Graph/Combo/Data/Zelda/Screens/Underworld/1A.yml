@@ -11,7 +11,7 @@ nodes:
       type: Scroll
       direction: Right
       
-    - name: "Top ledge"
+    - name: "Topledge"
       type: Scroll
       direction: Up
       

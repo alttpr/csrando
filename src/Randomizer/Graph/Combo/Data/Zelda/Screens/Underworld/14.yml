@@ -11,7 +11,7 @@ nodes:
       type: Scroll
       direction: Right
       
-    - name: "Top ledge"
+    - name: "Top edge"
       type: Scroll
       direction: Up
       
@@ -24,9 +24,6 @@ nodes:
       position: Middle
       type: Meta
       
-
-# TODO: This screen has special exit logic, needs to be implemented
-
 edges:
   undirected:
     fixed:
@@ -36,4 +33,5 @@ edges:
       - ["Right edge", "Top edge"]
       - ["Right edge", "Bottom edge"]
       - ["Top edge", "Bottom edge"]
+    StepLadder:
       - ["Left edge", "Middle"]

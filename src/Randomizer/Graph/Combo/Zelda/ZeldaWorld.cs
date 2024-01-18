@@ -29,19 +29,24 @@ internal class ZeldaWorld
             {
                 Name = name,
                 Type = type,
-                Item = item != null ? world.GetItem(item) : null,
+                Item = item != null ? world.GetItem("Z1" + item) : null,
                 ItemSet = itemset ?? []
             };
 
             world.Graph.AddVertex(vertex);
-            Console.WriteLine($"Added vertex {vertex.Name}");
+            //Console.WriteLine($"Added vertex {vertex.Name}");
         }
 
         var zeldaEdges = yamlReader.GetForWorld(world);
         foreach (var edgeCollection in zeldaEdges)
         {
             var edgeCollectionData = edgeCollection.Key.Split(":").First().Split('|');
-            var requirement = world.GetItem(edgeCollectionData.First());
+            var requirementName = edgeCollectionData.First();
+            if(!requirementName.StartsWith("fixed"))
+            {
+                requirementName = "Z1" + requirementName;
+            }
+            var requirement = world.GetItem(requirementName);
             var requirementCount = int.Parse(edgeCollectionData.Skip(1).FirstOrDefault() ?? "1");
 
             foreach (var edges in edgeCollection.Value.Directed)
@@ -54,7 +59,7 @@ internal class ZeldaWorld
                 }
 
                 world.Graph.AddDirected(from, to, requirement, requirementCount);
-                Console.WriteLine($"Added directed edge from {from.Name} to {to.Name}");
+                //Console.WriteLine($"Added directed edge from {from.Name} to {to.Name}");
             }
 
             foreach (var edges in edgeCollection.Value.Undirected)
@@ -68,7 +73,7 @@ internal class ZeldaWorld
 
                 world.Graph.AddDirected(from, to, requirement, requirementCount);
                 world.Graph.AddDirected(to, from, requirement, requirementCount);
-                Console.WriteLine($"Added undirected edge from {from.Name} to {to.Name}");
+                //Console.WriteLine($"Added undirected edge from {from.Name} to {to.Name}");
             }
         }
 
@@ -79,7 +84,7 @@ internal class ZeldaWorld
 
         var startMap = yamlReader.GetStartMap();
         var formattedStartMap = startMap.ToString("X2");
-        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Zelda - Overworld - Map {formattedStartMap} - Left exit"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Map {formattedStartMap} - Left exit"), world.GetItem("fixed"));
 
     }
 
@@ -90,7 +95,14 @@ internal class ZeldaWorld
             { "*", new WeightedSet
                 {
                     { 3, [
-                            
+                            world.GetItem("Z1UseBombs"),
+                            world.GetItem("Z1StepLadder"),
+                            world.GetItem("Z1OpenGraves"),
+                            world.GetItem("Z1Raft"),
+                            world.GetItem("Z1BurnTrees"),
+                            world.GetItem("Z1Recorder"),
+                            world.GetItem("Z1Sword"),
+                            world.GetItem("Z1Key")
                         ]
                     },
 

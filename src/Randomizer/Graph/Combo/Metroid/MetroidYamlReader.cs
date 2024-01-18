@@ -197,7 +197,7 @@ internal class MetroidYamlReader
             Load();
         }
 
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}:{world.Id}"; d[1] = $"{d[1]}:{world.Id}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}:{world.Id}"; d[1] = $"{d[1]}:{world.Id}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}:{world.Id}", e => e.Value);
+        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"M1 - {d[0]}:{world.Id}"; d[1] = $"M1 - {d[1]}:{world.Id}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"M1 - {d[0]}:{world.Id}"; d[1] = $"M1 - {d[1]}:{world.Id}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}:{world.Id}", e => e.Value);
     }
 
     public List<Dictionary<string, object>> LoadYmlData(World world)
@@ -207,7 +207,7 @@ internal class MetroidYamlReader
             Load();
         }
 
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}:{world.Id}"; return v; }).ToList();
+        return vertices.Values.Select(v => { v["name"] = $"M1 - {v["name"]}:{world.Id}"; return v; }).ToList();
     }
 
     public void BuildGraph()

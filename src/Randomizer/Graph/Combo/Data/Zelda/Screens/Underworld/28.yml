@@ -11,7 +11,7 @@ nodes:
       type: Scroll
       direction: Right
       
-    - name: "Top ledge"
+    - name: "Top edge"
       type: Scroll
       direction: Up
       
@@ -23,9 +23,9 @@ nodes:
     - name: "Middle"
       position: Middle
       type: Meta
-      
-
-# TODO: This screen has special exit logic, needs to be implemented
+     
+    - name: "Ganon"
+      type: Meta
 
 edges:
   undirected:
@@ -37,3 +37,4 @@ edges:
       - ["Right edge", "Bottom edge"]
       - ["Top edge", "Bottom edge"]
       - ["Left edge", "Middle"]
+      - ["Middle", "Ganon"]

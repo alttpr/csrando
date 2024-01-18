@@ -1,6 +1,7 @@
 name: Overworld
 level: 0x00
 area: Overworld
+rooms: []
 enemy_counts: [0x01, 0x04, 0x05, 0x06]
 start_room_id: 0x77
 start_y: 0x8D

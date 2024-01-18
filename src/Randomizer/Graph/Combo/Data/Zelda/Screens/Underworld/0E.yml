@@ -11,7 +11,7 @@ nodes:
       type: Scroll
       direction: Right
       
-    - name: "Top ledge"
+    - name: "Top edge"
       type: Scroll
       direction: Up
       
@@ -28,16 +28,8 @@ nodes:
       type: Push
       
 
-# TODO: This screen has special exit logic, needs to be implemented
-
 edges:
   undirected:
     fixed:
-      - ["Left edge", "Right edge"]
-      - ["Left edge", "Top edge"]
-      - ["Left edge", "Bottom edge"]
-      - ["Right edge", "Top edge"]
-      - ["Right edge", "Bottom edge"]
       - ["Top edge", "Bottom edge"]
-      - ["Left edge", "Middle"]
-      - ["Left edge", "Push block"]
+      - ["Top edge", "Middle"] 

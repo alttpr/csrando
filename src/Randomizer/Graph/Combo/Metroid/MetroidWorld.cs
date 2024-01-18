@@ -29,7 +29,7 @@ internal class MetroidWorld
             {
                 Name = name,
                 Type = type,
-                Item = item != null ? world.GetItem(item) : null,
+                Item = item != null ? world.GetItem("M1" + item) : null,
                 ItemSet = itemset ?? []
             };
 
@@ -40,7 +40,14 @@ internal class MetroidWorld
         foreach(var edgeCollection in metroidEdges)
         {
             var edgeCollectionData = edgeCollection.Key.Split(":").First().Split('|');
-            var requirement = world.GetItem(edgeCollectionData.First());
+            var requirementName = edgeCollectionData.First();
+            
+            if (!requirementName.StartsWith("fixed"))
+            {
+                requirementName = "M1" + requirementName;
+            }
+
+            var requirement = world.GetItem(requirementName);
             var requirementCount = int.Parse(edgeCollectionData.Skip(1).FirstOrDefault() ?? "1");
 
             foreach(var edges in edgeCollection.Value.Directed)
@@ -71,8 +78,8 @@ internal class MetroidWorld
 
         // Connect the start edge to the start edge of the Metroid graph
         // This will have to change when we know how we actually want to connect portals and such
-        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform"), world.GetItem("fixed"));
-        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
 
     }
 
@@ -83,21 +90,21 @@ internal class MetroidWorld
             { "*", new WeightedSet
                 {
                     { 3, [
-                            world.GetItem("Morph"),
-                            world.GetItem("Bombs"),
-                            world.GetItem("Varia"),
-                            world.GetItem("HiJump"),
-                            world.GetItem("IceBeam"),
-                            world.GetItem("LongBeam"),
-                            world.GetItem("WaveBeam"),
-                            world.GetItem("ScrewAttack"),
-                            world.GetItem("EnergyTank"),
-                            world.GetItem("Missile"),
+                            world.GetItem("M1Morph"),
+                            world.GetItem("M1Bombs"),
+                            world.GetItem("M1Varia"),
+                            world.GetItem("M1HiJump"),
+                            world.GetItem("M1IceBeam"),
+                            world.GetItem("M1LongBeam"),
+                            world.GetItem("M1WaveBeam"),
+                            world.GetItem("M1ScrewAttack"),
+                            world.GetItem("M1EnergyTank"),
+                            world.GetItem("M1Missile"),
                         ]
                     },
                     { 9001, [
-                            .. Enumerable.Repeat(world.GetItem("Missile"), 20),
-                            .. Enumerable.Repeat(world.GetItem("EnergyTank"), 7),
+                            .. Enumerable.Repeat(world.GetItem("M1Missile"), 20),
+                            .. Enumerable.Repeat(world.GetItem("M1EnergyTank"), 7),
                         ]
                     }
                 }

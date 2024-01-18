@@ -137,6 +137,16 @@ for uw in [0, 1]:
 
         item_pos = (underworld_data[LevelInfoF + m] >> 4) & 0x03
         behaviour = underworld_data[LevelInfoF + m] & 0x07
+        
+        if screen_id == 0x3E or screen_id == 0x3F:
+            # This is a passage
+            left = underworld_data[LevelInfoA + m] & 0x7F
+            right = underworld_data[LevelInfoB + m] & 0x7F
+            passage = True
+        else:
+            passage = False
+            left = 0
+            right = 0            
 
         map_id = m + offset
         template = f"""name: "Map {map_id:02X}"
@@ -145,6 +155,9 @@ map: 0x{map_id:02X}
 screen: 0x{screen_id:02X}
 palettes: [0x{inner_palette:02X}, 0x{outer_palette:02X}]
 doors: [0x{door_type_north:02X}, 0x{door_type_south:02X}, 0x{door_type_west:02X}, 0x{door_type_east:02X}] # [north, south, west, east]
+passage: {str(passage).lower()}
+passage_left: 0x{left:02X}
+passage_right: 0x{right:02X}
 enemies: 0x{enemy_quant:02X}
 enemy_id: 0x{enemy_id:02X}
 enemy_mode: 0x{enemy_mode:02X}
