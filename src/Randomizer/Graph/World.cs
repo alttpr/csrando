@@ -37,10 +37,6 @@ public sealed class World
         }
 
         items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
-        if (Config.Accessibility != AccessibilityOption.Locations)
-        {
-            items.Add(GetItem("KeyForKey"));
-        }
         StartingItems = new Inventory(items.ToArray());
 
         foreach (var vertex in VertexCollector.LoadYmlData(this))

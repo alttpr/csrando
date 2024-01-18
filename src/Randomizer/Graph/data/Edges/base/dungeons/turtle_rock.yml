@@ -2,7 +2,3 @@ fixed:
   directed:
     - ["Turtle Rock - Boss", "Turtle Rock - Prize"]
   undirected: []
-KeyForKey:
-  directed:
-    - ["Turtle Rock - Pokey C", "Turtle Rock - Lava Tubes 2"]
-  undirected: []

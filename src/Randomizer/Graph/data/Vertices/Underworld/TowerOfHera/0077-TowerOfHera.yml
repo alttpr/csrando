@@ -11,8 +11,6 @@ rooms:
               - "Tower Of Hera - Moldorm Cage"
             KeyP3:
               - "Tower Of Hera - Tile Room"
-            KeyForKey:
-              - "Tower Of Hera - Tile Room"
           items:
             - name: "Tower Of Hera - Map Chest"
               type: "chest"

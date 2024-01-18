@@ -2,7 +2,3 @@ fixed:
   directed:
     - ["Skull Woods - Boss", "Skull Woods - Prize"]
   undirected: []
-KeyForKey:
-  directed:
-    - ["Skull Woods - Big Chest Ledge", "Skull Woods - Big Chest"]
-  undirected: []

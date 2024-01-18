@@ -2,9 +2,3 @@ fixed:
   directed:
     - ["Palace of Darkness - Boss", "Palace of Darkness - Prize"]
   undirected: []
-# these need to connect vertices around the door to work properly
-KeyForKey:
-  directed:
-    - ["Palace of Darkness - Compass Room", "Palace of Darkness - Harmless Hellway"]
-    - ["Palace of Darkness - Basement Ledge", "Palace of Darkness - Big Key Chest Region"]
-  undirected: []
