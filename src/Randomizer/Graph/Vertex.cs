@@ -66,7 +66,7 @@ public sealed class Vertex : ICloneable
     public int? RoomId { get; init; }
     public int? Map { get; init; }
     public bool? MoonPearl { get; init; }
-    public string[] ItemSet { get; init; } = [];
+    public ItemSetName[] ItemSet { get; init; } = [];
     public long[]? Addresses { get; init; }
     public int? Offset { get; init; }
     public Position? Position { get; init; }

@@ -1,6 +1,6 @@
 namespace Randomizer.Graph;
 
-using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
+using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
 
 /// <summary>Get the sets of items to place.</summary>
@@ -25,7 +25,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
                 GetShopItems(world),
                 new ItemSet
                 {
-                    { "*", new WeightedSet
+                    { ItemSetName.DefaultSet, new WeightedSet
                         {
                             // placing behind keys for now.
                             { 3, [
@@ -103,12 +103,12 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
                     : prng.GetRandomInt((int)(15 * crystalRatio));
                 if (fillCount > 0)
                 {
-                    var junkFill = prng.Shuffle(worldSet["*"][9999]).Take(fillCount).ToArray();
+                    var junkFill = prng.Shuffle(worldSet[ItemSetName.DefaultSet][9999]).Take(fillCount).ToArray();
                     foreach (var key in junkFill)
                     {
-                        worldSet["gt:" + world.Id].TryAdd(2, []);
-                        worldSet["gt:" + world.Id][2].Add(key);
-                        worldSet["*"][9999].Remove(key);
+                        worldSet[new ItemSetName("gt", world)].TryAdd(2, []);
+                        worldSet[new ItemSetName("gt", world)][2].Add(key);
+                        worldSet[ItemSetName.DefaultSet][9999].Remove(key);
                     }
                 }
             }
@@ -156,12 +156,12 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         return new ItemSet
         {
-            { "mm-medallion:" + world.Id, new WeightedSet
+            { new ItemSetName("mm-medallion", world), new WeightedSet
                 {
                     { 0, [ world.GetItem(prng.GetRandomElement(_mireEntry)) ] },
                 }
             },
-            { "tr-medallion:" + world.Id, new WeightedSet
+            { new ItemSetName("tr-medallion", world), new WeightedSet
                 {
                     { 0, [ world.GetItem(prng.GetRandomElement(_trEntry)) ] },
                 }
@@ -175,7 +175,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         return new ItemSet
         {
-            { "prize:" + world.Id, new WeightedSet
+            { new ItemSetName("prize", world), new WeightedSet
                 {
                     { 0, [
                              world.GetItem("PendantOfCourage"),
@@ -201,62 +201,62 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         var keys = new ItemSet
         {
-            { "escape:" + world.Id, new WeightedSet
+            { new ItemSetName("escape", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("KeyH2") ] },
                 }
             },
-            { "desert:" + world.Id, new WeightedSet
+            { new ItemSetName("desert", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("KeyP2") ] },
                 }
             },
-            { "hera:" + world.Id, new WeightedSet
+            { new ItemSetName("hera", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("KeyP3") ] },
                 }
             },
-            { "agahnim:" + world.Id, new WeightedSet
+            { new ItemSetName("agahnim", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyA1"), 2)] },
                 }
             },
-            { "pod:" + world.Id, new WeightedSet
+            { new ItemSetName("pod", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyD1"), 6)] },
                 }
             },
-            { "swamp:" + world.Id, new WeightedSet
+            { new ItemSetName("swamp", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("KeyD2") ] },
                 }
             },
-            { "skull:" + world.Id, new WeightedSet
+            { new ItemSetName("skull", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyD3"), 3)] },
                 }
             },
-            { "thieves:" + world.Id, new WeightedSet
+            { new ItemSetName("thieves", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("KeyD4") ] },
                 }
             },
-            { "ice:" + world.Id, new WeightedSet
+            { new ItemSetName("ice", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyD5"), 2)] },
                 }
             },
-            { "mire:" + world.Id, new WeightedSet
+            { new ItemSetName("mire", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyD6"), 3)] },
                 }
             },
-            { "turtlerock:" + world.Id, new WeightedSet
+            { new ItemSetName("turtlerock", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyD7"), 4)] },
                 }
             },
-            { "gt:" + world.Id, new WeightedSet
+            { new ItemSetName("gt", world), new WeightedSet
                 {
                     { 1, [.. Enumerable.Repeat(world.GetItem("KeyA2"), 4)] },
                 }
@@ -267,7 +267,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         {
             return new ItemSet
             {
-                { "*",
+                { ItemSetName.DefaultSet,
                     new WeightedSet
                     {
                         { 3, [.. keys.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
@@ -285,57 +285,57 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         var bigKeys = new ItemSet
         {
-            { "eastern:" + world.Id, new WeightedSet
+            { new ItemSetName("eastern", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyP1") ] },
                 }
             },
-            { "desert:" + world.Id, new WeightedSet
+            { new ItemSetName("desert", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyP2") ] },
                 }
             },
-            { "hera:" + world.Id, new WeightedSet
+            { new ItemSetName("hera", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyP3") ] },
                 }
             },
-            { "pod:" + world.Id, new WeightedSet
+            { new ItemSetName("pod", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyD1") ] },
                 }
             },
-            { "swamp:" + world.Id, new WeightedSet
+            { new ItemSetName("swamp", world), new WeightedSet
                 {
                     { 2, [ world.GetItem("BigKeyD2") ] },
                 }
             },
-            { "skull:" + world.Id, new WeightedSet
+            { new ItemSetName("skull", world), new WeightedSet
                 {
                     { 2, [ world.GetItem("BigKeyD3") ] },
                 }
             },
-            { "thieves:" + world.Id, new WeightedSet
+            { new ItemSetName("thieves", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyD4") ] },
                 }
             },
-            { "ice:" + world.Id, new WeightedSet
+            { new ItemSetName("ice", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyD5") ] },
                 }
             },
-            { "mire:" + world.Id, new WeightedSet
+            { new ItemSetName("mire", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyD6") ] },
                 }
             },
-            { "turtlerock:" + world.Id, new WeightedSet
+            { new ItemSetName("turtlerock", world), new WeightedSet
                 {
                     { 1, [ world.GetItem("BigKeyD7") ] },
                 }
             },
-            { "gt:" + world.Id, new WeightedSet
+            { new ItemSetName("gt", world), new WeightedSet
                 {
                     { 0, [ world.GetItem("BigKeyA2") ] },
                 }
@@ -346,7 +346,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         {
             return new ItemSet
             {
-                { "*",
+                { ItemSetName.DefaultSet,
                     new WeightedSet
                     {
                         { 3, [.. bigKeys.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
@@ -364,62 +364,62 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         var maps = new ItemSet
         {
-            { "escape:" + world.Id, new WeightedSet
+            { new ItemSetName("escape", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapH2") ] },
                 }
             },
-            { "eastern:" + world.Id, new WeightedSet
+            { new ItemSetName("eastern", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapP1") ] },
                 }
             },
-            { "desert:" + world.Id, new WeightedSet
+            { new ItemSetName("desert", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapP2") ] },
                 }
             },
-            { "hera:" + world.Id, new WeightedSet
+            { new ItemSetName("hera", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapP3") ] },
                 }
             },
-            { "pod:" + world.Id, new WeightedSet
+            { new ItemSetName("pod", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD1") ] },
                 }
             },
-            { "swamp:" + world.Id, new WeightedSet
+            { new ItemSetName("swamp", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD2") ] },
                 }
             },
-            { "skull:" + world.Id, new WeightedSet
+            { new ItemSetName("skull", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD3") ] },
                 }
             },
-            { "thieves:" + world.Id, new WeightedSet
+            { new ItemSetName("thieves", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD4") ] },
                 }
             },
-            { "ice:" + world.Id, new WeightedSet
+            { new ItemSetName("ice", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD5") ] },
                 }
             },
-            { "mire:" + world.Id, new WeightedSet
+            { new ItemSetName("mire", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD6") ] },
                 }
             },
-            { "turtlerock:" + world.Id, new WeightedSet
+            { new ItemSetName("turtlerock", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapD7") ] },
                 }
             },
-            { "gt:" + world.Id, new WeightedSet
+            { new ItemSetName("gt", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("MapA2") ] },
                 }
@@ -430,7 +430,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         {
             return new ItemSet
             {
-                { "*",
+                { ItemSetName.DefaultSet,
                     new WeightedSet
                     {
                         { 3, [.. maps.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
@@ -457,57 +457,57 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         var compasses = new ItemSet
         {
-            { "eastern:" + world.Id, new WeightedSet
+            { new ItemSetName("eastern", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassP1") ] }
                 }
             },
-            { "desert:" + world.Id, new WeightedSet
+            { new ItemSetName("desert", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassP2") ] }
                 }
             },
-            { "hera:"+world.Id, new WeightedSet
+            { new ItemSetName("hera", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassP3") ] }
                 }
             },
-            { "pod:" + world.Id, new WeightedSet
+            { new ItemSetName("pod", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD1") ] }
                 }
             },
-            { "swamp:" + world.Id, new WeightedSet
+            { new ItemSetName("swamp", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD2") ] }
                 }
             },
-            { "skull:" + world.Id, new WeightedSet
+            { new ItemSetName("skull", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD3") ] }
                 }
             },
-            { "thieves:" + world.Id, new WeightedSet
+            { new ItemSetName("thieves", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD4") ] }
                 }
             },
-            { "ice:" + world.Id, new WeightedSet
+            { new ItemSetName("ice", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD5") ] }
                 }
             },
-            { "mire:" + world.Id, new WeightedSet
+            { new ItemSetName("mire", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD6") ] }
                 }
             },
-            { "turtlerock:" + world.Id, new WeightedSet
+            { new ItemSetName("turtlerock", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassD7") ] }
                 }
             },
-            { "gt:" + world.Id, new WeightedSet
+            { new ItemSetName("gt", world), new WeightedSet
                 {
                     { 9010, [ world.GetItem("CompassA2") ] }
                 }
@@ -518,7 +518,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         {
             return new ItemSet
             {
-                { "*",
+                { ItemSetName.DefaultSet,
                     new WeightedSet
                     {
                         { 3,  [.. compasses.Values.SelectMany(dungeon => dungeon.Values.SelectMany(item => item))] }
@@ -554,7 +554,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         return new ItemSet()
         {
-            { "bottle:" + world.Id,
+            { new ItemSetName("bottle", world),
                 new WeightedSet()
                 {
                     { 0, [
@@ -564,7 +564,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
                     },
                 }
             },
-            { "*",
+            { ItemSetName.DefaultSet,
                 new WeightedSet()
                 {
                     { 3, [ world.GetItem(prng.GetRandomElement(_bottles)) ] },
@@ -588,7 +588,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
 
         return new ItemSet()
         {
-            { "*", new WeightedSet()
+            { ItemSetName.DefaultSet, new WeightedSet()
                 {
                     // TODO verify these counts, they are definitely wrong
                     { 9999, [

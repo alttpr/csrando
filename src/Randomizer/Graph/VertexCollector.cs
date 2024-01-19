@@ -149,7 +149,7 @@ internal class VertexCollector
                         Sprite = Sprite.Get(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
                         State = mob.State.ToArray(),
-                        ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
                         // TODO: Add deny, allow to Vertex.
                         // Deny = mob.Deny,
@@ -197,7 +197,7 @@ internal class VertexCollector
                         Name = itemName,
                         Map = map.MapMap,
                         Item = world.GetItemOrNull(item.Item),
-                        ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Addresses = item.Addresses.ToArray(),
                     };
                     structured_vertices.Add(itemName, itemVertex);
@@ -307,7 +307,7 @@ internal class VertexCollector
                         Sprite = Sprite.Get(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
                         State = mob.State.ToArray(),
-                        ItemSet = mob.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
                         // TODO: Add deny, allow to Vertex.
                         // Deny = mob.Deny,
@@ -331,7 +331,7 @@ internal class VertexCollector
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(item.Item),
-                        ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Addresses = item.Addresses.ToArray(),
                     };
                     structured_vertices.Add(itemName, itemVertex);
@@ -353,7 +353,7 @@ internal class VertexCollector
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(item.Item),
                         Cost = item.Cost,
-                        ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                     };
                     structured_vertices.Add(inventoryName, inventoryVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, inventoryVertex, new ItemCondition(world.GetItem("BuyItem"), 1)));
@@ -370,7 +370,7 @@ internal class VertexCollector
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(pot.Item),
                         State = pot.State.ToArray(),
-                        ItemSet = pot.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                        ItemSet = pot.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(pot.Trophy),
                         // TODO: Add deny, allow to Vertex.
                         // Deny = pot.Deny,
@@ -400,7 +400,7 @@ internal class VertexCollector
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
                     Item = world.GetItemOrNull(item.Item),
-                    ItemSet = item.ItemSet.Select(v => $"{v}:{world.Id}").ToArray(),
+                    ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                     Addresses = item.Addresses.ToArray(),
                 });
             }

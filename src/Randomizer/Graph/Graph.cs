@@ -31,7 +31,7 @@ public sealed class Graph
     private readonly HashSet<Vertex> _vertices = new();
     private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = new();
-    private readonly Dictionary<string, List<Vertex>> _setLocations = new() { { "*", new() } };
+    private readonly Dictionary<ItemSetName, List<Vertex>> _setLocations = new() { { ItemSetName.DefaultSet, new() } };
     public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
     public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys = new();
     public HashSet<Item> AllItems { get; set; } = new();
@@ -41,7 +41,7 @@ public sealed class Graph
         return _vertices;
     }
 
-    public IEnumerable<Vertex> GetSetLocations(string set)
+    public IEnumerable<Vertex> GetSetLocations(ItemSetName set)
     {
         return _setLocations[set];
     }
@@ -74,8 +74,8 @@ public sealed class Graph
 
         if (ITEM_LOCATIONS.Contains(vertex.SubType ?? vertex.Type))
         {
-            _setLocations["*"].Add(vertex);
-            foreach (string set in vertex.ItemSet)
+            _setLocations[ItemSetName.DefaultSet].Add(vertex);
+            foreach (var set in vertex.ItemSet)
             {
                 _setLocations.TryAdd(set, new());
                 _setLocations[set].Add(vertex);

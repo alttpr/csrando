@@ -3,7 +3,7 @@ namespace Randomizer.Graph;
 using System.Diagnostics;
 
 // NOTE: same as in ItemPooler, except we cannot reuse aliases this way
-using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
+using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 
 internal sealed class RandomAssumedFiller
 {
@@ -43,18 +43,12 @@ internal sealed class RandomAssumedFiller
                 break;
             }
 
-            int? worldForItemSet = null;
-
             // When placing an item that is constrained to an item set from a specific world,
             // only add items to the inventory from that world to speed up the search as
             // we don't care to search other worlds.
-            int itemSetIndexOfColon = item_set.IndexOf(':');
-            if (itemSetIndexOfColon != -1)
-                worldForItemSet = Int32.Parse(item_set.Substring(itemSetIndexOfColon + 1));
-
             flat_items.Remove(item_key);
             var searcher = _randomizer.GetSearcherForInventory(
-                flat_items.Where(i => i.Weight <= 9000 && (worldForItemSet == null || worldForItemSet == i.Item.World.Id))
+                flat_items.Where(i => i.Weight <= 9000 && (item_set.World == null || item_set.World == i.Item.World))
                     .Select(i => i.Item)
                     .ToList()
                 );
@@ -88,18 +82,18 @@ internal sealed class RandomAssumedFiller
     /// Quickly place items in locations respecting placemenmt groups.
     /// </summary>
     /// <param name="fillItems">Items to be placed</param>
-    private void FastFillItemsInLocations(List<(string Set, int Weight, Item Item)> fillItems)
+    private void FastFillItemsInLocations(List<(ItemSetName Set, int Weight, Item Item)> fillItems)
     {
         System.Console.WriteLine("Fast Filling {0} items", fillItems.Count);
         // assure smaller location groups are filled first
         fillItems.Sort((a, b) =>
         {
-            int aweight = a.Weight + (a.Set == "*" ? 9999 : 0);
-            int bweight = b.Weight + (b.Set == "*" ? 9999 : 0);
+            int aweight = a.Weight + (a.Set.World == null ? 9999 : 0);
+            int bweight = b.Weight + (b.Set.World == null ? 9999 : 0);
             return aweight - bweight;
         });
 
-        string current_key = "";
+        ItemSetName? current_key = null;
         var searcher = _randomizer.GetSearcherForInventory(Enumerable.Empty<Item>());
         var locations = new List<Vertex>();
         foreach (var (item_set, _, item) in fillItems)

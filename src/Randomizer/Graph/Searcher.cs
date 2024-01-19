@@ -128,7 +128,8 @@ public class Searcher
             if (newItemsFound && world is not null && inventory.Has(world.GetItem("BigRedBomb")))
             {
                 var activeBomb = world.GetItem("BigRedBombActive");
-                if (!inventory.Has(activeBomb) && DropOffSearch(world, inventory)) {
+                if (!inventory.Has(activeBomb) && DropOffSearch(world, inventory))
+                {
                     inventory.AddItem(activeBomb);
                     newItemsFound = true;
                 }
@@ -320,11 +321,8 @@ public class Searcher
     /// <param name="itemSet">constrain results to item set</param>
     /// <param name="itemSets">counts of items required in each sett</param>
     /// <param name="reachable">reachable only return reachable locations</param>
-    public IEnumerable<Vertex> GetEmptyLocationsInSet(string itemSet = "*", Dictionary<string, int>? itemSets = null, bool reachable = true)
+    public IEnumerable<Vertex> GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool reachable = true)
     {
-        if (itemSet == "bottle:1")
-            Debugger.Break();
-
         var empty_locations = _graph.GetSetLocations(itemSet).Where((vertex) =>
         {
             return (!reachable || _visited.Contains(vertex)) && vertex.Item == null;
@@ -333,7 +331,7 @@ public class Searcher
         itemSets ??= new();
         foreach (var (set_name, set_count) in itemSets)
         {
-            if (set_name == "*")
+            if (set_name.World == null)
                 continue;
 
             var set_locations = _graph.GetSetLocations(set_name).Where(static (location) => location.Item == null);
