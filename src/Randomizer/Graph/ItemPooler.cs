@@ -558,8 +558,8 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
                 new WeightedSet()
                 {
                     { 0, [
-                            world.GetItem("Fairy" + _bottles[prng.GetRandomInt(_bottles.Length)]),
-                            world.GetItem("Fairy" + _bottles[prng.GetRandomInt(_bottles.Length)]),
+                            world.GetItem("Fairy" + prng.GetRandomElement(_bottles)),
+                            world.GetItem("Fairy" + prng.GetRandomElement(_bottles)),
                         ]
                     },
                 }
@@ -567,11 +567,11 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
             { "*",
                 new WeightedSet()
                 {
-                    { 3, [ world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]) ] },
+                    { 3, [ world.GetItem(prng.GetRandomElement(_bottles)) ] },
                     { 9001, [
-                            world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]),
-                            world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]),
-                            world.GetItem(_bottles[prng.GetRandomInt(_bottles.Length)]),
+                            world.GetItem(prng.GetRandomElement(_bottles)),
+                            world.GetItem(prng.GetRandomElement(_bottles)),
+                            world.GetItem(prng.GetRandomElement(_bottles)),
                         ]
                     },
                 }
