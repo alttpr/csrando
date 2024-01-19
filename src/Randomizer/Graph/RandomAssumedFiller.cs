@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using System.Diagnostics;
+
 // NOTE: same as in ItemPooler, except we cannot reuse aliases this way
 using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
 
@@ -41,15 +43,28 @@ internal sealed class RandomAssumedFiller
                 break;
             }
 
+            int? worldForItemSet = null;
+
+            // When placing an item that is constrained to an item set from a specific world,
+            // only add items to the inventory from that world to speed up the search as
+            // we don't care to search other worlds.
+            int itemSetIndexOfColon = item_set.IndexOf(':');
+            if (itemSetIndexOfColon != -1)
+                worldForItemSet = Int32.Parse(item_set.Substring(itemSetIndexOfColon + 1));
+
             flat_items.Remove(item_key);
-            var searcher = _randomizer.GetSearcherForInventory(flat_items.Where(i => i.Weight <= 9000).Select(i => i.Item).ToList());
+            var searcher = _randomizer.GetSearcherForInventory(
+                flat_items.Where(i => i.Weight <= 9000 && (worldForItemSet == null || worldForItemSet == i.Item.World.Id))
+                    .Select(i => i.Item)
+                    .ToList()
+                );
             bool required = item.World.Config.Accessibility != AccessibilityOption.None
                 || !searcher.HasFound(item.World.GetItem("Triforce"));
             var locations = searcher.GetEmptyLocationsInSet(item_set, set_counts, required);
 
             if (!locations.Any())
             {
-                throw new Exception($"No locations for: {item}");
+                throw new Exception($"No locations for `{item}` in set `{item_set}`");
             }
 
             var location = _prng.GetRandomElement(locations);

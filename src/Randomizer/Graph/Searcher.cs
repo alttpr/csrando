@@ -128,9 +128,10 @@ public class Searcher
             if (newItemsFound && world is not null && inventory.Has(world.GetItem("BigRedBomb")))
             {
                 var activeBomb = world.GetItem("BigRedBombActive");
-                if (!inventory.Has(activeBomb) && DropOffSearch(world, inventory))
+                if (!inventory.Has(activeBomb) && DropOffSearch(world, inventory)) {
                     inventory.AddItem(activeBomb);
-                newItemsFound = true;
+                    newItemsFound = true;
+                }
             }
         }
 
@@ -321,6 +322,9 @@ public class Searcher
     /// <param name="reachable">reachable only return reachable locations</param>
     public IEnumerable<Vertex> GetEmptyLocationsInSet(string itemSet = "*", Dictionary<string, int>? itemSets = null, bool reachable = true)
     {
+        if (itemSet == "bottle:1")
+            Debugger.Break();
+
         var empty_locations = _graph.GetSetLocations(itemSet).Where((vertex) =>
         {
             return (!reachable || _visited.Contains(vertex)) && vertex.Item == null;

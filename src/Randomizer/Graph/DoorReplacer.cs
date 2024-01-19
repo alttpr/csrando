@@ -51,7 +51,7 @@ internal sealed class DoorReplacer : IWorldModifier
                     .GroupBy(v => v.Item!)
                     .ToDictionary(k => k.Key, v => v.ToHashSet());
 
-        foreach (var key in world.Graph.Doors)
+        foreach (var key in world.Graph.Doors.Where(k => k.Key.World == world))
         {
             worldKeys.TryAdd(key.Key, new HashSet<Vertex>());
         }
