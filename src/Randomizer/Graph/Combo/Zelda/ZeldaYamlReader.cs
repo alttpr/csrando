@@ -352,7 +352,7 @@ internal class ZeldaYamlReader
             Load();
         }
 
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"Z1 - {d[0]}:{world.Id}"; d[1] = $"Z1 - {d[1]}:{world.Id}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"Z1 - {d[0]}:{world.Id}"; d[1] = $"Z1 - {d[1]}:{world.Id}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}:{world.Id}", e => e.Value);
+        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"Z1 - {d[0]}"; d[1] = $"Z1 - {d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"Z1 - {d[0]}"; d[1] = $"Z1 - {d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
     public List<Dictionary<string, object>> LoadYmlData(World world)
@@ -362,7 +362,7 @@ internal class ZeldaYamlReader
             Load();
         }
 
-        return vertices.Values.Select(v => { v["name"] = $"Z1 - {v["name"]}:{world.Id}"; return v; }).ToList();
+        return vertices.Values.Select(v => { v["name"] = $"Z1 - {v["name"]}"; return v; }).ToList();
     }
 
     private void BuildGraph()

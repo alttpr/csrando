@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-using ItemSet = Dictionary<string, /* WeightedSet */ Dictionary<int, List<Item>>>;
+using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
 
 internal class ZeldaWorld
@@ -27,10 +27,11 @@ internal class ZeldaWorld
 
             var vertex = new Vertex()
             {
+                World = world,
                 Name = name,
                 Type = type,
                 Item = item != null ? world.GetItem("Z1" + item) : null,
-                ItemSet = itemset ?? []
+                ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? []
             };
 
             world.Graph.AddVertex(vertex);
@@ -51,8 +52,8 @@ internal class ZeldaWorld
 
             foreach (var edges in edgeCollection.Value.Directed)
             {
-                var from = world.Graph.GetVertex(edges[0]);
-                var to = world.Graph.GetVertex(edges[1]);
+                var from = world.GetLocation(edges[0]);
+                var to = world.GetLocation(edges[1]);
                 if (from is null || to is null)
                 {
                     throw new Exception("Name Connection Mismatch: " + $"({edges[0]}, {edges[1]}) => " + $"({from}, {to})");
@@ -64,8 +65,8 @@ internal class ZeldaWorld
 
             foreach (var edges in edgeCollection.Value.Undirected)
             {
-                var from = world.Graph.GetVertex(edges[0]);
-                var to = world.Graph.GetVertex(edges[1]);
+                var from = world.GetLocation(edges[0]);
+                var to = world.GetLocation(edges[1]);
                 if (from is null || to is null)
                 {
                     throw new Exception("Name Connection Mismatch: " + $"({edges[0]}, {edges[1]}) => " + $"({from}, {to})");
@@ -92,7 +93,7 @@ internal class ZeldaWorld
     {
         return new ItemSet
         {
-            { "*", new WeightedSet
+            { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
                             world.GetItem("Z1UseBombs"),
