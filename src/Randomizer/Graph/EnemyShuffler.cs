@@ -21,13 +21,13 @@ internal sealed class EnemyShuffler : IWorldModifier
 
         foreach (string token in defeats.Keys)
         {
-            string vertexName = $"{token}:{world.Id}";
-            if (!world.Graph.HasVertex(vertexName))
+            if (!world.HasLocation(token))
             {
                 world.Graph.AddVertex(new Vertex
                 {
-                    Name = vertexName,
                     Type = VertexType.Meta,
+                    Name = token,
+                    World = world,
                     Item = world.GetItem(token),
                 });
             }
@@ -36,7 +36,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         var from = world.GetLocation("Meta");
         foreach (var (token, items) in defeats)
         {
-            var to = world.Graph.GetVertex($"{token}:{world.Id}");
+            var to = world.GetLocation(token);
             foreach (string item in items)
             {
                 world.Graph.AddDirected(from, to, world.GetItem(item));

@@ -76,7 +76,7 @@ internal sealed class BossShuffler : IWorldModifier
     public static void AdjustEdges(World world, PRNG prng)
     {
         var bossLocationMap = YamlReader.LoadSpriteLocations()
-            .ToDictionary(x => $"{x.Key}:{world.Id}", x => x.Value);
+            .ToDictionary(x => x.Key, x => x.Value);
 
         // most restrictive first
         var boss_locations = new List<string>()
@@ -201,10 +201,9 @@ internal sealed class BossShuffler : IWorldModifier
     private static void PlaceBossItemInLocation(string bossItem, string location, World world, Dictionary<string, Dictionary<string, List<YamlSprite>>> bossLocationMap)
     {
         var world_boss_item = world.GetItem(bossItem);
-        string from_location = BOSS_FROM_LOCATION[location] + ":" + world.Id;
-        var from = world.Graph.GetVertex(from_location);
-        location = location + ":" + world.Id;
-        var to_boss = world.Graph.GetVertex(location);
+        string from_location = BOSS_FROM_LOCATION[location];
+        var from = world.GetLocation(from_location);
+        var to_boss = world.GetLocation(location);
 
         if (from is null || to_boss is null)
         {
@@ -225,7 +224,8 @@ internal sealed class BossShuffler : IWorldModifier
             world.Graph.AddVertex(new Vertex
             {
                 Type = VertexType.Mob,
-                Name = $"{sprite_definition.Name}:{world.Id}",
+                Name = sprite_definition.Name,
+                World = world,
                 Position = sprite_definition.Position,
                 RoomId = sprite_definition.RoomId,
                 Sprite = Sprite.Get(sprite_definition.Sprite),

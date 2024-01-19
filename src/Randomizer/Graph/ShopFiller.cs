@@ -3,7 +3,7 @@ namespace Randomizer.Graph;
 /**
  * Fill initial shop state.
  */
-internal sealed class ShopFiller: IWorldModifier
+internal sealed class ShopFiller : IWorldModifier
 {
     public static void AdjustEdges(World world, PRNG prng)
     {
@@ -15,7 +15,7 @@ internal sealed class ShopFiller: IWorldModifier
             foreach (var shop in shops)
             {
                 // Potion shop canot be modified at this time.
-                if (shop.Name == $"Potion Shop:{world.Id}")
+                if (shop.Name == "Potion Shop")
                 {
                     continue;
                 }

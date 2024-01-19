@@ -48,7 +48,6 @@ internal class EdgeCollector
         }
 
         var return_data = new Dictionary<ItemCondition, DirectedUndirectedPair>();
-        int world_id = world.Id;
         foreach (var (conditionString, edges) in edges_data)
         {
             var parts = conditionString.Split("|");
@@ -57,8 +56,8 @@ internal class EdgeCollector
 
             return_data[itemCountPair] = new DirectedUndirectedPair
             {
-                Directed = edges.Directed.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
-                Undirected = edges.Undirected.Select((es) => es.Select((v) => $"{v}:{world_id}").ToList()).ToList(),
+                Directed = edges.Directed,
+                Undirected = edges.Undirected,
             };
         }
 

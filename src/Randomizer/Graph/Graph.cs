@@ -70,7 +70,7 @@ public sealed class Graph
             throw new Exception("Adding a vertex after Ids are set");
 
         _vertices.Add(vertex);
-        _verticesByName.Add(vertex.Name, vertex);
+        _verticesByName.Add($"{vertex.Name}:{vertex.World.Id}", vertex);
 
         if (ITEM_LOCATIONS.Contains(vertex.SubType ?? vertex.Type))
         {

@@ -66,7 +66,7 @@ internal sealed class RandomAssumedFiller
                 item_weight,
                 required ? "R" : " ",
                 item,
-                location.Name,
+                location,
                 item_set,
                 locations.Count()
             );
@@ -114,7 +114,7 @@ internal sealed class RandomAssumedFiller
             locations.Remove(location);
             System.Console.WriteLine("[FF] Placing: `{0}` in `{1}` ({2}:{3})",
                 item,
-                location.Name,
+                location,
                 item_set,
                 locations.Count + 1
             );

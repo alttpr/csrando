@@ -75,7 +75,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
                 continue;
 
             var blueVertex = (Vertex)v.Clone();
-            blueVertex.Name = blueVertex.Name.Replace($":{world.Id}", $" (Blue):{world.Id}");
+            blueVertex.Name = $"{blueVertex.Name} (Blue)";
             blueVertices.Add(blueVertex);
             world.Graph.AddVertex(blueVertex);
             orangeVertices.Add(v);
@@ -93,7 +93,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
                 var edgeCondition = edge.Condition;
                 if (edge.To.Type == VertexType.Region)
                 {
-                    edgeTo = world.Graph.GetVertex(edge.To.Name.Replace($":{world.Id}", $" (Blue):{world.Id}"));
+                    edgeTo = world.GetLocation($"{edge.To.Name} (Blue)");
                     if (edge.Condition.Item.Name == "PegBlue")
                     {
                         edgeCondition = new ItemCondition(world.GetItem("fixed"), 1);
@@ -115,7 +115,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
             if (v.Switch)
             {
                 v.Switch = false;
-                newEdges.Add(new Edge(v, world.Graph.GetVertex(v.Name.Replace(" (Blue)", "")), new ItemCondition(world.GetItem("fixed"), 1)));
+                newEdges.Add(new Edge(v, world.GetLocation(v.Name.Replace(" (Blue)", "")), new ItemCondition(world.GetItem("fixed"), 1)));
             }
             v.Edges = newEdges;
         }
@@ -139,7 +139,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
             if (v.Switch)
             {
                 v.Switch = false;
-                newEdges.Add(new Edge(v, world.Graph.GetVertex(v.Name.Replace($":{world.Id}", $" (Blue):{world.Id}")), new ItemCondition(world.GetItem("fixed"), 1)));
+                newEdges.Add(new Edge(v, world.GetLocation($"{v.Name} (Blue)"), new ItemCondition(world.GetItem("fixed"), 1)));
             }
             v.Edges = newEdges;
         }

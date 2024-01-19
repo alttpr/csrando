@@ -24,11 +24,10 @@ internal sealed class EntranceShuffler : IWorldModifier
         var definition = YamlReader.LoadEntrances(definition_name);
         var fixedItem = world.GetItem("fixed");
 
-        int world_id = world.Id;
         foreach (var connection in definition.Fixed)
         {
-            var from = world.Graph.GetVertex($"{connection[0]}:{world_id}");
-            var to = world.Graph.GetVertex($"{connection[1]}:{world_id}");
+            var from = world.GetLocation(connection[0]);
+            var to = world.GetLocation(connection[1]);
             world.Graph.AddDirected(from, to, fixedItem);
         }
         /* TODO: Let's only do vanilla in the meantime...

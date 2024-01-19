@@ -83,13 +83,13 @@ internal class VertexCollector
             };
             foreach (var meta in map.Nodes.Meta)
             {
-                string name = $"{meta.Name}:{world.Id}";
                 var metaVertex = new Vertex
                 {
                     Type = VertexType.Meta,
-                    Name = name,
+                    Name = meta.Name,
+                    World = world,
                 };
-                structured_vertices.Add(name, metaVertex);
+                structured_vertices.Add(meta.Name, metaVertex);
 
                 foreach (var connection in meta.Connections)
                 {
@@ -104,7 +104,8 @@ internal class VertexCollector
                     var metaItemVertex = new Vertex
                     {
                         Type = VertexType.Meta,
-                        Name = $"{meta.Name} - {index} - {item}:{world.Id}",
+                        Name = $"{meta.Name} - {index} - {item}",
+                        World = world,
                         Item = world.GetItem(item),
                     };
                     structured_vertices.Add(metaItemVertex.Name, metaItemVertex);
@@ -113,38 +114,38 @@ internal class VertexCollector
             }
             foreach (var prizepack in map.Nodes.Prizepacks)
             {
-                string name = $"{prizepack.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
+                structured_vertices.Add(prizepack.Name, new Vertex
                 {
                     Type = VertexType.PrizePack,
-                    Name = name,
+                    Name = prizepack.Name,
+                    World = world,
                     Offset = prizepack.Offset,
                     Sprite = Sprite.Get(prizepack.Sprite),
                 });
             }
             foreach (var region in map.Nodes.Regions)
             {
-                string name = $"{region.Name}:{world.Id}";
                 var regionVertex = new Vertex
                 {
                     Type = region.Type ?? VertexType.Region,
-                    Name = name,
+                    Name = region.Name,
+                    World = world,
                     Map = map.MapMap,
                     InletId = region.InletId,
                     Shopkeeper = region.Shopkeeper,
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
-                    MoonPearl = MoonPearlTransform(map.Moonpearl, name),
+                    MoonPearl = MoonPearlTransform(map.Moonpearl, region.Name),
                 };
-                structured_vertices.Add(name, regionVertex);
+                structured_vertices.Add(region.Name, regionVertex);
 
                 foreach (var mob in region.Mobs)
                 {
-                    string mobName = $"{mob.Name}:{world.Id}";
                     var mobVertex = new Vertex
                     {
                         Type = VertexType.Mob,
-                        Name = mobName,
+                        Name = mob.Name,
+                        World = world,
                         Map = map.MapMap,
                         Sprite = Sprite.Get(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
@@ -155,19 +156,20 @@ internal class VertexCollector
                         // Deny = mob.Deny,
                         // Allow = mob.Allow,
                     };
-                    structured_vertices.Add(mobName, mobVertex);
+                    structured_vertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
                 }
 
                 foreach (var entrance in region.Entrances)
                 {
                     // TODO: the old code had conditional access to entranceid and outletid; are there entrances without them?
-                    string nameIn = $"{entrance.Name} - In:{world.Id}";
-                    string nameOut = $"{entrance.Name} - Out:{world.Id}";
+                    string nameIn = $"{entrance.Name} - In";
+                    string nameOut = $"{entrance.Name} - Out";
                     var entranceInVertex = new Vertex
                     {
                         Type = VertexType.Entrance,
                         Name = nameIn,
+                        World = world,
                         Map = map.MapMap,
                         EntranceId = entrance.EntranceId,
                     };
@@ -176,6 +178,7 @@ internal class VertexCollector
                     {
                         Type = VertexType.Outlet,
                         Name = nameOut,
+                        World = world,
                         Map = map.MapMap,
                         OutletId = entrance.OutletId,
                     };
@@ -189,18 +192,18 @@ internal class VertexCollector
 
                 foreach (var item in region.Items)
                 {
-                    string itemName = $"{item.Name}:{world.Id}";
                     var itemVertex = new Vertex
                     {
                         Type = VertexType.Item,
                         SubType = item.Type,
-                        Name = itemName,
+                        Name = item.Name,
+                        World = world,
                         Map = map.MapMap,
                         Item = world.GetItemOrNull(item.Item),
                         ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Addresses = item.Addresses.ToArray(),
                     };
-                    structured_vertices.Add(itemName, itemVertex);
+                    structured_vertices.Add(item.Name, itemVertex);
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
                     {
                         regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, ConditionFrom(world, condition)));
@@ -209,15 +212,15 @@ internal class VertexCollector
 
                 foreach (var hole in region.Holes)
                 {
-                    string holeName = $"{hole.Name}:{world.Id}";
                     var holeVertex = new Vertex
                     {
                         Type = VertexType.Hole,
-                        Name = holeName,
+                        Name = hole.Name,
+                        World = world,
                         Map = map.MapMap,
                         EntranceIds = hole.EntranceIds.ToArray(),
                     };
-                    structured_vertices.Add(holeName, holeVertex);
+                    structured_vertices.Add(hole.Name, holeVertex);
                     foreach (var condition in hole.Conditions.DefaultIfEmpty("fixed"))
                     {
                         regionVertex.Edges.Add(new Edge(regionVertex, holeVertex, ConditionFrom(world, condition)));
@@ -226,16 +229,16 @@ internal class VertexCollector
 
                 foreach (var warp in region.Warps)
                 {
-                    string warpName = $"{warp.Name}:{world.Id}";
                     var warpVertex = new Vertex
                     {
                         Type = VertexType.Warp,
-                        Name = warpName,
+                        Name = warp.Name,
+                        World = world,
                         Map = map.MapMap,
                         Position = warp.Position,
-                        MoonPearl = MoonPearlTransform(map.Moonpearl, warpName),
+                        MoonPearl = MoonPearlTransform(map.Moonpearl, warp.Name),
                     };
-                    structured_vertices.Add(warpName, warpVertex);
+                    structured_vertices.Add(warp.Name, warpVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, warpVertex, fixedCondition));
                     warpVertex.Edges.Add(new Edge(warpVertex, regionVertex, fixedCondition));
 
@@ -264,11 +267,11 @@ internal class VertexCollector
             foreach (var region in room.Nodes.Regions)
             {
                 Vertex regionVertex;
-                string name = $"{region.Name}:{world.Id}";
                 regionVertex = new Vertex
                 {
                     Type = region.Type ?? VertexType.Region,
-                    Name = name,
+                    Name = region.Name,
+                    World = world,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
                     Dark = room.Dark,
@@ -278,15 +281,16 @@ internal class VertexCollector
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
                 };
-                structured_vertices.Add(name, regionVertex);
+                structured_vertices.Add(region.Name, regionVertex);
 
                 if (region.InletId.HasValue)
                 {
-                    string nameExit = $"{region.Name} - Exit:{world.Id}";
+                    string nameExit = $"{region.Name} - Exit";
                     var exitVertex = new Vertex
                     {
                         Type = VertexType.Entrance,
                         Name = nameExit,
+                        World = world,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         InletId = region.InletId,
@@ -297,11 +301,11 @@ internal class VertexCollector
 
                 foreach (var mob in region.Mobs)
                 {
-                    string mobName = $"{mob.Name}:{world.Id}";
                     var mobVertex = new Vertex
                     {
                         Type = VertexType.Mob,
-                        Name = mobName,
+                        Name = mob.Name,
+                        World = world,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Sprite = Sprite.Get(mob.Sprite),
@@ -313,7 +317,7 @@ internal class VertexCollector
                         // Deny = mob.Deny,
                         // Allow = mob.Allow,
                     };
-                    structured_vertices.Add(mobName, mobVertex);
+                    structured_vertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
                 }
 
@@ -322,19 +326,19 @@ internal class VertexCollector
 
                 foreach (var item in region.Items)
                 {
-                    string itemName = $"{item.Name}:{world.Id}";
                     var itemVertex = new Vertex
                     {
                         Type = VertexType.Item,
                         SubType = item.Type,
-                        Name = itemName,
+                        Name = item.Name,
+                        World = world,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(item.Item),
                         ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Addresses = item.Addresses.ToArray(),
                     };
-                    structured_vertices.Add(itemName, itemVertex);
+                    structured_vertices.Add(item.Name, itemVertex);
 
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
                     {
@@ -344,28 +348,28 @@ internal class VertexCollector
 
                 foreach (var item in region.Inventory)
                 {
-                    string inventoryName = $"{item.Name}:{world.Id}";
                     var inventoryVertex = new Vertex
                     {
                         Type = item.Type,
-                        Name = inventoryName,
+                        Name = item.Name,
+                        World = world,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(item.Item),
                         Cost = item.Cost,
                         ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                     };
-                    structured_vertices.Add(inventoryName, inventoryVertex);
+                    structured_vertices.Add(item.Name, inventoryVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, inventoryVertex, new ItemCondition(world.GetItem("BuyItem"), 1)));
                 }
 
                 foreach (var pot in region.Pots)
                 {
-                    string potName = $"{pot.Name}:{world.Id}";
                     var potVertex = new Vertex
                     {
                         Type = VertexType.Pot,
-                        Name = potName,
+                        Name = pot.Name,
+                        World = world,
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(pot.Item),
@@ -376,7 +380,7 @@ internal class VertexCollector
                         // Deny = pot.Deny,
                         // Allow = pot.Allow,
                     };
-                    structured_vertices.Add(potName, potVertex);
+                    structured_vertices.Add(pot.Name, potVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
                 }
 
@@ -391,12 +395,12 @@ internal class VertexCollector
 
             foreach (var item in room.Nodes.Items)
             {
-                string name = $"{item.Name}:{world.Id}";
-                structured_vertices.Add(name, new Vertex
+                structured_vertices.Add(item.Name, new Vertex
                 {
                     Type = VertexType.Item,
                     SubType = item.Type,
-                    Name = name,
+                    Name = item.Name,
+                    World = world,
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
                     Item = world.GetItemOrNull(item.Item),
@@ -416,7 +420,7 @@ internal class VertexCollector
         // Link all the pending edges
         foreach (var pendingEdge in pendingConnections)
         {
-            pendingEdge.Item1.Edges.Add(new Edge(pendingEdge.Item1, structured_vertices[$"{pendingEdge.Item2}:{world.Id}"], pendingEdge.Item3));
+            pendingEdge.Item1.Edges.Add(new Edge(pendingEdge.Item1, structured_vertices[pendingEdge.Item2], pendingEdge.Item3));
         }
 
         return structured_vertices.Values;

@@ -310,8 +310,8 @@ public class Searcher
             if (inventoryWithBombInTow.Has(itemToRemove))
                 inventoryWithBombInTow.RemoveItem(itemToRemove);
         }
-        var (newlyVisited, newSearchStarts) = InternalSearch(inventoryWithBombInTow, new(world.Graph), new[] { world.Graph.GetVertex($"Bomb Shoppe Lobby:{world.Id}") });
-        return newlyVisited.Contains(world.Graph.GetVertex($"Pyramid:{world.Id}"));
+        var (newlyVisited, newSearchStarts) = InternalSearch(inventoryWithBombInTow, new(world.Graph), new[] { world.GetLocation("Bomb Shoppe Lobby") });
+        return newlyVisited.Contains(world.GetLocation("Pyramid"));
     }
 
     /// <summary>

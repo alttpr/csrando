@@ -11,6 +11,14 @@ public sealed class World
     public WorldConfig Config { get; }
     private readonly Dictionary<string, Item> _allItems = new();
 
+    public World(Graph graph)
+    {
+        Id = -1;
+        Graph = graph;
+        StartingItems = new();
+        Config = new();
+    }
+
     /**
      * Add all the vertices to the graph for this region.
      *
@@ -49,8 +57,8 @@ public sealed class World
         {
             foreach (var edge_data in data.Directed)
             {
-                var from = Graph.GetVertex(edge_data[0]);
-                var to = Graph.GetVertex(edge_data[1]);
+                var from = GetLocation(edge_data[0]);
+                var to = GetLocation(edge_data[1]);
                 if (from is null || to is null)
                 {
                     throw new Exception(
@@ -62,8 +70,8 @@ public sealed class World
             }
             foreach (var edge_data in data.Undirected)
             {
-                var from = Graph.GetVertex(edge_data[0]);
-                var to = Graph.GetVertex(edge_data[1]);
+                var from = GetLocation(edge_data[0]);
+                var to = GetLocation(edge_data[1]);
                 if (from is null || to is null)
                 {
                     throw new Exception(
@@ -80,7 +88,7 @@ public sealed class World
     public Inventory ComputeStartingItems()
     {
         var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(GetItem)]);
-        var searcher = new Searcher(Graph, GetLocation($"DefaultItems:{Id}"), inventory);
+        var searcher = new Searcher(Graph, GetLocation("DefaultItems"), inventory);
         return inventory;
     }
 
@@ -90,11 +98,12 @@ public sealed class World
     /// <param name="locationName">name to search for</param>
     public Vertex GetLocation(string locationName)
     {
-        if (!locationName.Contains(':'))
-        {
-            locationName = locationName + ":" + Id;
-        }
-        return Graph.GetVertex(locationName);
+        return Graph.GetVertex($"{locationName}:{Id}");
+    }
+
+    public bool HasLocation(string locationName)
+    {
+        return Graph.HasVertex($"{locationName}:{Id}");
     }
 
     /// <summary>

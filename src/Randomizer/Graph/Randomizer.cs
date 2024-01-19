@@ -37,6 +37,7 @@ public sealed class Randomizer
         _start = Graph.AddVertex(new Vertex
         {
             Name = "start",
+            World = new World(Graph),
             Type = VertexType.Meta,
         });
 

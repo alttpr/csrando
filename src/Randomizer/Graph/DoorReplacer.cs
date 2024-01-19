@@ -14,7 +14,7 @@ internal sealed class DoorReplacer : IWorldModifier
 
         foreach (var edge in world.Graph.GetVertices()
             .SelectMany(v => v.Edges)
-            .Where(e => e.From.Name.EndsWith($":{world.Id}") && e.Condition.Item.Type == ItemType.SmallKey))
+            .Where(e => e.From.World == world && e.Condition.Item.Type == ItemType.SmallKey))
         {
             var first = edge.From;
             var second = edge.To;
@@ -47,7 +47,7 @@ internal sealed class DoorReplacer : IWorldModifier
         var fixedKeys = world.Graph.FixedKeys;
 
         var worldKeys = world.Graph.GetVertices()
-                    .Where(v => v.Name.EndsWith($":{world.Id}") && v.Item?.Type == ItemType.SmallKey)
+                    .Where(v => v.World == world && v.Item?.Type == ItemType.SmallKey)
                     .GroupBy(v => v.Item!)
                     .ToDictionary(k => k.Key, v => v.ToHashSet());
 
