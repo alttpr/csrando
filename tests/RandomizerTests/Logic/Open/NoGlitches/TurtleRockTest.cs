@@ -68,6 +68,7 @@ public class TurtleRockTest : OpenNoGlitchesLogicTests
         ["Turtle Rock - Big Chest", true, new string[] { "TurtleRockEntry", "Lamp", "Hookshot", "MoonPearl", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" }],
 
         ["Turtle Rock - Big Key Chest", false, new string[] { "TurtleRockEntry" }],
+        ["Turtle Rock - Big Key Chest", false, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" }],
         ["Turtle Rock - Big Key Chest", true, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],
         ["Turtle Rock - Big Key Chest", true, new string[] { "TurtleRockEntry", "Lamp", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],
         ["Turtle Rock - Big Key Chest", true, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],

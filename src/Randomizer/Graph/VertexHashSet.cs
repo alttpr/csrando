@@ -127,6 +127,17 @@ public class VertexHashSet : ICollection<Vertex>
         var otherBitCopy = new BitArray(other._bitArray);
         otherBitCopy.Not();
         _bitArray.And(otherBitCopy);
+        _count = -1;
+    }
+
+    public void SymmetricExceptWith(VertexHashSet other)
+    {
+        if (other._bitArray == null) return;
+
+        if (_bitArray == null) AllocateBitArray();
+
+        _bitArray.Xor(other._bitArray);
+        _count = -1;
     }
 
     public VertexHashSet Clone()

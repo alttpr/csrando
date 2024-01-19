@@ -148,6 +148,8 @@ public class Searcher
         return _visited;
     }
 
+    public bool HasVisited(Vertex vertex) => _visited.Contains(vertex);
+
     /// <summary>
     /// Basic graph searcher. Returns a set of vertices that are absolutely reachable from the given starting points.
     /// Will go through open doors.
@@ -184,8 +186,6 @@ public class Searcher
             {
                 if (!edge.Condition.IsUnconditional)
                 {
-                    if (edge.Condition.Item.Type == ItemType.SmallKey)
-                        continue;
                     if (!collected.Has(edge.Condition))
                         continue;
                 }
@@ -269,11 +269,15 @@ public class Searcher
 
             // Check what's behind the door
             Vertex[] startAt = [.. newVerticesFromDoor, .. additionalStarts];
-            var (weakLocations, weakSearchStarts) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
+            VertexHashSet weakLocations = new VertexHashSet(visitedBeforeRecursion.Graph);
+            VertexHashSet weakSearchStarts = new VertexHashSet(visitedBeforeRecursion.Graph);
+            do
+            {
+                var (weakLocations2, weakSearchStarts2) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
 
-            visitedBeforeRecursion.UnionWith(weakLocations);
-            // TODO: can we stop recursing here if we didn't find anything?
-            CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion);
+                visitedBeforeRecursion.UnionWith(weakLocations2);
+                weakLocations.UnionWith(weakLocations2);
+            } while (CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion));
             var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
             // reset
             visitedBeforeRecursion.IntersectWith(visitedBeforeDoors);
@@ -319,12 +323,12 @@ public class Searcher
     ///
     /// <param name="itemSet">constrain results to item set</param>
     /// <param name="itemSets">counts of items required in each sett</param>
-    /// <param name="reachable">reachable only return reachable locations</param>
-    public IEnumerable<Vertex> GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool reachable = true)
+    /// <param name="onlyReachable">only return reachable locations</param>
+    public IEnumerable<Vertex> GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool onlyReachable = true)
     {
         var emptyLocations = _graph.GetSetLocations(itemSet).Where((vertex) =>
         {
-            return (!reachable || _visited.Contains(vertex)) && vertex.Item == null;
+            return (!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null;
         }).OrderBy(v => v.Name).ToList();
 
         itemSets ??= new();

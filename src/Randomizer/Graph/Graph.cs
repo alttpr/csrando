@@ -34,6 +34,7 @@ public sealed class Graph
     private readonly Dictionary<ItemSetName, List<Vertex>> _setLocations = new() { { ItemSetName.DefaultSet, new() } };
     public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
     public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys = new();
+    public Dictionary<Item /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys = new();
     public HashSet<Item> AllItems { get; set; } = new();
 
     public IEnumerable<Vertex> GetVertices()

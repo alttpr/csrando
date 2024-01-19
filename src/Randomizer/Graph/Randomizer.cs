@@ -68,6 +68,7 @@ public sealed class Randomizer
         }
 
         Graph.SetVertexIds();
+
         System.Console.WriteLine($"Graph configuration took {sw.Elapsed}");
     }
 

@@ -47,9 +47,17 @@ internal sealed class RandomAssumedFiller
                     .Select(i => i.Item)
                     .ToList()
                 );
-            bool required = item.World.Config.Accessibility != AccessibilityOption.None
+            bool onlyReachable = item.World.Config.Accessibility != AccessibilityOption.None
                 || !searcher.HasFound(item.World.GetItem("Triforce"));
-            var locations = searcher.GetEmptyLocationsInSet(itemSet, setCounts, required);
+            var locations = searcher.GetEmptyLocationsInSet(itemSet, setCounts, onlyReachable).ToList();
+            if (item.World.Config.Accessibility != AccessibilityOption.Locations && (item.Type == ItemType.SmallKey || item.Type == ItemType.BigKey))
+            {
+                if (_randomizer.Graph.KeyForKeys.TryGetValue(item, out var keyForKeys))
+                {
+                    var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searcher.HasVisited(v2)))).Select(v => v.Chest);
+                    locations.AddRange(chests);
+                }
+            }
 
             if (!locations.Any())
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
@@ -57,7 +65,7 @@ internal sealed class RandomAssumedFiller
             var location = _prng.GetRandomElement(locations);
             System.Console.WriteLine("[{0}] [{1}] Placing `{2}` in `{3}` ({4}:{5})",
                 itemWeight,
-                required ? "R" : " ",
+                onlyReachable ? "R" : " ",
                 item,
                 location,
                 itemSet,

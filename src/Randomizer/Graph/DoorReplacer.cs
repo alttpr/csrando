@@ -40,6 +40,7 @@ internal sealed class DoorReplacer : IWorldModifier
         }
 
         FindFixedKeys(world);
+        FindKeyForKey(world);
     }
 
     static void FindFixedKeys(World world)
@@ -59,6 +60,127 @@ internal sealed class DoorReplacer : IWorldModifier
         foreach (var e in worldKeys)
         {
             fixedKeys.Add(e.Key, e.Value);
+        }
+    }
+
+    static void FindKeyForKey(World world)
+    {
+        VertexHashSet allVisited = new(world.Graph);
+        {
+            Queue<Vertex> vertexQueue = new();
+            vertexQueue.Enqueue(world.GetLocation("start"));
+
+            while (vertexQueue.Any())
+            {
+                Vertex v = vertexQueue.Dequeue();
+                allVisited.Add(v);
+
+                foreach (var edge in v.Edges)
+                {
+                    if (!allVisited.Contains(edge.To))
+                    {
+                        allVisited.Add(edge.To);
+                        vertexQueue.Enqueue(edge.To);
+                    }
+                }
+            }
+        }
+
+        foreach (var keyset in world.Graph.Doors)
+        {
+            foreach (var door in keyset.Value)
+            {
+                if (door.Key.World != world)
+                    continue;
+
+                Queue<Vertex> vertexQueue = new();
+
+                VertexHashSet visitedWithoutDoor = new(world.Graph);
+                vertexQueue.Enqueue(world.GetLocation("start"));
+
+                while (vertexQueue.Any())
+                {
+                    Vertex v = vertexQueue.Dequeue();
+                    visitedWithoutDoor.Add(v);
+
+                    foreach (var edge in v.Edges)
+                    {
+                        // Visit everything except for what's behind the door
+                        if (edge.Condition.Item == door.Key)
+                            continue;
+
+                        if (!visitedWithoutDoor.Contains(edge.To))
+                        {
+                            visitedWithoutDoor.Add(edge.To);
+                            vertexQueue.Enqueue(edge.To);
+                        }
+                    }
+                }
+
+                visitedWithoutDoor.SymmetricExceptWith(allVisited);
+                var behindDoor = visitedWithoutDoor.ToList();
+                // Find all the locations behind a door that have a single empty chest and no other item drop
+                // Those are "KeyForKey" chest targets and in "Accessibility.Items" mode are eligible to receive
+                // a key.
+                // TODO: Check behavior when we add pot and enemies as item targets
+                if (behindDoor.Count(v => v.Type == VertexType.Item && v.SubType == VertexType.Chest && v.Item == null) == 1 && !behindDoor.Any(v => v.Item != null))
+                {
+                    List<(Vertex Chest, List<Vertex> Regions)> keyForKeys;
+                    if (!world.Graph.KeyForKeys.TryGetValue(keyset.Key, out keyForKeys!))
+                    {
+                        keyForKeys = new();
+                        world.Graph.KeyForKeys.Add(keyset.Key, keyForKeys);
+                    }
+                    var chest = behindDoor.Where(v => v.Type == VertexType.Item && v.SubType == VertexType.Chest && v.Item == null).First();
+                    keyForKeys.Add((chest, door.Value.SelectMany(v => new Vertex[] { v.A, v.B }).ToList()));
+                }
+            }
+        }
+
+        foreach (var bigkey in world.GetAllItems().Where(i => i.Type == ItemType.BigKey))
+        {
+            Queue<Vertex> vertexQueue = new();
+
+            VertexHashSet visitedWithoutDoor = new(world.Graph);
+            vertexQueue.Enqueue(world.GetLocation("start"));
+
+            while (vertexQueue.Any())
+            {
+                Vertex v = vertexQueue.Dequeue();
+                visitedWithoutDoor.Add(v);
+
+                foreach (var edge in v.Edges)
+                {
+                    // Visit everything except for what's behind the bigkey
+                    if (edge.Condition.Item == bigkey)
+                        continue;
+
+                    if (!visitedWithoutDoor.Contains(edge.To))
+                    {
+                        visitedWithoutDoor.Add(edge.To);
+                        vertexQueue.Enqueue(edge.To);
+                    }
+                }
+            }
+
+            visitedWithoutDoor.SymmetricExceptWith(allVisited);
+            var behindDoor = visitedWithoutDoor.ToList();
+
+            // Find all the locations behind a door that have a single empty chest and no other item drop
+            // Those are "KeyForKey" chest targets and in "Accessibility.Items" mode are eligible to receive
+            // a key.
+            // TODO: Check behavior when we add pot and enemies as item targets
+            if (behindDoor.Count(v => v.Type == VertexType.Item && v.SubType == VertexType.BigChest && v.Item == null) == 1 && behindDoor.Count(v => v.Item != null || v.Type == VertexType.Item) == 1)
+            {
+                List<(Vertex Chest, List<Vertex> Regions)> keyForKeys;
+                if (!world.Graph.KeyForKeys.TryGetValue(bigkey, out keyForKeys!))
+                {
+                    keyForKeys = new();
+                    world.Graph.KeyForKeys.Add(bigkey, keyForKeys);
+                }
+                var chest = behindDoor.Where(v => v.Type == VertexType.Item && v.SubType == VertexType.BigChest && v.Item == null).First();
+                keyForKeys.Add((chest, []));
+            }
         }
     }
 
