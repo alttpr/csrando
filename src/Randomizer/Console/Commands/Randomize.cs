@@ -4,6 +4,7 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
 using System.Diagnostics;
 
 /**
@@ -23,7 +24,8 @@ internal sealed class Randomize : Command
     private readonly Option<string> _crystals_ganon = new Option<string>("crystals_ganon", () => "7", "set ganon crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<string> _crystals_tower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
-    private readonly Option<int> _bulk = new("bulk", "generate multiple ROMs");
+    private readonly Option<int> _bulk = new("bulk", () => 1, "generate multiple ROMs");
+    private readonly Option<int> _multiworld = new("multiworld", () => 1, "multiworld player count");
     private readonly Option<int?> _seed = new("seed", "set starting seed");
     private readonly Option<FileInfo> _vanillaRom = new Option<FileInfo>("rom", "set vanilla rom (Japanese 1.0)").ExistingOnly();
     // TODO: we should probably have the base rom patch "built in" and not require a path.
@@ -45,12 +47,32 @@ internal sealed class Randomize : Command
         Add(_crystals_tower);
         Add(_tech);
         Add(_bulk);
+        Add(_multiworld);
         Add(_seed);
         Add(_vanillaRom);
         Add(_baseBPS);
         Add(_outputDirectory);
 
+        AddValidator(Validate);
+
         this.SetHandler(context => context.ExitCode = Handle(context));
+    }
+
+    private void Validate(CommandResult result)
+    {
+        List<string> errors = new();
+
+        if (result.GetValueForOption(_multiworld) <= 0)
+        {
+            errors.Add("Multiworld player count needs to be at least 1");
+        }
+
+        if (result.GetValueForOption(_bulk) <= 0)
+        {
+            errors.Add("Bulk count needs to be at least 1");
+        }
+
+        result.ErrorMessage = String.Join('\n', errors);
     }
 
     /**
@@ -75,8 +97,7 @@ internal sealed class Randomize : Command
             int crystals_tower = crystals_towerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystals_towerS);
 
             var randomizer = new Randomizer(
-            [
-                new WorldConfig
+                Enumerable.Repeat(new WorldConfig
                 {
                     Accessibility = context.ParseResult.GetValueForOption(_accessibility),
                     Goal = context.ParseResult.GetValueForOption(_goal),
@@ -89,8 +110,9 @@ internal sealed class Randomize : Command
                     CrystalsTower = crystals_tower,
                     Weapon = context.ParseResult.GetValueForOption(_weapons),
                     Techs = context.ParseResult.GetValueForOption(_tech) ?? new(),
-                },
-            ], context.ParseResult.GetValueForOption(_seed));
+                }, context.ParseResult.GetValueForOption(_multiworld)).ToArray(),
+                context.ParseResult.GetValueForOption(_seed)
+            );
             randomizer.Randomize();
             if (!randomizer.IsWinnable())
             {
