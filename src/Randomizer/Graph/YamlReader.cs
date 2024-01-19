@@ -1,50 +1,29 @@
 ﻿namespace Randomizer.Graph;
 
+using System.Collections.Concurrent;
 using YamlDotNet.Serialization;
 
 public class YamlReader
 {
+    private static Lazy<string> _dataRoot = new(() =>
+    {
+        DirectoryInfo? currentDirectory = new(Directory.GetCurrentDirectory());
+
+        do
+        {
+            string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Graph/data");
+            if (Directory.Exists(dataRoot))
+                return dataRoot;
+
+            currentDirectory = currentDirectory.Parent;
+        } while (currentDirectory != null);
+
+        throw new Exception("Could not find the data directory automatically. Set YamlReader.DataRoot before loading data.");
+    });
     public static string DataRoot
     {
-        get
-        {
-            if (_dataRoot == null)
-            {
-                lock (_dataLock)
-                {
-                    if (_dataRoot == null)
-                    {
-                        string? newRoot = null;
-
-                        DirectoryInfo? currentDirectory = new(Directory.GetCurrentDirectory());
-
-                        do
-                        {
-                            string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Graph/data");
-                            if (Directory.Exists(dataRoot))
-                            {
-                                newRoot = dataRoot;
-                                break;
-                            }
-                            currentDirectory = currentDirectory.Parent;
-                        } while (currentDirectory != null);
-
-                        if (newRoot == null)
-                            throw new Exception("Could not find the data directory automatically. Set YamlReader.DataRoot before loading data.");
-
-                        _dataRoot = newRoot;
-                    }
-                }
-            }
-            return _dataRoot;
-        }
-        set
-        {
-            lock (_dataLock)
-            {
-                _dataRoot = value;
-            }
-        }
+        get => _dataRoot.Value;
+        set => _dataRoot = new(value);
     }
 
     private const string ItemsPath = "items.yml";
@@ -52,67 +31,61 @@ public class YamlReader
     private const string EnemiesPath = "Enemizer/enemies.yml";
     private const string SpriteLocationsPath = "Bosses/SpriteLocations.yml";
 
-    private static readonly object _dataLock = new object();
-    private static string? _dataRoot;
-    private static Vertices? _cachedVertices = null;
-    private static Dictionary<string, List<string>>? _cachedEnemies = null;
-    private static Entrances? _cachedEntrances = null;
-    private static Dictionary<string, YamlItem>? _cachedItems = null;
-    private static Dictionary<string, Dictionary<string, List<YamlSprite>>>? _cachedSpriteLocations = null;
-
-    private static readonly ReaderWriterLockSlim _cachedEdgesLock = new ReaderWriterLockSlim();
-    private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
-    private static readonly Dictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
-
-    public static Dictionary<string, YamlItem> LoadItems()
+    private static readonly Lazy<Vertices> _cachedVertices = new(() =>
     {
-        if (_cachedItems != null)
-            return _cachedItems;
+        Vertices result = new();
 
-        lock (_dataLock)
+        var files = Directory.GetFiles(Path.Combine(DataRoot, VerticesPath), "*.yml", SearchOption.AllDirectories).Order();
+        foreach (string file in files)
         {
-            if (_cachedItems != null)
-                return _cachedItems;
-
-            string itemsYML = Path.Combine(DataRoot, ItemsPath);
-
-            var deserializer = new DeserializerBuilder().Build();
-            using var reader = File.OpenText(itemsYML);
-            var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
-
-            _cachedItems = result;
-
-            return result;
+            var currentFileEdges = LoadVerticesFromFile(file);
+            MergeVertices(result, currentFileEdges);
         }
-    }
 
-    public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromTech(string name)
+        return result;
+    });
+    private static readonly Lazy<Dictionary<string, List<string>>> _cachedEnemies = new(() =>
     {
-        _cachedEdgesLock.EnterReadLock();
-        try
-        {
-            if (_cachedTechEdges.TryGetValue(name, out var cachedResult))
-                return cachedResult;
-        }
-        finally { _cachedEdgesLock.ExitReadLock(); }
+        string enemiesYML = Path.Combine(DataRoot, EnemiesPath);
+        using var reader = File.OpenText(enemiesYML);
+        var deserializer = new DeserializerBuilder().Build();
+        var result = deserializer.Deserialize<Dictionary<string, List<string>>>(reader);
+        return result;
+    });
+    private static readonly ConcurrentDictionary<string, Entrances> _cachedEntrances = new();
+    private static readonly Lazy<Dictionary<string, YamlItem>> _cachedItems = new(() =>
+    {
+        string itemsYML = Path.Combine(DataRoot, ItemsPath);
 
-        _cachedEdgesLock.EnterWriteLock();
-        try
-        {
-            if (_cachedTechEdges.TryGetValue(name, out var cachedResult))
-                return cachedResult;
+        var deserializer = new DeserializerBuilder().Build();
+        using var reader = File.OpenText(itemsYML);
+        var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
 
-            string edgesYML = Path.Combine(DataRoot, "Edges/tech", name + ".yml"); ;
+        return result;
+    });
+    private static readonly Lazy<Dictionary<string, Dictionary<string, List<YamlSprite>>>> _cachedSpriteLocations = new(() =>
+    {
+        string spritesYML = Path.Combine(DataRoot, SpriteLocationsPath);
+        using var reader = File.OpenText(spritesYML);
+        var deserializer = new DeserializerBuilder().Build();
+        var result = deserializer.Deserialize<Dictionary<string, Dictionary<string, List<YamlSprite>>>>(reader);
+        return result;
+    });
 
-            var deserializer = new DeserializerBuilder().Build();
-            using var reader = File.OpenText(edgesYML);
-            var result = deserializer.Deserialize<Dictionary<string, DirectedUndirectedPair>>(reader);
-            _cachedTechEdges.Add(name, result);
+    private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
+    private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
-            return result;
-        }
-        finally { _cachedEdgesLock.ExitWriteLock(); }
-    }
+    public static Dictionary<string, YamlItem> LoadItems() => _cachedItems.Value;
+
+    public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromTech(string name) => _cachedTechEdges.GetOrAdd(name, name =>
+    {
+        string edgesYML = Path.Combine(DataRoot, "Edges/tech", name + ".yml"); ;
+
+        var deserializer = new DeserializerBuilder().Build();
+        using var reader = File.OpenText(edgesYML);
+        var result = deserializer.Deserialize<Dictionary<string, DirectedUndirectedPair>>(reader);
+        return result;
+    });
 
     private static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromFile(string path)
     {
@@ -121,36 +94,19 @@ public class YamlReader
         return deserializer.Deserialize<Dictionary<string, DirectedUndirectedPair>>(reader);
     }
 
-    public static Dictionary<string, DirectedUndirectedPair> LoadEdges(string name)
+    public static Dictionary<string, DirectedUndirectedPair> LoadEdges(string name) => _cachedEdges.GetOrAdd(name, name =>
     {
-        _cachedEdgesLock.EnterReadLock();
-        try
+        var result = new Dictionary<string, DirectedUndirectedPair>();
+
+        var files = Directory.GetFiles(Path.Combine(DataRoot, "Edges", name), "*.yml", SearchOption.AllDirectories).Order();
+        foreach (string file in files)
         {
-            if (_cachedEdges.TryGetValue(name, out var cachedResult))
-                return cachedResult;
+            var currentFileEdges = LoadEdgesFromFile(file);
+            MergeEdges(result, currentFileEdges);
         }
-        finally { _cachedEdgesLock.ExitReadLock(); }
 
-        _cachedEdgesLock.EnterWriteLock();
-        try
-        {
-            if (_cachedEdges.TryGetValue(name, out var cachedResult))
-                return cachedResult;
-
-            var result = new Dictionary<string, DirectedUndirectedPair>();
-
-            var files = Directory.GetFiles(Path.Combine(DataRoot, "Edges", name), "*.yml", SearchOption.AllDirectories).Order();
-            foreach (string file in files)
-            {
-                var currentFileEdges = LoadEdgesFromFile(file);
-                MergeEdges(result, currentFileEdges);
-            }
-
-            _cachedEdges.Add(name, result);
-            return result;
-        }
-        finally { _cachedEdgesLock.ExitWriteLock(); }
-    }
+        return result;
+    });
 
     public static void MergeEdges(Dictionary<string, DirectedUndirectedPair> dest, Dictionary<string, DirectedUndirectedPair> source)
     {
@@ -174,24 +130,14 @@ public class YamlReader
         }
     }
 
-    public static Entrances LoadEntrances(string name)
+    public static Entrances LoadEntrances(string name) => _cachedEntrances.GetOrAdd(name, name =>
     {
-        if (_cachedEntrances != null)
-            return _cachedEntrances;
-
-        lock (_dataLock)
-        {
-            if (_cachedEntrances != null)
-                return _cachedEntrances;
-
-            string entrancesYML = Path.Combine(DataRoot, "Edges/entrances", name + ".yml");
-            var deserializer = new DeserializerBuilder().Build();
-            using var reader = File.OpenText(entrancesYML);
-            var result = deserializer.Deserialize<Entrances>(reader);
-            _cachedEntrances = result;
-            return result;
-        }
-    }
+        string entrancesYML = Path.Combine(DataRoot, "Edges/entrances", name + ".yml");
+        var deserializer = new DeserializerBuilder().Build();
+        using var reader = File.OpenText(entrancesYML);
+        var result = deserializer.Deserialize<Entrances>(reader);
+        return result;
+    });
 
     private static Vertices LoadVerticesFromFile(string path)
     {
@@ -201,74 +147,16 @@ public class YamlReader
         return deserializer.Deserialize<Vertices>(reader);
     }
 
-    public static Vertices LoadVertices()
-    {
-        if (_cachedVertices != null)
-            return _cachedVertices;
-
-        lock (_dataLock)
-        {
-            if (_cachedVertices != null)
-                return _cachedVertices;
-
-            Vertices result = new();
-
-            var files = Directory.GetFiles(Path.Combine(DataRoot, VerticesPath), "*.yml", SearchOption.AllDirectories).Order();
-            foreach (string file in files)
-            {
-                var currentFileEdges = LoadVerticesFromFile(file);
-                MergeVertices(result, currentFileEdges);
-            }
-
-            _cachedVertices = result;
-        }
-
-        return _cachedVertices;
-    }
-
+    public static Vertices LoadVertices() => _cachedVertices.Value;
     public static void MergeVertices(Vertices dest, Vertices source)
     {
         dest.Maps.AddRange(source.Maps);
         dest.Rooms.AddRange(source.Rooms);
     }
 
-    public static Dictionary<string, List<string>> LoadEnemies()
-    {
-        if (_cachedEnemies != null)
-            return _cachedEnemies;
+    public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
-        lock (_dataLock)
-        {
-            if (_cachedEnemies != null)
-                return _cachedEnemies;
-
-            string enemiesYML = Path.Combine(DataRoot, EnemiesPath);
-            using var reader = File.OpenText(enemiesYML);
-            var deserializer = new DeserializerBuilder().Build();
-            var result = deserializer.Deserialize<Dictionary<string, List<string>>>(reader);
-            _cachedEnemies = result;
-            return result;
-        }
-    }
-
-    public static Dictionary<string, Dictionary<string, List<YamlSprite>>> LoadSpriteLocations()
-    {
-        if (_cachedSpriteLocations != null)
-            return _cachedSpriteLocations;
-
-        lock (_dataLock)
-        {
-            if (_cachedSpriteLocations != null)
-                return _cachedSpriteLocations;
-
-            string spritesYML = Path.Combine(DataRoot, SpriteLocationsPath);
-            using var reader = File.OpenText(spritesYML);
-            var deserializer = new DeserializerBuilder().Build();
-            var result = deserializer.Deserialize<Dictionary<string, Dictionary<string, List<YamlSprite>>>>(reader);
-            _cachedSpriteLocations = result;
-            return result;
-        }
-    }
+    public static Dictionary<string, Dictionary<string, List<YamlSprite>>> LoadSpriteLocations() => _cachedSpriteLocations.Value;
 }
 public class YamlItem
 {
