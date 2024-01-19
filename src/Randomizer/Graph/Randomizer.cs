@@ -64,7 +64,7 @@ public sealed class Randomizer
             DoorReplacer.AdjustEdges(Worlds[i], PRNG);
             DungeonPegStateCopier.AdjustEdges(Worlds[i], PRNG);
 
-            Graph.AddDirected(_start, Worlds[i].Graph.GetVertex($"start:{i}"), Worlds[i].GetItem("fixed"));
+            Graph.AddDirected(_start, Worlds[i].GetLocation("start"), Worlds[i].GetItem("fixed"));
         }
 
         Graph.SetVertexIds();
@@ -89,11 +89,6 @@ public sealed class Randomizer
     public Searcher GetSearcherForInventory(IEnumerable<Item> items)
     {
         return new(Graph, _start, _startingItems.Merge(new Inventory(items.ToArray())));
-    }
-
-    public Item GetItemForWorld(string name, int worldId)
-    {
-        return Worlds[worldId].GetItem(name);
     }
 
     /// <summary>

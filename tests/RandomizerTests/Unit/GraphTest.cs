@@ -9,19 +9,20 @@ public sealed class GraphTest
     public void TestAllDoors()
     {
         var randomizer = new Randomizer([new WorldConfig()], 1337);
+        var world = randomizer.Worlds[0];
 
-        Assert.AreEqual(4, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyA1", 0)].Count);
-        Assert.AreEqual(8, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyA2", 0)].Count);
-        Assert.AreEqual(4, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyH2", 0)].Count);
-        Assert.AreEqual(2, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyP1", 0)].Count);
-        Assert.AreEqual(4, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyP2", 0)].Count);
-        Assert.AreEqual(1, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyP3", 0)].Count);
-        Assert.AreEqual(6, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD1", 0)].Count);
-        Assert.AreEqual(6, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD2", 0)].Count);
-        Assert.AreEqual(5, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD3", 0)].Count);
-        Assert.AreEqual(3, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD4", 0)].Count);
-        Assert.AreEqual(6, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD5", 0)].Count);
-        Assert.AreEqual(6, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD6", 0)].Count);
-        Assert.AreEqual(6, randomizer.Graph.Doors[randomizer.GetItemForWorld("KeyD7", 0)].Count);
+        Assert.AreEqual(4, randomizer.Graph.Doors[world.GetItem("KeyA1")].Count);
+        Assert.AreEqual(8, randomizer.Graph.Doors[world.GetItem("KeyA2")].Count);
+        Assert.AreEqual(4, randomizer.Graph.Doors[world.GetItem("KeyH2")].Count);
+        Assert.AreEqual(2, randomizer.Graph.Doors[world.GetItem("KeyP1")].Count);
+        Assert.AreEqual(4, randomizer.Graph.Doors[world.GetItem("KeyP2")].Count);
+        Assert.AreEqual(1, randomizer.Graph.Doors[world.GetItem("KeyP3")].Count);
+        Assert.AreEqual(6, randomizer.Graph.Doors[world.GetItem("KeyD1")].Count);
+        Assert.AreEqual(6, randomizer.Graph.Doors[world.GetItem("KeyD2")].Count);
+        Assert.AreEqual(5, randomizer.Graph.Doors[world.GetItem("KeyD3")].Count);
+        Assert.AreEqual(3, randomizer.Graph.Doors[world.GetItem("KeyD4")].Count);
+        Assert.AreEqual(6, randomizer.Graph.Doors[world.GetItem("KeyD5")].Count);
+        Assert.AreEqual(6, randomizer.Graph.Doors[world.GetItem("KeyD6")].Count);
+        Assert.AreEqual(6, randomizer.Graph.Doors[world.GetItem("KeyD7")].Count);
     }
 }

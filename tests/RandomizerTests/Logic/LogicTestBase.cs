@@ -12,16 +12,18 @@ public abstract class LogicTestBase
     protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
         var randomizer = new Randomizer(config);
+        // this is a single-world test; we have exactly one player world.
+        var world = randomizer.Worlds[0];
         try
         {
-            randomizer.Graph.GetVertex($"{location}:0");
+            _ = world.GetLocation(location);
         }
         catch (Exception)
         {
             Assert.Fail($"Location \"{location}\" doesn't exist in the graph");
         }
 
-        var searcher = randomizer.GetSearcherForInventory(inventory.Select(i => randomizer.GetItemForWorld(i, 0)));
+        var searcher = randomizer.GetSearcherForInventory(inventory.Select(world.GetItem));
         Assert.AreEqual(expected, searcher.GetVisited().Any(v => v.Name == location));
     }
 
