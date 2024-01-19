@@ -1,8 +1,6 @@
 namespace Randomizer.Graph;
 
-/**
- * Fill initial shop state.
- */
+/// <summary>Fill initial shop state.</summary>
 internal sealed class ShopFiller : IWorldModifier
 {
     public static void AdjustEdges(World world, PRNG prng)
@@ -16,16 +14,14 @@ internal sealed class ShopFiller : IWorldModifier
             {
                 // Potion shop canot be modified at this time.
                 if (shop.Name == "Potion Shop")
-                {
                     continue;
-                }
 
                 // TODO: Fix
                 // var inventory = graph.GetTargets(shop).Where(target => target.Type == VertexType.ShopItem);
-                // foreach (var shop_item in inventory)
+                // foreach (var shopItem in inventory)
                 // {
-                //     shop_item.Item = null;
-                //     shop_item.Cost = null;
+                //     shopItem.Item = null;
+                //     shopItem.Cost = null;
                 // }
             }
         }

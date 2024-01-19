@@ -16,7 +16,6 @@ public class PRNG
         _random = new MersenneTwister(Seed);
     }
 
-
     public IEnumerable<T> Shuffle<T>(IEnumerable<T> source)
     {
         return source.OrderBy(_ => _random.Next());
@@ -34,17 +33,17 @@ public class PRNG
 
     public T[] Shuffle<T>(T[] array)
     {
-        var new_array = new T[array.Length];
-        Array.Copy(array, new_array, array.Length);
+        var newArray = new T[array.Length];
+        Array.Copy(array, newArray, array.Length);
         int count = array.Length;
 
         for (int i = count - 1; i > 0; --i)
         {
             int r = GetRandomInt(0, i);
-            (new_array[i], new_array[r]) = (new_array[r], new_array[i]);
+            (newArray[i], newArray[r]) = (newArray[r], newArray[i]);
         }
 
-        return new_array;
+        return newArray;
     }
     public T GetRandomElement<T>(T[] array)
     {

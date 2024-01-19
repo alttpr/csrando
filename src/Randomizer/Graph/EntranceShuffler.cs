@@ -1,16 +1,16 @@
 namespace Randomizer.Graph;
 
-/**
- * Modify the edges of the graph to shuffle entrances.
- */
+/// <summary>
+/// Modify the edges of the graph to shuffle entrances.
+/// </summary>
 internal sealed class EntranceShuffler : IWorldModifier
 {
-    /**
-     * Connect Entrances, Exits, Outlets, and rooms based on World settings.
-     */
+    /// <summary>
+    /// Connect Entrances, Exits, Outlets, and rooms based on World settings.
+    /// </summary>
     public static void AdjustEdges(World world, PRNG prng)
     {
-        string definition_name = world.Config.EntranceShuffle switch
+        string definitionName = world.Config.EntranceShuffle switch
         {
             EntranceShuffleOption.Simple => "simple",
             EntranceShuffleOption.Restricted => "vanilla",
@@ -21,7 +21,7 @@ internal sealed class EntranceShuffler : IWorldModifier
             _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.Config.EntranceShuffle)
         };
 
-        var definition = YamlReader.LoadEntrances(definition_name);
+        var definition = YamlReader.LoadEntrances(definitionName);
         var fixedItem = world.GetItem("fixed");
 
         foreach (var connection in definition.Fixed)

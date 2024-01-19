@@ -69,9 +69,9 @@ internal sealed class InitialSram
     public void SetStartingEquipment(Inventory items, World world)
     {
         var config = world.Config;
-        int starting_rupees = 0;
-        byte starting_arrow_capacity = 0;
-        byte starting_bomb_capacity = 0;
+        int startingRupees = 0;
+        byte startingArrowCapacity = 0;
+        byte startingBombCapacity = 0;
         // starting heart containers
         if (items.HeartCount(world) < 1)
         {
@@ -302,23 +302,23 @@ internal sealed class InitialSram
                     _initialSramBytes[0x38D] |= 0b0000_0010;
                     break;
                 case "OneRupee":
-                    starting_rupees += 1 * count;
+                    startingRupees += 1 * count;
                     break;
                 case "FiveRupees":
-                    starting_rupees += 5 * count;
+                    startingRupees += 5 * count;
                     break;
                 case "TwentyRupees":
                 case "TwentyRupees2":
-                    starting_rupees += 20 * count;
+                    startingRupees += 20 * count;
                     break;
                 case "FiftyRupees":
-                    starting_rupees += 50 * count;
+                    startingRupees += 50 * count;
                     break;
                 case "OneHundredRupees":
-                    starting_rupees += 100 * count;
+                    startingRupees += 100 * count;
                     break;
                 case "ThreeHundredRupees":
-                    starting_rupees += 300 * count;
+                    startingRupees += 300 * count;
                     break;
                 case "PendantOfCourage":
                     _initialSramBytes[0x374] |= 0b0000_0100;
@@ -363,16 +363,16 @@ internal sealed class InitialSram
                     _initialSramBytes[0x379] |= 0b00000100;
                     break;
                 case "BombUpgrade5":
-                    starting_bomb_capacity += (byte)(5 * count);
+                    startingBombCapacity += (byte)(5 * count);
                     break;
                 case "BombUpgrade10":
-                    starting_bomb_capacity += (byte)(10 * count);
+                    startingBombCapacity += (byte)(10 * count);
                     break;
                 case "ArrowUpgrade5":
-                    starting_arrow_capacity += (byte)(5 * count);
+                    startingArrowCapacity += (byte)(5 * count);
                     break;
                 case "ArrowUpgrade10":
-                    starting_arrow_capacity += (byte)(10 * count);
+                    startingArrowCapacity += (byte)(10 * count);
                     break;
                 case "HalfMagic":
                     _initialSramBytes[0x37B] = 0x01;
@@ -582,8 +582,8 @@ internal sealed class InitialSram
                     break;
             }
         }
-        _initialSramBytes[0x362] = _initialSramBytes[0x360] = (byte)(starting_rupees & 0xFF);
-        _initialSramBytes[0x363] = _initialSramBytes[0x361] = (byte)(starting_rupees >> 8);
+        _initialSramBytes[0x362] = _initialSramBytes[0x360] = (byte)(startingRupees & 0xFF);
+        _initialSramBytes[0x363] = _initialSramBytes[0x361] = (byte)(startingRupees >> 8);
 
         // Set counters and highest equipment values
         _initialSramBytes[0x476] = (byte)BitOperations.PopCount(_initialSramBytes[0x37A]);
@@ -592,8 +592,8 @@ internal sealed class InitialSram
         _initialSramBytes[0x422] = _initialSramBytes[0x35A];
         _initialSramBytes[0x46E] = _initialSramBytes[0x35B];
 
-        SetValue(0x370, starting_bomb_capacity);
-        SetValue(0x371, starting_arrow_capacity);
+        SetValue(0x370, startingBombCapacity);
+        SetValue(0x371, startingArrowCapacity);
 
         if (config.Weapon == WeaponOption.Swordless)
         {

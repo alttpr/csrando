@@ -1,20 +1,16 @@
 namespace Randomizer.Graph;
 
-/**
- * Modify Prizepacks based on configuration.
- */
+/// <summary>Modify Prizepacks based on configuration.</summary>
 internal sealed class PrizePackShuffler : IWorldModifier
 {
-    /**
-     * Pick items for each prize pack.
-     */
+    /// <summary>Pick items for each prize pack.</summary>
     public static void AdjustEdges(World world, PRNG prng)
     {
         var prizepacks = world.GetLocationsOfType(VertexType.PrizePack);
 
         if (!world.Config.CustomPrizePacks)
         {
-            var random_vanilla_packs = new Stack<string>(prng.Shuffle(new[]
+            var randomVanillaPacks = new Stack<string>(prng.Shuffle(new[]
             {
                 new[] { "Heart", "Heart", "Heart", "Heart", "RupeeGreen", "Heart", "Heart", "RupeeGreen" },
                 new[] { "RupeeBlue", "RupeeGreen", "RupeeBlue", "RupeeRed", "RupeeBlue", "RupeeGreen", "RupeeBlue", "RupeeBlue" },
@@ -28,7 +24,7 @@ internal sealed class PrizePackShuffler : IWorldModifier
             var prizepacksOrdered = prizepacks.OrderBy(v => v.Offset);
             foreach (var pack in prizepacksOrdered)
             {
-                if (!random_vanilla_packs.TryPop(out string? spriteName))
+                if (!randomVanillaPacks.TryPop(out string? spriteName))
                 {
                     pack.Sprite = null;
                 }
@@ -52,11 +48,11 @@ internal sealed class PrizePackShuffler : IWorldModifier
             {
                 drops.AddRange(Enumerable.Repeat(Sprite.Get(sprite_name), Math.Min(_world.Config("drop.count." + sprite_name, count), 63)));
             }*/
-            var drop_pool = new Stack<Sprite>(prng.Shuffle(drops.ToArray()));
+            var dropPool = new Stack<Sprite>(prng.Shuffle(drops.ToArray()));
 
             foreach (var pack in emptypacks)
             {
-                if (drop_pool.TryPop(out var sprite))
+                if (dropPool.TryPop(out var sprite))
                     pack.Sprite = sprite;
             }
         }
@@ -67,17 +63,13 @@ internal sealed class PrizePackShuffler : IWorldModifier
             var fairy = Sprite.Get("Fairy");
             var heart = Sprite.Get("Heart");
             var magic = Sprite.Get("MagicRefillFull");
-            var small_magic = Sprite.Get("MagicRefillSmall");
+            var smallMagic = Sprite.Get("MagicRefillSmall");
             foreach (var prizepack in prizepacks)
             {
                 if (prizepack.Sprite == fairy)
-                {
                     prizepack.Sprite = heart;
-                }
                 if (prizepack.Sprite == magic)
-                {
-                    prizepack.Sprite = small_magic;
-                }
+                    prizepack.Sprite = smallMagic;
             }
         }
 
@@ -90,13 +82,9 @@ internal sealed class PrizePackShuffler : IWorldModifier
             foreach (var prizepack in prizepacks)
             {
                 if (prizepack.Sprite == arrows5)
-                {
                     prizepack.Sprite = rupeeBlue;
-                }
                 if (prizepack.Sprite == arrows10)
-                {
                     prizepack.Sprite = rupeeRed;
-                }
             }
         }
     }

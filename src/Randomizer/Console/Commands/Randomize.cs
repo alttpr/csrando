@@ -7,9 +7,7 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
 
-/**
- * Run randomizer as command.
- */
+/// <summary>Run randomizer as command.</summary>
 internal sealed class Randomize : Command
 {
     private readonly Option<GoalOption> _goal = new("goal", () => GoalOption.Ganon, "set game goal");
@@ -17,12 +15,12 @@ internal sealed class Randomize : Command
     private readonly Option<WeaponOption> _weapons = new("weapons", () => WeaponOption.Randomized, "set weapons mode");
     private readonly Option<GlitchesOption> _glitches = new("glitches", () => GlitchesOption.None, "set glitches");
     private readonly Option<AccessibilityOption> _accessibility = new("accessibility", "set item/location accessibility");
-    private readonly Option<BossShuffleOption> _boss_shuffle = new("bossshuffle", () => BossShuffleOption.None, "set boss shuffle mode");
-    private readonly Option<EntranceShuffleOption> _entrance_shuffle = new("entrance", () => EntranceShuffleOption.None, "set entrance shuffle mode");
-    private readonly Option<ShopSupplyOption> _shop_supply = new("shopsupply", () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
+    private readonly Option<BossShuffleOption> _bossShuffle = new("bossshuffle", () => BossShuffleOption.None, "set boss shuffle mode");
+    private readonly Option<EntranceShuffleOption> _entranceShuffle = new("entrance", () => EntranceShuffleOption.None, "set entrance shuffle mode");
+    private readonly Option<ShopSupplyOption> _shopSupply = new("shopsupply", () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
     private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
-    private readonly Option<string> _crystals_ganon = new Option<string>("crystals_ganon", () => "7", "set ganon crystal requirement").FromAmong(_crystalAmount);
-    private readonly Option<string> _crystals_tower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
+    private readonly Option<string> _crystalsGanon = new Option<string>("crystals_ganon", () => "7", "set ganon crystal requirement").FromAmong(_crystalAmount);
+    private readonly Option<string> _crystalsTower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
     private readonly Option<int> _bulk = new("bulk", () => 1, "generate multiple ROMs");
     private readonly Option<int> _multiworld = new("multiworld", () => 1, "multiworld player count");
@@ -40,11 +38,11 @@ internal sealed class Randomize : Command
         Add(_weapons);
         Add(_glitches);
         Add(_accessibility);
-        Add(_boss_shuffle);
-        Add(_entrance_shuffle);
-        Add(_shop_supply);
-        Add(_crystals_ganon);
-        Add(_crystals_tower);
+        Add(_bossShuffle);
+        Add(_entranceShuffle);
+        Add(_shopSupply);
+        Add(_crystalsGanon);
+        Add(_crystalsTower);
         Add(_tech);
         Add(_bulk);
         Add(_multiworld);
@@ -75,11 +73,7 @@ internal sealed class Randomize : Command
         result.ErrorMessage = String.Join('\n', errors);
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
+    /// <summary>Execute the console command.</summary>
     public int Handle(InvocationContext context)
     {
         int bulk = Math.Max(context.ParseResult.GetValueForOption(_bulk), 1);
@@ -90,11 +84,11 @@ internal sealed class Randomize : Command
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
-            string crystals_ganonS = context.ParseResult.GetValueForOption(_crystals_ganon)!;
-            int crystals_ganon = crystals_ganonS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystals_ganonS);
+            string crystalsGanonS = context.ParseResult.GetValueForOption(_crystalsGanon)!;
+            int crystalsGanon = crystalsGanonS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsGanonS);
 
-            string crystals_towerS = context.ParseResult.GetValueForOption(_crystals_tower)!;
-            int crystals_tower = crystals_towerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystals_towerS);
+            string crystalsTowerS = context.ParseResult.GetValueForOption(_crystalsTower)!;
+            int crystalsTower = crystalsTowerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsTowerS);
 
             var randomizer = new Randomizer(
                 Enumerable.Repeat(new WorldConfig
@@ -103,11 +97,11 @@ internal sealed class Randomize : Command
                     Goal = context.ParseResult.GetValueForOption(_goal),
                     State = context.ParseResult.GetValueForOption(_state),
                     Glitches = context.ParseResult.GetValueForOption(_glitches),
-                    EntranceShuffle = context.ParseResult.GetValueForOption(_entrance_shuffle),
-                    BossShuffle = context.ParseResult.GetValueForOption(_boss_shuffle),
-                    RegionShopSupply = context.ParseResult.GetValueForOption(_shop_supply),
-                    CrystalsGanon = crystals_ganon,
-                    CrystalsTower = crystals_tower,
+                    EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
+                    BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
+                    RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
+                    CrystalsGanon = crystalsGanon,
+                    CrystalsTower = crystalsTower,
                     Weapon = context.ParseResult.GetValueForOption(_weapons),
                     Techs = context.ParseResult.GetValueForOption(_tech) ?? new(),
                 }, context.ParseResult.GetValueForOption(_multiworld)).ToArray(),
@@ -132,11 +126,11 @@ internal sealed class Randomize : Command
         return 0;
     }
 
-    static private void Info(string format, params object[] args)
+    private static void Info(string format, params object[] args)
     {
         System.Console.WriteLine(format, args);
     }
-    static private void Error(string format, params object[] args)
+    private static void Error(string format, params object[] args)
     {
         var previousColor = System.Console.ForegroundColor;
         System.Console.ForegroundColor = ConsoleColor.Red;

@@ -1,66 +1,65 @@
 namespace Randomizer.Graph;
 
-/**
- * Pull data files to create all edges for a given world configuration.
- */
+/// <summary>
+/// Pull data files to create all edges for a given world configuration.
+/// </summary>
 internal class EdgeCollector
 {
-    /**
-     * Given a particular world (configuration), read all the edge data files
-     * and create edges based on the world to connect the vertices.
-     *
-     * @param World world world to attach preset items to
-     */
+    /// <summary>
+    /// Given a particular world (configuration), read all the edge data files
+    /// and create edges based on the world to connect the vertices.
+    /// </summary>
+    /// <param name="world">world to attach preset items to</param>
     public Dictionary<ItemCondition, DirectedUndirectedPair> GetForWorld(World world)
     {
-        var edges_data = new Dictionary<string, DirectedUndirectedPair>();
-        YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("base"));
+        var edgeData = new Dictionary<string, DirectedUndirectedPair>();
+        YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("base"));
 
         switch (world.Config.State)
         {
             case StateOption.Standard:
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
-                edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
+                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
                 break;
             case StateOption.Inverted:
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("inverted"));
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("inverted"));
                 // @todo move these once we have the nodes made
-                edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
-                edges_data["fixed"].Directed.Add(new() { "start", "Dark Sanctuary" });
+                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edgeData["fixed"].Directed.Add(new() { "start", "Dark Sanctuary" });
                 break;
             case StateOption.Open:
             default:
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("normal"));
-                YamlReader.MergeEdges(edges_data, YamlReader.LoadEdges("open"));
-                edges_data["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
-                edges_data["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("open"));
+                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edgeData["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
                 break;
         }
 
         foreach (var tech in world.Config.Techs)
         {
-            var file_name = tech switch
+            var fileName = tech switch
             {
                 TechOption.DungeonBunnyRevival => "dungeon_bunny_revival",
                 _ => throw new Exception("Missing tech enum to file mapping for value: " + tech),
             };
-            YamlReader.MergeEdges(edges_data, YamlReader.LoadEdgesFromTech(file_name));
+            YamlReader.MergeEdges(edgeData, YamlReader.LoadEdgesFromTech(fileName));
         }
 
-        var return_data = new Dictionary<ItemCondition, DirectedUndirectedPair>();
-        foreach (var (conditionString, edges) in edges_data)
+        var returnData = new Dictionary<ItemCondition, DirectedUndirectedPair>();
+        foreach (var (conditionString, edges) in edgeData)
         {
             var parts = conditionString.Split("|");
             var item = world.GetItem(parts[0]);
             var itemCountPair = new ItemCondition(item, parts.Length > 1 ? int.Parse(parts[1]) : 1);
 
-            return_data[itemCountPair] = new DirectedUndirectedPair
+            returnData[itemCountPair] = new DirectedUndirectedPair
             {
                 Directed = edges.Directed,
                 Undirected = edges.Undirected,
             };
         }
 
-        return return_data;
+        return returnData;
     }
 }

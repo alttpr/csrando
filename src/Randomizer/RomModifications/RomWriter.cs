@@ -303,9 +303,9 @@ public static class RomWriter
                 break;
         }
 
-        //bool triforce_hud = config.Goal is GoalOption.TriforceHunt or GoalOption.GanonHunt
+        //bool triforceHUD = config.Goal is GoalOption.TriforceHunt or GoalOption.GanonHunt
         //    || (config("item.Goal.Required", 0) > 0);
-        //rom.EnableHudItemCounter(triforce_hud ? false : config("rom.hudItemCounter", config("goal", "ganon") == "completionist"));
+        //rom.EnableHudItemCounter(triforceHUD ? false : config("rom.hudItemCounter", config("goal", "ganon") == "completionist"));
         rom.EnableHudItemCounter(false);
 
         if (config.CrystalsTower == 0)
@@ -344,23 +344,23 @@ public static class RomWriter
     {
         var config = world.Config;
 
-        var uncle_items = world.StartingItems.Clone();
-        //uncle_items.setChecksForWorld(id);
+        var uncleItems = world.StartingItems.Clone();
+        //uncleItems.setChecksForWorld(id);
         var uncleItem = world.GetLocation("Link's Uncle").Item;
         if (uncleItem != null)
-            uncle_items.AddItem(uncleItem);
+            uncleItems.AddItem(uncleItem);
 
         // Add starting items if uncle doesn't have a weapon.  Temporarily disable ignoreCanKillEscapeThings for this check
         //bool ignoreCanKillEscapeThings = false; //ignoreCanKillEscapeThings
         //config['ignoreCanKillEscapeThings'] = false;
-        //if (!uncle_items.canKillEscapeThings(this))
+        //if (!uncleItems.canKillEscapeThings(this))
         //{
-        //    uncle_items = uncle_items.merge(getPreCollectedItems());
+        //    uncleItems = uncleItems.merge(getPreCollectedItems());
         //}
         //config['ignoreCanKillEscapeThings'] = ignoreCanKillEscapeThings;
 
         // FIXME: that sword check doesn't cover everything.
-        if (uncle_items.Has(world.GetItem("ProgressiveSword")) || uncle_items.Has(world.GetItem("Hammer")))
+        if (uncleItems.Has(world.GetItem("ProgressiveSword")) || uncleItems.Has(world.GetItem("Hammer")))
         {
             rom.SetEscapeFills();
             rom.SetUncleSpawnRefills(0, 0, 0);
@@ -368,9 +368,9 @@ public static class RomWriter
             rom.SetMantleSpawnRefills(0, 0, 0);
         }
         else if (
-            uncle_items.Has(world.GetItem("FireRod"))
-            || uncle_items.Has(world.GetItem("CaneOfSomaria"))
-            || (uncle_items.Has(world.GetItem("CaneOfByrna"))) // && config('enemizer.enemyHealth', 'default') == 'default')
+            uncleItems.Has(world.GetItem("FireRod"))
+            || uncleItems.Has(world.GetItem("CaneOfSomaria"))
+            || (uncleItems.Has(world.GetItem("CaneOfByrna"))) // && config('enemizer.enemyHealth', 'default') == 'default')
         )
         {
             rom.SetEscapeFills(refillMagic: true);
@@ -393,7 +393,7 @@ public static class RomWriter
                 rom.SetEscapeAssist(infiniteMagic: true);
         }
         // FIXME: that bow check (probably) doesn't cover everything.
-        else if (uncle_items.Has(world.GetItem("Bow")))
+        else if (uncleItems.Has(world.GetItem("Bow")))
         {
             rom.SetEscapeFills(refillArrows: true);
             rom.SetUncleSpawnRefills(
@@ -414,7 +414,7 @@ public static class RomWriter
             if (false) //rom.EscapeAssist
                 rom.SetEscapeAssist(infiniteArrows: true);
         }
-        else if (uncle_items.Has(world.GetItem("TenBombs"))) // || config('logic') != 'NoLogic')
+        else if (uncleItems.Has(world.GetItem("TenBombs"))) // || config('logic') != 'NoLogic')
         {
             // TenBombs, or give player bombs if uncle was plando'd to not have a weapon.
             rom.SetEscapeFills(refillBombs: true);
@@ -450,20 +450,20 @@ public static class RomWriter
         var config = world.Config;
 
         var emptyDrops = getEmptyDropSlots();
-        var drop_pool = getDropsPool();
+        var dropPool = getDropsPool();
 
         for (int i = 0; i < emptyDrops.Count; i++)
-            emptyDrops[i].setDrop(drop_pool[i]);
+            emptyDrops[i].setDrop(dropPool[i]);
 
-        byte[] drop_bytes = getAllDrops().Select(prize => prize.getDrop().getBytes()[0]).ToArray();
+        byte[] dropBytes = getAllDrops().Select(prize => prize.getDrop().getBytes()[0]).ToArray();
 
         // hard+ does not allow fairies/full magics
         if (config('rom.NoFarieDrops', false))
-            drop_bytes = str_replace([0xE0, 0xE3], [0xDF, 0xD8], drop_bytes);
+            dropBytes = str_replace([0xE0, 0xE3], [0xDF, 0xD8], dropBytes);
 
         if (config.RomRupeeBow)
         {
-            drop_bytes = str_replace([0xE1, 0xE2], [0xDA, 0xDB], drop_bytes);
+            dropBytes = str_replace([0xE1, 0xE2], [0xDA, 0xDB], dropBytes);
             rom.SetOverworldDigPrizes([
                 0xB2,
                 0xD8,
@@ -533,19 +533,19 @@ public static class RomWriter
         }
 
         // write to prize packs
-        rom.SetPrizePacks(drop_bytes[..56]);
+        rom.SetPrizePacks(dropBytes[..56]);
 
         // write to trees
-        rom.SetPullTreePrizes(drop_bytes[56], drop_bytes[57], drop_bytes[58]);
+        rom.SetPullTreePrizes(dropBytes[56], dropBytes[57], dropBytes[58]);
 
         // write to prize crab
-        rom.SetRupeeCrabPrizes(drop_bytes[59], drop_bytes[60]);
+        rom.SetRupeeCrabPrizes(dropBytes[59], dropBytes[60]);
 
         // write to stunned
-        rom.SetStunnedSpritePrize(drop_bytes[61]);
+        rom.SetStunnedSpritePrize(dropBytes[61]);
 
         // write to saved fish
-        rom.SetFishSavePrize(drop_bytes[62]);
+        rom.SetFishSavePrize(dropBytes[62]);
 #endif
     }
 }

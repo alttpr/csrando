@@ -375,13 +375,13 @@ public sealed class Rom : IDisposable
     }
 
     /// <summary>Set Menu Speed</summary>
-    /// <param name="menu_speed">speed at which the menu enters the screen</param>
+    /// <param name="menuSpeed">speed at which the menu enters the screen</param>
     // TODO: don't use a string for this
-    public void SetMenuSpeed(string menu_speed = "normal")
+    public void SetMenuSpeed(string menuSpeed = "normal")
     {
         bool fast = false;
         byte speed;
-        switch (menu_speed)
+        switch (menuSpeed)
         {
             case "instant":
                 speed = 0xE8;

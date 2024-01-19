@@ -1,11 +1,9 @@
 namespace Randomizer.Graph;
 
-/**
- * Container for all the vertices.
- */
+/// <summary>Container for all the vertices.</summary>
 internal class VertexCollector
 {
-    static ItemCondition ConditionFrom(World world, string condition)
+    internal static ItemCondition ConditionFrom(World world, string condition)
     {
         var conditionSplit = condition.Split("|");
         var itemCount = 1;
@@ -16,9 +14,7 @@ internal class VertexCollector
         return new ItemCondition(world.GetItem(conditionSplit[0]), itemCount);
     }
 
-    /**
-     * This does not account for door rando.
-     */
+    // NOTE: This does not account for door rando.
     private static readonly HashSet<string> BUNNY_REVIVE = new()
     {
         "Eastern Palace - Entrance",
@@ -43,39 +39,33 @@ internal class VertexCollector
         "Ganon's Tower - Lobby",
     };
 
-    /**
-     * Get all vertices for a world and map static items to that world. Also
-     * given the world config, we may invert the moonpearl requirements here.
-     *
-     * @param World world world to attach preset items to
-     *
-     * @throws Exception if unable to read data files
-     */
-    // TODO: this really needs to return typed data already...
+    /// <summary>
+    /// Get all vertices for a world and map static items to that world. Also
+    /// given the world config, we may invert the moonpearl requirements here.
+    /// </summary>
+    /// <param name="world">world to attach preset items to</param>
     public static IEnumerable<Vertex> LoadYmlData(World world)
     {
-        var vertex_data = YamlReader.LoadVertices();
-        var structured_vertices = new Dictionary<string, Vertex>();
+        var vertexData = YamlReader.LoadVertices();
+        var structuredVertices = new Dictionary<string, Vertex>();
         var fixedCondition = new ItemCondition(world.GetItem("fixed"), 1);
         var pendingConnections = new List<(Vertex, string, ItemCondition)>();
 
-        var MoonPearlTransform = (bool moonpearl, string name) =>
+        bool moonPearlTransform(bool moonpearl, string name)
         {
             bool result = moonpearl;
+
             if (world.Config.State == StateOption.Inverted)
-            {
                 result = !moonpearl;
-            }
 
             if (world.Config.Techs.Contains(TechOption.DungeonBunnyRevival) && BUNNY_REVIVE.Contains(name))
-            {
                 result = false;
-            }
+
             return result;
-        };
+        }
 
         // overworld
-        foreach (var map in vertex_data.Maps)
+        foreach (var map in vertexData.Maps)
         {
             var shared = new Dictionary<string, object>()
             {
@@ -89,7 +79,7 @@ internal class VertexCollector
                     Name = meta.Name,
                     World = world,
                 };
-                structured_vertices.Add(meta.Name, metaVertex);
+                structuredVertices.Add(meta.Name, metaVertex);
 
                 foreach (var connection in meta.Connections)
                 {
@@ -108,13 +98,13 @@ internal class VertexCollector
                         World = world,
                         Item = world.GetItem(item),
                     };
-                    structured_vertices.Add(metaItemVertex.Name, metaItemVertex);
+                    structuredVertices.Add(metaItemVertex.Name, metaItemVertex);
                     metaVertex.Edges.Add(new Edge(metaVertex, metaItemVertex, fixedCondition));
                 }
             }
             foreach (var prizepack in map.Nodes.Prizepacks)
             {
-                structured_vertices.Add(prizepack.Name, new Vertex
+                structuredVertices.Add(prizepack.Name, new Vertex
                 {
                     Type = VertexType.PrizePack,
                     Name = prizepack.Name,
@@ -135,9 +125,9 @@ internal class VertexCollector
                     Shopkeeper = region.Shopkeeper,
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
-                    MoonPearl = MoonPearlTransform(map.Moonpearl, region.Name),
+                    MoonPearl = moonPearlTransform(map.Moonpearl, region.Name),
                 };
-                structured_vertices.Add(region.Name, regionVertex);
+                structuredVertices.Add(region.Name, regionVertex);
 
                 foreach (var mob in region.Mobs)
                 {
@@ -156,7 +146,7 @@ internal class VertexCollector
                         // Deny = mob.Deny,
                         // Allow = mob.Allow,
                     };
-                    structured_vertices.Add(mob.Name, mobVertex);
+                    structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
                 }
 
@@ -173,7 +163,7 @@ internal class VertexCollector
                         Map = map.MapMap,
                         EntranceId = entrance.EntranceId,
                     };
-                    structured_vertices.Add(nameIn, entranceInVertex);
+                    structuredVertices.Add(nameIn, entranceInVertex);
                     var entranceOutVertex = new Vertex
                     {
                         Type = VertexType.Outlet,
@@ -182,7 +172,7 @@ internal class VertexCollector
                         Map = map.MapMap,
                         OutletId = entrance.OutletId,
                     };
-                    structured_vertices.Add(nameOut, entranceOutVertex);
+                    structuredVertices.Add(nameOut, entranceOutVertex);
                     foreach (var condition in entrance.Conditions.DefaultIfEmpty("fixed"))
                     {
                         regionVertex.Edges.Add(new Edge(regionVertex, entranceInVertex, ConditionFrom(world, condition)));
@@ -203,7 +193,7 @@ internal class VertexCollector
                         ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Addresses = item.Addresses.ToArray(),
                     };
-                    structured_vertices.Add(item.Name, itemVertex);
+                    structuredVertices.Add(item.Name, itemVertex);
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
                     {
                         regionVertex.Edges.Add(new Edge(regionVertex, itemVertex, ConditionFrom(world, condition)));
@@ -220,7 +210,7 @@ internal class VertexCollector
                         Map = map.MapMap,
                         EntranceIds = hole.EntranceIds.ToArray(),
                     };
-                    structured_vertices.Add(hole.Name, holeVertex);
+                    structuredVertices.Add(hole.Name, holeVertex);
                     foreach (var condition in hole.Conditions.DefaultIfEmpty("fixed"))
                     {
                         regionVertex.Edges.Add(new Edge(regionVertex, holeVertex, ConditionFrom(world, condition)));
@@ -236,9 +226,9 @@ internal class VertexCollector
                         World = world,
                         Map = map.MapMap,
                         Position = warp.Position,
-                        MoonPearl = MoonPearlTransform(map.Moonpearl, warp.Name),
+                        MoonPearl = moonPearlTransform(map.Moonpearl, warp.Name),
                     };
-                    structured_vertices.Add(warp.Name, warpVertex);
+                    structuredVertices.Add(warp.Name, warpVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, warpVertex, fixedCondition));
                     warpVertex.Edges.Add(new Edge(warpVertex, regionVertex, fixedCondition));
 
@@ -262,7 +252,7 @@ internal class VertexCollector
         }
 
         // underworld
-        foreach (var room in vertex_data.Rooms)
+        foreach (var room in vertexData.Rooms)
         {
             foreach (var region in room.Nodes.Regions)
             {
@@ -281,7 +271,7 @@ internal class VertexCollector
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
                 };
-                structured_vertices.Add(region.Name, regionVertex);
+                structuredVertices.Add(region.Name, regionVertex);
 
                 if (region.InletId.HasValue)
                 {
@@ -295,7 +285,7 @@ internal class VertexCollector
                         Group = room.Group.GetValueOrDefault(0),
                         InletId = region.InletId,
                     };
-                    structured_vertices.Add(nameExit, exitVertex);
+                    structuredVertices.Add(nameExit, exitVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, exitVertex, fixedCondition));
                 }
 
@@ -317,7 +307,7 @@ internal class VertexCollector
                         // Deny = mob.Deny,
                         // Allow = mob.Allow,
                     };
-                    structured_vertices.Add(mob.Name, mobVertex);
+                    structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
                 }
 
@@ -338,7 +328,7 @@ internal class VertexCollector
                         ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Addresses = item.Addresses.ToArray(),
                     };
-                    structured_vertices.Add(item.Name, itemVertex);
+                    structuredVertices.Add(item.Name, itemVertex);
 
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
                     {
@@ -359,7 +349,7 @@ internal class VertexCollector
                         Cost = item.Cost,
                         ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                     };
-                    structured_vertices.Add(item.Name, inventoryVertex);
+                    structuredVertices.Add(item.Name, inventoryVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, inventoryVertex, new ItemCondition(world.GetItem("BuyItem"), 1)));
                 }
 
@@ -380,7 +370,7 @@ internal class VertexCollector
                         // Deny = pot.Deny,
                         // Allow = pot.Allow,
                     };
-                    structured_vertices.Add(pot.Name, potVertex);
+                    structuredVertices.Add(pot.Name, potVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
                 }
 
@@ -395,7 +385,7 @@ internal class VertexCollector
 
             foreach (var item in room.Nodes.Items)
             {
-                structured_vertices.Add(item.Name, new Vertex
+                structuredVertices.Add(item.Name, new Vertex
                 {
                     Type = VertexType.Item,
                     SubType = item.Type,
@@ -420,9 +410,9 @@ internal class VertexCollector
         // Link all the pending edges
         foreach (var pendingEdge in pendingConnections)
         {
-            pendingEdge.Item1.Edges.Add(new Edge(pendingEdge.Item1, structured_vertices[pendingEdge.Item2], pendingEdge.Item3));
+            pendingEdge.Item1.Edges.Add(new Edge(pendingEdge.Item1, structuredVertices[pendingEdge.Item2], pendingEdge.Item3));
         }
 
-        return structured_vertices.Values;
+        return structuredVertices.Values;
     }
 }

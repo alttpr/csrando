@@ -1,6 +1,5 @@
 namespace Randomizer.Graph;
 
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
@@ -323,26 +322,26 @@ public class Searcher
     /// <param name="reachable">reachable only return reachable locations</param>
     public IEnumerable<Vertex> GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool reachable = true)
     {
-        var empty_locations = _graph.GetSetLocations(itemSet).Where((vertex) =>
+        var emptyLocations = _graph.GetSetLocations(itemSet).Where((vertex) =>
         {
             return (!reachable || _visited.Contains(vertex)) && vertex.Item == null;
         }).OrderBy(v => v.Name).ToList();
 
         itemSets ??= new();
-        foreach (var (set_name, set_count) in itemSets)
+        foreach (var (setName, setCount) in itemSets)
         {
-            if (set_name.World == null)
+            if (setName.World == null)
                 continue;
 
-            var set_locations = _graph.GetSetLocations(set_name).Where(static (location) => location.Item == null);
-            if (set_locations.Count() < set_count)
-                throw new Exception($"Not enough set locations available: {set_name}");
+            var setLocations = _graph.GetSetLocations(setName).Where(static (location) => location.Item == null);
+            if (setLocations.Count() < setCount)
+                throw new Exception($"Not enough set locations available: {setName}");
             // if a set has the same number of items to place as set locations
             // left, remove it from this return.
-            if (itemSet != set_name && set_locations.Count() == set_count)
-                empty_locations.RemoveAll(set_locations.Contains);
+            if (itemSet != setName && setLocations.Count() == setCount)
+                emptyLocations.RemoveAll(setLocations.Contains);
         }
 
-        return empty_locations.ToArray();
+        return emptyLocations.ToArray();
     }
 }

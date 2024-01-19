@@ -1,7 +1,8 @@
 namespace Randomizer.Graph;
-/**
- * Modify the edges of the graph to deal with MoonPearl/Bunny state.
- */
+
+/// <summary>
+/// Modify the edges of the graph to deal with MoonPearl/Bunny state.
+/// </summary>
 internal sealed class BunnyGraphifier : IWorldModifier
 {
     private static readonly Dictionary<string, string> ITEM_MAP = new()
@@ -36,9 +37,9 @@ internal sealed class BunnyGraphifier : IWorldModifier
         { "OpenChest", "DarkOpenChest" },
     };
 
-    /**
-     * Add edges for new dark items required based on dark world and moon pearl.
-     */
+    /// <summary>
+    /// Add edges for new dark items required based on dark world and moon pearl.
+    /// </summary>
     public static void AdjustEdges(World world, PRNG prng)
     {
         var graph = world.Graph;
@@ -50,49 +51,38 @@ internal sealed class BunnyGraphifier : IWorldModifier
             World = world,
         });
         var meta = world.GetLocation("Meta");
-        graph.AddDirected(meta!, moonpearl, world.GetItem("MoonPearl"));
+        graph.AddDirected(meta, moonpearl, world.GetItem("MoonPearl"));
 
-        foreach (var (light_item, dark_item) in ITEM_MAP)
+        foreach (var (lightItem, darkItem) in ITEM_MAP)
         {
-            var dark_vertex = graph.AddVertex(new Vertex
+            var darkVertex = graph.AddVertex(new Vertex
             {
                 Type = VertexType.Meta,
-                Name = dark_item,
+                Name = darkItem,
                 World = world,
-                Item = world.GetItem(dark_item),
+                Item = world.GetItem(darkItem),
             });
 
-            world.Graph.AddDirected(moonpearl, dark_vertex, world.GetItem(light_item));
+            world.Graph.AddDirected(moonpearl, darkVertex, world.GetItem(lightItem));
         }
 
-        var dark_nodes =
-            from vertex in world.Graph.GetVertices()
-            where vertex.MoonPearl == true
-            select vertex;
-
-        var work_queue = new Queue<Vertex>(dark_nodes);
+        var darkNodes = world.Graph.GetVertices().Where(v => v.MoonPearl == true);
+        var workQueue = new Queue<Vertex>(darkNodes);
         var marked = new HashSet<Vertex>();
 
-        while (work_queue.TryDequeue(out var node))
+        while (workQueue.TryDequeue(out var node))
         {
-            if (node.Name.StartsWith("Lake of Bad Omen"))
-                node.ToString();
-            if (marked.Contains(node))
-            {
+            if (!marked.Add(node))
                 continue;
-            }
-            marked.Add(node);
 
             foreach (var edge in node.Edges)
             {
                 var toNode = edge.To;
                 if (toNode.MoonPearl != false)
                 {
-                    work_queue.Enqueue(toNode);
+                    workQueue.Enqueue(toNode);
                     if (!ITEM_MAP.ContainsKey(edge.Condition.Item.Name))
-                    {
                         continue;
-                    }
 
                     edge.Condition = new(world.GetItem(ITEM_MAP[edge.Condition.Item.Name]), edge.Condition.Count);
                 }

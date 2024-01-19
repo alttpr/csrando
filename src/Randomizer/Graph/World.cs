@@ -51,28 +51,28 @@ public sealed class World
         var edges = new EdgeCollector().GetForWorld(this);
         foreach (var (condition, data) in edges)
         {
-            foreach (var edge_data in data.Directed)
+            foreach (var edgeData in data.Directed)
             {
-                var from = GetLocation(edge_data[0]);
-                var to = GetLocation(edge_data[1]);
+                var from = GetLocation(edgeData[0]);
+                var to = GetLocation(edgeData[1]);
                 if (from is null || to is null)
                 {
                     throw new Exception(
                         "Name Connection Mismatch: " +
-                        $"({edge_data[0]}, {edge_data[1]}) => " +
+                        $"({edgeData[0]}, {edgeData[1]}) => " +
                         $"({from}, {to})");
                 }
                 Graph.AddDirected(from, to, condition);
             }
-            foreach (var edge_data in data.Undirected)
+            foreach (var edgeData in data.Undirected)
             {
-                var from = GetLocation(edge_data[0]);
-                var to = GetLocation(edge_data[1]);
+                var from = GetLocation(edgeData[0]);
+                var to = GetLocation(edgeData[1]);
                 if (from is null || to is null)
                 {
                     throw new Exception(
                         "Undirected Name Connection Mismatch: " +
-                        $"({edge_data[0]}, {edge_data[1]}) => " +
+                        $"({edgeData[0]}, {edgeData[1]}) => " +
                         $"({from}, {to})");
                 }
                 Graph.AddDirected(from, to, condition);

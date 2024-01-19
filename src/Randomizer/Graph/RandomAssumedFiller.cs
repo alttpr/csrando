@@ -1,7 +1,5 @@
 namespace Randomizer.Graph;
 
-using System.Diagnostics;
-
 // NOTE: same as in ItemPooler, except we cannot reuse aliases this way
 using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 
@@ -24,58 +22,53 @@ internal sealed class RandomAssumedFiller
     /// <param name="items">items to be placed</param>
     public void FillGraph(ItemSet items)
     {
-        var set_counts = items.ToDictionary(k => k.Key, set => set.Value.SelectMany(x => x.Value).Count());
+        var setCounts = items.ToDictionary(k => k.Key, set => set.Value.SelectMany(x => x.Value).Count());
 
-        var flat_items_a = items
+        var flatItemsArray = items
             .SelectMany(set => set.Value.SelectMany(weight => weight.Value
                 .Select(item => (Set: set.Key, Weight: weight.Key, Item: item))))
             .ToArray();
-        flat_items_a = _prng.Shuffle(flat_items_a).OrderBy(i => i.Weight).ToArray();
         // fix placement groups
-        //Array.Sort(flat_items_a, (a, b) => a.Weight - b.Weight);
-        var flat_items = flat_items_a.ToList();
+        flatItemsArray = _prng.Shuffle(flatItemsArray).OrderBy(i => i.Weight).ToArray();
+        var flatItems = flatItemsArray.ToList();
 
-        foreach (var item_key in flat_items_a)
+        foreach (var itemKey in flatItemsArray)
         {
-            var (item_set, item_weight, item) = item_key;
-            if (item_weight > 9000)
-            {
+            var (itemSet, itemWeight, item) = itemKey;
+            if (itemWeight > 9000)
                 break;
-            }
 
             // When placing an item that is constrained to an item set from a specific world,
             // only add items to the inventory from that world to speed up the search as
             // we don't care to search other worlds.
-            flat_items.Remove(item_key);
+            flatItems.Remove(itemKey);
             var searcher = _randomizer.GetSearcherForInventory(
-                flat_items.Where(i => i.Weight <= 9000 && (item_set.World == null || item_set.World == i.Item.World))
+                flatItems.Where(i => i.Weight <= 9000 && (itemSet.World == null || itemSet.World == i.Item.World))
                     .Select(i => i.Item)
                     .ToList()
                 );
             bool required = item.World.Config.Accessibility != AccessibilityOption.None
                 || !searcher.HasFound(item.World.GetItem("Triforce"));
-            var locations = searcher.GetEmptyLocationsInSet(item_set, set_counts, required);
+            var locations = searcher.GetEmptyLocationsInSet(itemSet, setCounts, required);
 
             if (!locations.Any())
-            {
-                throw new Exception($"No locations for `{item}` in set `{item_set}`");
-            }
+                throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
             var location = _prng.GetRandomElement(locations);
             System.Console.WriteLine("[{0}] [{1}] Placing `{2}` in `{3}` ({4}:{5})",
-                item_weight,
+                itemWeight,
                 required ? "R" : " ",
                 item,
                 location,
-                item_set,
+                itemSet,
                 locations.Count()
             );
 
             location.Item = item;
-            set_counts[item_set]--;
+            setCounts[itemSet]--;
         }
 
-        FastFillItemsInLocations(flat_items);
+        FastFillItemsInLocations(flatItems);
     }
 
     /// <summary>
@@ -93,21 +86,21 @@ internal sealed class RandomAssumedFiller
             return aweight - bweight;
         });
 
-        ItemSetName? current_key = null;
+        ItemSetName? currentKey = null;
         var searcher = _randomizer.GetSearcherForInventory(Enumerable.Empty<Item>());
         var locations = new List<Vertex>();
-        foreach (var (item_set, _, item) in fillItems)
+        foreach (var (itemSet, _, item) in fillItems)
         {
-            if (current_key != item_set)
+            if (currentKey != itemSet)
             {
-                locations = _prng.Shuffle(searcher.GetEmptyLocationsInSet(item_set, null, false).ToArray()).ToList();
-                current_key = item_set;
+                locations = _prng.Shuffle(searcher.GetEmptyLocationsInSet(itemSet, null, false).ToArray()).ToList();
+                currentKey = itemSet;
             }
 
             var location = locations.LastOrDefault();
             if (location is null)
             {
-                System.Console.WriteLine("No Location: `{0}` `{1}`", item, item_set);
+                System.Console.WriteLine("No Location: `{0}` `{1}`", item, itemSet);
                 continue;
             }
             location.Item = item;
@@ -115,7 +108,7 @@ internal sealed class RandomAssumedFiller
             System.Console.WriteLine("[FF] Placing: `{0}` in `{1}` ({2}:{3})",
                 item,
                 location,
-                item_set,
+                itemSet,
                 locations.Count + 1
             );
         }
