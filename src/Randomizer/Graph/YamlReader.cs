@@ -164,6 +164,27 @@ public class YamlItem
     public List<byte> Bytes { get; set; } = new();
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
+
+    // TODO: those are english-only right now, and could probably go elsewhere.
+    // TODO: do we want to keep location-specific hints? they all use the same text at the moment.
+    [YamlMember(Alias = "pedestalhint")]
+    public string? PedestalHintText { get; set; }
+    [YamlMember(Alias = "etherhint")]
+    public string? EtherTabletHintText { get; set; }
+    [YamlMember(Alias = "bomboshint")]
+    public string? BombosTabletHintText { get; set; }
+    [YamlMember(Alias = "pedestalcredits")]
+    public string? PedestalCreditsText { get; set; }
+    [YamlMember(Alias = "zoracredits")]
+    public string? ZoraCreditsText { get; set; }
+    [YamlMember(Alias = "witchcredits")]
+    public string? WitchCreditsText { get; set; }
+    [YamlMember(Alias = "unclecredits")]
+    public string? UncleCreditsText { get; set; }
+    [YamlMember(Alias = "kidcredits")]
+    public string? KidCreditsText { get; set; }
+    [YamlMember(Alias = "flutecredits")]
+    public string? FluteCreditsText { get; set; }
 }
 
 public class YamlSprite

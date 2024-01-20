@@ -4,8 +4,27 @@ using System.Text.RegularExpressions;
 using SceneLine = (string Type, int X, int Y, string Text);
 
 /// <summary>Class to handle Credits Sequence</summary>
-internal sealed class Credits
+public sealed class Credits
 {
+    private static readonly string[] _sceneOrder =
+    [
+        "castle",
+        "sanctuary",
+        "kakariko",
+        "desert",
+        "hera",
+        "house",
+        "zora",
+        "witch",
+        "lumberjacks",
+        "grove",
+        "well",
+        "smithy",
+        "kakariko2",
+        "bridge",
+        "woods",
+        "pedestal",
+    ];
     private readonly Dictionary<string, SceneLine[]> _scenes = new()
     {
         { "castle", [
@@ -80,7 +99,7 @@ internal sealed class Credits
         if (!_scenes.TryGetValue(scene, out var lineData) || lineData.Length < line)
             return false;
 
-        var lineToUpdate = lineData[line];
+        ref var lineToUpdate = ref lineData[line];
         text = text.MaxLength(32);
 
         lineToUpdate.Text = text;
@@ -99,8 +118,9 @@ internal sealed class Credits
     {
         List<ushort> pointers = [0];
         var data = new List<byte>();
-        foreach (var (_, scene) in _scenes)
+        foreach (var sceneIdentifier in _sceneOrder)
         {
+            var scene = _scenes[sceneIdentifier];
             foreach (var part in scene)
             {
                 switch (part.Type)
@@ -183,11 +203,12 @@ internal sealed class Credits
 
     private static byte[] GetHeader(int x, int y, int length)
     {
+        // NOTE: this bit twiddling already assumes little endian for the SNES.
         byte[] header = BitConverter.GetBytes((0x6000
             | y >> 5 << 11 | (y & 0x1F) << 5
             | x >> 5 << 10 | x & 0x1F) << 16
             | length * 2 - 1);
-        if (!BitConverter.IsLittleEndian)
+        if (BitConverter.IsLittleEndian)
             Array.Reverse(header);
 
         return header;

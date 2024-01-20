@@ -13,7 +13,7 @@ public static class RomWriter
     private static readonly string[] _heartColorOptions = ["blue", "green", "yellow", "red"];
     public static void WriteForWorld(World world, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory, PRNG prng)
     {
-        var rom = new Rom(vanillaRom.FullName);
+        using var rom = new Rom(vanillaRom.FullName);
         // TODO: check hash? do we need that?
 
         rom.Resize();
@@ -64,6 +64,9 @@ public static class RomWriter
                 var itemToWrite = location.Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
+                rom.WriteCreditsText(location, itemToWrite);
+                rom.WriteDungeonMusic(location, itemToWrite, prng);
+                rom.WriteHintText(location, itemToWrite);
             }
         }
 
@@ -241,7 +244,7 @@ public static class RomWriter
             }
         }
 
-        var linksUncleItem = world.GetLocation("Link's Uncle").Item;
+        var linksUncleItem = world.GetLocation("Link's Uncle")?.Item;
         if (linksUncleItem != null)
         {
             if (!linksUncleItem.Name.Contains("Sword"))

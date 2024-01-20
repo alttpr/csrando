@@ -1766,6 +1766,64 @@ public sealed class Rom : IDisposable
                 Write(0x4E3BB, [0xEB]);
         }
     }
+    public void WriteCreditsText(Vertex location, Item? item)
+    {
+        var (creditsKey, creditsText) = location.Name switch
+        {
+            "Master Sword Pedestal" => ("pedestal", item?.PedestalCreditsText),
+            "Link's Uncle" => ("house", item?.UncleCreditsText),
+            "King Zora" => ("zora", item?.ZoraCreditsText),
+            "Potion Shop Item" => ("witch", item?.WitchCreditsText),
+            "Sick Kid Item" => ("kakariko2", item?.KidCreditsText),
+            "Flute Spot" => ("grove", item?.FluteCreditsText),
+            _ => (null, null),
+        };
+
+        if (string.IsNullOrEmpty(creditsKey))
+            return;
+
+        SetCredit(creditsKey, creditsText ?? "simply nothing");
+    }
+
+    private static readonly byte[] _musicChoices =
+    [
+        0x11, // pendant
+        0x16, // crystal
+    ];
+    public void WriteDungeonMusic(Vertex location, Item item, PRNG prng)
+    {
+        if (location?.SubType != VertexType.Prize)
+            return;
+        var musicAddresses = location.GetDungeonMusicAddresses();
+        if (musicAddresses == null)
+            return;
+
+        byte music;
+        var config = location.World.Config;
+        if (config.RegionWildMaps)
+            music = prng.GetRandomElement(_musicChoices);
+        else
+            music = item.Name.StartsWith("Crystal") ? (byte)0x16 : (byte)0x11;
+
+        foreach (Address address in musicAddresses)
+            Write(address, [music]);
+    }
+
+    public void WriteHintText(Vertex location, Item? item)
+    {
+        var (hintKey, hintText) = location.Name switch
+        {
+            "Master Sword Pedestal" => ("mastersword_pedestal_translated", item?.PedestalHintText),
+            "Ether Tablet" => ("tablet_ether_book", item?.EtherTabletHintText),
+            "Bombos Tablet" => ("tablet_bombos_book", item?.BombosTabletHintText),
+            _ => (null, null),
+        };
+
+        if (string.IsNullOrEmpty(hintKey))
+            return;
+
+        SetText(hintKey, hintText ?? "Don't waste\nyour time!");
+    }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
