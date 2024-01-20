@@ -65,6 +65,9 @@ internal sealed class DoorReplacer : IWorldModifier
 
     static void FindKeyForKey(World world)
     {
+        if (world.Config.Accessibility == AccessibilityOption.Locations)
+            return;
+
         VertexHashSet allVisited = new(world.Graph);
         {
             Queue<Vertex> vertexQueue = new();
