@@ -87,9 +87,9 @@ public sealed class Randomizer
     /// <summary>
     /// Get a graph searched based on the items in the inventory.
     /// </summary>
-    public Searcher GetSearcherForInventory(IEnumerable<Item> items)
+    public Searcher GetSearcherForInventory(IEnumerable<Item> items, World? world = null)
     {
-        return new(Graph, _start, _startingItems.Merge(new Inventory(items.ToArray())));
+        return new(Graph, world?.GetLocation("start") ?? _start, _startingItems.Merge(new Inventory(items.ToArray())));
     }
 
     /// <summary>

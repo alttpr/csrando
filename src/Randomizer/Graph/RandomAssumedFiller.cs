@@ -32,6 +32,19 @@ internal sealed class RandomAssumedFiller
         flatItemsArray = _prng.Shuffle(flatItemsArray).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
 
+        Searcher[] searchers = new Searcher[_randomizer.Worlds.Length];
+        for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+        {
+            searchers[i] = _randomizer.GetSearcherForInventory(
+                flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
+                    .Select(i => i.Item)
+                    .ToList(),
+                _randomizer.Worlds[i]
+                );
+        }
+
+        var itemsToPlaceCount = flatItems.Where(i => i.Weight <= 9000).Count();
+
         foreach (var itemKey in flatItemsArray)
         {
             var (itemSet, itemWeight, item) = itemKey;
@@ -42,20 +55,28 @@ internal sealed class RandomAssumedFiller
             // only add items to the inventory from that world to speed up the search as
             // we don't care to search other worlds.
             flatItems.Remove(itemKey);
-            var searcher = _randomizer.GetSearcherForInventory(
-                flatItems.Where(i => i.Weight <= 9000 && (itemSet.World == null || itemSet.World == i.Item.World))
+
+            searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
+                flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
                     .Select(i => i.Item)
-                    .ToList()
+                    .ToList(),
+                item.World
                 );
-            bool onlyReachable = item.World.Config.Accessibility != AccessibilityOption.None
-                || !searcher.HasFound(item.World.GetItem("Triforce"));
-            var locations = searcher.GetEmptyLocationsInSet(itemSet, setCounts, onlyReachable).ToList();
-            if (item.World.Config.Accessibility != AccessibilityOption.Locations && (item.Type == ItemType.SmallKey || item.Type == ItemType.BigKey))
+
+            var locations = new List<Vertex>();
+            for (int i = 0; i < _randomizer.Worlds.Length; ++i)
             {
-                if (_randomizer.Graph.KeyForKeys.TryGetValue(item, out var keyForKeys))
+                bool onlyReachable = _randomizer.Worlds[i].Config.Accessibility != AccessibilityOption.None
+                    || !searchers[i].HasFound(_randomizer.Worlds[i].GetItem("Triforce"));
+                locations.AddRange(searchers[i].GetEmptyLocationsInSet(itemSet, setCounts, onlyReachable));
+
+                if (_randomizer.Worlds[i].Config.Accessibility != AccessibilityOption.Locations && (item.Type == ItemType.SmallKey || item.Type == ItemType.BigKey))
                 {
-                    var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searcher.HasVisited(v2)))).Select(v => v.Chest);
-                    locations.AddRange(chests);
+                    if (_randomizer.Graph.KeyForKeys.TryGetValue(item, out var keyForKeys))
+                    {
+                        var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searchers[i].HasVisited(v2)))).Select(v => v.Chest);
+                        locations.AddRange(chests);
+                    }
                 }
             }
 
@@ -63,13 +84,13 @@ internal sealed class RandomAssumedFiller
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
             var location = _prng.GetRandomElement(locations);
-            System.Console.WriteLine("[{0}] [{1}] Placing `{2}` in `{3}` ({4}:{5})",
+            System.Console.WriteLine("({5}%) [{0}] Placing `{1}` in `{2}` ({3}:{4})",
                 itemWeight,
-                onlyReachable ? "R" : " ",
                 item,
                 location,
                 itemSet,
-                locations.Count()
+                locations.Count(),
+                (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount
             );
 
             location.Item = item;
