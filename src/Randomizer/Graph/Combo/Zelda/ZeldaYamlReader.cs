@@ -677,7 +677,7 @@ internal class ZeldaYamlReader
                         { "name", $"{mapName} - {meta.name} - Triforce" },
                         { "type", VertexType.Standing },
                         { "item", "Triforce" },
-                        { "itemset", (string[])["zelda"] },
+                        { "itemset", (string[])["zelda", "z1triforce"] },
                     });
 
                     AddDirectedEdge(metaNode, triforceNode, "fixed");
@@ -706,7 +706,7 @@ internal class ZeldaYamlReader
                     { "name", $"{mapName} - Item" },
                     { "type", VertexType.Standing },
                     { "item", null },
-                    { "itemset", (string[])["zelda"] },
+                    { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 
                 // Connect this to the middle node of the screen for now (TODO: Fix logic for the actual item position)
@@ -823,7 +823,7 @@ internal class ZeldaYamlReader
                     { "name", $"{mapName} - Passage - Item" },
                     { "type", VertexType.Standing },
                     { "item", null },
-                    { "itemset", (string[])["zelda"] },
+                    { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 
                 // Connect the left and right nodes to the left

@@ -93,6 +93,111 @@ internal class ZeldaWorld
     {
         return new ItemSet
         {
+            //{
+            //    new ItemSetName("z1triforce", world), new WeightedSet
+            //    {
+            //        { 1, [.. Enumerable.Repeat(world.GetItem("Z1Triforce"), 8)] }
+            //    }
+            //},
+            { new ItemSetName("z1d1", world), new WeightedSet
+                {
+                    { 1, 
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d2", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d3", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d4", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d5", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d6", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d7", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d8", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
+            { new ItemSetName("z1d9", world), new WeightedSet
+                {
+                    { 1,
+                        [
+                            world.GetItem("Z1Key"),
+                            world.GetItem("Z1Map"),
+                            world.GetItem("Z1Compass"),
+                        ]
+                    }
+                }
+            },
             { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
@@ -103,10 +208,8 @@ internal class ZeldaWorld
                             world.GetItem("Z1BurnTrees"),
                             world.GetItem("Z1Recorder"),
                             world.GetItem("Z1Sword"),
-                            world.GetItem("Z1Key")
                         ]
                     },
-
                 }
             }
         };
