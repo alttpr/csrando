@@ -81,7 +81,7 @@ internal sealed class Credits
             return false;
 
         var lineToUpdate = lineData[line];
-        text = text[..32];
+        text = text.MaxLength(32);
 
         lineToUpdate.Text = text;
 
@@ -205,13 +205,10 @@ internal sealed class Credits
             _ => (byte)0x9F,
         }).ToArray();
 
-    /**
-     * Convert string to byte array for Credits that can be written to ROM
-     *
-     * @param string string string to convert
-     *
-     * @return array
-     */
+    /// <summary>
+    /// Convert string to byte array for Credits that can be written to ROM
+    /// </summary>
+    /// <param name="str">string to convert</param>
     public static byte[] ConvertLargeCreditsBottom(string str)
         => str.ToLowerInvariant().Select(c => c switch
         {
@@ -222,23 +219,17 @@ internal sealed class Credits
             _ => (byte)0x9F,
         }).ToArray();
 
-    /**
-     * Convert string to byte array for Credits that can be written to ROM
-     *
-     * @param string string string to convert
-     *
-     * @return array
-     */
+    /// <summary>
+    /// Convert string to byte array for Credits that can be written to ROM
+    /// </summary>
+    /// <param name="str">string to convert</param>
     public static byte[] ConvertAltCredits(string str)
         => str.ToLowerInvariant().Select(CharToAltCreditsHex).ToArray();
 
-    /**
-     * Convert character to byte for ROM in Credits Sequence
-     *
-     * @param string char character to convert
-     *
-     * @return int
-     */
+    /// <summary>
+    /// Convert character to byte for ROM in Credits Sequence
+    /// </summary>
+    /// <param name="c">character to convert</param>
     private static byte CharToAltCreditsHex(char c) => c switch
     {
         >= 'a' and <= 'z' => (byte)(c - 0x29),
@@ -246,23 +237,17 @@ internal sealed class Credits
         _ => 0x9F,
     };
 
-    /**
-     * Convert string to byte array for Credits that can be written to ROM
-     *
-     * @param string string string to convert
-     *
-     * @return array
-     */
+    /// <summary>
+    /// Convert string to byte array for Credits that can be written to ROM
+    /// </summary>
+    /// <param name="str">string to convert</param>
     public static byte[] ConvertCredits(string str)
         => str.ToLowerInvariant().Select(CharToCreditsHex).ToArray();
 
-    /**
-     * Convert character to byte for ROM in Credits Sequence
-     *
-     * @param string char character to convert
-     *
-     * @return int
-     */
+    /// <summary>
+    /// Convert character to byte for ROM in Credits Sequence
+    /// </summary>
+    /// <param name="c">character to convert</param>
     private static byte CharToCreditsHex(char c) => c switch
     {
         >= 'a' and <= 'z' => (byte)(c - 0x47),
