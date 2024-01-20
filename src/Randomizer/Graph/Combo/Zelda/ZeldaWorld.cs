@@ -11,12 +11,17 @@ using WeightedSet = Dictionary<int, List<Item>>;
 
 internal class ZeldaWorld
 {
+    // Cache the yaml data used for any given world
+    // TODO: Remove this cache when we have a better way to handle the data
+    public static Dictionary<World, ZeldaYamlReader.YamlData?> Data = new Dictionary<World, ZeldaYamlReader.YamlData?>();
+
     // Adjusts the world as needed to randomize Metroid
     public static void AdjustWorld(World world)
     {
         // Load the Metroid Yaml Data and hook up the world to the current world graph
         var yamlReader = new ZeldaYamlReader();
         var zeldaVertices = yamlReader.LoadYmlData(world);
+        Data[world] = yamlReader.Data;
 
         foreach (var vtx in zeldaVertices)
         {
@@ -24,6 +29,7 @@ internal class ZeldaWorld
             var type = vtx.TryGetValue("type", out object? typeValue) ? (VertexType)typeValue : VertexType.Meta;
             var item = vtx.TryGetValue("item", out object? itemValue) ? (string)itemValue : null;
             var itemset = vtx.TryGetValue("itemset", out object? itemsetValue) ? (string[])itemsetValue : null;
+            var address = vtx.TryGetValue("address", out object? addressValue) ? (int?)addressValue : null;
 
             var vertex = new Vertex()
             {
@@ -31,7 +37,9 @@ internal class ZeldaWorld
                 Name = name,
                 Type = type,
                 Item = item != null ? world.GetItem("Z1" + item) : null,
-                ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? []
+                ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? [],
+                Addresses = address != null ? [(long)address.Value] : null,
+                Game = Game.Zelda
             };
 
             world.Graph.AddVertex(vertex);
@@ -86,6 +94,7 @@ internal class ZeldaWorld
         var startMap = yamlReader.GetStartMap();
         var formattedStartMap = startMap.ToString("X2");
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Map {formattedStartMap} - Left exit"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Meta - Meta"), world.GetItem("fixed"));
 
     }
 
@@ -103,9 +112,9 @@ internal class ZeldaWorld
                 {
                     { 1, 
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 3),
                         ]
                     }
                 }
@@ -114,9 +123,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -125,9 +134,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -136,9 +145,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -147,9 +156,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -158,9 +167,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 1),
                         ]
                     }
                 }
@@ -169,9 +178,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -180,9 +189,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -191,9 +200,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Key"),
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -201,13 +210,27 @@ internal class ZeldaWorld
             { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
-                            world.GetItem("Z1UseBombs"),
+                            world.GetItem("Z1Bombs"),
                             world.GetItem("Z1StepLadder"),
-                            world.GetItem("Z1OpenGraves"),
                             world.GetItem("Z1Raft"),
-                            world.GetItem("Z1BurnTrees"),
                             world.GetItem("Z1Recorder"),
-                            world.GetItem("Z1Sword"),
+                            world.GetItem("Z1SwordL1"),
+                            world.GetItem("Z1SwordL2"),
+                            world.GetItem("Z1SwordL3"),
+                            world.GetItem("Z1BlueCandle"),
+                            world.GetItem("Z1RedCandle"),
+                            world.GetItem("Z1SilverArrows"),
+                            world.GetItem("Z1Bow"),
+                            world.GetItem("Z1MagicalKey"),
+                            world.GetItem("Z1Rod"),
+                            world.GetItem("Z1Book"),
+                            world.GetItem("Z1BlueRing"),
+                            world.GetItem("Z1RedRing"),
+                            world.GetItem("Z1PowerBracelet"),
+                            world.GetItem("Z1Letter"),
+                            world.GetItem("Z1MagicShield"),
+                            world.GetItem("Z1Boomerang"),
+                            world.GetItem("Z1MagicBoomerang"),
                         ]
                     },
                 }

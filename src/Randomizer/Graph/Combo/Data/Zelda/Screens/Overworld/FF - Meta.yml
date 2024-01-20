@@ -1,0 +1,41 @@
+name: Meta
+area: Overworld
+screen: 0xFF
+nodes:     
+  meta:
+    - name: "Meta"
+      type: Meta  
+
+    - name: "Use Bombs"
+      type: Meta
+      item: UseBombs
+
+    - name: "Open Graves"
+      type: Meta
+      item: OpenGraves
+
+    - name: "Burn Trees"
+      type: Meta
+      item: BurnTrees
+
+    - name: "Use Sword"
+      type: Meta
+      item: UseSword
+      
+edges:
+  directed:
+    Bombs:
+      - ["Meta", "Use Bombs"]
+    PowerBracelet:
+      - ["Meta", "Open Graves"]
+    BlueCandle:
+      - ["Meta", "Burn Trees"]
+    RedCandle:
+      - ["Meta", "Burn Trees"]
+    SwordL1:
+      - ["Meta", "Use Sword"]
+    SwordL2:
+      - ["Meta", "Use Sword"]
+    SwordL3:
+      - ["Meta", "Use Sword"]
+          

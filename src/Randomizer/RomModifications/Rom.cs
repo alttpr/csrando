@@ -6,7 +6,7 @@ using SpanDex;
 
 public sealed class Rom : IDisposable
 {
-    private const int RomSize = 2 * 1024 * 1024;
+    private const int RomSize = 8 * 1024 * 1024;
 
     private readonly string _tempRom;
     private readonly FileStream _rom;
@@ -1668,11 +1668,26 @@ public sealed class Rom : IDisposable
         if (itemToWrite == null)
             return;
 
-        var itemBytes = itemToWrite.Bytes;
+        var itemByteDict = itemToWrite.Bytes;
+        
+        if (itemByteDict.Count == 0)
+            return;
+
+        var itemBytes = location.Game switch
+        {
+            Game.Alttp => itemByteDict["z3"],
+            Game.SuperMetroid => itemByteDict["m3"],
+            Game.Metroid => itemByteDict["m1"],
+            Game.Zelda => itemByteDict["z1"],
+            _ => itemByteDict["z3"],
+        };
+
+        //var itemBytes = itemToWrite.Bytes;
         // probably a meta item...
         // FIXME: or something that needs special handling?
         if (itemBytes == null)
             return;
+        
 
         for (int i = 0; i < Math.Min(itemBytes.Length, location.Addresses.Length); i++)
         {
@@ -1683,7 +1698,7 @@ public sealed class Rom : IDisposable
             if (itemByte == null)
                 continue;
 
-            Write((Address)address, [itemByte.Value]);
+            Write((Address)address, [itemByte.Value], (location.Game == Game.Alttp || location.Game == null) ? 0x400000 : 0);
         }
     }
     public void WriteCreditsText(WorldConfig config, Vertex location, Item? item)
@@ -1861,9 +1876,9 @@ public sealed class Rom : IDisposable
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
-    private void Write(Address address, in ReadOnlySpan<byte> data)
+    private void Write(Address address, in ReadOnlySpan<byte> data, int offset = 0x400000)
     {
-        _rom.Seek(address.Value, SeekOrigin.Begin);
+        _rom.Seek(address.Value + offset, SeekOrigin.Begin);
         _rom.Write(data);
     }
 

@@ -85,6 +85,7 @@ public sealed class Vertex : ICloneable
     public string[]? Deny { get; init; }
     public int? Group { get; init; }
     public Item? Key { get; init; }
+    public Game? Game { get; init; }
 
     public List<Edge> Edges = new();
 

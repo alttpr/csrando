@@ -39,6 +39,8 @@ public static class RomWriter
         // TODO: patch in the sprite
         // TODO: tournament mode
 
+        // Patch in combo specific things
+
         rom.UpdateChecksum();
 
         outputDirectory.Create();

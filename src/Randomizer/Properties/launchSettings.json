@@ -2,7 +2,8 @@
   "profiles": {
     "Randomizer": {
       "commandName": "Project",
-      "commandLineArgs": "randomize seed=31337"
+      "commandLineArgs": "randomize rom=main.sfc outdir=out",
+      "workingDirectory": "F:\\Code\\csrando\\src\\Randomizer"
     }
   }
 }

@@ -11,12 +11,15 @@ using WeightedSet = Dictionary<int, List<Item>>;
 
 internal class MetroidWorld
 {
+    public static Dictionary<World, MetroidYamlReader.YamlData?> Data = new Dictionary<World, MetroidYamlReader.YamlData?>();
+
     // Adjusts the world as needed to randomize Metroid
     public static void AdjustWorld(World world)
     {
         // Load the Metroid Yaml Data and hook up the world to the current world graph
         var yamlReader = new MetroidYamlReader();
         var metroidVertices = yamlReader.LoadYmlData(world);
+        Data[world] = yamlReader.Data;
 
         foreach (var vtx in metroidVertices)
         {
@@ -31,7 +34,8 @@ internal class MetroidWorld
                 Name = name,
                 Type = type,
                 Item = item != null ? world.GetItem("M1" + item) : null,
-                ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? []
+                ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? [],
+                Game = Game.Metroid
             };
 
             world.Graph.AddVertex(vertex);
@@ -112,4 +116,5 @@ internal class MetroidWorld
             }
         };
     }
+
 }

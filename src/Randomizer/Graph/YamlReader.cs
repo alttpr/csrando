@@ -26,7 +26,7 @@ public class YamlReader
         set => _dataRoot = new(value);
     }
 
-    private const string ItemsPath = "items.yml";
+    private const string ItemsPath = "multi_items.yml";
     private const string VerticesPath = "Vertices";
     private const string BossesPath = "bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
@@ -251,7 +251,7 @@ public class YamlReader
 public class YamlItem
 {
     [YamlMember(Alias = "bytes")]
-    public List<byte> Bytes { get; set; } = new();
+    public Dictionary<string, List<byte>> Bytes { get; set; } = new();
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
 }

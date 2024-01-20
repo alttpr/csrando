@@ -11,7 +11,9 @@ internal class ZeldaYamlReader
     private Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
     private Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
 
-    class Screen
+    public YamlData? Data { get { return data;  } }
+
+    internal class Screen
     {
         public string name;
         public Area area;
@@ -20,40 +22,41 @@ internal class ZeldaYamlReader
         public EdgeCollection edges;
     }
 
-    class NodeCollection
+    internal class NodeCollection
     {
         public List<Exit> exits;
         public List<Cave> caves;
         public List<Meta> meta;
     }
 
-    class EdgeCollection
+    internal class EdgeCollection
     {
         public Dictionary<string, List<object>> undirected;
         public Dictionary<string, List<object>> directed;
     }
 
-    class Exit
+    internal class Exit
     {
         public string name;
         public ExitType type;
         public Direction direction;
     }
 
-    class Cave
+    internal class Cave
     {
         public string name;
         public CaveType type;
     }
 
-    class Meta
+    internal class Meta
     {
         public string name;
         public MetaType type;
         public string position;
+        public string? item;
     }
 
-    enum MetaType
+    internal enum MetaType
     {
         Meta,
         Item,
@@ -63,7 +66,7 @@ internal class ZeldaYamlReader
         Stairs
     }
 
-    enum CaveType
+    internal enum CaveType
     {
         Bomb,
         Open,
@@ -72,18 +75,18 @@ internal class ZeldaYamlReader
         Push
     }
 
-    enum Area
+    internal enum Area
     {
         Overworld,
         Underworld,
     }
 
-    enum ExitType
+    internal enum ExitType
     {
         Scroll
     }
 
-    enum Direction
+    internal enum Direction
     {
         Up,
         Down,
@@ -91,7 +94,7 @@ internal class ZeldaYamlReader
         Right,
     }
 
-    class OverworldMap
+    internal class OverworldMap
     {
         public string name;
         public Area area;
@@ -110,7 +113,7 @@ internal class ZeldaYamlReader
         public int[] exit;
     }
 
-    class UnderworldMap
+    internal class UnderworldMap
     {
         public string name;
         public Area area;
@@ -132,7 +135,7 @@ internal class ZeldaYamlReader
         public int behaviour;
     }
 
-    enum DoorType : int
+    internal enum DoorType : int
     {
         Open = 0,
         Wall = 1,
@@ -144,7 +147,7 @@ internal class ZeldaYamlReader
         Shutter = 7
     }
 
-    enum RoomBehaviour : int
+    internal enum RoomBehaviour : int
     {
         None = 0,
         KillForItemShutter = 1,
@@ -156,7 +159,7 @@ internal class ZeldaYamlReader
         KillForItemShutterBoss = 7
     }
 
-    class Level
+    internal class Level
     {
         public string name;
         public int level;
@@ -179,7 +182,7 @@ internal class ZeldaYamlReader
         public byte[] death_palette_series;
     }
 
-    class Special
+    internal class Special
     {
         public int overworld_item_room;
         public int overworld_item_x;
@@ -193,7 +196,7 @@ internal class ZeldaYamlReader
         public int start;
     }
 
-    class YamlData
+    internal class YamlData
     {
         public List<OverworldMap> overworld_maps;
         public List<Screen> overworld_screens;
@@ -434,7 +437,7 @@ internal class ZeldaYamlReader
             else
             {
                 var metaName = $"{mapName} - {meta.name}";
-                var metaNode = FindOrCreateNode(metaName);
+                var metaNode = FindOrCreateNode(metaName, meta.item);
             }
         }
 
@@ -542,6 +545,7 @@ internal class ZeldaYamlReader
                 { "name", $"{mapName} - {armosScreenNode.name} - Item" },
                 { "type", VertexType.Standing },
                 { "item", null },
+                { "address", 0x620CF5 },
                 { "itemset", (string[])["zelda"] },
             }); 
 
@@ -559,6 +563,7 @@ internal class ZeldaYamlReader
                 { "name", $"{mapName} - {itemScreenNode.name} - Item" },
                 { "type", VertexType.Standing },
                 { "item", null },
+                { "address", 0x65B88B },
                 { "itemset", (string[])["zelda"] },
             });
 
@@ -675,7 +680,7 @@ internal class ZeldaYamlReader
                     var triforceNode = CreateNode(new()
                     {
                         { "name", $"{mapName} - {meta.name} - Triforce" },
-                        { "type", VertexType.Standing },
+                        { "type", VertexType.Meta },
                         { "item", "Triforce" },
                         { "itemset", (string[])["zelda", "z1triforce"] },
                     });
@@ -689,7 +694,7 @@ internal class ZeldaYamlReader
                     var zeldaNode = CreateNode(new()
                     {
                         { "name", $"{mapName} - {meta.name} - Zelda" },
-                        { "type", VertexType.Standing },
+                        { "type", VertexType.Meta },
                         { "item", "Zelda" },
                         { "itemset", (string[])["zelda"] },
                     });
@@ -706,6 +711,7 @@ internal class ZeldaYamlReader
                     { "name", $"{mapName} - Item" },
                     { "type", VertexType.Standing },
                     { "item", null },
+                    { "address", 0x650000 + map.map },
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 
@@ -823,6 +829,7 @@ internal class ZeldaYamlReader
                     { "name", $"{mapName} - Passage - Item" },
                     { "type", VertexType.Standing },
                     { "item", null },
+                    { "address", 0x650000 + map.map },
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 

@@ -13,6 +13,8 @@ internal class MetroidYamlReader
     private Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
     private Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
 
+    public YamlData? Data { get { return data; } }
+
     internal class YamlData
     {
         public List<Room> rooms;
@@ -217,6 +219,9 @@ internal class MetroidYamlReader
         {
             BuildRoom(room);
         }
+
+        // Construct item table data 
+
     }
 
     private Dictionary<string, object> CreateNode(Dictionary<string, object> nodeData)

@@ -16,7 +16,7 @@ public sealed class Item
     public string Name { get; }
     public World World { get; }
     public ItemType Type { get; }
-    public byte[]? Bytes { get; }
+    public Dictionary<string, byte[]?> Bytes { get; }
 
     /// <summary>
     /// Create a new Item.
