@@ -114,7 +114,7 @@ internal class ZeldaWorld
                         [
                             world.GetItem("Z1Map"),
                             world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 3),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
                         ]
                     }
                 }
@@ -231,8 +231,15 @@ internal class ZeldaWorld
                             world.GetItem("Z1MagicShield"),
                             world.GetItem("Z1Boomerang"),
                             world.GetItem("Z1MagicBoomerang"),
+                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer"), 9),
                         ]
                     },
+                    { 9001, [
+                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer"), 4),
+                            .. Enumerable.Repeat(world.GetItem("Z1Bombs"), 16),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 8),
+                        ]
+                    }
                 }
             }
         };

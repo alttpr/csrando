@@ -699,7 +699,7 @@ M1EnergyTank:
     z3: [0x6e]
     m1: [0x0B, 0x6e]
     m3: [0x6e]
-M1Missiles:
+M1Missile:
   bytes:
     z1: [0x9f]
     z3: [0x6f]

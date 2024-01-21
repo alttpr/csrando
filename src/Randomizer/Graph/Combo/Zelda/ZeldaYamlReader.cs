@@ -196,6 +196,31 @@ internal class ZeldaYamlReader
         public int start;
     }
 
+    internal class CaveData
+    {
+        public string name;
+        public int cave;
+        public int[] items;
+        public int[] flags;
+        public int[] prices;
+        public int text;
+
+        public CaveFlags Flag => (CaveFlags)((text & 0xC0) >> 6 | flags[2] >> 4 | flags[1] >> 2 | flags[0]);
+    }
+
+    [Flags]
+    internal enum CaveFlags : int
+    {
+        PickItem = 0x01,
+        Shop = 0x02,
+        ShowItems = 0x04,
+        ShowPrices = 0x08,
+        MoneyGame = 0x10,
+        Hint = 0x20,
+        HeartRequirement = 0x40,
+        NegativeAmounts = 0x80,
+    }
+
     internal class YamlData
     {
         public List<OverworldMap> overworld_maps;
@@ -205,6 +230,7 @@ internal class ZeldaYamlReader
         public List<Screen> underworld_screens;
 
         public List<Level> levels;
+        public List<CaveData> caves;
         public Special special;
     }
 
@@ -323,6 +349,7 @@ internal class ZeldaYamlReader
         var overworldScreens = LoadFiles<Screen>(Path.Combine(path, "Screens/Overworld"));
         var underworldScreens = LoadFiles<Screen>(Path.Combine(path, "Screens/Underworld"));
 
+        var caves = LoadFile<List<CaveData>>(Path.Combine(path, "Caves.yml"));
         var special = LoadFile<Special>(Path.Combine(path, "Special.yml"));
 
         data = new YamlData()
@@ -332,7 +359,8 @@ internal class ZeldaYamlReader
             underworld_maps = underworldMaps,
             overworld_screens = overworldScreens,
             underworld_screens = underworldScreens,
-            special = special
+            special = special,
+            caves = caves
         };
 
         BuildGraph();
@@ -399,6 +427,67 @@ internal class ZeldaYamlReader
 
             AddUndirectedEdge(levelEntranceNode, FindOrCreateNode($"{startMap.area} - {level.name} - {startMap.name} - {startNode.name}"), levelRequirement);
         }
+
+        foreach(var cave in data.caves)
+        {
+            var caveEntranceNode = FindNode($"Cave {cave.cave:X2} - Entrance");
+            var caveNode = FindOrCreateNode($"Cave {cave.cave:X2}");
+
+            AddDirectedEdge(caveEntranceNode, caveNode, "fixed");
+
+            // We don't mess with shops for now, just the take item things, and let's remove the "heart requirement" flag for now
+            // TODO: Fix Heart requirement flag
+
+            if (cave.Flag.HasFlag(CaveFlags.PickItem) && cave.Flag.HasFlag(CaveFlags.ShowItems) && !cave.Flag.HasFlag(CaveFlags.Shop) && !cave.Flag.HasFlag(CaveFlags.MoneyGame) && !cave.Flag.HasFlag(CaveFlags.Hint))
+            {
+                bool takeAny = cave.items.Where(i => i != 0x2F).Count() > 1;
+                var caveTypeName = takeAny ? "Take Any Item" : "Take One Item";
+                var caveItemSet = takeAny ? "z1takeany" : "z1takeone";
+                int caveItemIndex = 0;
+                foreach(var item in cave.items)
+                {
+                    if(item != 0x2F)
+                    {
+                        string junkItem = null;
+                        if (takeAny)
+                        {
+                            // TODO: Fix this
+                            // Pre-fill this take-any with a junk item
+                            List<string> junkItems = ["Rupee", "Rupee5", "Heart", "Key", "Bombs", "Arrows"];
+                            junkItem = junkItems[new Random().Next(0, junkItems.Count)];
+                        }
+
+                        // This is an item we want to add to the cave
+                        var itemNode = CreateNode(new()
+                        {
+                            { "name", $"Cave {cave.cave:X2} - {caveTypeName} - Item {caveItemIndex:X2}" },
+                            { "type", VertexType.Standing },
+                            { "item", junkItem },
+                            { "address", 0x650100 + ((cave.cave-0x10)*3) + caveItemIndex },
+                            { "itemset", (string[])["zelda", $"z1c{cave.cave:X2}", caveItemSet] },
+                        });
+
+                        if (cave.Flag.HasFlag(CaveFlags.HeartRequirement))
+                        {
+                            var heartRequirement = cave.cave switch
+                            {
+                                0x12 => "HeartContainer|2",
+                                0x13 => "HeartContainer|9",
+                                _ => "fixed"
+                            };
+                            AddDirectedEdge(caveNode, itemNode, heartRequirement);
+                        }
+                        else
+                        {
+                            AddDirectedEdge(caveNode, itemNode, "fixed");
+                        }
+
+                        
+                    }
+                    caveItemIndex++;
+                }
+            }            
+        }
     }
 
     private void BuildOverworldMap(OverworldMap map)
@@ -417,7 +506,7 @@ internal class ZeldaYamlReader
 
         foreach (var cave in screen.nodes.caves ?? [])
         {
-            if (map.cave > 0 && (cave.type == CaveType.Open || map.secret[0] == 1))
+            if (map.cave > 0 && (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || map.secret[0] == 1))
             {
                 var caveName = $"{mapName} - {cave.name}";
                 var caveNode = FindOrCreateNode(caveName);
@@ -493,7 +582,7 @@ internal class ZeldaYamlReader
             var cave = screen.nodes.caves?.FirstOrDefault() ?? null;
             if (cave != null)
             {
-                if (cave.type == CaveType.Open || map.secret[0] == 1)
+                if (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || map.secret[0] == 1)
                 {
                     if (map.cave < 10)
                     {
@@ -505,10 +594,10 @@ internal class ZeldaYamlReader
                     } 
                     else
                     {
-                        var caveEntranceNode = FindOrCreateNode($"Cave {map.cave} - Entrance");
+                        var caveEntranceNode = FindOrCreateNode($"Cave {map.cave:X2} - Entrance");
                         var caveNode = FindOrCreateNode($"{mapName} - {cave.name}");
 
-                        AddDirectedEdge(caveEntranceNode, caveNode, "fixed");
+                        AddDirectedEdge(caveNode, caveEntranceNode, "fixed");
                     }
                 }
             }
@@ -522,7 +611,7 @@ internal class ZeldaYamlReader
             var caveNodeName = map.cave switch
             {
                 <= 10 => $"Level {map.cave} - Entrance",
-                _ => $"Cave {map.cave} - Entrance"
+                _ => $"Cave {map.cave:X2} - Entrance"
             };
 
             var caveNode = FindOrCreateNode(caveNodeName);
@@ -580,7 +669,7 @@ internal class ZeldaYamlReader
             var caveNodeName = map.cave switch
             {
                 <= 10 => $"Level {map.cave} - Entrance",
-                _ => $"Cave {map.cave} - Entrance"
+                _ => $"Cave {map.cave:X2} - Entrance"
             };
 
             var caveNode = FindOrCreateNode(caveNodeName);
@@ -706,9 +795,16 @@ internal class ZeldaYamlReader
             // Does this room have an item? (This should be 2F when writing back combo data)
             if (map.room_item != 0x03)
             {
+                var itemName = (RoomBehaviour)map.behaviour switch
+                {
+                    RoomBehaviour.KillForItemShutter => $"{mapName} - Kill - Item",
+                    RoomBehaviour.KillForItemShutterBoss => $"{mapName} - Boss - Item",
+                    _ => $"{mapName} - Item"
+                };
+
                 var roomItemNode = CreateNode(new()
                 {
-                    { "name", $"{mapName} - Item" },
+                    { "name", itemName },
                     { "type", VertexType.Standing },
                     { "item", null },
                     { "address", 0x650000 + map.map },
@@ -722,8 +818,8 @@ internal class ZeldaYamlReader
 
                 var roomItemRequirement = (RoomBehaviour)map.behaviour switch
                 {
-                    RoomBehaviour.KillForItemShutter => "Sword",
-                    RoomBehaviour.KillForItemShutterBoss => "Sword",
+                    RoomBehaviour.KillForItemShutter => "UseSword",
+                    RoomBehaviour.KillForItemShutterBoss => "UseSword",
                     _ => "fixed"
                 };
 

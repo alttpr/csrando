@@ -14,6 +14,10 @@ nodes:
     - name: "Up exit"
       type: Scroll
       direction: Up
+
+  caves:
+    - name: "Waterfall cave"
+      type: Open
       
 edges:
   undirected:
@@ -21,3 +25,5 @@ edges:
       - ["Left exit", "Right exit"]
       - ["Left exit", "Up exit"]
       - ["Right exit", "Up exit"]
+    StepLadder:
+      - ["Left exit", "Waterfall cave"]

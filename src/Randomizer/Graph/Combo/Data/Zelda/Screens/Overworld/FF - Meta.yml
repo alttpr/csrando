@@ -21,9 +21,15 @@ nodes:
     - name: "Use Sword"
       type: Meta
       item: UseSword
+
+    - name: "Push Blocks"
+      type: Meta
+      item: PushBlocks
       
 edges:
   directed:
+    fixed:
+      - ["Meta", "Push Blocks"]    
     Bombs:
       - ["Meta", "Use Bombs"]
     PowerBracelet:
