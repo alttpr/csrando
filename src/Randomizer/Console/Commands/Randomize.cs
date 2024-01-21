@@ -22,6 +22,7 @@ internal sealed class Randomize : Command
     private readonly Option<string> _crystalsGanon = new Option<string>("crystals_ganon", () => "7", "set ganon crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<string> _crystalsTower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
+    private readonly Option<List<string>> _startingItems = new Option<List<string>>("items", "set starting items (comma separated)");
     private readonly Option<int> _bulk = new("bulk", () => 1, "generate multiple ROMs");
     private readonly Option<int> _multiworld = new("multiworld", () => 1, "multiworld player count");
     private readonly Option<int?> _seed = new("seed", "set starting seed");
@@ -44,6 +45,8 @@ internal sealed class Randomize : Command
         Add(_crystalsGanon);
         Add(_crystalsTower);
         Add(_tech);
+        Add(_startingItems);
+        _startingItems.AllowMultipleArgumentsPerToken = true;
         Add(_bulk);
         Add(_multiworld);
         Add(_seed);
@@ -103,7 +106,8 @@ internal sealed class Randomize : Command
                     CrystalsGanon = crystalsGanon,
                     CrystalsTower = crystalsTower,
                     Weapon = context.ParseResult.GetValueForOption(_weapons),
-                    Techs = context.ParseResult.GetValueForOption(_tech) ?? new(),
+                    Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
+                    StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],
                 }, context.ParseResult.GetValueForOption(_multiworld)).ToArray(),
                 context.ParseResult.GetValueForOption(_seed)
             );
