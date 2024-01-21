@@ -419,10 +419,13 @@ internal class ZeldaYamlReader
             var startNode = startScreen.nodes.exits.Where(e => e.direction == Direction.Down).First();
 
             // Connect level entrance to start room
+            // TODO: Temporary sword requirement for dungeons, remove this
             var levelRequirement = level.level switch
             {
+                6 => "CanDefeatGohma",
+                8 => "CanDefeatGohma",
                 9 => "Triforce|8",
-                _ => "fixed"
+                _ => "CanHurtEnemies"
             };
 
             AddUndirectedEdge(levelEntranceNode, FindOrCreateNode($"{startMap.area} - {level.name} - {startMap.name} - {startNode.name}"), levelRequirement);

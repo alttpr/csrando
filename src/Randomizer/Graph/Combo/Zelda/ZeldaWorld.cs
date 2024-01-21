@@ -207,20 +207,25 @@ internal class ZeldaWorld
                     }
                 }
             },
+            { new ItemSetName("lw", world), new WeightedSet
+                {
+                    { 2, [world.GetItem("Z1SwordL1")] }
+                }
+            },
             { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
                             world.GetItem("Z1Bombs"),
                             world.GetItem("Z1StepLadder"),
                             world.GetItem("Z1Raft"),
-                            world.GetItem("Z1Recorder"),
-                            world.GetItem("Z1SwordL1"),
+                            world.GetItem("Z1Recorder"),                            
                             world.GetItem("Z1SwordL2"),
                             world.GetItem("Z1SwordL3"),
                             world.GetItem("Z1BlueCandle"),
                             world.GetItem("Z1RedCandle"),
                             world.GetItem("Z1SilverArrows"),
                             world.GetItem("Z1Bow"),
+                            world.GetItem("Z1Arrows"),
                             world.GetItem("Z1MagicalKey"),
                             world.GetItem("Z1Rod"),
                             world.GetItem("Z1Book"),
@@ -236,8 +241,10 @@ internal class ZeldaWorld
                     },
                     { 9001, [
                             .. Enumerable.Repeat(world.GetItem("Z1HeartContainer"), 4),
-                            .. Enumerable.Repeat(world.GetItem("Z1Bombs"), 16),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 8),
+                            .. Enumerable.Repeat(world.GetItem("Z1Bombs"), 22),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 12),
+                            .. Enumerable.Repeat(world.GetItem("Z1Rupee"), 12),
+                            .. Enumerable.Repeat(world.GetItem("Z1Rupee5"), 22),
                         ]
                     }
                 }

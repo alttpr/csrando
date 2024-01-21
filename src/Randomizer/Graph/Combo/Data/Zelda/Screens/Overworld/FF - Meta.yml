@@ -25,23 +25,38 @@ nodes:
     - name: "Push Blocks"
       type: Meta
       item: PushBlocks
+
+    - name: "Can Hurt Enemies"
+      type: Meta
+      item: CanHurtEnemies
+    
+    - name: "Can Defeat Gohma"
+      type: Meta
+      item: CanDefeatGohma  
       
 edges:
   directed:
-    fixed:
-      - ["Meta", "Push Blocks"]    
     Bombs:
       - ["Meta", "Use Bombs"]
     PowerBracelet:
       - ["Meta", "Open Graves"]
+      - ["Meta", "Push Blocks"]    
     BlueCandle:
       - ["Meta", "Burn Trees"]
     RedCandle:
       - ["Meta", "Burn Trees"]
+      - ["Meta", "Can Hurt Enemies"]
     SwordL1:
       - ["Meta", "Use Sword"]
     SwordL2:
       - ["Meta", "Use Sword"]
     SwordL3:
       - ["Meta", "Use Sword"]
+    UseSword:
+      - ["Meta", "Can Hurt Enemies"]
+    Rod:
+      - ["Meta", "Can Hurt Enemies"]
+    Bow:
+      - ["Can Hurt Enemies", "Can Defeat Gohma"]
+      
           

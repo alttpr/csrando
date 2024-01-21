@@ -44,6 +44,14 @@ ProgressiveBow|2:
   directed:
     - ["Meta", "BowAndSilverArrows"]
   undirected: []
+Bow:
+  directed:
+    - ["Meta", "BowAndArrows"]
+  undirected: []
+SilverArrowUpgrade:
+  directed:
+    - ["BowAndArrows", "BowAndSilverArrows"]
+  undirected: []
 LogicalBottle:
   directed:
     - ["Meta", "BottleMagicBar1"]

@@ -89,6 +89,9 @@ internal class MetroidWorld
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
 
+        var morphItem = world.GetLocation("M1 - Brinstar - Morph Room - Morph Pedestal (1) - Morph Ball");
+        morphItem.Item = world.GetItem("OneRupee");
+
     }
 
     public static ItemSet GetItemSet(World world)
@@ -98,7 +101,6 @@ internal class MetroidWorld
             { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
-                            world.GetItem("M1Morph"),
                             world.GetItem("M1Bombs"),
                             world.GetItem("M1Varia"),
                             world.GetItem("M1HiJump"),
@@ -115,6 +117,11 @@ internal class MetroidWorld
                             .. Enumerable.Repeat(world.GetItem("M1EnergyTank"), 7),
                         ]
                     }
+                }
+            },
+            { new ItemSetName("lw", world), new WeightedSet
+                {
+                    { 2, [ world.GetItem("M1Morph")] }                            
                 }
             }
         };
