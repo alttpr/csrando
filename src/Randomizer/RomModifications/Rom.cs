@@ -1757,6 +1757,14 @@ public sealed class Rom : IDisposable
 
             Write((Address)address, [itemByte.Value]);
         }
+
+        if (location.Name == "Tower Of Hera - Basement Cage")
+        {
+            if (itemToWrite.Name == "KeyP3")
+                Write(0x4E3BB, [0xE4]);
+            else
+                Write(0x4E3BB, [0xEB]);
+        }
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
