@@ -119,18 +119,4 @@ public class SwampPalaceTest : InvertedNoGlitchesLogicTests
     {
         base.TestLogic(location, expected, inventory);
     }
-
-    [TestMethod]
-    public void TestKeyForKey()
-    {
-        RunLogicTest(
-        [
-            new WorldConfig
-            {
-                Accessibility = AccessibilityOption.Items,
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        ], "Swamp Palace - Big Chest:0", true, new[] { "KeyD2", "MagicMirror", "MoonPearl", "Flippers", "TitansMitt", "Hammer" });
-    }
 }

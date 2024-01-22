@@ -172,6 +172,12 @@ maps:
               - "Hyrule Castle - Courtyard"
             RescueZelda:
               - "Hyrule Castle - Outer Court"
+            ConfigWorldStateOpen:
+              - "Hyrule Castle - Wall Walk - Middle Door Normal"
+            ConfigWorldStateStandard:
+              - "Hyrule Castle - Wall Walk - Middle Door Normal"
+            ConfigWorldStateInverted:
+              - "Hyrule Castle - Wall Walk - Middle Door Inverted"
           entrances:
             - name: "Hyrule Castle - West Entrance"
               entranceid: 0x02
@@ -179,12 +185,29 @@ maps:
             - name: "Hyrule Castle - East Entrance"
               entranceid: 0x04
               outletid: 0x04
-            - name: "Hyrule Castle - Agahnim's Tower Entrance"
-              conditions: ["L2Sword", "Cape"]
-              entranceid: 0x23
-              outletid: 0x25
           mobs:
             - name: "Hyrule Castle - Courtyard - Lightning Lock"
               position: { x: 0x1f, y: 0x06 }
               sprite: "LightningLock"
               state: [0, 1]
+
+        - name: "Hyrule Castle - Wall Walk - Middle Door Normal"
+          connections:
+            L2Sword:
+              - "Hyrule Castle - Wall Walk - Middle Door"
+            Cape:
+              - "Hyrule Castle - Wall Walk - Middle Door"
+
+        - name: "Hyrule Castle - Wall Walk - Middle Door Inverted"
+          connections:
+            TowerEntry:
+              - "Hyrule Castle - Wall Walk - Middle Door"
+
+        - name: "Hyrule Castle - Wall Walk - Middle Door"
+          connections:
+            fixed:
+              - "Hyrule Castle - Wall Walk"
+          entrances:
+            - name: "Hyrule Castle - Agahnim's Tower Entrance"
+              entranceid: 0x23
+              outletid: 0x25

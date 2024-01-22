@@ -8,6 +8,8 @@ maps:
             fixed:
               - "Lake Hylia River Bend"
               - "Lake Hylia Fairy Island"
+            ConfigWorldStateInverted:
+              - "Lake Hylia Small Island"
           warps:
             - name: "Lake Hylia whirlpool"
               position: { x: 0x29, y: 0x2B }
@@ -157,6 +159,10 @@ maps:
           connections:
             Flippers:
               - "Lake Hylia"
+            ConfigWorldStateNormal:
+              - "Lake Hylia Fairy Island Normal Portal"
+            ConfigWorldStateOpen:
+              - "Lake Hylia Fairy Island Normal Portal"
           entrances:
             - name: "Pond of Happiness"
               entranceid: 0x5C
@@ -171,6 +177,11 @@ maps:
               position: { x: 0x2f, y: 0x1f }
               sprite: "Buzzblob"
               state: [1, 2]
+
+        - name: "Lake Hylia Fairy Island Normal Portal"
+          connections:
+            TitansMitt:
+              - "Dark Lake Hylia Ice Palace Entrance"
 
         - name: "Lake Hylia Small Island"
           connections:

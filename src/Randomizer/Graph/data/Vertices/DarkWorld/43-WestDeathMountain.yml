@@ -8,6 +8,10 @@ maps:
             fixed:
               - "West Dark Death Mountain Byrna Ledge"
               - "East Dark Death Mountain South East Cliff"
+            # Portal
+            ConfigWorldStateInverted:
+              - "West Death Mountain"
+              - "West Dark Death Mountain Summit"
           entrances:
             - name: "West Death Mountain Big Fairy"
               entranceid: 0x6F
@@ -32,13 +36,27 @@ maps:
             fixed:
               - "West Dark Death Mountain"
               - "East Dark Death Mountain Summit"
+            ConfigWorldStateOpen:
+              - "West Dark Death Mountain Summit Tower Stairs Normal"
+            ConfigWorldStateStandard:
+              - "West Dark Death Mountain Summit Tower Stairs Normal"
+            ConfigWorldStateInverted:
+              - "West Dark Death Mountain Ganon Tower Stairs"
           mobs:
             - name: "West Dark Death Mountain - Crystal Cut Scene"
               position: { x: 0x2f, y: 0x0c }
               sprite: "Waterfall"
               state: [1, 2]
 
+        - name: "West Dark Death Mountain Summit Tower Stairs Normal"
+          connections:
+            TowerEntry:
+              - "West Dark Death Mountain Ganon Tower Stairs"
+
         - name: "West Dark Death Mountain Ganon Tower Stairs"
+          connections:
+            ConfigWorldStateInverted:
+              - "West Dark Death Mountain Summit"
           entrances:
             - name: "Ganon's Tower"
               entranceid: 0x36

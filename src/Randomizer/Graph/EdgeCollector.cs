@@ -30,7 +30,6 @@ internal class EdgeCollector
             case StateOption.Open:
             default:
                 YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
-                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("open"));
                 edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
                 edgeData["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
                 break;

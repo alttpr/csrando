@@ -31,17 +31,11 @@ fixed:
   - ["Spectacle Rock Cave Exit - In", "Spectacle Rock Cave Exit"]
   - ["Spectacle Rock Cave Exit - Exit", "Spectacle Rock Cave Exit - Out"]
 
-  - ["Death Mountain Descent - In", "Death Mountain Descent Cave Right"]
-  - ["Death Mountain Descent Cave Right - Exit", "Death Mountain Descent - Out"]
-
   - ["Old Man Home - In", "Old Man Home"]
   - ["Old Man Home - Exit", "Old Man Home - Out"]
 
   - ["Old Man Home Circle - In", "Old Man Home Circle"]
   - ["Old Man Home Circle - Exit", "Old Man Home Circle - Out"]
-
-  - ["Old Man Maze - In", "Old Man Maze"]
-  - ["Old Man Maze - Exit", "Old Man Maze - Out"]
 
   # Map 0x05
   - ["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right"]
@@ -70,11 +64,6 @@ fixed:
 
   - ["Paradox Cave - Top - In", "Paradox Cave - Top"]
   - ["Paradox Cave - Top - Exit", "Paradox Cave - Top - Out"]
-
-  # Map 0x0A
-  # Old Man Cave connected in normal.yml
-  - ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left"]
-  - ["Death Mountain Descent Cave Left - Exit", "Death Mountain Foot Descent Ledge - Out"]
 
   # Map 0x0F
   - ["Waterfall of Wishing - In", "Waterfall Fairy"]
@@ -169,9 +158,6 @@ fixed:
 
   - ["Hyrule Castle - East Entrance - In", "Hyrule Castle - East"]
   - ["Hyrule Castle - East - Exit", "Hyrule Castle - East Entrance - Out"]
-
-  - ["Hyrule Castle - Agahnim's Tower Entrance - In", "Agahnims Tower - Entrance"]
-  - ["Agahnims Tower - Entrance - Exit", "Hyrule Castle - Agahnim's Tower Entrance - Out"]
 
   # Map 0x1E
   - ["Eastern Palace - In", "Eastern Palace - Entrance"]
@@ -308,14 +294,8 @@ fixed:
   - ["Lumberjack Shop - Exit", "Lumberjack Shop - Out"]
 
   # Map 0x43
-  - ["Ganon's Tower - In", "Ganon's Tower - Lobby"]
-  - ["Ganon's Tower - Lobby - Exit", "Ganon's Tower - Out"]
-
   - ["Spike Cave - In", "Spike Cave Entrance"]
   - ["Spike Cave Entrance - Exit", "Spike Cave - Out"]
-
-  - ["West Death Mountain Big Fairy - In", "Death Mountain Big Fairy"]
-  - ["Death Mountain Big Fairy - Exit", "West Death Mountain Big Fairy - Out"]
 
   # Map 0x45
   - ["Dark Floating Island - In", "Hookshot Cave Corner"]
@@ -345,13 +325,6 @@ fixed:
   # Map 0x47
   - ["Turtle Rock - In", "Turtle Rock - Entrance"]
   - ["Turtle Rock - Entrance - Exit", "Turtle Rock - Out"]
-
-  # Map 0x4A
-  - ["Bumper Cave Ledge Top - In", "Bumper Cave Top Exit"]
-  - ["Bumper Cave Top Exit - Exit", "Bumper Cave Ledge Top - Out"]
-
-  - ["Bumper Cave Entrance Bottom - In", "Bumper Cave Bottom"]
-  - ["Bumper Cave Bottom - Exit", "Bumper Cave Entrance Bottom - Out"]
 
   # Map 0x51
   - ["North of Outcasts Psychic - In", "Fortune Teller Dark"]

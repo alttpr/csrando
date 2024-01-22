@@ -7,6 +7,8 @@ maps:
           connections:
             fixed:
               - "East Death Mountain Summit"
+            TitansMitt:
+              - "East Death Mountain Peg Portal Top"
           mobs:
             - name: "East Death Mountain Peg Portal - Deadrock 1"
               position: { x: 0x0e, y: 0x07 }
@@ -31,5 +33,21 @@ maps:
 
         - name: "East Death Mountain Peg Portal Top"
           connections:
+            ConfigWorldStateNormal:
+              - "East Death Mountain Peg Portal Top Puzzle"
+            ConfigWorldStateOpen:
+              - "East Death Mountain Peg Portal Top Puzzle"
+            ConfigWorldStateInverted:
+              - "East Death Mountain Peg Portal Top Inverted"
+
+        - name: "East Death Mountain Peg Portal Top Puzzle"
+          connections:
+            fixed:
+              - "East Death Mountain Peg Portal"
             Hammer:
               - "Turtle Peak Shellback"
+
+        - name: "East Death Mountain Peg Portal Top Inverted"
+          connections:
+            Hammer:
+              - "East Death Mountain Peg Portal"

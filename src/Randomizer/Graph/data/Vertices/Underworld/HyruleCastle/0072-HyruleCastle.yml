@@ -12,6 +12,7 @@ rooms:
           items:
             - name: "Hyrule Castle - Map Chest"
               addresses: [0xEB0C]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["escape"]
           mobs:

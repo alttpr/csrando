@@ -7,6 +7,11 @@ maps:
           connections:
             fixed:
               - "East Death Mountain Hookshot Bridge"
+            # Portal
+            ConfigWorldStateOpen:
+              - "West Dark Death Mountain"
+            ConfigWorldStateNormal:
+              - "West Dark Death Mountain"
           entrances:
             - name: "Spectacle Rock Cave Top"
               entranceid: 0x22
@@ -123,6 +128,8 @@ maps:
             fixed:
               - "West Death Mountain"
               - "East Death Mountain Hammer Bridge"
+            ConfigWorldStateInverted:
+              - "West Death Mountain Spectacle Peak"
           entrances:
             - name: "Tower Of Hera - Entrance"
               entranceid: 0x32
