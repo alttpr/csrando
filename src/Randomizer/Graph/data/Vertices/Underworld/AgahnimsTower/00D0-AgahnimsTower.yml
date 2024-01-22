@@ -27,6 +27,7 @@ rooms:
           items:
             - name: "Agahnims Tower - Second Chest"
               addresses: [0xEAB2]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["agahnim"]
           pots:

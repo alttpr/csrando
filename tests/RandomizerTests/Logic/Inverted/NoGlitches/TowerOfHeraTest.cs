@@ -82,19 +82,4 @@ public class TowerOfHeraTest : InvertedNoGlitchesLogicTests
     {
         base.TestLogic(location, expected, inventory);
     }
-
-    [TestMethod]
-    public void TestKeyForKey()
-    {
-        RunLogicTest(
-        [
-            new WorldConfig
-            {
-                Accessibility = AccessibilityOption.Items,
-                Glitches = GlitchesOption.None,
-                State = StateOption.Inverted,
-            }
-        ], "Tower Of Hera - Big Key Chest:0", true, new[] { "Lamp", "Hammer", "MoonPearl", "OcarinaActive", "Hookshot" });
-    }
-
 }

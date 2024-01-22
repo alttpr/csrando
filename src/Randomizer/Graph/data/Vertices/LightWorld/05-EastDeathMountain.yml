@@ -32,6 +32,10 @@ maps:
               - "East Death Mountain Hookshot Bridge"
             TitansMitt:
               - "East Death Mountain Running Man's Tail"
+            ConfigWorldStateNormal:
+              - "East Death Mountain Running Man Normal Portal"
+            ConfigWorldStateOpen:
+              - "East Death Mountain Running Man Normal Portal"
           entrances:
             - name: "Spiral Cave Exit"
               entranceid: 0x1B
@@ -71,6 +75,11 @@ maps:
               sprite: "Deadrock"
               state: [1, 2]
 
+        - name: "East Death Mountain Running Man Normal Portal"
+          connections:
+            TitansMitt:
+              - "East Dark Death Mountain Running Man"
+
         - name: "East Death Mountain Running Man's Tail"
           connections:
             fixed:
@@ -88,6 +97,8 @@ maps:
               - "East Death Mountain Peg Portal"
             Hammer:
               - "East Death Mountain Hammer Bridge"
+            ConfigWorldStateInverted:
+              - "East Death Mountain Mimic Balcony"
           entrances:
             - name: "Paradox Cave - Top"
               entranceid: 0x1F
@@ -137,6 +148,9 @@ maps:
             - name: "Mimic Cave Entrance"
               entranceid: 0x4E
               outletid: 0x5D
+          connections:
+            ConfigWorldStateInverted:
+              - "East Death Mountain Running Man"
 
         - name: "East Death Mountain Floating Island"
           items:

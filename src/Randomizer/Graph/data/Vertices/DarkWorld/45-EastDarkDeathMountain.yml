@@ -16,6 +16,8 @@ maps:
           connections:
             LiftBush:
               - "East Dark Death Mountain Running Man's Tail"
+            ConfigWorldStateInverted:
+              - "East Dark Death Mountain Running Man Inverted Portal"
           entrances:
             - name: "East Dark Death Mountain Running Man Bunny"
               entranceid: 0x12
@@ -23,6 +25,11 @@ maps:
             - name: "East Dark Death Mountain Shop"
               entranceid: 0x6D
               outletid: 0x6A
+
+        - name: "East Dark Death Mountain Running Man Inverted Portal"
+          connections:
+            TitansMitt:
+              - "East Death Mountain Running Man"
 
         - name: "East Dark Death Mountain Running Man's Tail"
           connections:

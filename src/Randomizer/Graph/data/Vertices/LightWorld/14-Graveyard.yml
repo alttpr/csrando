@@ -94,6 +94,8 @@ maps:
               - "Graveyard"
               - "Graveyard Four Square Niche"
               - "Graveyard Northwest Niche"
+            ConfigWorldStateInverted:
+              - "Graveyard Ledge"
 
         - name: "Graveyard Northwest Niche"
           connections:

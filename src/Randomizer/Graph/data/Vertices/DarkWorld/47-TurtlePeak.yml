@@ -7,6 +7,8 @@ maps:
           connections:
             fixed:
               - "East Dark Death Mountain Summit"
+            ConfigWorldStateInverted:
+              - "Turtle Peak Shellback"
           entrances:
             - name: "Turtle Rock"
               conditions: ["TurtleRockEntry"]
@@ -17,6 +19,8 @@ maps:
           connections:
             fixed:
               - "Turtle Peak"
+            ConfigWorldStateInverted:
+              - "Turtle Peak Shellback Inverted"
           items:
             - name: "Turtle Rock - Entry"
               type: "medallion"
@@ -27,3 +31,8 @@ maps:
               position: { x: 0x16, y: 0x14 }
               sprite: "PullForRupees"
               state: [1, 2]
+
+        - name: "Turtle Peak Shellback Inverted"
+          connections:
+            TitansMitt:
+              - "East Death Mountain Peg Portal Top"

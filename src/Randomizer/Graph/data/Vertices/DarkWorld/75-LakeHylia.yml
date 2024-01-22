@@ -39,6 +39,10 @@ maps:
               state: [1, 2]
 
         - name: "Dark Lake Hylia Ice Palace Entrance"
+          connections:
+            ConfigWorldStateInverted:
+              - "Dark Lake Hylia Ice Palace Island"
+              - "Dark Lake Hylia Ice Palace Entrance Inverted Portal"
           entrances:
             - name: "Ice Palace"
               entranceid: 0x2C
@@ -49,10 +53,17 @@ maps:
               sprite: "Pikit"
               state: [1, 2]
 
+        - name: "Dark Lake Hylia Ice Palace Entrance Inverted Portal"
+          connections:
+            TitansMitt:
+              - "Lake Hylia Fairy Island"
+
         - name: "Dark Lake Hylia Ice Palace Island"
           connections:
             Flippers:
               - "Dark Lake Hylia"
+            ConfigWorldStateInverted:
+              - "Dark Lake Hylia Ice Palace Entrance"
           mobs:
             - name: "Dark Lake Hylia - Pikit 4"
               position: { x: 0x2a, y: 0x26 }

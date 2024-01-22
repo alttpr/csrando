@@ -1,6 +1,0 @@
-TowerEntry:
-  directed:
-    # TODO: Add transition from stairs to summit after it has opened. Maybe not relevant since to open it,
-    # you need to be at the summit already?
-    - ["West Dark Death Mountain Summit", "West Dark Death Mountain Ganon Tower Stairs"]
-  undirected: []

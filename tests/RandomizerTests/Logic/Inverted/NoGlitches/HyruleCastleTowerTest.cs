@@ -13,9 +13,9 @@ public class HyruleCastleTowerTest : InvertedNoGlitchesLogicTests
         ["Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Lamp", "ProgressiveGlove" }],
         ["Agahnims Tower - Second Chest", true, new string[] { "KeyA1", "Lamp", "OcarinaInactive", "TitansMitt", "MoonPearl" }],
 
-        ["Agahnims Tower - Boss", false, new string[] {  }],
-        ["Agahnims Tower - Boss", false, new string[] { "KeyA1", "KeyA1", "ProgressiveGlove", "Lamp" }],
-        ["Agahnims Tower - Boss", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "ProgressiveGlove", "Lamp" }],
+        ["Agahnims Tower - Boss Room - Agahnim", false, new string[] {  }],
+        ["Agahnims Tower - Boss Room - Agahnim", false, new string[] { "KeyA1", "KeyA1", "ProgressiveGlove", "Lamp" }],
+        ["Agahnims Tower - Boss Room - Agahnim", true, new string[] { "KeyA1", "KeyA1", "L1Sword", "ProgressiveGlove", "Lamp" }],
     ];
 
     [TestMethod]

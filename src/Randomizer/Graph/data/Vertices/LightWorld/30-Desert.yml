@@ -9,6 +9,8 @@ maps:
               - "Desert Pass"
             BookOfMudora:
               - "Desert Stairs"
+            ConfigWorldStateInverted:
+              - "Checkerboard Ledge"
           entrances:
             - name: "Aginah's Cave"
               entranceid: 0x4C
@@ -195,3 +197,12 @@ maps:
           connections:
             fixed:
               - "Desert"
+            ConfigWorldStateNormal:
+              - "Desert Rocks Ledge Normal Portal"
+            ConfigWorldStateOpen:
+              - "Desert Rocks Ledge Normal Portal"
+
+        - name: "Desert Rocks Ledge Normal Portal"
+          connections:
+            TitansMitt:
+              - "Mire Warp Ledge"

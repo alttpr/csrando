@@ -8,6 +8,8 @@ maps:
             fixed:
               - "Desert"
               - "Wetlands Dam"
+            ConfigWorldStateInverted:
+              - "Bombos Tablet Ledge East"
           entrances:
             - name: "Desert Big Fairy"
               entranceid: 0x71

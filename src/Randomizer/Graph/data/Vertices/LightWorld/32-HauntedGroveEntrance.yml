@@ -10,6 +10,8 @@ maps:
               - "South Kakariko"
             LiftBush:
               - "Haunted Grove"
+            ConfigWorldStateInverted:
+              - "Cave 45 Ledge"
           mobs:
             - name: "Cave 45 Ledge - Bomb Refill (1)"
               position: { x: 0x1a, y: 0x09 }

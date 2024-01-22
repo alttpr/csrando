@@ -88,3 +88,10 @@ maps:
             fixed:
               - "Bomb Shoppe"
               - "West of Bomb Shoppe"
+            ConfigWorldStateInverted:
+              - "Pyramid Southern Ledge Inverted Portal"
+
+        - name: "Pyramid Southern Ledge Inverted Portal"
+          connections:
+            AgahnimDefeated:
+              - "Hyrule Castle - Outer Court"
