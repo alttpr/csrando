@@ -71,6 +71,7 @@ public static class RomWriter
                 rom.WriteCreditsText(location, itemToWrite);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
                 rom.WriteHintText(location, itemToWrite);
+                rom.WriteLocationSpecificData(location, itemToWrite);
             }
         }
 

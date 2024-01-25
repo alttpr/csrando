@@ -1757,14 +1757,6 @@ public sealed class Rom : IDisposable
 
             Write((Address)address, [itemByte.Value]);
         }
-
-        if (location.Name == "Tower Of Hera - Basement Cage")
-        {
-            if (itemToWrite.Name == "KeyP3")
-                Write(0x4E3BB, [0xE4]);
-            else
-                Write(0x4E3BB, [0xEB]);
-        }
     }
     public void WriteCreditsText(Vertex location, Item? item)
     {
@@ -1823,6 +1815,18 @@ public sealed class Rom : IDisposable
             return;
 
         SetText(hintKey, hintText ?? "Don't waste\nyour time!");
+    }
+
+    public void WriteLocationSpecificData(Vertex location, Item? item)
+    {
+        switch (location?.Name)
+        {
+            case "Tower Of Hera - Basement Cage":
+                // in case this location is a hera key, be vanilla and don't allow players to
+                // pick up the key with a boomerang. any other item is fair game though.
+                Write(0x4E3BB, [(byte)(item?.Name == "KeyP3" ? 0xE4 : 0xEB)]);
+                break;
+        }
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
