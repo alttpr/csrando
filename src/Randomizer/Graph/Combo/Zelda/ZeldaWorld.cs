@@ -243,8 +243,8 @@ internal class ZeldaWorld
                             .. Enumerable.Repeat(world.GetItem("Z1HeartContainer"), 4),
                             .. Enumerable.Repeat(world.GetItem("Z1Bombs"), 22),
                             .. Enumerable.Repeat(world.GetItem("Z1Key"), 12),
-                            .. Enumerable.Repeat(world.GetItem("Z1Rupee"), 12),
-                            .. Enumerable.Repeat(world.GetItem("Z1Rupee5"), 22),
+                            .. Enumerable.Repeat(world.GetItem("Z1Rupee"), 6),
+                            .. Enumerable.Repeat(world.GetItem("Z1Rupee5"), 20),
                         ]
                     }
                 }

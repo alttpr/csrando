@@ -32,7 +32,11 @@ nodes:
     
     - name: "Can Defeat Gohma"
       type: Meta
-      item: CanDefeatGohma  
+      item: CanDefeatGohma
+
+    - name: "Can Defeat Digdogger"
+      type: Meta
+      item: CanDefeatDigdogger
       
 edges:
   directed:
@@ -58,5 +62,7 @@ edges:
       - ["Meta", "Can Hurt Enemies"]
     Bow:
       - ["Can Hurt Enemies", "Can Defeat Gohma"]
+    Recorder:
+      - ["Can Hurt Enemies", "Can Defeat Digdogger"]
       
           

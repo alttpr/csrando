@@ -68,7 +68,6 @@ public static class RomWriter
             foreach (var location in itemLocations)
             {
                 var itemToWrite = location.Item ?? nothing;
-
                 rom.WriteItem(location, itemToWrite);
                 rom.WriteCreditsText(config, location, itemToWrite);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
@@ -325,12 +324,12 @@ public static class RomWriter
 
         rom.EnableFastRom(config.FastRom); //fastrom
 
-        rom.WriteCredits();
-        rom.WriteText();
+        //rom.WriteCredits();
+        //rom.WriteText();
         rom.WriteInitialSram();
         rom.SetTotalItemCount(world.PlacedItemCount);
 
-        rom.SetSeedString("VT CSharp v32".PadRight(32));
+        //rom.SetSeedString("VT CSharp v32".PadRight(32));
         // FIXME: is this a useful hash? it should be the same for the same seed...
         rom.SetStartScreenHash([
             (byte)prng.GetRandomInt(0xFF),

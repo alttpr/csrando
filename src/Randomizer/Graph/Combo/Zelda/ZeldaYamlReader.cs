@@ -420,9 +420,13 @@ internal class ZeldaYamlReader
 
             // Connect level entrance to start room
             // TODO: Temporary sword requirement for dungeons, remove this
+            // TODO: These dungeon entrance logical restrictions are way too restrictive and neds to be fixed so that the restrictions are on the actual places
+            //       where the sword, bow and recorder are required, not the entrance to the dungeon
             var levelRequirement = level.level switch
             {
+                5 => "CanDefeatDigdogger",
                 6 => "CanDefeatGohma",
+                7 => "CanDefeatDigdogger",
                 8 => "CanDefeatGohma",
                 9 => "Triforce|8",
                 _ => "CanHurtEnemies"
@@ -796,12 +800,12 @@ internal class ZeldaYamlReader
             }
 
             // Does this room have an item? (This should be 2F when writing back combo data)
-            if (map.room_item != 0x03)
+            if (map.room_item != 0x03 && level.triforce_room_id != map.map)
             {
                 var itemName = (RoomBehaviour)map.behaviour switch
                 {
                     RoomBehaviour.KillForItemShutter => $"{mapName} - Kill - Item",
-                    RoomBehaviour.KillForItemShutterBoss => $"{mapName} - Boss - Item",
+                    RoomBehaviour.KillForItemShutterBoss => (level.boss_room_id == map.map) ? $"{mapName} - Boss - Item" : $"{mapName} - Kill - Item",
                     _ => $"{mapName} - Item"
                 };
 

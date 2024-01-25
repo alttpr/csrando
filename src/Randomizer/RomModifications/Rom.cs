@@ -1668,6 +1668,30 @@ public sealed class Rom : IDisposable
         if (itemToWrite == null)
             return;
 
+        if (location.Name == "Tower Of Hera - Basement Cage")
+        {
+            if (itemToWrite.Name == "KeyP3")
+                Write(0x4E3BB, [0xE4]);
+            else
+                Write(0x4E3BB, [0xEB]);
+        }
+
+        // Do some item replacements if needed (this breaks keysanity, but we'll fix that later)
+        // TODO: Fix this (this will probably work better with the latest Z3 base rom updates as well)
+        // For now we do the old thing
+        if (location.Game == null || location.Game == Game.Alttp)
+        {
+            // In ALTTP we always write the "local" key item since we don't do keysanity for now
+            itemToWrite = itemToWrite.Name switch
+            {
+                var n when n.StartsWith("Key") => location.World.GetItem("Key"),
+                var n when n.StartsWith("BigKey") => location.World.GetItem("BigKey"),
+                var n when n.StartsWith("Map") => location.World.GetItem("Map"),
+                var n when n.StartsWith("Compass") => location.World.GetItem("Compass"),
+                _ => itemToWrite,
+            };
+        }
+
         var itemByteDict = itemToWrite.Bytes;
         
         if (itemByteDict.Count == 0)
