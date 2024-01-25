@@ -6,12 +6,12 @@ public static class RomWriter
 {
     public static void Write(Randomizer randomizer, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory)
     {
-        foreach (var world in randomizer.Worlds)
-            WriteForWorld(world, vanillaRom, baseBPS, outputDirectory, randomizer.PRNG);
+        foreach (var (i, world) in randomizer.Worlds.Select((world, index) => (index + 1, world)))
+            WriteForWorld(world, vanillaRom, baseBPS, outputDirectory, randomizer.PRNG, randomizer.Worlds.Length > 1 ? $"_W{i}" : null);
     }
 
     private static readonly string[] _heartColorOptions = ["blue", "green", "yellow", "red"];
-    public static void WriteForWorld(World world, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory, PRNG prng)
+    public static void WriteForWorld(World world, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
     {
         using var rom = new Rom(vanillaRom.FullName);
         // TODO: check hash? do we need that?
@@ -49,7 +49,7 @@ public static class RomWriter
         outputDirectory.Create();
         string outputFile = Path.Combine(
             outputDirectory.FullName,
-            $"alttpr_{world.Config.Glitches}_{world.Config.State}_{world.Config.Goal}_{prng.Seed:x08}.sfc");
+            $"alttpr_{world.Config.Glitches}_{world.Config.State}_{world.Config.Goal}_{prng.Seed:x08}{worldSuffix}.sfc");
         rom.Save(outputFile);
     }
     private static void WriteWorld(World world, Rom rom, PRNG prng)
@@ -199,8 +199,8 @@ public static class RomWriter
 
         if (false) //rom.mapOnPickup
         {
-            var locationByPrize = world.Graph.GetVertices()
-                .Where(v => v.Type == VertexType.Item && v.SubType == VertexType.Prize && v.Item != null)
+            var locationByPrize = world.GetLocationsOfType(VertexType.Item)
+                .Where(v => v.SubType == VertexType.Prize && v.Item != null)
                 .ToDictionary(v => v.Item!.Name);
 
             var greenPendant = locationByPrize.GetValueOrDefault("PendantOfCourage", null!).GetMapReveal();
@@ -349,7 +349,7 @@ public static class RomWriter
 
         var uncleItems = world.StartingItems.Clone();
         //uncleItems.setChecksForWorld(id);
-        var uncleItem = world.GetLocation("Link's Uncle").Item;
+        var uncleItem = world.GetLocation("Link's Uncle")?.Item;
         if (uncleItem != null)
             uncleItems.AddItem(uncleItem);
 

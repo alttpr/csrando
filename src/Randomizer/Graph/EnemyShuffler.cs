@@ -45,7 +45,7 @@ internal sealed class EnemyShuffler : IWorldModifier
 
         // Replaces the fixed condition to mobs with a Defeat condition
         // if one exists.
-        foreach (var vertex in world.Graph.GetVertices())
+        foreach (var vertex in world.Graph.GetVertices().Where(v => v.World == world))
         {
             foreach (var edge in vertex.Edges)
             {

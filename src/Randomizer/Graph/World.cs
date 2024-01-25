@@ -108,7 +108,7 @@ public sealed class World
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
     {
-        return Graph.GetVertices().Where(vertex => vertex.Type == type);
+        return Graph.GetVertices().Where(vertex => vertex.World == this && vertex.Type == type);
     }
 
     public Item GetItem(string name)

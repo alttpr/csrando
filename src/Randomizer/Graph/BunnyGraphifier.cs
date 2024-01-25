@@ -66,7 +66,7 @@ internal sealed class BunnyGraphifier : IWorldModifier
             world.Graph.AddDirected(moonpearl, darkVertex, world.GetItem(lightItem));
         }
 
-        var darkNodes = world.Graph.GetVertices().Where(v => v.MoonPearl == true);
+        var darkNodes = world.Graph.GetVertices().Where(v => v.World == world && v.MoonPearl == true);
         var workQueue = new Queue<Vertex>(darkNodes);
         var marked = new HashSet<Vertex>();
 

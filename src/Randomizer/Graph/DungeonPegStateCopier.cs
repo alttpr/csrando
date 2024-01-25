@@ -13,7 +13,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
         Dictionary<Vertex, int> vertexToGroup = new();
         Dictionary<int, HashSet<Vertex>> groups = new();
 
-        foreach (var vertex in world.Graph.GetVertices().Where(v => v.EntranceId != null))
+        foreach (var vertex in world.Graph.GetVertices().Where(v => v.World == world && v.EntranceId != null))
         {
             if (!vertexToGroup.ContainsKey(vertex))
             {
