@@ -325,7 +325,7 @@ public static class RomWriter
         rom.EnableFastRom(config.FastRom); //fastrom
 
         //rom.WriteCredits();
-        //rom.WriteText();
+        rom.WriteText();
         rom.WriteInitialSram();
         rom.SetTotalItemCount(world.PlacedItemCount);
 
