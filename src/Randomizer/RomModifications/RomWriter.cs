@@ -4,20 +4,24 @@ using Randomizer.Graph;
 
 public static class RomWriter
 {
-    public static void Write(Randomizer randomizer, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory)
+    public static void Write(Randomizer randomizer, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
     {
         foreach (var (i, world) in randomizer.Worlds.Select((world, index) => (index + 1, world)))
-            WriteForWorld(world, vanillaRom, baseBPS, outputDirectory, randomizer.PRNG, randomizer.Worlds.Length > 1 ? $"_W{i}" : null);
+            WriteForWorld(world, baseRom, baseBPS, outputDirectory, randomizer.PRNG, randomizer.Worlds.Length > 1 ? $"_W{i}" : null);
     }
 
     private static readonly string[] _heartColorOptions = ["blue", "green", "yellow", "red"];
-    public static void WriteForWorld(World world, FileInfo vanillaRom, FileInfo baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
+    public static void WriteForWorld(World world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
     {
-        using var rom = new Rom(vanillaRom.FullName);
+        using var rom = new Rom(baseRom.FullName);
         // TODO: check hash? do we need that?
 
-        rom.Resize();
-        rom.ApplyBasePatch(baseBPS);
+        // assume we either have a vanilla rom and a BPS, or an already pre-patched base rom.
+        if (baseBPS != null)
+        {
+            rom.Resize();
+            rom.ApplyBasePatch(baseBPS);
+        }
 
         string? heartColor = null; //option('heartcolor')
         if (!string.IsNullOrWhiteSpace(heartColor))
