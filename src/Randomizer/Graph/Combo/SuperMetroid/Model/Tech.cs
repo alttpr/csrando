@@ -13,15 +13,12 @@ internal record TechCategory(
 
 internal record Tech(
     string Name,
-    LogicalRequirement Requires,
+    Requirement Requires,
     List<Tech> ExtensionTechs,
-    Note Note,
-    DevNote DevNote
+    Note? Note,
+    Note? DevNote
 );
 
-// Placeholder for logical requirements
-internal record LogicalRequirement;
-
-internal record SuperMetroidTech(
+internal record TechCollection(
     List<TechCategory> TechCategories
 );

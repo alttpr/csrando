@@ -66,13 +66,13 @@ internal abstract record Requirement
     internal record ObstaclesNotCleared(List<string> Obstacles) : Requirement;
     internal record ResourceCapacity(List<ResourceTypeCount> Capacity) : Requirement;
     internal record CanShineCharge(
-        double UsedTiles,
-        int OpenEnd,
-        int? GentleUpTiles = null,
-        int? GentleDownTiles = null,
-        int? SteepUpTiles = null,
-        int? SteepDownTiles = null,
-        int? StartingDownTiles = null
+        decimal UsedTiles,
+        decimal OpenEnd,
+        decimal? GentleUpTiles = null,
+        decimal? GentleDownTiles = null,
+        decimal? SteepUpTiles = null,
+        decimal? SteepDownTiles = null,
+        decimal? StartingDownTiles = null
     ) : Requirement;
     internal record Shinespark(int Frames, int? ExcessFrames = null) : Requirement;
     internal record ResetRoom(
@@ -146,6 +146,7 @@ internal class RequirementConverter : JsonConverter<Requirement>
             var property = element.EnumerateObject().First();
             return property.Name switch
             {
+                "and" => new Requirement.And(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToList()),
                 "not" => new Requirement.Not(ParseElement(property.Value)!),
                 "or" => new Requirement.Or(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToList()),
                 "ammo" => new Requirement.Ammo(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
@@ -168,7 +169,10 @@ internal class RequirementConverter : JsonConverter<Requirement>
                 "samusEaterFrames" => new Requirement.SamusEaterFrames(property.Value.GetInt32()),
                 "metroidFrames" => new Requirement.MetroidFrames(property.Value.GetInt32()),
                 "energyAtMost" => new Requirement.EnergyAtMost(property.Value.GetInt32()),
-                "autoReserveTrigger" => new Requirement.AutoReserveTrigger(property.Value.GetProperty("minReserveEnergy").GetInt32(), property.Value.GetProperty("maxReserveEnergy").GetInt32()),
+                "autoReserveTrigger" => new Requirement.AutoReserveTrigger(
+                    property.Value.TryGetProperty("minReserveEnergy", out var minReserveEnergy) ? minReserveEnergy.GetInt32() : 1, 
+                    property.Value.TryGetProperty("maxReserveEnergy", out var maxReserveEnergy) ? maxReserveEnergy.GetInt32() : 400
+                ),
                 "spikeHits" => new Requirement.SpikeHits(property.Value.GetInt32()),
                 "thornHits" => new Requirement.ThornHits(property.Value.GetInt32()),
                 "doorUnlockedAtNode" => new Requirement.DoorUnlockedAtNode(property.Value.GetInt32()),
@@ -176,13 +180,13 @@ internal class RequirementConverter : JsonConverter<Requirement>
                 "obstaclesNotCleared" => new Requirement.ObstaclesNotCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToList()),
                 "resourceCapacity" => new Requirement.ResourceCapacity(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToList()),
                 "canShineCharge" => new Requirement.CanShineCharge(
-                    property.Value.GetProperty("usedTiles").GetDouble(),
-                    property.Value.GetProperty("openEnd").GetInt32(),
-                    property.Value.TryGetProperty("gentleUpTiles", out var gentleUpTiles) ? gentleUpTiles.GetInt32() : null!,
-                    property.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetInt32() : null!,
-                    property.Value.TryGetProperty("steepUpTiles", out var steepUpTiles) ? steepUpTiles.GetInt32() : null!,
-                    property.Value.TryGetProperty("steepDownTiles", out var steepDownTiles) ? steepDownTiles.GetInt32() : null!,
-                    property.Value.TryGetProperty("startingDownTiles", out var startingDownTiles) ? startingDownTiles.GetInt32() : null!),
+                    property.Value.GetProperty("usedTiles").GetDecimal(),
+                    property.Value.GetProperty("openEnd").GetDecimal(),
+                    property.Value.TryGetProperty("gentleUpTiles", out var gentleUpTiles) ? gentleUpTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("steepUpTiles", out var steepUpTiles) ? steepUpTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("steepDownTiles", out var steepDownTiles) ? steepDownTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("startingDownTiles", out var startingDownTiles) ? startingDownTiles.GetDecimal() : null!),
                 "shinespark" => new Requirement.Shinespark(property.Value.GetProperty("frames").GetInt32(), property.Value.TryGetProperty("excessFrames", out var excessFrames) ? excessFrames.GetInt32() : null!),
                 "resetRoom" => new Requirement.ResetRoom(
                     property.Value.GetProperty("nodes").EnumerateArray().Select(n => n.GetInt32()).ToList(),

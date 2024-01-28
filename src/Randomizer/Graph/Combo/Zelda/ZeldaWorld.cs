@@ -27,6 +27,7 @@ internal class ZeldaWorld
         {
             var name = vtx.TryGetValue("name", out object? nameValue) ? (string)nameValue : throw new InvalidDataException("Zelda vertex without a name");
             var type = vtx.TryGetValue("type", out object? typeValue) ? (VertexType)typeValue : VertexType.Meta;
+            var subtype = vtx.TryGetValue("subtype", out object? subtypeValue) ? (VertexType?)subtypeValue : (type == VertexType.Item ? VertexType.Standing : null);
             var item = vtx.TryGetValue("item", out object? itemValue) ? (string)itemValue : null;
             var itemset = vtx.TryGetValue("itemset", out object? itemsetValue) ? (string[])itemsetValue : null;
             var address = vtx.TryGetValue("address", out object? addressValue) ? (int?)addressValue : null;
@@ -36,7 +37,8 @@ internal class ZeldaWorld
                 World = world,
                 Name = name,
                 Type = type,
-                Item = item != null ? world.GetItem("Z1" + item) : null,
+                SubType = subtype,
+                Item = item != null ? world.GetItem("Z1" + item, Game.Zelda) : null,
                 ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? [],
                 Addresses = address != null ? [(long)address.Value] : null,
                 Game = Game.Zelda
@@ -55,7 +57,7 @@ internal class ZeldaWorld
             {
                 requirementName = "Z1" + requirementName;
             }
-            var requirement = world.GetItem(requirementName);
+            var requirement = world.GetItem(requirementName, Game.Zelda);
             var requirementCount = int.Parse(edgeCollectionData.Skip(1).FirstOrDefault() ?? "1");
 
             foreach (var edges in edgeCollection.Value.Directed)
@@ -112,9 +114,9 @@ internal class ZeldaWorld
                 {
                     { 1, 
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
                         ]
                     }
                 }
@@ -123,9 +125,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 3),
                         ]
                     }
                 }
@@ -134,9 +136,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
                         ]
                     }
                 }
@@ -145,9 +147,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 3),
                         ]
                     }
                 }
@@ -156,9 +158,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 5),
                         ]
                     }
                 }
@@ -167,9 +169,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 1),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
                         ]
                     }
                 }
@@ -178,9 +180,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 3),
                         ]
                     }
                 }
@@ -189,9 +191,9 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
                         ]
                     }
                 }
@@ -200,51 +202,51 @@ internal class ZeldaWorld
                 {
                     { 1,
                         [
-                            world.GetItem("Z1Map"),
-                            world.GetItem("Z1Compass"),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 2),
+                            world.GetItem("Z1Map", Game.Zelda),
+                            world.GetItem("Z1Compass", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 2),
                         ]
                     }
                 }
             },
             { new ItemSetName("lw", world), new WeightedSet
                 {
-                    { 2, [world.GetItem("Z1SwordL1")] }
+                    { 4, [world.GetItem("Z1SwordL1", Game.Zelda)] }
                 }
             },
             { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
-                            world.GetItem("Z1Bombs"),
-                            world.GetItem("Z1StepLadder"),
-                            world.GetItem("Z1Raft"),
-                            world.GetItem("Z1Recorder"),                            
-                            world.GetItem("Z1SwordL2"),
-                            world.GetItem("Z1SwordL3"),
-                            world.GetItem("Z1BlueCandle"),
-                            world.GetItem("Z1RedCandle"),
-                            world.GetItem("Z1SilverArrows"),
-                            world.GetItem("Z1Bow"),
-                            world.GetItem("Z1Arrows"),
-                            world.GetItem("Z1MagicalKey"),
-                            world.GetItem("Z1Rod"),
-                            world.GetItem("Z1Book"),
-                            world.GetItem("Z1BlueRing"),
-                            world.GetItem("Z1RedRing"),
-                            world.GetItem("Z1PowerBracelet"),
-                            world.GetItem("Z1Letter"),
-                            world.GetItem("Z1MagicShield"),
-                            world.GetItem("Z1Boomerang"),
-                            world.GetItem("Z1MagicBoomerang"),
-                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer"), 9),
+                            world.GetItem("Z1Bombs", Game.Zelda),
+                            world.GetItem("Z1StepLadder", Game.Zelda),
+                            world.GetItem("Z1Raft", Game.Zelda),
+                            world.GetItem("Z1Recorder", Game.Zelda),                            
+                            world.GetItem("Z1SwordL2", Game.Zelda),
+                            world.GetItem("Z1SwordL3", Game.Zelda),
+                            world.GetItem("Z1BlueCandle", Game.Zelda),
+                            world.GetItem("Z1RedCandle", Game.Zelda),
+                            world.GetItem("Z1SilverArrows", Game.Zelda),
+                            world.GetItem("Z1Bow", Game.Zelda),
+                            world.GetItem("Z1Arrows", Game.Zelda),
+                            world.GetItem("Z1MagicalKey", Game.Zelda),
+                            world.GetItem("Z1Rod", Game.Zelda),
+                            world.GetItem("Z1Book", Game.Zelda),
+                            world.GetItem("Z1BlueRing", Game.Zelda),
+                            world.GetItem("Z1RedRing", Game.Zelda),
+                            world.GetItem("Z1PowerBracelet", Game.Zelda),
+                            world.GetItem("Z1Letter", Game.Zelda),
+                            world.GetItem("Z1MagicShield", Game.Zelda),
+                            world.GetItem("Z1Boomerang", Game.Zelda),
+                            world.GetItem("Z1MagicBoomerang", Game.Zelda),
+                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer", Game.Zelda), 9),
                         ]
                     },
                     { 9001, [
-                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer"), 4),
-                            .. Enumerable.Repeat(world.GetItem("Z1Bombs"), 22),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key"), 12),
-                            .. Enumerable.Repeat(world.GetItem("Z1Rupee"), 6),
-                            .. Enumerable.Repeat(world.GetItem("Z1Rupee5"), 20),
+                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer", Game.Zelda), 4),
+                            .. Enumerable.Repeat(world.GetItem("Z1Bombs", Game.Zelda), 20),
+                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 9),
+                            .. Enumerable.Repeat(world.GetItem("Z1Rupee", Game.Zelda), 6),
+                            .. Enumerable.Repeat(world.GetItem("Z1Rupee5", Game.Zelda), 10),
                         ]
                     }
                 }

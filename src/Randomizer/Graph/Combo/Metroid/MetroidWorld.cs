@@ -25,6 +25,7 @@ internal class MetroidWorld
         {
             var name = vtx.TryGetValue("name", out object? nameValue) ? (string)nameValue : throw new InvalidDataException("Metroid vertex without a name");
             var type = vtx.TryGetValue("type", out object? typeValue) ? (VertexType)typeValue : VertexType.Meta;
+            var subtype = vtx.TryGetValue("subtype", out object? subtypeValue) ? (VertexType?)subtypeValue : (type == VertexType.Item ? VertexType.Standing : null);
             var item = vtx.TryGetValue("item", out object? itemValue) ? (string)itemValue : null;
             var itemset = vtx.TryGetValue("itemset", out object? itemsetValue) ? (string[])itemsetValue : null;
 
@@ -35,7 +36,8 @@ internal class MetroidWorld
                 World = world,
                 Name = name,
                 Type = type,
-                Item = item != null ? world.GetItem("M1" + item) : null,
+                SubType = subtype,
+                Item = item != null ? world.GetItem("M1" + item, Game.Metroid) : null,
                 ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? [],
                 Addresses = address != null ? [ address.Value, address.Value + 1] : null,
                 Game = Game.Metroid
@@ -55,7 +57,7 @@ internal class MetroidWorld
                 requirementName = "M1" + requirementName;
             }
 
-            var requirement = world.GetItem(requirementName);
+            var requirement = world.GetItem(requirementName, Game.Metroid);
             var requirementCount = int.Parse(edgeCollectionData.Skip(1).FirstOrDefault() ?? "1");
 
             foreach(var edges in edgeCollection.Value.Directed)
@@ -101,27 +103,27 @@ internal class MetroidWorld
             { ItemSetName.DefaultSet, new WeightedSet
                 {
                     { 3, [
-                            world.GetItem("M1Bombs"),
-                            world.GetItem("M1Varia"),
-                            world.GetItem("M1HiJump"),
-                            world.GetItem("M1IceBeam"),
-                            world.GetItem("M1LongBeam"),
-                            world.GetItem("M1WaveBeam"),
-                            world.GetItem("M1ScrewAttack"),
-                            world.GetItem("M1EnergyTank"),
-                            world.GetItem("M1Missile"),
+                            world.GetItem("M1Bombs", Game.Metroid),
+                            world.GetItem("M1Varia", Game.Metroid),
+                            world.GetItem("M1HiJump", Game.Metroid),
+                            world.GetItem("M1IceBeam", Game.Metroid),
+                            world.GetItem("M1LongBeam", Game.Metroid),
+                            world.GetItem("M1WaveBeam", Game.Metroid),
+                            world.GetItem("M1ScrewAttack", Game.Metroid),
+                            world.GetItem("M1EnergyTank", Game.Metroid),
+                            world.GetItem("M1Missile", Game.Metroid),
                         ]
                     },
                     { 9001, [
-                            .. Enumerable.Repeat(world.GetItem("M1Missile"), 20),
-                            .. Enumerable.Repeat(world.GetItem("M1EnergyTank"), 7),
+                            .. Enumerable.Repeat(world.GetItem("M1Missile", Game.Metroid), 20),
+                            .. Enumerable.Repeat(world.GetItem("M1EnergyTank", Game.Metroid), 7),
                         ]
                     }
                 }
             },
             { new ItemSetName("lw", world), new WeightedSet
                 {
-                    { 2, [ world.GetItem("M1Morph")] }                            
+                    { 4, [ world.GetItem("M1Morph", Game.Metroid)] }                            
                 }
             }
         };

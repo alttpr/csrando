@@ -83,6 +83,8 @@ internal sealed class RandomAssumedFiller
             if (locations.Count == 0)
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
+            locations = locations.Where(l => l.CanPlace(item, itemWeight, searchers[item.World.Id])).ToList();
+
             var location = _prng.GetRandomElement(locations);
             _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,

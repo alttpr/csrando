@@ -1,6 +1,8 @@
-namespace Randomizer.Graph;
 
 using System.Diagnostics;
+using static Randomizer.Graph.Game;
+
+namespace Randomizer.Graph;
 
 // FIXME: we need a sprite class that does something.
 public record class Sprite(string Name, byte[]? Bytes = null)
@@ -97,5 +99,26 @@ public sealed class Vertex : ICloneable
     public object Clone()
     {
         return MemberwiseClone();
+    }
+
+    // Not sure if this should go here, but it's ok for now
+    // This determines if an item can be placed at this location
+    // depending on the current item weight we're placing for
+    // A Searcher is passed in so we can check for reachability of other locations
+    public bool CanPlace(Item item, int itemWeight, Searcher searcher)
+    {
+        // Don't place out of world progression items inside GT
+        if (item.Game != Alttp && Group == 16 && itemWeight < 9000)
+        {
+            return false;
+        }
+
+        // Don't place out of world progression items inside level 9
+        if (item.Game != Zelda && ItemSet.Any(x => x.Name == "z1d9") && itemWeight < 9000)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

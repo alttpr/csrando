@@ -17,6 +17,7 @@ public sealed class Item
     public World World { get; }
     public ItemType Type { get; }
     public Dictionary<string, byte[]?> Bytes { get; }
+    public Game Game { get; }
 
     /// <summary>
     /// Create a new Item.
@@ -24,10 +25,11 @@ public sealed class Item
     ///
     /// <param name="name">Unique name of item</param>
     /// <param name="world">World this item is in</param>
-    public Item(string name, World world)
+    public Item(string name, World world, Game game = Game.Alttp)
     {
         Name = name;
         World = world;
+        Game = game;
 
         var yamlItems = YamlReader.LoadItems();
         var yamlItem = yamlItems.GetValueOrDefault(name);

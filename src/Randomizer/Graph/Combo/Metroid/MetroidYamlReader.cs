@@ -407,7 +407,7 @@ internal class MetroidYamlReader
                     var itemNode = CreateNode(new()
                     {
                         { "name", itemName },
-                        { "type", VertexType.Standing },
+                        { "type", VertexType.Item },
                         { "item", null },
                         { "itemset", (string[])["metroid"] },
                     });

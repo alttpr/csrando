@@ -468,7 +468,7 @@ internal class ZeldaYamlReader
                         var itemNode = CreateNode(new()
                         {
                             { "name", $"Cave {cave.cave:X2} - {caveTypeName} - Item {caveItemIndex:X2}" },
-                            { "type", VertexType.Standing },
+                            { "type", VertexType.Item },
                             { "item", junkItem },
                             { "address", 0x650100 + ((cave.cave-0x10)*3) + caveItemIndex },
                             { "itemset", (string[])["zelda", $"z1c{cave.cave:X2}", caveItemSet] },
@@ -639,7 +639,7 @@ internal class ZeldaYamlReader
             var itemNode = CreateNode(new()
             {
                 { "name", $"{mapName} - {armosScreenNode.name} - Item" },
-                { "type", VertexType.Standing },
+                { "type", VertexType.Item },
                 { "item", null },
                 { "address", 0x620CF5 },
                 { "itemset", (string[])["zelda"] },
@@ -657,9 +657,9 @@ internal class ZeldaYamlReader
             var overworldNode = CreateNode(new()
             {
                 { "name", $"{mapName} - {itemScreenNode.name} - Item" },
-                { "type", VertexType.Standing },
+                { "type", VertexType.Item },
                 { "item", null },
-                { "address", 0x65B88B },
+                { "address", 0x62B88A },
                 { "itemset", (string[])["zelda"] },
             });
 
@@ -812,7 +812,7 @@ internal class ZeldaYamlReader
                 var roomItemNode = CreateNode(new()
                 {
                     { "name", itemName },
-                    { "type", VertexType.Standing },
+                    { "type", VertexType.Item },
                     { "item", null },
                     { "address", 0x650000 + map.map },
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },
@@ -930,7 +930,7 @@ internal class ZeldaYamlReader
                 var itemNode = CreateNode(new()
                 {
                     { "name", $"{mapName} - Passage - Item" },
-                    { "type", VertexType.Standing },
+                    { "type", VertexType.Item },
                     { "item", null },
                     { "address", 0x650000 + map.map },
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },

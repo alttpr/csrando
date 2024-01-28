@@ -92,6 +92,12 @@ public sealed class World
             Combo.Zelda.ZeldaWorld.AdjustWorld(this);
         }
 
+        if (Config.Games.Contains(Game.SuperMetroid))
+        {
+            Combo.SuperMetroid.SMWorld.AdjustWorld(this);
+        }
+    }
+
         PruneConfigEdges();
     }
 
@@ -105,7 +111,7 @@ public sealed class World
 
     public Inventory ComputeStartingItems()
     {
-        var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(GetItem)]);
+        var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(e => GetItem(e))]);
         var searcher = new Searcher(Graph, GetLocation("DefaultItems"), inventory);
         return inventory;
     }
@@ -131,7 +137,7 @@ public sealed class World
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
 
-    public Item GetItem(string name)
+    public Item GetItem(string name, Game game = Game.Alttp)
     {
         if (_allItems.TryGetValue(name, out var matchingItem))
         {
@@ -139,7 +145,7 @@ public sealed class World
         }
 
         // allow made up items
-        var item = new Item(name, this);
+        var item = new Item(name, this, game);
         _allItems.Add(item.Name, item);
         item.Id = Graph.AllItems.Count;
         Graph.AllItems.Add(item);
