@@ -1,3 +1,6 @@
+[submodule "src/Randomizer/Graph/Combo/Data/SuperMetroid/sm-json-data"]
+	path = src/Randomizer/Graph/Combo/Data/SuperMetroid/sm-json-data
+	url = https://github.com/vg-json-data/sm-json-data
 [submodule "asm"]
 	path = asm
 	url = https://github.com/KatDevsGames/z3randomizer
