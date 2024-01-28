@@ -49,6 +49,9 @@ public enum VertexType
     Refill,
     Region,
     Warp,
+    Visible,
+    Chozo,
+    Hidden
 }
 
 /// <summary>
