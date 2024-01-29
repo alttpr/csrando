@@ -5,7 +5,7 @@ internal sealed class BossShuffler : IWorldModifier
 {
     private static readonly Dictionary<string, string> BOSS_ITEMS = new()
     {
-        { "Armos", "DefeatArmos" },
+        { "ArmosKnight", "DefeatArmosKnight" },
         { "Lanmola", "DefeatLanmolas" },
         { "Moldorm", "DefeatMoldorm" },
         { "Agahnim", "DefeatAgahnim" },
@@ -116,7 +116,7 @@ internal sealed class BossShuffler : IWorldModifier
             case BossShuffleOption.Full: // 1 copy of each, +3 other copies
                 placeBosses = new()
                 {
-                    "DefeatArmos",
+                    "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
                     "DefeatHelmasaur",
@@ -142,7 +142,7 @@ internal sealed class BossShuffler : IWorldModifier
             case BossShuffleOption.Simple: // 1:1
                 placeBosses = new()
                 {
-                    "DefeatArmos",
+                    "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
                     "DefeatHelmasaur",
@@ -152,7 +152,7 @@ internal sealed class BossShuffler : IWorldModifier
                     "DefeatKholdstare",
                     "DefeatVitreous",
                     "DefeatTrinexx",
-                    "DefeatArmos",
+                    "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
                 };
@@ -169,7 +169,7 @@ internal sealed class BossShuffler : IWorldModifier
                 break;
             case BossShuffleOption.None:
             default:
-                PlaceBossItemInLocation("DefeatArmos", "Eastern Palace - Boss", world, bossLocationMap);
+                PlaceBossItemInLocation("DefeatArmosKnight", "Eastern Palace - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatLanmolas", "Desert Palace - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatMoldorm", "Tower Of Hera - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatHelmasaur", "Palace of Darkness - Boss", world, bossLocationMap);
@@ -179,7 +179,7 @@ internal sealed class BossShuffler : IWorldModifier
                 PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatVitreous", "Misery Mire - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatTrinexx", "Turtle Rock - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatArmos", "Ganon's Tower - Ice Armos", world, bossLocationMap);
+                PlaceBossItemInLocation("DefeatArmosKnight", "Ganon's Tower - Ice Armos", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatLanmolas", "Ganon's Tower - Lanmolas", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatMoldorm", "Ganon's Tower - Moldorm", world, bossLocationMap);
                 break;

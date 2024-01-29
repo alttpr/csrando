@@ -1,14 +1,8 @@
 # special logical connections
-L1Sword:
-  directed:
-    - ["ArrghusPullPuffs", "DefeatArrghus"]
-  undirected: []
 L2Sword:
   directed:
     - ["Meta", "L1Sword"]
     - ["Meta", "MasterSword"]
-    - ["KholdstareShellMelt", "DefeatKholdstare"]
-    - ["Meta", "TrinexxMainHead"]
   undirected: []
 ProgressiveSword|2:
   directed:
@@ -21,7 +15,6 @@ MasterSword:
 L3Sword:
   directed:
     - ["Meta", "MasterSword"]
-    - ["Meta", "TrinexxMagic"]
   undirected: []
 L4Sword:
   directed:
@@ -51,32 +44,6 @@ ProgressiveBow|2:
   directed:
     - ["Meta", "BowAndSilverArrows"]
   undirected: []
-Boomerang:
-  directed:
-    - ["Meta", "DefeatArmos"]
-  undirected: []
-RedBoomerang:
-  directed:
-    - ["Meta", "DefeatArmos"]
-  undirected: []
-Hammer:
-  directed:
-    - ["Meta", "DefeatArmos"]
-    - ["Meta", "DefeatLanmolas"]
-    - ["Meta", "DefeatMoldorm"]
-    - ["Meta", "DefeatAgahnim"]
-    - ["Meta", "DefeatHelmasaur"]
-    - ["ArrghusPullPuffs", "DefeatArrghus"]
-    - ["Meta", "DefeatMothula"]
-    - ["Meta", "DefeatBlind"]
-    - ["KholdstareShellMelt", "DefeatKholdstare"]
-    - ["Meta", "DefeatVitreous"]
-    - ["Meta", "TrinexxMainHead"]
-  undirected: []
-TrinexxHead|3:
-  directed:
-    - ["Meta", "DefeatTrinexx"]
-  undirected: []
 LogicalBottle:
   directed:
     - ["Meta", "BottleMagicBar1"]
@@ -100,44 +67,4 @@ HalfMagic:
     - ["BottleMagicBar2", "HalfMagicBar2"]
     - ["BottleMagicBar3", "HalfMagicBar3"]
     - ["BottleMagicBar4", "HalfMagicBar4"]
-  undirected: []
-MagicBar|4:
-  directed:
-    - ["Meta", "TrinexxMagic"]
-  undirected: []
-BowAndArrows:
-  directed:
-    - ["Meta", "DefeatArmos"]
-    - ["Meta", "DefeatLanmolas"]
-  undirected: []
-Hookshot:
-  directed:
-    - ["Meta", "ArrghusPullPuffs"]
-  undirected: []
-ActiveBombos:
-  directed:
-    - ["Meta", "KholdstareShellMelt"]
-  undirected: []
-FireRod:
-  directed:
-    - ["Meta", "KholdstareShellMelt"]
-    - ["Meta", "DefeatLanmolas"]
-    - ["TrinexxMagic", "TrinexxIceHead"]
-  undirected: []
-IceRod:
-  directed:
-    - ["Meta", "DefeatLanmolas"]
-    - ["TrinexxMagic", "TrinexxFireHead"]
-  undirected: []
-CaneOfSomaria:
-  directed:
-    - ["Meta", "DefeatBlind"]
-  undirected: []
-CaneOfByrna:
-  directed:
-    - ["Meta", "DefeatBlind"]
-  undirected: []
-BugCatchingNet:
-  directed:
-    - ["Meta", "DefeatAgahnim"]
   undirected: []
