@@ -147,6 +147,13 @@ public sealed class World
         return null;
     }
 
+    public Item? GetExistingItem(string name)
+    {
+        if (_allItems.TryGetValue(name, out var item))
+            return item;
+        return null;
+    }
+
     public IEnumerable<Item> GetAllItems()
     {
         return _allItems.Values;

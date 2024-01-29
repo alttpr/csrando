@@ -1,5 +1,9 @@
 namespace Randomizer.Graph;
 
+using System.Collections.Frozen;
+using System.Collections.Immutable;
+using System.Diagnostics;
+
 /// <summary>
 /// Modify the edges of the graph to deal with MoonPearl/Bunny state.
 /// </summary>
@@ -75,18 +79,30 @@ internal sealed class BunnyGraphifier : IWorldModifier
             if (!marked.Add(node))
                 continue;
 
+
             foreach (var edge in node.Edges)
             {
                 var toNode = edge.To;
                 if (toNode.MoonPearl != false)
                 {
                     workQueue.Enqueue(toNode);
-                    if (!ITEM_MAP.ContainsKey(edge.Condition.Item.Name))
+
+                    var darkItem = ToDarkItem(edge.Condition.Item.Name);
+                    if (darkItem == null)
                         continue;
 
-                    edge.Condition = new(world.GetItem(ITEM_MAP[edge.Condition.Item.Name]), edge.Condition.Count);
+                    edge.Condition = new(world.GetItem(darkItem), edge.Condition.Count);
                 }
             }
         }
+    }
+
+    public static string? ToDarkItem(string item)
+    {
+        if (ITEM_MAP.TryGetValue(item, out var darkItem))
+            return darkItem;
+        if (item.StartsWith("Defeat"))
+            return $"Dark{item}";
+        return null;
     }
 }

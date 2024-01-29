@@ -1,34 +1,34 @@
-DefeatLandmine:
+Landmine:
   - fixed
-DefeatMedusa:
+Medusa:
   - fixed
-DefeatSpikeTrap:
+SpikeTrap:
   - fixed
-DefeatBigSpikeTrap:
+BigSpikeTrap:
   - fixed
-DefeatBeamos:
+Beamos:
   - fixed
-DefeatTileRoom:
+TileRoom:
   - fixed
-DefeatYomoMedusa:
+YomoMedusa:
   - fixed
-DefeatAntifairyCircle:
+AntifairyCircle:
   - fixed
-DefeatStatue:
+Statue:
   - fixed
-DefeatFloppingFish:
+FloppingFish:
   - fixed
-DefeatFireBarCW:
+FireBarCW:
   - fixed
-DefeatFireBarCCW:
+FireBarCCW:
   - fixed
-DefeatFireSnake:
+FireSnake:
   - fixed
-DefeatRabbit:
+Rabbit:
   - fixed
-DefeatSparkCCW:
+SparkCCW:
   - fixed
-DefeatRaven:
+Raven:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -42,7 +42,7 @@ DefeatRaven:
   - FireRod
   - IceRod
   - ActiveBombos
-DefeatVulture:
+Vulture:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -56,14 +56,14 @@ DefeatVulture:
   - FireRod
   - IceRod
   - ActiveBombos
-DefeatFlyingStalfosHead:
+FlyingStalfosHead:
   - Boomerang
   - RedBoomerang
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
   - Hammer
-DefeatOctorok1:
+Octorok1:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -75,7 +75,7 @@ DefeatOctorok1:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatOctorok4:
+Octorok4:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -87,47 +87,7 @@ DefeatOctorok4:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatOctorokStone:
-  - Boomerang
-  - RedBoomerang
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - Hookshot
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
-DefeatBuzzblob:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - Powder
-  - FireRod
-  - ActiveBombos
-DefeatSnapdragon:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - Powder
-  - FireRod
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
-DefeatOctoballoon:
+OctorokStone:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -142,7 +102,47 @@ DefeatOctoballoon:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatOctobaby:
+  - ActiveQuake
+Buzzblob:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - Powder
+  - FireRod
+  - ActiveBombos
+Snapdragon:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - Powder
+  - FireRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+Octoballoon:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - Hookshot
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+Octobaby:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -157,7 +157,7 @@ DefeatOctobaby:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatHinox:
+Hinox:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -168,7 +168,7 @@ DefeatHinox:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatMoblin:
+Moblin:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -180,7 +180,7 @@ DefeatMoblin:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatMiniHelmasaur:
+MiniHelmasaur:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -193,9 +193,9 @@ DefeatMiniHelmasaur:
   - ActiveEther
   - ActiveQuake
 # Antifairies trophy count is fixed
-DefeatAntifairy:
+Antifairy:
   - fixed
-DefeatBushHoarder:
+BushHoarder:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -211,7 +211,7 @@ DefeatBushHoarder:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatMiniMoldorm:
+MiniMoldorm:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -226,7 +226,7 @@ DefeatMiniMoldorm:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatPoe:
+Poe:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -241,7 +241,7 @@ DefeatPoe:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatSluggula:
+Sluggula:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -252,7 +252,7 @@ DefeatSluggula:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatRopa:
+Ropa:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -265,7 +265,7 @@ DefeatRopa:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatRedBari:
+RedBari:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -278,7 +278,7 @@ DefeatRedBari:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatBlueBari:
+BlueBari:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -291,17 +291,17 @@ DefeatBlueBari:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatHardhatBeetle:
+HardhatBeetle:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
   - Hammer
   - BowAndSilverArrows
   - ActiveBombos
-DefeatDeadrock:
+Deadrock:
   - Powder
   - ActiveQuake
-DefeatRockHoarder:
+RockHoarder:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -317,7 +317,7 @@ DefeatRockHoarder:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatBlueSwordGuard:
+BlueSwordGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -329,7 +329,7 @@ DefeatBlueSwordGuard:
   - IceRod
   - ActiveBombos
   - ActiveQuake
-DefeatGreenSwordGuard:
+GreenSwordGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -341,7 +341,7 @@ DefeatGreenSwordGuard:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatRedSpearGuard:
+RedSpearGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -352,7 +352,7 @@ DefeatRedSpearGuard:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatAssaultSwordGuard:
+AssaultSwordGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -363,7 +363,7 @@ DefeatAssaultSwordGuard:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatFastRedSpearGuard:
+FastRedSpearGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -374,7 +374,7 @@ DefeatFastRedSpearGuard:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatBlueArcher:
+BlueArcher:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -385,7 +385,7 @@ DefeatBlueArcher:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatGreenArcher:
+GreenArcher:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -398,7 +398,7 @@ DefeatGreenArcher:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatRedJavelinGuard:
+RedJavelinGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -409,7 +409,7 @@ DefeatRedJavelinGuard:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatRedJavelinGuard2:
+RedJavelinGuard2:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -421,7 +421,7 @@ DefeatRedJavelinGuard2:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatRedBombGuard:
+RedBombGuard:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -432,7 +432,7 @@ DefeatRedBombGuard:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatGreenGuardRecruit:
+GreenGuardRecruit:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -444,7 +444,7 @@ DefeatGreenGuardRecruit:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatGeldman:
+Geldman:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -458,20 +458,7 @@ DefeatGeldman:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatPopo:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - Hookshot
-  - UseBomb
-  - BowAndSilverArrows
-  - Powder
-  - FireRod
-  - ActiveBombos
-  - ActiveQuake
-DefeatPopo2:
+Popo:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -484,109 +471,7 @@ DefeatPopo2:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatArmos:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - ActiveBombos
-  - ActiveEther
-DefeatFireballZora:
-  - Boomerang
-  - RedBoomerang
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
-DefeatWalkingZora:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
-DefeatCrab:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - Powder
-  - FireRod
-  - ActiveBombos
-  - ActiveQuake
-DefeatDevalantBlue:
-  - Boomerang
-  - RedBoomerang
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveEther
-DefeatDevalantRed:
-  - Boomerang
-  - RedBoomerang
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveEther
-DefeatBallNChainTrooper:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - ActiveBombos
-  - ActiveQuake
-DefeatCannonGuard:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveQuake
-DefeatRat:
+Popo2:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -599,7 +484,111 @@ DefeatRat:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatRope:
+Armos:
+  - L1Sword
+  - Boomerang
+  - RedBoomerang
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - ActiveBombos
+  - ActiveEther
+FireballZora:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+WalkingZora:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+Crab:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - Powder
+  - FireRod
+  - ActiveBombos
+  - ActiveQuake
+DevalantBlue:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+DevalantRed:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+BallNChainTrooper:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - ActiveBombos
+  - ActiveQuake
+CannonGuard:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveQuake
+Rat:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -612,7 +601,20 @@ DefeatRope:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatKeese:
+Rope:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - Hookshot
+  - UseBomb
+  - BowAndSilverArrows
+  - Powder
+  - FireRod
+  - ActiveBombos
+  - ActiveQuake
+Keese:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -625,7 +627,7 @@ DefeatKeese:
   - BowAndSilverArrows
   - FireRod
   - ActiveBombos
-DefeatLeever:
+Leever:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -635,7 +637,7 @@ DefeatLeever:
   - BowAndSilverArrows
   - FireRod
   - ActiveBombos
-DefeatBee:
+Bee:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -652,7 +654,7 @@ DefeatBee:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatGreenStalfos:
+GreenStalfos:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -663,7 +665,7 @@ DefeatGreenStalfos:
   - FireRod
   - ActiveBombos
   - ActiveEther
-DefeatInvisibleStalfos:
+InvisibleStalfos:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -674,7 +676,7 @@ DefeatInvisibleStalfos:
   - FireRod
   - ActiveBombos
   - ActiveEther
-DefeatHover:
+Hover:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -687,7 +689,7 @@ DefeatHover:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatEyegoreGreen:
+EyegoreGreen:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -695,10 +697,10 @@ DefeatEyegoreGreen:
   - BowAndArrows
   - UseBomb
   - BowAndSilverArrows
-DefeatEyegoreRed:
+EyegoreRed:
   - BowAndArrows
   - BowAndSilverArrows
-DefeatStalfosYellow:
+StalfosYellow:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -712,7 +714,7 @@ DefeatStalfosYellow:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatKodongo:
+Kodongo:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -722,7 +724,7 @@ DefeatKodongo:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatGibdo:
+Gibdo:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -732,7 +734,7 @@ DefeatGibdo:
   - FireRod
   - ActiveBombos
   - ActiveEther
-DefeatTerrorpin:
+Terrorpin:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -745,7 +747,7 @@ DefeatTerrorpin:
   - FireRod
   - ActiveBombos
   - ActiveEther
-DefeatZol:
+Zol:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -757,7 +759,7 @@ DefeatZol:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatWallmaster:
+Wallmaster:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -772,14 +774,14 @@ DefeatWallmaster:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatStalfosKnight:
+StalfosKnight:
   - Boomerang
   - RedBoomerang
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
   - Hammer
-DefeatPirogisu:
+Pirogisu:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -794,7 +796,7 @@ DefeatPirogisu:
   - IceRod
   - ActiveBombos
   - ActiveEther
-DefeatPengator:
+Pengator:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -808,9 +810,9 @@ DefeatPengator:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatKyameron:
+Kyameron:
   - fixed
-DefeatWizzrobe:
+Wizzrobe:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -822,7 +824,7 @@ DefeatWizzrobe:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatZoro:
+Zoro:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -836,7 +838,7 @@ DefeatZoro:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatBabasu:
+Babasu:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -850,10 +852,10 @@ DefeatBabasu:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatFreezor:
+Freezor:
   - FireRod
   - ActiveBombos
-DefeatZazakBlue:
+ZazakBlue:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -863,7 +865,7 @@ DefeatZazakBlue:
   - BowAndSilverArrows
   - FireRod
   - ActiveBombos
-DefeatZazakRed:
+ZazakRed:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -873,7 +875,7 @@ DefeatZazakRed:
   - BowAndSilverArrows
   - FireRod
   - ActiveBombos
-DefeatStalfos:
+Stalfos:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -889,7 +891,7 @@ DefeatStalfos:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatZirroGreen:
+ZirroGreen:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -901,7 +903,7 @@ DefeatZirroGreen:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatZirroBlue:
+ZirroBlue:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -913,7 +915,7 @@ DefeatZirroBlue:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-DefeatPikit:
+Pikit:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -926,62 +928,7 @@ DefeatPikit:
   - FireRod
   - IceRod
   - ActiveBombos
-DefeatBeeGood:
-  - Boomerang
-  - RedBoomerang
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - Hookshot
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
-DefeatMimic:
-  - BowAndArrows
-  - BowAndSilverArrows
-DefeatGibo:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-DefeatThief:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-DefeatPokey:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-  - ActiveBombos
-DefeatTektite:
-  - L1Sword
-  - CaneOfSomaria
-  - CaneOfByrna
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - ActiveBombos
-  - ActiveEther
-  - ActiveQuake
-DefeatSwamola:
+BeeGood:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -997,14 +944,69 @@ DefeatSwamola:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-DefeatLynel:
+Mimic:
+  - BowAndArrows
+  - BowAndSilverArrows
+Gibo:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+Thief:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+Pokey:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+Tektite:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+Swamola:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - Hookshot
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+Lynel:
   - L2Sword
   - Hammer
   - BowAndSilverArrows
 # Bunny beams trophy count is fixed
-DefeatBunnyBeam:
+BunnyBeam:
   - fixed
-DefeatStal:
+Stal:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -1020,3 +1022,59 @@ DefeatStal:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
+PullSwitchGood:
+  - LiftBush
+
+# Simple bosses
+ArmosKnight:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+Lanmolas:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+Moldorm:
+  - L1Sword
+  - Hammer
+Mothula:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - FireRod
+Blind:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+Vitreous:
+  - L1Sword
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+VitreousSmallEyeball:
+  - L1Sword
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+Agahnim:
+  - L1Sword
+  - Hammer
+  - BugCatchingNet

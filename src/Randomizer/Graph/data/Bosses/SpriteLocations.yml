@@ -1,5 +1,5 @@
 "Eastern Palace - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Eastern Palace - Boss Room - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0xc8
@@ -150,7 +150,7 @@
       roomid: 0xc8
       sprite: "TrinexxHeadIce"
 "Desert Palace - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Desert Palace - Boss Room - Armos Knight 1"
       position: { x: 0x04, y: 0x15, z: 0x00 }
       roomid: 0x33
@@ -301,7 +301,7 @@
       roomid: 0x33
       sprite: "TrinexxHeadIce"
 "Tower Of Hera - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Tower Of Hera - Boss Room - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0x07
@@ -452,7 +452,7 @@
       roomid: 0x07
       sprite: "TrinexxHeadIce"
 "Palace of Darkness - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Palace of Darkness - Boss Room - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0x5a
@@ -603,7 +603,7 @@
       roomid: 0x5a
       sprite: "TrinexxHeadIce"
 "Swamp Palace - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Swamp Palace - Boss Room - Armos Knight 1"
       position: { x: 0x04, y: 0x15, z: 0x00 }
       roomid: 0x06
@@ -754,7 +754,7 @@
       roomid: 0x06
       sprite: "TrinexxHeadIce"
 "Skull Woods - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Skull Woods - Boss Room - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0x29
@@ -945,7 +945,7 @@
       roomid: 0x29
       sprite: "MovingFloor"
 "Thieves' Town - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Thieves' Town - Boss Room - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0xac
@@ -1096,7 +1096,7 @@
       roomid: 0xac
       sprite: "TrinexxHeadIce"
 "Ice Palace - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Ice Palace - Boss Room - Armos Knight 1"
       position: { x: 0x14, y: 0x05, z: 0x00 }
       roomid: 0xde
@@ -1247,7 +1247,7 @@
       roomid: 0xde
       sprite: "TrinexxHeadIce"
 "Misery Mire - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Misery Mire - Boss Room - Armos Knight 1"
       position: { x: 0x04, y: 0x15, z: 0x00 }
       roomid: 0x90
@@ -1398,7 +1398,7 @@
       roomid: 0x90
       sprite: "TrinexxHeadIce"
 "Turtle Rock - Boss Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Turtle Rock - Boss Room - Armos Knight 1"
       position: { x: 0x04, y: 0x15, z: 0x00 }
       roomid: 0xa4
@@ -1549,7 +1549,7 @@
       roomid: 0xa4
       sprite: "TrinexxHeadIce"
 "Ganon's Tower - Ice Room":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Ganon's Tower - Ice Room - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0x1c
@@ -1701,7 +1701,7 @@
       sprite: "TrinexxHeadIce"
 # this needs to be renamed in all code later
 "Ganon's Tower - Gauntlet Refill":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Ganon's Tower - Gauntlet Refill - Armos Knight 1"
       position: { x: 0x04, y: 0x15, z: 0x00 }
       roomid: 0x6c
@@ -1852,7 +1852,7 @@
       roomid: 0x6c
       sprite: "TrinexxHeadIce"
 "Ganon's Tower - Moldorm - Kill Zone":
-  DefeatArmos:
+  DefeatArmosKnight:
     - name: "Ganon's Tower - Moldorm - Kill Zone - Armos Knight 1"
       position: { x: 0x14, y: 0x15, z: 0x00 }
       roomid: 0x4d

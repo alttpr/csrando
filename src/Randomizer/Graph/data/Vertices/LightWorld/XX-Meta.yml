@@ -11,6 +11,7 @@ maps:
           connections:
             fixed:
               - "DefaultItems"
+              - "Enemies"
               - "Turtle Rock - Entry"
               - "Misery Mire - Entry"
               - "Tower Entry - Check"
@@ -20,15 +21,6 @@ maps:
               - "L1Sword"
             UncleSword:
               - "L1Sword"
-            L1Sword:
-              - "DefeatArmos"
-              - "DefeatLanmolas"
-              - "DefeatMoldorm"
-              - "DefeatAgahnim"
-              - "DefeatHelmasaur"
-              - "DefeatMothula"
-              - "DefeatBlind"
-              - "DefeatVitreous"
             Crystal1:
               - "Crystal1"
             Crystal2:
@@ -146,6 +138,8 @@ maps:
             - "ArrowUpgrade10"
             - "ArrowUpgrade10"
             - "hop"
+
+        - name: "Enemies"
 
         - name: "DefaultItemsStandard"
           items:
@@ -343,46 +337,6 @@ maps:
 
         - name: "ReturnedSmith"
           items: ["ReturnedSmith"]
-
-        # Boss beating metas
-        - name: "DefeatArmos"
-          items: ["DefeatArmos"]
-
-        - name: "DefeatLanmolas"
-          items: ["DefeatLanmolas"]
-
-        - name: "DefeatMoldorm"
-          items: ["DefeatMoldorm"]
-
-        - name: "DefeatAgahnim"
-          items: ["DefeatAgahnim"]
-
-        - name: "DefeatHelmasaur"
-          items: ["DefeatHelmasaur"]
-
-        - name: "ArrghusPullPuffs"
-          items: ["ArrghusPullPuffs"]
-
-        - name: "DefeatArrghus"
-          items: ["DefeatArrghus"]
-
-        - name: "DefeatMothula"
-          items: ["DefeatMothula"]
-
-        - name: "DefeatBlind"
-          items: ["DefeatBlind"]
-
-        - name: "KholdstareShellMelt"
-          items: ["KholdstareShellMelt"]
-
-        - name: "DefeatKholdstare"
-          items: ["DefeatKholdstare"]
-
-        - name: "DefeatVitreous"
-          items: ["DefeatVitreous"]
-
-        - name: "DefeatTrinexx"
-          items: ["DefeatTrinexx"]
 
         - name: "Pendant-1"
           items: ["Pendant"]

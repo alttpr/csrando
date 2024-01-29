@@ -28,6 +28,7 @@ public class YamlReader
 
     private const string ItemsPath = "items.yml";
     private const string VerticesPath = "Vertices";
+    private const string BossesPath = "bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
     private const string SpriteLocationsPath = "Bosses/SpriteLocations.yml";
 
@@ -42,6 +43,14 @@ public class YamlReader
             MergeVertices(result, currentFileEdges);
         }
 
+        return result;
+    });
+    private static readonly Lazy<Dictionary<string, List<string>>> _cachedBosses = new(() =>
+    {
+        string bossesYML = Path.Combine(DataRoot, BossesPath);
+        using var reader = File.OpenText(bossesYML);
+        var deserializer = new DeserializerBuilder().Build();
+        var result = deserializer.Deserialize<Dictionary<string, List<string>>>(reader);
         return result;
     });
     private static readonly Lazy<Dictionary<string, List<string>>> _cachedEnemies = new(() =>
@@ -154,6 +163,7 @@ public class YamlReader
         dest.Rooms.AddRange(source.Rooms);
     }
 
+    public static Dictionary<string, List<string>> LoadBosses() => _cachedBosses.Value;
     public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
     public static Dictionary<string, Dictionary<string, List<YamlSprite>>> LoadSpriteLocations() => _cachedSpriteLocations.Value;
