@@ -79,6 +79,16 @@ public sealed class World
                 Graph.AddDirected(to, from, condition);
             }
         }
+
+        PruneConfigEdges();
+    }
+
+    private void PruneConfigEdges()
+    {
+        foreach (var v in Graph.GetVertices().Where(v => v.World == this))
+        {
+            v.Edges = v.Edges.Where(e => !e.Condition.Item.Name.StartsWith("ConfigWorld") || StartingItems.Has(e.Condition.Item)).ToList();
+        }
     }
 
     public Inventory ComputeStartingItems()
