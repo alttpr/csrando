@@ -277,13 +277,18 @@ public class Searcher
 
                 visitedBeforeRecursion.UnionWith(weakLocations2);
                 weakLocations.UnionWith(weakLocations2);
+                weakSearchStarts = weakSearchStarts2;
             } while (CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion));
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
+            if (inventoryForIteration.GetCount(key) > 0)
+            {
+                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
+                weakLocations.UnionWith(recursiveLocations);
+                weakSearchStarts.UnionWith(recursiveSearchStarts);
+            }
             // reset
             visitedBeforeRecursion.IntersectWith(visitedBeforeDoors);
             collectedBeforeRecursion.IntersectWith(collectedBeforeDoors);
-            weakLocations.UnionWith(recursiveLocations);
-            weakSearchStarts.UnionWith(recursiveSearchStarts);
+
 
             if (weakLocations.Count == 0)
                 return (new VertexHashSet(visitedBeforeDoors.Graph), new VertexHashSet(visitedBeforeDoors.Graph));
