@@ -1,4 +1,6 @@
 
+using Randomizer.Graph.Combo.SuperMetroid.Model;
+using System.Data.Common;
 using System.Diagnostics;
 using static Randomizer.Graph.Game;
 
@@ -91,6 +93,8 @@ public sealed class Vertex : ICloneable
     public int? Group { get; init; }
     public Item? Key { get; init; }
     public Game? Game { get; init; }
+    public Requirement? InteractionRequires { get; init; }
+    public string[]? Yields { get; init; }
 
     public List<Edge> Edges = new();
 

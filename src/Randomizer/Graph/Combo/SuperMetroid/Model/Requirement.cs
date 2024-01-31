@@ -11,7 +11,7 @@ using OneOf;
 internal record ResourceTypeCount(string Type, int Count);
 
 [JsonConverter(typeof(RequirementConverter))]
-internal abstract record Requirement
+public abstract record Requirement
 {
     internal record Single(string Req): Requirement;
     internal record And(List<Requirement> Reqs) : Requirement;
