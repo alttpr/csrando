@@ -1,17 +1,24 @@
 ﻿namespace RandomizerTests.Logic;
 
 using Randomizer.Graph;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 
 public abstract class LogicTestBase
 {
     protected abstract WorldConfig GetWorldConfig();
 
+    // Tests are run in parallel in the same process, so we try to cache Randomizer instances as much as possible.
+    private static ConcurrentDictionary<WorldConfig[], Lazy<Randomizer>> _cachedRandomizers = new(new WorldConfigArrayComparer());
+
     protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
-        var randomizer = new Randomizer(config);
+        var randomizer = GetRandomizerForConfig(config);
+
         // this is a single-world test; we have exactly one player world.
         var world = randomizer.Worlds[0];
         try
@@ -49,5 +56,36 @@ public abstract class LogicTestBase
         [
             GetWorldConfig(),
         ], location, expected, inventory);
+    }
+
+    private Randomizer GetRandomizerForConfig(WorldConfig[] config)
+    {
+        return _cachedRandomizers.GetOrAdd(config, config => new Lazy<Randomizer>(() =>
+                {
+                    return new Randomizer(config);
+                }, LazyThreadSafetyMode.ExecutionAndPublication)).Value;
+    }
+
+    // This is crude, but easier than having a proper comparer on WorldConfig
+    private class WorldConfigArrayComparer : IEqualityComparer<WorldConfig[]>
+    {
+        public bool Equals(WorldConfig[]? x, WorldConfig[]? y)
+        {
+            if (x == y)
+                return true;
+            if (x == null || y == null)
+                return false;
+
+            var xJson = JsonSerializer.Serialize(x);
+            var yJson = JsonSerializer.Serialize(y);
+            return xJson.Equals(yJson);
+        }
+
+        public int GetHashCode([DisallowNull] WorldConfig[] obj)
+        {
+            var json = JsonSerializer.Serialize(obj);
+            var hashcode = json.GetHashCode();
+            return hashcode;
+        }
     }
 }
