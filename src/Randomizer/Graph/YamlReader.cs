@@ -200,16 +200,16 @@ public class YamlItem
 public class YamlSprite
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "position")]
-    public Position Position { get; set; }
+    public required Position Position { get; set; }
 
     [YamlMember(Alias = "roomid")]
     public int RoomId { get; set; }
 
     [YamlMember(Alias = "sprite")]
-    public string Sprite { get; set; }
+    public required string Sprite { get; set; }
 }
 
 public class DirectedUndirectedPair
@@ -247,7 +247,7 @@ public partial class Map
     public bool Moonpearl { get; set; }
 
     [YamlMember(Alias = "nodes")]
-    public MapNodes Nodes { get; set; }
+    public required MapNodes Nodes { get; set; }
 }
 
 public partial class MapNodes
@@ -265,7 +265,7 @@ public partial class MapNodes
 public class MetaEntry
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "items")]
     public List<string> Items { get; set; } = new();
@@ -277,19 +277,19 @@ public class MetaEntry
 public class Prizepack
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "offset")]
     public byte Offset { get; set; }
 
     [YamlMember(Alias = "sprite")]
-    public string Sprite { get; set; }
+    public required string Sprite { get; set; }
 }
 
 public partial class Entrance
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "entranceid")]
     public int EntranceId { get; set; }
@@ -304,7 +304,7 @@ public partial class Entrance
 public partial class Hole
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "entranceids")]
     public List<int> EntranceIds { get; set; } = new();
@@ -316,7 +316,7 @@ public partial class Hole
 public partial class ItemEntry
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "addresses")]
     public List<long> Addresses { get; set; } = new();
@@ -337,10 +337,10 @@ public partial class ItemEntry
 public partial class Warp
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "position")]
-    public Position Position { get; set; }
+    public Position? Position { get; set; }
 
     [YamlMember(Alias = "connections")]
     public Dictionary<string, List<string>> Connections { get; set; } = new();
@@ -352,7 +352,7 @@ public partial class Room
     public int Roomid { get; set; }
 
     [YamlMember(Alias = "nodes")]
-    public RoomNodes Nodes { get; set; }
+    public required RoomNodes Nodes { get; set; }
 
     [YamlMember(Alias = "group")]
     public int? Group { get; set; }
@@ -380,31 +380,16 @@ public partial class RoomNodes
 
 }
 
-public partial class Keydoor
-{
-    [YamlMember(Alias = "name")]
-    public string Name { get; set; }
-
-    [YamlMember(Alias = "key")]
-    public string Key { get; set; }
-}
-
-public partial class Shutter
-{
-    [YamlMember(Alias = "name")]
-    public string Name { get; set; }
-}
-
 public partial class InventoryEntry
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "type")]
     public VertexType Type { get; set; }
 
     [YamlMember(Alias = "item")]
-    public string Item { get; set; }
+    public required string Item { get; set; }
 
     [YamlMember(Alias = "cost")]
     public int Cost { get; set; }
@@ -416,15 +401,15 @@ public partial class InventoryEntry
 public partial class Entity
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     // TODO: Some entries (pots) use a short, some have an x,y,z triple. Fix data
     [YamlMember(Alias = "position")]
     //public Position Position { get; set; }
-    public object Position { get; set; }
+    public object? Position { get; set; }
 
     [YamlMember(Alias = "sprite")]
-    public string Sprite { get; set; }
+    public required string Sprite { get; set; }
 
     [YamlMember(Alias = "state")]
     public List<int> State { get; set; } = new();
@@ -463,7 +448,7 @@ public partial class Position
 public partial class Region
 {
     [YamlMember(Alias = "name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [YamlMember(Alias = "inletid")]
     public int? InletId { get; set; }
