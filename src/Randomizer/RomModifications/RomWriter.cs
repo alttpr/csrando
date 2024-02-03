@@ -193,19 +193,7 @@ public static class RomWriter
                 break;
         }
 
-        if (config.MapOnPickup) //rom.mapOnPickup
-        {
-            var locationByPrize = world.GetLocationsOfType(VertexType.Item)
-                .Where(v => v.SubType == VertexType.Prize && v.Item != null)
-                .ToDictionary(v => v.Item!.Name);
-
-            var greenPendant = locationByPrize.GetValueOrDefault("PendantOfCourage", null!).GetMapReveal();
-            rom.SetMapRevealSahasrahla(greenPendant);
-
-            var crystal5 = locationByPrize.GetValueOrDefault("Crystal5", null!).GetMapReveal();
-            var crystal6 = locationByPrize.GetValueOrDefault("Crystal6", null!).GetMapReveal();
-            rom.SetMapRevealBombShop((ushort)(crystal5 | crystal6));
-        }
+        WriteMapReveals(world, rom);
 
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
@@ -331,6 +319,30 @@ public static class RomWriter
             (byte)prng.GetRandomInt(0xFF),
             (byte)prng.GetRandomInt(0xFF)
         ]);
+    }
+
+    private static void WriteMapReveals(World world, Rom rom)
+    {
+        var locationByPrize = world.GetLocationsOfType(VertexType.Item)
+            .Where(v => v.SubType == VertexType.Prize && v.Item != null)
+            .ToDictionary(v => v.Item!.Name);
+
+        var greenPendant = locationByPrize.GetValueOrDefault("PendantOfCourage", null!);
+        var crystal5 = locationByPrize.GetValueOrDefault("Crystal5", null!);
+        var crystal6 = locationByPrize.GetValueOrDefault("Crystal6", null!);
+
+        // TODO: this only works because of our naming convention "Region - Location"; we probably want something more stable.
+        string greenPendantLocation = greenPendant?.Name.Split(" - ").FirstOrDefault() ?? "Wrecked Ship";
+        string crystal5Location = crystal5?.Name.Split(" - ").FirstOrDefault() ?? "Tourian";
+        string crystal6Location = crystal6?.Name.Split(" - ").FirstOrDefault() ?? "Norfair";
+
+        rom.SetText("sahasrahla_bring_courage", $"Want something\nfor free? Go\nearn the green\npendant in\n{greenPendantLocation}\nand I'll give\nyou something.");
+        rom.SetText("bomb_shop", $"bring me the\ncrystals from\n{crystal5Location}\nand\n{crystal6Location}\nso I can make\na big bomb!");
+        if (world.Config.MapOnPickup) //rom.mapOnPickup
+        {
+            rom.SetMapRevealSahasrahla(greenPendant.GetMapReveal());
+            rom.SetMapRevealBombShop((ushort)(crystal5.GetMapReveal() | crystal6.GetMapReveal()));
+        }
     }
 
     /// <summary>
