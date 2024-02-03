@@ -67,6 +67,13 @@ public class WorldConfig
     public bool SilversOnlyAtGanon { get; init; } = false;
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
+    public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
+    public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
+    public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
+    public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;
+    public GanonAgahnimRngOption GanonAgahnimRNG { get; init; } = GanonAgahnimRngOption.Table;
+    public SilversEquipOption SilversAutoEquip { get; init; } = SilversEquipOption.Collection;
+    public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt }
@@ -89,3 +96,10 @@ public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Ins
 public enum BossShuffleOption { None, Simple, Full, Random }
 public enum ShopSupplyOption { Normal, Shuffled }
 public enum EnemyShuffleOption { None, Shuffled, Random }
+public enum HeartColorOption { Red, Blue, Green, Yellow, Random }
+public enum HeartBeepSpeedOption { Off = 0x00, Double = 0x10, Normal = 0x20, Half = 0x40, Quarter = 0x80 }
+public enum MenuSpeedOption { Slow = 0x04, Normal = 0x08, Fast = 0x10, Instant = 0xE8 }
+public enum GoalIconOption { Triforce, Star }
+public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
+public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
+public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }

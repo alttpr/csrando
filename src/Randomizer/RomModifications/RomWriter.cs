@@ -10,7 +10,7 @@ public static class RomWriter
             WriteForWorld(world, baseRom, baseBPS, outputDirectory, randomizer.PRNG, randomizer.Worlds.Length > 1 ? $"_W{i}" : null);
     }
 
-    private static readonly string[] _heartColorOptions = ["blue", "green", "yellow", "red"];
+    private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
     public static void WriteForWorld(World world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
     {
         using var rom = new Rom(baseRom.FullName);
@@ -23,24 +23,18 @@ public static class RomWriter
             rom.ApplyBasePatch(baseBPS);
         }
 
-        string? heartColor = null; //option('heartcolor')
-        if (!string.IsNullOrWhiteSpace(heartColor))
-        {
-            if (heartColor == "random")
+        var heartColor = world.Config.HeartColor; //option('heartcolor')
+        if (heartColor == HeartColorOption.Random)
                 heartColor = prng.GetRandomElement(_heartColorOptions);
             rom.SetHeartColors(heartColor);
-        }
-
-        string? heartBeep = null; //option('heartbeep')
-        if (!string.IsNullOrWhiteSpace(heartBeep))
-            rom.SetHeartBeepSpeed(heartBeep);
+        rom.SetHeartBeepSpeed(world.Config.HeartBeepSpeed); //option('heartbeep')
 
         rom.SetQuickSwap(world.Config.QuickSwap); //option('quickswap')
 
         WriteWorld(world, rom, prng);
 
         rom.MuteMusic(world.Config.NoMusic); //option('no-music')
-        rom.SetMenuSpeed("normal"); //option('menu-speed')
+        rom.SetMenuSpeed(world.Config.MenuSpeed); //option('menu-speed')
 
         // TODO: patch in the sprite
         // TODO: tournament mode
@@ -76,7 +70,7 @@ public static class RomWriter
             SetEscapeFills(world, rom);
 
         rom.SetGoalRequiredCount(config.TriforcePieces); //item.Goal.Required
-        rom.SetGoalIcon("triforce"); //item.Goal.Icon
+        rom.SetGoalIcon(config.GoalIcon); //item.Goal.Icon
 
         // Set item functionality settings
         rom.SetCaneOfByrnaSpikeCaveUsage();
@@ -102,7 +96,7 @@ public static class RomWriter
 
         rom.SetRupoorValue(0); //item.value.Rupoor
 
-        rom.SetGanonAgahnimRng("table"); //rom.GanonAgRNG
+        rom.SetGanonAgahnimRng(config.GanonAgahnimRNG); //rom.GanonAgRNG
 
         rom.SetTowerCrystalRequirement(config.CrystalsTower);
         rom.SetGanonCrystalRequirement(config.CrystalsGanon);
@@ -136,7 +130,7 @@ public static class RomWriter
             0x47 //item.overflow.replacement.Bow; TwentyRupees2
         );
 
-        rom.SetSilversEquip("collection");
+        rom.SetSilversEquip(config.SilversAutoEquip);
         rom.SetSubstitutions([
             // lamp -> 5 rupees
             0x12,
@@ -214,7 +208,7 @@ public static class RomWriter
         }
 
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
-        rom.SetCompassMode("off"); //rom.dungeonCount
+        rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
         rom.SetCompassCountTotals();
         rom.SetFreeItemTextMode(); //rom.freeItemText
         rom.SetFreeItemMenu(); //rom.freeItemMenu

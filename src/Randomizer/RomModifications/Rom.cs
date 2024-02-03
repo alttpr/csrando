@@ -84,20 +84,8 @@ public sealed class Rom : IDisposable
 
     /// <summary>Set the Low Health Beep Speed</summary>
     /// <param name="setting">name (0x00: off, 0x20: normal, 0x40: half, 0x80: quarter)</param>
-    // TODO: don't use a string for this
-    public void SetHeartBeepSpeed(string setting)
-    {
-        var b = setting switch
-        {
-            "off" => (byte)0x00,
-            "half" => (byte)0x40,
-            "quarter" => (byte)0x80,
-            "double" => (byte)0x10,
-            // "normal"
-            _ => (byte)0x20,
-        };
-        Write(0x180033, [b]);
-    }
+    public void SetHeartBeepSpeed(HeartBeepSpeedOption setting)
+        => Write(0x180033, [(byte)setting]);
 
     /// <summary>Set the Rupoor value to take rupees</summary>
     public void SetRupoorValue(ushort value = 10)
@@ -185,18 +173,18 @@ public sealed class Rom : IDisposable
 
         // TODO: temporarily disable compass mode while this is enabled since they occupy the same region of the hud.
         if (compassOverride)
-            SetCompassMode("off");
+            SetCompassMode(CompassCounterOption.Off);
 
         Write(0x180190, [.. bytes, (byte)(restart ? 0x01 : 0x00)]);
     }
 
     /// <summary>Enable triforce-hunt turn in mode.</summary>
-    /// @param bool  enable  enable or disable turn in mode.
+    /// <param name="enable">enable or disable turn in mode.</param>
     public void EnableTriforceTurnIn(bool enable = true)
         => Write(0x180194, [(byte)(enable ? 0x01 : 0x00)]);
 
     /// <summary>Enable HUD item counter</summary>
-    /// @param bool  enable  enable or disable collection count / total item count on HUD
+    /// <param name="enable">enable or disable collection count / total item count on HUD</param>
     public void EnableHudItemCounter(bool enable = false)
         => Write(0x180039, [(byte)(enable ? 0x01 : 0x00)]);
 
@@ -260,13 +248,12 @@ public sealed class Rom : IDisposable
     }
 
     /// <summary>Set the goal item icon</summary>
-    // TODO: don't use a string for this
-    public void SetGoalIcon(string goalIcon = "triforce")
+    public void SetGoalIcon(GoalIconOption goalIcon = GoalIconOption.Triforce)
     {
         ReadOnlySpan<byte> bytes = goalIcon switch
         {
-            "triforce" => [0x0E, 0x28],
-            // "star"
+            GoalIconOption.Triforce => [0x0E, 0x28],
+            // GoalIconOption.Star
             _ => [0x0D, 0x28],
         };
         Write(0x180165, bytes);
@@ -332,15 +319,14 @@ public sealed class Rom : IDisposable
 
     /// <summary>Set hearts color for low vision people</summary>
     /// <param name="color">color to have HUD hearts</param>
-    // TODO: don't use a string for this
-    public void SetHeartColors(string color)
+    public void SetHeartColors(HeartColorOption color)
     {
         var b = color switch
         {
-            "blue" => (byte)0x01,
-            "green" => (byte)0x02,
-            "yellow" => (byte)0x03,
-            // "red"
+            HeartColorOption.Blue => (byte)0x01,
+            HeartColorOption.Green => (byte)0x02,
+            HeartColorOption.Yellow => (byte)0x03,
+            // HeartColorOption.Red
             _ => (byte)0x00,
         };
         Write(0x187020, [b]);
@@ -376,28 +362,10 @@ public sealed class Rom : IDisposable
 
     /// <summary>Set Menu Speed</summary>
     /// <param name="menuSpeed">speed at which the menu enters the screen</param>
-    // TODO: don't use a string for this
-    public void SetMenuSpeed(string menuSpeed = "normal")
+    public void SetMenuSpeed(MenuSpeedOption menuSpeed = MenuSpeedOption.Normal)
     {
-        bool fast = false;
-        byte speed;
-        switch (menuSpeed)
-        {
-            case "instant":
-                speed = 0xE8;
-                fast = true;
-                break;
-            case "fast":
-                speed = 0x10;
-                break;
-            case "normal":
-            default:
-                speed = 0x08;
-                break;
-            case "slow":
-                speed = 0x04;
-                break;
-        }
+        bool fast = menuSpeed == MenuSpeedOption.Instant;
+        byte speed = (byte)menuSpeed;
         Write(0x180048, [speed]);
         Write(0x6DD9A, [(byte)(fast ? 0x20 : 0x11)]);
         Write(0x6DF2A, [(byte)(fast ? 0x20 : 0x12)]);
@@ -921,19 +889,8 @@ public sealed class Rom : IDisposable
 
     /// <summary>Set when silvers equip</summary>
     /// <param name="setting">name</param>
-    // TODO: don't use a string for this
-    public void SetSilversEquip(string setting)
-    {
-        var b = setting switch
-        {
-            "both" => (byte)0x03,
-            "ganon" => (byte)0x02,
-            "off" => (byte)0x00,
-            // "collection"
-            _ => (byte)0x01,
-        };
-        Write(0x180182, [b]);
-    }
+    public void SetSilversEquip(SilversEquipOption setting)
+        => Write(0x180182, [(byte)setting]);
 
     /// <summary>Enable/Disable ability to bug net catch Bee (also makes them attack you?)</summary>
     /// <param name="enable">switch on or off</param>
@@ -1453,18 +1410,8 @@ public sealed class Rom : IDisposable
 
     /// <summary>Enable compass to show dungeon count</summary>
     /// <param name="setting">switch on or off</param>
-    // TODO: don't use a string for this
-    public void SetCompassMode(string setting = "off")
-    {
-        var b = setting switch
-        {
-            "on" => (byte)0x02,
-            "pickup" => (byte)0x01,
-            // "off"
-            _ => (byte)0x00,
-        };
-        Write(0x18003C, [b]);
-    }
+    public void SetCompassMode(CompassCounterOption setting = CompassCounterOption.Off)
+        => Write(0x18003C, [(byte)setting]);
 
     /// <summary>Set Ball and Chain guard dungeon id</summary>
     public void SetBallNChainDungeon(byte dungeonId)
@@ -1607,18 +1554,8 @@ public sealed class Rom : IDisposable
 
     /// <summary>Set the Ganon Warp Phase and Agahnim BB mode</summary>
     /// <param name="setting">name</param>
-    // TODO: don't use a string for this?
-    public void SetGanonAgahnimRng(string setting = "table")
-    {
-        var b = setting switch
-        {
-            "none" => (byte)0x01,
-            // "vanilla"
-            // "table"
-            _ => (byte)0x00,
-        };
-        Write(0x180086, [b]);
-    }
+    public void SetGanonAgahnimRng(GanonAgahnimRngOption setting = GanonAgahnimRngOption.Table)
+        => Write(0x180086, [(byte)setting]);
 
     /// <summary>Set the Tower Crystal Requirement</summary>
     public void SetTowerCrystalRequirement(int crystals = 7)
