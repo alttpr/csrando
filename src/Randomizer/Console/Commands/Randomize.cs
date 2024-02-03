@@ -6,6 +6,8 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 /// <summary>Run randomizer as command.</summary>
 internal sealed class Randomize : Command
@@ -30,6 +32,7 @@ internal sealed class Randomize : Command
     // TODO: we should probably have the base rom patch "built in" and not require a path.
     private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>("bps", "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
     private readonly Option<DirectoryInfo> _outputDirectory = new Option<DirectoryInfo>("outdir", "output directory for generated games");
+    private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>("settings", "JSON serialized settings file").ExistingOnly();
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -53,6 +56,7 @@ internal sealed class Randomize : Command
         Add(_baseRom);
         Add(_baseBPS);
         Add(_outputDirectory);
+        Add(_settingsFile);
 
         AddValidator(Validate);
 
@@ -87,28 +91,9 @@ internal sealed class Randomize : Command
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
-            string crystalsGanonS = context.ParseResult.GetValueForOption(_crystalsGanon)!;
-            int crystalsGanon = crystalsGanonS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsGanonS);
-
-            string crystalsTowerS = context.ParseResult.GetValueForOption(_crystalsTower)!;
-            int crystalsTower = crystalsTowerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsTowerS);
-
+            var worldConfigs = GetWorldConfigs(context);
             var randomizer = new Randomizer(
-                Enumerable.Repeat(new WorldConfig
-                {
-                    Accessibility = context.ParseResult.GetValueForOption(_accessibility),
-                    Goal = context.ParseResult.GetValueForOption(_goal),
-                    State = context.ParseResult.GetValueForOption(_state),
-                    Glitches = context.ParseResult.GetValueForOption(_glitches),
-                    EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
-                    BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
-                    RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
-                    CrystalsGanon = crystalsGanon,
-                    CrystalsTower = crystalsTower,
-                    Weapon = context.ParseResult.GetValueForOption(_weapons),
-                    Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
-                    StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],
-                }, context.ParseResult.GetValueForOption(_multiworld)).ToArray(),
+                worldConfigs,
                 context.ParseResult.GetValueForOption(_seed)
             );
             randomizer.Randomize();
@@ -128,6 +113,70 @@ internal sealed class Randomize : Command
         Info("Randomization took {0}", sw.Elapsed);
 
         return 0;
+    }
+
+    private static readonly JsonSerializerOptions _options = new()
+    {
+        AllowTrailingCommas = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() },
+    };
+    private WorldConfig[] GetWorldConfigs(InvocationContext context)
+    {
+        var settingsFile = context.ParseResult.GetValueForOption(_settingsFile);
+        if (settingsFile != null && settingsFile.Exists)
+        {
+            using var settingsStream = settingsFile.OpenRead();
+            try
+            {
+                // try to read an array first; one entry per world (for multiworld)
+                var configArray = JsonSerializer.Deserialize<WorldConfig[]>(settingsStream, _options);
+                if (configArray != null)
+                {
+                    Info("Read {0} worlds from passed config file.", configArray.Length);
+                    return configArray;
+                }
+            }
+            catch { }
+            try
+            {
+                settingsStream.Seek(0, SeekOrigin.Begin);
+                // try to read a single config, duplicate for multiworld as necessary
+                var singleConfig = JsonSerializer.Deserialize<WorldConfig>(settingsStream, _options);
+                if (singleConfig != null)
+                {
+                    Info("Read single world from passed config file.");
+                    return Enumerable.Repeat(singleConfig, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
+                }
+            }
+            catch { }
+        }
+
+        Info("Using directly passed options to construct world.");
+        string crystalsGanonS = context.ParseResult.GetValueForOption(_crystalsGanon)!;
+        int crystalsGanon = crystalsGanonS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsGanonS);
+
+        string crystalsTowerS = context.ParseResult.GetValueForOption(_crystalsTower)!;
+        int crystalsTower = crystalsTowerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsTowerS);
+
+        var worldConfigs = Enumerable.Repeat(new WorldConfig
+        {
+            Accessibility = context.ParseResult.GetValueForOption(_accessibility),
+            Goal = context.ParseResult.GetValueForOption(_goal),
+            State = context.ParseResult.GetValueForOption(_state),
+            Glitches = context.ParseResult.GetValueForOption(_glitches),
+            EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
+            BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
+            RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
+            CrystalsGanon = crystalsGanon,
+            CrystalsTower = crystalsTower,
+            Weapon = context.ParseResult.GetValueForOption(_weapons),
+            Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
+            StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],
+        }, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
+
+        return worldConfigs;
     }
 
     private static void Info(string format, params object[] args)
