@@ -1607,6 +1607,7 @@ public sealed class Rom : IDisposable
 
     /// <summary>Set the Ganon Warp Phase and Agahnim BB mode</summary>
     /// <param name="setting">name</param>
+    // TODO: don't use a string for this?
     public void SetGanonAgahnimRng(string setting = "table")
     {
         var b = setting switch

@@ -35,14 +35,11 @@ public static class RomWriter
         if (!string.IsNullOrWhiteSpace(heartBeep))
             rom.SetHeartBeepSpeed(heartBeep);
 
-        bool? quickSwap = null; //option('quickswap')
-        if (quickSwap.HasValue)
-            rom.SetQuickSwap(quickSwap.Value);
+        rom.SetQuickSwap(world.Config.QuickSwap); //option('quickswap')
 
         WriteWorld(world, rom, prng);
 
-        bool? noMusic = null; //option('no-music')
-        rom.MuteMusic(noMusic.GetValueOrDefault());
+        rom.MuteMusic(world.Config.NoMusic); //option('no-music')
         rom.SetMenuSpeed("normal"); //option('menu-speed')
 
         // TODO: patch in the sprite
@@ -78,7 +75,7 @@ public static class RomWriter
         if (config.State == StateOption.Standard)
             SetEscapeFills(world, rom);
 
-        rom.SetGoalRequiredCount(0); //item.Goal.Required
+        rom.SetGoalRequiredCount(config.TriforcePieces); //item.Goal.Required
         rom.SetGoalIcon("triforce"); //item.Goal.Icon
 
         // Set item functionality settings
@@ -88,20 +85,20 @@ public static class RomWriter
         rom.SetCaneOfByrnaMagicPerCycle();
 
         rom.SetCapeRegularMagicUsage(
-            0x04, //rom.CapeMagicUsage.Normal
-            0x08, //rom.CapeMagicUsage.Half
-            0x10 //rom.CapeMagicUsage.Quarter
+            config.CapeMagicUsageNormal, //rom.CapeMagicUsage.Normal
+            config.CapeMagicUsageHalf, //rom.CapeMagicUsage.Half
+            config.CapeMagicUsageQuarter //rom.CapeMagicUsage.Quarter
         );
-        rom.SetCaneOfByrnaInvulnerability(true); //rom.CaneOfByrnaInvulnerability
-        rom.SetPowderedSpriteFairyPrize(0xE3); //rom.PowderedSpriteFairyPrize
+        rom.SetCaneOfByrnaInvulnerability(config.CaneOfByrnaInvulnerability); //rom.CaneOfByrnaInvulnerability
+        rom.SetPowderedSpriteFairyPrize(config.PowderedSpriteFairyPrize); //rom.PowderedSpriteFairyPrize
         rom.SetBottleFills(
-            0xA0,  //rom.BottleFill.Health
-            0x80 //rom.BottleFill.Magic
+            config.BottleFillHealth, //rom.BottleFill.Health
+            config.BottleFillMagic //rom.BottleFill.Magic
         );
-        rom.SetCatchableFairies(true); //rom.CatchableFairies
-        rom.SetCatchableBees(true); //rom.CatchableBees
-        rom.SetStunItems(true, true); //rom.StunItems
-        rom.SetSilversOnlyAtGanon(false); //rom.SilversOnlyAtGanon
+        rom.SetCatchableFairies(config.CatchableFairies); //rom.CatchableFairies
+        rom.SetCatchableBees(config.CatchableBees); //rom.CatchableBees
+        rom.SetStunItems(config.StunItemsHookshot, config.StunItemsBoomerang); //rom.StunItems
+        rom.SetSilversOnlyAtGanon(config.SilversOnlyAtGanon); //rom.SilversOnlyAtGanon
 
         rom.SetRupoorValue(0); //item.value.Rupoor
 
@@ -111,9 +108,9 @@ public static class RomWriter
         rom.SetGanonCrystalRequirement(config.CrystalsGanon);
 
         // testing features
-        rom.SetGenericKeys(false); //rom.genericKeys
+        rom.SetGenericKeys(config.GenericKeys); //rom.genericKeys
         //rom.SetupCustomShops(getShops());
-        rom.SetRupeeArrow(false); //rom.rupeeBow
+        rom.SetRupeeArrow(config.RomRupeeBow); //rom.rupeeBow
         rom.SetWishingWellChests(true);
         rom.SetWishingWellUpgrade(false);
         rom.SetHyliaFairyShop(true);
@@ -202,7 +199,7 @@ public static class RomWriter
                 break;
         }
 
-        if (false) //rom.mapOnPickup
+        if (config.MapOnPickup) //rom.mapOnPickup
         {
             var locationByPrize = world.GetLocationsOfType(VertexType.Item)
                 .Where(v => v.SubType == VertexType.Prize && v.Item != null)
@@ -216,7 +213,7 @@ public static class RomWriter
             rom.SetMapRevealBombShop((ushort)(crystal5 | crystal6));
         }
 
-        rom.SetMapMode(false); //rom.mapOnPickup
+        rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode("off"); //rom.dungeonCount
         rom.SetCompassCountTotals();
         rom.SetFreeItemTextMode(); //rom.freeItemText
@@ -227,8 +224,8 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
 
-        rom.SetPyramidFairyChests(true); //region.swordsInPool
-        rom.SetSmithyQuickItemGive(true); //region.swordsInPool
+        rom.SetPyramidFairyChests(config.Weapon != WeaponOption.Vanilla); //region.swordsInPool
+        rom.SetSmithyQuickItemGive(config.Weapon != WeaponOption.Vanilla); //region.swordsInPool
 
         rom.SetGameState(config.State);
         rom.SetSwordlessMode(config.Weapon == WeaponOption.Swordless);
@@ -311,10 +308,9 @@ public static class RomWriter
                 break;
         }
 
-        //bool triforceHUD = config.Goal is GoalOption.TriforceHunt or GoalOption.GanonHunt
-        //    || (config("item.Goal.Required", 0) > 0);
-        //rom.EnableHudItemCounter(triforceHUD ? false : config("rom.hudItemCounter", config("goal", "ganon") == "completionist"));
-        rom.EnableHudItemCounter(false);
+        bool triforceHUD = config.Goal is GoalOption.TriforceHunt //or GoalOption.GanonHunt
+            || (config.TriforcePieces > 0);
+        rom.EnableHudItemCounter(!triforceHUD && config.HudItemCounter /*|| config.Goal == GoalOption.Completionist*/); //rom.hudItemCounter
 
         if (config.CrystalsTower == 0)
             rom.InitialSram.PreOpenGanonsTower();
@@ -323,9 +319,9 @@ public static class RomWriter
 
         rom.SetMysteryMasking(false); //spoilers == "mystery"
 
-        rom.SetPseudoBoots(false); //pseudoboots
+        rom.SetPseudoBoots(config.PseudoBoots); //pseudoboots
 
-        rom.EnableFastRom(true); //fastrom
+        rom.EnableFastRom(config.FastRom); //fastrom
 
         rom.WriteCredits();
         rom.WriteText();
@@ -397,7 +393,7 @@ public static class RomWriter
                 0,
                 0
             );
-            if (false) //rom.EscapeAssist
+            if (config.EscapeAssist) //rom.EscapeAssist
                 rom.SetEscapeAssist(infiniteMagic: true);
         }
         // FIXME: that bow check (probably) doesn't cover everything.
@@ -419,10 +415,10 @@ public static class RomWriter
                 0,
                 1 //rom.EscapeRefills.Mantle.Arrows
             );
-            if (false) //rom.EscapeAssist
+            if (config.EscapeAssist) //rom.EscapeAssist
                 rom.SetEscapeAssist(infiniteArrows: true);
         }
-        else if (uncleItems.Has(world.GetItem("TenBombs"))) // || config('logic') != 'NoLogic')
+        else if (uncleItems.Has(world.GetItem("TenBombs")) || config.Glitches != GlitchesOption.NoLogic)
         {
             // TenBombs, or give player bombs if uncle was plando'd to not have a weapon.
             rom.SetEscapeFills(refillBombs: true);
@@ -441,7 +437,7 @@ public static class RomWriter
                 3, //rom.EscapeRefills.Mantle.Bombs
                 0
             );
-            if (false) //rom.EscapeAssist
+            if (config.EscapeAssist) //rom.EscapeAssist
                 rom.SetEscapeAssist(infiniteBombs: true);
         }
     }
