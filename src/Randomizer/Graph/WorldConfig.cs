@@ -14,6 +14,8 @@ public class WorldConfig
     public int CrystalsGanon { get; set; } = 7;
     public int CrystalsTower { get; set; } = 7;
 
+    public int TriforcePieces { get; set; } = 7;
+
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;

@@ -53,6 +53,7 @@ public sealed class Randomizer
             Worlds[i] = new World(i, randomizerConfigs[i], Graph);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
 
+            GameWinnerer.AdjustEdges(Worlds[i], PRNG);
             ShopFiller.AdjustEdges(Worlds[i], PRNG);
             DoorShuffler.AdjustEdges(Worlds[i], PRNG);
             EntranceShuffler.AdjustEdges(Worlds[i], PRNG);
