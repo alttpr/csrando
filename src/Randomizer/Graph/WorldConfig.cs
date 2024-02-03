@@ -4,15 +4,37 @@ using System.Collections.Generic;
 
 public class WorldConfig
 {
-    public const int RandomCrystals = -1;
+    public static readonly int[] RandomCrystals = [0, 1, 2, 3, 4, 5, 6, 7];
 
     // TODO: Align this with current website which broke it down to multiple settings.
     // See https://github.com/sporchia/alttp_vt_randomizer/pull/951
     public int RomHardMode { get; init; } = 0;
 
-    // Use RandomizerConfig.RandomCrystals value for randomizing the number of crystals
-    public int CrystalsGanon { get; set; } = 7;
-    public int CrystalsTower { get; set; } = 7;
+    // Use an array of allowed random values for randomizing the number of crystals.
+    // A single-element array acts as specific count to use.
+    public int[] CrystalsGanonChoices { get; set; } = RandomCrystals;
+    public int[] CrystalsTowerChoices { get; set; } = RandomCrystals;
+
+    private int? _crystalsGanon;
+    public int CrystalsGanon
+    {
+        get => _crystalsGanon.GetValueOrDefault(7);
+        set => _crystalsGanon = value;
+    }
+    private int? _crystalsTower;
+    public int CrystalsTower
+    {
+        get => _crystalsTower.GetValueOrDefault(7);
+        set => _crystalsTower = value;
+    }
+
+    public void SelectRandomValues(PRNG prng)
+    {
+        if (!_crystalsGanon.HasValue)
+            _crystalsGanon = prng.GetRandomElement(CrystalsGanonChoices);
+        if (!_crystalsTower.HasValue)
+            _crystalsTower = prng.GetRandomElement(CrystalsTowerChoices);
+    }
 
     public ushort TriforcePieces { get; set; } = 0;
 

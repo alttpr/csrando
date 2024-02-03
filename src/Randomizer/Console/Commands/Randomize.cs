@@ -21,8 +21,8 @@ internal sealed class Randomize : Command
     private readonly Option<EntranceShuffleOption> _entranceShuffle = new("entrance", () => EntranceShuffleOption.None, "set entrance shuffle mode");
     private readonly Option<ShopSupplyOption> _shopSupply = new("shopsupply", () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
     private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
-    private readonly Option<string> _crystalsGanon = new Option<string>("crystals_ganon", () => "7", "set ganon crystal requirement").FromAmong(_crystalAmount);
-    private readonly Option<string> _crystalsTower = new Option<string>("crystals_tower", () => "7", "set ganon tower crystal requirement").FromAmong(_crystalAmount);
+    private readonly Option<int[]> _crystalsGanon = new Option<int[]>("crystals_ganon", ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
+    private readonly Option<int[]> _crystalsTower = new Option<int[]>("crystals_tower", ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
     private readonly Option<List<string>> _startingItems = new Option<List<string>>("items", "set starting items (comma separated)");
     private readonly Option<int> _bulk = new("bulk", () => 1, "generate multiple ROMs");
@@ -61,6 +61,21 @@ internal sealed class Randomize : Command
         AddValidator(Validate);
 
         this.SetHandler(context => context.ExitCode = Handle(context));
+    }
+
+    private static int[] ParseCrystalCount(ArgumentResult result)
+    {
+        // option not specified: default to 7
+        if (!result.Tokens.Any())
+            return [7];
+
+        // option specified as "random": allow any number
+        if (result.Tokens.Any(t => "random".Equals(t.Value, StringComparison.OrdinalIgnoreCase)))
+            return WorldConfig.RandomCrystals;
+
+        // anything else: the user specified at least one value; we'll use those as possible choices to randomize the count
+        // those values are already pre-validated, so they are guaranteed to be integers (or the string "random")
+        return result.Tokens.Select(t => int.Parse(t.Value)).ToArray();
     }
 
     private void Validate(CommandResult result)
@@ -154,12 +169,6 @@ internal sealed class Randomize : Command
         }
 
         Info("Using directly passed options to construct world.");
-        string crystalsGanonS = context.ParseResult.GetValueForOption(_crystalsGanon)!;
-        int crystalsGanon = crystalsGanonS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsGanonS);
-
-        string crystalsTowerS = context.ParseResult.GetValueForOption(_crystalsTower)!;
-        int crystalsTower = crystalsTowerS == "random" ? WorldConfig.RandomCrystals : int.Parse(crystalsTowerS);
-
         var worldConfigs = Enumerable.Repeat(new WorldConfig
         {
             Accessibility = context.ParseResult.GetValueForOption(_accessibility),
@@ -169,8 +178,8 @@ internal sealed class Randomize : Command
             EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
             BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
             RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
-            CrystalsGanon = crystalsGanon,
-            CrystalsTower = crystalsTower,
+            CrystalsGanonChoices = context.ParseResult.GetValueForOption(_crystalsGanon) ?? WorldConfig.RandomCrystals,
+            CrystalsTowerChoices = context.ParseResult.GetValueForOption(_crystalsTower) ?? WorldConfig.RandomCrystals,
             Weapon = context.ParseResult.GetValueForOption(_weapons),
             Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
             StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],

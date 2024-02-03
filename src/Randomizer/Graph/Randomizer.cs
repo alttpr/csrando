@@ -44,11 +44,7 @@ public sealed class Randomizer
         Worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
-            if (randomizerConfigs[i].CrystalsGanon == WorldConfig.RandomCrystals)
-                randomizerConfigs[i].CrystalsGanon = PRNG.GetRandomInt(7 + 1);
-
-            if (randomizerConfigs[i].CrystalsTower == WorldConfig.RandomCrystals)
-                randomizerConfigs[i].CrystalsTower = PRNG.GetRandomInt(7 + 1);
+            randomizerConfigs[i].SelectRandomValues(PRNG);
 
             Worlds[i] = new World(i, randomizerConfigs[i], Graph);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
