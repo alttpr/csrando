@@ -13,18 +13,20 @@ internal record ResourceTypeCount(string Type, int Count);
 [JsonConverter(typeof(RequirementConverter))]
 public abstract record Requirement
 {
-    internal record Single(string Req): Requirement;
-    internal record And(List<Requirement> Reqs) : Requirement;
+    internal record Always : Requirement;
+    internal record Never : Requirement;
+    internal record Single(string Req) : Requirement;
+    internal record And(Requirement[] Reqs) : Requirement;
     internal record Not(Requirement Req) : Requirement;
-    internal record Or(List<Requirement> Reqs) : Requirement;
+    internal record Or(Requirement[] Reqs) : Requirement;
     internal record Ammo(string Type, int Count) : Requirement;
     internal record AmmoDrain(string Type, int Count) : Requirement;
-    internal record Refill(List<string> Resources) : Requirement;
+    internal record Refill(string[] Resources) : Requirement;
     internal record EnemyKill(
-        List<List<string>> Enemies,
-        List<string> ExplicitWeapons = null,
-        List<string> ExcludedWeapons = null,
-        List<string> FarmableAmmo = null
+        string[][] Enemies,
+        string[]? ExplicitWeapons = null,
+        string[]? ExcludedWeapons = null,
+        string[]? FarmableAmmo = null
     ) : Requirement
     {
         internal bool CanKillWith(Dictionary<string, int> flags)
@@ -62,9 +64,9 @@ public abstract record Requirement
     internal record SpikeHits(int Hits) : Requirement;
     internal record ThornHits(int Hits) : Requirement;
     internal record DoorUnlockedAtNode(int Node) : Requirement;
-    internal record ObstaclesCleared(List<string> Obstacles) : Requirement;
-    internal record ObstaclesNotCleared(List<string> Obstacles) : Requirement;
-    internal record ResourceCapacity(List<ResourceTypeCount> Capacity) : Requirement;
+    internal record ObstaclesCleared(string[] Obstacles) : Requirement;
+    internal record ObstaclesNotCleared(string[] Obstacles) : Requirement;
+    internal record ResourceCapacity(ResourceTypeCount[] Capacity) : Requirement;
     internal record CanShineCharge(
         decimal UsedTiles,
         decimal OpenEnd,
@@ -76,8 +78,8 @@ public abstract record Requirement
     ) : Requirement;
     internal record Shinespark(int Frames, int? ExcessFrames = null) : Requirement;
     internal record ResetRoom(
-        List<int> Nodes,
-        List<int> NodesToAvoid = null,
+        int[] Nodes,
+        int[]? NodesToAvoid = null,
         bool? MustStayPut = null
     ) : Requirement;    
     internal record ItemNotCollectedAtNode(int Node) : Requirement;
@@ -86,6 +88,8 @@ public abstract record Requirement
     {
         return this switch
         {
+            Always => true,
+            Never => false,
             Single req => flags.ContainsKey(req.Req),
             And reqs => reqs.Reqs.All(req => req.Check(flags)),
             Not req => !req.Req.Check(flags),
@@ -138,7 +142,7 @@ internal class RequirementConverter : JsonConverter<Requirement>
         }
         else if(element.ValueKind == JsonValueKind.Array)
         {
-            return new Requirement.And(element.EnumerateArray().Select(req => ParseElement(req)!).ToList());
+            return new Requirement.And(element.EnumerateArray().Select(req => ParseElement(req)!).ToArray());
         }
         else if(element.ValueKind == JsonValueKind.Object)
         {
@@ -146,17 +150,19 @@ internal class RequirementConverter : JsonConverter<Requirement>
             var property = element.EnumerateObject().First();
             return property.Name switch
             {
-                "and" => new Requirement.And(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToList()),
+                "always" => new Requirement.Always(),
+                "never" => new Requirement.Never(),
+                "and" => new Requirement.And(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToArray()),
                 "not" => new Requirement.Not(ParseElement(property.Value)!),
-                "or" => new Requirement.Or(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToList()),
+                "or" => new Requirement.Or(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToArray()),
                 "ammo" => new Requirement.Ammo(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
                 "ammoDrain" => new Requirement.AmmoDrain(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
-                "refill" => new Requirement.Refill(property.Value.EnumerateArray().Select(r => r.GetString()!).ToList()),
+                "refill" => new Requirement.Refill(property.Value.EnumerateArray().Select(r => r.GetString()!).ToArray()),
                 "enemyKill" => new Requirement.EnemyKill(
-                    property.Value.GetProperty("enemies").EnumerateArray().Select(e => e.EnumerateArray().Select(ee => ee.GetString()!).ToList()).ToList(),
-                    property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? explicitWeapons.EnumerateArray().Select(e => e.GetString()!).ToList() : null!,
-                    property.Value.TryGetProperty("excludedWeapons", out var excludedWeapons) ? excludedWeapons.EnumerateArray().Select(e => e.GetString()!).ToList() : null!,
-                    property.Value.TryGetProperty("farmableAmmo", out var farmableAmmo) ? farmableAmmo.EnumerateArray().Select(e => e.GetString()!).ToList() : null!),
+                    property.Value.GetProperty("enemies").EnumerateArray().Select(e => e.EnumerateArray().Select(ee => ee.GetString()!).ToArray()).ToArray(),
+                    property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? explicitWeapons.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!,
+                    property.Value.TryGetProperty("excludedWeapons", out var excludedWeapons) ? excludedWeapons.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!,
+                    property.Value.TryGetProperty("farmableAmmo", out var farmableAmmo) ? farmableAmmo.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!),
                 "acidFrames" => new Requirement.AcidFrames(property.Value.GetInt32()),
                 "gravitylessAcidFrames" => new Requirement.GravitylessAcidFrames(property.Value.GetInt32()),
                 "draygonElectricityFrames" => new Requirement.DraygonElectricityFrames(property.Value.GetInt32()),
@@ -176,9 +182,9 @@ internal class RequirementConverter : JsonConverter<Requirement>
                 "spikeHits" => new Requirement.SpikeHits(property.Value.GetInt32()),
                 "thornHits" => new Requirement.ThornHits(property.Value.GetInt32()),
                 "doorUnlockedAtNode" => new Requirement.DoorUnlockedAtNode(property.Value.GetInt32()),
-                "obstaclesCleared" => new Requirement.ObstaclesCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToList()),
-                "obstaclesNotCleared" => new Requirement.ObstaclesNotCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToList()),
-                "resourceCapacity" => new Requirement.ResourceCapacity(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToList()),
+                "obstaclesCleared" => new Requirement.ObstaclesCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToArray()),
+                "obstaclesNotCleared" => new Requirement.ObstaclesNotCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToArray()),
+                "resourceCapacity" => new Requirement.ResourceCapacity(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
                 "canShineCharge" => new Requirement.CanShineCharge(
                     property.Value.GetProperty("usedTiles").GetDecimal(),
                     property.Value.GetProperty("openEnd").GetDecimal(),
@@ -189,8 +195,8 @@ internal class RequirementConverter : JsonConverter<Requirement>
                     property.Value.TryGetProperty("startingDownTiles", out var startingDownTiles) ? startingDownTiles.GetDecimal() : null!),
                 "shinespark" => new Requirement.Shinespark(property.Value.GetProperty("frames").GetInt32(), property.Value.TryGetProperty("excessFrames", out var excessFrames) ? excessFrames.GetInt32() : null!),
                 "resetRoom" => new Requirement.ResetRoom(
-                    property.Value.GetProperty("nodes").EnumerateArray().Select(n => n.GetInt32()).ToList(),
-                    property.Value.TryGetProperty("nodesToAvoid", out var nodesToAvoid) ? nodesToAvoid.EnumerateArray().Select(n => n.GetInt32()).ToList() : null!,
+                    property.Value.GetProperty("nodes").EnumerateArray().Select(n => n.GetInt32()).ToArray(),
+                    property.Value.TryGetProperty("nodesToAvoid", out var nodesToAvoid) ? nodesToAvoid.EnumerateArray().Select(n => n.GetInt32()).ToArray() : null!,
                     property.Value.TryGetProperty("mustStayPut", out var mustStayPut) ? mustStayPut.GetBoolean() : null!),
                 "itemNotCollectedAtNode" => new Requirement.ItemNotCollectedAtNode(property.Value.GetInt32()),
                 _ => throw new Exception($"Unknown requirement: {property.Name}")

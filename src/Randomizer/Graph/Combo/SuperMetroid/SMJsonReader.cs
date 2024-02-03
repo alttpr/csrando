@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Combo.SuperMetroid.Model;
 using static global::Randomizer.Graph.Combo.Zelda.ZeldaYamlReader;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Security;
 
 internal class SMJsonReader
 {
@@ -21,7 +23,9 @@ internal class SMJsonReader
     public List<BossScenarioCollection> BossScenarios { get; set; } = new();
 
     private Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
-    private Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
+    private Dictionary<Requirement, DirectedUndirectedPair> edges = new Dictionary<Requirement, DirectedUndirectedPair>();
+
+    private HashSet<(string, string, Requirement)> _edgeExists = new HashSet<(string, string, Requirement)>();
 
     private Dictionary<string, object> CreateNode(Dictionary<string, object> nodeData)
     {
@@ -55,17 +59,21 @@ internal class SMJsonReader
         return vertexData;
     }
 
-    private void AddEdge(Dictionary<string, object> from, Dictionary<string, object> to, string edgeGroup, bool undirected = false)
+    private bool EdgeExists(Dictionary<string, object> from, Dictionary<string, object> to, Requirement requirement)
     {
-        if (!edges.TryGetValue(edgeGroup, out var edgePair))
+        return _edgeExists.Contains(((string)from["name"], (string)to["name"], requirement));
+    }
+
+    private void AddEdge(Dictionary<string, object> from, Dictionary<string, object> to, Requirement requirement, bool undirected = false)
+    {
+        if (!edges.TryGetValue(requirement, out var edgePair))
         {
             edgePair = new DirectedUndirectedPair();
-            edges.Add(edgeGroup, edgePair);
+            edges.Add(requirement, edgePair);
         }
 
-        // Check if the edge already exists
-        var edgeExists = undirected ? edgePair.Undirected.Any(e => e.SequenceEqual(new string[] { (string)from["name"], (string)to["name"] })) :
-                                      edgePair.Directed.Any(e => e.SequenceEqual(new string[] { (string)from["name"], (string)to["name"] }));
+        // check if the edge already exists
+        var edgeExists = _edgeExists.Contains(((string)from["name"], (string)to["name"], requirement));
 
         if (!edgeExists)
         {
@@ -77,17 +85,19 @@ internal class SMJsonReader
             {
                 edgePair.Directed.Add([(string)from["name"], (string)to["name"]]);
             }
+
+            _edgeExists.Add(((string)from["name"], (string)to["name"], requirement));
         }
     }
 
-    private void AddDirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, string edgeGroup)
+    private void AddDirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, Requirement requirement)
     {
-        AddEdge(from, to, edgeGroup);
+        AddEdge(from, to, requirement);
     }
 
-    private void AddUndirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, string edgeGroup)
+    private void AddUndirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, Requirement requirement)
     {
-        AddEdge(from, to, edgeGroup, true);
+        AddEdge(from, to, requirement, true);
     }
 
     private List<T> LoadFiles<T>(string path)
@@ -142,6 +152,26 @@ internal class SMJsonReader
         }
     }
 
+    public Dictionary<string, DirectedUndirectedPair> GetForWorld(World world)
+    {
+        if (Rooms.Count == 0)
+        {
+            Load();
+        }
+
+        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"SM - {d[0]}"; d[1] = $"SM - {d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"SM - {d[0]}"; d[1] = $"SM - {d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
+    }
+
+    public List<Dictionary<string, object>> LoadYmlData(World world)
+    {
+        if (Rooms.Count == 0)
+        {
+            Load();
+        }
+
+        return vertices.Values.Select(v => { v["name"] = $"SM - {v["name"]}"; return v; }).ToList();
+    }
+
     // Load all JSON data into memory
     public void Load()
     {
@@ -154,42 +184,131 @@ internal class SMJsonReader
         BossScenarios = LoadFiles<BossScenarioCollection>(Path.Combine(path, "enemies")).Where(x => x.Scenarios != null).ToList();
     }
 
-    public void BuildGraph()
+    public void BuildGraph(World world)
     {
-        BuildRoom(Rooms[0]);
+        foreach(var room in Rooms)
+        {
+            BuildRoom(room);
+        }   
     }
 
     private void BuildRoom(Room room)
     {
-        // Create this rooms nodes
+        // For each obstacle in the room, created a copy of a node for that obstacle state (including a blank state)
+        var obstacleCombinations = room.Obstacles?.Combinations().ToList() ?? [];
+        string[] obstacleIdStrings = ["", ..obstacleCombinations.Select(c => string.Join(",", c.Select(o => o.Id).OrderBy(c => c))).OrderBy(c => c).ToList()];
+
+        foreach (var obstacleIdString in obstacleIdStrings)
+        {
+            // Create this rooms nodes
+            foreach (var node in room.Nodes)
+            {
+                var nodeName = obstacleIdString == "" ? $"{room.Area} - {room.Name} - {node.Name}" : $"{room.Area} - {room.Name} - {node.Name} - {obstacleIdString}";
+
+                var nodeType = node.NodeType switch
+                {
+                    // "door", "entrance", "exit", "event", "item", "junction", "utility"
+                    "item" => VertexType.Item,
+                    "entrance" => VertexType.Entrance,
+                    "exit" => VertexType.Entrance,
+                    "door" => VertexType.Entrance,
+                    _ => VertexType.Meta
+                };
+
+                VertexType? nodeSubType = node.NodeSubType switch
+                {
+                    "chozo" => VertexType.Chozo,
+                    "hidden" => VertexType.Hidden,
+                    "visible" => VertexType.Visible,
+                    _ => null
+                };
+
+                var newNode = CreateNode(new()
+                {
+                    { "name", nodeName },
+                    { "type", VertexType.Meta },
+                    { "subtype", VertexType.Meta },
+                });
+
+                // If this node is an item, create a new item node that is common for all obstacle states
+                if(nodeType == VertexType.Item)
+                {
+                    var itemNodeName = $"{room.Area} - {room.Name} - {node.Name} - Item";
+                    if (FindNode(itemNodeName) == null)
+                    {
+                        var itemNode = CreateNode(new()
+                        {
+                            { "name", itemNodeName },
+                            { "type", VertexType.Item },
+                            { "subtype", nodeSubType! },
+                            { "address", Convert.ToInt32(node.NodeAddress ?? "0", 16) },
+                            { "itemset", (string[])["supermetroid"] },
+                        });
+
+                        AddDirectedEdge(newNode, itemNode, node.InteractionRequires ?? new Requirement.Always());
+                    }
+                }
+            }
+        }
+
         foreach (var node in room.Nodes)
         {
-            var nodeType = node.NodeType switch
-            {
-                // "door", "entrance", "exit", "event", "item", "junction", "utility"
-                "item" => VertexType.Item,
-                "entrance" => VertexType.Entrance,
-                "exit" => VertexType.Entrance,
-                "door" => VertexType.Entrance,
-                _ => VertexType.Meta
-            };
+            ConnectNode(room, node, "");
+        }
 
-            VertexType? nodeSubType = node.NodeSubType switch
+    }
+
+    // This will recursively connect all the nodes in the room, switching obstacle states as needed
+    public void ConnectNode(Room room, Node from, string obstacleState)
+    {
+        var fromNodeName = obstacleState == "" ? $"{room.Area} - {room.Name} - {from.Name}" : $"{room.Area} - {room.Name} - {from.Name} - {obstacleState}";
+        var fromNodeData = FindNode(fromNodeName)!;
+
+        // Get all the nodes that are connected from this one (all edges are directed)
+        var links = room.Links.Where(l => l.From == from.Id).ToList();
+
+        foreach (var link in links)
+        {
+            foreach (var linkTo in link.To)
             {
-                "chozo" => VertexType.Chozo,
-                "hidden" => VertexType.Hidden,
-                "visible" => VertexType.Visible,
-                _ => null
-            };
-            
-            var newNode = CreateNode(new()
-            {
-                { "name", $"{room.Area} - {room.Name} - {node.Name}" },
-                { "type", nodeType },
-                { "subtype", nodeSubType! },
-                { "address", Convert.ToInt32(node.NodeAddress ?? "0", 16) },
-                { "itemset", (string[])["supermetroid"] },
-            });
+                var toNode = room.Nodes.Where(n => n.Id == linkTo.Id).FirstOrDefault()!;
+                var linkStrats = room.Strats.Where(s => s.Link[0] == link.From && s.Link[1] == linkTo.Id).ToList();
+
+                foreach (var strat in linkStrats)
+                {
+                    // Figure out the target obstacle state after executing this strat
+                    string newObstacleState = obstacleState;
+                    
+                    if (strat.ClearsObstacles != null)
+                    {
+                        string[] currentObstacles = obstacleState.Split(",");
+                        newObstacleState = string.Join(",", currentObstacles.Union(strat.ClearsObstacles).OrderBy(c => c)).Trim(',');
+                    }
+
+                    if (strat.ResetsObstacles != null)
+                    {
+                        string[] currentObstacles = newObstacleState.Split(",");
+                        newObstacleState = string.Join(",", currentObstacles.Except(strat.ResetsObstacles).OrderBy(c => c)).Trim(',');
+                    }
+
+                    var stratNodeName = $"{fromNodeName} - {string.Join(",", strat.Link)} - Strat: {strat.Name}";
+                    var stratNode = FindOrCreateNode(stratNodeName);
+
+                    var toNodeName = newObstacleState == "" ? $"{room.Area} - {room.Name} - {toNode.Name}" : $"{room.Area} - {room.Name} - {toNode.Name} - {newObstacleState}";
+                    var toNodeData = FindNode(toNodeName)!;
+
+                    var requirement = strat.Requires == new Requirement.And([]) ? new Requirement.Always() : strat.Requires;
+
+                    if (!EdgeExists(fromNodeData, stratNode, requirement))
+                    {
+                        AddDirectedEdge(fromNodeData, stratNode, requirement);
+                        AddDirectedEdge(stratNode, toNodeData, new Requirement.Always());
+                        //Console.WriteLine($"Added edge from {fromNodeName} to {stratNodeName} with requirement {requirement}");
+                        ConnectNode(room, toNode, newObstacleState);
+                    }
+
+                }
+            }
         }
     }
 }

@@ -11,5 +11,6 @@ internal class SMWorld
     {
         var jsonReader = new SMJsonReader();
         jsonReader.Load();
+        jsonReader.BuildGraph(world);
     }
 }

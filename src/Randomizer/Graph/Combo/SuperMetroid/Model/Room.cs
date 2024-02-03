@@ -87,7 +87,23 @@ internal record Obstacle
     string ObstacleType,
     Note? Note,
     Note? DevNote
-);
+) : IComparable
+{
+    public int CompareTo([AllowNull] object other)
+    {
+        if (other == null)
+        {
+            return 1;
+        }
+
+        if (Id == ((Obstacle)other).Id)
+        {
+            return 0;
+        }
+
+        return Id.CompareTo(((Obstacle)other).Id);
+    }
+};
 
 internal record RoomEnemy
 (
