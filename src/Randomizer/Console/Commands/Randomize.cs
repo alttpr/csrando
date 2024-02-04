@@ -21,6 +21,7 @@ internal sealed class Randomize : Command
     private readonly Option<EntranceShuffleOption> _entranceShuffle = new("entrance", () => EntranceShuffleOption.None, "set entrance shuffle mode");
     private readonly Option<ShopSupplyOption> _shopSupply = new("shopsupply", () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
     private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
+    private static readonly int[] _defaultCrystals = [7];
     private readonly Option<int[]> _crystalsGanon = new Option<int[]>("crystals_ganon", ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
     private readonly Option<int[]> _crystalsTower = new Option<int[]>("crystals_tower", ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
@@ -46,7 +47,9 @@ internal sealed class Randomize : Command
         Add(_entranceShuffle);
         Add(_shopSupply);
         Add(_crystalsGanon);
+        _crystalsGanon.SetDefaultValue(_defaultCrystals);
         Add(_crystalsTower);
+        _crystalsTower.SetDefaultValue(_defaultCrystals);
         Add(_tech);
         Add(_startingItems);
         _startingItems.AllowMultipleArgumentsPerToken = true;
