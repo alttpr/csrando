@@ -460,7 +460,7 @@ public sealed class Rom : IDisposable
     /// <summary>Set the Plandomizer Author</summary>
     /// <param name="name">name of author</param>
     public void SetPlandomizerAuthor(string name)
-        => Write(0x180220, [.. name[..31].Select(c => (byte)c)]);
+        => Write(0x180220, [.. name.MaxLength(31).Select(c => (byte)c)]);
 
     /// <summary>Set the Tournament Type</summary>
     /// <param name="setting">name</param>
@@ -1572,7 +1572,7 @@ public sealed class Rom : IDisposable
     /// <summary>Write the seed identifier</summary>
     /// <param name="seed">identifier for this seed</param>
     public void SetSeedString(string seed)
-        => Write(0x7FC0, [.. seed[..21].Select(c => (byte)c)]);
+        => Write(0x7FC0, [.. seed.MaxLength(21).Select(c => (byte)c)]);
 
     /// <summary>Write a block of data to RNG Block in ROM.</summary>
     /// <param name="random">prng byte generator</param>
