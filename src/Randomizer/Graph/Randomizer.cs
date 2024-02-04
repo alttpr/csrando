@@ -140,6 +140,11 @@ public sealed class Randomizer
 #endif
                 return false;
             }
+
+            if(world.Config.Games.Contains(Game.SuperMetroid) && !searcher.HasFound(world.GetItem("SMf_BeatSuperMetroid")))
+            {
+                return false;
+            }
         }
 
         return true;

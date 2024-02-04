@@ -86,6 +86,23 @@ internal sealed class RandomAssumedFiller
             locations = locations.Where(l => l.CanPlace(item, itemWeight, searchers[item.World.Id])).ToList();
 
             var location = _prng.GetRandomElement(locations);
+            if (location.Game == Game.SuperMetroid)
+            {
+                while (true)
+                {
+                    //System.Console.WriteLine("Backtracking: `{0}` in `{1}`", item, location);
+                    var backtrackLocations = searchers[item.World.Id].BacktrackSearch(location);
+                    //System.Console.WriteLine("Backtrack Location Count: {0}", backtrackLocations.Count);
+                    if (backtrackLocations.Any(location => location.Game != Game.SuperMetroid || location.Name.Contains("Ship")))
+                    {
+                        break;
+                    }
+
+                    System.Console.WriteLine("Backtrack Failed: `{0}` in `{1}`", item, location);
+                    location = _prng.GetRandomElement(locations);
+                }
+            }
+
             _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
                 itemWeight,

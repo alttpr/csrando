@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -27,27 +28,7 @@ public abstract record Requirement
         string[]? ExplicitWeapons = null,
         string[]? ExcludedWeapons = null,
         string[]? FarmableAmmo = null
-    ) : Requirement
-    {
-        internal bool CanKillWith(Dictionary<string, int> flags)
-        {
-            // Take our flags, and reduce them to the ones that are explicitly weapons, and the ones that are not excluded weapons
-            var filteredFlags = ExplicitWeapons == null ? flags.AsEnumerable() : flags.Where(flags => ExplicitWeapons.Contains(flags.Key));
-            filteredFlags = ExcludedWeapons == null ? filteredFlags : filteredFlags.Where(flags => !ExcludedWeapons.Contains(flags.Key));
-            
-            // Go through the enemies, and see if we can kill them with the filtered flags
-            foreach(var enemy in Enemies.SelectMany(e => e))
-            {
-                // If we can't kill this enemy, return false
-
-                // TODO: Implement this
-                // if (!CanKillEnemy(enemy, filteredFlags))
-                //      return false;
-            }
-
-            return true;
-        }
-    };
+    ) : Requirement;
     internal record AcidFrames(int Frames) : Requirement;
     internal record GravitylessAcidFrames(int Frames) : Requirement;
     internal record DraygonElectricityFrames(int Frames) : Requirement;
@@ -81,49 +62,22 @@ public abstract record Requirement
         int[] Nodes,
         int[]? NodesToAvoid = null,
         bool? MustStayPut = null
-    ) : Requirement;    
+    ) : Requirement;
     internal record ItemNotCollectedAtNode(int Node) : Requirement;
 
-    internal bool Check(Dictionary<string, int> flags)
+    internal Requirement ModifyObstacleState(string[] obstaclesCleared)
     {
         return this switch
         {
-            Always => true,
-            Never => false,
-            Single req => flags.ContainsKey(req.Req),
-            And reqs => reqs.Reqs.All(req => req.Check(flags)),
-            Not req => !req.Req.Check(flags),
-            Or reqs => reqs.Reqs.Any(req => req.Check(flags)),
-            Ammo ammo => flags.TryGetValue(ammo.Type, out var count) && count >= ammo.Count,
-            AmmoDrain ammo => true,
-            Refill resources => true,
-            EnemyKill enemies => enemies.CanKillWith(flags),
-            AcidFrames frames => true,
-            GravitylessAcidFrames frames => true,
-            DraygonElectricityFrames frames => true,
-            EnemyDamage enemy => true,
-            HeatFrames frames => true,
-            GravitylessHeatFrames frames => true,
-            HibashiHits hits => true,
-            LavaFrames frames => true,
-            GravitylessLavaFrames frames => true,
-            SamusEaterFrames frames => true,
-            MetroidFrames frames => true,
-            EnergyAtMost energy => true,
-            AutoReserveTrigger minMax => true,
-            SpikeHits hits => true,
-            ThornHits hits => true,
-            DoorUnlockedAtNode node => true,
-            ObstaclesCleared obstacles => true,
-            ObstaclesNotCleared obstacles => true,
-            ResourceCapacity capacity => true,
-            CanShineCharge usedTiles => true,
-            Shinespark frames => true,
-            ResetRoom nodes => true,
-            ItemNotCollectedAtNode node => true,
-            _ => throw new NotImplementedException()
+            // Check if all obstacles is in the obstaclesCleared list, in that case return Always, otherwise Never
+            ObstaclesCleared obstacles => obstacles.Obstacles.All(obstacle => obstaclesCleared.Contains(obstacle)) ? new Always() : new Never(),
+            And reqs => new And(reqs.Reqs.Select(req => req.ModifyObstacleState(obstaclesCleared)).ToArray()),
+            Or reqs => new Or(reqs.Reqs.Select(req => req.ModifyObstacleState(obstaclesCleared)).ToArray()),
+            _ => this
         };
     }
+
+
 }
 
 internal class RequirementConverter : JsonConverter<Requirement>

@@ -197,8 +197,18 @@ public class Searcher
             {
                 if (!edge.Condition.IsUnconditional)
                 {
-                    if (!collected.Has(edge.Condition))
-                        continue;
+                    if (edge.Condition.ComplexRequirement == null)
+                    {
+                        if (!collected.Has(edge.Condition))
+                            continue;
+                    } 
+                    else
+                    {
+                        if (!edge.Condition.ComplexRequirement.Check(collected))
+                        {
+                            continue;
+                        }
+                    }
                 }
 
                 unvisitedEdges--;
@@ -221,6 +231,7 @@ public class Searcher
 
         return (newlyVisited, newSearchStarts);
     }
+
     private bool DoorSearch(Inventory inventory)
     {
         var strongLocations = new VertexHashSet(_graph);
@@ -241,6 +252,34 @@ public class Searcher
         bool foundItems = CollectItems(inventory, _visited, _collected);
 
         return strongLocations.Count != 0 || foundItems;
+    }
+
+    public VertexHashSet BacktrackSearch(Vertex start)
+    {
+        _visited.Clear();
+        _collected.Clear();
+        _searchStarts.Clear();
+        _searchStarts.Add(start);
+        var inventory = _inventory.Clone();
+
+        // This is an item we only add for the purpose of backtracking, because SM items nodes are tagged with a path back from the item node, but only for backtracking.
+        var backtrackItem = start.World.GetItem("SMBacktrackSearch", Game.SuperMetroid);
+        inventory.AddItem(backtrackItem);
+
+        bool newItemsFound;
+        do
+        {
+            var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, _searchStarts);
+            _visited.UnionWith(newlyVisited);
+            _searchStarts.Clear();
+            _searchStarts.UnionWith(newSearchStarts);
+
+            newItemsFound = CollectItems(inventory, _visited, _collected);
+            if (DoorSearch(inventory))
+                newItemsFound = true;
+        } while (newItemsFound);
+
+        return _visited;
     }
 
     private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)

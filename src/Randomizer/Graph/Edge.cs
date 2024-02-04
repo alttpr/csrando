@@ -1,5 +1,6 @@
 namespace Randomizer.Graph;
 
+using Combo.SuperMetroid;
 using System.Diagnostics;
 
 /**
@@ -19,7 +20,7 @@ public sealed class Edge
 }
 
 [DebuggerDisplay("{Item.Name}:{Item.World.Id} >= {Count}")]
-public record ItemCondition(Item Item, int Count)
+public record ItemCondition(Item Item, int Count, ComplexRequirement? ComplexRequirement = null)
 {
-    public bool IsUnconditional { get; } = Item.Name == "fixed";
+    public bool IsUnconditional { get; } = Item.Name == "fixed" || (ComplexRequirement != null && ComplexRequirement.IsUnconditional());
 }
