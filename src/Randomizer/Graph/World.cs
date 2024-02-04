@@ -96,7 +96,6 @@ public sealed class World
         {
             Combo.SuperMetroid.SMWorld.AdjustWorld(this);
         }
-    }
 
         PruneConfigEdges();
     }
