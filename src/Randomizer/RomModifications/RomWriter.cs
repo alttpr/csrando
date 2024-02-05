@@ -338,6 +338,17 @@ public static class RomWriter
             (byte)prng.GetRandomInt(0xFF),
             (byte)prng.GetRandomInt(0xFF)
         ]);
+
+        if(world.Config.Games.Contains(Game.Metroid))
+        {
+            rom.WriteMetroidPatches(world);
+        }
+
+        if(world.Config.Games.Contains(Game.SuperMetroid))
+        {
+            rom.WriteSMBossesNeeded(world);
+            rom.WriteSMBossRewards(world);
+        }
     }
 
     private static void SetProgressionText(World world, Rom rom, PRNG prng)

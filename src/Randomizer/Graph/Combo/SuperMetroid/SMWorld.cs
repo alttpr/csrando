@@ -256,7 +256,7 @@ internal class SMWorld
                 SubType = subtype,
                 Item = item != null ? world.GetItem("SM" + item, Game.SuperMetroid) : null,
                 ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? [],
-                Addresses = address != null ? [(long)address.Value] : null,
+                Addresses = address != null ? [(long)address.Value, (long)address.Value + 1, (long)address.Value + 5] : null,
                 Game = Game.SuperMetroid
             };
 
@@ -343,7 +343,26 @@ internal class SMWorld
 
         // Connect SM to the main world graph
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("SM - Meta"), world.GetItem("fixed"));
-        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"SM - Crateria - Landing Site - Ship"), world.GetItem("fixed"));
+        
+         
+
+        // Add undirected path between the games
+        world.Graph.AddDirected(world.GetLocation("Lake Hylia North West Shore"), world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetLocation("Lake Hylia North West Shore"), world.GetItem("fixed"));
+
+        // Add norfair map to death moutain portal
+        world.Graph.AddDirected(world.GetLocation("SM - Norfair - Business Center - Middle Left Door"), world.GetLocation("West Death Mountain"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("West Death Mountain"), world.GetLocation("SM - Norfair - Business Center - Middle Left Door"), world.GetItem("fixed"));
+
+        // Add maridia missile refill to dark world shopping mall
+        world.Graph.AddDirected(world.GetLocation("SM - Maridia - Halfie Climb Room - Bottom Right Door"), world.GetLocation("Dark Shopping Mall"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("Dark Shopping Mall"), world.GetLocation("SM - Maridia - Halfie Climb Room - Bottom Right Door"), world.GetItem("fixed"));
+
+        // Add lower norfair refill to mire area
+        world.Graph.AddDirected(world.GetLocation("SM - Norfair - Screw Attack Room - Middle Right Door"), world.GetLocation("Mire"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("Mire"), world.GetLocation("SM - Norfair - Screw Attack Room - Middle Right Door"), world.GetItem("fixed"));
+        
+
 
         // Patch maridia main street (since we're cheating with shinespark nodes)
         world.Graph.AddDirected(

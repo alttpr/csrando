@@ -12,12 +12,16 @@ using WeightedSet = Dictionary<int, List<Item>>;
 internal class MetroidWorld
 {
     public static Dictionary<World, MetroidYamlReader.YamlData?> Data = new Dictionary<World, MetroidYamlReader.YamlData?>();
+    public static Dictionary<World, Dictionary<int, byte[]>> PatchData = new Dictionary<World, Dictionary<int, byte[]>>();
 
     // Adjusts the world as needed to randomize Metroid
     public static void AdjustWorld(World world)
     {
         // Load the Metroid Yaml Data and hook up the world to the current world graph
         var yamlReader = new MetroidYamlReader();
+        PatchData[world] = yamlReader.BuildPortalRooms(world);
+        yamlReader.BuildGraph();
+
         var metroidVertices = yamlReader.LoadYmlData(world);
         Data[world] = yamlReader.Data;
 
@@ -29,7 +33,7 @@ internal class MetroidWorld
             var item = vtx.TryGetValue("item", out object? itemValue) ? (string)itemValue : null;
             var itemset = vtx.TryGetValue("itemset", out object? itemsetValue) ? (string[])itemsetValue : null;
 
-            var address = type == VertexType.Standing ? GetItemLocationAddress(world, name) : null;
+            var address = type == VertexType.Item ? GetItemLocationAddress(world, name) : null;
 
             var vertex = new Vertex()
             {
@@ -88,7 +92,7 @@ internal class MetroidWorld
 
         // Connect the start edge to the start edge of the Metroid graph
         // This will have to change when we know how we actually want to connect portals and such
-        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Left Vertical Shaft - Right Door Shaft (12) - Right door"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
 
         var morphItem = world.GetLocation("M1 - Brinstar - Morph Room - Morph Pedestal (1) - Morph Ball");
@@ -199,8 +203,7 @@ internal class MetroidWorld
         var y = room.position[1];
 
         int? address = CoordToAddressMap.TryGetValue((y, x), out var addr) ? addr : null;
-        return address;
-        
+        return address;        
     }
 
 }

@@ -344,8 +344,7 @@ internal class SMJsonReader
                         {
                             { "name", itemNodeName },
                             { "type", VertexType.Item },
-                            //{ "subtype", nodeSubType! },
-                            { "subtype", VertexType.Standing },
+                            { "subtype", nodeSubType! },
                             { "address", Convert.ToInt32(node.NodeAddress ?? "0", 16) },
                             { "itemset", (string[])["supermetroid"] },
                         });

@@ -2,6 +2,7 @@
 
 using BpsNet;
 using Randomizer.Graph;
+using Randomizer.Graph.Combo.Metroid;
 using SpanDex;
 
 public sealed class Rom : IDisposable
@@ -1703,16 +1704,35 @@ public sealed class Rom : IDisposable
         // FIXME: or something that needs special handling?
         if (itemBytes == null)
             return;
-        
 
-        for (int i = 0; i < Math.Min(itemBytes.Length, location.Addresses.Length); i++)
+        if (location.Game == Game.SuperMetroid)
         {
-            if (i >= location.Addresses.Length)
-                break;
-            long address = location.Addresses[i];
-            byte? itemByte = itemBytes.ElementAtOrDefault(i);
-            if (itemByte == null)
-                continue;
+            int plmBytes = (int)itemBytes[0] + ((int)itemBytes[1] << 8);
+            int offset = location.SubType switch
+            {
+                VertexType.Chozo => plmBytes >= 0xEFE0 ? 0x04 : 0x54,
+                VertexType.Hidden => plmBytes >= 0xEFE0 ? 0x08 : 0xA8,
+                _ => 0
+            };
+
+            plmBytes += offset;
+            Write((Address)location.Addresses[0], new byte[] { (byte)(plmBytes & 0xFF), (byte)((plmBytes >> 8) & 0xFF) }, 0);
+            
+            if (plmBytes >= 0xEFE0)
+            { 
+                Write((Address)location.Addresses[2], new byte[] { itemBytes[2] }, 0);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < Math.Min(itemBytes.Length, location.Addresses.Length); i++)
+            {
+                if (i >= location.Addresses.Length)
+                    break;
+                long address = location.Addresses[i];
+                byte? itemByte = itemBytes.ElementAtOrDefault(i);
+                if (itemByte == null)
+                    continue;
 
             Write((Address)address, [itemByte.Value], (location.Game == Game.Alttp || location.Game == null) ? 0x400000 : 0);
         }
@@ -1887,6 +1907,25 @@ public sealed class Rom : IDisposable
         Write((SNES)0x068F76, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
         // SpritePrep_HardhatBeetle_health (sprite 0x26)
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
+    }
+
+    public void WriteMetroidPatches(World world)
+    {
+        var patchData = MetroidWorld.PatchData[world];
+        foreach (var (address, data) in patchData)
+        {
+            Write((Address)address, data, 0);
+        }
+    }
+
+    public void WriteSMBossesNeeded(World world)
+    {
+        //Write()
+    }
+
+    public void WriteSMBossRewards(World world)
+    {
+
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>

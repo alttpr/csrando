@@ -189,7 +189,6 @@ internal class MetroidYamlReader
             rooms = rooms,
             screens = screens
         };
-        BuildGraph();
     }
 
     public Dictionary<string, DirectedUndirectedPair> GetForWorld(World world)
@@ -214,6 +213,10 @@ internal class MetroidYamlReader
 
     public void BuildGraph()
     {
+        if (data is null)
+        {
+            Load();
+        }
 
         foreach (var room in data.rooms)
         {
@@ -474,6 +477,42 @@ internal class MetroidYamlReader
         }
 
         return null;
+    }
+
+    public Dictionary<int, byte[]> BuildPortalRooms(World world)
+    {
+        if(data is null)
+        {
+            Load();
+        }
+
+        // This will create new rooms for the portals, add it to the graph by patching the room/screen definitions and return a list of patch data to write to the ROM
+        var patchData = new Dictionary<int, byte[]>();
+
+        // Portal 1 (New door in brinstar shaft)
+
+        // Patch the shaft data so the logic knows there's a door there
+        var brinstarShaft = data.rooms.Find(r => r.area == Area.Brinstar && r.name == "Left Vertical Shaft")!;
+        brinstarShaft.screens[12] = 0x03;
+
+        // Create a new dummy room behind this door
+        var newRoom = new Room
+        {
+            name = "Brinstar Portal",
+            area = Area.Brinstar,
+            position = new int[] { 0x0C, 0x0D },
+            screens = new int[] { 0x1F },
+            scroll = Scrolling.Horizontal,
+            sprites = []
+        };
+
+        data.rooms.Add(newRoom);
+
+        // This should take care of the logic implications of this new door, now add the patch data
+        patchData.Add(0x70253E + (0x20 * 0x0D) + 0x0B, new byte[] { 0x03, 0x1F });
+
+
+        return patchData;
     }
 }
 
