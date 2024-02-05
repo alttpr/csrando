@@ -176,7 +176,8 @@ internal sealed class BossShuffler : IWorldModifier
                 PlaceBossItemInLocation("DefeatArrghus", "Swamp Palace - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatMothula", "Skull Woods - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatBlind", "Thieves' Town - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world, bossLocationMap);
+                if (world.Config.Weapon != WeaponOption.Swordless)
+                    PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatVitreous", "Misery Mire - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatTrinexx", "Turtle Rock - Boss", world, bossLocationMap);
                 PlaceBossItemInLocation("DefeatArmosKnight", "Ganon's Tower - Ice Armos", world, bossLocationMap);
