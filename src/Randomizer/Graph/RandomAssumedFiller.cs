@@ -1,7 +1,7 @@
 namespace Randomizer.Graph;
 
 // NOTE: same as in ItemPooler, except we cannot reuse aliases this way
-using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
+using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
 internal sealed class RandomAssumedFiller
 {
@@ -20,16 +20,12 @@ internal sealed class RandomAssumedFiller
     /// items will then have a smaller set of places that they can be placed.
     /// </summary>
     /// <param name="items">items to be placed</param>
-    public void FillGraph(ItemSet items)
+    public void FillGraph(PooledItem[] items)
     {
-        var setCounts = items.ToDictionary(k => k.Key, set => set.Value.SelectMany(x => x.Value).Count());
+        var setCounts = items.GroupBy(k => k.Set).ToDictionary(k => k.Key, set => set.Count());
 
-        var flatItemsArray = items
-            .SelectMany(set => set.Value.SelectMany(weight => weight.Value
-                .Select(item => (Set: set.Key, Weight: weight.Key, Item: item))))
-            .ToArray();
         // fix placement groups
-        flatItemsArray = _prng.Shuffle(flatItemsArray).OrderBy(i => i.Weight).ToArray();
+        var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
 
         Searcher[] searchers = new Searcher[_randomizer.Worlds.Length];
@@ -89,7 +85,7 @@ internal sealed class RandomAssumedFiller
                 item,
                 location,
                 itemSet,
-                locations.Count(),
+                locations.Count,
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount
             );
 
