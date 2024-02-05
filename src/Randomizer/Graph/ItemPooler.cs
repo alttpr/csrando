@@ -75,6 +75,46 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("ThreeHundredRupees")), 5),
         ];
 
+        switch (world.Config.Weapon)
+        {
+            case WeaponOption.Assured:
+                var assuredSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
+                worldSet.Remove(assuredSword);
+                worldSet.Add((ItemSetName.DefaultSet, 9999, world.GetItem("FiftyRupees")));
+                // TODO: does this actually work?
+                world.Config.StartingEquipment.Add("ProgressiveSword");
+                break;
+            case WeaponOption.Vanilla:
+                var uncleSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
+                worldSet.Remove(uncleSword);
+                world.GetLocation("Link's Uncle").Item = world.GetItem("UncleSword");
+
+                var masterSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
+                worldSet.Remove(masterSword);
+                if (world.GetLocation("Master Sword Pedestal") is { Item.Name: not "Triforce" } pedestal)
+                    pedestal.Item = masterSword.Item;
+                else
+                    worldSet.Add((ItemSetName.DefaultSet, 9999, world.GetItem("TwentyRupees")));
+
+                var baconSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
+                worldSet.Remove(baconSword);
+                world.GetLocation("Blacksmith Item").Item = baconSword.Item;
+
+                var goldSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
+                worldSet.Remove(goldSword);
+                world.GetLocation("Pyramid Fairy - Left").Item = goldSword.Item;
+                break;
+            case WeaponOption.Swordless:
+                var swordLess = worldSet.Where(p => p.Item.Name == "ProgressiveSword").ToArray();
+                worldSet.AddRange(swordLess.Select(s => (s.Set, s.Weight, world.GetItem("TwentyRupees2"))));
+                worldSet.RemoveAll(swordLess.Contains);
+                // TODO: v31 forces SilverArrowUpgrade in here when there are no silvers in the pool.
+                break;
+        }
+
+        // TODO: does the config option region.requireBetterSword mean anything in v32?
+        // TODO: remove swords and place them in take-any caves? (region.takeAnys)
+
         if (
             world.Config.Glitches != GlitchesOption.None
             && (world.Config.State == StateOption.Inverted
