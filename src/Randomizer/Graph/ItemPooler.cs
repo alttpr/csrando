@@ -115,6 +115,9 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         // TODO: does the config option region.requireBetterSword mean anything in v32?
         // TODO: remove swords and place them in take-any caves? (region.takeAnys)
 
+        if (world.Config.Goal == GoalOption.TriforceHunt)
+            worldSet.AddRange(Enumerable.Repeat((ItemSetName.DefaultSet, 3, world.GetItem("TriforcePiece")), world.Config.TriforcePieces));
+
         if (
             world.Config.Glitches != GlitchesOption.None
             && (world.Config.State == StateOption.Inverted

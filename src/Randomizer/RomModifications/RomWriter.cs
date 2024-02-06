@@ -69,7 +69,7 @@ public static class RomWriter
         if (config.State == StateOption.Standard)
             SetEscapeFills(world, rom);
 
-        rom.SetGoalRequiredCount(config.TriforcePieces); //item.Goal.Required
+        rom.SetGoalRequiredCount(config.GoalRequiredCount); //item.Goal.Required
         rom.SetGoalIcon(config.GoalIcon); //item.Goal.Icon
 
         // Set item functionality settings
@@ -193,7 +193,7 @@ public static class RomWriter
                 break;
         }
 
-        WriteMapReveals(world, rom);
+        SetProgressionText(world, rom);
 
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
@@ -321,7 +321,7 @@ public static class RomWriter
         ]);
     }
 
-    private static void WriteMapReveals(World world, Rom rom)
+    private static void SetProgressionText(World world, Rom rom)
     {
         var locationByPrize = world.GetLocationsOfType(VertexType.Item)
             .Where(v => v.SubType == VertexType.Prize && v.Item != null)
@@ -342,6 +342,23 @@ public static class RomWriter
         {
             rom.SetMapRevealSahasrahla(greenPendant.GetMapReveal());
             rom.SetMapRevealBombShop((ushort)(crystal5.GetMapReveal() | crystal6.GetMapReveal()));
+        }
+
+        if (world.Config.Goal == GoalOption.TriforceHunt)
+        {
+            rom.SetText("murahdahla",
+$@"Hello @. I
+am Murahdahla, brother of
+Sahasrahla and Aginah. Behold the power of
+invisibility.
+
+
+
+… … …
+
+Wait! you can see me? I knew I should have
+hidden in  a hollow tree. If you bring
+{world.Config.GoalRequiredCount} triforce pieces, I can reassemble it.");
         }
     }
 

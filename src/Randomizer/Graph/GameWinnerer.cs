@@ -23,9 +23,10 @@ internal sealed class GameWinnerer : IWorldModifier
                     Type = VertexType.Meta,
                     Name = "Murahdahla",
                     World = world,
+                    Item = world.GetItem("Triforce"),
                 });
                 var courtyard = world.GetLocation("Hyrule Castle - Courtyard");
-                world.Graph.AddDirected(courtyard, murahdahla, world.GetItem("TriforcePiece"), world.Config.TriforcePieces);
+                world.Graph.AddDirected(courtyard, murahdahla, world.GetItem("TriforcePiece"), world.Config.GoalRequiredCount);
                 break;
             default:
                 throw new ArgumentException("Unknown Goal option: " + world.Config.Goal);
