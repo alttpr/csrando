@@ -95,8 +95,10 @@ internal class MetroidWorld
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Left Vertical Shaft - Right Door Shaft (12) - Right door"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
 
-        var morphItem = world.GetLocation("M1 - Brinstar - Morph Room - Morph Pedestal (1) - Morph Ball");
-        morphItem.Item = world.GetItem("OneRupee");
+        
+        // Remove this for now until we've fixed the M1 teleport location properly
+        //var morphItem = world.GetLocation("M1 - Brinstar - Morph Room - Morph Pedestal (1) - Morph Ball");
+        //morphItem.Item = world.GetItem("OneRupee");
 
     }
 

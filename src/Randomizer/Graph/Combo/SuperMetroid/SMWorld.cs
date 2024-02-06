@@ -343,12 +343,12 @@ internal class SMWorld
 
         // Connect SM to the main world graph
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("SM - Meta"), world.GetItem("fixed"));
-        
-         
+
+
 
         // Add undirected path between the games
-        world.Graph.AddDirected(world.GetLocation("Lake Hylia North West Shore"), world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetItem("fixed"));
-        world.Graph.AddDirected(world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetLocation("Lake Hylia North West Shore"), world.GetItem("fixed"));
+        //world.Graph.AddDirected(world.GetLocation("Lake Hylia North West Shore"), world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetItem("fixed"));
+        //world.Graph.AddDirected(world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetLocation("Lake Hylia North West Shore"), world.GetItem("fixed"));
 
         // Add norfair map to death moutain portal
         world.Graph.AddDirected(world.GetLocation("SM - Norfair - Business Center - Middle Left Door"), world.GetLocation("West Death Mountain"), world.GetItem("fixed"));

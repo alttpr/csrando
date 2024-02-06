@@ -75,7 +75,7 @@ public class WorldConfig
     public bool CustomPrizePacks { get; init; } = false;
 
     public List<string> StartingEquipment { get; init; } = new();
-    public List<Game> Games { get; init; } = [Game.Alttp, Game.Metroid];
+    public List<Game> Games { get; init; } = [Game.Alttp, Game.Metroid, Game.Zelda, Game.SuperMetroid];
 
     public bool MapOnPickup { get; init; } = false;
     public bool EscapeAssist { get; init; } = false;
