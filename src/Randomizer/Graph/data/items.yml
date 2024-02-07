@@ -3094,6 +3094,15 @@ KeyGK:
 ShopKey:
   bytes: [0xAF]
   type: SmallKey
+# these bytes correspond to the addresses held by type: "prize" items.
+# all of them are ROM/file addresses, not SNES adresses.
+# they map to the following base rom locations (tables.asm unless otherwise noted):
+# - CrystalPendantFlags
+# - WorldMapIcon_tile (2 bytes)
+# - WorldMapIcon_tile
+# - CrystalPendantFlags_2
+# - CrystalNumberTable
+# - DungeonPrizeReceiptID
 Crystal1:
   bytes: [0x02, 0x34, 0x64, 0x40, 0x7F, 0x20]
 Crystal2:
