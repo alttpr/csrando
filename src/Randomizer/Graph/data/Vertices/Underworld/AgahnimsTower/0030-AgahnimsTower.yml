@@ -15,6 +15,10 @@ rooms:
               - "Agahnims Tower - Antichamber"
             L1Sword:
               - "Agahnims Tower - Boss Room"
+            SwordlessNormal:
+              - "Agahnims Tower - Boss Room"
+            SwordlessInverted:
+              - "Agahnims Tower - Boss Room"
           mobs:
             - name: "Agahnims Tower - Bedroom - Cutscene Agahnim"
               position: { x: 0x07, y: 0x05, z: 0x00 }

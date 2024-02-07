@@ -197,6 +197,8 @@ maps:
               - "Hyrule Castle - Wall Walk - Middle Door"
             Cape:
               - "Hyrule Castle - Wall Walk - Middle Door"
+            SwordlessHammer:
+              - "Hyrule Castle - Wall Walk - Middle Door"
 
         - name: "Hyrule Castle - Wall Walk - Middle Door Inverted"
           connections:

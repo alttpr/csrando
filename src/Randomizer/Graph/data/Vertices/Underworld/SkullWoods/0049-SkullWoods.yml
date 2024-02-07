@@ -89,6 +89,10 @@ rooms:
               - "Skull Woods - Torch Room"
             L1Sword:
               - "Skull Woods - Play Pen"
+            SwordlessNormal:
+              - "Skull Woods - Play Pen"
+            SwordlessInverted:
+              - "Skull Woods - Play Pen"
           mobs:
             - name: "Skull Woods - Bari Pits - Mini Moldorm 1"
               position: { x: 0x0b, y: 0x05, z: 0x00 }

@@ -30,6 +30,7 @@ public sealed class World
         Graph = graph;
 
         List<Item> items = [GetItem("fixed")];
+        items.Add(GetItem($"ConfigWorldWeapon{Config.Weapon}"));
         items.Add(GetItem($"ConfigWorldState{Config.State}"));
         items.Add(GetItem($"ConfigWorldGlitches{Config.Glitches}"));
         items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
