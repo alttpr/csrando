@@ -35,6 +35,11 @@ internal class MetroidWorld
 
             var address = type == VertexType.Item ? GetItemLocationAddress(world, name) : null;
 
+            if(type == VertexType.Item && address is null)
+            {
+                throw new Exception("No address found for item " + name);
+            }
+
             var vertex = new Vertex()
             {
                 World = world,
@@ -92,13 +97,12 @@ internal class MetroidWorld
 
         // Connect the start edge to the start edge of the Metroid graph
         // This will have to change when we know how we actually want to connect portals and such
-        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Left Vertical Shaft - Right Door Shaft (12) - Right door"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Brinstar - Left Vertical Shaft - Right Door Shaft (11) - Right door"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("M1 - Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
-
         
-        // Remove this for now until we've fixed the M1 teleport location properly
-        //var morphItem = world.GetLocation("M1 - Brinstar - Morph Room - Morph Pedestal (1) - Morph Ball");
-        //morphItem.Item = world.GetItem("OneRupee");
+        // Place morph at vanilla morph for safety
+        var morphItem = world.GetLocation("M1 - Brinstar - Morph Room - Morph Pedestal (1) - Morph Ball");
+        morphItem.Item = world.GetItem("M1Morph");
 
     }
 
@@ -196,13 +200,17 @@ internal class MetroidWorld
         {
             throw new Exception("No Metroid Data for world " + world.Id);
         }
-
+        
         var room = data.rooms.Where(r => vertexName.Contains(r.name)).First();
-        var sprite = room.sprites.Where(s => vertexName.Contains(s.name)).First();
-        var screen = data.screens.Where(s => s.screen == room.screens[sprite.screen]).First();
 
-        var x = room.position[0] + sprite.screen;
-        var y = room.position[1];
+        // The screen is embedded in the vertex name within parentheses, extract it using regex
+        var screenIndex = Int32.Parse(System.Text.RegularExpressions.Regex.Match(vertexName, @"\(([^)]*)\)").Groups[1].Value);
+
+        //var sprite = room.sprites.Where(s => vertexName.Contains(s.name)).First();
+        //var screen = data.screens.Where(s => s.screen == room.screens[sprite.screen]).First();
+
+        var x = room.position[0] + (room.scroll == MetroidYamlReader.Scrolling.Horizontal ? screenIndex : 0);
+        var y = room.position[1] + (room.scroll == MetroidYamlReader.Scrolling.Vertical ? screenIndex : 0);
 
         int? address = CoordToAddressMap.TryGetValue((y, x), out var addr) ? addr : null;
         return address;        

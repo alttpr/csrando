@@ -493,14 +493,14 @@ internal class MetroidYamlReader
 
         // Patch the shaft data so the logic knows there's a door there
         var brinstarShaft = data.rooms.Find(r => r.area == Area.Brinstar && r.name == "Left Vertical Shaft")!;
-        brinstarShaft.screens[12] = 0x03;
+        brinstarShaft.screens[11] = 0x03;
 
         // Create a new dummy room behind this door
         var newRoom = new Room
         {
             name = "Brinstar Portal",
             area = Area.Brinstar,
-            position = new int[] { 0x0C, 0x0D },
+            position = new int[] { 0x0C, 0x0C },
             screens = new int[] { 0x1F },
             scroll = Scrolling.Horizontal,
             sprites = []
@@ -509,7 +509,7 @@ internal class MetroidYamlReader
         data.rooms.Add(newRoom);
 
         // This should take care of the logic implications of this new door, now add the patch data
-        patchData.Add(0x70253E + (0x20 * 0x0D) + 0x0B, new byte[] { 0x03, 0x1F });
+        patchData.Add(0x70253E + (0x20 * 0x0C) + 0x0B, new byte[] { 0x03, 0x1F });
 
 
         return patchData;

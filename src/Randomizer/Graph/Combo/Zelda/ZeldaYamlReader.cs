@@ -797,10 +797,23 @@ internal class ZeldaYamlReader
 
                     AddDirectedEdge(metaNode, zeldaNode, "fixed");
                 }
+
+                if (meta.name == "Ganon")
+                {
+                    var ganonNode = CreateNode(new()
+                    {
+                        { "name", $"{mapName} - {meta.name} - Ganon" },
+                        { "type", VertexType.Meta },
+                        { "item", "Triforce" },
+                        { "itemset", (string[])["zelda"] },
+                    });
+
+                    AddDirectedEdge(metaNode, ganonNode, "fixed");
+                }
             }
 
             // Does this room have an item? (This should be 2F when writing back combo data)
-            if (map.room_item != 0x03 && level.triforce_room_id != map.map)
+            if (map.room_item != 0x03 && level.triforce_room_id != map.map && map.screen != 0x28)
             {
                 var itemName = (RoomBehaviour)map.behaviour switch
                 {

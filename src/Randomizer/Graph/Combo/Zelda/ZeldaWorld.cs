@@ -97,7 +97,6 @@ internal class ZeldaWorld
         var formattedStartMap = startMap.ToString("X2");
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Map {formattedStartMap} - Left exit"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Meta - Meta"), world.GetItem("fixed"));
-
     }
 
     public static ItemSet GetItemSet(World world)
