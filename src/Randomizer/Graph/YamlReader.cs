@@ -167,6 +167,38 @@ public class YamlReader
     public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
     public static Dictionary<string, Dictionary<string, List<YamlSprite>>> LoadSpriteLocations() => _cachedSpriteLocations.Value;
+
+    public static IReadOnlyDictionary<string, string> LoadCreditsForFluteSpot(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "flute.yml"));
+    public static IReadOnlyDictionary<string, string> LoadCreditsForPedestal(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "pedestal.yml"));
+    public static IReadOnlyDictionary<string, string> LoadCreditsForSickKid(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "sick-kid.yml"));
+    public static IReadOnlyDictionary<string, string> LoadCreditsForUncle(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "uncle.yml"));
+    public static IReadOnlyDictionary<string, string> LoadCreditsForWitchHut(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "witch.yml"));
+    public static IReadOnlyDictionary<string, string> LoadCreditsForZora(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "zora.yml"));
+    public static IReadOnlyDictionary<string, string> LoadHintsForPedestal(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "pedestal.yml"));
+    public static IReadOnlyDictionary<string, string> LoadHintsForBombosTablet(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "bombos-tablet.yml"));
+    public static IReadOnlyDictionary<string, string> LoadHintsForEtherTablet(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "ether-tablet.yml"));
+
+    private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyDictionary<string, string>> _keyedLocalizedText = new();
+    public static IReadOnlyDictionary<string, string> LoadKeyedLocalizedText(string path) => _keyedLocalizedText.GetOrAdd(path, LoadKeyedText);
+    public static IReadOnlyDictionary<string, string> LoadKeyedLayeredLocalizedText(string basePath, string specificPath) => _keyedLocalizedText.GetOrAdd(specificPath, s =>
+    {
+        // load a copy of the base text...
+        var values = new Dictionary<string, string>(LoadKeyedLocalizedText(basePath));
+        // ...then load the specific text...
+        var specificValues = LoadKeyedText(s);
+        // ...and overlay them on top
+        foreach (var (key, value) in specificValues)
+            values[key] = value;
+
+        return values;
+    });
+    private static IReadOnlyDictionary<string, string> LoadKeyedText(string path)
+    {
+        string keyedTextYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
+        using var reader = File.OpenText(keyedTextYML);
+        var deserializer = new DeserializerBuilder().Build();
+        return deserializer.Deserialize<Dictionary<string, string>>(reader) ?? [];
+    }
 }
 public class YamlItem
 {
@@ -174,27 +206,6 @@ public class YamlItem
     public List<byte> Bytes { get; set; } = new();
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
-
-    // TODO: those are english-only right now, and could probably go elsewhere.
-    // TODO: do we want to keep location-specific hints? they all use the same text at the moment.
-    [YamlMember(Alias = "pedestalhint")]
-    public string? PedestalHintText { get; set; }
-    [YamlMember(Alias = "etherhint")]
-    public string? EtherTabletHintText { get; set; }
-    [YamlMember(Alias = "bomboshint")]
-    public string? BombosTabletHintText { get; set; }
-    [YamlMember(Alias = "pedestalcredits")]
-    public string? PedestalCreditsText { get; set; }
-    [YamlMember(Alias = "zoracredits")]
-    public string? ZoraCreditsText { get; set; }
-    [YamlMember(Alias = "witchcredits")]
-    public string? WitchCreditsText { get; set; }
-    [YamlMember(Alias = "unclecredits")]
-    public string? UncleCreditsText { get; set; }
-    [YamlMember(Alias = "kidcredits")]
-    public string? KidCreditsText { get; set; }
-    [YamlMember(Alias = "flutecredits")]
-    public string? FluteCreditsText { get; set; }
 }
 
 public class YamlSprite

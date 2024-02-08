@@ -1,0 +1,19 @@
+# text in here overrides an item's hint text on Master Sword Pedestal.
+
+BigKeyA2: |-
+  The Big Key
+  of evil's bane
+BigKeyD2: |-
+  The Big key
+  to the swamp
+BigKeyD4: |-
+  The Big Key
+  of rogues
+L2Sword: |-
+  I thought this
+  was meant to
+  be randomized?
+MasterSword: |-
+  I thought this
+  was meant to
+  be randomized?

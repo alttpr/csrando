@@ -17,15 +17,6 @@ public sealed class Item
     public World World { get; }
     public ItemType Type { get; }
     public byte[]? Bytes { get; }
-    public string? PedestalHintText { get; }
-    public string? PedestalCreditsText { get; }
-    public string? EtherTabletHintText { get; }
-    public string? BombosTabletHintText { get; }
-    public string? UncleCreditsText { get; }
-    public string? FluteCreditsText { get; }
-    public string? KidCreditsText { get; }
-    public string? WitchCreditsText { get; }
-    public string? ZoraCreditsText { get; }
 
     /// <summary>
     /// Create a new Item.
@@ -45,15 +36,6 @@ public sealed class Item
             itemType = ItemType.Meta;
         Type = itemType;
         Bytes = yamlItem?.Bytes.ToArray();
-        PedestalHintText = yamlItem?.PedestalHintText;
-        EtherTabletHintText = yamlItem?.EtherTabletHintText;
-        BombosTabletHintText = yamlItem?.BombosTabletHintText;
-        PedestalCreditsText = yamlItem?.PedestalCreditsText;
-        UncleCreditsText = yamlItem?.UncleCreditsText;
-        FluteCreditsText = yamlItem?.FluteCreditsText;
-        KidCreditsText = yamlItem?.KidCreditsText;
-        WitchCreditsText = yamlItem?.WitchCreditsText;
-        ZoraCreditsText  = yamlItem?.ZoraCreditsText;
     }
 
     public override string ToString() => $"{Name}:{World.Id}";

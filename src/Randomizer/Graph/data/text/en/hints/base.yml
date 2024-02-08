@@ -1,0 +1,591 @@
+# text in this file is used unless it is overridden by a specific location.
+# using default YAML formatting (with two spaces as indent), text should
+# preferably stay within 19 characters to fit into the dialog box without wrapping.
+# |-----------------| <- suggested maximum width.
+
+# "default" is the text shown when the item has no specific text.
+default: |-
+  Don't waste
+  your time!
+Arrow: |-
+  a lonely arrow
+  sits here.
+ArrowUpgrade5: |-
+  increase arrow
+  storage, low
+  low price
+ArrowUpgrade10: |-
+  increase arrow
+  storage, low
+  low price
+ArrowUpgrade70: |-
+  increase arrow
+  storage, low
+  low price
+BigKey: |-
+  A big key
+  to the Kingdom
+BigKeyA1: |-
+  Okay, this big
+  key doesn't
+  really exist
+BigKeyA2: |-
+  The big key
+  of evil's bane
+BigKeyD1: |-
+  Hammeryump
+  with this
+  big key
+BigKeyD2: |-
+  The big key
+  to the swamp
+BigKeyD3: |-
+  The big key
+  of the dark
+  forest
+BigKeyD4: |-
+  The big key
+  of rogues
+BigKeyD5: |-
+  A frozen
+  big key
+  rests here
+BigKeyD6: |-
+  The big key
+  to Vitreous
+BigKeyD7: |-
+  The big key
+  of terrapins
+BigKeyH1: |-
+  You should
+  have got this
+  from a guard
+BigKeyH2: |-
+  You should
+  have got this
+  from a guard
+BigKeyP1: |-
+  The big key
+  of the east
+BigKeyP2: |-
+  Sand spills
+  out of this
+  big key
+BigKeyP3: |-
+  The big key
+  to moldorm's
+  heart
+BlueClock: |-
+  sapphire sand
+  trickles down
+BlueMail: |-
+  Now you're a
+  blue elf!
+BlueShield: |-
+  Now you can
+  defend against
+  pebbles!
+Bomb: |-
+  I make things
+  go BOOM! But
+  just once.
+Bombos: |-
+  Burn, baby,
+  burn! Fear my
+  ring of fire!
+BombUpgrade10: |-
+  increase bomb
+  storage, low
+  low price
+BombUpgrade5: |-
+  increase bomb
+  storage, low
+  low price
+BombUpgrade50: |-
+  increase bomb
+  storage, low
+  low price
+BookOfMudora: |-
+  This is a
+  paradox?!
+Boomerang: |-
+  No matter what
+  you do, blue
+  returns to you
+BossHeartContainer: |-
+  Maximum health
+  increased!
+  Yeah!
+Bottle: |-
+  Now you can
+  store potions
+  and stuff!
+BottleWithBee: |-
+  Release me
+  so I can go
+  bzzzzz!
+BottleWithBluePotion: |-
+  You see blue
+  goo in a
+  bottle?
+BottleWithFairy: |-
+  If you die
+  I will revive
+  you!
+BottleWithGoldBee: |-
+  Release me
+  so I can go
+  bzzzzz!
+BottleWithGreenPotion: |-
+  You see green
+  goo in a
+  bottle?
+BottleWithRedPotion: |-
+  You see red
+  goo in a
+  bottle?
+Bow: |-
+  You have
+  chosen the
+  archer class.
+BowAndArrows: |-
+  You are now an
+  average archer
+BowAndSilverArrows: |-
+  You are now a
+  master archer!
+BugCatchingNet: |-
+  Let's catch
+  some bees and
+  faeries!
+CaneOfByrna: |-
+  Use this to
+  become
+  invincible!
+CaneOfSomaria: |-
+  I make blocks
+  to hold down
+  switches!
+Cape: |-
+  Wear this to
+  become
+  invisible!
+Compass: |-
+  Now you know
+  where the boss
+  hides!
+CompassA1: |-
+  Now you know
+  where the boss
+  hides!
+CompassA2: |-
+  Now you know
+  where the boss
+  hides!
+CompassD1: |-
+  Now you know
+  where the boss
+  hides!
+CompassD2: |-
+  Now you know
+  where the boss
+  hides!
+CompassD3: |-
+  Now you know
+  where the boss
+  hides!
+CompassD4: |-
+  Now you know
+  where the boss
+  hides!
+CompassD5: |-
+  Now you know
+  where the boss
+  hides!
+CompassD6: |-
+  Now you know
+  where the boss
+  hides!
+CompassD7: |-
+  Now you know
+  where the boss
+  hides!
+CompassH1: |-
+  Now you know
+  where the boss
+  hides!
+CompassH2: |-
+  Now you know
+  where the boss
+  hides!
+CompassP1: |-
+  Now you know
+  where the boss
+  hides!
+CompassP2: |-
+  Now you know
+  where the boss
+  hides!
+CompassP3: |-
+  Now you know
+  where the boss
+  hides!
+Ether: |-
+  This magic
+  coin freezes
+  everything!
+FiftyRupees: |-
+  Just couch
+  cash. Move
+  right along.
+FireRod: |-
+  I'm the hot
+  rod. I make
+  things burn!
+FiveRupees: |-
+  Just pocket
+  change. Move
+  right along.
+Flippers: |-
+  fancy a swim?
+GreenClock: |-
+  tick tock
+  tick tock
+HalfMagic: |-
+  Your magic
+  power has been
+  doubled!
+Hammer: |-
+  stop
+  hammer time!
+Heart: |-
+  I'm a lonely
+  heart.
+HeartContainer: |-
+  Maximum health
+  increased!
+  Yeah!
+HeartContainerNoAnimation: |-
+  Maximum health
+  increased!
+  Yeah!
+Hookshot: |-
+  BOING!!!
+  BOING!!!
+  BOING!!!
+IceRod: |-
+  I'm the cold
+  rod. I make
+  things freeze!
+Key: |-
+  A small key
+  to the Kingdom
+KeyA1: |-
+  Agahnim
+  halfway
+  unlocked
+KeyA2: |-
+  The small key
+  of evil's bane
+KeyD1: |-
+  A small key
+  that steals
+  light
+KeyD2: |-
+  Access to
+  the swamp
+  is granted
+KeyD3: |-
+  The small key
+  of the dark
+  forest
+KeyD4: |-
+  The small key
+  of rogues
+KeyD5: |-
+  A frozen
+  small key
+  rests here
+KeyD6: |-
+  The small key
+  to Vitreous
+KeyD7: |-
+  The small key
+  of terrapins
+KeyGK: |-
+  A small key
+  to the Kingdom
+KeyH1: |-
+  The key to
+  the castle
+KeyH2: |-
+  The key to
+  the castle
+KeyP1: |-
+  Okay, this
+  key doesn't
+  really exist
+KeyP2: |-
+  Sand spills
+  out of this
+  small key
+KeyP3: |-
+  The key
+  to moldorm's
+  basement
+L1Sword: |-
+  A pathetic
+  sword rests
+  here!
+L1SwordAndShield: |-
+  A pathetic
+  sword rests
+  here!
+L2Sword: |-
+  Look at me!
+  I am the
+  pedestal!
+L3Sword: |-
+  I stole the
+  blacksmith's
+  job!
+L4Sword: |-
+  The butter
+  sword rests
+  here!
+Lamp: |-
+  Baby, baby,
+  baby.
+  Light my way!
+MagicMirror: |-
+  Isn't your
+  reflection so
+  pretty?
+Map: |-
+  You can now
+  find your way
+  home!
+MapA1: |-
+  You can now
+  find your way
+  home!
+MapA2: |-
+  You can now
+  find your way
+  home!
+MapD1: |-
+  You can now
+  find your way
+  home!
+MapD2: |-
+  You can now
+  find your way
+  home!
+MapD3: |-
+  You can now
+  find your way
+  home!
+MapD4: |-
+  You can now
+  find your way
+  home!
+MapD5: |-
+  You can now
+  find your way
+  home!
+MapD6: |-
+  You can now
+  find your way
+  home!
+MapD7: |-
+  You can now
+  find your way
+  home!
+MapDW: |-
+  You can now
+  find your way
+  home!
+MapH1: |-
+  You can now
+  find your way
+  home!
+MapH2: |-
+  You can now
+  find your way
+  home!
+MapLW: |-
+  You can now
+  find your way
+  home!
+MapP1: |-
+  You can now
+  find your way
+  home!
+MapP2: |-
+  You can now
+  find your way
+  home!
+MapP3: |-
+  You can now
+  find your way
+  home!
+MasterSword: |-
+  Look at me!
+  I am the
+  pedestal!
+MirrorShield: |-
+  Now you can
+  defend against
+  lasers!
+MoonPearl: |2-
+    Bunny Link
+        be
+       gone!
+multiRNG: |-
+  who knows? you
+  probably don't
+  need this.
+Mushroom: |-
+  I'm a fun guy!
+
+  I'm a funghi!
+OcarinaActive: |-
+  Save the duck
+  and fly to
+  freedom!
+OcarinaInactive: |-
+  Save the duck
+  and fly to
+  freedom!
+OneHundredRupees: |-
+  A rupee stash!
+  Hell yeah!
+OneRupee: |-
+  Just pocket
+  change. Move
+  right along.
+PegasusBoots: |-
+  Gotta go fast!
+PendantOfCourage: |-
+  Courage for
+  those who
+  already had it
+PendantOfPower: |-
+  Power for
+  those who
+  already had it
+PendantOfWisdom: |-
+  Wisdom for
+  those who
+  already had it
+PieceOfHeart: |-
+  Just a little
+  piece of love!
+Powder: |-
+  you can turn
+  anti-faeries
+  into faeries
+PowerGlove: |-
+  Now you can
+  lift weak
+  stuff!
+PowerStar: |-
+  Aim for the
+  moon. You may
+  hit a 'star'
+ProgressiveArmor: |-
+  time for a
+  change of
+  clothes?
+ProgressiveBow: |-
+  You have
+  chosen the
+  archer class.
+ProgressiveGlove: |-
+  a way to lift
+  heavier things
+ProgressiveShield: |-
+  have a better
+  defense in
+  front of you
+ProgressiveSword: |-
+  a better copy
+  of your sword
+  for your time
+Quake: |-
+  Maxing out the
+  Richter scale
+  is what I do!
+QuarterMagic: |-
+  Your magic
+  power has been
+  quadrupled!
+RedBoomerang: |-
+  No matter what
+  you do, red
+  returns to you
+RedClock: |-
+  like the sands
+  through a red
+  hourglass
+RedMail: |-
+  Now you're a
+  red elf!
+RedShield: |-
+  Now you can
+  defend against
+  fireballs!
+Rupoor: |-
+  This is not
+  really worth
+  your time
+Shovel: |-
+  Can
+     You
+        Dig it?
+SilverArrowUpgrade: |-
+  Do you fancy
+  silver tipped
+  arrows?
+singleRNG: |-
+  who knows? you
+  probably don't
+  need this.
+SmallMagic: |-
+  A tiny magic
+  refill rests
+  here
+TenArrows: |-
+  This will give
+  you ten shots
+  with your bow!
+TenBombs: |-
+  I make things
+  go BOOM!
+  so many times!
+ThreeBombs: |-
+  I make things
+  go triple
+  BOOM!!!
+ThreeHundredRupees: |-
+  A rupee hoard!
+  Hell yeah!
+TitansMitt: |-
+  Now you can
+  lift heavy
+  stuff!
+Triforce: |2-
+
+     YOU WIN!
+TriforcePiece: |-
+  a yellow
+  triangle
+  you need this
+TwentyRupees: |-
+  Just couch
+  cash. Move
+  right along.
+TwentyRupees2: |-
+  Just couch
+  cash. Move
+  right along.

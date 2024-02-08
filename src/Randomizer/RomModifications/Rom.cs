@@ -1696,23 +1696,31 @@ public sealed class Rom : IDisposable
             Write((Address)address, [itemByte.Value]);
         }
     }
-    public void WriteCreditsText(Vertex location, Item? item)
+    public void WriteCreditsText(WorldConfig config, Vertex location, Item? item)
     {
-        var (creditsKey, creditsText) = location.Name switch
+        var (creditsKey, creditsTextMap) = location.Name switch
         {
-            "Master Sword Pedestal" => ("pedestal", item?.PedestalCreditsText),
-            "Link's Uncle" => ("house", item?.UncleCreditsText),
-            "King Zora" => ("zora", item?.ZoraCreditsText),
-            "Potion Shop Item" => ("witch", item?.WitchCreditsText),
-            "Sick Kid Item" => ("kakariko2", item?.KidCreditsText),
-            "Flute Spot" => ("grove", item?.FluteCreditsText),
+            "Master Sword Pedestal" => ("pedestal", YamlReader.LoadCreditsForPedestal(config.Language)),
+            "Link's Uncle" => ("house", YamlReader.LoadCreditsForUncle(config.Language)),
+            "King Zora" => ("zora", YamlReader.LoadCreditsForZora(config.Language)),
+            "Potion Shop Item" => ("witch", YamlReader.LoadCreditsForWitchHut(config.Language)),
+            "Sick Kid Item" => ("kakariko2", YamlReader.LoadCreditsForSickKid(config.Language)),
+            "Flute Spot" => ("grove", YamlReader.LoadCreditsForFluteSpot(config.Language)),
             _ => (null, null),
         };
 
         if (string.IsNullOrEmpty(creditsKey))
             return;
 
-        SetCredit(creditsKey, creditsText ?? "simply nothing");
+        string creditsText = "simply nothing";
+        if (creditsTextMap != null && item != null)
+        {
+            if (creditsTextMap.TryGetValue(item.Name, out var specificItemText))
+                creditsText = specificItemText;
+            else if (creditsTextMap.TryGetValue("default", out var fallbackText))
+                creditsText = fallbackText;
+        }
+        SetCredit(creditsKey, creditsText);
     }
 
     private static readonly byte[] _musicChoices =
@@ -1739,20 +1747,28 @@ public sealed class Rom : IDisposable
             Write(address, [music]);
     }
 
-    public void WriteHintText(Vertex location, Item? item)
+    public void WriteHintText(WorldConfig config, Vertex location, Item? item)
     {
-        var (hintKey, hintText) = location.Name switch
+        var (hintKey, hintTextMap) = location.Name switch
         {
-            "Master Sword Pedestal" => ("mastersword_pedestal_translated", item?.PedestalHintText),
-            "Ether Tablet" => ("tablet_ether_book", item?.EtherTabletHintText),
-            "Bombos Tablet" => ("tablet_bombos_book", item?.BombosTabletHintText),
+            "Master Sword Pedestal" => ("mastersword_pedestal_translated", YamlReader.LoadHintsForPedestal(config.Language)),
+            "Ether Tablet" => ("tablet_ether_book", YamlReader.LoadHintsForEtherTablet(config.Language)),
+            "Bombos Tablet" => ("tablet_bombos_book", YamlReader.LoadHintsForBombosTablet(config.Language)),
             _ => (null, null),
         };
 
         if (string.IsNullOrEmpty(hintKey))
             return;
 
-        SetText(hintKey, hintText ?? "Don't waste\nyour time!");
+        string hintText = "Don't waste\nyour time!";
+        if (hintTextMap != null && item != null)
+        {
+            if (hintTextMap.TryGetValue(item.Name, out var specificItemText))
+                hintText = specificItemText;
+            else if (hintTextMap.TryGetValue("default", out var fallbackText))
+                hintText = fallbackText;
+        }
+        SetText(hintKey, hintText);
     }
 
     public void WriteLocationSpecificData(Vertex location, Item? item)

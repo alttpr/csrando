@@ -1,400 +1,46 @@
 Nothing:
   bytes: [0x5A]
   type: Meta
-  pedestalhint: |-
-    Don't waste
-    your time!
-  etherhint: |-
-    Don't waste
-    your time!
-  bomboshint: |-
-    Don't waste
-    your time!
-  pedestalcredits: "and nothing"
-  zoracredits: "Nothing, so stupid"
-  witchcredits: "mushrooms go poof"
-  unclecredits: "your uncle does nothing"
-  kidcredits: "nothing-having kid"
-  flutecredits: "empty boy does nothing again"
 L1Sword:
   bytes: [0x49]
-  pedestalhint: |-
-    A pathetic
-    sword rests
-    here!
-  etherhint: |-
-    A pathetic
-    sword rests
-    here!
-  bomboshint: |-
-    A pathetic
-    sword rests
-    here!
-  pedestalcredits: "the plastic sword"
-  zoracredits: "sword for sale"
-  witchcredits: "fungus for slasher"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 L1SwordAndShield:
   bytes: [0x00]
-  pedestalhint: |-
-    A pathetic
-    sword rests
-    here!
-  etherhint: |-
-    A pathetic
-    sword rests
-    here!
-  bomboshint: |-
-    A pathetic
-    sword rests
-    here!
-  pedestalcredits: "the plastic sword"
-  zoracredits: "sword for sale"
-  witchcredits: "fungus for slasher"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 L2Sword:
   bytes: [0x01]
-  pedestalhint: |-
-    I thought this
-    was meant to
-    be randomized?
-  etherhint: |-
-    Look at me!
-    I am the
-    pedestal!
-  bomboshint: |-
-    Look at me!
-    I am the
-    pedestal!
-  pedestalcredits: "and the master sword"
-  zoracredits: "glow sword for sale"
-  witchcredits: "fungus for blue slasher"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 MasterSword:
   bytes: [0x50]
-  pedestalhint: |-
-    I thought this
-    was meant to
-    be randomized?
-  etherhint: |-
-    Look at me!
-    I am the
-    pedestal!
-  bomboshint: |-
-    Look at me!
-    I am the
-    pedestal!
-  pedestalcredits: "and the master sword"
-  zoracredits: "glow sword for sale"
-  witchcredits: "fungus for blue slasher"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 L3Sword:
   bytes: [0x02]
-  pedestalhint: |-
-    I stole the
-    blacksmith's
-    job!
-  etherhint: |-
-    I stole the
-    blacksmith's
-    job!
-  bomboshint: |-
-    I stole the
-    blacksmith's
-    job!
-  pedestalcredits: "the tempered sword"
-  zoracredits: "flame sword for sale"
-  witchcredits: "fungus for red slasher"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 L4Sword:
   bytes: [0x03]
-  pedestalhint: |-
-    The butter
-    sword rests
-    here!
-  etherhint: |-
-    The butter
-    sword rests
-    here!
-  bomboshint: |-
-    The butter
-    sword rests
-    here!
-  pedestalcredits: "and the butter sword"
-  zoracredits: "butter for sale"
-  witchcredits: "cap churned to butter"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 BlueShield:
   bytes: [0x04]
-  pedestalhint: |-
-    Now you can
-    defend against
-    pebbles!
-  etherhint: |-
-    Now you can
-    defend against
-    pebbles!
-  bomboshint: |-
-    Now you can
-    defend against
-    pebbles!
-  pedestalcredits: "the useless shield"
-  zoracredits: "bad defense for sale"
-  witchcredits: "fungus for shield"
-  unclecredits: "your uncle protects"
-  kidcredits: "shield-wielding kid"
-  flutecredits: "shield boy defends again"
 RedShield:
   bytes: [0x05]
-  pedestalhint: |-
-    Now you can
-    defend against
-    fireballs!
-  etherhint: |-
-    Now you can
-    defend against
-    fireballs!
-  bomboshint: |-
-    Now you can
-    defend against
-    fireballs!
-  pedestalcredits: "near useless shield"
-  zoracredits: "red shield for sale"
-  witchcredits: "fungus for fire shield"
-  unclecredits: "your uncle protects"
-  kidcredits: "shield-wielding kid"
-  flutecredits: "shield boy defends again"
 MirrorShield:
   bytes: [0x06]
-  pedestalhint: |-
-    Now you can
-    defend against
-    lasers!
-  etherhint: |-
-    Now you can
-    defend against
-    lasers!
-  bomboshint: |-
-    Now you can
-    defend against
-    lasers!
-  pedestalcredits: "and the ditto shield"
-  zoracredits: "face shield for sale"
-  witchcredits: "fungus for shiny shield"
-  unclecredits: "your uncle protects"
-  kidcredits: "shield-wielding kid"
-  flutecredits: "shield boy defends again"
 FireRod:
   bytes: [0x07]
-  pedestalhint: |-
-    I'm the hot
-    rod. I make
-    things burn!
-  etherhint: |-
-    I'm the hot
-    rod. I make
-    things burn!
-  bomboshint: |-
-    I'm the hot
-    rod. I make
-    things burn!
-  pedestalcredits: "and the rage rod"
-  zoracredits: "rage rod for sale"
-  witchcredits: "fungus for rage-rod"
-  unclecredits: "your uncle starts fires"
-  kidcredits: "fire-starting kid"
-  flutecredits: "firestarter boy burns again"
 IceRod:
   bytes: [0x08]
-  pedestalhint: |-
-    I'm the cold
-    rod. I make
-    things freeze!
-  etherhint: |-
-    I'm the cold
-    rod. I make
-    things freeze!
-  bomboshint: |-
-    I'm the cold
-    rod. I make
-    things freeze!
-  pedestalcredits: "and the freeze ray"
-  zoracredits: "ice cream for sale"
-  witchcredits: "fungus for ice-rod"
-  unclecredits: "your uncle is cold as ice"
-  kidcredits: "the ice-bending kid"
-  flutecredits: "ice-cube boy freezes again"
 Hammer:
   bytes: [0x09]
-  pedestalhint: |-
-    stop
-    hammer time!
-  etherhint: |-
-    stop
-    hammer time!
-  bomboshint: |-
-    stop
-    hammer time!
-  pedestalcredits: "and m c hammer"
-  zoracredits: "m c hammer for sale"
-  witchcredits: "stop...   hammer time"
-  unclecredits: "stop...   hammer time"
-  kidcredits: "hammer-smashing kid"
-  flutecredits: "stop, hammer time"
 Hookshot:
   bytes: [0x0A]
-  pedestalhint: |-
-    BOING!!!
-    BOING!!!
-    BOING!!!
-  etherhint: |-
-    BOING!!!
-    BOING!!!
-    BOING!!!
-  bomboshint: |-
-    BOING!!!
-    BOING!!!
-    BOING!!!
-  pedestalcredits: "and the tickle beam"
-  zoracredits: "tickle beam for sale"
-  witchcredits: "witch and tickle boy"
-  unclecredits: "your uncle is BOING"
-  kidcredits: "tickle-monster kid"
-  flutecredits: "beam boy tickles again"
 Bow:
   bytes: [0x0B]
-  pedestalhint: |-
-    You have
-    chosen the
-    archer class.
-  etherhint: |-
-    You have
-    chosen the
-    archer class.
-  bomboshint: |-
-    You have
-    chosen the
-    archer class.
-  pedestalcredits: "the stick and twine"
-  zoracredits: "arrow sling for sale"
-  witchcredits: "witch and robin hood"
-  unclecredits: "your uncle, robin hood"
-  kidcredits: "arrow-slinging kid"
-  flutecredits: "archer boy shoots again"
 Boomerang:
   bytes: [0x0C]
-  pedestalhint: |-
-    No matter what
-    you do, blue
-    returns to you
-  etherhint: |-
-    No matter what
-    you do, blue
-    returns to you
-  bomboshint: |-
-    No matter what
-    you do, blue
-    returns to you
-  pedestalcredits: "the backlash stick"
-  zoracredits: "bent stick for sale"
-  witchcredits: "fungus for puma-stick"
-  unclecredits: "your uncle is stunning"
-  kidcredits: "the bat-throwing kid"
-  flutecredits: "throwing boy plays fetch again"
 Powder:
   bytes: [0x0D]
-  pedestalhint: |-
-    you can turn
-    anti-faeries
-    into faeries
-  etherhint: |-
-    you can turn
-    anti-faeries
-    into faeries
-  bomboshint: |-
-    you can turn
-    anti-faeries
-    into faeries
-  pedestalcredits: "and the magic sack"
-  zoracredits: "sack for sale"
-  witchcredits: "the witch and assistant"
-  unclecredits: "your uncle and his sack"
-  kidcredits: "the sack-holding kid"
-  flutecredits: "magic boy plays marbles again"
 Bee:
   bytes: [0x0E]
 Bombos:
   bytes: [0x0F]
-  pedestalhint: |-
-    Burn, baby,
-    burn! Fear my
-    ring of fire!
-  etherhint: |-
-    Burn, baby,
-    burn! Fear my
-    ring of fire!
-  bomboshint: |-
-    Burn, baby,
-    burn! Fear my
-    ring of fire!
-  pedestalcredits: "and the swirly coin"
-  zoracredits: "swirly coin for sale"
-  witchcredits: "shrooms for swirly-coin"
-  unclecredits: "your uncle collects coins"
-  kidcredits: "coin-collecting kid"
-  flutecredits: "medallion boy melts room again"
 Ether:
   bytes: [0x10]
-  pedestalhint: |-
-    This magic
-    coin freezes
-    everything!
-  etherhint: |-
-    This magic
-    coin freezes
-    everything!
-  bomboshint: |-
-    This magic
-    coin freezes
-    everything!
-  pedestalcredits: "and the bolt coin"
-  zoracredits: "bolt coin for sale"
-  witchcredits: "shrooms for bolt-coin"
-  unclecredits: "your uncle collects coins"
-  kidcredits: "coin-collecting kid"
-  flutecredits: "medallion boy sees floor again"
 Quake:
   bytes: [0x11]
-  pedestalhint: |-
-    Maxing out the
-    Richter scale
-    is what I do!
-  etherhint: |-
-    Maxing out the
-    Richter scale
-    is what I do!
-  bomboshint: |-
-    Maxing out the
-    Richter scale
-    is what I do!
-  pedestalcredits: "and the wavy coin"
-  zoracredits: "wavy coin for sale"
-  witchcredits: "shrooms for wavy-coin"
-  unclecredits: "your uncle collects coins"
-  kidcredits: "coin-collecting kid"
-  flutecredits: "medallion boy shakes dirt again"
 MireEntryBombos:
   bytes: [0x00, 0x31, 0x80, 0x00]
   type: Meta
@@ -415,531 +61,66 @@ TurtleRockEntryQuake:
   type: Meta
 Lamp:
   bytes: [0x12]
-  pedestalhint: |-
-    Baby, baby,
-    baby.
-    Light my way!
-  etherhint: |-
-    Baby, baby,
-    baby.
-    Light my way!
-  bomboshint: |-
-    Baby, baby,
-    baby.
-    Light my way!
-  pedestalcredits: "and the flashlight"
-  zoracredits: "candle for sale"
-  witchcredits: "fungus for illumination"
-  unclecredits: "your uncle has night vision"
-  kidcredits: "light-shining kid"
-  flutecredits: "illuminated boy can see again"
 Shovel:
   bytes: [0x13]
-  pedestalhint: |-
-    Can
-       You
-          Dig it?
-  etherhint: |-
-    Can
-       You
-          Dig it?
-  bomboshint: |-
-    Can
-       You
-          Dig it?
-  pedestalcredits: "and the flute scoop"
-  zoracredits: "dirt spade for sale"
-  witchcredits: "can you dig it"
-  unclecredits: "your uncle digs it"
-  kidcredits: "archaeologist kid"
-  flutecredits: "shovel boy digs again"
 OcarinaInactive:
   bytes: [0x14]
-  pedestalhint: |-
-    Save the duck
-    and fly to
-    freedom!
-  etherhint: |-
-    Save the duck
-    and fly to
-    freedom!
-  bomboshint: |-
-    Save the duck
-    and fly to
-    freedom!
-  pedestalcredits: "and the duck call"
-  zoracredits: "duck call for sale"
-  witchcredits: "duck-calls for trade"
-  unclecredits: "your uncle trains ducks"
-  kidcredits: "the duck-call kid"
-  flutecredits: "ocarina boy plays again"
 CaneOfSomaria:
   bytes: [0x15]
-  pedestalhint: |-
-    I make blocks
-    to hold down
-    switches!
-  etherhint: |-
-    I make blocks
-    to hold down
-    switches!
-  bomboshint: |-
-    I make blocks
-    to hold down
-    switches!
-  pedestalcredits: "the walking stick"
-  zoracredits: "block stick for sale"
-  witchcredits: "twizzle-stick for trade"
-  unclecredits: "your uncle makes blocks"
-  kidcredits: "the block-making kid"
-  flutecredits: "cane boy makes blocks again"
 Bottle:
   bytes: [0x16]
-  pedestalhint: |-
-    Now you can
-    store potions
-    and stuff!
-  etherhint: |-
-    Now you can
-    store potions
-    and stuff!
-  bomboshint: |-
-    Now you can
-    store potions
-    and stuff!
-  pedestalcredits: "and the terrarium"
-  zoracredits: "terrarium for sale"
-  witchcredits: "first taste is not free"
-  unclecredits: "your uncle likes turtles"
-  kidcredits: "the terrarium kid"
-  flutecredits: "bottle boy has terrarium again"
 FairyBottle:
   bytes: [0x16]
 PieceOfHeart:
   bytes: [0x17]
-  pedestalhint: |-
-    Just a little
-    piece of love!
-  etherhint: |-
-    Just a little
-    piece of love!
-  bomboshint: |-
-    Just a little
-    piece of love!
-  pedestalcredits: "and the broken heart"
-  zoracredits: "little love for sale"
-  witchcredits: "fungus for life"
-  unclecredits: "your uncle is healthy"
-  kidcredits: "the life-giving kid"
-  flutecredits: "life boy feels some love again"
 CaneOfByrna:
   bytes: [0x18]
-  pedestalhint: |-
-    Use this to
-    become
-    invincible!
-  etherhint: |-
-    Use this to
-    become
-    invincible!
-  bomboshint: |-
-    Use this to
-    become
-    invincible!
-  pedestalcredits: "and the blue bat"
-  zoracredits: "shiny stick for sale"
-  witchcredits: "spark-stick for trade"
-  unclecredits: "your uncle sparks"
-  kidcredits: "the spark-making kid"
-  flutecredits: "cane boy encircles again"
 Cape:
   bytes: [0x19]
-  pedestalhint: |-
-    Wear this to
-    become
-    invisible!
-  etherhint: |-
-    Wear this to
-    become
-    invisible!
-  bomboshint: |-
-    Wear this to
-    become
-    invisible!
-  pedestalcredits: "the camouflage cape"
-  zoracredits: "red hood for sale"
-  witchcredits: "hood from a hood"
-  unclecredits: "your uncle can hide"
-  kidcredits: "red riding-hood kid"
-  flutecredits: "dapper boy hides again"
 MagicMirror:
   bytes: [0x1A]
-  pedestalhint: |-
-    Isn't your
-    reflection so
-    pretty?
-  etherhint: |-
-    Isn't your
-    reflection so
-    pretty?
-  bomboshint: |-
-    Isn't your
-    reflection so
-    pretty?
-  pedestalcredits: "the face reflector"
-  zoracredits: "your face for sale"
-  witchcredits: "trades looking-glass"
-  unclecredits: "your uncle is vain"
-  kidcredits: "the narcissistic kid"
-  flutecredits: "narcissistic boy is happy again"
 PowerGlove:
   bytes: [0x1B]
-  pedestalhint: |-
-    Now you can
-    lift weak
-    stuff!
-  etherhint: |-
-    Now you can
-    lift weak
-    stuff!
-  bomboshint: |-
-    Now you can
-    lift weak
-    stuff!
-  pedestalcredits: "and the grey mittens"
-  zoracredits: "lift glove for sale"
-  witchcredits: "fungus for gloves"
-  unclecredits: "your uncle goes back to the gym"
-  kidcredits: "body-building kid"
-  flutecredits: "body-building boy lifts again"
 TitansMitt:
   bytes: [0x1C]
-  pedestalhint: |-
-    Now you can
-    lift heavy
-    stuff!
-  etherhint: |-
-    Now you can
-    lift heavy
-    stuff!
-  bomboshint: |-
-    Now you can
-    lift heavy
-    stuff!
-  pedestalcredits: "and the golden glove"
-  zoracredits: "carry glove for sale"
-  witchcredits: "fungus for bling-gloves"
-  unclecredits: "your uncle goes back to the gym"
-  kidcredits: "body-building kid"
-  flutecredits: "body-building boy has gold again"
 BookOfMudora:
   bytes: [0x1D]
-  pedestalhint: |-
-    This is a
-    paradox?!
-  etherhint: |-
-    This is a
-    paradox?!
-  bomboshint: |-
-    This is a
-    paradox?!
-  pedestalcredits: "and the story book"
-  zoracredits: "moon runes for sale"
-  witchcredits: "drugs for literacy"
-  unclecredits: "your uncle can read"
-  kidcredits: "the scholarly kid"
-  flutecredits: "book-worm boy can read again"
 Flippers:
   bytes: [0x1E]
-  pedestalhint: |-
-    fancy a swim?
-  etherhint: |-
-    fancy a swim?
-  bomboshint: |-
-    fancy a swim?
-  pedestalcredits: "the water airfoil"
-  zoracredits: "finger webs for sale"
-  witchcredits: "shrooms let you swim"
-  unclecredits: "your uncle swims"
-  kidcredits: "the swimming kid"
-  flutecredits: "swimming boy swims again"
 MoonPearl:
   bytes: [0x1F]
-  pedestalhint: |2-
-      Bunny Link
-          be
-         gone!
-  etherhint: |2-
-      Bunny Link
-          be
-         gone!
-  bomboshint: |2-
-      Bunny Link
-          be
-         gone!
-  pedestalcredits: "and the jaw breaker"
-  zoracredits: "lunar orb for sale"
-  witchcredits: "shrooms for moon rock"
-  unclecredits: "your uncle shoots marbles"
-  kidcredits: "fortune-telling kid"
-  flutecredits: "moon boy plays ball again"
 BugCatchingNet:
   bytes: [0x21]
-  pedestalhint: |-
-    Let's catch
-    some bees and
-    faeries!
-  etherhint: |-
-    Let's catch
-    some bees and
-    faeries!
-  bomboshint: |-
-    Let's catch
-    some bees and
-    faeries!
-  pedestalcredits: "and the surprise net"
-  zoracredits: "stick web for sale"
-  witchcredits: "fungus for butterflies"
-  unclecredits: "your uncle catches bees"
-  kidcredits: "the bug-catching kid"
-  flutecredits: "wrong boy catches bees again"
 BlueMail:
   bytes: [0x22]
-  pedestalhint: |-
-    Now you're a
-    blue elf!
-  etherhint: |-
-    Now you're a
-    blue elf!
-  bomboshint: |-
-    Now you're a
-    blue elf!
-  pedestalcredits: "and the banana hat"
-  zoracredits: "banana hat for sale"
-  witchcredits: "the clothing store"
-  unclecredits: "your uncle tailors"
-  kidcredits: "the protected kid"
-  flutecredits: "tailor boy banana hatted again"
 RedMail:
   bytes: [0x23]
-  pedestalhint: |-
-    Now you're a
-    red elf!
-  etherhint: |-
-    Now you're a
-    red elf!
-  bomboshint: |-
-    Now you're a
-    red elf!
-  pedestalcredits: "and the eggplant hat"
-  zoracredits: "purple hat for sale"
-  witchcredits: "the nice clothing store"
-  unclecredits: "your uncle tailors"
-  kidcredits: "well-protected kid"
-  flutecredits: "tailor boy fears nothing again"
 Key:
   bytes: [0x24]
   type: SmallKey
-  pedestalhint: |-
-    A small key
-    to the Kingdom
-  etherhint: |-
-    A small key
-    to the Kingdom
-  bomboshint: |-
-    A small key
-    to the Kingdom
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 Compass:
   bytes: [0x25]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 HeartContainerNoAnimation:
   bytes: [0x26]
-  pedestalhint: |-
-    Maximum health
-    increased!
-    Yeah!
-  etherhint: |-
-    Maximum health
-    increased!
-    Yeah!
-  bomboshint: |-
-    Maximum health
-    increased!
-    Yeah!
-  pedestalcredits: "and the full heart"
-  zoracredits: "love for sale"
-  witchcredits: "fungus for life"
-  unclecredits: "your uncle is healthy"
-  kidcredits: "the life-giving kid"
-  flutecredits: "life boy feels love again"
 Bomb:
   bytes: [0x27]
-  pedestalhint: |-
-    I make things
-    go BOOM! But
-    just once.
-  etherhint: |-
-    I make things
-    go BOOM! But
-    just once.
-  bomboshint: |-
-    I make things
-    go BOOM! But
-    just once.
-  pedestalcredits: "and the explosion"
-  zoracredits: "firecracker for sale"
-  witchcredits: "blend fungus into bombs"
-  unclecredits: "your uncle believes"
-  kidcredits: "the bomb-holding kid"
-  flutecredits: "'splosion boy explodes again"
 ThreeBombs:
   bytes: [0x28]
-  pedestalhint: |-
-    I make things
-    go triple
-    BOOM!!!
-  etherhint: |-
-    I make things
-    go triple
-    BOOM!!!
-  bomboshint: |-
-    I make things
-    go triple
-    BOOM!!!
-  pedestalcredits: "the explosions"
-  zoracredits: "fireworks for sale"
-  witchcredits: "blend fungus into bombs"
-  unclecredits: "your uncle believes"
-  kidcredits: "the bomb-holding kid"
-  flutecredits: "'splosion boy explodes again"
 Mushroom:
   bytes: [0x29]
-  pedestalhint: |-
-    I'm a fun guy!
-
-    I'm a funghi!
-  etherhint: |-
-    I'm a fun guy!
-
-    I'm a funghi!
-  bomboshint: |-
-    I'm a fun guy!
-
-    I'm a funghi!
-  pedestalcredits: "and the legal drugs"
-  zoracredits: "legal drugs for sale"
-  witchcredits: "my name is error"
-  unclecredits: "your uncle deals drugs"
-  kidcredits: "the drug-dealing kid"
-  flutecredits: "shroom boy sells drugs again"
 RedBoomerang:
   bytes: [0x2A]
-  pedestalhint: |-
-    No matter what
-    you do, red
-    returns to you
-  etherhint: |-
-    No matter what
-    you do, red
-    returns to you
-  bomboshint: |-
-    No matter what
-    you do, red
-    returns to you
-  pedestalcredits: "and the rebound rod"
-  zoracredits: "air foil for sale"
-  witchcredits: "fungus for return-stick"
-  unclecredits: "your uncle is stunning"
-  kidcredits: "the bat-throwing kid"
-  flutecredits: "magical boy plays fetch again"
 BottleWithRedPotion:
   bytes: [0x2B]
-  pedestalhint: |-
-    You see red
-    goo in a
-    bottle?
-  etherhint: |-
-    You see red
-    goo in a
-    bottle?
-  bomboshint: |-
-    You see red
-    goo in a
-    bottle?
-  pedestalcredits: "and the red goo"
-  zoracredits: "red goo for sale"
-  witchcredits: "free samples"
-  unclecredits: "your uncle helps out"
-  kidcredits: "potion-slinging kid"
-  flutecredits: "bottle boy has red goo again"
 FairyBottleWithRedPotion:
   bytes: [0x2B]
 BottleWithGreenPotion:
   bytes: [0x2C]
-  pedestalhint: |-
-    You see green
-    goo in a
-    bottle?
-  etherhint: |-
-    You see green
-    goo in a
-    bottle?
-  bomboshint: |-
-    You see green
-    goo in a
-    bottle?
-  pedestalcredits: "and the green goo"
-  zoracredits: "green goo for sale"
-  witchcredits: "free samples"
-  unclecredits: "your uncle helps out"
-  kidcredits: "potion-slinging kid"
-  flutecredits: "bottle boy has green goo again"
 FairyBottleWithGreenPotion:
   bytes: [0x2C]
 BottleWithBluePotion:
   bytes: [0x2D]
-  pedestalhint: |-
-    You see blue
-    goo in a
-    bottle?
-  etherhint: |-
-    You see blue
-    goo in a
-    bottle?
-  bomboshint: |-
-    You see blue
-    goo in a
-    bottle?
-  pedestalcredits: "and the blue goo"
-  zoracredits: "blue goo for sale"
-  witchcredits: "free samples"
-  unclecredits: "your uncle helps out"
-  kidcredits: "potion-slinging kid"
-  flutecredits: "bottle boy has blue goo again"
 FairyBottleWithBluePotion:
   bytes: [0x2D]
 RedPotion:
@@ -950,649 +131,82 @@ BluePotion:
   bytes: [0x30]
 TenBombs:
   bytes: [0x31]
-  pedestalhint: |-
-    I make things
-    go BOOM!
-    so many times!
-  etherhint: |-
-    I make things
-    go BOOM!
-    so many times!
-  bomboshint: |-
-    I make things
-    go BOOM!
-    so many times!
-  pedestalcredits: "the many explosions"
-  zoracredits: "boom boom for sale"
-  witchcredits: "blend fungus into bombs"
-  unclecredits: "your uncle believes"
-  kidcredits: "the bomb-holding kid"
-  flutecredits: "'splosion boy explodes again"
 BigKey:
   bytes: [0x32]
   type: BigKey
-  pedestalhint: |-
-    A big key
-    to the Kingdom
-  etherhint: |-
-    A big key
-    to the Kingdom
-  bomboshint: |-
-    A big key
-    to the Kingdom
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 Map:
   bytes: [0x33]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 OneRupee:
   bytes: [0x34]
-  pedestalhint: |-
-    Just pocket
-    change. Move
-    right along.
-  etherhint: |-
-    Just pocket
-    change. Move
-    right along.
-  bomboshint: |-
-    Just pocket
-    change. Move
-    right along.
-  pedestalcredits: "the pocket change"
-  zoracredits: "life lesson for sale"
-  witchcredits: "buying cheap drugs"
-  unclecredits: "your uncle is cheap"
-  kidcredits: "poverty-struck kid"
-  flutecredits: "destitute boy has lunch again"
 FiveRupees:
   bytes: [0x35]
-  pedestalhint: |-
-    Just pocket
-    change. Move
-    right along.
-  etherhint: |-
-    Just pocket
-    change. Move
-    right along.
-  bomboshint: |-
-    Just pocket
-    change. Move
-    right along.
-  pedestalcredits: "the pocket change"
-  zoracredits: "life lesson for sale"
-  witchcredits: "buying cheap drugs"
-  unclecredits: "your uncle is cheap"
-  kidcredits: "poverty-struck kid"
-  flutecredits: "destitute boy has lunch again"
 TwentyRupees:
   bytes: [0x36]
-  pedestalhint: |-
-    Just couch
-    cash. Move
-    right along.
-  etherhint: |-
-    Just couch
-    cash. Move
-    right along.
-  bomboshint: |-
-    Just couch
-    cash. Move
-    right along.
-  pedestalcredits: "and the couch cash"
-  zoracredits: "life lesson for sale"
-  witchcredits: "the witch buying drugs"
-  unclecredits: "your uncle likes cash"
-  kidcredits: "the piggy-bank kid"
-  flutecredits: "destitute boy has lunch again"
 PendantOfCourage:
   bytes: [0x04, 0x38, 0x62, 0x00, 0x69, 0x37]
-  pedestalhint: |-
-    Courage for
-    those who
-    already had it
-  etherhint: |-
-    Courage for
-    those who
-    already had it
-  bomboshint: |-
-    Courage for
-    those who
-    already had it
 PendantOfWisdom:
   bytes: [0x01, 0x32, 0x60, 0x00, 0x69, 0x38]
-  pedestalhint: |-
-    Wisdom for
-    those who
-    already had it
-  etherhint: |-
-    Wisdom for
-    those who
-    already had it
-  bomboshint: |-
-    Wisdom for
-    those who
-    already had it
 PendantOfPower:
   bytes: [0x02, 0x34, 0x60, 0x00, 0x69, 0x39]
-  pedestalhint: |-
-    Power for
-    those who
-    already had it
-  etherhint: |-
-    Power for
-    those who
-    already had it
-  bomboshint: |-
-    Power for
-    those who
-    already had it
 BowAndArrows:
   bytes: [0x3A]
-  pedestalhint: |-
-    You are now an
-    average archer
-  etherhint: |-
-    You are now an
-    average archer
-  bomboshint: |-
-    You are now an
-    average archer
-  pedestalcredits: "the stick and twine"
-  zoracredits: "point stick for sale"
-  witchcredits: "witch and robin hood"
-  unclecredits: "your uncle, robin hood"
-  kidcredits: "arrow-slinging kid"
-  flutecredits: "archer boy shoots again"
 BowAndSilverArrows:
   bytes: [0x3B]
-  pedestalhint: |-
-    You are now a
-    master archer!
-  etherhint: |-
-    You are now a
-    master archer!
-  bomboshint: |-
-    You are now a
-    master archer!
-  pedestalcredits: "the stick and shine"
-  zoracredits: "you got lucky"
-  witchcredits: "witch and robin hood"
-  unclecredits: "your uncle, robin hood"
-  kidcredits: "arrow-slinging kid"
-  flutecredits: "archer boy shoots again"
 BottleWithBee:
   bytes: [0x3C]
-  pedestalhint: |-
-    Release me
-    so I can go
-    bzzzzz!
-  etherhint: |-
-    Release me
-    so I can go
-    bzzzzz!
-  bomboshint: |-
-    Release me
-    so I can go
-    bzzzzz!
-  pedestalcredits: "and the mad friend"
-  zoracredits: "mad friend for sale"
-  witchcredits: "insects for trade"
-  unclecredits: "your uncle likes arthropods"
-  kidcredits: "the bug-caught kid"
-  flutecredits: "bottle boy has mad bee again"
 FairyBottleWithBee:
   bytes: [0x3C]
 BottleWithFairy:
   bytes: [0x3D]
-  pedestalhint: |-
-    If you die
-    I will revive
-    you!
-  etherhint: |-
-    If you die
-    I will revive
-    you!
-  bomboshint: |-
-    If you die
-    I will revive
-    you!
-  pedestalcredits: "and the fairy friend"
-  zoracredits: "friend for sale"
-  witchcredits: "shrooms for friends"
-  unclecredits: "your uncle has a friend"
-  kidcredits: "fairy-catching kid"
-  flutecredits: "bottle boy has friend again"
 FairyBottleWithFairy:
   bytes: [0x3D]
 BossHeartContainer:
   bytes: [0x3E]
-  pedestalhint: |-
-    Maximum health
-    increased!
-    Yeah!
-  etherhint: |-
-    Maximum health
-    increased!
-    Yeah!
-  bomboshint: |-
-    Maximum health
-    increased!
-    Yeah!
-  pedestalcredits: "and the full heart"
-  zoracredits: "love for sale"
-  witchcredits: "fungus for life"
-  unclecredits: "your uncle is healthy"
-  kidcredits: "the life-giving kid"
-  flutecredits: "life boy feels love again"
 HeartContainer:
   bytes: [0x3F]
-  pedestalhint: |-
-    Maximum health
-    increased!
-    Yeah!
-  etherhint: |-
-    Maximum health
-    increased!
-    Yeah!
-  bomboshint: |-
-    Maximum health
-    increased!
-    Yeah!
-  pedestalcredits: "and the full heart"
-  zoracredits: "love for sale"
-  witchcredits: "fungus for life"
-  unclecredits: "your uncle is healthy"
-  kidcredits: "the life-giving kid"
-  flutecredits: "life boy feels love again"
 OneHundredRupees:
   bytes: [0x40]
-  pedestalhint: |-
-    A rupee stash!
-    Hell yeah!
-  etherhint: |-
-    A rupee stash!
-    Hell yeah!
-  bomboshint: |-
-    A rupee stash!
-    Hell yeah!
-  pedestalcredits: "and the rupee stash"
-  zoracredits: "fair trade for sale"
-  witchcredits: "buying good drugs"
-  unclecredits: "your uncle is rich"
-  kidcredits: "the kind-of-rich kid"
-  flutecredits: "affluent boy goes drinking again"
 FiftyRupees:
   bytes: [0x41]
-  pedestalhint: |-
-    Just couch
-    cash. Move
-    right along.
-  etherhint: |-
-    Just couch
-    cash. Move
-    right along.
-  bomboshint: |-
-    Just couch
-    cash. Move
-    right along.
-  pedestalcredits: "and the couch cash"
-  zoracredits: "life lesson for sale"
-  witchcredits: "the witch buying drugs"
-  unclecredits: "your uncle likes cash"
-  kidcredits: "the piggy-bank kid"
-  flutecredits: "destitute boy has lunch again"
 Heart:
   bytes: [0x42]
-  pedestalhint: |-
-    I'm a lonely
-    heart.
-  etherhint: |-
-    I'm a lonely
-    heart.
-  bomboshint: |-
-    I'm a lonely
-    heart.
-  pedestalcredits: "and the tiny heart"
-  zoracredits: "affection for sale"
-  witchcredits: "trading for transplant"
-  unclecredits: "your uncle is creepy"
-  kidcredits: "affection-giving kid"
-  flutecredits: "loving boy has affection again"
 Arrow:
   bytes: [0x43]
-  pedestalhint: |-
-    a lonely arrow
-    sits here.
-  etherhint: |-
-    a lonely arrow
-    sits here.
-  bomboshint: |-
-    a lonely arrow
-    sits here.
-  pedestalcredits: "the vampire skewer"
-  zoracredits: "sewing needle for sale"
-  witchcredits: "fungus for arrow"
-  unclecredits: "your uncle believes in you"
-  kidcredits: "stick-collecting kid"
-  flutecredits: "archer boy sews again"
 ShopArrow:
   bytes: [0x43]
 TenArrows:
   bytes: [0x44]
-  pedestalhint: |-
-    This will give
-    you ten shots
-    with your bow!
-  etherhint: |-
-    This will give
-    you ten shots
-    with your bow!
-  bomboshint: |-
-    This will give
-    you ten shots
-    with your bow!
-  pedestalcredits: "the vampire skewers"
-  zoracredits: "sewing kit for sale"
-  witchcredits: "fungus for arrows"
-  unclecredits: "your uncle sews"
-  kidcredits: "stick-collecting kid"
-  flutecredits: "archer boy sews again"
 SmallMagic:
   bytes: [0x45]
-  pedestalhint: |-
-    A tiny magic
-    refill rests
-    here
-  etherhint: |-
-    A tiny magic
-    refill rests
-    here
-  bomboshint: |-
-    A tiny magic
-    refill rests
-    here
-  pedestalcredits: "and the tiny pouch"
-  zoracredits: "alchemy for sale"
-  witchcredits: "fungus for magic"
-  unclecredits: "your uncle is magic"
-  kidcredits: "magic-slinging kid"
-  flutecredits: "magic boy summons again"
 ThreeHundredRupees:
   bytes: [0x46]
-  pedestalhint: |-
-    A rupee hoard!
-    Hell yeah!
-  etherhint: |-
-    A rupee hoard!
-    Hell yeah!
-  bomboshint: |-
-    A rupee hoard!
-    Hell yeah!
-  pedestalcredits: "and the rupee hoard"
-  zoracredits: "good return for sale"
-  witchcredits: "buying the best drugs"
-  unclecredits: "your uncle is rich"
-  kidcredits: "the really-rich kid"
-  flutecredits: "fat-cat boy is rich again"
 TwentyRupees2:
   bytes: [0x47]
-  pedestalhint: |-
-    Just couch
-    cash. Move
-    right along.
-  etherhint: |-
-    Just couch
-    cash. Move
-    right along.
-  bomboshint: |-
-    Just couch
-    cash. Move
-    right along.
-  pedestalcredits: "and the couch cash"
-  zoracredits: "life lesson for sale"
-  witchcredits: "the witch buying drugs"
-  unclecredits: "your uncle likes cash"
-  kidcredits: "the piggy-bank kid"
-  flutecredits: "destitute boy has lunch again"
 BottleWithGoldBee:
   bytes: [0x48]
-  pedestalhint: |-
-    Release me
-    so I can go
-    bzzzzz!
-  etherhint: |-
-    Release me
-    so I can go
-    bzzzzz!
-  bomboshint: |-
-    Release me
-    so I can go
-    bzzzzz!
-  pedestalcredits: "and the beetor"
-  zoracredits: "beetor for sale"
-  witchcredits: "insects for trade"
-  unclecredits: "your uncle has beetor"
-  kidcredits: "the bug-caught kid"
-  flutecredits: "bottle boy has beetor again"
 FairyBottleWithGoldBee:
   bytes: [0x48]
 OcarinaActive:
   bytes: [0x4A]
-  pedestalhint: |-
-    Save the duck
-    and fly to
-    freedom!
-  etherhint: |-
-    Save the duck
-    and fly to
-    freedom!
-  bomboshint: |-
-    Save the duck
-    and fly to
-    freedom!
-  pedestalcredits: "and the duck call"
-  zoracredits: "duck call for sale"
-  witchcredits: "duck-calls for trade"
-  unclecredits: "your uncle trains ducks"
-  kidcredits: "the duck-call kid"
-  flutecredits: "ocarina boy plays again"
 PegasusBoots:
   bytes: [0x4B]
-  pedestalhint: |-
-    Gotta go fast!
-  etherhint: |-
-    Gotta go fast!
-  bomboshint: |-
-    Gotta go fast!
-  pedestalcredits: "and the sprint shoes"
-  zoracredits: "sprint shoe for sale"
-  witchcredits: "shrooms for speed"
-  unclecredits: "your uncle goes fast"
-  kidcredits: "the running-man kid"
-  flutecredits: "gotta-go-fast boy runs again"
 BombUpgrade5:
   bytes: [0x51]
-  pedestalhint: |-
-    increase bomb
-    storage, low
-    low price
-  etherhint: |-
-    increase bomb
-    storage, low
-    low price
-  bomboshint: |-
-    increase bomb
-    storage, low
-    low price
-  pedestalcredits: "and the bomb booster"
-  zoracredits: "bomb boost for sale"
-  witchcredits: "the shroom goes boom"
-  unclecredits: "your uncle has the bomb bag"
-  kidcredits: "boom-enlarging kid"
-  flutecredits: "upgrade boy explodes more again"
 BombUpgrade10:
   bytes: [0x52]
-  pedestalhint: |-
-    increase bomb
-    storage, low
-    low price
-  etherhint: |-
-    increase bomb
-    storage, low
-    low price
-  bomboshint: |-
-    increase bomb
-    storage, low
-    low price
-  pedestalcredits: "and the bomb booster"
-  zoracredits: "bomb boost for sale"
-  witchcredits: "the shroom goes boom"
-  unclecredits: "your uncle has the bomb bag"
-  kidcredits: "boom-enlarging kid"
-  flutecredits: "upgrade boy explodes more again"
 BombUpgrade50:
   bytes: [0x4C]
-  pedestalhint: |-
-    increase bomb
-    storage, low
-    low price
-  etherhint: |-
-    increase bomb
-    storage, low
-    low price
-  bomboshint: |-
-    increase bomb
-    storage, low
-    low price
-  pedestalcredits: "and the bomb booster"
-  zoracredits: "bomb boost for sale"
-  witchcredits: "the shroom goes boom"
-  unclecredits: "your uncle has the bomb bag"
-  kidcredits: "boom-enlarging kid"
-  flutecredits: "upgrade boy explodes more again"
 ArrowUpgrade5:
   bytes: [0x53]
-  pedestalhint: |-
-    increase arrow
-    storage, low
-    low price
-  etherhint: |-
-    increase arrow
-    storage, low
-    low price
-  bomboshint: |-
-    increase arrow
-    storage, low
-    low price
-  pedestalcredits: "and the arrow boost"
-  zoracredits: "arrow boost for sale"
-  witchcredits: "witch and more arrows"
-  unclecredits: "your uncle has the quiver"
-  kidcredits: "quiver-enlarging kid"
-  flutecredits: "upgrade boy sews more again"
 ArrowUpgrade10:
   bytes: [0x54]
-  pedestalhint: |-
-    increase arrow
-    storage, low
-    low price
-  etherhint: |-
-    increase arrow
-    storage, low
-    low price
-  bomboshint: |-
-    increase arrow
-    storage, low
-    low price
-  pedestalcredits: "and the arrow boost"
-  zoracredits: "arrow boost for sale"
-  witchcredits: "witch and more arrows"
-  unclecredits: "your uncle has the quiver"
-  kidcredits: "quiver-enlarging kid"
-  flutecredits: "upgrade boy sews more again"
 ArrowUpgrade70:
   bytes: [0x4D]
-  pedestalhint: |-
-    increase arrow
-    storage, low
-    low price
-  etherhint: |-
-    increase arrow
-    storage, low
-    low price
-  bomboshint: |-
-    increase arrow
-    storage, low
-    low price
-  pedestalcredits: "and the arrow boost"
-  zoracredits: "arrow boost for sale"
-  witchcredits: "witch and more arrows"
-  unclecredits: "your uncle has the quiver"
-  kidcredits: "quiver-enlarging kid"
-  flutecredits: "upgrade boy sews more again"
 HalfMagic:
   bytes: [0x4E]
-  pedestalhint: |-
-    Your magic
-    power has been
-    doubled!
-  etherhint: |-
-    Your magic
-    power has been
-    doubled!
-  bomboshint: |-
-    Your magic
-    power has been
-    doubled!
-  pedestalcredits: "and the magic saver"
-  zoracredits: "wizardry for sale"
-  witchcredits: "mekalekahi mekahiney ho"
-  unclecredits: "your uncle is magical"
-  kidcredits: "the magic-saving kid"
-  flutecredits: "magic boy saves magic again"
 QuarterMagic:
   bytes: [0x4F]
-  pedestalhint: |-
-    Your magic
-    power has been
-    quadrupled!
-  etherhint: |-
-    Your magic
-    power has been
-    quadrupled!
-  bomboshint: |-
-    Your magic
-    power has been
-    quadrupled!
-  pedestalcredits: "and the magic saver"
-  zoracredits: "wizardry for sale"
-  witchcredits: "mekalekahi mekahiney ho"
-  unclecredits: "your uncle is magical"
-  kidcredits: "the magic-saving kid"
-  flutecredits: "magic boy saves magic again"
 Programmable1:
   bytes: [0x55]
 Programmable2:
@@ -1601,1496 +215,215 @@ Programmable3:
   bytes: [0x57]
 SilverArrowUpgrade:
   bytes: [0x58]
-  pedestalhint: |-
-    Do you fancy
-    silver tipped
-    arrows?
-  etherhint: |-
-    Do you fancy
-    silver tipped
-    arrows?
-  bomboshint: |-
-    Do you fancy
-    silver tipped
-    arrows?
-  pedestalcredits: "and the razer blade"
-  zoracredits: "sharp arrow for sale"
-  witchcredits: "arrow-honing service"
-  unclecredits: "your uncle shaves"
-  kidcredits: "arrow-sharpening kid"
-  flutecredits: "archer boy shines again"
 Rupoor:
   bytes: [0x59]
-  pedestalhint: |-
-    This is not
-    really worth
-    your time
-  etherhint: |-
-    This is not
-    really worth
-    your time
-  bomboshint: |-
-    This is not
-    really worth
-    your time
-  pedestalcredits: "and the toll-booth"
-  zoracredits: "double loss for sale"
-  witchcredits: "witch stole your rupees"
-  unclecredits: "your uncle collects"
-  kidcredits: "the toll-booth kid"
-  flutecredits: "affluent boy steals rupees"
 RedClock:
   bytes: [0x5B]
-  pedestalhint: |-
-    like the sands
-    through a red
-    hourglass
-  etherhint: |-
-    like the sands
-    through a red
-    hourglass
-  bomboshint: |-
-    like the sands
-    through a red
-    hourglass
-  pedestalcredits: "and the ruby clock"
-  zoracredits: "ruby clock for sale"
-  witchcredits: "shrooms for ruby time"
-  unclecredits: "your uncle keeps time"
-  kidcredits: "the ruby-time kid"
-  flutecredits: "moment boy travels time again"
 BlueClock:
   bytes: [0x5C]
-  pedestalhint: |-
-    sapphire sand
-    trickles down
-  etherhint: |-
-    sapphire sand
-    trickles down
-  bomboshint: |-
-    sapphire sand
-    trickles down
-  pedestalcredits: "the sapphire clock"
-  zoracredits: "blue clock for sale"
-  witchcredits: "fungus for blue time"
-  unclecredits: "your uncle keeps time"
-  kidcredits: "the indigo-time kid"
-  flutecredits: "moment boy time travels again"
 GreenClock:
   bytes: [0x5D]
-  pedestalhint: |-
-    tick tock
-    tick tock
-  etherhint: |-
-    tick tock
-    tick tock
-  bomboshint: |-
-    tick tock
-    tick tock
-  pedestalcredits: "the emerald clock"
-  zoracredits: "green clock for sale"
-  witchcredits: "shrooms for green time"
-  unclecredits: "your uncle keeps time"
-  kidcredits: "the emerald-time kid"
-  flutecredits: "moment boy adjusts time again"
 ProgressiveSword:
   bytes: [0x5E]
-  pedestalhint: |-
-    a better copy
-    of your sword
-    for your time
-  etherhint: |-
-    a better copy
-    of your sword
-    for your time
-  bomboshint: |-
-    a better copy
-    of your sword
-    for your time
-  pedestalcredits: "the unknown sword"
-  zoracredits: "some sword for sale"
-  witchcredits: "fungus for some slasher"
-  unclecredits: "your uncle recovers"
-  kidcredits: "sword-wielding kid"
-  flutecredits: "sword boy fights again"
 UncleSword:
   bytes: [0x5E]
 ProgressiveShield:
   bytes: [0x5F]
-  pedestalhint: |-
-    have a better
-    defense in
-    front of you
-  etherhint: |-
-    have a better
-    defense in
-    front of you
-  bomboshint: |-
-    have a better
-    defense in
-    front of you
-  pedestalcredits: "the unknown shield"
-  zoracredits: "some shield for sale"
-  witchcredits: "fungus for some shield"
-  unclecredits: "your uncle protects"
-  kidcredits: "shield-wielding kid"
-  flutecredits: "shield boy defends again"
 ProgressiveArmor:
   bytes: [0x60]
-  pedestalhint: |-
-    time for a
-    change of
-    clothes?
-  etherhint: |-
-    time for a
-    change of
-    clothes?
-  bomboshint: |-
-    time for a
-    change of
-    clothes?
-  pedestalcredits: "the unknown hat"
-  zoracredits: "unknown hat for sale"
-  witchcredits: "the clothing store"
-  unclecredits: "your uncle tailors"
-  kidcredits: "the protected kid"
-  flutecredits: "tailor boy has threads again"
 ProgressiveGlove:
   bytes: [0x61]
-  pedestalhint: |-
-    a way to lift
-    heavier things
-  etherhint: |-
-    a way to lift
-    heavier things
-  bomboshint: |-
-    a way to lift
-    heavier things
-  pedestalcredits: "the magic hand cover"
-  zoracredits: "some glove for sale"
-  witchcredits: "fungus for gloves"
-  unclecredits: "your uncle goes back to the gym"
-  kidcredits: "body-building kid"
-  flutecredits: "body-building boy lifts again"
 singleRNG:
   bytes: [0x62]
-  pedestalhint: |-
-    who knows? you
-    probably don't
-    need this.
-  etherhint: |-
-    who knows? you
-    probably don't
-    need this.
-  bomboshint: |-
-    who knows? you
-    probably don't
-    need this.
-  pedestalcredits: "the whatever"
-  zoracredits: "some item for sale"
-  witchcredits: "fungus for something"
-  unclecredits: "your uncle recovers"
-  kidcredits: "the something kid"
-  flutecredits: "unknown boy somethings again"
 multiRNG:
   bytes: [0x63]
-  pedestalhint: |-
-    who knows? you
-    probably don't
-    need this.
-  etherhint: |-
-    who knows? you
-    probably don't
-    need this.
-  bomboshint: |-
-    who knows? you
-    probably don't
-    need this.
-  pedestalcredits: "the whatever"
-  zoracredits: "some item for sale"
-  witchcredits: "fungus for something"
-  unclecredits: "your uncle recovers"
-  kidcredits: "the something kid"
-  flutecredits: "unknown boy somethings again"
 ProgressiveBow:
   bytes: [0x64]
-  pedestalhint: |-
-    You have
-    chosen the
-    archer class.
-  etherhint: |-
-    You have
-    chosen the
-    archer class.
-  bomboshint: |-
-    You have
-    chosen the
-    archer class.
-  pedestalcredits: "the stick and twine"
-  zoracredits: "arrow sling for sale"
-  witchcredits: "witch and robin hood"
-  unclecredits: "your uncle, robin hood"
-  kidcredits: "arrow-slinging kid"
-  flutecredits: "archer boy shoots again"
 ProgressiveBowAlternate:
   bytes: [0x65]
 Triforce:
   bytes: [0x6A]
-  pedestalhint: |2-
-
-       YOU WIN!
-  etherhint: |2-
-
-       YOU WIN!
-  bomboshint: |2-
-
-       YOU WIN!
-  pedestalcredits: "and the triforce"
-  zoracredits: "game win for sale"
-  witchcredits: "mushrooms win the game"
-  unclecredits: "your uncle wins the game"
-  kidcredits: "the game-winning kid"
-  flutecredits: "greedy boy wins game again"
 PowerStar:
   bytes: [0x6B]
-  pedestalhint: |-
-    Aim for the
-    moon. You may
-    hit a 'star'
-  etherhint: |-
-    Aim for the
-    moon. You may
-    hit a 'star'
-  bomboshint: |-
-    Aim for the
-    moon. You may
-    hit a 'star'
-  pedestalcredits: "and the power star"
-  zoracredits: "power star for sale"
-  witchcredits: "the powder or the stars"
-  unclecredits: "your uncle is important"
-  kidcredits: "the starry-eyed kid"
-  flutecredits: "mario powers up again"
 TriforcePiece:
   bytes: [0x6C]
-  pedestalhint: |-
-    a yellow
-    triangle
-    you need this
-  etherhint: |-
-    a yellow
-    triangle
-    you need this
-  bomboshint: |-
-    a yellow
-    triangle
-    you need this
-  pedestalcredits: "the triforce piece"
-  zoracredits: "triangle for sale"
-  witchcredits: "hoarding for ganon"
-  unclecredits: "your uncle is important"
-  kidcredits: "triforce-holding kid"
-  flutecredits: "wise boy has triangle again"
 MapLW:
   bytes: [0x70]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapDW:
   bytes: [0x71]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapA2:
   bytes: [0x72]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD7:
   bytes: [0x73]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD4:
   bytes: [0x74]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapP3:
   bytes: [0x75]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD5:
   bytes: [0x76]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD3:
   bytes: [0x77]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD6:
   bytes: [0x78]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD1:
   bytes: [0x79]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapD2:
   bytes: [0x7A]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapA1:
   bytes: [0x7B]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapP2:
   bytes: [0x7C]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapP1:
   bytes: [0x7D]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapH1:
   bytes: [0x7E]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 MapH2:
   bytes: [0x7F]
   type: Map
-  pedestalhint: |-
-    You can now
-    find your way
-    home!
-  etherhint: |-
-    You can now
-    find your way
-    home!
-  bomboshint: |-
-    You can now
-    find your way
-    home!
-  pedestalcredits: "and the map"
-  zoracredits: "the world for sale"
-  witchcredits: "shrooms find secrets"
-  unclecredits: "your uncle finds treasure"
-  kidcredits: "the cartographer kid"
-  flutecredits: "map boy navigates again"
 CompassA2:
   bytes: [0x82]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD7:
   bytes: [0x83]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD4:
   bytes: [0x84]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassP3:
   bytes: [0x85]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD5:
   bytes: [0x86]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD3:
   bytes: [0x87]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD6:
   bytes: [0x88]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD1:
   bytes: [0x89]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassD2:
   bytes: [0x8A]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassA1:
   bytes: [0x8B]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassP2:
   bytes: [0x8C]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassP1:
   bytes: [0x8D]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassH1:
   bytes: [0x8E]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 CompassH2:
   bytes: [0x8F]
   type: Compass
-  pedestalhint: |-
-    Now you know
-    where the boss
-    hides!
-  etherhint: |-
-    Now you know
-    where the boss
-    hides!
-  bomboshint: |-
-    Now you know
-    where the boss
-    hides!
-  pedestalcredits: "and the compass"
-  zoracredits: "bearings for sale"
-  witchcredits: "shrooms for navigation"
-  unclecredits: "your uncle navigates"
-  kidcredits: "the navigating kid"
-  flutecredits: "compass boy finds boss again"
 BigKeyA2:
   bytes: [0x92]
   type: BigKey
-  pedestalhint: |-
-    The Big Key
-    of evil's bane
-  etherhint: |-
-    The big key
-    of evil's bane
-  bomboshint: |-
-    The big key
-    of evil's bane
-  pedestalcredits: "la key of evils bane"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD7:
   bytes: [0x93]
   type: BigKey
-  pedestalhint: |-
-    The big key
-    of terrapins
-  etherhint: |-
-    The big key
-    of terrapins
-  bomboshint: |-
-    The big key
-    of terrapins
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD4:
   bytes: [0x94]
   type: BigKey
-  pedestalhint: |-
-    The Big Key
-    of rogues
-  etherhint: |-
-    The big key
-    of rogues
-  bomboshint: |-
-    The big key
-    of rogues
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyP3:
   bytes: [0x95]
   type: BigKey
-  pedestalhint: |-
-    The big key
-    to moldorm's
-    heart
-  etherhint: |-
-    The big key
-    to moldorm's
-    heart
-  bomboshint: |-
-    The big key
-    to moldorm's
-    heart
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD5:
   bytes: [0x96]
   type: BigKey
-  pedestalhint: |-
-    A frozen
-    big key
-    rests here
-  etherhint: |-
-    A frozen
-    big key
-    rests here
-  bomboshint: |-
-    A frozen
-    big key
-    rests here
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD3:
   bytes: [0x97]
   type: BigKey
-  pedestalhint: |-
-    The big key
-    of the dark
-    forest
-  etherhint: |-
-    The big key
-    of the dark
-    forest
-  bomboshint: |-
-    The big key
-    of the dark
-    forest
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD6:
   bytes: [0x98]
   type: BigKey
-  pedestalhint: |-
-    The big key
-    to Vitreous
-  etherhint: |-
-    The big key
-    to Vitreous
-  bomboshint: |-
-    The big key
-    to Vitreous
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD1:
   bytes: [0x99]
   type: BigKey
-  pedestalhint: |-
-    Hammeryump
-    with this
-    big key
-  etherhint: |-
-    Hammeryump
-    with this
-    big key
-  bomboshint: |-
-    Hammeryump
-    with this
-    big key
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyD2:
   bytes: [0x9A]
   type: BigKey
-  pedestalhint: |-
-    The Big key
-    to the swamp
-  etherhint: |-
-    The big key
-    to the swamp
-  bomboshint: |-
-    The big key
-    to the swamp
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyA1:
   bytes: [0x9B]
   type: BigKey
-  pedestalhint: |-
-    Okay, this big
-    key doesn't
-    really exist
-  etherhint: |-
-    Okay, this big
-    key doesn't
-    really exist
-  bomboshint: |-
-    Okay, this big
-    key doesn't
-    really exist
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyP2:
   bytes: [0x9C]
   type: BigKey
-  pedestalhint: |-
-    Sand spills
-    out of this
-    big key
-  etherhint: |-
-    Sand spills
-    out of this
-    big key
-  bomboshint: |-
-    Sand spills
-    out of this
-    big key
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyP1:
   bytes: [0x9D]
   type: BigKey
-  pedestalhint: |-
-    The big key
-    of the east
-  etherhint: |-
-    The big key
-    of the east
-  bomboshint: |-
-    The big key
-    of the east
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyH1:
   bytes: [0x9E]
   type: BigKey
-  pedestalhint: |-
-    You should
-    have got this
-    from a guard
-  etherhint: |-
-    You should
-    have got this
-    from a guard
-  bomboshint: |-
-    You should
-    have got this
-    from a guard
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 BigKeyH2:
   bytes: [0x9F]
   type: BigKey
-  pedestalhint: |-
-    You should
-    have got this
-    from a guard
-  etherhint: |-
-    You should
-    have got this
-    from a guard
-  bomboshint: |-
-    You should
-    have got this
-    from a guard
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyH2:
   bytes: [0xA0]
   type: SmallKey
-  pedestalhint: |-
-    The key to
-    the castle
-  etherhint: |-
-    The key to
-    the castle
-  bomboshint: |-
-    The key to
-    the castle
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyH1:
   bytes: [0xA1]
   type: SmallKey
-  pedestalhint: |-
-    The key to
-    the castle
-  etherhint: |-
-    The key to
-    the castle
-  bomboshint: |-
-    The key to
-    the castle
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyP1:
   bytes: [0xA2]
   type: SmallKey
-  pedestalhint: |-
-    Okay, this
-    key doesn't
-    really exist
-  etherhint: |-
-    Okay, this
-    key doesn't
-    really exist
-  bomboshint: |-
-    Okay, this
-    key doesn't
-    really exist
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyP2:
   bytes: [0xA3]
   type: SmallKey
-  pedestalhint: |-
-    Sand spills
-    out of this
-    small key
-  etherhint: |-
-    Sand spills
-    out of this
-    small key
-  bomboshint: |-
-    Sand spills
-    out of this
-    small key
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyA1:
   bytes: [0xA4]
   type: SmallKey
-  pedestalhint: |-
-    Agahnim
-    halfway
-    unlocked
-  etherhint: |-
-    Agahnim
-    halfway
-    unlocked
-  bomboshint: |-
-    Agahnim
-    halfway
-    unlocked
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD2:
   bytes: [0xA5]
   type: SmallKey
-  pedestalhint: |-
-    Access to
-    the swamp
-    is granted
-  etherhint: |-
-    Access to
-    the swamp
-    is granted
-  bomboshint: |-
-    Access to
-    the swamp
-    is granted
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD1:
   bytes: [0xA6]
   type: SmallKey
-  pedestalhint: |-
-    A small key
-    that steals
-    light
-  etherhint: |-
-    A small key
-    that steals
-    light
-  bomboshint: |-
-    A small key
-    that steals
-    light
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD6:
   bytes: [0xA7]
   type: SmallKey
-  pedestalhint: |-
-    The small key
-    to Vitreous
-  etherhint: |-
-    The small key
-    to Vitreous
-  bomboshint: |-
-    The small key
-    to Vitreous
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD3:
   bytes: [0xA8]
   type: SmallKey
-  pedestalhint: |-
-    The small key
-    of the dark
-    forest
-  etherhint: |-
-    The small key
-    of the dark
-    forest
-  bomboshint: |-
-    The small key
-    of the dark
-    forest
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD5:
   bytes: [0xA9]
   type: SmallKey
-  pedestalhint: |-
-    A frozen
-    small key
-    rests here
-  etherhint: |-
-    A frozen
-    small key
-    rests here
-  bomboshint: |-
-    A frozen
-    small key
-    rests here
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyP3:
   bytes: [0xAA]
   type: SmallKey
-  pedestalhint: |-
-    The key
-    to moldorm's
-    basement
-  etherhint: |-
-    The key
-    to moldorm's
-    basement
-  bomboshint: |-
-    The key
-    to moldorm's
-    basement
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD4:
   bytes: [0xAB]
   type: SmallKey
-  pedestalhint: |-
-    The small key
-    of rogues
-  etherhint: |-
-    The small key
-    of rogues
-  bomboshint: |-
-    The small key
-    of rogues
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyD7:
   bytes: [0xAC]
   type: SmallKey
-  pedestalhint: |-
-    The small key
-    of terrapins
-  etherhint: |-
-    The small key
-    of terrapins
-  bomboshint: |-
-    The small key
-    of terrapins
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyA2:
   bytes: [0xAD]
   type: SmallKey
-  pedestalhint: |-
-    The small key
-    of evil's bane
-  etherhint: |-
-    The small key
-    of evil's bane
-  bomboshint: |-
-    The small key
-    of evil's bane
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 KeyGK:
   bytes: [0xAF]
   type: SmallKey
-  pedestalhint: |-
-    A small key
-    to the Kingdom
-  etherhint: |-
-    A small key
-    to the Kingdom
-  bomboshint: |-
-    A small key
-    to the Kingdom
-  pedestalcredits: "and the key"
-  zoracredits: "advancement for sale"
-  witchcredits: "keys, keys, keys"
-  unclecredits: "your uncle picks locks"
-  kidcredits: "the key-holding kid"
-  flutecredits: "key boy picks locks again"
 ShopKey:
   bytes: [0xAF]
   type: SmallKey

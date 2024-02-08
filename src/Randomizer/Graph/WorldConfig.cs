@@ -6,6 +6,9 @@ public class WorldConfig
 {
     public static readonly int[] RandomCrystals = [0, 1, 2, 3, 4, 5, 6, 7];
 
+    // game/text language. english only at the moment.
+    public string Language { get; init; } = "en";
+
     // TODO: Align this with current website which broke it down to multiple settings.
     // See https://github.com/sporchia/alttp_vt_randomizer/pull/951
     public int RomHardMode { get; init; } = 0;
