@@ -115,8 +115,11 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         // TODO: does the config option region.requireBetterSword mean anything in v32?
         // TODO: remove swords and place them in take-any caves? (region.takeAnys)
 
-        if (world.Config.Goal == GoalOption.TriforceHunt)
-            worldSet.AddRange(Enumerable.Repeat((ItemSetName.DefaultSet, 3, world.GetItem("TriforcePiece")), world.Config.TriforcePieces));
+        if (world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Trifecta)
+        {
+            ushort triforcePiecesToPlace = Math.Max(world.Config.TriforcePieces, world.Config.GoalRequiredCount);
+            worldSet.AddRange(Enumerable.Repeat((ItemSetName.DefaultSet, 3, world.GetItem("TriforcePiece")), triforcePiecesToPlace));
+        }
 
         if (
             world.Config.Glitches != GlitchesOption.None
@@ -125,7 +128,7 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         )
         {
             float crystalRatio = world.Config.CrystalsTower / 7f;
-            int fillCount = world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal
+            int fillCount = world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal or GoalOption.Trifecta
                 ? prng.GetRandomInt((int)(15 * crystalRatio), (int)(25 * crystalRatio))
                 : prng.GetRandomInt((int)(15 * crystalRatio));
             if (fillCount > 0)

@@ -187,6 +187,10 @@ public static class RomWriter
             //case GoalOption.Completionist:
             //    rom.SetGanonInvincible("completionist");
             //    break;
+            case GoalOption.Trifecta:
+                rom.EnableTriforceTurnIn(true);
+                rom.SetGanonInvincible("crystals_only");
+                break;
 
             default:
                 rom.SetGanonInvincible("crystals_only");
@@ -290,7 +294,7 @@ public static class RomWriter
                 break;
         }
 
-        bool triforceHUD = config.Goal is GoalOption.TriforceHunt //or GoalOption.GanonHunt
+        bool triforceHUD = config.Goal is GoalOption.TriforceHunt or GoalOption.Trifecta //or GoalOption.GanonHunt
             || (config.TriforcePieces > 0);
         rom.EnableHudItemCounter(!triforceHUD && config.HudItemCounter /*|| config.Goal == GoalOption.Completionist*/); //rom.hudItemCounter
 
@@ -344,7 +348,7 @@ public static class RomWriter
             rom.SetMapRevealBombShop((ushort)(crystal5.GetMapReveal() | crystal6.GetMapReveal()));
         }
 
-        if (world.Config.Goal == GoalOption.TriforceHunt)
+        if (world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Trifecta)
         {
             rom.SetText("murahdahla",
 $@"Hello @. I
