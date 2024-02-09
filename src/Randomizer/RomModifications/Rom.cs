@@ -15,7 +15,7 @@ public sealed class Rom : IDisposable
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(string baseRomPath)
+    public Rom(string baseRomPath, string language)
     {
         if (!File.Exists(baseRomPath))
             throw new FileNotFoundException("Could not load base ROM file.", baseRomPath);
@@ -24,7 +24,7 @@ public sealed class Rom : IDisposable
         File.Copy(baseRomPath, _tempRom, overwrite: true);
         _rom = new FileStream(_tempRom, FileMode.Open, FileAccess.ReadWrite, FileShare.Read, bufferSize: 32 * 1024, FileOptions.RandomAccess | FileOptions.DeleteOnClose);
         InitialSram = new();
-        _text = new();
+        _text = new(language);
         _text.RemoveUnwanted();
         _credits = new();
     }
@@ -1382,25 +1382,18 @@ public sealed class Rom : IDisposable
 
         Write((SNES)0x06B2AB, [0xF0, 0xE1, 0x05]); // frog pickup on contact
 
-        _text.SetString("sign_path_to_death_mountain", "→ Bumper Cave\nYou need Cape and Mirror, but not Hookshot");
-        _text.SetString("sign_bumper_cave", "Cave to lost, old man.\nGood luck.");
-        _text.SetString("sign_east_of_bomb_shop", "\n← Your House");
-        _text.SetString("sign_east_of_links_house", "\n← Bomb Shoppe");
-        _text.SetString("kiki_leaving_screen", "{NOTEXT}", false);
-        _text.SetString("dark_sanctuary", "{NOTEXT}", false);
-        _text.SetString("dark_sanctuary_yes", "{NOTEXT}", false);
-        _text.SetString("dark_sanctuary_no", "If you want that healing you're gonna need 20 rupees.");
+        foreach (var (key, text) in YamlReader.LoadDialogForInverted(_text.Language))
+            _text.SetString(key, text, !isNoPause(key));
 
-        _text.SetString("menu_start_2", "{MENU}\n{SPEED0}\n≥@'s House\n Dark Chapel\n{CHOICE3}", false);
-        _text.SetString("menu_start_3", "{MENU}\n{SPEED0}\n≥@'s House\n Dark Chapel\n Dark Mountain\n{CHOICE2}", false);
+        static bool isNoPause(string key)
+        {
+            if (Text.IsNoPause(key))
+                return true;
 
-        _text.SetString("intro_main", "{INTRO}\n Episode  III\n{PAUSE3}\n A Link to\n   the Past\n"
-            + "{PAUSE3}\nInverted\n  Randomizer\n{PAUSE3}\nAfter mostly disregarding what happened in the first two games,\n"
-            + "{PAUSE3}\nLink has been transported to the Dark World\n{PAUSE3}\nWhile he was slumbering,\n"
-            + "{PAUSE3}\nWhatever will happen?\n{PAUSE3}\n{CHANGEPIC}\nGanon has moved around all the items in Hyrule.\n"
-            + "{PAUSE7}\nYou will have to find all the items necessary to beat Ganon.\n"
-            + "{PAUSE7}\nThis is your chance to be a hero.\n{PAUSE3}\n{CHANGEPIC}\n"
-            + "You must get the 7 crystals to beat Ganon.\n{PAUSE9}\n{CHANGEPIC}", false);
+            return key is "kiki_leaving_screen"
+                       or "dark_sanctuary"
+                       or "dark_sanctuary_yes";
+        }
     }
 
     /// <summary>Enable maps to show crystals on overworld map</summary>
@@ -1499,13 +1492,8 @@ public sealed class Rom : IDisposable
     {
         if (enable)
         {
-            _text.SetString("intro_main", "{INTRO}\n Episode  III\n{PAUSE3}\n A Link to\n   the Past\n"
-                + "{PAUSE3}\n  Randomizer\n{PAUSE3}\nAfter mostly disregarding what happened in the first two games.\n"
-                + "{PAUSE3}\nLink awakens to his uncle leaving the house.\n{PAUSE3}\nHe just runs out the door,\n"
-                + "{PAUSE3}\ninto the rainy night.\n{PAUSE3}\n{CHANGEPIC}\nGanon has moved around all the items in Hyrule.\n"
-                + "{PAUSE7}\nYou will have to find all the items necessary to beat Ganon.\n"
-                + "{PAUSE7}\nThis is your chance to be a hero.\n{PAUSE3}\n{CHANGEPIC}\n"
-                + "You must get the 7 crystals to beat Ganon.\n{PAUSE9}\n{CHANGEPIC}", false);
+            foreach (var (key, text) in YamlReader.LoadDialogForMystery(_text.Language))
+                _text.SetString(key, text, !Text.IsNoPause(key));
         }
     }
 

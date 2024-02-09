@@ -13,7 +13,7 @@ public static class RomWriter
     private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
     public static void WriteForWorld(World world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
     {
-        using var rom = new Rom(baseRom.FullName);
+        using var rom = new Rom(baseRom.FullName, world.Config.Language);
         // TODO: check hash? do we need that?
 
         // assume we either have a vanilla rom and a BPS, or an already pre-patched base rom.
@@ -25,8 +25,8 @@ public static class RomWriter
 
         var heartColor = world.Config.HeartColor; //option('heartcolor')
         if (heartColor == HeartColorOption.Random)
-                heartColor = prng.GetRandomElement(_heartColorOptions);
-            rom.SetHeartColors(heartColor);
+            heartColor = prng.GetRandomElement(_heartColorOptions);
+        rom.SetHeartColors(heartColor);
         rom.SetHeartBeepSpeed(world.Config.HeartBeepSpeed); //option('heartbeep')
 
         rom.SetQuickSwap(world.Config.QuickSwap); //option('quickswap')

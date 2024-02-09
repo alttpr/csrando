@@ -1,0 +1,61 @@
+# this file contains text specific to inverted mode.
+# any text not present will stay the same as defined in the base file.
+
+dark_sanctuary: "{NOTEXT}"
+dark_sanctuary_no: "If you want that healing you're gonna need 20 rupees."
+dark_sanctuary_yes: "{NOTEXT}"
+intro_main: |-
+  {INTRO}
+   Episode  III
+  {PAUSE3}
+   A Link to
+     the Past
+  {PAUSE3}
+  Inverted
+    Randomizer
+  {PAUSE3}
+  After mostly disregarding what happened in the first two games,
+  {PAUSE3}
+  Link has been transported to the Dark World
+  {PAUSE3}
+  While he was slumbering,
+  {PAUSE3}
+  Whatever will happen?
+  {PAUSE3}
+  {CHANGEPIC}
+  Ganon has moved around all the items in Hyrule.
+  {PAUSE7}
+  You will have to find all the items necessary to beat Ganon.
+  {PAUSE7}
+  This is your chance to be a hero.
+  {PAUSE3}
+  {CHANGEPIC}
+  You must get the 7 crystals to beat Ganon.
+  {PAUSE9}
+  {CHANGEPIC}
+kiki_leaving_screen: "{NOTEXT}"
+menu_start_2: |-
+  {MENU}
+  {SPEED0}
+  ≥@'s House
+   Dark Chapel
+  {CHOICE3}
+menu_start_3: |-
+  {MENU}
+  {SPEED0}
+  ≥@'s House
+   Dark Chapel
+   Dark Mountain
+  {CHOICE2}
+sign_bumper_cave: |-
+  Cave to lost, old man.
+  Good luck.
+sign_east_of_bomb_shop: |2-
+
+  ← Your House
+sign_east_of_links_house: |2-
+
+  ← Bomb Shoppe
+sign_path_to_death_mountain: |-
+  → Bumper Cave
+  You need Cape and Mirror, but not Hookshot

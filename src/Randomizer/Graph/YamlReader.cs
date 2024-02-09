@@ -177,6 +177,9 @@ public class YamlReader
     public static IReadOnlyDictionary<string, string> LoadHintsForPedestal(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "pedestal.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintsForBombosTablet(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "bombos-tablet.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintsForEtherTablet(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "ether-tablet.yml"));
+    public static IReadOnlyDictionary<string, string> LoadDialogText(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "dialog", "base.yml"));
+    public static IReadOnlyDictionary<string, string> LoadDialogForInverted(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "dialog", "inverted.yml"));
+    public static IReadOnlyDictionary<string, string> LoadDialogForMystery(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "dialog", "mystery.yml"));
 
     private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyDictionary<string, string>> _keyedLocalizedText = new();
     public static IReadOnlyDictionary<string, string> LoadKeyedLocalizedText(string path) => _keyedLocalizedText.GetOrAdd(path, LoadKeyedText);

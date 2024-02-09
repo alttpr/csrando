@@ -1,0 +1,1182 @@
+# this file contains the base text for a regular rom, which includes vanilla text.
+# text is automatically wrapped at 19 characters (when necessary.)
+# special commands in the form of {COMMAND} are available, see Dialog.cs for details.
+
+agahnim_defeated: "Arrrgggghhh. Well you're coming with me!"
+agahnim_final_meeting: "You have done well to come this far. Now, die!"
+agahnim_hide_and_seek_found: "Peek-a-boo!"
+agahnim_magic_running_away: |-
+  And now, the end is near
+  And so I face the final curtain
+  My friend, I'll say it clear
+  I'll state my case, of which I'm certain
+  I've lived a life that's full
+  I've traveled each and every highway
+  But more, much more than this
+  I did it my way
+agahnim_zelda_teleport: "I am a magician, and this is my act. Watch as I make this girl disappear!"
+aginah: "So, I've been living in this cave for years, and you think you can just come along and bomb open walls?"
+aginah_have_better_sword: |-
+  Pandas are very vicious animals. Never forget…
+
+
+
+
+  I never will…
+aginah_l1sword_no_book: "I once had a fish dinner. I still remember it to this day."
+aginah_l1sword_with_pendants: |-
+  Do you remember when I was young?
+
+  I sure don't.
+aginah_need_better_sword: "Once, I farted in this cave so bad all the jazz hands guys ran away and hid in the sand."
+barrier_breaking: "What did the seven crystals say to Ganon's Tower ? "
+blacksmiths_bogart_sword: "We're going to have to take it to work on it."
+blacksmiths_collect_frog: "Ribbit! Ribbit! Let's find my partner. To the shop!"
+blacksmiths_extra_okay: |-
+  Are you sure you're sure ?
+    ≥ Ah, yup
+      Hang on…
+  {CHOICE}
+blacksmiths_get_sword: "Sword is done. Now, back to our bread!"
+blacksmiths_hammer_anvil: "Dernt Take Er Jerbs!"
+blacksmiths_paywall: |-
+  It's 10 rupees
+    ≥ Easy
+      Hang on…
+  {CHOICE}
+blacksmiths_saving_bows: |-
+  Thanks!
+
+  Thanks!
+blacksmiths_shop_before_saving: "I lost my friend. Help me find him!"
+blacksmiths_shop_saving: "You found him! Colour me happy! Come back right away and we will bang on your sword."
+blacksmiths_still_working: "Something this precious takes time… Come back later."
+blacksmiths_temper_no: "Oh, come by any time!"
+blacksmiths_tempered_already: "Whelp… We can't make this any better."
+blacksmiths_what_you_want: |-
+  Nice of you to come back!
+  Would you like us mess with your sword?
+    ≥ Temper
+      It's fine
+  {CHOICE}
+blind_by_the_light: |-
+  Aaaahhhh~!
+  S-so bright~!
+blind_in_the_cell: |-
+  You saved me!
+  Please get me out of here!
+blind_not_that_way: "No! Don't go that way!"
+blinds_hut_dude: "I'm just some dude. This is Blind's hut."
+bomb_shop: "30 bombs for 100 rupees. Good deals all day!"
+bomb_shop_big_bomb: "30 bombs for 100 rupees, 100 rupees 1 BIG bomb. Good deals all day!"
+bomb_shop_big_bomb_buy: |-
+  Thanks!
+  Boom goes the dynamite!
+bottle_vendor_already_collected: "Dude! You already have it."
+bottle_vendor_bee: "Cool! A bee! Here's 100 rupees."
+bottle_vendor_choice: |-
+  I gots bottles.
+  Yous gots 100 rupees?
+    ≥ I want
+      No way!
+bottle_vendor_fish: "Whoa! A fish! You walked this all the way here?"
+bottle_vendor_get: "Nice! Hold it up son! Show the world what you got!"
+bottle_vendor_no: "Fine! I didn't want your money anyway."
+castle_wall_guard: "Looking for a Princess? Look downstairs."
+catfish: "You woke me from my nap! Take this, and get out!"
+catfish_after_item: |-
+  I don't have anything else for you!
+  Take this!
+caught_a_bee: |-
+  Caught a Bee
+    ≥ Keep
+      Release
+  {CHOICE}
+caught_a_fairy: |-
+  Caught Fairy!
+    ≥ Keep
+      Release
+  {CHOICE}
+chicken_hut_lady: |-
+  This is
+  Christos' hut.
+
+  He's out, searching for a bow.
+cukeman: "Did you hear that Veetorp beat ajneb174 in a 1 on 1 race at AGDQ?"
+cukeman_2: |-
+  You found Shabadoo, huh?
+  Niiiiice.
+dark_flute_boy_after_shovel_get: |-
+  So I gave you an item, and you're still here.
+
+
+
+
+
+  I mean, we can sit here and stare at each other, if you like…
+
+
+
+
+
+
+
+  Fine, I guess you should just go.
+dark_flute_boy_flute_not_found: "Still haven't found the item? Dig in the Light World around here, dingus!"
+dark_flute_boy_get_shovel: "Schaweet! Here you go. Happy digging!"
+dark_flute_boy_no_get_shovel: "Oh I see, not good enough for you… FINE!"
+dark_flute_boy_storytime: |-
+  Hi!
+  I'm Stumpy!
+  I've been chillin' in this world for a while now, but I miss my flute.If I gave you a shovel, would you go digging for it ?
+    ≥ Sure
+      Nahh
+  {CHOICE}
+dark_palace_tree_dude: |-
+  Did you know…
+
+
+  A tree typically has many secondary branches supported clear of the ground by the trunk. This trunk typically contains woody tissue for strength, and vascular tissue to carry materials from one part of the tree to another.
+dark_sanctuary: |-
+  For 20 rupees I'll tell you something?
+  How about it?
+    ≥ Yes
+      No
+  {CHOICE}
+dark_sanctuary_hint_0: "I once was a tea kettle, but then I moved up in the world, and now you can see me as this. Makes you wonder what I could be next time."
+dark_sanctuary_hint_1: "There is a thief in the desert, he can open creepy chests that follow you. But now that we have that out of the way, do you like my hair? I've spent eons getting it this way."
+dark_sanctuary_hint_2: |-
+  All I can say is that my life is pretty plain
+  I like watchin' the puddles gather rain,
+  And all I can do is just pour some tea for two,
+  And speak my point of view but it's not sane,
+  It's not sane
+dark_sanctuary_no: "Then go away!"
+dark_sanctuary_yes: |-
+  With Crystals 5&6, you can find a great fairy in the pyramid.
+
+  Flomp Flomp, Whizzle Whomp
+death_mountain_bullied_no_pearl: "I wrote a word. Just one. On a stone and threw it into the ocean. It was my word. It was what would save me. I hope someday someone finds that word and brings it to me. The word is the beginning of my song."
+death_mountain_bullied_with_pearl: "I wrote a song. Just one. On a guitar and threw it into the sky. It was my song. It could tame beasts and free minds. It flitters on the wind and lurks in our minds. It is the song of nature, of humanity, of dreams and dreamers."
+death_mountain_bully_no_pearl: "Add garlic, ginger and apple and cook for 2 minutes. Add carrots, potatoes, garam masala and curry powder and stir well. Add tomato paste, stir well and slowly add red wine and bring to a boil. Add sugar, soy sauce and water, stir and bring to a boil again."
+death_mountain_bully_with_pearl: "I think I forgot how to smile…"
+desert_entry_translated: "Kneel before this stone, and magic will move around you."
+desert_thief_after_item_get: "You tell anyone and I will give you such a pinch!"
+desert_thief_following: "Why……………"
+desert_thief_question: |-
+  I was a thief. I open purple chests!
+  Keep secret?
+    ≥ Sure thing
+      Never!
+  {CHOICE}
+desert_thief_question_yes: "Cool, bring me any purple chests you find."
+desert_thief_reassure: "Bring chests. It's a secret to everyone."
+desert_thief_sitting: "………………………"
+end_triforce: |-
+  {SPEED2}
+  {MENU}
+  {NOBORDER}
+       G G
+fairy_fountain_refill: "Well done, lettuce have a cup of tea…"
+fairy_wishing_ponds: |2-
+
+  -Wishing pond-
+
+  Throw item in?
+    ≥ Yesh
+      No
+  {CHOICE}
+fairy_wishing_ponds_no: |2-
+
+     Stop it!
+fighting_brothers_left: |-
+  Did you come from my brother's room?
+
+  Are we cool?
+fighting_brothers_right: |-
+  I walled off my brother Leo.
+
+  What a dingus.
+fighting_brothers_right_opened: "Now I should probably talk to him…"
+fish_money: "It's a secret to everyone."
+follower_no_enter: "Can't you take me some place nice."
+game_chest_lost_woods: |-
+  Pay 100 rupees open 1 chest. Are you lucky?
+  So, play game?
+    ≥ Play
+      Never!
+  {CHOICE}
+game_chest_no_cash: |-
+  So, like, you need 30 rupees.
+  Silly!
+game_chest_not_played: |-
+  You want to play a game?
+  Talk to me.
+game_chest_play_no: "Well fine, I didn't want your rupees."
+game_chest_play_yes: "Good luck then."
+game_chest_played: |-
+  You've opened the chests!
+  Time to go.
+game_chest_south_of_kakariko: |-
+  Pay 20 rupees, open 1 chest. Are you lucky?
+  So, play game?
+    ≥ Play
+      Never!
+  {CHOICE}
+game_chest_village_of_outcasts: |-
+  Pay 30 rupees, open 2 chests. Are you lucky?
+  So, play game?
+    ≥ Play
+      Never!
+  {CHOICE}
+game_chest_village_of_outcasts_play: |-
+  Alright, brother!
+  Go play!
+game_digging_choice: |-
+  Have 80 Rupees? Want to play digging game?
+    ≥Yes
+     No
+  {CHOICE}
+game_digging_come_back_later: "Come back later, I have to bury things."
+game_digging_end_time: |-
+  Time's up!
+  Time for you to go.
+game_digging_no_cash: |-
+  Shovel rental is 80 rupees.
+  I have all day
+game_digging_no_follower: "Something is following you. I don't like."
+game_digging_start: "Okay, use the shovel with Y!"
+game_over_menu: |-
+  {SPEED0}
+  Save-Continue
+  Save-Quit
+  Continue
+game_race_boy_already_won: "You already have your prize, dingus!"
+game_race_boy_failure: |-
+  Too slow!
+  I keep my
+  precious!
+game_race_boy_sneaky: "Thought you could sneak in, eh?"
+game_race_boy_success: |-
+  Nice!
+  You can have this trash!
+game_race_boy_time: |-
+  Your time was
+  ᚎᚍ min ᚌᚋ sec.
+game_race_girl: |-
+  You have 15 seconds,
+  Go… Go… Go…
+game_race_sign: "Why are you reading this sign? Run!!!"
+game_shooting_choice: |-
+  20 rupees.
+  5 arrows.
+  Win rupees!
+  Want to play?
+    ≥ Yes
+      No
+  {CHOICE}
+game_shooting_continue: |-
+  Keep playing?
+    ≥ Yes
+      No
+  {CHOICE}
+game_shooting_no: "Where are you going? Straight up!"
+game_shooting_yes: "Let's do this!"
+ganon_fall_in: |-
+  You drove
+  away my other
+  self, Agahnim,
+  two times…
+  But, I won't
+  give you the
+  Triforce.
+  I'll defeat
+  you!
+ganon_fall_in_alt: |-
+  You think you
+  are ready to
+  face me?
+
+  I will not die
+
+  unless you
+  complete your
+  goals. Dingus!
+ganon_phase_3: |-
+  Can you beat
+  my darkness
+  technique?
+ganon_phase_3_alt: "Got wax in your ears? I cannot die!"
+ganon_phase_3_no_bow: "You have no bow. Dingus!"
+ganon_phase_3_no_silvers: "You can't best me without silver arrows!"
+ganon_phase_3_no_silvers_alt: "You can't best me without silver arrows!"
+ganon_phase_3_silvers: "Oh no! Silver! My one true weakness!"
+gate_guard: "No Lonks Allowed!"
+hobo_item_get_bottle: "You think life is rough? I guess you can take my last item. Except this tent. That's MY tent!"
+houlihan_room: |2-
+       Randomizer
+  Tournament Winners
+
+  {HARP}
+      ~~~2023~~~
+    GanonsGoneWild
+
+      ~~~2022~~~
+        Obscure
+
+      ~~~2021~~~
+        Daaanty
+
+      ~~~2019~~~
+        Jet082
+
+      ~~~2018~~~
+        S: Andy
+        A: Andy
+      ~~~2017~~~
+      S: ajneb174
+      A: ajneb174
+hylian_text_1: |-
+  %== %== %==
+   ^ %==% ^
+  %== ^%%^ ==^
+hylian_text_2: |-
+  %%^= %==%
+   ^ =%^=
+  ==%= ^^%^
+hylian_text_3: |-
+  ^^ ^%=^= =%=
+  =%% =%%=^
+  ==%^= %=^^%
+intro_agahnim: |-
+  {IBOX}
+  Also, you need to defeat this guy!
+intro_main: |-
+  {INTRO}
+   Episode  III
+  {PAUSE3}
+   A Link to
+     the Past
+  {PAUSE3}
+    Randomizer
+  {PAUSE3}
+  After mostly disregarding what happened in the first two games.
+  {PAUSE3}
+  Link awakens to his uncle leaving the house.
+  {PAUSE3}
+  He just runs out the door,
+  {PAUSE3}
+  into the rainy night.
+  {PAUSE3}
+  {CHANGEPIC}
+  Ganon has moved around all the items in Hyrule.
+  {PAUSE7}
+  You will have to find all the items necessary to beat Ganon.
+  {PAUSE7}
+  This is your chance to be a hero.
+  {PAUSE3}
+  {CHANGEPIC}
+  You must get enough crystals to beat Ganon.
+  {PAUSE9}
+  {CHANGEPIC}
+intro_throne_room: |-
+  {IBOX}
+  Look at this Stalfos on the throne.
+intro_zelda_cell: |-
+  {IBOX}
+  It is your time to shine!
+item_get_14_heart: |-
+  3 more to go
+        ¼
+  Yay!
+item_get_24_heart: |-
+  2 more to go
+        ½
+  Whee!
+item_get_34_heart: |-
+  1 more to go
+        ¾
+  Good job!
+item_get_big_bomb: "YAY! Press A to 'splode it!"
+item_get_big_key: "Yo! You got a Big Key!"
+item_get_blue_mail: "Blue threads? Less damage activated!"
+item_get_blue_potion: "Blue goo to go! Nice!"
+item_get_bombos: "Let's set everything on fire, and melt things!"
+item_get_bombs: "BOMBS! Use A to pick 'em up, throw 'em, get hurt!"
+item_get_book: "It book! U R now litterit!"
+item_get_boomerang: "Boomerang! Press START to select it."
+item_get_bottle: "It's a terrarium. I hope we find a lizard!"
+item_get_bow: "You're in bow mode now!"
+item_get_bug_net: "Surprise Net! Let's catch stuff!"
+item_get_cane_of_byrna: "It's the Blue Cane. You can now protect yourself with lag!"
+item_get_cane_of_somaria: |-
+  Make blocks!
+  Throw blocks!
+  Splode Blocks!
+item_get_compass: "A compass! I can now find the boss."
+item_get_ether: "We can chill out with this!"
+item_get_fake_mastersword: |-
+  It's the Master Sword! …or not…
+
+           FOOL!
+item_get_fire_rod: "A Rod that shoots fire? Let's burn all the things!"
+item_get_flippers: "Splish! Splash! Let's go take a bath!"
+item_get_green_potion: "Green goo to go! Nice!"
+item_get_hammer: |-
+  STOP!
+
+  Hammer Time!
+item_get_hookshot: |-
+  BOING!!!
+  BOING!!!
+  Say no more…
+item_get_ice_rod: "It's the Ice Rod! Freeze Ray time."
+item_get_lamp: "Lamp! You can see in the dark, and light torches."
+item_get_magic_cape: "Finally! We get to play Invisible Man!"
+item_get_magic_mirror: "We could stare at this all day or, you know, beat Ganon…"
+item_get_map: "Yo! You found a MAP! Press X to see it."
+item_get_mirror_shield: "Pit would be proud!"
+item_get_moonpearl: "I found a shiny marble! No more hops!"
+item_get_mushroom: "A Mushroom! Don't eat it. Find a witch."
+item_get_ocarina: "Finally! We can play the Song of Time!"
+item_get_pegasus_boots: |-
+  Finally, it's bonking time!
+  Hold A to dash
+item_get_pendant_courage: "We have the Pendant of Courage! How brave!"
+item_get_pendant_power: "We have the Pendant of Power! How robust!"
+item_get_pendant_power_alt: "We have the Pendant of Power! How robust!"
+item_get_pendant_wisdom: "We have the Pendant of Wisdom! How astute!"
+item_get_pendant_wisdom_alt: "We have the Pendant of Wisdom! How astute!"
+item_get_powder: "It's the powder. Let's cause some mischief!"
+item_get_power_gloves: "Feel the power! You can now lift light rocks! Rock on!"
+item_get_quake: "Time to make the earth shake, rattle, and roll!"
+item_get_red_mail: "You feel the power of the eggplant on your head."
+item_get_red_potion: "Red goo to go! Nice!"
+item_get_sanc_heart: |-
+  You got a whole ♥!
+  Go you!
+item_get_shovel: "This is my new mop. My friend George, he gave me this mop. It's a pretty good mop. It's not as good as my old mop. I miss my old mop. But it's still a good mop."
+item_get_temperedsword: "Nice… I now have a craving for Cheetos."
+item_get_titans_mitts: |-
+  So, like, you can now lift anything.
+  ANYTHING!
+item_get_whole_heart: |-
+  You got a whole ♥!!
+  Go you!
+kakariko_alert_guards: |-
+  Guards! Help!
+  The creeper
+  @ is here!
+kakariko_flophouse_man: |-
+  I sure do have a lot of beds.
+
+  Did you know if you played the flute in the center of town things could happen?
+kakariko_flophouse_man_no_flippers: |-
+  I sure do have a lot of beds.
+
+  Zora is a cheapskate and will try to sell you his trash for 500 rupees…
+kakariko_powdered_chicken: |-
+  Smallhacker…
+
+
+  Was hiding, you found me!
+
+
+  Okay, you can leave now.
+kakariko_saharalasa_after_master_sword: |-
+  Cool sword!
+
+
+  …
+
+
+  …
+
+
+  Please save us
+kakariko_saharalasa_grandson: |-
+  My grandpa is over in the East. I'm bad with directions. I'll mark your map. Best of luck!
+  {HARP}
+kakariko_saharalasa_grandson_next: "Someday I'll be in a high school band!"
+kakariko_saharalasa_wife: |-
+  Heya, @!
+  Long time no see.
+  You want a Master Sword?
+
+  Well good luck with that.
+kakariko_saharalasa_wife_closing: |-
+  Anywho, I have things to do. You see those 2 ovens?
+
+  Yeah, 2!
+  Who has 2 ovens nowadays?!
+kakariko_saharalasa_wife_sword_story: |-
+  It occurs to me that I like toast and jam, but cheese and crackers is better.
+  You like?
+    ≥ Cheese
+      Jam
+  {CHOICE}
+kakariko_tavern_fisherman: |-
+  Don't argue
+  with a frozen
+  Deadrock.
+  He'll never
+  change his
+  position!
+kiki_first_extortion: |-
+  I'm Kiki. I like rupees, may I have 10?
+  How about it?
+    ≥ Yes
+      No
+  {CHOICE}
+kiki_first_extortion_no: "Pfft. I have no reason to hang. See ya!"
+kiki_first_extortion_yes: "Nice. I'll tag along with you for a bit."
+kiki_leaving_screen: "No no no no no! We should play by my rules! Goodbye…"
+kiki_second_extortion: |-
+  For 100 more, I'll open this place.
+  How about it?
+    ≥ Open
+      Nah
+  {CHOICE}
+kiki_second_extortion_no: "Heh, good luck getting in."
+kiki_second_extortion_yes: |-
+  Yay! Rupees!
+  Okay, let's do this!
+lost_woods_thief: |-
+  Have you seen Andy?
+
+  He was out looking for our prized Ether medallion.
+  I wonder when he will be back?
+lumberjack_left: "One of us always tells the truth."
+lumberjack_left_post_agahnim: "One of us likes peanut butter."
+lumberjack_right: "One of us always lies."
+magic_bat_give_half_magic: "How you like me now?"
+magic_bat_wake: "You bum! I was sleeping! Where's my magic bolts?"
+maiden_confirm_undersood: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  Capisce?
+    ≥ Yes
+      No
+  {CHOICE}
+maiden_crystal_1: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  I have a pretty red dress.
+  {SPEED1}
+  {SPEED2}Just thought I would tell you.
+maiden_crystal_2: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  I have a pretty blue dress.
+  {SPEED1}
+  {SPEED2}Just thought I would tell you.
+maiden_crystal_3: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  I have a pretty gold dress.
+  {SPEED1}
+  {SPEED2}Just thought I would tell you.
+maiden_crystal_4: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  I have a pretty redder dress.
+  {SPEED1}
+  {SPEED2}Just thought I would tell you.
+maiden_crystal_5: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  I have a pretty green dress.
+  {SPEED1}
+  {SPEED2}Just thought I would tell you.
+maiden_crystal_6: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  I have a pretty green dress.
+  {SPEED1}
+  {SPEED2}Just thought I would tell you.
+maiden_crystal_7: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  It's about friggin time.
+  {SPEED1}
+  {SPEED2}Do you know how long I've been waiting?!
+maiden_crystal_7_again: |-
+  {SPEED2}
+  {BOTTOM}
+  {NOBORDER}
+  It's about friggin time.
+  {SPEED1}
+  {SPEED2}Do you know how long I've been waiting?!
+maiden_ending: "May the way of the hero lead to the Triforce."
+mastersword_pedestal_translated: "A test of strength: If you have 3 pendants, I'm yours."
+menu_pause: |-
+  {SPEED0}
+  ≥Continue
+   Save and Quit
+  {CHOICE3}
+menu_start_2: |-
+  {MENU}
+  {SPEED0}
+  ≥@'s House
+   Sanctuary
+  {CHOICE3}
+menu_start_3: |-
+  {MENU}
+  {SPEED0}
+  ≥@'s House
+   Sanctuary
+   Mountain Cave
+  {CHOICE2}
+menu_start_4: |-
+  {MENU}
+  {SPEED0}
+  ≥@'s House
+   Mountain Cave
+  {CHOICE3}
+missing_big_key: |-
+  Something is missing…
+  The Big Key?
+missing_magic: |-
+  Something is missing…
+  Magic meter?
+mountain_old_man_deadend: "Oh, goody, hearts in jars! This place is creepy."
+mountain_old_man_drop_off: "Here's a thing to help you, good luck!"
+mountain_old_man_first: "Look out for holes, and monsters."
+mountain_old_man_in_his_cave: |-
+  You can find stuff in the tower at the top of this mountain.
+  Come see me if you'd like to be healed.
+mountain_old_man_in_his_cave_post_agahnim: |-
+  You should be heading to the castle… you have a portal there now.
+  Say hi anytime you like.
+mountain_old_man_in_his_cave_pre_agahnim: "You need to beat the tower at the top of the mountain."
+mountain_old_man_lost_and_alone: "Hello. I can't see anything. Take me with you."
+mountain_old_man_turn_right: "Turn right. Let's get out of this place."
+murahdahla: |-
+  Hello @. I
+  am Murahdahla, brother of
+  Sahasrahla and Aginah. Behold the power of
+  invisibility.
+  {PAUSE3}
+  … … …
+  Wait! you can see me? I knew I should have
+  hidden in  a hollow tree.
+no_empty_bottles: |-
+  Whoa, bucko!
+  No empty bottles.
+pickup_purple_chest: "A curious box. Let's take it with us!"
+pond_item_boomerang: "I don't much like you, so have this worse Boomerang."
+pond_item_bottle_filled: |-
+  Bottle filled!
+  Money saved!
+pond_item_select: |-
+  Pick something
+  to throw in.
+  {ITEMSELECT}
+pond_item_shield: "I grant you the ability to block fireballs. Don't lose this to a Pikit!"
+pond_item_silvers: "So, wouldn't it be nice to kill Ganon? These should help in the final phase."
+pond_item_sword: "Thank you for the sword, here is a stick of butter."
+pond_item_test: |-
+  You toss this?
+    ≥ Yup
+      Wrong
+  {CHOICE}
+pond_item_test_no: |-
+  You sure?
+    ≥ Oh yeah
+      Um…
+  {CHOICE}
+pond_item_test_no_no: "Well, I don't want it, so take it back."
+pond_of_wishing: |-
+  -Wishing Pond-
+
+   On Vacation
+pond_of_wishing_arrows: |-
+  Woo-hoo!
+  You can now
+  hold ᚌᚋ arrows
+pond_of_wishing_bad_luck: "Why you come in here and pretend like you have something this fountain wants? Come back with bottles!"
+pond_of_wishing_bombs: |-
+  Woo-hoo!
+  You can now
+  carry ᚌᚋ bombs
+pond_of_wishing_choice: |-
+  Your wish?
+    ≥More bombs
+     More arrows
+  {CHOICE}
+pond_of_wishing_fortune: "By the way, your fortune,"
+pond_of_wishing_full_upgrades: "You have all I can give you, here are your rupees back."
+pond_of_wishing_good_luck: |2-
+
+   is good luck
+pond_of_wishing_great_luck: |2-
+
+  is great luck
+pond_of_wishing_happiness: |-
+  Happiness up!
+  You are now
+  ᚌᚋ happy!
+pond_of_wishing_meh_luck: |2-
+
+   is meh luck
+pond_of_wishing_no: |2-
+
+    Fine then!
+pond_of_wishing_return_item: "Okay. Here's your item back, 'cause I can't use it. I'm stuck in this fountain."
+pond_of_wishing_throw: |-
+  How many?
+    ≥ᚌᚋ rupees
+     ᚎᚍ rupees
+  {CHOICE}
+pond_pre_item_silvers: "I like you, so here's a thing you can use to beat up Ganon."
+pond_will_upgrade: "You're honest, so I'll give you a present."
+post_item_get_mastersword: |-
+  {NOBORDER}
+  {SPEED6}
+  @, you got the sword!
+  {CHANGEMUSIC}
+  Now let's go beat up Agahnim!
+potion_shop_no_cash: "Yo! I'm not running a charity here."
+potion_shop_no_empty_bottles: |-
+  Whoa, bucko!
+  No empty bottles.
+priest_info: "So, I'm the dude that will protect Zelda. Don't worry, I got this covered."
+priest_sanctuary_after_pendants_before_master_sword: "Kudos! But seriously, you should be getting the Master Sword, not having a kegger in here."
+priest_sanctuary_before_leave: "Go be a hero!"
+priest_sanctuary_before_pendants: "Go'on and get them pendants so you can beat up Agahnim."
+priest_sanctuary_dying: "They took her to the castle! Take your sword and save her!"
+running_man: |-
+  Hi, Do you
+  know Veetorp?
+
+  You really
+  should. And
+  all the other great guys who made this possible.
+  Go thank them.
+
+
+  If you can catch them…
+sahasrahla_bring_courage: |-
+  {BOTTOM}
+  While you're here, could you do me a solid and get the green pendant from that dungeon?
+  {HARP}
+  I'll give you a present if you do.
+sahasrahla_found: |-
+  {BOTTOM}
+  Yup!
+
+  I'm the old man you are looking for. I'll keep it short and sweet: Go into that dungeon, then bring me the green pendant and talk to me again.
+sahasrahla_have_boots_no_icerod: |-
+  {BOTTOM}
+  Cave in South East has a cool item.
+sahasrahla_have_courage: |-
+  {BOTTOM}
+  Look, you have the green pendant! I'll give you something. Go kill the other two bosses for more pendant fun!
+sahasrahla_have_ice_rod: |-
+  {BOTTOM}
+  Like, I sit here, and tell you what to do?
+
+
+  Alright, go and find all the maidens, there are, like, maybe 7 of them. I dunno anymore. I'm old.
+sahasrahla_quest_have_master_sword: |-
+  {BOTTOM}
+  That's a pretty sword, but I'm old, forgetful, and old. Why don't you go do all the hard work while I hang out in this hut.
+sahasrahla_quest_have_pendants: |-
+  {BOTTOM}
+  Cool beans, but I think you should mosey on over to the Lost Woods.
+sahasrahla_quest_information: |-
+  {BOTTOM}
+  Sahasrahla, I am. You would do well to find the 3 pendants from the 3 dungeons in the Light World.
+  Understand?
+    ≥ yes
+      no
+  {CHOICE}
+sanctuary_enter: |-
+  YAY!
+  You saved Zelda!
+shop_already_have: "So, like, you already have one of those."
+shop_buy_arrows: "Arrows! Cause you were too lazy to look under some pots!"
+shop_buy_bee: "He's my best friend.Please take care of him, and never lose him."
+shop_buy_bombs: "You bought bombs. What, couldn't find any under bushes?"
+shop_buy_heart: "You really just bought this?"
+shop_buy_no_space: "You are carrying to much crap, go use some of it first!"
+shop_buy_red_potion: "Red goo, so good! It's like a fairy in a bottle, except you have to activate it yourself."
+shop_buy_shield: "Thanks! Now you can block fire balls."
+shop_darkworld_enter: "It's dangerous outside, buy my crap for safety."
+shop_first_no_bottle_buy: "Why does no one own bottles? Go find one first!"
+shop_first_time: |-
+  Welcome to my shop! Select stuff with A.
+  DO IT NOW!
+shop_fortune_teller_lw: |-
+  {BOTTOM}
+  Welcome to the Fortune Shoppe!
+  Fancy a read?
+    ≥I must know
+     Negative
+  {CHOICE}
+shop_fortune_teller_lw_hint_0: |-
+  {BOTTOM}
+  By the black cats, the book opens the desert
+shop_fortune_teller_lw_hint_1: |-
+  {BOTTOM}
+  By the black cats, nothing doing
+shop_fortune_teller_lw_hint_10: |-
+  {BOTTOM}
+  By the black cats, the missing blacksmith is south of the Village of Outcasts
+shop_fortune_teller_lw_hint_11: |-
+  {BOTTOM}
+  By the black cats, open chests to get stuff
+shop_fortune_teller_lw_hint_12: |-
+  {BOTTOM}
+  By the black cats, you can buy a new bomb at the Bomb Shoppe
+shop_fortune_teller_lw_hint_13: |-
+  {BOTTOM}
+  By the black cats, big bombs blow up cracked walls in pyramids
+shop_fortune_teller_lw_hint_14: |-
+  {BOTTOM}
+  By the black cats, you need all the crystals to open Ganon's Tower
+shop_fortune_teller_lw_hint_15: |-
+  {BOTTOM}
+  By the black cats, Silver Arrows will defeat Ganon in his final phase
+shop_fortune_teller_lw_hint_2: |-
+  {BOTTOM}
+  By the black cats, I'm cheap
+shop_fortune_teller_lw_hint_3: |-
+  {BOTTOM}
+  By the black cats, am I cheap?
+shop_fortune_teller_lw_hint_4: |-
+  {BOTTOM}
+  By the black cats, Zora lives at the end of the river
+shop_fortune_teller_lw_hint_5: |-
+  {BOTTOM}
+  By the black cats, The Cape can pass through the barrier
+shop_fortune_teller_lw_hint_6: |-
+  {BOTTOM}
+  By the black cats, Spin, Hammer, or Net to hurt Agahnim
+shop_fortune_teller_lw_hint_7: |-
+  {BOTTOM}
+  By the black cats, You can jump in the well by the blacksmiths
+shop_fortune_teller_lw_hint_8: |-
+  {BOTTOM}
+  By the black cats, why you do?
+shop_fortune_teller_lw_hint_9: |-
+  {BOTTOM}
+  By the black cats, panda crackers
+shop_fortune_teller_lw_no: |-
+  {BOTTOM}
+  Well then, why did you even come in here?
+shop_fortune_teller_lw_no_rupees: |-
+  {BOTTOM}
+  The black cats are hungry, come back with rupees
+shop_fortune_teller_lw_post_hint: |-
+  {BOTTOM}
+  For ᚋᚌ rupees
+  It is done.
+  Be gone!
+sick_kid_no_bottle: |-
+  {BOTTOM}
+  I'm sick! Show me a bottle, get something!
+sick_kid_post_trade: |-
+  {BOTTOM}
+  Leave me alone
+  I'm sick. You have my item.
+sick_kid_trade: |-
+  {BOTTOM}
+  Cool bottle! Here's something for you.
+sign_before_catfish_area: "→↑ Have you met Woeful Ike?"
+sign_before_wishing_pond: |-
+  Waterfall
+  up ahead
+  Make wishes
+sign_bumper_cave: "You need Cape, but not Hookshot"
+sign_catfish: |-
+  Toss rocks
+  Toss items
+  Toss cookies
+sign_death_mountain_cave_back: "Cave away from sky cabbages"
+sign_desert_thief: "Don't talk to me or touch my sign!"
+sign_east_death_mountain_bridge: |-
+  Glitched
+  tournament
+  winners
+  {HARP}
+  ~~~HMG 2023~~~
+  tam
+
+  ~~~No Logic 2022~~~
+  Chexhuman
+
+  ~~~HMG 2021~~~
+  Krithel
+
+  ~~~OWG 2019~~~
+  Glan
+
+  ~~~OWG 2018~~~
+  ChristosOwen
+  the numpty
+sign_east_of_bomb_shop: |2-
+
+  ← Bomb Shoppe
+sign_east_of_castle: |-
+  → East Palace
+
+  ← Castle
+sign_east_of_desert: |-
+  ← Desert
+
+       It's hot.
+sign_east_of_links_house: |-
+  ↓ Lake Hylia
+
+   Also, a shop
+sign_east_of_mire: |2-
+
+  ← Misery Mire
+   No way in.
+   No way out.
+sign_east_of_pyramid: |2-
+
+  → Dark Palace
+sign_east_of_sanctuary: |-
+  ↑→ Potions!
+
+  Wish Waterfall
+sign_ganon: "You need all 7 crystals to beat Ganon."
+sign_ganons_tower: "You need all 7 crystals to enter."
+sign_lost_woods: |2-
+
+  ↑ Lost Woods
+sign_lumberjacks_house: |-
+  Lumberjacks, Inc.
+  You see 'em, we saw 'em.
+sign_north_kakariko: |-
+  ↓ Kakariko
+    Village
+sign_north_of_lake: |2-
+
+   Lake  Hylia
+sign_north_of_links_house: "> Randomizer The telepathic tiles can have hints!"
+sign_north_village_of_outcasts: |-
+  ↑ Skull Woods
+
+  ↓ Steve's Town
+sign_outside_magic_shop: "Welcome to the Magic Shoppe"
+sign_path_to_death_mountain: |-
+  Cave to lost, old man.
+  Good luck.
+sign_rain_north_of_links_house: |-
+  ↑ Dying Uncle
+    This way…
+sign_south_of_bumper_cave: |2-
+
+  → Kat's cave
+sign_south_of_lumberjacks: |-
+  ← Kakariko
+    Village
+sign_village_of_outcasts: "Have a Trulie Awesome Day!"
+sign_zoras: |-
+  Danger!
+  Deep water!
+  Zoras!
+tablet_bombos_book: "Can you make things fall out of the sky? With the Master Sword, you can!"
+tablet_ether_book: "Can you make things fall out of the sky? With the Master Sword, you can!"
+talking_tree_info_1: "Have you heard the good word about tree warp?"
+talking_tree_info_2: "Yank on the pitchfork in the center of town, ya heard it here."
+talking_tree_info_3: "There is a portal near the Lost Woods, ya heard it here."
+talking_tree_info_4: "Use bombs to quickly kill the Hinox, ya heard it here."
+talking_tree_info_start: "Whoa! I can talk again!"
+talking_tree_other: "I can breathe!"
+tavern_old_man_awake: "Life? Love? Happiness? The question you should really ask is: Was this generated by Stoops Alu or Stoops Jet?"
+tavern_old_man_have_flute: "Life? Love? Happiness? The question you should really ask is: Was this generated by Stoops Alu or Stoops Jet?"
+tavern_old_man_know_tree_unactivated_flute: "You should play that flute for the weathervane, cause reasons."
+tavern_old_man_unactivated_flute: "You should play that flute for the weathervane, cause reasons."
+telepathic_intro: |-
+  {NOBORDER}
+  {SPEED6}
+  Hey, come find me and help me!
+telepathic_reminder: |-
+  {NOBORDER}
+  {SPEED6}
+  I'm in the castle basement.
+telepathic_sahasrahla_beat_agahnim: |-
+  {NOBORDER}
+  {SPEED6}
+  Nice, so you beat Agahnim. Now you must beat Ganon. Good Luck!
+telepathic_sahasrahla_beat_agahnim_no_pearl: |-
+  {NOBORDER}
+  {SPEED6}
+  Oh, also you forgot the Moon Pearl, dingus. Go back and find it!
+telepathic_tile_castle_tower: |-
+  {NOBORDER}
+  You can reflect Agahnim's energy with Sword, Bug-net or Hammer.
+telepathic_tile_desert_bonk_torch_room: |-
+  {NOBORDER}
+  Things can be knocked down, if you fancy yourself a dashing dude.
+telepathic_tile_eastern_palace: |-
+  {NOBORDER}
+  You need a Bow to get past the red Eyegore. derpy
+telepathic_tile_ice_entrace: |-
+  {NOBORDER}
+  You can use Fire Rod or Bombos to pass.
+telepathic_tile_ice_large_room: |-
+  {NOBORDER}
+  All right stop collaborate and listen
+  Ice is back with my brand new invention.
+telepathic_tile_ice_stalfos_knights_room: |-
+  {NOBORDER}
+  Knock 'em down and then bomb them dead.
+telepathic_tile_misery_mire: |-
+  {NOBORDER}
+  Lighting 4 torches will open your way forward!
+telepathic_tile_palace_of_darkness: |-
+  {NOBORDER}
+  This is a funny looking Enemizer.
+telepathic_tile_south_east_darkworld_cave: |-
+  ~~ dev cave ~~
+    no farming
+     required
+telepathic_tile_spectacle_rock: |-
+  {NOBORDER}
+  Use the Mirror, or the Hookshot and Hammer, to get to Tower of Hera!
+telepathic_tile_swamp_entrance: |-
+  {NOBORDER}
+  Drain the floodgate to raise the water here!
+telepathic_tile_thieves_town_upstairs: |-
+  {NOBORDER}
+  Blind hates bright light.
+telepathic_tile_tower_of_hera_entrance: |-
+  {NOBORDER}
+  This is a bad place, with a guy who will make you fall…
+
+
+  a lot.
+telepathic_tile_tower_of_hera_floor_4: |-
+  {NOBORDER}
+  If you find a shiny ball, you can be you in the Dark World.
+telepathic_tile_turtle_rock: |-
+  {NOBORDER}
+  You Shall Not Pass… without the Red Cane.
+telepathic_tile_under_ganon: |2+
+     ALTTPR League          Winners
+  {HARP}
+
+    ~~~Season 5~~~
+       OKDUDES: 
+    GanonsGoneWild
+       Telethar
+     Hitsuyan1337
+
+    ~~~Season 4~~~
+  The Titan's Mitts:
+      SailorNep
+       Relkin
+       Daaanty
+
+    ~~~Season 3~~~
+  Phendrana Drifters:
+       Megawott
+     Frostbite3030
+        Jet082
+
+    ~~~Season 2~~~
+      Team すごい:
+      IIYoshiII
+     Hitsuyan1337
+       Ramond
+
+    ~~~Season 1~~~
+      Team すごい:
+      IIYoshiII
+        Thalane
+     Hitsuyan1337
+
+telepathic_zelda_right_after_master_sword: |-
+  {NOBORDER}
+  {SPEED6}
+  Hi @,
+  Have you been thinking about me?
+  arrrrrgghh…
+  … … …
+thief_desert_rupee_cave: "So you, like, busted down my door, and are being a jerk by talking to me? Normally I would be angry and make you pay for it, but I bet you're just going to break all my pots and steal my 50 rupees."
+thief_ice_rupee_cave: "I'm a rupee pot farmer. One day I will take over the world with my skillz. Have you met my brother in the desert? He's way richer than I am."
+thief_money: "It's a secret to everyone."
+toppi_fallen: |-
+  Ouch!
+
+  You jerk!
+tutorial_guard_1: "Only adults should travel at night."
+tutorial_guard_2: "You can press X to see the Map."
+tutorial_guard_3: "Press the A button to lift things by you."
+tutorial_guard_4: "When you has a sword, press B to slash it."
+tutorial_guard_5: "このメッセージはニホンゴでそのまま"
+tutorial_guard_6: "Are we really still reading these?"
+tutorial_guard_7: "Jeeze! There really are a lot of things."
+uncle_dying_sewer: "I've fallen and I can't get up, take this."
+uncle_leaving_text: "I'm just going out for a pack of smokes."
+var_test: |-
+  0= ᚋ, 1= ᚌ
+  2= ᚍ, 3= ᚎ
+witch_assistant_informational: |-
+  Red is life
+  Green is magic
+  Blue is both
+  I'll heal you for free, though.
+witch_assistant_no_bottle: "You got to give me the mushroom, Numpty."
+witch_assistant_no_bottle_buying: "If only you had something to put that in, like a bottle…"
+witch_assistant_no_empty_bottle: "Gotta use your stuff before you can get more."
+witch_brewing_the_item: "This mushroom is busy brewing. Come back later."
+witch_bring_mushroom: |-
+  Double, double toil and trouble!
+  Bring me a mushroom!
+zelda_after_pendants_before_master_sword: "Very pretty pendants, but really you should be getting that sword in the forest!"
+zelda_before_pendants: |-
+  You need to find all the pendants…
+
+
+  Numpty.
+zelda_go_to_throne: "Go north to the throne."
+zelda_push_throne: "Let's push it from the left!"
+zelda_sanctuary_before_leave: "Be careful!"
+zelda_sanctuary_story: |-
+  Do you want to hear me say this again?
+  {HARP}
+    ≥ No
+      Yes
+  {CHOICE}
+zelda_save_lets_go: "Let's get out of here!"
+zelda_save_repeat: |-
+  I like talking, do you?
+    ≥ No
+      Yes
+  {CHOICE}
+zelda_save_sewers: "You saved me!"
+zelda_sewers: "Just a little further to the Sanctuary."
+zelda_switch_room: |-
+  The Sanctuary!
+
+  Pull my finger
+zelda_switch_room_pull: "Pull this lever using A."
+zora_get_flippers: "Here's some Flippers for you! Swim little fish, swim."
+zora_meeting: |-
+  What do you want?
+    ≥ Flippers
+      Nothin'
+  {CHOICE}
+zora_no_buy_item: "Wah hoo! Well, whenever you want to see these gills, stop on by."
+zora_no_cash: |-
+  Fine!
+  Go get some more money first.
+zora_tells_cost: |-
+  Fine! But they aren't cheap.You got 500 rupees?
+    ≥ Duh
+      Oh carp
+  {CHOICE}
