@@ -335,33 +335,30 @@ public static class RomWriter
         var crystal5 = locationByPrize.GetValueOrDefault("Crystal5", null!);
         var crystal6 = locationByPrize.GetValueOrDefault("Crystal6", null!);
 
-        string greenPendantLocation = greenPendant?.GetRegion(config.Language) ?? "Wrecked Ship";
-        string crystal5Location = crystal5?.GetRegion(config.Language) ?? "Tourian";
-        string crystal6Location = crystal6?.GetRegion(config.Language) ?? "Norfair";
+        string greenPendantLocation = greenPendant?.GetRegion(world.Config.Language) ?? "Wrecked Ship";
+        string crystal5Location = crystal5?.GetRegion(world.Config.Language) ?? "Tourian";
+        string crystal6Location = crystal6?.GetRegion(world.Config.Language) ?? "Norfair";
 
-        rom.SetText("sahasrahla_bring_courage", $"Want something\nfor free? Go\nearn the green\npendant in\n{greenPendantLocation}\nand I'll give\nyou something.");
-        rom.SetText("bomb_shop", $"bring me the\ncrystals from\n{crystal5Location}\nand\n{crystal6Location}\nso I can make\na big bomb!");
+        var replacements = new Dictionary<string, string>
+        {
+            { "{GREEN_PENDANT}", greenPendantLocation },
+            { "{CRYSTAL5}", crystal5Location },
+            { "{CRYSTAL6}", crystal6Location },
+            { "{TRIFORCE_PIECE_COUNT}", $"{world.Config.GoalRequiredCount}" },
+        };
+        foreach (var (key, text) in YamlReader.LoadHintsForProgression(world.Config.Language))
+        {
+            string locationHint = text;
+            foreach (var (placeholder, replacement) in replacements)
+                locationHint = locationHint.Replace(placeholder, replacement);
+
+            rom.SetText(key, locationHint);
+        }
+
         if (world.Config.MapOnPickup) //rom.mapOnPickup
         {
             rom.SetMapRevealSahasrahla(greenPendant.GetMapReveal());
             rom.SetMapRevealBombShop((ushort)(crystal5.GetMapReveal() | crystal6.GetMapReveal()));
-        }
-
-        if (world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Trifecta)
-        {
-            rom.SetText("murahdahla",
-$@"Hello @. I
-am Murahdahla, brother of
-Sahasrahla and Aginah. Behold the power of
-invisibility.
-
-
-
-… … …
-
-Wait! you can see me? I knew I should have
-hidden in  a hollow tree. If you bring
-{world.Config.GoalRequiredCount} triforce pieces, I can reassemble it.");
         }
     }
 

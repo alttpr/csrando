@@ -1,0 +1,35 @@
+# this file contains location hints aimed at helping the player finish the game.
+
+# the Bomb Shoppe hint contains two placeholders that should be used:
+# - {CRYSTAL5}: the location of crystal 5
+# - {CRYSTAL6}: the location of crystal 6
+bomb_shop: |-
+  bring me the
+  crystals from
+  {CRYSTAL5}
+  and
+  {CRYSTAL6}
+  so I can make
+  a big bomb!
+# the Murahdahla hint contains one placeholder that should be used:
+# - {TRIFORCE_PIECE_COUNT}: the number of triforce pieces required to finish
+murahdahla: |-
+  Hello @. I
+  am Murahdahla, brother of
+  Sahasrahla and Aginah. Behold the power of
+  invisibility.
+  {PAUSE3}
+  … … …
+  Wait! you can see me? I knew I should have
+  hidden in  a hollow tree. If you bring
+  {TRIFORCE_PIECE_COUNT} triforce pieces, I can reassemble it.
+# the Sahasrahla hint contains one placeholder that should be used:
+# - {GREEN_PENDANT}: the location of the green pendant
+sahasrahla_bring_courage: |-
+  Want something
+  for free? Go
+  earn the green
+  pendant in
+  {GREEN_PENDANT}
+  and I'll give
+  you something.
