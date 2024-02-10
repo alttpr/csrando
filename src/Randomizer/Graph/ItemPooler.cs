@@ -81,7 +81,6 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
                 var assuredSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
                 worldSet.Remove(assuredSword);
                 worldSet.Add((ItemSetName.DefaultSet, 9999, world.GetItem("FiftyRupees")));
-                // TODO: does this actually work?
                 world.Config.StartingEquipment.Add("ProgressiveSword");
                 break;
             case WeaponOption.Vanilla:

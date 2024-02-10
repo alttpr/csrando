@@ -210,8 +210,8 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
 
-        rom.SetPyramidFairyChests(config.Weapon != WeaponOption.Vanilla); //region.swordsInPool
-        rom.SetSmithyQuickItemGive(config.Weapon != WeaponOption.Vanilla); //region.swordsInPool
+        rom.SetPyramidFairyChests(true); //region.swordsInPool
+        rom.SetSmithyQuickItemGive(true); //region.swordsInPool
 
         rom.SetGameState(config.State);
         rom.SetSwordlessMode(config.Weapon == WeaponOption.Swordless);
