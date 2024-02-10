@@ -1,0 +1,14 @@
+# text in here helps build the hint text that goes on a telepathic tile.
+# the following placeholders are always present:
+# - {LOCATION}: the hint location
+# - {ITEM}: the (single or last) item for this location  
+# whenever more than one item is present, an additional key will exist:
+# - {ITEMS}: the (first until second-to-last) items, separated by a comma
+# locations may specify that they don't want the glue word "is"/"are" by including {NOGLUE}
+
+single: "{ITEM} is {LOCATION}"
+singleNoGlue: "{ITEM} {LOCATION}"
+# special key for a single item that represents multiple things, like the pegasus boots
+singlePlural: "{ITEM} are {LOCATION}"
+multiple: "{ITEMS} and {ITEM} are {LOCATION}"
+multipleNoGlue: "{ITEMS} and {ITEM} {LOCATION}"

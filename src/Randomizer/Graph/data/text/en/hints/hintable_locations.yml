@@ -1,0 +1,20 @@
+# list of locations that should be hinted.
+# regular (single) locations are simply keys, while locations with multiple chests
+# use the key as location text lookup and the values as locations to use.
+
+Sahasrahla's Hut - Sahasrahla: []
+Mimic Cave: []
+Catfish: []
+Graveyard Cave Item: []
+Purple Chest Item: []
+Tower Of Hera - Big Key Chest: []
+Swamp Palace - Big Chest: []
+misery_mire:
+- "Misery Mire - Big Key Chest"
+- "Misery Mire - Compass Chest"
+swamp_palace:
+- "Swamp Palace - Big Key Chest"
+- "Swamp Palace - West Chest"
+pyramid_fairy:
+- "Pyramid Fairy - Left"
+- "Pyramid Fairy - Right"

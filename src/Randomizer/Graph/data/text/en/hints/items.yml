@@ -1,0 +1,416 @@
+# a list of random hint texts for a given item name.
+# text that represents a plural should start with the identifier {PLURAL}
+# to indicate that different wording might be necessary for the hint text
+# (to avoid "The boots is in $location" hints that don't read too well)
+
+Nothing:
+- Who knows
+UncleSword:
+- Something Sharp
+L1Sword:
+- Something Sharp
+L1SwordAndShield:
+- Something Sharp
+L2Sword:
+- Something Sharp
+MasterSword:
+- Something Sharp
+L3Sword:
+- Something Sharp
+L4Sword:
+- Something Sharp
+BlueShield:
+- A Shield
+RedShield:
+- A Shield
+MirrorShield:
+- A Shield
+FireRod:
+- The Fire Rod
+- A unique item
+IceRod:
+- The Ice Rod
+- A unique item
+Hammer:
+- The Hammer
+- A unique item
+Hookshot:
+- The Hookshot
+- A unique item
+Bow:
+- The Bow
+- A unique item
+Boomerang:
+- The Best Boomerang
+- A unique item
+Powder:
+- The Magic Powder
+- A unique item
+Bee:
+- A Beetor
+Bombos:
+- Bombos
+- A unique item
+Ether:
+- Ether
+- A unique item
+Quake:
+- Quake
+- A unique item
+Lamp:
+- The Lamp
+- A unique item
+Shovel:
+- A Shovel
+- A unique item
+OcarinaInactive:
+- The Flute
+- A unique item
+CaneOfSomaria:
+- The Cane Of Somaria
+- A unique item
+Bottle:
+- A Bottle
+PieceOfHeart:
+- A Piece Of Heart
+CaneOfByrna:
+- The Cane Of Byrna
+- A unique item
+Cape:
+- The Magic Cape
+- A unique item
+MagicMirror:
+- The Magic Mirror
+- A unique item
+PowerGlove:
+- The Power Glove
+- A unique item
+TitansMitt:
+- The Titans Mitt
+- A unique item
+BookOfMudora:
+- The Book Of Mudora
+- A unique item
+Flippers:
+- "{PLURAL}The Flippers"
+- A unique item
+MoonPearl:
+- The Moon Pearl
+- A unique item
+BugCatchingNet:
+- The Bug Catching Net
+- A unique item
+BlueMail:
+- Armor
+RedMail:
+- Armor
+Key:
+- A Key
+Compass:
+- A Compass
+HeartContainerNoAnimation:
+- A Heart Container
+Bomb:
+- "{PLURAL}Some Bombs"
+ThreeBombs:
+- "{PLURAL}Some Bombs"
+Mushroom:
+- The Mushroom
+- A unique item
+RedBoomerang:
+- A Boomerang
+- A unique item
+BottleWithRedPotion:
+- A Bottle
+BottleWithGreenPotion:
+- A Bottle
+BottleWithBluePotion:
+- A Bottle
+RedPotion:
+- A Potion
+GreenPotion:
+- A Potion
+BluePotion:
+- A Potion
+TenBombs:
+- "{PLURAL}Some Bombs"
+BigKey:
+- A Big Key
+Map:
+- A Map
+OneRupee:
+- Some cash
+FiveRupees:
+- Some cash
+TwentyRupees:
+- Some cash
+PendantOfCourage:
+- A pendant
+PendantOfWisdom:
+- A pendant
+PendantOfPower:
+- A pendant
+BowAndArrows:
+- The Bow
+- A unique item
+BowAndSilverArrows:
+- The Bow
+- A unique item
+BottleWithBee:
+- A Bottle
+BottleWithFairy:
+- A Bottle
+BossHeartContainer:
+- A Heart Container
+HeartContainer:
+- The Heart Container
+OneHundredRupees:
+- Some cash
+FiftyRupees:
+- Some cash
+Heart:
+- A Small Heart
+Arrow:
+- The Single Arrow
+- A unique item
+TenArrows:
+- "{PLURAL}Some Arrows"
+SmallMagic:
+- Small Magic
+ThreeHundredRupees:
+- Some cash
+TwentyRupees2:
+- Some cash
+BottleWithGoldBee:
+- A Bottle
+OcarinaActive:
+- The Flute
+- A unique item
+PegasusBoots:
+- "{PLURAL}The Boots"
+- A unique item
+BombUpgrade5:
+- A bomb bag
+BombUpgrade10:
+- A bomb bag
+BombUpgrade50:
+- A bomb bag
+ArrowUpgrade5:
+- A larger quiver
+ArrowUpgrade10:
+- A larger quiver
+ArrowUpgrade70:
+- A larger quiver
+HalfMagic:
+- Half Magic
+- A unique item
+QuarterMagic:
+- Quarter Magic
+- A unique item
+Programmable1:
+- Something
+Programmable2:
+- Something
+Programmable3:
+- Something
+SilverArrowUpgrade:
+- "{PLURAL}Silver Arrows"
+- A unique item
+Rupoor:
+- Some Cash
+RedClock:
+- A Clock
+BlueClock:
+- A Clock
+GreenClock:
+- A Clock
+ProgressiveSword:
+- Something Sharp
+ProgressiveShield:
+- A Shield
+ProgressiveArmor:
+- Armor
+ProgressiveGlove:
+- A Glove
+- A unique item
+singleRNG:
+- Something
+multiRNG:
+- Something
+ProgressiveBow:
+- A Bow
+- A unique item
+Triforce:
+- The Triforce
+PowerStar:
+- A Power Star
+TriforcePiece:
+- A Triforce Piece
+MapLW:
+- A map
+MapDW:
+- A map
+MapA2:
+- A map
+MapD7:
+- A map
+MapD4:
+- A map
+MapP3:
+- A map
+MapD5:
+- A map
+MapD3:
+- A map
+MapD6:
+- A map
+MapD1:
+- A map
+MapD2:
+- A map
+MapA1:
+- A map
+MapP2:
+- A map
+MapP1:
+- A map
+MapH1:
+- A map
+MapH2:
+- A map
+CompassA2:
+- A compass
+CompassD7:
+- A compass
+CompassD4:
+- A compass
+CompassP3:
+- A compass
+CompassD5:
+- A compass
+CompassD3:
+- A compass
+CompassD6:
+- A compass
+CompassD1:
+- A compass
+CompassD2:
+- A compass
+CompassA1:
+- A compass
+CompassP2:
+- A compass
+CompassP1:
+- A compass
+CompassH1:
+- A compass
+CompassH2:
+- A compass
+BigKeyA2:
+- The Big Key of evils bane
+BigKeyD7:
+- The Turtle Rock Big Key
+BigKeyD4:
+- The Thieves Town Big Key
+BigKeyP3:
+- The Tower of Hera Big Key
+BigKeyD5:
+- The Ice Palace Big Key
+BigKeyD3:
+- The Skull Woods Big Key
+BigKeyD6:
+- The Misery Mire Big Key
+BigKeyD1:
+- The Palace of Darkness Big Key
+BigKeyD2:
+- The Swamp Palace Big Key
+BigKeyA1:
+- The Agahnims Tower Big Key
+BigKeyP2:
+- The Desert Palace Big Key
+BigKeyP1:
+- The Eastern Palace Big Key
+BigKeyH1:
+- The Hyrule Castle Big Key
+BigKeyH2:
+- The Sewers Big Key
+KeyH2:
+- A Sewers Key
+KeyH1:
+- A Hyrule Castle Key
+KeyP1:
+- A Eastern Palace Key
+KeyP2:
+- A Desert Palace Key
+KeyA1:
+- A Agahnims Tower Key
+KeyD2:
+- A Swamp Palace Key
+KeyD1:
+- A Palace of Darkness Key
+KeyD6:
+- A Misery Mire Key
+KeyD3:
+- A Skull Woods Key
+KeyD5:
+- A Ice Palace Key
+KeyP3:
+- A Tower of Hera Key
+KeyD4:
+- A Thieves Town Key
+KeyD7:
+- A Turtle Rock Key
+KeyA2:
+- A Ganons Tower Key
+KeyGK:
+- A Generic Key
+Crystal1:
+- Crystal 1
+Crystal2:
+- Crystal 2
+Crystal3:
+- Crystal 3
+Crystal4:
+- Crystal 4
+Crystal5:
+- Crystal 5
+Crystal6:
+- Crystal 6
+Crystal7:
+- Crystal 7
+RescueZelda:
+- Rescue Zelda
+DefeatAgahnim:
+- Defeat Agahnim
+BigRedBomb:
+- Big Red Bomb
+DefeatAgahnim2:
+- Defeat Agahnim 2
+DefeatGanon:
+- Defeat Ganon
+Armos Knights:
+- Armos Knights
+Lanmolas:
+- Lanmolas
+Moldorm:
+- Moldorm
+Helmasaur King:
+- Helmasaur King
+Arrghus:
+- Arrghus
+Mothula:
+- Mothula
+Blind:
+- Blind
+Kholdstare:
+- Kholdstare
+Vitreous:
+- Vitreous
+Trinexx:
+- Trinexx
+Agahnim:
+- Agahnim
+Agahnim 2:
+- Agahnim 2
+Ganon:
+- Ganon

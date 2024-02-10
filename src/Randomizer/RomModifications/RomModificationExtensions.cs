@@ -78,7 +78,10 @@ internal static class RomModificationExtensions
         if (vertex == null)
             return null;
 
-        _ = language;
+        var regionNames = YamlReader.LoadRegions(language);
+        if (regionNames.TryGetValue(vertex.Name, out var region))
+            return region;
+
         if (!vertex.Name.Contains(" - "))
         {
             if (vertex.MoonPearl == true)
@@ -86,7 +89,7 @@ internal static class RomModificationExtensions
             else
                 return vertex.World.Config.State == StateOption.Inverted ? "Dark World" : "Light World";
         }
-        // TODO: this only works because of our naming convention "Region - Location"; we probably want something more stable (using the passed language).
+        // TODO: this only works because of our naming convention "Region - Location"; preferably the region file has a match already.
         return vertex.Name.Split(" - ")[0];
     }
 }

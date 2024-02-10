@@ -54,4 +54,6 @@ public class PRNG
     {
         return array.ElementAt(GetRandomInt(array.Count()));
     }
+
+    public IEnumerable<T> GetRandomElements<T>(IEnumerable<T> source, int count) => Shuffle(source).Take(count);
 }

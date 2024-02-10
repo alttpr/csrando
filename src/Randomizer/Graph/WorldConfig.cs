@@ -100,6 +100,8 @@ public class WorldConfig
     public GanonAgahnimRngOption GanonAgahnimRNG { get; init; } = GanonAgahnimRngOption.Table;
     public SilversEquipOption SilversAutoEquip { get; init; } = SilversEquipOption.Collection;
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
+    public bool RevealBootsLocation { get; init; } = false;
+    public bool EnableHints { get; init; } = false;
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }

@@ -1,0 +1,655 @@
+# location hints that may or may not be accurate.
+# vagueness on purpose.
+# some hints don't work with glue words such as "is" or "are",
+# those may use the marker {NOGLUE} to supress it.
+
+Agahnim 2:
+- on Agahnim 2
+Agahnim:
+- on Agahnim
+Aginah's Cave - Chest:
+- with a hermit
+- "{NOGLUE}requires a bomb"
+Blacksmith Item:
+- can be forged
+- held by someone friendly
+Blind's Hideout - Far Left:
+- in Blind's Hideout
+Blind's Hideout - Far Right:
+- in Blind's Hideout
+Blind's Hideout - Left:
+- in Blind's Hideout
+Blind's Hideout - Right:
+- in Blind's Hideout
+Blind's Hideout - Top:
+- in Blind's Hideout
+- "{NOGLUE}requires a bomb"
+Bombos Tablet:
+- on a Tablet
+- "{NOGLUE}requires the book"
+Bonk Rocks Item:
+- under some Rocks
+- "{NOGLUE}requires the boots"
+Bottle Merchant Item:
+- can be bought
+- held by someone friendly
+Brewery Item:
+- in the dark village
+- "{NOGLUE}requires a bomb"
+Bumper Cave Item:
+- "{NOGLUE}requires the cape"
+- in plain sight
+C-Shaped House Item:
+- in the dark village
+Castle Tower - Dark Maze:
+- in Castle Tower
+- in the dark
+Castle Tower - Room 03:
+- in Castle Tower
+Catfish:
+- held with a grumpy fish
+- under water
+- held with the fishes
+- held by someone friendly
+Cave 45 Item:
+- near the haunted grove
+Checkerboard Cave Item:
+- under a rock in the desert
+- "{NOGLUE}requires a glove"
+Chest Game:
+- in the dark village
+Chicken House Item:
+- with the Chickens
+- "{NOGLUE}requires a bomb"
+Desert Ledge - Item:
+- in plain sight
+Desert Palace - Big Chest:
+- in Desert Palace
+Desert Palace - Big Key Chest:
+- in Desert Palace
+Desert Palace - Compass Chest:
+- in Desert Palace
+Desert Palace - Boss:
+- in Desert Palace
+- on a boss
+Desert Palace - Map Chest:
+- in Desert Palace
+Desert Palace - Prize:
+- in Desert Palace
+Desert Palace - Torch:
+- in Desert Palace
+- in plain sight
+- "{NOGLUE}requires the boots"
+Digging Game - Item:
+- "{NOGLUE}can be dug up"
+Eastern Palace - Boss:
+- in Eastern Palace
+- on a boss
+Eastern Palace - Big Chest:
+- in Eastern Palace
+Eastern Palace - Big Key Chest:
+- in Eastern Palace
+Eastern Palace - Cannonball Chest:
+- in Eastern Palace
+Eastern Palace - Compass Chest:
+- in Eastern Palace
+Eastern Palace - Map Chest:
+- in Eastern Palace
+Eastern Palace - Prize:
+- in Eastern Palace
+Ether Tablet:
+- on a Tablet
+- "{NOGLUE}requires the book"
+Floating Island Item:
+- on Floating Island
+- in plain sight
+Floodgate Chest:
+- near a water switch
+Flute Spot:
+- "{NOGLUE}can be dug up"
+- "{NOGLUE}requires the shovel"
+Ganon:
+- Ganon
+Ganon's Tower - Big Chest:
+- in Ganon's Tower
+Ganon's Tower - Big Key Chest:
+- in Ganon's Tower
+- "{NOGLUE}requires a bomb"
+Ganon's Tower - Big Key Room - Left:
+- in Ganon's Tower
+- "{NOGLUE}requires a bomb"
+Ganon's Tower - Big Key Room - Right:
+- in Ganon's Tower
+- "{NOGLUE}requires a bomb"
+Ganon's Tower - Bob's Chest:
+- in Ganon's Tower
+Ganon's Tower - Bob's Torch:
+- in Ganon's Tower
+- in plain sight
+- "{NOGLUE}requires the boots"
+Ganon's Tower - Compass Room - Bottom Left:
+- in Ganon's Tower
+- "{NOGLUE}requires the cane of somaria"
+Ganon's Tower - Compass Room - Bottom Right:
+- in Ganon's Tower
+- "{NOGLUE}requires the cane of somaria"
+Ganon's Tower - Compass Room - Top Left:
+- in Ganon's Tower
+- "{NOGLUE}requires the cane of somaria"
+Ganon's Tower - Compass Room - Top Right:
+- in Ganon's Tower
+- "{NOGLUE}requires the cane of somaria"
+Ganon's Tower - DMs Room - Bottom Left:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - DMs Room - Bottom Right:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - DMs Room - Top Left:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - DMs Room - Top Right:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Firesnake Room:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Hope Room - Left:
+- in Ganon's Tower
+Ganon's Tower - Hope Room - Right:
+- in Ganon's Tower
+Ganon's Tower - Map Chest:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+Ganon's Tower - Mini Helmasaur Room - Left:
+- in Ganon's Tower
+Ganon's Tower - Mini Helmasaur Room - Right:
+- in Ganon's Tower
+Ganon's Tower - Moldorm Chest:
+- in Ganon's Tower
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Pre-Moldorm Chest:
+- in Ganon's Tower
+Ganon's Tower - Randomizer Room - Bottom Left:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires a bomb"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Randomizer Room - Bottom Right:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires a bomb"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Randomizer Room - Top Left:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires a bomb"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Randomizer Room - Top Right:
+- in Ganon's Tower
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires a bomb"
+- "{NOGLUE}requires the hookshot"
+Ganon's Tower - Tile Room Chest:
+- in Ganon's Tower
+- "{NOGLUE}requires the cane of somaria"
+Graveyard Cave Item:
+- above the poes
+- "{NOGLUE}requires a bomb"
+Hammer Pegs Item:
+- under a stump
+- "{NOGLUE}requires the Hammer"
+Hobo:
+- under a bridge
+- held by someone friendly
+Hookshot Cave - Bottom Chest:
+- in Hookshot Cave
+- "{NOGLUE}requires a glove"
+Hookshot Cave - Middle North Chest:
+- in Hookshot Cave
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires a glove"
+Hookshot Cave - Middle South Chest:
+- in Hookshot Cave
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires a glove"
+Hookshot Cave - Top Chest:
+- in Hookshot Cave
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires a glove"
+Hype Cave - Bottom:
+- in the Hype cave
+- "{NOGLUE}requires a bomb"
+Hype Cave - Middle Left:
+- in the Hype cave
+- "{NOGLUE}requires a bomb"
+Hype Cave - Middle Right:
+- in the Hype cave
+- "{NOGLUE}requires a bomb"
+Hype Cave - NPC Item:
+- in the Hype cave
+- "{NOGLUE}requires a bomb"
+- held by someone friendly
+Hype Cave - Top:
+- in the Hype cave
+- "{NOGLUE}requires a bomb"
+Hyrule Castle - Boomerang Chest:
+- in the Castle
+Hyrule Castle - Map Chest:
+- in the Castle
+Hyrule Castle - Zelda's Cell:
+- in the Castle
+Ice Palace - Big Chest:
+- in Ice Palace
+- "{NOGLUE}requires a bomb"
+Ice Palace - Big Key Chest:
+- in Ice Palace
+- "{NOGLUE}requires the Hammer"
+- "{NOGLUE}requires a glove"
+- "{NOGLUE}requires a bomb"
+Ice Palace - Compass Chest:
+- in Ice Palace
+Ice Palace - Freezor Chest:
+- in Ice Palace
+- "{NOGLUE}requires a bomb"
+Ice Palace - Iced T Room:
+- in Ice Palace
+- "{NOGLUE}requires a bomb"
+Ice Palace - Boss:
+- in Ice Palace
+- "{NOGLUE}requires the Hammer"
+- on a boss
+- "{NOGLUE}requires a glove"
+- "{NOGLUE}requires a bomb"
+Ice Palace - Map Chest:
+- in Ice Palace
+- "{NOGLUE}requires the Hammer"
+- "{NOGLUE}requires a glove"
+- "{NOGLUE}requires a bomb"
+Ice Palace - Prize:
+- in Ice Palace
+Ice Palace - Spike Room:
+- in Ice Palace
+- "{NOGLUE}requires a bomb"
+Ice Rod Cave Item:
+- in a cold Cave
+- "{NOGLUE}requires a bomb"
+Kakariko Tavern Item:
+- in Kakariko Tavern
+Kakariko Well - Bottom:
+- in Kakariko Well
+Kakariko Well - Left:
+- in Kakariko Well
+Kakariko Well - Middle:
+- in Kakariko Well
+Kakariko Well - Right:
+- in Kakariko Well
+Kakariko Well - Top:
+- in Kakariko Well
+- "{NOGLUE}requires a bomb"
+King Zora:
+- held with a grumpy fish
+- under water
+- held with the fishes
+- "{NOGLUE}can be bought"
+- held by someone friendly
+King's Tomb Chest:
+- sleeps in the Tomb
+- "{NOGLUE}requires the boots"
+Lake Hylia Island Item:
+- in plain sight
+Library Item:
+- in plain sight
+- "{NOGLUE}requires the boots"
+Link's House - Chest:
+- in your House, numpty
+Link's Uncle:
+- on your Uncle
+- held by someone friendly
+Lost Woods Hideout Item:
+- in the Lost Woods
+Lumberjack Tree:
+- in plain sight
+- "{NOGLUE}requires the boots"
+Magic Bat Item:
+- with Magic Bat
+- held by someone friendly
+Master Sword Pedestal:
+- "{NOGLUE}requires three pendants"
+- in the lost woods
+Maze Race:
+- in plain sight
+Mimic Cave:
+- in Mimic Cave
+- "{NOGLUE}requires the hammer"
+Mini Moldorm Cave - Far Left:
+- in Mini Moldorm Cave
+- "{NOGLUE}requires a bomb"
+Mini Moldorm Cave - Far Right:
+- in Mini Moldorm Cave
+- "{NOGLUE}requires a bomb"
+Mini Moldorm Cave - Left:
+- in Mini Moldorm Cave
+- "{NOGLUE}requires a bomb"
+Mini Moldorm Cave - NPC:
+- in Mini Moldorm Cave
+- "{NOGLUE}requires a bomb"
+- held by someone friendly
+Mini Moldorm Cave - Right:
+- in Mini Moldorm Cave
+- "{NOGLUE}requires a bomb"
+Mire Shed - Left:
+- near Misery Mire
+Mire Shed - Right:
+- near Misery Mire
+Misery Mire - Big Chest:
+- in Misery Mire
+Misery Mire - Big Key Chest:
+- in Misery Mire
+- fire locked in Misery Mire
+Misery Mire - Bridge Chest:
+- in Misery Mire
+Misery Mire - Compass Chest:
+- in Misery Mire
+- fire locked in Misery Mire
+Misery Mire - Main Lobby Chest:
+- in Misery Mire
+Misery Mire - Map Chest:
+- in Misery Mire
+Misery Mire - Prize:
+- in Misery Mire
+Misery Mire - Spike Chest:
+- in Misery Mire
+Misery Mire - Boss:
+- in Misery Mire
+- "{NOGLUE}requires the cane of somaria"
+- on a boss
+Misery Mire Medallion:
+- required to enter Misery Mire
+Mushroom:
+- in the Lost Woods
+- in plain sight
+Old Man:
+- held by an Old Man
+- in the dark
+- held by someone friendly
+Palace of Darkness - Big Chest:
+- in Palace of Darkness
+Palace of Darkness - Big Key Chest:
+- in Palace of Darkness
+Palace of Darkness - Compass Chest:
+- in Palace of Darkness
+Palace of Darkness - Dark Basement - Left:
+- in Palace of Darkness
+- in the dark
+Palace of Darkness - Dark Basement - Right:
+- in Palace of Darkness
+- in the dark
+Palace of Darkness - Dark Maze - Bottom:
+- in Palace of Darkness
+- in the dark
+Palace of Darkness - Dark Maze - Top:
+- in Palace of Darkness
+- in the dark
+Palace of Darkness - Harmless Hellway Chest:
+- in Palace of Darkness
+Palace of Darkness - Boss:
+- in Palace of Darkness
+- "{NOGLUE}requires the Hammer"
+- "{NOGLUE}requires the bow"
+- on a boss
+Palace of Darkness - Map Chest:
+- in Palace of Darkness
+Palace of Darkness - Prize:
+- in Palace of Darkness
+Palace of Darkness - Shooter Room Chest:
+- in Palace of Darkness
+Palace of Darkness - Stalfos Basement Chest:
+- in Palace of Darkness
+Palace of Darkness - The Arena - Bridge Ledge Chest:
+- in Palace of Darkness
+Palace of Darkness - The Arena - Ledge:
+- in Palace of Darkness
+Paradox Cave Lower - Far Left:
+- in Paradox Cave
+Paradox Cave Lower - Far Right:
+- in Paradox Cave
+Paradox Cave Lower - Left:
+- in Paradox Cave
+Paradox Cave Lower - Middle:
+- in Paradox Cave
+Paradox Cave Lower - Right:
+- in Paradox Cave
+Paradox Cave Upper - Left:
+- in Paradox Cave
+- "{NOGLUE}requires a bomb"
+Paradox Cave Upper - Right:
+- in Paradox Cave
+- "{NOGLUE}requires a bomb"
+Potion Shop Item:
+- with the witch
+- "{NOGLUE}requires the mushroom"
+Purple Chest Item:
+- in a chest requiring a specialist to unlock
+Pyramid Bottle:
+- the Pyramid Bottle
+Pyramid Fairy - Bow:
+- "{NOGLUE}requires a big red bomb"
+- with a great fairy
+Pyramid Fairy - Left:
+- "{NOGLUE}requires a big red bomb"
+- with a great fairy
+Pyramid Fairy - Right:
+- "{NOGLUE}requires a big red bomb"
+- with a great fairy
+Pyramid Fairy - Sword:
+- "{NOGLUE}requires a big red bomb"
+- with a great fairy
+Pyramid Item:
+- in plain sight
+Sahasrahla's Hut - Left:
+- in a sages closet
+Sahasrahla's Hut - Middle:
+- in a sages closet
+Sahasrahla's Hut - Right:
+- in a sages closet
+Sahasrahla's Hut - Sahasrahla:
+- "{NOGLUE}requires a green pendant"
+- held by the Kakariko village elder
+- held by someone friendly
+Sanctuary Chest:
+- in the Sanctuary
+Secret Passage:
+- near your Uncle
+Sewers - Dark Cross Chest:
+- in the Sewers
+- in the dark
+Sewers - Secret Room - Left:
+- in the Sewers
+Sewers - Secret Room - Middle:
+- in the Sewers
+Sewers - Secret Room - Right:
+- in the Sewers
+Sick Kid Item:
+- with Sick Kid
+- "{NOGLUE}requires a bottle"
+- held by someone friendly
+Skull Woods - Big Chest:
+- in Skull Woods
+Skull Woods - Big Key Chest:
+- in Skull Woods
+Skull Woods - Bridge Room Chest:
+- in Skull Woods
+Skull Woods - Compass Chest:
+- in Skull Woods
+Skull Woods - Map Chest:
+- in Skull Woods
+Skull Woods - Boss:
+- in Skull Woods
+- on a boss
+Skull Woods - Pinball Chest:
+- in Skull Woods
+Skull Woods - Pot Prison:
+- in Skull Woods
+Skull Woods - Prize:
+- in Skull Woods
+Spectacle Rock Cave Item:
+- in Spectacle Rock
+- in plain sight
+Spectacle Rock:
+- on Spectacle Rock
+- in plain sight
+Spike Cave:
+- in the Spike Cave
+- "{NOGLUE}requires the hammer"
+- "{NOGLUE}requires a glove"
+Spiral Cave Item:
+- in Spiral Cave
+Stumpy:
+- "{NOGLUE}can be found on a stump"
+- held by someone friendly
+Sunken Treasure:
+- under water
+Superbunny Cave - Bottom:
+- in Superbunny Cave
+Superbunny Cave - Top:
+- in Superbunny Cave
+Swamp Palace - Boss:
+- in Swamp Palace
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires the Hammer"
+- on a boss
+Swamp Palace - Big Chest:
+- in Swamp Palace
+- in the Big Chest Swamp Palace
+- "{NOGLUE}requires the Hammer"
+Swamp Palace - Big Key Chest:
+- in Swamp Palace
+- in western wing of Swamp Palace
+- "{NOGLUE}requires the Hammer"
+Swamp Palace - Compass Chest:
+- in Swamp Palace
+- "{NOGLUE}requires the Hammer"
+Swamp Palace - Entrance Chest:
+- in Swamp Palace
+Swamp Palace - Flooded Room - Left:
+- in Swamp Palace
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires the Hammer"
+- under water
+Swamp Palace - Flooded Room - Right:
+- in Swamp Palace
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires the Hammer"
+- under water
+Swamp Palace - Map Chest:
+- in Swamp Palace
+- "{NOGLUE}requires a bomb"
+Swamp Palace - Prize:
+- in Swamp Palace
+Swamp Palace - Waterfall Room Chest:
+- in Swamp Palace
+- "{NOGLUE}requires the hookshot"
+- "{NOGLUE}requires the Hammer"
+Swamp Palace - West Chest:
+- in Swamp Palace
+- in western wing of Swamp Palace
+- "{NOGLUE}requires the Hammer"
+Thieves' Town - Ambush Chest:
+- in Thieves' Town
+Thieves' Town - Attic Chest:
+- in Thieves' Town
+Thieves' Town - Big Chest:
+- in Thieves' Town
+- "{NOGLUE}requires the Hammer"
+Thieves' Town - Big Key Chest:
+- in Thieves' Town
+Thieves' Town - Boss:
+- in Thieves' Town
+- on a boss
+Thieves' Town - Blind's Cell:
+- in Thieves' Town
+Thieves' Town - Compass Chest:
+- in Thieves' Town
+Thieves' Town - Map Chest:
+- in Thieves' Town
+Thieves' Town - Prize:
+- in Thieves' Town
+Tower Of Hera - Basement Cage:
+- in Tower of Hera
+- in plain sight
+Tower Of Hera - Big Chest:
+- in Tower of Hera
+Tower Of Hera - Big Key Chest:
+- in Tower of Hera
+- "{NOGLUE}needs fire in Tower of Hera"
+Tower Of Hera - Compass Chest:
+- in Tower of Hera
+Tower Of Hera - Map Chest:
+- in Tower of Hera
+Tower Of Hera - Boss:
+- in Tower of Hera
+- on a boss
+Tower Of Hera - Prize:
+- in Tower of Hera
+Turtle Rock - Big Chest:
+- in Turtle Rock
+Turtle Rock - Big Key Chest:
+- in Turtle Rock
+Turtle Rock - Chain Chomps:
+- in Turtle Rock
+Turtle Rock - Compass Chest:
+- in Turtle Rock
+- "{NOGLUE}requires the cane of somaria"
+Turtle Rock - Crystaroller Room Chest:
+- in Turtle Rock
+Turtle Rock - Eye Bridge - Bottom Left:
+- in Turtle Rock
+Turtle Rock - Eye Bridge - Bottom Right:
+- in Turtle Rock
+Turtle Rock - Eye Bridge - Top Left:
+- in Turtle Rock
+Turtle Rock - Eye Bridge - Top Right:
+- in Turtle Rock
+Turtle Rock - Prize:
+- in Turtle Rock
+Turtle Rock - Roller Room - Left:
+- in Turtle Rock
+- "{NOGLUE}requires the cane of somaria"
+Turtle Rock - Roller Room - Right:
+- in Turtle Rock
+- "{NOGLUE}requires the cane of somaria"
+Turtle Rock - Boss:
+- in Turtle Rock
+- "{NOGLUE}requires the cane of somaria"
+- on a boss
+Turtle Rock Medallion:
+- required to enter Turtle Rock
+Waterfall Bottle:
+- the Waterfall Bottle
+Waterfall Fairy - Left:
+- "{NOGLUE}awaits in the waterfall"
+- with a great fairy
+- under water
+Waterfall Fairy - Right:
+- "{NOGLUE}awaits in the waterfall"
+- with a great fairy
+- under water
+Zelda:
+- on Zelda
+- held by someone friendly
+Zora's Domain Ledge Item:
+- in plain sight
+
+# locations that represent a group of items
+misery_mire:
+- in the westmost chests in Misery Mire
+swamp_palace:
+- in the westmost chests in Swamp Palace
+pyramid_fairy:
+- in the chests next to Pyramid Fairy

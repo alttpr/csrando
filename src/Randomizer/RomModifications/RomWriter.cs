@@ -53,8 +53,17 @@ public static class RomWriter
 
         if (!false) //config("multiworld", false))
         {
+            var itemLocations = world.GetLocationsOfType(VertexType.Item).ToArray();
+            // replace one of the bows with the alternate, so we can give a silvers hint at the end.
+            var alternateBowLocation = itemLocations
+                .Where(v => v.Item?.Name == "ProgressiveBow")
+                .Skip(1)
+                .FirstOrDefault();
+            if (alternateBowLocation != null)
+                alternateBowLocation.Item = world.GetItem("ProgressiveBowAlternate");
+
             var nothing = world.GetItem("Nothing");
-            foreach (var location in world.GetLocationsOfType(VertexType.Item))
+            foreach (var location in itemLocations)
             {
                 var itemToWrite = location.Item ?? nothing;
 
@@ -197,7 +206,8 @@ public static class RomWriter
                 break;
         }
 
-        SetProgressionText(world, rom);
+        SetProgressionText(world, rom, prng);
+        SetHintText(world, rom, prng);
 
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
@@ -325,40 +335,270 @@ public static class RomWriter
         ]);
     }
 
-    private static void SetProgressionText(World world, Rom rom)
+    private static void SetProgressionText(World world, Rom rom, PRNG prng)
     {
-        var locationByPrize = world.GetLocationsOfType(VertexType.Item)
-            .Where(v => v.SubType == VertexType.Prize && v.Item != null)
-            .ToDictionary(v => v.Item!.Name);
+        var config = world.Config;
+        var progressionHints = YamlReader.LoadHintsForProgression(config.Language);
+        var hints = new Dictionary<string, string>
+        {
+            { "blind_by_the_light", prng.GetRandomElement(YamlReader.LoadRandomDialogForBlind(config.Language)) },
+            { "kakariko_tavern_fisherman", prng.GetRandomElement(YamlReader.LoadRandomDialogForTavernMan(config.Language)) },
+            { "ganon_fall_in", prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonFallIn(config.Language)) },
+            { "ganon_phase_3_alt", prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonPhase3NoGoal(config.Language)) },
+            { "end_triforce", "{NOBORDER}\n" + prng.GetRandomElement(YamlReader.LoadRandomDialogForTriforce(config.Language)) },
+            { "sahasrahla_bring_courage", progressionHints["GreenPendantLocation"] },
+            { "bomb_shop", progressionHints["Crystal56Location"] },
+        };
+        var locationByItem = world.GetLocationsOfType(VertexType.Item)
+            .Where(v => v.Item != null)
+            .ToLookup(v => v.Item!.Name);
 
-        var greenPendant = locationByPrize.GetValueOrDefault("PendantOfCourage", null!);
-        var crystal5 = locationByPrize.GetValueOrDefault("Crystal5", null!);
-        var crystal6 = locationByPrize.GetValueOrDefault("Crystal6", null!);
+        // the boots reveal works in non-standard as well; except it is only on the sign east of Link's house.
+        string uncleBootsText;
+        if (config.RevealBootsLocation)
+        {
+            var bootsLocation = locationByItem["PegasusBoots"].FirstOrDefault();
+            var bootsRevealHints = YamlReader.LoadHintsForBoots(world.Config.Language);
 
-        string greenPendantLocation = greenPendant?.GetRegion(world.Config.Language) ?? "Wrecked Ship";
-        string crystal5Location = crystal5?.GetRegion(world.Config.Language) ?? "Tourian";
-        string crystal6Location = crystal6?.GetRegion(world.Config.Language) ?? "Norfair";
+            if (bootsLocation is null)
+                uncleBootsText = bootsRevealHints["NoBoots"];
+            else if (bootsRevealHints.TryGetValue(bootsLocation.Name, out var bootsHint))
+                uncleBootsText = bootsHint;
+            else if (config.StartingEquipment.Contains("PegasusBoots"))
+                uncleBootsText = bootsRevealHints["BootsStart"];
+            else
+                uncleBootsText = bootsRevealHints["BootsLocation"].Replace("{BOOTS}", bootsLocation.GetRegion(config.Language));
+
+            hints.Add("sign_east_of_links_house", uncleBootsText);
+        }
+        else
+        {
+            uncleBootsText = prng.GetRandomElement(YamlReader.LoadRandomDialogForUncle(config.Language));
+        }
+
+        hints.Add("uncle_leaving_text", uncleBootsText);
+
+        var silverArrowsUpgrade = locationByItem["SilverArrowUpgrade"].FirstOrDefault()
+            ?? locationByItem["BowAndSilverArrows"].FirstOrDefault();
+        var firstBow = locationByItem["ProgressiveBow"].FirstOrDefault();
+        var secondBow = locationByItem["ProgressiveBowAlternate"].FirstOrDefault();
+
+        string silversHint;
+        string silversHintAlt;
+        string silversLocation = "the void";
+        string silversLocationAlt = "the void";
+        if (firstBow != null && secondBow != null)
+        {
+            silversLocation = firstBow.GetRegion(config.Language);
+            silversLocationAlt = secondBow.GetRegion(config.Language);
+
+            if (silversLocation == "Ganon's Tower")
+                silversLocation = "My Tower";
+            if (silversLocationAlt == "Ganon's Tower")
+                silversLocationAlt = "My Tower";
+
+            string pattern = progressionHints["GanonSilversLocation"];
+            silversHint = pattern;
+            silversHintAlt = pattern.Replace("{SILVERS}", "{SILVERS_ALT}");
+        }
+        else if (silverArrowsUpgrade != null)
+        {
+            silversLocation = silverArrowsUpgrade.GetRegion(config.Language);
+            if (silversLocation == "Ganon's Tower")
+                silversLocation = "My Tower";
+
+            string pattern = progressionHints["GanonSilversLocation"];
+            silversHint = pattern;
+            silversHintAlt = silversHint;
+        }
+        else
+        {
+            silversHint = prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonPhase3NoSilvers(config.Language));
+            silversHintAlt = silversHint;
+        }
+
+        hints.Add("ganon_phase_3_no_silvers", silversHint);
+        hints.Add("ganon_phase_3_no_silvers_alt", silversHintAlt);
+
+        if (config.Goal is GoalOption.TriforceHunt or GoalOption.Trifecta)
+        {
+            hints.Add("murahdahla", config.GoalRequiredCount == 1
+                ? progressionHints["TriforceHandInSingular"]
+                : progressionHints["TriforceHandInPlural"]);
+        }
+        if (config.CrystalsTower < 7)
+        {
+            hints.Add("sign_ganons_tower", config.CrystalsTower == 1
+                ? progressionHints["TowerCrystalCountSingular"]
+                : progressionHints["TowerCrystalCountPlural"]);
+        }
+
+        string ganonText = config.Goal switch
+        {
+            GoalOption.Pedestal => progressionHints["UnkillableGanonPedestal"],
+            GoalOption.TriforceHunt => progressionHints["UnkillableGanonTriforceHunt"],
+            _ => progressionHints["UnkillableGanonNoGoal"],
+        };
+        string? pyramidSign = config.Goal switch
+        {
+            // TODO: do we want/need a fast-ganon trifecta?
+            GoalOption.Ganon or GoalOption.Trifecta => config.CrystalsGanon == 1
+                ? progressionHints["GanonCrystalCountSingular"]
+                : progressionHints["GanonCrystalCountPlural"],
+            GoalOption.FastGanon => config.CrystalsGanon == 1
+                ? progressionHints["FastGanonCrystalCountSingular"]
+                : progressionHints["FastGanonCrystalCountPlural"],
+            GoalOption.Dungeons => progressionHints["GanonAllDungeons"],
+            GoalOption.Pedestal => progressionHints["GanonPedestal"],
+            GoalOption.TriforceHunt => progressionHints["GanonTriforceHunt"],
+            _ => null,
+        };
+
+        hints.Add("ganon_fall_in_alt", ganonText);
+        if (!string.IsNullOrEmpty(pyramidSign))
+            hints.Add("sign_ganon", pyramidSign);
+
+        var greenPendant = locationByItem["PendantOfCourage"].FirstOrDefault();
+        var crystal5 = locationByItem["Crystal5"].FirstOrDefault();
+        var crystal6 = locationByItem["Crystal6"].FirstOrDefault();
+
+        string greenPendantLocation = greenPendant?.GetRegion(config.Language) ?? "Wrecked Ship";
+        string crystal5Location = crystal5?.GetRegion(config.Language) ?? "Tourian";
+        string crystal6Location = crystal6?.GetRegion(config.Language) ?? "Norfair";
 
         var replacements = new Dictionary<string, string>
         {
             { "{GREEN_PENDANT}", greenPendantLocation },
             { "{CRYSTAL5}", crystal5Location },
             { "{CRYSTAL6}", crystal6Location },
-            { "{TRIFORCE_PIECE_COUNT}", $"{world.Config.GoalRequiredCount}" },
+            { "{TOWER_COUNT}", $"{config.CrystalsTower}" },
+            { "{GANON_COUNT}", $"{config.CrystalsGanon}" },
+            { "{SILVERS}", silversLocation },
+            { "{SILVERS_ALT}", silversLocationAlt },
+            { "{TRIFORCE_PIECE_COUNT}", $"{config.GoalRequiredCount}" },
         };
-        foreach (var (key, text) in YamlReader.LoadHintsForProgression(world.Config.Language))
-        {
-            string locationHint = text;
-            foreach (var (placeholder, replacement) in replacements)
-                locationHint = locationHint.Replace(placeholder, replacement);
+        foreach (var (key, text) in hints)
+            rom.SetText(key, ReplacePlaceholders(text, replacements));
 
-            rom.SetText(key, locationHint);
-        }
-
-        if (world.Config.MapOnPickup) //rom.mapOnPickup
+        if (config.MapOnPickup) //rom.mapOnPickup
         {
             rom.SetMapRevealSahasrahla(greenPendant.GetMapReveal());
             rom.SetMapRevealBombShop((ushort)(crystal5.GetMapReveal() | crystal6.GetMapReveal()));
+        }
+    }
+
+    private static string ReplacePlaceholders(string text, IDictionary<string, string> replacements)
+    {
+        foreach (var (placeholder, replacement) in replacements)
+            text = text.Replace(placeholder, replacement);
+        return text;
+    }
+
+    private static void SetHintText(World world, Rom rom, PRNG prng)
+    {
+        var config = world.Config;
+        if (!config.EnableHints)
+        {
+            rom.SetText("sign_north_of_links_house", "Randomizer v32\nDo you See Sharp?\n>    -veetorp");
+            return;
+        }
+
+        var tiles = prng.Shuffle([.. YamlReader.LoadHintLocations(config.Language)]);
+        var hints = new Queue<(string Location, string[] Items)>();
+        var locationByItem = world.GetLocationsOfType(VertexType.Item)
+            .Where(v => v.Item != null)
+            .ToLookup(v => v.Item!.Name);
+        var jokeHints = YamlReader.LoadJokeHints(config.Language);
+        var itemHints = YamlReader.LoadHintsForItems(config.Language);
+        var locationHints = YamlReader.LoadHintsForLocations(config.Language);
+        var locationTemplates = YamlReader.LoadHintTemplates(config.Language);
+
+        // keysanity: hint for GT big key
+        if (config.RegionWildBigKeys)
+        {
+            var gtbkLocation = locationByItem["BigKeyA2"].FirstOrDefault();
+            if (gtbkLocation != null)
+                hints.Enqueue((prng.GetRandomElement(locationHints[gtbkLocation.Name]), [prng.GetRandomElement(itemHints[gtbkLocation.Item!.Name])]));
+        }
+
+        // don't waste a hint on boots if we already revealed them
+        if (!config.RevealBootsLocation)
+        {
+            var bootsLocation = locationByItem["PegasusBoots"].FirstOrDefault();
+            if (bootsLocation != null)
+                hints.Enqueue((prng.GetRandomElement(locationHints[bootsLocation.Name]), [prng.GetRandomElement(itemHints[bootsLocation.Item!.Name])]));
+        }
+
+        // add 5 location hints
+        var hintableLocations = prng.GetRandomElements(YamlReader.LoadHintableLocations(config.Language), 5);
+        foreach (var (location, subLocations) in hintableLocations)
+        {
+            // location is either an artificial location (group) that consists of many sub-locations;
+            // or, when no sub-locations exist, the key is a specific single location
+            var locationsToCheck = (subLocations ?? []).DefaultIfEmpty(location);
+            string[] items = [.. locationsToCheck.Select(l => world.GetLocation(l)?.Item?.Name).Where(i => !string.IsNullOrWhiteSpace(i))];
+
+            // no usable items? leave the spot empty for a joke hint later.
+            if (items.Length > 0)
+                hints.Enqueue((location, items));
+        }
+
+        // add at most 4 item hints (progression items, including big keys if keysanity)
+        // FIXME: what _are_ progression items at this point? the RandomAssumedFiller knows, but we don't.
+        var progressionLocations = prng.GetRandomElements(locationByItem, Math.Min(4, tiles.Length - hints.Count));
+        foreach (var itemAtLocations in progressionLocations)
+        {
+            // TODO: this biases hints to max one location per item; ie. no two different hints for different swords.
+            hints.Enqueue((prng.GetRandomElement(itemAtLocations).Name, [itemAtLocations.Key]));
+        }
+
+        // add [remainingTiles/2, remainingTiles) item hints (anything)
+        int remainingTiles = tiles.Length - hints.Count;
+        var randomItemLocations = prng.GetRandomElements(locationByItem, prng.GetRandomInt(remainingTiles / 2, remainingTiles));
+        foreach (var itemAtLocations in randomItemLocations)
+        {
+            // TODO: this biases hints to max one location per item; ie. no two different hints for different swords.
+            hints.Enqueue((prng.GetRandomElement(itemAtLocations).Name, [itemAtLocations.Key]));
+        }
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            string text;
+            if (hints.TryDequeue(out var locationItem))
+            {
+                var (location, items) = locationItem;
+                // resolve internal names to hinted names
+                items = [.. items.Select(item => prng.GetRandomElement(itemHints.GetValueOrDefault(item, [item])))];
+                location = prng.GetRandomElement(locationHints.GetValueOrDefault(location, [location]));
+
+                string singleOrLastItem = items.Last();
+                bool isPlural = singleOrLastItem.Contains("{PLURAL}");
+                bool noGlue = location.Contains("{NOGLUE}");
+                var replacements = new Dictionary<string, string>
+                {
+                    { "{LOCATION}", location },
+                    { "{ITEM}", singleOrLastItem },
+                    { "{ITEMS}", string.Join(", ", items[..^1]) },
+                    // special markers, not really a placeholder
+                    { "{PLURAL}", "" },
+                    { "{NOGLUE}", "" },
+                };
+                if (items.Length > 1)
+                    text = locationTemplates[noGlue ? "multipleNoGlue" : "multiple"];
+                else if (isPlural)
+                    text = locationTemplates[noGlue ? "singleNoGlue" : "singlePlural"];
+                else
+                    text = locationTemplates[noGlue ? "singleNoGlue" : "single"];
+
+                text = ReplacePlaceholders(text, replacements);
+            }
+            else
+            {
+                // fill the remainder with joke hints
+                // joke hints are colored, because why not.
+                text = "{C:GREEN}\n" + prng.GetRandomElement(jokeHints);
+            }
+            rom.SetText(tiles[i], text);
         }
     }
 

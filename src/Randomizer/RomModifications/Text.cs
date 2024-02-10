@@ -481,13 +481,14 @@ internal sealed class Text
         _texts = LoadTranslation(language);
     }
 
+    public static bool IsValidKey(string key) => _dialogOrder.Contains(key);
+
     /// <summary>Updates a specific string in the table, including encoding the string.</summary>
     /// <param name="id">The ID of the string to update</param>
     /// <param name="value">the string to add to the table</param>
     public void SetString(string id, string value, bool pause = true, int maxBytes = 2046, int wrap = 19)
     {
-        // TODO: should we be checking against _dialogOrder instead, since the data is keyed?
-        if (!_texts.ContainsKey(id))
+        if (!IsValidKey(id))
             throw new Exception($"Attempted to update a non-existant text id ({id}).");
 
         _texts[id] = _converter.ConvertDialogCompressed(value, pause, maxBytes, wrap);

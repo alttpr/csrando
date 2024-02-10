@@ -3,17 +3,37 @@
 # the Bomb Shoppe hint contains two placeholders that should be used:
 # - {CRYSTAL5}: the location of crystal 5
 # - {CRYSTAL6}: the location of crystal 6
-bomb_shop: |-
-  bring me the
+Crystal56Location: |-
+  Bring me the
   crystals from
   {CRYSTAL5}
   and
   {CRYSTAL6}
   so I can make
   a big bomb!
-# the Murahdahla hint contains one placeholder that should be used:
+# the Sahasrahla hint contains one placeholder that should be used:
+# - {GREEN_PENDANT}: the location of the green pendant
+GreenPendantLocation: |-
+  Want something
+  for free? Go
+  earn the green
+  pendant in
+  {GREEN_PENDANT}
+  and I'll give
+  you something.
+# the Murahdahla hints contain one placeholder that should be used:
 # - {TRIFORCE_PIECE_COUNT}: the number of triforce pieces required to finish
-murahdahla: |-
+TriforceHandInSingular: |-
+  Hello @. I
+  am Murahdahla, brother of
+  Sahasrahla and Aginah. Behold the power of
+  invisibility.
+  {PAUSE3}
+  … … …
+  Wait! you can see me? I knew I should have
+  hidden in  a hollow tree. If you bring
+  {TRIFORCE_PIECE_COUNT} triforce piece, I can reassemble it.
+TriforceHandInPlural: |-
   Hello @. I
   am Murahdahla, brother of
   Sahasrahla and Aginah. Behold the power of
@@ -23,13 +43,54 @@ murahdahla: |-
   Wait! you can see me? I knew I should have
   hidden in  a hollow tree. If you bring
   {TRIFORCE_PIECE_COUNT} triforce pieces, I can reassemble it.
-# the Sahasrahla hint contains one placeholder that should be used:
-# - {GREEN_PENDANT}: the location of the green pendant
-sahasrahla_bring_courage: |-
-  Want something
-  for free? Go
-  earn the green
-  pendant in
-  {GREEN_PENDANT}
-  and I'll give
-  you something.
+# the Silver Arrows location hint contains one placeholder that should be used:
+# - {SILVERS}: the location of the silver arrows
+GanonSilversLocation: |-
+  Did you find
+  the arrows in
+  {SILVERS}?
+# the Pyramid sign hint contains one placeholder that should be used:
+# - {GANON_COUNT}: the number of crystals needed to kill ganon
+GanonCrystalCountSingular: To beat Ganon you must collect {GANON_COUNT} Crystal and defeat his minion at the top of his tower.
+GanonCrystalCountPlural: To beat Ganon you must collect {GANON_COUNT} Crystals and defeat his minion at the top of his tower.
+FastGanonCrystalCountSingular: You need {GANON_COUNT} crystal to beat Ganon.
+FastGanonCrystalCountPlural: You need {GANON_COUNT} crystals to beat Ganon.
+# the Ganon's tower sign hint contains one placeholder that should be used:
+# - {TOWER_COUNT}: the number of crystals needed to enter the tower
+TowerCrystalCountSingular: You need {TOWER_COUNT} crystal to enter.
+TowerCrystalCountPlural: You need {TOWER_COUNT} crystals to enter.
+
+# the following hints do not have placeholders.
+
+# Pyramid sign hint text for non-crystal goals.
+GanonAllDungeons: You need to defeat all of Ganon's bosses.
+GanonTriforceHunt: Go find the Triforce pieces... Dingus!
+GanonPedestal: You need to get to the pedestal... Dingus!
+
+# Ganon Phase 3 text when he cannot be killed.
+UnkillableGanonNoGoal: |-
+  You think you
+  are ready to
+  face me?
+  I will not die
+  unless you
+  complete your
+  goals. Dingus!
+UnkillableGanonTriforceHunt: |-
+  So you thought
+  you could come
+  here and beat
+  me? I have
+  hidden the
+  Triforce
+  pieces well.
+  Without them,
+  you can't win!
+UnkillableGanonPedestal: |-
+  You cannot
+  kill me. You
+  should go for
+  your real goal
+  It's on the
+  pedestal.
+  You dingus!

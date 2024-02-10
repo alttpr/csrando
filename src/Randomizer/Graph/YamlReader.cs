@@ -174,13 +174,29 @@ public class YamlReader
     public static IReadOnlyDictionary<string, string> LoadCreditsForUncle(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "uncle.yml"));
     public static IReadOnlyDictionary<string, string> LoadCreditsForWitchHut(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "witch.yml"));
     public static IReadOnlyDictionary<string, string> LoadCreditsForZora(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "zora.yml"));
+    public static IReadOnlyDictionary<string, string> LoadHintTemplates(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "hints", "templates.yml"));
+    public static IReadOnlyDictionary<string, string[]> LoadHintsForLocations(string language) => LoadKeyedLocalizedListText(Path.Combine("text", language, "hints", "locations.yml"));
+    public static IReadOnlyDictionary<string, string[]> LoadHintsForItems(string language) => LoadKeyedLocalizedListText(Path.Combine("text", language, "hints", "items.yml"));
+    public static IReadOnlyDictionary<string, string[]> LoadHintableLocations(string language) => LoadKeyedLocalizedListText(Path.Combine("text", language, "hints", "hintable_locations.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintsForPedestal(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "pedestal.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintsForBombosTablet(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "bombos-tablet.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintsForEtherTablet(string language) => LoadKeyedLayeredLocalizedText(Path.Combine("text", language, "hints", "base.yml"), Path.Combine("text", language, "hints", "ether-tablet.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintsForProgression(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "hints", "progression.yml"));
+    public static IReadOnlyDictionary<string, string> LoadHintsForBoots(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "hints", "boots.yml"));
     public static IReadOnlyDictionary<string, string> LoadDialogText(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "dialog", "base.yml"));
     public static IReadOnlyDictionary<string, string> LoadDialogForInverted(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "dialog", "inverted.yml"));
     public static IReadOnlyDictionary<string, string> LoadDialogForMystery(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "dialog", "mystery.yml"));
+    public static IReadOnlyList<string> LoadJokeHints(string language) => LoadLocalizedText(Path.Combine("text", language, "hints", "jokes.yml"));
+    public static IReadOnlyList<string> LoadHintLocations(string language) => LoadLocalizedText(Path.Combine("text", language, "hints", "tiles.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForUncle(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "uncle.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForBlind(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "blind.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForFortuneTeller(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "fortune.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForGanonFallIn(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "ganon_fall_in.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForGanonPhase3NoSilvers(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "ganon_phase_3_no_silvers.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForGanonPhase3NoGoal(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "ganon_phase_3_alt.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForTavernMan(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "tavern_man.yml"));
+    public static IReadOnlyList<string> LoadRandomDialogForTriforce(string language) => LoadLocalizedText(Path.Combine("text", language, "dialog", "triforce.yml"));
+    public static IReadOnlyDictionary<string, string> LoadRegions(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "regions.yml"));
 
     private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyDictionary<string, string>> _keyedLocalizedText = new();
     public static IReadOnlyDictionary<string, string> LoadKeyedLocalizedText(string path) => _keyedLocalizedText.GetOrAdd(path, LoadKeyedText);
@@ -203,6 +219,24 @@ public class YamlReader
         var deserializer = new DeserializerBuilder().Build();
         return deserializer.Deserialize<Dictionary<string, string>>(reader) ?? [];
     }
+    private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyDictionary<string, string[]>> _keyedLocalizedListText = new();
+    public static IReadOnlyDictionary<string, string[]> LoadKeyedLocalizedListText(string path) => _keyedLocalizedListText.GetOrAdd(path, LoadKeyedListText);
+    private static IReadOnlyDictionary<string, string[]> LoadKeyedListText(string path)
+    {
+        string keyedTextYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
+        using var reader = File.OpenText(keyedTextYML);
+        var deserializer = new DeserializerBuilder().Build();
+        return deserializer.Deserialize<Dictionary<string, string[]>>(reader) ?? [];
+    }
+    private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyList<string>> _localizedText = new();
+    public static IReadOnlyList<string> LoadLocalizedText(string path) => _localizedText.GetOrAdd(path, LoadText);
+    private static IReadOnlyList<string> LoadText(string path)
+    {
+        string textYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
+        using var reader = File.OpenText(textYML);
+        var deserializer = new DeserializerBuilder().Build();
+        return deserializer.Deserialize<List<string>>(reader) ?? [];
+}
 }
 public class YamlItem
 {

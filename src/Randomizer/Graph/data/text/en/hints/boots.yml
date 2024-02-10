@@ -1,0 +1,31 @@
+# this file contains boots reveal hints when playing Stardard mode.
+
+# the generic Boots Location hint contains one placeholders that should be used:
+# - {BOOTS}: the location of the boots
+BootsLocation: |-
+  Lonk! Boots
+  are in the
+  {BOOTS}
+BootsStart: |-
+  Lonk! Boots
+  are on
+  your feet.
+NoBoots: |-
+  I couldn't
+  find the Boots
+  today.
+  RIP me.
+# anything that follows is a location specific hint.
+# they are used when the item "PegasusBoots" is found on the named location.
+Link's House: |-
+  Lonk!
+  You'll never
+  find the boots.
+Link's Uncle: |-
+  Ganon offered
+  me the Boots.
+  Time to run!
+Maze Race: |-
+  Boots at race?
+  Seed confirmed
+  impossible.

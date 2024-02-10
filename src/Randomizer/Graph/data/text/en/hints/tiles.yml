@@ -1,0 +1,23 @@
+# list of hint tile locations (which need not be tiles)
+
+- telepathic_tile_castle_tower
+- telepathic_tile_desert_bonk_torch_room
+- telepathic_tile_eastern_palace
+- telepathic_tile_ice_entrace
+- telepathic_tile_ice_large_room
+- telepathic_tile_ice_stalfos_knights_room
+- telepathic_tile_misery_mire
+- telepathic_tile_palace_of_darkness
+- telepathic_tile_south_east_darkworld_cave
+- telepathic_tile_spectacle_rock
+- telepathic_tile_swamp_entrance
+- telepathic_tile_thieves_town_upstairs
+- telepathic_tile_tower_of_hera_entrance
+- telepathic_tile_tower_of_hera_floor_4
+- telepathic_tile_turtle_rock
+# additional ones that door rando adds
+- dark_palace_tree_dude
+- dark_sanctuary_hint_0
+- dark_sanctuary_hint_1
+- dark_sanctuary_hint_2
+- dark_sanctuary_yes
