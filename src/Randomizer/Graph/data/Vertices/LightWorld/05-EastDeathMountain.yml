@@ -32,7 +32,7 @@ maps:
               - "East Death Mountain Hookshot Bridge"
             TitansMitt:
               - "East Death Mountain Running Man's Tail"
-            ConfigWorldStateNormal:
+            ConfigWorldStateStandard:
               - "East Death Mountain Running Man Normal Portal"
             ConfigWorldStateOpen:
               - "East Death Mountain Running Man Normal Portal"

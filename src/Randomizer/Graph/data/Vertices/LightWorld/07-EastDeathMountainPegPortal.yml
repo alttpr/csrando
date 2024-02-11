@@ -33,7 +33,7 @@ maps:
 
         - name: "East Death Mountain Peg Portal Top"
           connections:
-            ConfigWorldStateNormal:
+            ConfigWorldStateStandard:
               - "East Death Mountain Peg Portal Top Puzzle"
             ConfigWorldStateOpen:
               - "East Death Mountain Peg Portal Top Puzzle"

@@ -197,7 +197,7 @@ maps:
           connections:
             fixed:
               - "Desert"
-            ConfigWorldStateNormal:
+            ConfigWorldStateStandard:
               - "Desert Rocks Ledge Normal Portal"
             ConfigWorldStateOpen:
               - "Desert Rocks Ledge Normal Portal"

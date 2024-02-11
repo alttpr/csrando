@@ -159,7 +159,7 @@ maps:
           connections:
             Flippers:
               - "Lake Hylia"
-            ConfigWorldStateNormal:
+            ConfigWorldStateStandard:
               - "Lake Hylia Fairy Island Normal Portal"
             ConfigWorldStateOpen:
               - "Lake Hylia Fairy Island Normal Portal"

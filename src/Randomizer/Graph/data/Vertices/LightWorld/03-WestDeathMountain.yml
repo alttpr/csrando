@@ -10,7 +10,7 @@ maps:
             # Portal
             ConfigWorldStateOpen:
               - "West Dark Death Mountain"
-            ConfigWorldStateNormal:
+            ConfigWorldStateStandard:
               - "West Dark Death Mountain"
           entrances:
             - name: "Spectacle Rock Cave Top"
