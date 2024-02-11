@@ -335,10 +335,9 @@ public static class RomWriter
         var crystal5 = locationByPrize.GetValueOrDefault("Crystal5", null!);
         var crystal6 = locationByPrize.GetValueOrDefault("Crystal6", null!);
 
-        // TODO: this only works because of our naming convention "Region - Location"; we probably want something more stable.
-        string greenPendantLocation = greenPendant?.Name.Split(" - ").FirstOrDefault() ?? "Wrecked Ship";
-        string crystal5Location = crystal5?.Name.Split(" - ").FirstOrDefault() ?? "Tourian";
-        string crystal6Location = crystal6?.Name.Split(" - ").FirstOrDefault() ?? "Norfair";
+        string greenPendantLocation = greenPendant?.GetRegion(config.Language) ?? "Wrecked Ship";
+        string crystal5Location = crystal5?.GetRegion(config.Language) ?? "Tourian";
+        string crystal6Location = crystal6?.GetRegion(config.Language) ?? "Norfair";
 
         rom.SetText("sahasrahla_bring_courage", $"Want something\nfor free? Go\nearn the green\npendant in\n{greenPendantLocation}\nand I'll give\nyou something.");
         rom.SetText("bomb_shop", $"bring me the\ncrystals from\n{crystal5Location}\nand\n{crystal6Location}\nso I can make\na big bomb!");

@@ -71,6 +71,24 @@ internal static class RomModificationExtensions
         0x00A4 => Dungeon.TurtleRock, // turtle rock
         _ => Dungeon.None,
     };
+
+    [return: NotNullIfNotNull(nameof(vertex))]
+    internal static string? GetRegion(this Vertex? vertex, string language)
+    {
+        if (vertex == null)
+            return null;
+
+        _ = language;
+        if (!vertex.Name.Contains(" - "))
+        {
+            if (vertex.MoonPearl == true)
+                return vertex.World.Config.State == StateOption.Inverted ? "Light World" : "Dark World";
+            else
+                return vertex.World.Config.State == StateOption.Inverted ? "Dark World" : "Light World";
+        }
+        // TODO: this only works because of our naming convention "Region - Location"; we probably want something more stable (using the passed language).
+        return vertex.Name.Split(" - ")[0];
+    }
 }
 
 // TODO: this (and associated methods) should be data, get rid of those.
