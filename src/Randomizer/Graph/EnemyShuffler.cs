@@ -365,3 +365,296 @@ internal sealed class EnemyShuffler : IWorldModifier
         }
     }
 }
+
+/*
+    // remove this and use the same alg for UW enemies
+    const OW_MAP_SHEETS = [
+        0x02 => [0x0F, null, 0x4A, null],
+        0x03 => [null, null, 0x12, 0x10],
+        0x14 => [0x0E, null, null, null],
+        0x18 => [0x4F, 0x49, 0x4A, 0x50],
+        0x1B => [null, null, null, 0x1D],
+        0x30 => [null, null, 0x12, null],
+        0x3A => [null, null, null, 0x11], // this should be handled?
+        0x4F => [null, null, 0x18, null],
+        0x5E => [null, null, null, 0x19],
+    ];
+
+    private readonly array $defeats;
+    private readonly array $challenge_enemies;
+    private readonly array $no_place_sprites;
+
+    public function __construct(private World $world)
+    {
+        $this->defeats = Yaml::parse(file_get_contents(app_path('Graph/data/Enemizer/enemies.yml'))) ?? [];
+        $this->challenge_enemies = Yaml::parse(file_get_contents(app_path('Graph/data/Enemizer/challenge.yml'))) ?? [];
+        $this->no_place_sprites = Yaml::parse(file_get_contents(app_path('Graph/data/Enemizer/noplace.yml'))) ?? [];
+
+        $world_id = $this->world->id;
+        foreach (array_keys($this->defeats) as $token) {
+            $this->world->graph->newVertex([
+                'name' => "$token:$world_id",
+                'type' => 'meta',
+                'item' => Item::get($token, $world_id),
+            ]);
+        }
+
+        $enemies = $world->getLocationsOfType('mob');
+
+        $enemy_rooms = $enemies->groupBy(fn ($enemy) => $enemy->roomid);
+        $enemy_ows = $enemies->groupBy(fn ($enemy) => $enemy->map);
+
+        // Set up sprite sheets
+        $sheetable_sprites = Sprite::all()->filter(
+            fn ($s) => count(array_filter($s->sheets, fn ($v) => $v !== null)) !== 0
+        );
+        // sprites that can be moved to any room as they don't have any sheet
+        // requirements
+        $nosheet_sprites = Sprite::all()->filter(
+            fn ($s) => count(array_filter($s->sheets, fn ($v) => $v !== null)) === 0
+                && !in_array($s->name, $this->no_place_sprites)
+        )->all();
+
+        $sheet_sets = array_fill(0, 124, [null, null, null, null]);
+        $sheets_to_sprites = array_fill(0, 124, $nosheet_sprites);
+
+        $room_sheets = [];
+        $ow_sheets = [];
+
+        // deal with OW required sheet sets ($j carries over to next block, it's
+        // important for filling the array properly)
+        $j = 0;
+        foreach (self::OW_MAP_SHEETS as $map => $ow_set) {
+            $ow_sheets[$map] = $j;
+            $sheet_sets[$j] = $ow_set;
+            $j++;
+        }
+
+        if ($world->config('enemizer.enemyShuffle') === 'none') {
+            for ($i = 0; $i < 0x80; $i++) {
+                if (!isset($enemy_ows[$i]) || count($enemy_ows[$i]) === 0) {
+                    $ow_sheets[$i] = 0xFF;
+                    continue;
+                }
+                if (!isset($ow_sheets[$i])) {
+                    $fixed_set = [];
+                    $enemies = $enemy_ows[$i]->map(fn ($e) => $e->sprite)->all();
+                    foreach ($enemies as $sprite) {
+                        $filtered_sprite = array_filter($sprite->sheets, fn ($v) => $v !== null);
+                        $filtered_set = array_filter($fixed_set, fn ($v) => $v !== null);
+                        $fixed_set = array_replace([null, null, null, null], $filtered_set, $filtered_sprite);
+                    }
+                    if (empty(array_filter($fixed_set, fn ($v) => $v !== null))) {
+                        continue;
+                    }
+                    for ($k = 0; $k < $j; ++$k) {
+                        if (
+                            ($fixed_set[0] === null || $sheet_sets[$k][0] === $fixed_set[0])
+                            && ($fixed_set[1] === null || $sheet_sets[$k][1] === $fixed_set[1])
+                            && ($fixed_set[2] === null || $sheet_sets[$k][2] === $fixed_set[2])
+                            && ($fixed_set[3] === null || $sheet_sets[$k][3] === $fixed_set[3])
+                        ) {
+                            $ow_sheets[$i] = $k;
+                            continue 2;
+                        }
+                    }
+                    $sheet_sets[$j] = $fixed_set;
+                    $ow_sheets[$i] = $j;
+                    ++$j;
+                }
+            }
+        }
+
+        // force fixed room sets! If we have a few "no move" sprites in a room
+        // we need to guarantee that a sheet set exists for that room to look
+        // correct.
+        for ($i = 0; $i < 0x180; $i++) {
+            if (!isset($enemy_rooms[$i]) || count($enemy_rooms[$i]) === 0) {
+                continue;
+            }
+            $filtered = $enemy_rooms[$i]->filter(
+                fn ($e) => $world->config('enemizer.enemyShuffle') === 'none'
+                    || in_array($e->sprite->name, $this->no_place_sprites)
+            );
+            if (count($filtered) === 0) {
+                continue;
+            }
+            $fixed_set = [];
+            $enemies = $filtered->map(fn ($e) => $e->sprite)->all();
+            foreach ($enemies as $sprite) {
+                $filtered_sprite = array_filter($sprite->sheets, fn ($v) => $v !== null);
+                $filtered_set = array_filter($fixed_set, fn ($v) => $v !== null);
+                $fixed_set = array_replace([null, null, null, null], $filtered_set, $filtered_sprite);
+            }
+            if (empty(array_filter($fixed_set, fn ($v) => $v !== null))) {
+                continue;
+            }
+            // potential bug here where fixed set is full, we may end up making 2+ copies in table
+            if ($world->config('enemizer.enemyShuffle') === 'none' || get_random_int(0, 1)) {
+                for ($k = 0; $k < $j; ++$k) {
+                    if (
+                        ($fixed_set[0] === null || $sheet_sets[$k][0] === $fixed_set[0])
+                        && ($fixed_set[1] === null || $sheet_sets[$k][1] === $fixed_set[1])
+                        && ($fixed_set[2] === null || $sheet_sets[$k][2] === $fixed_set[2])
+                        && ($fixed_set[3] === null || $sheet_sets[$k][3] === $fixed_set[3])
+                    ) {
+                        $room_sheets[$i] = $k;
+                        continue 2;
+                    }
+                }
+            }
+            $sheet_sets[$j] = $fixed_set;
+            $room_sheets[$i] = $j;
+            ++$j;
+        }
+
+        // fill in all sheet sets with valid layouts for sprites
+        for ($i = 0; $i < 124; ++$i) {
+            while (in_array(null, $sheet_sets[$i], true)) {
+                $sprite = $sheetable_sprites->random();
+                if (
+                    ($sprite->sheets[0] === null || $sheet_sets[$i][0] === null)
+                    && ($sprite->sheets[1] === null || $sheet_sets[$i][1] === null)
+                    && ($sprite->sheets[2] === null || $sheet_sets[$i][2] === null)
+                    && ($sprite->sheets[3] === null || $sheet_sets[$i][3] === null)
+                ) {
+                    $filtered_sprite = array_filter($sprite->sheets, fn ($v) => $v !== null);
+                    $filtered_set = array_filter($sheet_sets[$i], fn ($v) => $v !== null);
+                    $sheet_sets[$i] = array_replace([null, null, null, null], $filtered_set, $filtered_sprite);
+                }
+            }
+        }
+
+        // find all the sprites that can be placed validly with a particular sheet set.
+        foreach ($sheetable_sprites as $sprite) {
+            foreach ($sheet_sets as $i => $set) {
+                if (
+                    $world->config('enemizer.enemyShuffle') !== 'none'
+                    && ($sprite->sheets[0] === null || $set[0] === $sprite->sheets[0])
+                    && ($sprite->sheets[1] === null || $set[1] === $sprite->sheets[1])
+                    && ($sprite->sheets[2] === null || $set[2] === $sprite->sheets[2])
+                    && ($sprite->sheets[3] === null || $set[3] === $sprite->sheets[3])
+                    && !in_array($sprite->name, $this->no_place_sprites)
+                ) {
+                    $sheets_to_sprites[$i][$sprite->name] = $sprite;
+                }
+            }
+        }
+
+        $all_challenge_enemies = array_map(fn ($e) => "$e:{$this->world->id}", Arr::flatten(self::CHALLENGE_ROOMS));
+        for ($i = 0; $i < 0x180; $i++) {
+            if (!isset($enemy_rooms[$i]) || count($enemy_rooms[$i]) === 0) {
+                $room_sheets[$i] = 0x00;
+                continue;
+            }
+            if (!isset($room_sheets[$i])) {
+                do {
+                    $sheet = get_random_key($sheets_to_sprites);
+                } while (count($sheets_to_sprites[$sheet]) === 0);
+                $room_sheets[$i] = $sheet;
+            }
+            $sheet = $room_sheets[$i];
+            $filtered_placable = $enemy_rooms[$i]->filter(
+                fn ($e) => $world->config('enemizer.enemyShuffle') !== 'none'
+                    && !in_array($e->sprite->name, $this->no_place_sprites)
+            );
+            if (count($filtered_placable) === 0) {
+                continue;
+            }
+            foreach ($filtered_placable as $enemy) {
+                if (in_array($enemy->name, $all_challenge_enemies)) {
+                    $new = get_random_element(array_filter(
+                        $sheets_to_sprites[$sheet],
+                        fn ($sprite) => in_array($sprite->name, $this->challenge_enemies)
+                    ));
+                    if (!$new) {
+                        throw new Exception('ugh');
+                    }
+                } else {
+                    $new = get_random_element($sheets_to_sprites[$sheet]);
+                }
+                Log::debug(vsprintf('%s: placing %s', [
+                    $enemy->name,
+                    $new->getNiceName(),
+                ]));
+                $enemy->sprite = $new;
+            }
+        }
+
+        for ($i = 0; $i < 0x80; $i++) {
+            if (!isset($enemy_ows[$i]) || count($enemy_ows[$i]) === 0) {
+                $ow_sheets[$i] = 0xFF;
+                continue;
+            }
+            if (!isset($ow_sheets[$i])) {
+                do {
+                    $sheet = get_random_key($sheets_to_sprites);
+                } while (count($sheets_to_sprites[$sheet]) === 0);
+                $ow_sheets[$i] = $sheet;
+            }
+            $sheet = $ow_sheets[$i];
+            $filtered_placable = $enemy_ows[$i]->filter(
+                fn ($e) => $world->config('enemizer.enemyShuffle') !== 'none'
+                    && !in_array($e->sprite->name, $this->no_place_sprites)
+            );
+            if (count($filtered_placable) === 0) {
+                continue;
+            }
+            foreach ($filtered_placable as $enemy) {
+                $new = get_random_element($sheets_to_sprites[$sheet]);
+                Log::debug(vsprintf('%s: placing %s', [
+                    $enemy->name,
+                    $new->getNiceName(),
+                ]));
+                $enemy->sprite = $new;
+            }
+        }
+        ksort($ow_sheets);
+        $ow_sheets = array_merge(
+            array_slice($ow_sheets, 0, 0x40),
+            array_slice($ow_sheets, 0, 0x40),
+            array_slice($ow_sheets, 0, 0x40),
+            array_slice($ow_sheets, 0x40, 0x80),
+        );
+
+        // pick random sheets where we have options
+        $sheet_sets = array_map(
+            fn ($set) => array_map(
+                fn ($sheet) => is_array($sheet) ? get_random_element($sheet) : $sheet,
+                $set
+            ),
+            $sheet_sets
+        );
+
+        $world->sprite_sheets = [
+            'underworld' => array_map(fn ($s) => $s - 0x40, $room_sheets),
+            'overworld' => $ow_sheets,
+            'sets' => $sheet_sets,
+        ];
+    }
+
+    public function adjustEdges(): void
+    {
+        $from = $this->world->getLocation('Meta');
+        $world_id = $this->world->id;
+        foreach ($this->defeats as $token => $items) {
+            $to = $this->world->graph->getVertex($token . ":$world_id");
+            foreach ($items as $item) {
+                $this->world->graph->addDirected($from, $to, "$item:$world_id");
+            }
+        }
+
+        foreach (self::CHALLENGE_ROOMS as $room => $enemies) {
+            $from = $this->world->getLocation($room);
+            foreach ($enemies as $enemy) {
+                $to = $this->world->getLocation($enemy);
+                if (!$to) {
+                    dd([$enemy, $to]);
+                }
+                $take = 'Defeat' . $to->sprite->name . ":$world_id";
+                $this->world->graph->addDirected($from, $to, $take);
+            }
+        }
+    }
+}
+*/
