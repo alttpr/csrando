@@ -45,7 +45,7 @@ public class WorldConfig
 
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
-    public StateOption State { get; init; } = StateOption.Standard;
+    public StateOption State { get; init; } = StateOption.Open;
 
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
@@ -97,7 +97,7 @@ public class WorldConfig
     public bool SilversOnlyAtGanon { get; init; } = false;
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
-    public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
+    public GoalIconOption GoalIcon { get; init; } = GoalIconOption.None;
     public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
@@ -135,7 +135,7 @@ public enum EnemyHealthOption { Default, Easy, Medium, Hard, Expert }
 public enum HeartColorOption { Red, Blue, Green, Yellow, Random }
 public enum HeartBeepSpeedOption { Off = 0x00, Double = 0x10, Normal = 0x20, Half = 0x40, Quarter = 0x80 }
 public enum MenuSpeedOption { Slow = 0x04, Normal = 0x08, Fast = 0x10, Instant = 0xE8 }
-public enum GoalIconOption { Triforce, Star }
+public enum GoalIconOption { None, Triforce, Star }
 public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }

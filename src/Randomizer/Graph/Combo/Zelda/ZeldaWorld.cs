@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
+using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
 internal class ZeldaWorld
 {
@@ -99,157 +100,76 @@ internal class ZeldaWorld
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Meta - Meta"), world.GetItem("fixed"));
     }
 
-    public static ItemSet GetItemSet(World world)
+    public static PooledItem[] GetItemSet(World world)
     {
-        return new ItemSet
-        {
-            //{
-            //    new ItemSetName("z1triforce", world), new WeightedSet
-            //    {
-            //        { 1, [.. Enumerable.Repeat(world.GetItem("Z1Triforce"), 8)] }
-            //    }
-            //},
-            { new ItemSetName("z1d1", world), new WeightedSet
-                {
-                    { 1, 
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d2", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 3),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d3", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d4", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 3),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d5", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 5),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d6", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d7", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 3),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d8", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 4),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("z1d9", world), new WeightedSet
-                {
-                    { 1,
-                        [
-                            world.GetItem("Z1Map", Game.Zelda),
-                            world.GetItem("Z1Compass", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 2),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("lw", world), new WeightedSet
-                {
-                    { 4, [world.GetItem("Z1SwordL1", Game.Zelda)] }
-                }
-            },
-            { ItemSetName.DefaultSet, new WeightedSet
-                {
-                    { 3, [
-                            world.GetItem("Z1Bombs", Game.Zelda),
-                            world.GetItem("Z1StepLadder", Game.Zelda),
-                            world.GetItem("Z1Raft", Game.Zelda),
-                            world.GetItem("Z1Recorder", Game.Zelda),                            
-                            world.GetItem("Z1SwordL2", Game.Zelda),
-                            world.GetItem("Z1SwordL3", Game.Zelda),
-                            world.GetItem("Z1BlueCandle", Game.Zelda),
-                            world.GetItem("Z1RedCandle", Game.Zelda),
-                            world.GetItem("Z1SilverArrows", Game.Zelda),
-                            world.GetItem("Z1Bow", Game.Zelda),
-                            world.GetItem("Z1Arrows", Game.Zelda),
-                            world.GetItem("Z1MagicalKey", Game.Zelda),
-                            world.GetItem("Z1Rod", Game.Zelda),
-                            world.GetItem("Z1Book", Game.Zelda),
-                            world.GetItem("Z1BlueRing", Game.Zelda),
-                            world.GetItem("Z1RedRing", Game.Zelda),
-                            world.GetItem("Z1PowerBracelet", Game.Zelda),
-                            world.GetItem("Z1Letter", Game.Zelda),
-                            world.GetItem("Z1MagicShield", Game.Zelda),
-                            world.GetItem("Z1Boomerang", Game.Zelda),
-                            world.GetItem("Z1MagicBoomerang", Game.Zelda),
-                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer", Game.Zelda), 9),
-                        ]
-                    },
-                    { 9001, [
-                            .. Enumerable.Repeat(world.GetItem("Z1HeartContainer", Game.Zelda), 4),
-                            .. Enumerable.Repeat(world.GetItem("Z1Bombs", Game.Zelda), 20),
-                            .. Enumerable.Repeat(world.GetItem("Z1Key", Game.Zelda), 9),
-                            .. Enumerable.Repeat(world.GetItem("Z1Rupee", Game.Zelda), 6),
-                            .. Enumerable.Repeat(world.GetItem("Z1Rupee5", Game.Zelda), 10),
-                        ]
-                    }
-                }
-            }
-        };
+        return
+        [
+            new PooledItem(new ItemSetName("z1d1", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d1", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d1", world), 1, world.GetItem("Z1Key", Game.Zelda)), 4),
+
+            new PooledItem(new ItemSetName("z1d2", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d2", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d2", world), 1, world.GetItem("Z1Key", Game.Zelda)), 3),
+
+            new PooledItem(new ItemSetName("z1d3", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d3", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d3", world), 1, world.GetItem("Z1Key", Game.Zelda)), 4),
+
+            new PooledItem(new ItemSetName("z1d4", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d4", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d4", world), 1, world.GetItem("Z1Key", Game.Zelda)), 3),
+
+            new PooledItem(new ItemSetName("z1d5", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d5", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d5", world), 1, world.GetItem("Z1Key", Game.Zelda)), 5),
+
+            new PooledItem(new ItemSetName("z1d6", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d6", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d6", world), 1, world.GetItem("Z1Key", Game.Zelda)), 4),
+
+            new PooledItem(new ItemSetName("z1d7", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d7", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d7", world), 1, world.GetItem("Z1Key", Game.Zelda)), 3),
+
+            new PooledItem(new ItemSetName("z1d8", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d8", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d8", world), 1, world.GetItem("Z1Key", Game.Zelda)), 4),
+
+            new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Z1Map", Game.Zelda)),
+            new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Z1Key", Game.Zelda)), 2),
+
+            new PooledItem(new ItemSetName("lw", world), 4, world.GetItem("Z1SwordL1", Game.Zelda)),
+
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Bombs", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1StepLadder", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Raft", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Recorder", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1SwordL2", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1SwordL3", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1BlueCandle", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1RedCandle", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1SilverArrows", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Bow", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Arrows", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1MagicalKey", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Rod", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Book", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1BlueRing", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1RedRing", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1PowerBracelet", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Letter", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1MagicShield", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Boomerang", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1MagicBoomerang", Game.Zelda)),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1HeartContainer", Game.Zelda)), 9),
+
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Z1HeartContainer", Game.Zelda)), 4),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Z1Bombs", Game.Zelda)), 20),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Z1Key", Game.Zelda)), 9),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Z1Rupee", Game.Zelda)), 6),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Z1Rupee5", Game.Zelda)), 11),
+        ];
     }
 }

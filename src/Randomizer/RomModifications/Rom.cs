@@ -251,13 +251,16 @@ public sealed class Rom : IDisposable
     /// <summary>Set the goal item icon</summary>
     public void SetGoalIcon(GoalIconOption goalIcon = GoalIconOption.Triforce)
     {
-        ReadOnlySpan<byte> bytes = goalIcon switch
+        if (goalIcon != GoalIconOption.None)
         {
-            GoalIconOption.Triforce => [0x0E, 0x28],
-            // GoalIconOption.Star
-            _ => [0x0D, 0x28],
-        };
-        Write(0x180165, bytes);
+            ReadOnlySpan<byte> bytes = goalIcon switch
+            {
+                GoalIconOption.Triforce => [0x0E, 0x28],
+                // GoalIconOption.Star
+                _ => [0x0D, 0x28],
+            };
+            Write(0x180165, bytes);
+        }
     }
 
     /// <summary>Set Progressive Sword limit and item after limit is reached</summary>

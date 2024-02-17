@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
+using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
 internal class MetroidWorld
 {
@@ -106,37 +107,25 @@ internal class MetroidWorld
 
     }
 
-    public static ItemSet GetItemSet(World world)
+    public static PooledItem[] GetItemSet(World world)
     {
-        return new ItemSet
-        {
-            { ItemSetName.DefaultSet, new WeightedSet
-                {
-                    { 3, [
-                            world.GetItem("M1Bombs", Game.Metroid),
-                            world.GetItem("M1Varia", Game.Metroid),
-                            world.GetItem("M1HiJump", Game.Metroid),
-                            world.GetItem("M1IceBeam", Game.Metroid),
-                            world.GetItem("M1LongBeam", Game.Metroid),
-                            world.GetItem("M1WaveBeam", Game.Metroid),
-                            world.GetItem("M1ScrewAttack", Game.Metroid),
-                            world.GetItem("M1EnergyTank", Game.Metroid),
-                            world.GetItem("M1Missile", Game.Metroid),
-                        ]
-                    },
-                    { 9001, [
-                            .. Enumerable.Repeat(world.GetItem("M1Missile", Game.Metroid), 20),
-                            .. Enumerable.Repeat(world.GetItem("M1EnergyTank", Game.Metroid), 7),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("lw", world), new WeightedSet
-                {
-                    { 4, [ world.GetItem("M1Morph", Game.Metroid)] }                            
-                }
-            }
-        };
+        return 
+        [
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1Bombs", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1Varia", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1HiJump", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1IceBeam", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1LongBeam", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1WaveBeam", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1ScrewAttack", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1EnergyTank", Game.Metroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("M1Missile", Game.Metroid)),
+            
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("M1Missile", Game.Metroid)), 20),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("M1EnergyTank", Game.Metroid)), 6),
+
+            new PooledItem(new ItemSetName("lw", world), 4, world.GetItem("M1Morph", Game.Metroid))
+        ];
     }
 
     private static readonly Dictionary<(int, int), int> CoordToAddressMap = new()

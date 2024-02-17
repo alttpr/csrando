@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
+using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
 
 // Represents a complex requirement for an edge
@@ -424,50 +425,40 @@ internal class SMWorld
         }
     }
 
-    public static ItemSet GetItemSet(World world)
+    public static PooledItem[] GetItemSet(World world)
     {
-        return new ItemSet
-        {
-            { ItemSetName.DefaultSet, new WeightedSet
-                {
-                    { 3, [
-                            world.GetItem("SMBombs", Game.SuperMetroid),
-                            world.GetItem("SMVaria", Game.SuperMetroid),
-                            world.GetItem("SMGravity", Game.SuperMetroid),
-                            world.GetItem("SMCharge", Game.SuperMetroid),
-                            world.GetItem("SMIce", Game.SuperMetroid),
-                            world.GetItem("SMWave", Game.SuperMetroid),
-                            world.GetItem("SMPlasma", Game.SuperMetroid),
-                            world.GetItem("SMSpazer", Game.SuperMetroid),
-                            world.GetItem("SMXRayScope", Game.SuperMetroid),
-                            world.GetItem("SMGrapple", Game.SuperMetroid),
-                            world.GetItem("SMSpringBall", Game.SuperMetroid),
-                            world.GetItem("SMScrewAttack", Game.SuperMetroid),
-                            world.GetItem("SMHiJump", Game.SuperMetroid),
-                            world.GetItem("SMSpaceJump", Game.SuperMetroid),
-                            world.GetItem("SMSpeedBooster", Game.SuperMetroid),
-                            .. Enumerable.Repeat(world.GetItem("SMPowerBomb", Game.SuperMetroid), 3),
-                            .. Enumerable.Repeat(world.GetItem("SMSuper", Game.SuperMetroid), 3),
-                            .. Enumerable.Repeat(world.GetItem("SMMissile", Game.SuperMetroid), 8),
-                            .. Enumerable.Repeat(world.GetItem("SMETank", Game.SuperMetroid), 5),
-                            .. Enumerable.Repeat(world.GetItem("SMReserveTank", Game.SuperMetroid), 4)
+        return
+        [
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMBombs", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMVaria", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMGravity", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMCharge", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMIce", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMWave", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMPlasma", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMSpazer", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMXRayScope", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMGrapple", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMSpringBall", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMScrewAttack", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMHiJump", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMSpaceJump", Game.SuperMetroid)),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMSpeedBooster", Game.SuperMetroid)),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMPowerBomb", Game.SuperMetroid)), 3),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMSuper", Game.SuperMetroid)), 3),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMMissile", Game.SuperMetroid)), 8),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMETank", Game.SuperMetroid)), 5),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMReserveTank", Game.SuperMetroid)), 4),
 
-                        ]
-                    },
-                    { 9001, [
-                            .. Enumerable.Repeat(world.GetItem("SMMissile", Game.SuperMetroid), 32),
-                            .. Enumerable.Repeat(world.GetItem("SMSuper", Game.SuperMetroid), 12),
-                            .. Enumerable.Repeat(world.GetItem("SMPowerBomb", Game.SuperMetroid), 7),
-                            .. Enumerable.Repeat(world.GetItem("SMETank", Game.SuperMetroid), 9),
-                        ]
-                    }
-                }
-            },
-            { new ItemSetName("lw", world), new WeightedSet
-                {
-                    { 4, [ world.GetItem("SMMorph", Game.SuperMetroid)] }
-                }
-            }
-        };
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("SMMissile", Game.SuperMetroid)), 32),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("SMSuper", Game.SuperMetroid)), 12),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("SMPowerBomb", Game.SuperMetroid)), 7),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("SMETank", Game.SuperMetroid)), 9),
+
+            new PooledItem(new ItemSetName("lw", world), 4, world.GetItem("SMMorph", Game.SuperMetroid))
+
+
+        ];
+
     }
 }

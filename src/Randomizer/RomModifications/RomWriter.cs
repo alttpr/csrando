@@ -79,8 +79,12 @@ public static class RomWriter
         if (config.State == StateOption.Standard)
             SetEscapeFills(world, rom);
 
-        rom.SetGoalRequiredCount(config.GoalRequiredCount); //item.Goal.Required
-        rom.SetGoalIcon(config.GoalIcon); //item.Goal.Icon
+        if(world.Config.Goal == GoalOption.TriforceHunt)
+        {
+            rom.SetGoalRequiredCount(config.GoalRequiredCount); //item.Goal.Required
+            rom.SetGoalIcon(config.GoalIcon); //item.Goal.Icon
+
+        }
 
         // Set item functionality settings
         rom.SetCaneOfByrnaSpikeCaveUsage();

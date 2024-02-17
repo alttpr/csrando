@@ -74,8 +74,13 @@ internal sealed class ItemPooler
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Flippers")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("FireRod")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("IceRod")),
-            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveBow")),
-            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveBow")),
+            //new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveBow")),
+            //new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveBow")),
+
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Bow")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SilverArrowUpgrade")),
+
+
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveSword")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveSword")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ProgressiveShield")),
