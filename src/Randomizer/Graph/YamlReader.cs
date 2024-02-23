@@ -174,6 +174,14 @@ public class YamlReader
     public static IReadOnlyDictionary<string, string> LoadCreditsForUncle(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "uncle.yml"));
     public static IReadOnlyDictionary<string, string> LoadCreditsForWitchHut(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "witch.yml"));
     public static IReadOnlyDictionary<string, string> LoadCreditsForZora(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "zora.yml"));
+    public static IReadOnlyList<string> LoadCreditsForDMBridge(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "bridge.yml"));
+    public static IReadOnlyList<string> LoadCreditsForHyruleCastle(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "castle.yml"));
+    public static IReadOnlyList<string> LoadCreditsForKakariko(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "kakariko.yml"));
+    public static IReadOnlyList<string> LoadCreditsForLumberjacks(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "lumberjacks.yml"));
+    public static IReadOnlyList<string> LoadCreditsForSanctuary(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "sanctuary.yml"));
+    public static IReadOnlyList<string> LoadCreditsForSmithy(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "smithy.yml"));
+    public static IReadOnlyList<string> LoadCreditsForFairyWell(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "well.yml"));
+    public static IReadOnlyList<string> LoadCreditsForLostWoods(string language) => LoadLocalizedText(Path.Combine("text", language, "credits", "woods.yml"));
     public static IReadOnlyDictionary<string, string> LoadHintTemplates(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "hints", "templates.yml"));
     public static IReadOnlyDictionary<string, string[]> LoadHintsForLocations(string language) => LoadKeyedLocalizedListText(Path.Combine("text", language, "hints", "locations.yml"));
     public static IReadOnlyDictionary<string, string[]> LoadHintsForItems(string language) => LoadKeyedLocalizedListText(Path.Combine("text", language, "hints", "items.yml"));

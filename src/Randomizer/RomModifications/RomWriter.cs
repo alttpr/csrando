@@ -208,6 +208,7 @@ public static class RomWriter
 
         SetProgressionText(world, rom, prng);
         SetHintText(world, rom, prng);
+        SetCreditsText(world, rom, prng);
 
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
@@ -600,6 +601,18 @@ public static class RomWriter
             }
             rom.SetText(tiles[i], text);
         }
+    }
+    private static void SetCreditsText(World world, Rom rom, PRNG prng)
+    {
+        var config = world.Config;
+        rom.SetCredit("bridge", prng.GetRandomElement(YamlReader.LoadCreditsForDMBridge(config.Language)));
+        rom.SetCredit("castle", prng.GetRandomElement(YamlReader.LoadCreditsForHyruleCastle(config.Language)));
+        rom.SetCredit("kakariko", prng.GetRandomElement(YamlReader.LoadCreditsForKakariko(config.Language)));
+        rom.SetCredit("lumberjacks", prng.GetRandomElement(YamlReader.LoadCreditsForLumberjacks(config.Language)));
+        rom.SetCredit("sanctuary", prng.GetRandomElement(YamlReader.LoadCreditsForSanctuary(config.Language)));
+        rom.SetCredit("smithy", prng.GetRandomElement(YamlReader.LoadCreditsForSmithy(config.Language)));
+        rom.SetCredit("well", prng.GetRandomElement(YamlReader.LoadCreditsForFairyWell(config.Language)));
+        rom.SetCredit("woods", prng.GetRandomElement(YamlReader.LoadCreditsForLostWoods(config.Language)));
     }
 
     /// <summary>
