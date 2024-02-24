@@ -1787,6 +1787,71 @@ public sealed class Rom : IDisposable
             Write((SNES)(0x1BB84C + entranceId), [(byte)inletId]);
     }
 
+    /// <summary>
+    /// Reads the enemy damage table from the ROM and returns it.
+    /// </summary>
+    public byte[] GetEnemyDamageTable()
+        => Read(0x6B266, 0xF3);
+
+    /// <summary>
+    /// Writes the enemy damage table to the ROM.
+    /// </summary>
+    /// <param name="damageTable">The damage table to write.</param>
+    public void SetEnemyDamageTable(byte[] damageTable, PRNG prng)
+    {
+        Write(0x6B266, damageTable);
+
+        Write((SNES)0x068874, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068875, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068888, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068889, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x0688A4, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x0688A5, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068963, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068964, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068D99, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068D9A, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068F74, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x068F75, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x069127, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x069128, [(byte)prng.GetRandomInt(0, 9)]);
+        Write((SNES)0x06EE0B, [(byte)prng.GetRandomInt(0, 9)]);
+    }
+
+    /// <summary>
+    /// Reads the enemy health table from the ROM and returns it.
+    /// </summary>
+    public byte[] GetEnemyHealthTable()
+        => Read(0x6B173, 0xD4);
+
+    /// <summary>
+    /// Writes the enemy health table to the ROM.
+    /// </summary>
+    /// <param name="healthTable">The health table to write.</param>
+    /// <param name="lowest">The lowest of the range of health values to use.</param>
+    /// <param name="highest">The highest of the range of health values to use.</param>
+    /// <param name="prng">The PRNG to use for randomization.</param>
+    public void SetEnemyHealthTable(byte[] healthTable, int lowest, int highest, PRNG prng)
+    {
+        Write(0x6B173, healthTable);
+
+        // Health values
+        Write((SNES)0x068876, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068877, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x06888A, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x06888B, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x0688A6, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x0688A7, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068965, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068966, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068D97, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068D98, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068F76, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x068F77, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest, highest)]);
+        Write((SNES)0x069120, [(byte)prng.GetRandomInt(lowest, highest)]);
+    }
+
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
@@ -1794,6 +1859,19 @@ public sealed class Rom : IDisposable
     {
         _rom.Seek(address.Value, SeekOrigin.Begin);
         _rom.Write(data);
+    }
+
+    /// <summary>
+    /// Reads the data at <paramref name="address"/> and returns it.
+    /// </summary>
+    /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
+    /// <param name="length">Number of bytes to read.</param>
+    private byte[] Read(Address address, int length)
+    {
+        _rom.Seek(address.Value, SeekOrigin.Begin);
+        var data = new byte[length];
+        _rom.Read(data);
+        return data;
     }
 
     public void Dispose()

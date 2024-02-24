@@ -57,6 +57,10 @@ public class WorldConfig
 
     public EnemyShuffleOption EnemyShuffle { get; init; } = EnemyShuffleOption.None;
 
+    public EnemyDamageOption EnemyDamage { get; init; } = EnemyDamageOption.Default;
+
+    public EnemyHealthOption EnemyHealth { get; init; } = EnemyHealthOption.Default;
+
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
     // TODO: Make it a bool? Do we have more planned there?
@@ -124,6 +128,8 @@ public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Ins
 public enum BossShuffleOption { None, Simple, Full, Random }
 public enum ShopSupplyOption { Normal, Shuffled }
 public enum EnemyShuffleOption { None, Shuffled, Random }
+public enum EnemyDamageOption { Default, Shuffled, Random }
+public enum EnemyHealthOption { Default, Easy, Medium, Hard, Expert }
 public enum HeartColorOption { Red, Blue, Green, Yellow, Random }
 public enum HeartBeepSpeedOption { Off = 0x00, Double = 0x10, Normal = 0x20, Half = 0x40, Quarter = 0x80 }
 public enum MenuSpeedOption { Slow = 0x04, Normal = 0x08, Fast = 0x10, Instant = 0xE8 }

@@ -221,6 +221,8 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
+        WriteEnemyDamageToRom(world, rom, prng);
+        WriteEnemyHealthToRom(world, rom, prng);
 
         rom.SetPyramidFairyChests(true); //region.swordsInPool
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
@@ -885,4 +887,181 @@ public static class RomWriter
 
         rom.WriteEntrances(outlets, entrances, holes);
     }
+
+
+    /// <summary>
+    /// Set enemy damage values based on configuration for world.
+    /// </summary>
+    /// <param name="world">world to pull config from</param>
+    /// <param name="rom">rom to write data to</param>
+    /// <param name="prng">prng to use for randomization</param>
+    private static void WriteEnemyDamageToRom(World world, Rom rom, PRNG prng)
+    {
+        if (world.Config.EnemyDamage == EnemyDamageOption.Default)
+            return;
+
+        var damageBytes = rom.GetEnemyDamageTable();
+
+        var updateTable = world.Config.EnemyDamage switch
+        {
+            EnemyDamageOption.Shuffled => prng.Shuffle(damageBytes.Select(v => v & 0x0F)).ToArray(),
+            _ => Enumerable.Range(0, 0xF3).Select(_ => prng.GetRandomInt(0, 9)).ToArray(),
+        };
+
+        for (int i = 0; i < 0xF3; i++)
+        {
+            damageBytes[i] = (byte)((damageBytes[i] & 0xF0) | (byte)updateTable[i]);
+        }
+
+        rom.SetEnemyDamageTable(damageBytes, prng);
+    }
+
+    /// <summary>
+    /// Set enemy health values based on configuration for world.
+    /// </summary>
+    /// <param name="world">world to pull config from</param>
+    /// <param name="rom">rom to write data to</param>
+    /// <param name="prng">prng to use for randomization</param>
+    private static void WriteEnemyHealthToRom(World world, Rom rom, PRNG prng)
+    {
+        if (world.Config.EnemyHealth == EnemyHealthOption.Default)
+            return;
+
+        var healthBytes = rom.GetEnemyHealthTable();
+
+        var lowest = world.Config.EnemyHealth switch
+        {
+            EnemyHealthOption.Expert => 4,
+            EnemyHealthOption.Hard => 2,
+            EnemyHealthOption.Medium => 2,
+            _ => 1,
+        };
+
+        var highest = world.Config.EnemyHealth switch
+        {
+            EnemyHealthOption.Expert => 50,
+            EnemyHealthOption.Hard => 25,
+            EnemyHealthOption.Medium => 15,
+            _ => 4,
+        };
+        for (int i = 0; i < 0xD3; i++)
+        {
+            if (healthBytes[i] == 0xFF || new List<int> { 0x89, 0x70, 0xBF, 0xCE, 0xA3, 0x7A, 0x7B, 0xA4 }.Contains(i))
+                continue;
+            healthBytes[i] = (byte)prng.GetRandomInt(lowest, highest);
+        }
+
+        rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
+    }
+
+    /**
+     * Write Room headers, and room data for all enemies in game.
+     *
+     * @param World $world world to pull config from
+     * @param Rom $rom rom to write data to
+    private static void function WriteEnemiesToRom(World $world, Rom $rom)
+    {
+        $enemies = $world->getLocationsOfType('mob');
+
+        // @TODO check if I can just use 'roomid'
+        $enemy_rooms = $enemies->groupBy(fn ($enemy) => $enemy->roomid);
+
+        $output_offsets = [];
+        // empty room ;)
+        $output_bytes = [0x00, 0xFF];
+        for ($i = 0; $i < 0x180; $i++) {
+            if (!isset($enemy_rooms[$i]) || count($enemy_rooms[$i]) === 0) {
+                $output_offsets[$i] = 0x0000;
+                continue;
+            }
+            $output_offsets[$i] = count($output_bytes);
+            // Some OAM forcing magic stuff based on room_id
+            $output_bytes[] = (int) in_array($i, [0x14, 0x15, 0x51, 0x59, 0x5B, 0x60, 0x62, 0x81, 0x86, 0xA8, 0xAA, 0xB2, 0xB9, 0xC2, 0xCB, 0xCC, 0xDB, 0xDC]);
+            foreach ($enemy_rooms[$i] as $enemy) {
+                $sprite = $enemy->sprite;
+                $output_bytes[] = (($sprite->subtype & 0x18) << 2)
+                    + ($enemy->position['z'] << 7)
+                    + $enemy->position['y'];
+                $output_bytes[] = (($sprite->subtype & 0x07) << 5)
+                    + $enemy->position['x'];
+                $output_bytes[] = $sprite->byte;
+                if ($enemy->item) {
+                    // @todo update this when we can place any item
+                    $output_bytes[] = strpos($enemy->item->name, 'BigKey') !== false ? 0xFD : 0xFE;
+                    $output_bytes[] = 0x00;
+                    $output_bytes[] = 0xE4;
+                }
+            }
+            $output_bytes[] = 0xFF;
+            // room header
+            $rom->write(snes_to_pc(0x30DA00) + ($i * 14) + 3, pack('C', $world->sprite_sheets['underworld'][$i] ?? 0x00));
+        }
+
+        // SNES table start _09D62E
+        $data_start = 0xD62E + count($output_offsets) * 2;
+        foreach ($output_offsets as $room_id => $offset) {
+            $rom->write(snes_to_pc(0x9D62E) + $room_id * 2, pack('S', $data_start + $offset));
+        }
+        $rom->write(snes_to_pc(0x9D62E) + count($output_offsets) * 2, pack('C*', ...$output_bytes));
+
+        // Overworld
+        $output_offsets = [];
+        // empty map ;)
+        $output_bytes = [0xFF];
+        $enemy_maps = $enemies->groupBy(fn ($enemy) => $enemy->map);
+        $state_pointer_start = 0x9C881;
+        $maps_bytes = [0x0000 => $output_bytes];
+        foreach ([0 => 0x9C4F0, 1 => 0x9C504, 2 => 0x9C4FA] as $state => $pointers) {
+            // Pointer to pointer table
+            $offset = count($output_offsets) * 2;
+            $rom->write(snes_to_pc($pointers), pack('S', $state_pointer_start + $offset));
+            $rom->write(snes_to_pc($pointers + 5), pack('S', $state_pointer_start + $offset + 1));
+
+            for ($i = 0; $i <= 0x81; $i++) {
+                if ($state === 0 && $i > 0x3f) {
+                    break;
+                }
+                if (!isset($enemy_maps[$i]) || count($enemy_maps[$i]) === 0) {
+                    $output_offsets[] = 0x0000;
+                    continue;
+                }
+                $output_map = [];
+                foreach ($enemy_maps[$i] as $enemy) {
+                    if (!in_array($state, $enemy->state)) {
+                        continue;
+                    }
+                    $output_map[] = $enemy->position['y'];
+                    $output_map[] = $enemy->position['x'];
+                    $output_map[] = $enemy->sprite->byte;
+                }
+                $output_map[] = 0xFF;
+
+                $possible_repeat = array_search($output_map, $maps_bytes);
+                if ($possible_repeat !== false) {
+                    $output_offsets[] = $possible_repeat;
+                    continue;
+                }
+
+                $output_offsets[] = count($output_bytes);
+                $maps_bytes[count($output_bytes)] = $output_map;
+                $output_bytes = array_merge($output_bytes, $output_map);
+            }
+        }
+
+        // OW sheets PC 0x7A41
+        $data_start = $state_pointer_start + count($output_offsets) * 2;
+        foreach ($output_offsets as $map => $offset) {
+            $rom->write(snes_to_pc($state_pointer_start) + $map * 2, pack('S', $data_start + $offset));
+        }
+        $rom->write(snes_to_pc($state_pointer_start) + count($output_offsets) * 2, pack('C*', ...$output_bytes));
+        if (count($output_bytes) > 0x0B29) {
+            throw new Exception("Trying to write too many enemy sprites to OW!");
+        }
+
+        // write new sheet sets
+        $rom->write(snes_to_pc(0x00DB97), pack('C*', ...Arr::flatten($world->sprite_sheets['sets'])));
+        $rom->write(snes_to_pc(0x00FA41), pack('C*', ...Arr::flatten($world->sprite_sheets['overworld'])));
+        // special OW 0x02E575 // zora/msp/hobo
+    }
+    */
 }
