@@ -1777,10 +1777,10 @@ public sealed class Rom : IDisposable
     /// <param name="holes">EntranceId to InletId map</param>
     public void WriteEntrances(IDictionary<int, int> outlets, IDictionary<int, int> entrances, IDictionary<int, int> holes)
     {
-        // RoomToOutlet, offset is the room id pointing towards the related outlet id
+        // RoomToOutlet (tables.asm), offset is the room id pointing towards the related outlet id
         foreach (var (roomId, outletId) in outlets)
             Write((SNES)(0x30EB00 + roomId), [(byte)outletId]);
-        // FIXME: are those two offsets correct?
+        // TODO: those are vanilla addresses, but they don't have any labels in the base rom (yet?)
         foreach (var (entranceId, inletId) in entrances)
             Write((SNES)(0x1BBB73 + entranceId), [(byte)inletId]);
         foreach (var (entranceId, inletId) in holes)
