@@ -16,7 +16,8 @@ maps:
               entranceid: 0x00
               outletid: 0x00
             - name: "Houlihan Room"
-              entranceid: 0x00
+              # Houlihan Room doens't really have an entrance; you can't walk in normally.
+              entranceid: -1
               outletid: 0x3D
           mobs:
             - name: "Link's House - Tutorial Guard 1"

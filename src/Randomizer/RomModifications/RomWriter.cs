@@ -220,6 +220,7 @@ public static class RomWriter
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
 
         WritePrizePacksToRom(world, rom);
+        WriteEntrancesToRom(world, rom);
 
         rom.SetPyramidFairyChests(true); //region.swordsInPool
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
@@ -827,5 +828,61 @@ public static class RomWriter
         // write to saved fish
         rom.SetFishSavePrize(dropBytes[62]);
 #endif
+    }
+    private static void WriteEntrancesToRom(World world, Rom rom)
+    {
+        var sourcesByTarget = world.Graph.GetVertices()
+            .Where(v => v.World == world)
+            .SelectMany(v => v.Edges.Select(e => (Target: e.To, Source: v)))
+            .ToLookup(k => k.Target, v => v.Source);
+
+        var outletVertices = world.GetLocationsOfType(VertexType.Outlet).Where(v => v.OutletId.HasValue);
+        var outlets = new Dictionary<int, int>();
+        foreach (var outletVertex in outletVertices)
+        {
+            var source = sourcesByTarget[outletVertex].FirstOrDefault(e => (e?.RoomId).HasValue);
+            if (!(source?.RoomId).HasValue)
+                throw new Exception($"Source outlet '{outletVertex.Name}' has no origin room with room id");
+
+            // some rooms are reused (like 0x0112) for single entrance and don't have their own unique room id.
+            // the rom will take care of that and send the player back to where they came from.
+            // however: if we start in there, we need a place to go. this is what we write here.
+            outlets.TryAdd(source!.RoomId!.Value, outletVertex.OutletId!.Value);
+        }
+
+        // we also tag exits as Entrance, so we have to look for the ones that have an EntranceId set.
+        var entranceVertices = world.GetLocationsOfType(VertexType.Entrance).Where(v => v.EntranceId.HasValue);
+        var entrances = new Dictionary<int, int>();
+        foreach (var entranceVertex in entranceVertices)
+        {
+            if (entranceVertex.EntranceId < 0)
+                continue;
+
+            // entrances connect to a virtual entry node, which then connect to the inside
+            var entranceTransition = entranceVertex.Edges.Select(e => e.To).FirstOrDefault();
+            if (entranceTransition == null)
+                throw new Exception($"No entrance connection for '{entranceVertex.Name}'");
+            var target = entranceTransition.Edges.Select(e => e.To).FirstOrDefault(e => (e?.InletId).HasValue);
+            if (target == null)
+                throw new Exception($"No entrance target for '{entranceVertex.Name}'");
+
+            entrances.Add(entranceVertex.EntranceId!.Value, target.InletId!.Value);
+        }
+
+        var holeVertices = world.GetLocationsOfType(VertexType.Hole);
+        var holes = new Dictionary<int, int>();
+        foreach (var holeVertex in holeVertices)
+        {
+            if (holeVertex.EntranceIds == null)
+                throw new Exception($"Hole '{holeVertex.Name}' has no entrance ids");
+            var target = holeVertex.Edges.Select(e => e.To).FirstOrDefault(e => (e?.InletId).HasValue);
+            if (target == null)
+                throw new Exception($"No entrance target for '{holeVertex.Name}'");
+
+            foreach (var entranceId in holeVertex.EntranceIds ?? [])
+                holes.Add(entranceId, target.InletId!.Value);
+        }
+
+        rom.WriteEntrances(outlets, entrances, holes);
     }
 }
