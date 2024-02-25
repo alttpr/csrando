@@ -916,6 +916,18 @@ public static class RomWriter
         rom.SetEnemyDamageTable(damageBytes, prng);
     }
 
+    // don't change the health value for those sprites
+    private static readonly HashSet<int> _enemyHealthBlacklist =
+    [
+        0x70, // King Helmasaur fireball
+        0x7A, // Agahnim
+        0x7B, // Agahnim's balls
+        0x89, // Mothula beam
+        0xA3, // Kholdstare shell
+        0xA4, // Falling ice
+        0xBF, // Lightning
+        0xCE, // Blind
+    ];
     /// <summary>
     /// Set enemy health values based on configuration for world.
     /// </summary>
@@ -946,7 +958,7 @@ public static class RomWriter
         };
         for (int i = 0; i < 0xD3; i++)
         {
-            if (healthBytes[i] == 0xFF || new List<int> { 0x89, 0x70, 0xBF, 0xCE, 0xA3, 0x7A, 0x7B, 0xA4 }.Contains(i))
+            if (healthBytes[i] == 0xFF || _enemyHealthBlacklist.Contains(i))
                 continue;
             healthBytes[i] = (byte)prng.GetRandomInt(lowest, highest);
         }

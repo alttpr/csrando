@@ -1780,9 +1780,10 @@ public sealed class Rom : IDisposable
         // RoomToOutlet (tables.asm), offset is the room id pointing towards the related outlet id
         foreach (var (roomId, outletId) in outlets)
             Write((SNES)(0x30EB00 + roomId), [(byte)outletId]);
-        // TODO: those are vanilla addresses, but they don't have any labels in the base rom (yet?)
+        // Overworld_Entrance_ID (Vanilla, bank_1B.asm)
         foreach (var (entranceId, inletId) in entrances)
             Write((SNES)(0x1BBB73 + entranceId), [(byte)inletId]);
+        // Overworld_GetPitDestination_entrance (Vanilla, bank_1B.asm)
         foreach (var (entranceId, inletId) in holes)
             Write((SNES)(0x1BB84C + entranceId), [(byte)inletId]);
     }
@@ -1791,7 +1792,7 @@ public sealed class Rom : IDisposable
     /// Reads the enemy damage table from the ROM and returns it.
     /// </summary>
     public byte[] GetEnemyDamageTable()
-        => Read(0x6B266, 0xF3);
+        => Read((SNES)0x0DB266, 0xF3);
 
     /// <summary>
     /// Writes the enemy damage table to the ROM.
@@ -1799,22 +1800,24 @@ public sealed class Rom : IDisposable
     /// <param name="damageTable">The damage table to write.</param>
     public void SetEnemyDamageTable(byte[] damageTable, PRNG prng)
     {
-        Write(0x6B266, damageTable);
+        // Vanilla "bump" damage table (SpriteData_Bump, bank_0D.asm)
+        Write((SNES)0x0DB266, damageTable);
 
-        Write((SNES)0x068874, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068875, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068888, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068889, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x0688A4, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x0688A5, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068963, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068964, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068D99, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068D9A, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068F74, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x068F75, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x069127, [(byte)prng.GetRandomInt(0, 9)]);
-        Write((SNES)0x069128, [(byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_Rat_damage (sprite 0x6D)
+        Write((SNES)0x068874, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_Keese_damage (sprite 0x6F)
+        Write((SNES)0x068888, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_Rope_damage (sprite 0x6E)
+        Write((SNES)0x0688A4, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_Raven_damage (sprite 0x00)
+        Write((SNES)0x068963, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_Tektite_damage (sprite 0xC9)
+        Write((SNES)0x068D99, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_Octorok_damage (sprites 0x08/0x0A)
+        Write((SNES)0x068F74, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // SpritePrep_HardhatBeetle_bump (sprite 0x26)
+        Write((SNES)0x069127, [(byte)prng.GetRandomInt(0, 9), (byte)prng.GetRandomInt(0, 9)]);
+        // patch the damage value for powdered blobs (sprite 0x8D)
         Write((SNES)0x06EE0B, [(byte)prng.GetRandomInt(0, 9)]);
     }
 
@@ -1822,7 +1825,7 @@ public sealed class Rom : IDisposable
     /// Reads the enemy health table from the ROM and returns it.
     /// </summary>
     public byte[] GetEnemyHealthTable()
-        => Read(0x6B173, 0xD4);
+        => Read((SNES)0x0DB173, 0xD4);
 
     /// <summary>
     /// Writes the enemy health table to the ROM.
@@ -1833,23 +1836,24 @@ public sealed class Rom : IDisposable
     /// <param name="prng">The PRNG to use for randomization.</param>
     public void SetEnemyHealthTable(byte[] healthTable, int lowest, int highest, PRNG prng)
     {
-        Write(0x6B173, healthTable);
+        // Vanilla health table (SpriteData_Health, bank_0D.asm)
+        Write((SNES)0x0DB173, healthTable);
 
-        // Health values
-        Write((SNES)0x068876, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068877, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x06888A, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x06888B, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x0688A6, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x0688A7, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068965, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068966, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068D97, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068D98, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068F76, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x068F77, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest, highest)]);
-        Write((SNES)0x069120, [(byte)prng.GetRandomInt(lowest, highest)]);
+        // Health values for sprites that appear in both light/dark world
+        // SpritePrep_Rat_hp (sprite 0x6D)
+        Write((SNES)0x068876, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
+        // SpritePrep_Keese_hp (sprite 0x6F)
+        Write((SNES)0x06888A, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
+        // SpritePrep_Rope_hp (sprite 0x6E)
+        Write((SNES)0x0688A6, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
+        // SpritePrep_Raven_hp (sprite 0x00)
+        Write((SNES)0x068965, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
+        // SpritePrep_Tektite_health (sprite 0xC9)
+        Write((SNES)0x068D97, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
+        // SpritePrep_Octorok_health (sprites 0x08/0x0A)
+        Write((SNES)0x068F76, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
+        // SpritePrep_HardhatBeetle_health (sprite 0x26)
+        Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest, highest), (byte)prng.GetRandomInt(lowest, highest)]);
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
