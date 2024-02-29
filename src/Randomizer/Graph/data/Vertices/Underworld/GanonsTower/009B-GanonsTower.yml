@@ -21,7 +21,7 @@ rooms:
               - "Ganon's Tower - Twin Switches Top Right - Blue Transition"
           pots:
             - name: "Ganon's Tower - Twin Switches Pot - Pot 1"
-              position: 0x0430
+              position: { x: 0x18, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ganon's Tower - Spike Switch - Crystal Switch 1"
@@ -76,7 +76,7 @@ rooms:
               - "Ganon's Tower - Twin Switches Left"
           pots:
             - name: "Ganon's Tower - Twin Switches Pot BR"
-              position: 0x0c30
+              position: { x: 0x18, y: 0x18, z: 0x00 }
               item: "KeyA2"
               itemset: ["gt"]
 
@@ -106,9 +106,9 @@ rooms:
               - "Ganon's Tower - Teleports - Bottom"
           pots:
             - name: "Ganon's Tower - Spike Switch - Pot 2"
-              position: 0x1820
+              position: { x: 0x10, y: 0x30, z: 0x00 }
             - name: "Ganon's Tower - Spike Switch - Pot 3"
-              position: 0x181c
+              position: { x: 0x0e, y: 0x30, z: 0x00 }
 
         - name: "Ganon's Tower - Beetle Pits Left"
           connections:

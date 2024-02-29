@@ -17,13 +17,13 @@ rooms:
               itemset: ["lw", "argh"]
           pots:
             - name: "Sahasrahla's Room - Pot 1"
-              position: 0x141e
+              position: { x: 0x0f, y: 0x28, z: 0x00 }
               sprite: "@Heart"
             - name: "Sahasrahla's Room - Pot 2"
-              position: 0x151c
+              position: { x: 0x0e, y: 0x2a, z: 0x00 }
               sprite: "@Heart"
             - name: "Sahasrahla's Room - Pot 3"
-              position: 0x1520
+              position: { x: 0x10, y: 0x2a, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Sahasrahla's Hut - Sahasrahla Sprite"

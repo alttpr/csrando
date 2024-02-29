@@ -42,16 +42,16 @@ rooms:
               - "Ice Palace - Vanilla Ice"
           pots:
             - name: "Ice Palace - Pit Trap - Pot 1"
-              position: 0x045c
+              position: { x: 0x2e, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ice Palace - Pit Trap - Pot 2"
-              position: 0x0460
+              position: { x: 0x30, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ice Palace - Pit Trap - Pot 3"
-              position: 0x084c
+              position: { x: 0x26, y: 0x10, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Pit Trap - Pot 4"
-              position: 0x0870
+              position: { x: 0x38, y: 0x10, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Ice Palace - Pit Trap - Trap"

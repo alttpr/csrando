@@ -13,11 +13,11 @@ rooms:
               - "Thieves' Town - Firesnake Room"
           pots:
             - name: "Thieves' Town - Torch Hallway Pot Key"
-              position: 0x0466
+              position: { x: 0x33, y: 0x08, z: 0x00 }
               item: "KeyD4"
               itemset: ["thieves"]
             - name: "Thieves' Town - Toilet - Pot 2"
-              position: 0x0456
+              position: { x: 0x2b, y: 0x08, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Thieves' Town - Toilet - Stalfos 2"
@@ -48,10 +48,10 @@ rooms:
               - "Thieves' Town - Toilet"
           pots:
             - name: "Thieves' Town - Toilet - Pot 6"
-              position: 0x151c
+              position: { x: 0x0e, y: 0x2a, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Thieves' Town - Toilet - Pot 7"
-              position: 0x1520
+              position: { x: 0x10, y: 0x2a, z: 0x00 }
               sprite: "@RupeeBlue"
 
         - name: "Thieves' Town - Firesnake Room"
@@ -62,15 +62,15 @@ rooms:
               - "Thieves' Town - Torch Hallway"
           pots:
             - name: "Thieves' Town - Toilet - Pot 4"
-              position: 0x140c
+              position: { x: 0x06, y: 0x28, z: 0x00 }
             - name: "Thieves' Town - Toilet - Pot 5"
-              position: 0x1430
+              position: { x: 0x18, y: 0x28, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Toilet - Pot 10"
-              position: 0x1c0c
+              position: { x: 0x06, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Toilet - Pot 11"
-              position: 0x1c30
+              position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Thieves' Town - Toilet - Blue Zazak 3"
@@ -89,10 +89,10 @@ rooms:
               - "Thieves' Town - Grand Room NE Catwalk"
           pots:
             - name: "Thieves' Town - Toilet - Pot 8"
-              position: 0x1b1c
+              position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Thieves' Town - Toilet - Pot 9"
-              position: 0x1b20
+              position: { x: 0x10, y: 0x36, z: 0x00 }
               sprite: "@RupeeBlue"
 
         - name: "Thieves' Town - Toilet"
@@ -105,16 +105,16 @@ rooms:
               - "Thieves' Town - Torch Hallway"
           pots:
             - name: "Thieves' Town - Toilet - Pot 1"
-              position: 0x03b2
+              position: { x: 0x19, y: 0x07, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Thieves' Town - Toilet - Pot 3"
-              position: 0x0c8a
+              position: { x: 0x05, y: 0x19, z: 0x00 }
               sprite: "@Heart"
             - name: "Thieves' Town - Toilet - Pot 12"
-              position: 0x0cb2
+              position: { x: 0x19, y: 0x19, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Toilet - Pot 13"
-              position: 0x038a
+              position: { x: 0x05, y: 0x07, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Thieves' Town - Toilet - Blue Zazak 1"

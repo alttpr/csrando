@@ -6,8 +6,8 @@ rooms:
           inletid: 0x3e
           pots:
             - name: "East Snitch House - Pot 1"
-              position: 0x13e0
+              position: { x: 0x30, y: 0x27, z: 0x00 }
               sprite: "@Chicken"
             - name: "East Snitch House - Pot 2"
-              position: 0x13e4
+              position: { x: 0x32, y: 0x27, z: 0x00 }
               sprite: "@Heart"

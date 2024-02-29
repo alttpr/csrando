@@ -12,10 +12,10 @@ rooms:
 
           pots:
             - name: "Ice Palace - Slime Party - Top Pot"
-              position: 0x0550
+              position: { x: 0x28, y: 0x0a, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Ice Palace - Slime Party - Bottom Pot"
-              position: 0x0650
+              position: { x: 0x28, y: 0x0c, z: 0x00 }
 
           mobs:
             - name: "Ice Palace - Zol Party - Freezor"

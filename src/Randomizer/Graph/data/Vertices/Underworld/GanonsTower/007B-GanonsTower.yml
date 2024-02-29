@@ -54,18 +54,18 @@ rooms:
               - "Ganon's Tower - Firebar Falling Bridge"
           pots:
             - name: "Ganon's Tower - Bari Corridor Pot TR"
-              position: 0x0440
+              position: { x: 0x20, y: 0x08, z: 0x00 }
               item: "KeyA2"
               itemset: ["gt"]
             - name: "Ganon's Tower - DMs Room - Pot 1"
-              position: 0x043c
+              position: { x: 0x1e, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - DMs Room - Pot 2"
-              position: 0x0a30
+              position: { x: 0x18, y: 0x14, z: 0x00 }
             - name: "Ganon's Tower - DMs Room - Pot 3"
-              position: 0x074c
+              position: { x: 0x26, y: 0x0e, z: 0x00 }
             - name: "Ganon's Tower - DMs Room - Pot 4"
-              position: 0x0a58
+              position: { x: 0x2c, y: 0x14, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - DMs Room - Blue Bari 1"
               position: { x: 0x0b, y: 0x07, z: 0x00 }

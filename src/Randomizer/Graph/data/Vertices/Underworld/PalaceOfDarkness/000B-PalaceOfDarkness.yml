@@ -19,10 +19,10 @@ rooms:
               - "Palace of Darkness - Lonely Turtle"
           pots:
             - name: "Palace of Darkness - Callback - Pot 1"
-              position: 0x03ca
+              position: { x: 0x25, y: 0x07, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Callback - Pot 2"
-              position: 0x0cca
+              position: { x: 0x25, y: 0x19, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Palace of Darkness - Callback - Crystal Switch"

@@ -13,10 +13,10 @@ rooms:
               - "Palace of Darkness - Conveyor"
           pots:
             - name: "Palace of Darkness - Mimics 1 - Pot 1"
-              position: 0x0614
+              position: { x: 0x0a, y: 0x0c, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Palace of Darkness - Mimics 1 - Pot 2"
-              position: 0x0628
+              position: { x: 0x14, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Palace of Darkness - Mimics 1 - Red Eyegore"

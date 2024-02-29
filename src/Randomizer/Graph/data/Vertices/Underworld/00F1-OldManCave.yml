@@ -10,7 +10,7 @@ rooms:
               - "Old Man Cave Lost Space"
           pots:
             - name: "Old Man Maze - Pot"
-              position: 0x0540
+              position: { x: 0x20, y: 0x0a, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Old Man Maze - Keese 1"

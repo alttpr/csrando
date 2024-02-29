@@ -9,7 +9,7 @@ rooms:
               - "Paradox Cave - Shop"
           pots:
             - name: "Paradox Cave - Shop - Pot 3"
-              position: 0x1c70
+              position: { x: 0x38, y: 0x38, z: 0x00 }
               sprite: "@RupeeGreen"
 
         - name: "Paradox Cave - Bottom"
@@ -38,10 +38,10 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Paradox Cave - Shop - Pot 1"
-              position: 0x085c
+              position: { x: 0x2e, y: 0x10, z: 0x00 }
               sprite: "@Heart"
             - name: "Paradox Cave - Shop - Pot 2"
-              position: 0x0860
+              position: { x: 0x30, y: 0x10, z: 0x00 }
               sprite: "@Heart"
 
         - name: "Paradox Cave - Shop"

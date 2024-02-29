@@ -59,13 +59,13 @@ rooms:
               - "Thieves' Town - Attic Gate - Center"
           pots:
             - name: "Thieves' Town - Attic Hall Left - Pot 1"
-              position: 0x160c
+              position: { x: 0x06, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Attic Hall Left - Pot 2"
-              position: 0x1610
+              position: { x: 0x08, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Attic Hall Left - Pot 3"
-              position: 0x1614
+              position: { x: 0x0a, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Thieves' Town - Attic Hall Left - Keese 1"
@@ -88,16 +88,16 @@ rooms:
               - "Thieves' Town - Attic Gate - Center"
           pots:
             - name: "Thieves' Town - Attic Hall Left - Pot 4"
-              position: 0x1c24
+              position: { x: 0x12, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Attic Hall Left - Pot 5"
-              position: 0x1c28
+              position: { x: 0x14, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Thieves' Town - Attic Hall Left - Pot 6"
-              position: 0x1c2c
+              position: { x: 0x16, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Thieves' Town - Attic Hall Left - Pot 7"
-              position: 0x1c30
+              position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "FloorSwitch"
               item: "ThievesTownAtticHallFloorSwitch"
           mobs:

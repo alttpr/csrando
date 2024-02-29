@@ -6,7 +6,7 @@ rooms:
           inletid: 0x3f
           pots:
             - name: "West Snitch House - Pot"
-              position: 0x140c
+              position: { x: 0x06, y: 0x28, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "West Snitch - Rupee Pull"

@@ -13,13 +13,13 @@ rooms:
               - "Swamp Palace - Lobby North Ledge"
           pots:
             - name: "Swamp Palace - Big Spoon - Pot 3"
-              position: 0x1396
+              position: { x: 0x0b, y: 0x27, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Swamp Palace - Big Spoon - Pot 4"
-              position: 0x1a16
+              position: { x: 0x0b, y: 0x34, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Swamp Palace - Big Spoon - Pot 5"
-              position: 0x1adc
+              position: { x: 0x2e, y: 0x35, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Swamp Palace - Big Spoon - Statue"
@@ -55,10 +55,10 @@ rooms:
               - "Swamp Palace - Little Spoon"
           pots:
             - name: "Swamp Palace - Big Spoon - Pot 1"
-              position: 0x041c
+              position: { x: 0x0e, y: 0x08, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Swamp Palace - Big Spoon - Pot 2"
-              position: 0x080c
+              position: { x: 0x06, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Swamp Palace - Big Spoon - Medusa 1"

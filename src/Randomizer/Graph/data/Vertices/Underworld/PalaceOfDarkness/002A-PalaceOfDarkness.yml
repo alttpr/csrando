@@ -13,10 +13,10 @@ rooms:
               - "Palace of Darkness - Pit Room"
           pots:
             - name: "Palace of Darkness - Arena Main - Pot 1"
-              position: 0x0c50
+              position: { x: 0x28, y: 0x18, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Palace of Darkness - Arena Main - Pot 2"
-              position: 0x1350
+              position: { x: 0x28, y: 0x26, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Palace of Darkness - Arena Main - Crystal Switch"

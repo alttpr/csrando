@@ -12,13 +12,13 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Link's House - Bedroom - Pot 1"
-              position: 0x15ca
+              position: { x: 0x25, y: 0x2b, z: 0x00 }
               sprite: "@Heart"
             - name: "Link's House - Bedroom - Pot 2"
-              position: 0x16ca
+              position: { x: 0x25, y: 0x2d, z: 0x00 }
               sprite: "@Heart"
             - name: "Link's House - Bedroom - Pot 3"
-              position: 0x17ca
+              position: { x: 0x25, y: 0x2f, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Link's House - Bedroom - Uncle"

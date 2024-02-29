@@ -18,13 +18,13 @@ rooms:
 
           pots:
             - name: "Eastern Palace - Antifairy Circle - Pot 1"
-              position: 0x0d60
+              position: { x: 0x30, y: 0x1a, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Eastern Palace - Antifairy Circle - Pot 2"
-              position: 0x1058
+              position: { x: 0x2c, y: 0x20, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - Antifairy Circle - Pot 3"
-              position: 0x1068
+              position: { x: 0x34, y: 0x20, z: 0x00 }
               sprite: "@Heart"
 
           mobs:

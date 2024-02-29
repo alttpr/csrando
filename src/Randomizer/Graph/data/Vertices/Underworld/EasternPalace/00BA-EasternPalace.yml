@@ -71,28 +71,28 @@ rooms:
               - "Eastern Palace - Dark Antifairy Circle"
           pots:
             - name: "Eastern Palace - Dark Stalfos - Pot 1"
-              position: 0x045e
+              position: { x: 0x2f, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Eastern Palace - Dark Stalfos - Pot 2"
-              position: 0x064c
+              position: { x: 0x26, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - Dark Stalfos - TR Pot"
-              position: 0x0670
+              position: { x: 0x38, y: 0x0c, z: 0x00 }
               item: "KeyP1"
               itemset: ["eastern"]
             - name: "Eastern Palace - Dark Stalfos - Pot 3"
-              position: 0x0a4c
+              position: { x: 0x26, y: 0x14, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - Dark Stalfos - Pot 4"
-              position: 0x0a70
+              position: { x: 0x38, y: 0x14, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Eastern Palace - Dark Stalfos - Pot 5"
-              position: 0x0c5e
+              position: { x: 0x2f, y: 0x18, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Eastern Palace - Dark Stalfos - Pot 6"
-              position: 0x0858
+              position: { x: 0x2c, y: 0x10, z: 0x00 }
             - name: "Eastern Palace - Dark Stalfos - Pot 7"
-              position: 0x0864
+              position: { x: 0x32, y: 0x10, z: 0x00 }
           mobs:
             - name: "Eastern Palace - Dark Stalfos - Stalfos 1"
               position: { x: 0x14, y: 0x04, z: 0x00 }

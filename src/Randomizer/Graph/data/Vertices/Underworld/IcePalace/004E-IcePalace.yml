@@ -23,15 +23,15 @@ rooms:
               - "Ice Palace - IPBJ - Right"
           pots:
             - name: "Ice Palace - Blob Alley - Pot 1"
-              position: 0x0b8c
+              position: { x: 0x06, y: 0x17, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Ice Palace - Blob Alley - Pot 2"
-              position: 0x0c1c
+              position: { x: 0x0e, y: 0x18, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Blob Alley - Pot 4"
-              position: 0x078c
+              position: { x: 0x06, y: 0x0f, z: 0x00 }
             - name: "Ice Palace - Blob Alley - Pot 5"
-              position: 0x0a30
+              position: { x: 0x18, y: 0x14, z: 0x00 }
           mobs:
             - name: "Ice Palace - IPBJ - Fire Bar (Clockwise)"
               position: { x: 0x07, y: 0x09, z: 0x00 }
@@ -50,7 +50,7 @@ rooms:
               - "Ice Palace - Penguin Line Up"
           pots:
             - name: "Ice Palace - Blob Alley - Pot 3"
-              position: 0x0c70
+              position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ice Palace - Blob Alley - Zol 1"

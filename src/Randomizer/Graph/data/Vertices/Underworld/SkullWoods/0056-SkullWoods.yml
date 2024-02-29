@@ -9,34 +9,34 @@ rooms:
               - "Skull Woods - Bumper Buddy North"
           pots:
             - name: "Skull Woods - Bumper Buddy - Pot 1"
-              position: 0x0614
+              position: { x: 0x0a, y: 0x0c, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bumper Buddy - Pot 2"
-              position: 0x0628
+              position: { x: 0x14, y: 0x0c, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bumper Buddy - Pot 3"
-              position: 0x0718
+              position: { x: 0x0c, y: 0x0e, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bumper Buddy - Pot 4"
-              position: 0x0724
+              position: { x: 0x12, y: 0x0e, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bumper Buddy - Pot 5"
-              position: 0x080c
+              position: { x: 0x06, y: 0x10, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Bumper Buddy - Pot 6"
-              position: 0x0830
+              position: { x: 0x18, y: 0x10, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Bumper Buddy - Pot 7"
-              position: 0x0918
+              position: { x: 0x0c, y: 0x12, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bumper Buddy - Pot 8"
-              position: 0x0924
+              position: { x: 0x12, y: 0x12, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bumper Buddy - Pot 9"
-              position: 0x0a14
+              position: { x: 0x0a, y: 0x14, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Skull Woods - Bumper Buddy - Pot 10"
-              position: 0x0a28
+              position: { x: 0x14, y: 0x14, z: 0x00 }
               sprite: "@RupeeBlue"
           mobs:
             - name: "Skull Woods - Bumper Buddy - Falling Squares"
@@ -59,11 +59,11 @@ rooms:
               - "Skull Woods - Dumb Switches Bottom"
           pots:
             - name: "Skull Woods - Bumper Buddy - Pot 11"
-              position: 0x0a5c
+              position: { x: 0x2e, y: 0x14, z: 0x00 }
             - name: "Skull Woods - Bumper Buddy - Pot 12"
-              position: 0x0a60
+              position: { x: 0x30, y: 0x14, z: 0x00 }
             - name: "Skull Woods - Bumper Buddy - Pot 13"
-              position: 0x0664
+              position: { x: 0x32, y: 0x0c, z: 0x00 }
           mobs:
             - name: "Skull Woods - Bumper Buddy - Hardhat Beetle 1"
               position: { x: 0x1b, y: 0x05, z: 0x00 }
@@ -101,11 +101,11 @@ rooms:
               - "Skull Woods - Bumper Buddy North"
           pots:
             - name: "Skull Woods - Bumper Buddy - TL Pot"
-              position: 0x140c
+              position: { x: 0x06, y: 0x28, z: 0x00 }
               item: "KeyD3"
               itemset: ["skull"]
             - name: "Skull Woods - Bumper Buddy - Pot 14"
-              position: 0x1430
+              position: { x: 0x18, y: 0x28, z: 0x00 }
           mobs:
             - name: "Skull Woods - Bumper Buddy - Bumper 1"
               position: { x: 0x07, y: 0x19, z: 0x00 }

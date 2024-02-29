@@ -55,10 +55,10 @@ rooms:
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Torches 2 - Pot 1"
-              position: 0x0c4c
+              position: { x: 0x26, y: 0x18, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Torches 2 - Pot 2"
-              position: 0x0c70
+              position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Ganon's Tower - Mini Helmasaur Room - Mini Helmasaur - Left"
@@ -104,19 +104,19 @@ rooms:
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Torches 2 - Pot 3"
-              position: 0x1618
+              position: { x: 0x0c, y: 0x2c, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - Torches 2 - Pot 4"
-              position: 0x1628
+              position: { x: 0x14, y: 0x2c, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Ganon's Tower - Torches 2 - Pot 5"
-              position: 0x1820
+              position: { x: 0x10, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - Torches 2 - Pot 6"
-              position: 0x1a14
+              position: { x: 0x0a, y: 0x34, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Ganon's Tower - Torches 2 - Pot 7"
-              position: 0x1a24
+              position: { x: 0x12, y: 0x34, z: 0x00 }
               sprite: "@MagicRefillFull"
           mobs:
             - name: "Ganon's Tower - Torches 2 - Crystal Switch 1"

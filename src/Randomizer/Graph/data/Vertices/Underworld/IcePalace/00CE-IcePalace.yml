@@ -11,10 +11,10 @@ rooms:
               - "Ice Palace - Over Boss - Right After Rock"
           pots:
             - name: "Ice Palace - Over Boss - Top - Pot 1"
-              position: 0x084c
+              position: { x: 0x26, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ice Palace - Over Boss - Top - Pot 2"
-              position: 0x0850
+              position: { x: 0x28, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ice Palace - Over Boss - Top - Red Bari 1"
@@ -102,8 +102,8 @@ rooms:
         - name: "Ice Palace - Over Boss - Right After Pegs"
           pots:
             - name: "Ice Palace - Over Boss - Top - Pot 3"
-              position: 0x0c6c
+              position: { x: 0x36, y: 0x18, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ice Palace - Over Boss - Top - Pot 4"
-              position: 0x0c70
+              position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@ArrowRefill5"

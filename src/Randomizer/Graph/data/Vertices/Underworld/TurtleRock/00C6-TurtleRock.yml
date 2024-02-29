@@ -23,7 +23,7 @@ rooms:
               - "Turtle Rock - Lobby track"
           pots:
             - name: "Turtle Rock - Lobby SSE - Pot 2"
-              position: 0x190c
+              position: { x: 0x06, y: 0x32, z: 0x00 }
               sprite: "@Heart"
 
         - name: "Turtle Rock - Lobby WNW"
@@ -32,7 +32,7 @@ rooms:
               - "Turtle Rock - Lobby track"
           pots:
             - name: "Turtle Rock - Lobby SSE - Pot 1"
-              position: 0x070c
+              position: { x: 0x06, y: 0x0e, z: 0x00 }
               sprite: "@MagicRefillFull"
 
         - name: "Turtle Rock - Lobby NNW"

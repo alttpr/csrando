@@ -17,17 +17,17 @@ rooms:
           # TODO: Verify pots in room
           pots:
             - name: "Skull Woods - Firebar Pits - Pot 3"
-              position: 0x1360
+              position: { x: 0x30, y: 0x26, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Firebar Pits - Pot 7"
-              position: 0x1c68
+              position: { x: 0x34, y: 0x38, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Firebar Pits - Pot 8"
-              position: 0x095c
+              position: { x: 0x2e, y: 0x12, z: 0x00 }
             - name: "Skull Woods - Firebar Pits - Pot 9"
-              position: 0x1c54
+              position: { x: 0x2a, y: 0x38, z: 0x00 }
             - name: "Skull Woods - Firebar Pits - Pot 4"
-              position: 0x144a
+              position: { x: 0x25, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Skull Woods - Firebar Pits - Hardhat Beetle 2"
@@ -52,19 +52,19 @@ rooms:
           # TODO: Verify pots in room, one missing
           pots:
             - name: "Skull Woods - Firebar Pits - Pot 1"
-              position: 0x070c
+              position: { x: 0x06, y: 0x0e, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Skull Woods - Firebar Pits - Pot 2"
-              position: 0x0730
+              position: { x: 0x18, y: 0x0e, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Firebar Pits - Pot 5"
-              position: 0x1712
+              position: { x: 0x09, y: 0x2e, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Firebar Pits - Pot 6"
-              position: 0x1a12
+              position: { x: 0x09, y: 0x34, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Firebar Pits - Pot 10"
-              position: 0x1a16
+              position: { x: 0x0b, y: 0x34, z: 0x00 }
           mobs:
             - name: "Skull Woods - Firebar Pits - Bumper"
               position: { x: 0x07, y: 0x0c, z: 0x00 }

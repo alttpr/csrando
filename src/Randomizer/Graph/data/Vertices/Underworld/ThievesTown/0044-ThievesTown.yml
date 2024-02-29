@@ -14,7 +14,7 @@ rooms:
               - "Thieves' Town - Mole Room"
           pots:
             - name: "Thieves' Town - Conveyor Bridge - Block"
-              position: 0x07cc
+              position: { x: 0x26, y: 0x0f, z: 0x00 }
           mobs:
             - name: "Thieves' Town - Joke Room - Zol"
               position: { x: 0x17, y: 0x08, z: 0x00 }

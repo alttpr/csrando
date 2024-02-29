@@ -23,22 +23,22 @@ rooms:
               - "Ice Palace - Restock Room"
           pots:
             - name: "Ice Palace - Restock Room - Pot 1"
-              position: 0x1428
+              position: { x: 0x14, y: 0x28, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Ice Palace - Restock Room - Pot 2"
-              position: 0x142c
+              position: { x: 0x16, y: 0x28, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Restock Room - Pot 3"
-              position: 0x1430
+              position: { x: 0x18, y: 0x28, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ice Palace - Restock Room - Pot 4"
-              position: 0x1c28
+              position: { x: 0x14, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ice Palace - Restock Room - Pot 5"
-              position: 0x1c2c
+              position: { x: 0x16, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ice Palace - Restock Room - Pot 6"
-              position: 0x1c30
+              position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ice Palace - Restock Room - Bunny Beam"

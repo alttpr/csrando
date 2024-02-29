@@ -17,19 +17,19 @@ rooms:
               - "Bumper Cave Top Stairs Ledge"
           pots:
             - name: "Bumper Cave Top Exit - Pot 1"
-              position: 0x08ce
+              position: { x: 0x27, y: 0x11, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Bumper Cave Top Exit - Pot 2"
-              position: 0x08d2
+              position: { x: 0x29, y: 0x11, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Bumper Cave Top Exit - Pot 3"
-              position: 0x0e58
+              position: { x: 0x2c, y: 0x1c, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Bumper Cave Top Exit - Pot 4"
-              position: 0x0e5c
+              position: { x: 0x2e, y: 0x1c, z: 0x00 }
               sprite: "@Heart"
             - name: "Bumper Cave Top Exit - Pot 5"
-              position: 0x0e60
+              position: { x: 0x30, y: 0x1c, z: 0x00 }
               sprite: "@MagicRefillSmall"
 
         - name: "Bumper Cave Top Exit"

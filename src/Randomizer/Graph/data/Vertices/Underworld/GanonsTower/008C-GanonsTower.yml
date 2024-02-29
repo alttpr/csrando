@@ -70,19 +70,19 @@ rooms:
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Hope Room - Pot 3"
-              position: 0x144c
+              position: { x: 0x26, y: 0x28, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Hope Room - Pot 4"
-              position: 0x145c
+              position: { x: 0x2e, y: 0x28, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Hope Room - Pot 5"
-              position: 0x1564
+              position: { x: 0x32, y: 0x2a, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Ganon's Tower - Hope Room - Pot 6"
-              position: 0x1a68
+              position: { x: 0x34, y: 0x34, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Hope Room - Pot 7"
-              position: 0x1b58
+              position: { x: 0x2c, y: 0x36, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Ganon's Tower - Hope Room - Spark (Clockwise) 2"
@@ -114,10 +114,10 @@ rooms:
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Hope Room - Pot 1"
-              position: 0x0c4c
+              position: { x: 0x26, y: 0x18, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Ganon's Tower - Hope Room - Pot 2"
-              position: 0x0c70
+              position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ganon's Tower - Hope Room - Pull Switch (Bad)"

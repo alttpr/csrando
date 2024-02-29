@@ -32,10 +32,10 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Kakariko Well - Pot 5"
-              position: 0x13ac
+              position: { x: 0x16, y: 0x27, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Kakariko Well - Pot 6"
-              position: 0x13b4
+              position: { x: 0x1a, y: 0x27, z: 0x00 }
               sprite: "@RupeeBlue"
 
         - name: "Kakariko Well Hidden"
@@ -50,24 +50,24 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Kakariko Well - Pot 1"
-              position: 0x071c
+              position: { x: 0x0e, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
             - name: "Kakariko Well - Pot 2"
-              position: 0x0720
+              position: { x: 0x10, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
             - name: "Kakariko Well - Pot 3"
-              position: 0x091c
+              position: { x: 0x0e, y: 0x12, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Kakariko Well - Pot 4"
-              position: 0x0920
+              position: { x: 0x10, y: 0x12, z: 0x00 }
               sprite: "@RupeeBlue"
 
         - name: "Kakariko Well - Water"
           inletid: 0x39
           pots:
             - name: "Kakariko Well - Pot 7"
-              position: 0x1b68
+              position: { x: 0x34, y: 0x36, z: 0x00 }
               sprite: "@Heart"
             - name: "Kakariko Well - Pot 8"
-              position: 0x1c68
+              position: { x: 0x34, y: 0x38, z: 0x00 }
               sprite: "@Heart"

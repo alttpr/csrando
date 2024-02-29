@@ -12,10 +12,10 @@ rooms:
               - "Eastern Palace - Kill Room 2"
           pots:
             - name: "Eastern Palace - Kill Room 1 - Pot 7"
-              position: 0x185c
+              position: { x: 0x2e, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - Kill Room 1 - Pot 8"
-              position: 0x1860
+              position: { x: 0x30, y: 0x30, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Eastern Palace - Kill Room 1 - Red Eyegore"
@@ -46,22 +46,22 @@ rooms:
               - "Eastern Palace - Boss Room"
           pots:
             - name: "Eastern Palace - Kill Room 1 - Pot 1"
-              position: 0x08ca
+              position: { x: 0x25, y: 0x11, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - Kill Room 1 - Pot 2"
-              position: 0x08f2
+              position: { x: 0x39, y: 0x11, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Kill Room 1 - Pot 3"
-              position: 0x0aca
+              position: { x: 0x25, y: 0x15, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Kill Room 1 - Pot 4"
-              position: 0x0af2
+              position: { x: 0x39, y: 0x15, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Kill Room 1 - Pot 5"
-              position: 0x0cca
+              position: { x: 0x25, y: 0x19, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Kill Room 1 - Pot 6"
-              position: 0x0cf2
+              position: { x: 0x39, y: 0x19, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Eastern Palace - Kill Room 2 - Red Eyegore L"

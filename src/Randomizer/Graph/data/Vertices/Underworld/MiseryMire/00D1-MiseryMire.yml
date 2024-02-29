@@ -11,13 +11,13 @@ rooms:
           pots:
             # TODO: Missing empty pot in lower left corner
             - name: "Misery Mire - Sluggula - Pot 2"
-              position: 0x044c
+              position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Misery Mire - Sluggula - Pot 3"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Misery Mire - Sluggula - Pot 5"
-              position: 0x0c70
+              position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
             - name: "Misery Mire - Sluggula - Beamos 1"
@@ -37,10 +37,10 @@ rooms:
               - "Misery Mire - Torch Puzzle"
           pots:
             - name: "Misery Mire - Sluggula - Pot 1"
-              position: 0x0430
+              position: { x: 0x18, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillFull"
             - name: "Misery Mire - Sluggula - Pot 4"
-              position: 0x07a8
+              position: { x: 0x14, y: 0x0f, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
             - name: "Misery Mire - Sluggula - Wizzrobe"

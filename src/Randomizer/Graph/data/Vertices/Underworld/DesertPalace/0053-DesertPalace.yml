@@ -46,16 +46,16 @@ rooms:
               - "Desert Palace - Popo Hallway Top"
           pots:
             - name: "Desert Palace - Bridge - Pot 1"
-              position: 0x0b5c
+              position: { x: 0x2e, y: 0x16, z: 0x00 }
               sprite: "@Heart"
             - name: "Desert Palace - Bridge - Pot 2"
-              position: 0x0b60
+              position: { x: 0x30, y: 0x16, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Desert Palace - Bridge - Pot 3"
-              position: 0x0b68
+              position: { x: 0x34, y: 0x16, z: 0x00 }
               sprite: "@Heart"
             - name: "Desert Palace - Popo Hallway - Pot"
-              position: 0x0b64
+              position: { x: 0x32, y: 0x16, z: 0x00 }
               item: "KeyP2"
               itemset: ["desert"]
           mobs:

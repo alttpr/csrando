@@ -50,43 +50,43 @@ rooms:
               - "Agahnims Tower - Guards"
           pots:
             - name: "Agahnims Tower - Guards - Pot 1"
-              position: 0x1514
+              position: { x: 0x0a, y: 0x2a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Agahnims Tower - Guards - Pot 2"
-              position: 0x151c
+              position: { x: 0x0e, y: 0x2a, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Agahnims Tower - Guards - Pot 3"
-              position: 0x1520
+              position: { x: 0x10, y: 0x2a, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Agahnims Tower - Guards - Pot 4"
-              position: 0x1528
+              position: { x: 0x14, y: 0x2a, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Agahnims Tower - Guards - Pot 5"
-              position: 0x1710
+              position: { x: 0x08, y: 0x2e, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Agahnims Tower - Guards - Pot 6"
-              position: 0x172c
+              position: { x: 0x16, y: 0x2e, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Agahnims Tower - Guards - Pot 7"
-              position: 0x1824
+              position: { x: 0x12, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Agahnims Tower - Guards - Pot 8"
-              position: 0x1910
+              position: { x: 0x08, y: 0x32, z: 0x00 }
               sprite: "@Heart"
             - name: "Agahnims Tower - Guards - Pot 9"
-              position: 0x1b1c
+              position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Agahnims Tower - Guards - Pot 10"
-              position: 0x1b28
+              position: { x: 0x14, y: 0x36, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Agahnims Tower - Guards - Pot 11"
-              position: 0x1b14
+              position: { x: 0x0a, y: 0x36, z: 0x00 }
             - name: "Agahnims Tower - Guards - Pot 12"
-              position: 0x1818
+              position: { x: 0x0c, y: 0x30, z: 0x00 }
             - name: "Agahnims Tower - Guards - Pot 13"
-              position: 0x192c
+              position: { x: 0x16, y: 0x32, z: 0x00 }
             - name: "Agahnims Tower - Guards - Pot 14"
-              position: 0x1b20
+              position: { x: 0x10, y: 0x36, z: 0x00 }
           mobs:
             - name: "Agahnims Tower - Circle of Pots - Red Spear Guard C"
               position: { x: 0x08, y: 0x18, z: 0x00 }

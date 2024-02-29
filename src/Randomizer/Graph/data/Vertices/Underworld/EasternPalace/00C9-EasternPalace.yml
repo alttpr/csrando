@@ -10,13 +10,13 @@ rooms:
               - "Eastern Palace - Popo Switch"
           pots:
             - name: "Eastern Palace - Entrance - Pot 1"
-              position: 0x161e
+              position: { x: 0x0f, y: 0x2c, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Eastern Palace - Entrance - Pot 2"
-              position: 0x165e
+              position: { x: 0x2f, y: 0x2c, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Eastern Palace - Entrance - Pot 3"
-              position: 0x163c
+              position: { x: 0x1e, y: 0x2c, z: 0x00 }
               sprite: "FloorSwitch"
 
         - name: "Eastern Palace - Popo Switch"

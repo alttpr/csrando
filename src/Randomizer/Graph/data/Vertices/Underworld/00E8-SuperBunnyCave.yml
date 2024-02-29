@@ -15,7 +15,7 @@ rooms:
               - "Super Bunny Treasure"
           pots:
             - name: "Super Bunny Exit - Pot"
-              position: 0x0460
+              position: { x: 0x30, y: 0x08, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Super Bunny Exit - Hardhat Beetle 2"

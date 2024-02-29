@@ -15,18 +15,18 @@ rooms:
               itemset: ["pod"]
           pots:
             - name: "Palace of Darkness - Basement Ledge - Pot 1"
-              position: 0x0860
+              position: { x: 0x30, y: 0x10, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Basement Ledge - Pot 2"
-              position: 0x0868
+              position: { x: 0x34, y: 0x10, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Basement Ledge - Pot 3"
-              position: 0x0bcc
+              position: { x: 0x26, y: 0x17, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Palace of Darkness - Basement Ledge - Pot 6"
-              position: 0x0764
+              position: { x: 0x32, y: 0x0e, z: 0x00 }
             - name: "Palace of Darkness - Basement Ledge - Pot 7"
-              position: 0x0964
+              position: { x: 0x32, y: 0x12, z: 0x00 }
           mobs:
             - name: "Palace of Darkness - Basement Ledge - Terrorpin 1"
               position: { x: 0x17, y: 0x08, z: 0x00 }
@@ -64,8 +64,8 @@ rooms:
               - "Palace of Darkness - Big Key Chest Region"
           pots:
             - name: "Palace of Darkness - Basement Ledge - Pot 4"
-              position: 0x119c
+              position: { x: 0x0e, y: 0x23, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Basement Ledge - Pot 5"
-              position: 0x11a0
+              position: { x: 0x10, y: 0x23, z: 0x00 }
               sprite: "@ArrowRefill5"

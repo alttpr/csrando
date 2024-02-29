@@ -31,34 +31,34 @@ rooms:
               - "Desert Palace - Northwest Corner"
           pots:
             - name: "Desert Palace - Beemos Room - Pot 1"
-              position: 0x159a
+              position: { x: 0x0d, y: 0x2b, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Beemos Room - Pot 2"
-              position: 0x159e
+              position: { x: 0x0f, y: 0x2b, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Desert Palace - Beemos Room - Pot 3"
-              position: 0x1714
+              position: { x: 0x0a, y: 0x2e, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Desert Palace - Beemos Room - Pot 4"
-              position: 0x1724
+              position: { x: 0x12, y: 0x2e, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Desert Palace - Beemos Room - Pot 5"
-              position: 0x1890
+              position: { x: 0x08, y: 0x31, z: 0x00 }
               sprite: "@Heart"
             - name: "Desert Palace - Beemos Room - Pot 6"
-              position: 0x18a8
+              position: { x: 0x14, y: 0x31, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Beemos Room - Pot 7"
-              position: 0x1a14
+              position: { x: 0x0a, y: 0x34, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Desert Palace - Beemos Room - Pot 8"
-              position: 0x1a24
+              position: { x: 0x12, y: 0x34, z: 0x00 }
               sprite: "@Heart"
             - name: "Desert Palace - Beemos Room - Pot 9"
-              position: 0x1b9a
+              position: { x: 0x0d, y: 0x37, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Desert Palace - Beemos Room - Pot 10"
-              position: 0x1b9e
+              position: { x: 0x0f, y: 0x37, z: 0x00 }
               sprite: "@RupeeBlue"
           mobs:
             - name: "Desert Palace - Beemos Room - Beamos"

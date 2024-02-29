@@ -37,13 +37,13 @@ rooms:
               - "Ganon's Tower - Bari Corridor"
           pots:
             - name: "Ganon's Tower - Randomizer Room - Pot 1"
-              position: 0x041c
+              position: { x: 0x0e, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - Randomizer Room - Pot 2"
-              position: 0x0420
+              position: { x: 0x10, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - Randomizer Room - Pot 3"
-              position: 0x1524
+              position: { x: 0x12, y: 0x2a, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - Randomizer Room - Fire Bar (Counterclockwise)"
               position: { x: 0x06, y: 0x0c, z: 0x00 }

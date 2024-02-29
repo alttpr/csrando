@@ -29,16 +29,16 @@ rooms:
               - "Ganon's Tower - Wizzrobes 1"
           pots:
             - name: "Ganon's Tower - Lanmolas - Pot 1"
-              position: 0x0614
+              position: { x: 0x0a, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - Lanmolas - Pot 2"
-              position: 0x0628
+              position: { x: 0x14, y: 0x0c, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Ganon's Tower - Lanmolas - Pot 3"
-              position: 0x0a14
+              position: { x: 0x0a, y: 0x14, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Lanmolas - Pot 4"
-              position: 0x0a28
+              position: { x: 0x14, y: 0x14, z: 0x00 }
               sprite: "@MagicRefillSmall"
 
     # this data might not end up living here?

@@ -15,13 +15,13 @@ rooms:
               - "Misery Mire - Dark Weave - Spike Area"
           pots:
             - name: "Misery Mire - Dark Weave - Pot 1"
-              position: 0x1756
+              position: { x: 0x2b, y: 0x2e, z: 0x00 }
             - name: "Misery Mire - Dark Weave - Pot 2"
-              position: 0x175C
+              position: { x: 0x2e, y: 0x2e, z: 0x00 }
             - name: "Misery Mire - Dark Weave - Pot 3"
-              position: 0x1762
+              position: { x: 0x31, y: 0x2e, z: 0x00 }
             - name: "Misery Mire - Dark Weave - Pot 4"
-              position: 0x1768
+              position: { x: 0x34, y: 0x2e, z: 0x00 }
           mobs:
             - name: "Misery Mire - Dark Weave - Crystal Switch 1"
               position: { x: 0x18, y: 0x09, z: 0x00 }

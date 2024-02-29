@@ -14,10 +14,10 @@ rooms:
               - "Misery Mire - Room 45"
           pots:
             - name: "Misery Mire - Dark Switch - Pot 1"
-              position: 0x071c
+              position: { x: 0x0e, y: 0x0e, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Misery Mire - Dark Switch - Pot 2"
-              position: 0x0760
+              position: { x: 0x30, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Misery Mire - Room 45 - Medusa 1"
@@ -48,7 +48,7 @@ rooms:
               - "Misery Mire - Dark Weave - Spike Area"
           pots:
             - name: "Misery Mire - Big Block - Block"
-              position: 0x179C
+              position: { x: 0x0e, y: 0x2f, z: 0x00 }
           mobs:
             - name: "Misery Mire - Room 45 - Stalfos 1"
               position: { x: 0x04, y: 0x15, z: 0x00 }

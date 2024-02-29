@@ -15,13 +15,13 @@ rooms:
               - "Turtle Rock - Bomb Ambush"
           pots:
             - name: "Turtle Rock - Big Money - Pot 3"
-              position: 0x2d0c
+              position: { x: 0x06, y: 0x1a, z: 0x00 }
             - name: "Turtle Rock - Big Money - Pot 4"
-              position: 0x2d11
+              position: { x: 0x08, y: 0x1a, z: 0x00 }
             - name: "Turtle Rock - Big Money - Pot 5"
-              position: 0x330c
+              position: { x: 0x06, y: 0x26, z: 0x00 }
             - name: "Turtle Rock - Big Money - Pot 6"
-              position: 0x3311
+              position: { x: 0x08, y: 0x26, z: 0x00 }
           mobs:
             - name: "Turtle Rock - Big Money - Sahasrahla / Aginah"
               position: { x: 0x07, y: 0x12, z: 0x00 }
@@ -77,10 +77,10 @@ rooms:
               - "Turtle Rock - Big Money"
           pots:
             - name: "Turtle Rock - Big Money - Pot 1"
-              position: 0x13cc
+              position: { x: 0x26, y: 0x27, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Turtle Rock - Big Money - Pot 2"
-              position: 0x13f0
+              position: { x: 0x38, y: 0x27, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Turtle Rock - Big Money - Pull Switch (Good)"

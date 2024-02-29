@@ -36,41 +36,41 @@ rooms:
               itemset: ["hera"]
           pots:
             - name: "Tower Of Hera - Petting Zoo - Pot 1"
-              position: 0x14a6
+              position: { x: 0x13, y: 0x29, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Tower Of Hera - Petting Zoo - Pot 2"
-              position: 0x15d6
+              position: { x: 0x2b, y: 0x2b, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Petting Zoo - Pot 3"
-              position: 0x1c28
+              position: { x: 0x14, y: 0x38, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Tower Of Hera - Petting Zoo - Pot 4"
-              position: 0x1c2c
+              position: { x: 0x16, y: 0x38, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Tower Of Hera - Petting Zoo - Pot 5"
-              position: 0x1c50
+              position: { x: 0x28, y: 0x38, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Tower Of Hera - Petting Zoo - Pot 6"
-              position: 0x1c54
+              position: { x: 0x2a, y: 0x38, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Tower Of Hera - Petting Zoo - Pot 7"
-              position: 0x0ca0
+              position: { x: 0x10, y: 0x19, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 8"
-              position: 0x13a6
+              position: { x: 0x13, y: 0x27, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 9"
-              position: 0x15a6
+              position: { x: 0x13, y: 0x2b, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 10"
-              position: 0x13d6
+              position: { x: 0x2b, y: 0x27, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 11"
-              position: 0x14d6
+              position: { x: 0x2b, y: 0x29, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 12"
-              position: 0x1162
+              position: { x: 0x31, y: 0x22, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 13"
-              position: 0x1166
+              position: { x: 0x33, y: 0x22, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 14"
-              position: 0x116a
+              position: { x: 0x35, y: 0x22, z: 0x00 }
             - name: "Tower Of Hera - Petting Zoo - Pot 15"
-              position: 0x0c5c
+              position: { x: 0x2e, y: 0x18, z: 0x00 }
           mobs:
             - name: "Tower Of Hera - Petting Zoo - Mini Moldorm 1"
               position: { x: 0x17, y: 0x09, z: 0x00 }

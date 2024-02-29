@@ -18,16 +18,16 @@ rooms:
 
           pots:
             - name: "Thieves' Town - Grand Room SE - Pot 1"
-              position: 0x0438
+              position: { x: 0x1c, y: 0x08, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Thieves' Town - Grand Room SE - Pot 2"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Grand Room SE - Pot 3"
-              position: 0x1044
+              position: { x: 0x22, y: 0x20, z: 0x00 }
               sprite: "@Heart"
             - name: "Thieves' Town - Grand Room SE - Pot 4"
-              position: 0x1c0c
+              position: { x: 0x06, y: 0x38, z: 0x00 }
               sprite: "@ArrowRefill5"
 
           mobs:

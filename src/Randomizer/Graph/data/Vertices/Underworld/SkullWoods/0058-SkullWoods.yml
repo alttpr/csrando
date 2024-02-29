@@ -46,35 +46,35 @@ rooms:
               - "Skull Woods - Lever Room"
           pots:
             - name: "Skull Woods - Lever Room - Pot 1"
-              position: 0x0560
+              position: { x: 0x30, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Skull Woods - Lever Room - Pot 2"
-              position: 0x0564
+              position: { x: 0x32, y: 0x0a, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Lever Room - Pot 4"
-              position: 0x075c
+              position: { x: 0x2e, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Lever Room - Pot 5"
-              position: 0x076c
+              position: { x: 0x36, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Lever Room - Pot 7"
-              position: 0x0964
+              position: { x: 0x32, y: 0x12, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Lever Room - Pot 8"
-              position: 0x0968
+              position: { x: 0x34, y: 0x12, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Skull Woods - Lever Room - Pot 11"
-              position: 0x065c
+              position: { x: 0x2e, y: 0x0c, z: 0x00 }
             - name: "Skull Woods - Lever Room - Pot 12"
-              position: 0x085c
+              position: { x: 0x2e, y: 0x10, z: 0x00 }
             - name: "Skull Woods - Lever Room - Pot 13"
-              position: 0x0960
+              position: { x: 0x30, y: 0x12, z: 0x00 }
             - name: "Skull Woods - Lever Room - Pot 14"
-              position: 0x086c
+              position: { x: 0x36, y: 0x10, z: 0x00 }
             - name: "Skull Woods - Lever Room - Pot 15"
-              position: 0x066c
+              position: { x: 0x36, y: 0x0c, z: 0x00 }
             - name: "Skull Woods - Lever Room - Pot 16"
-              position: 0x0568
+              position: { x: 0x34, y: 0x0a, z: 0x00 }
           mobs:
             - name: "Skull Woods - Lever Room - Mini Helmasaur"
               position: { x: 0x14, y: 0x04, z: 0x00 }
@@ -117,15 +117,15 @@ rooms:
               - "Skull Woods - Hourglass Top"
           pots:
             - name: "Skull Woods - Lever Room - Pot 3"
-              position: 0x070c
+              position: { x: 0x06, y: 0x0e, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Lever Room - Pot 6"
-              position: 0x0810
+              position: { x: 0x08, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Lever Room - Pot 9"
-              position: 0x0710
+              position: { x: 0x08, y: 0x0e, z: 0x00 }
             - name: "Skull Woods - Lever Room - Pot 10"
-              position: 0x0c0c
+              position: { x: 0x06, y: 0x18, z: 0x00 }
           mobs:
             - name: "Skull Woods - Lever Room - Pull Switch"
               position: { x: 0x08, y: 0x0a, z: 0x00 }

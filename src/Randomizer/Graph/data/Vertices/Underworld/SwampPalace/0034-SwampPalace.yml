@@ -99,10 +99,10 @@ rooms:
               - "Swamp Palace - West Wing Right Ledge - Right"
           pots:
             - name: "Swamp Palace - West Wing - Pot 1"
-              position: 0x084e
+              position: { x: 0x27, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Swamp Palace - West Wing - Pot 2"
-              position: 0x085c
+              position: { x: 0x2e, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
 
         - name: "Swamp Palace - West Wing Right Ledge - Right"

@@ -11,10 +11,10 @@ rooms:
               - "Hyrule Castle - Lobby"
           pots:
             - name: "Hyrule Castle - West - Pot 1"
-              position: 0x044c
+              position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Hyrule Castle - West - Pot 2"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Hyrule Castle - West - Blue Guard"

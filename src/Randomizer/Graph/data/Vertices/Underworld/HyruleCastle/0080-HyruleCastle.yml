@@ -11,13 +11,13 @@ rooms:
               - "Hyrule Castle - Basement Locked Cell"
           pots:
             - name: "Hyrule Castle - Basement Cells - Pot 1"
-              position: 0x0430
+              position: { x: 0x18, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Hyrule Castle - Basement Cells - Pot 2"
-              position: 0x0434
+              position: { x: 0x1a, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Hyrule Castle - Basement Cells - Pot 3"
-              position: 0x0438
+              position: { x: 0x1c, y: 0x08, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Hyrule Castle - Basement Cells - Ball N Chain Key"

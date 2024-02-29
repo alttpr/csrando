@@ -31,10 +31,10 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Secret Passage Exit - Pot 1"
-              position: 0x18e6
+              position: { x: 0x33, y: 0x31, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Secret Passage Exit - Pot 2"
-              position: 0x19e6
+              position: { x: 0x33, y: 0x33, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Secret Passage Exit - Green Knife Guard 1"

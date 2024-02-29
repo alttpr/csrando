@@ -10,15 +10,15 @@ rooms:
               - "Desert Palace - Popo Hallway Top"
           pots:
             - name: "Desert Palace - Tiles 2 - TR Pot"
-              position: 0x1470
+              position: { x: 0x38, y: 0x28, z: 0x00 }
               item: "KeyP2"
               itemset: ["desert"]
             - name: "Desert Palace - Tiles 2 - Pot 5"
-              position: 0x144c
+              position: { x: 0x26, y: 0x28, z: 0x00 }
             - name: "Desert Palace - Tiles 2 - Pot 6"
-              position: 0x1c4c
+              position: { x: 0x26, y: 0x38, z: 0x00 }
             - name: "Desert Palace - Tiles 2 - Pot 7"
-              position: 0x1c70
+              position: { x: 0x38, y: 0x38, z: 0x00 }
           mobs:
             - name: "Desert Palace - Tiles 2 - TileRoom"
               position: { x: 0x17, y: 0x18, z: 0x00 }
@@ -34,16 +34,16 @@ rooms:
               - "Desert Palace - Sliding Wall Door"
           pots:
             - name: "Desert Palace - Sliding Wall - Pot 1"
-              position: 0x0442
+              position: { x: 0x21, y: 0x08, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Sliding Wall - Pot 2"
-              position: 0x044e
+              position: { x: 0x27, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Desert Palace - Sliding Wall - Pot 3"
-              position: 0x0942
+              position: { x: 0x21, y: 0x12, z: 0x00 }
               sprite: "@Heart"
             - name: "Desert Palace - Sliding Wall - Pot 4"
-              position: 0x094e
+              position: { x: 0x27, y: 0x12, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Desert Palace - Tiles 2 - Red Eyegore"

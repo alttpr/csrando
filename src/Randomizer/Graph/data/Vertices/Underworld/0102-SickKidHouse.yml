@@ -12,10 +12,10 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Sick Kid House - Pot 1"
-              position: 0x1392
+              position: { x: 0x09, y: 0x27, z: 0x00 }
               sprite: "@Heart"
             - name: "Sick Kid House - Pot 2"
-              position: 0x1396
+              position: { x: 0x0b, y: 0x27, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Sick Kid House - Bug-Catching Kid"

@@ -11,27 +11,27 @@ rooms:
               - "Skull Woods - Bridge Room"
           pots:
             - name: "Skull Woods - Bari Pits - Pot 3"
-              position: 0x1390
+              position: { x: 0x08, y: 0x27, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bari Pits - Pot 4"
-              position: 0x14ac
+              position: { x: 0x16, y: 0x29, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Bari Pits - Pot 5"
-              position: 0x1b90
+              position: { x: 0x08, y: 0x37, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Bari Pits - Pot 6"
-              position: 0x1cac
+              position: { x: 0x16, y: 0x39, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bari Pits - Pot 7"
-              position: 0x1490
+              position: { x: 0x08, y: 0x29, z: 0x00 }
             - name: "Skull Woods - Bari Pits - Pot 8"
-              position: 0x17ac
+              position: { x: 0x16, y: 0x2f, z: 0x00 }
             - name: "Skull Woods - Bari Pits - Pot 9"
-              position: 0x18ac
+              position: { x: 0x16, y: 0x31, z: 0x00 }
             - name: "Skull Woods - Bari Pits - Pot 10"
-              position: 0x1ba0
+              position: { x: 0x10, y: 0x37, z: 0x00 }
             - name: "Skull Woods - Bari Pits - Pot 11"
-              position: 0x1b9c
+              position: { x: 0x0e, y: 0x37, z: 0x00 }
           mobs:
             - name: "Skull Woods - Bari Pits - Wallmaster"
               position: { x: 0x0f, y: 0x0f, z: 0x00 }
@@ -54,10 +54,10 @@ rooms:
               - "Skull Woods - Vine Door Room"
           pots:
             - name: "Skull Woods - Bari Pits - Pot 1"
-              position: 0x0f68
+              position: { x: 0x34, y: 0x1e, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bari Pits - Pot 2"
-              position: 0x1068
+              position: { x: 0x34, y: 0x20, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Skull Woods - Bari Pits - Gibdo 2"

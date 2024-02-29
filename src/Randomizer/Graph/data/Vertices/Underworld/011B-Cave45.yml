@@ -9,22 +9,22 @@ rooms:
               - "Cave 45 Left"
           pots:
             - name: "Cave 45 - Pot 1"
-              position: 0x3618
+              position: { x: 0x0c, y: 0x2c, z: 0x00 }
               sprite: "@Heart"
             - name: "Cave 45 - Pot 2"
-              position: 0x3620
+              position: { x: 0x10, y: 0x2c, z: 0x00 }
               sprite: "@Heart"
             - name: "Cave 45 - Pot 3"
-              position: 0x3628
+              position: { x: 0x14, y: 0x2c, z: 0x00 }
               sprite: "@Heart"
             - name: "Cave 45 - Pot 4"
-              position: 0x3718
+              position: { x: 0x0c, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
             - name: "Cave 45 - Pot 5"
-              position: 0x381c
+              position: { x: 0x0e, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Cave 45 - Pot 6"
-              position: 0x3518
+              position: { x: 0x0c, y: 0x2a, z: 0x00 }
 
         - name: "Cave 45 Left"
           connections:

@@ -13,20 +13,20 @@ rooms:
               - "Ganon's Tower - Mimics 1"
           pots:
             - name: "Ganon's Tower - Spike Switches - Pot 1"
-              position: 0x051c
+              position: { x: 0x0e, y: 0x0a, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower -Spike Switches - Pot 2"
-              position: 0x082c
+              position: { x: 0x16, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ganon's Tower - Spike Switches - Pot 3"
-              position: 0x0b1c
+              position: { x: 0x0e, y: 0x16, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ganon's Tower - Spike Switches - Pot 5"
-              position: 0x052c
+              position: { x: 0x16, y: 0x0a, z: 0x00 }
             - name: "Ganon's Tower - Spike Switches - Pot 6"
-              position: 0x081c
+              position: { x: 0x0e, y: 0x10, z: 0x00 }
             - name: "Ganon's Tower - Spike Switches - Pot 7"
-              position: 0x0b2c
+              position: { x: 0x16, y: 0x16, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - Spike Switches - Crystal Switch 1"
               position: { x: 0x07, y: 0x04, z: 0x00 }
@@ -85,9 +85,9 @@ rooms:
               - "Ganon's Tower - Dragmire Statues"
           pots:
             - name: "Ganon's Tower - Mimics 2 - Pot 8"
-              position: 0x195a
+              position: { x: 0x2d, y: 0x32, z: 0x00 }
             - name: "Ganon's Tower - Mimics 2 - Pot 4"
-              position: 0x1962
+              position: { x: 0x31, y: 0x32, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Ganon's Tower - Mimics 2 - Red Eyegore T"

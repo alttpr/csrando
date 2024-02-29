@@ -63,10 +63,10 @@ rooms:
               - "Ganon's Tower - Gibdo Airlock - Corner"
           pots:
             - name: "Ganon's Tower - Compass Room - Pot 1"
-              position: 0x044c
+              position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Compass Room - Pot 2"
-              position: 0x0454
+              position: { x: 0x2a, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ganon's Tower - Compass Room - Gibdo 1"
@@ -97,9 +97,9 @@ rooms:
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Compass Room - Pot 3"
-              position: 0x0928
+              position: { x: 0x14, y: 0x12, z: 0x00 }
             - name: "Ganon's Tower - Compass Room - Pot 4"
-              position: 0x0720
+              position: { x: 0x10, y: 0x0e, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - Compass Room - Hardhat Beetle 1"
               position: { x: 0x06, y: 0x04, z: 0x00 }

@@ -36,23 +36,23 @@ rooms:
               - "Ganon's Tower - Cannonball Z ledge"
           pots:
             - name: "Ganon's Tower - Refill Room - Pot 1"
-              position: 0x165e
+              position: { x: 0x2f, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Refill Room - Pot 2"
-              position: 0x1a5e
+              position: { x: 0x2f, y: 0x34, z: 0x00 }
               sprite: "@MagicRefillFull"
             - name: "Ganon's Tower - Refill Room - Pot 3"
-              position: 0x16d8
+              position: { x: 0x2c, y: 0x2d, z: 0x00 }
             - name: "Ganon's Tower - Refill Room - Pot 4"
-              position: 0x1854
+              position: { x: 0x2a, y: 0x30, z: 0x00 }
             - name: "Ganon's Tower - Refill Room - Pot 5"
-              position: 0x19d8
+              position: { x: 0x2c, y: 0x33, z: 0x00 }
             - name: "Ganon's Tower - Refill Room - Pot 6"
-              position: 0x19e4
+              position: { x: 0x32, y: 0x33, z: 0x00 }
             - name: "Ganon's Tower - Refill Room - Pot 7"
-              position: 0x1868
+              position: { x: 0x34, y: 0x30, z: 0x00 }
             - name: "Ganon's Tower - Refill Room - Pot 8"
-              position: 0x16e4
+              position: { x: 0x32, y: 0x2d, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - Refill Room - Fairy 1"
               position: { x: 0x17, y: 0x18, z: 0x00 }

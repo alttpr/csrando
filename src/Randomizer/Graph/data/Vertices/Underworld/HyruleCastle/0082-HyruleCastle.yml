@@ -10,12 +10,12 @@ rooms:
               - "Hyrule Castle - Basement Hallways"
           pots:
             - name: "Hyrule Castle - Basement Playpit - Pot 1"
-              position: 0x324c
+              position: { x: 0x26, y: 0x24, z: 0x00 }
               sprite: "@Heart"
             - name: "Hyrule Castle - Basement Playpit - Pot 2"
-              position: 0x2a32
+              position: { x: 0x19, y: 0x14, z: 0x00 }
             - name: "Hyrule Castle - Basement Playpit - Pot 3"
-              position: 0x2532
+              position: { x: 0x19, y: 0x0a, z: 0x00 }
           mobs:
             - name: "Hyrule Castle - Basement Playpit - Blue Guard 1"
               position: { x: 0x09, y: 0x05, z: 0x01 }

@@ -12,10 +12,10 @@ rooms:
               - "Misery Mire - Fish Room Bottom"
           pots:
             - name: "Misery Mire - Hourglass - Pot 1"
-              position: 0x044c
+              position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Misery Mire - Hourglass - Pot 2"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
             - name: "Misery Mire - Hourglass - Medusa 1"

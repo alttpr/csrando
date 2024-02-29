@@ -71,7 +71,7 @@ rooms:
               - "Swamp Palace - East Moat Water Flipper Gate"
           pots:
             - name: "Swamp Palace - Water 1 - Pot"
-              position: 0x1430
+              position: { x: 0x18, y: 0x28, z: 0x00 }
 
         - name: "Swamp Palace - East Moat Left"
           connections:
@@ -120,6 +120,6 @@ rooms:
         - name: "Swamp Palace - Hammer Switch Moat"
           pots:
             - name: "Swamp Palace - Hammer Switch Ditch Key"
-              position: 0x063c
+              position: { x: 0x1e, y: 0x0c, z: 0x00 }
               item: "KeyD2"
               itemset: ["swamp"]

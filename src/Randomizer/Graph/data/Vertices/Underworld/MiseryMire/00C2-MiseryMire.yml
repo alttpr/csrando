@@ -18,10 +18,10 @@ rooms:
               - "Misery Mire - Main Lobby Between Pegs"
           pots:
             - name: "Misery Mire - Main Lobby - Pot 3"
-              position: 0x3044
+              position: { x: 0x22, y: 0x20, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Misery Mire - Main Lobby - Pot 4"
-              position: 0x3440
+              position: { x: 0x20, y: 0x28, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Misery Mire - Main Lobby - Fire Snake 1"
@@ -67,7 +67,7 @@ rooms:
               - "Misery Mire - East Wing Top Left"
           pots:
             - name: "Misery Mire - Main Lobby - Pot 2"
-              position: 0x2e64
+              position: { x: 0x32, y: 0x1c, z: 0x00 }
               sprite: "@MagicRefillSmall"
 
         - name: "Misery Mire - Main Lobby Between Pegs"
@@ -85,5 +85,5 @@ rooms:
               itemset: ["mire"]
           pots:
             - name: "Misery Mire - Main Lobby - Pot 1"
-              position: 0x07b4
+              position: { x: 0x1a, y: 0x0f, z: 0x00 }
               sprite: "FloorSwitch"

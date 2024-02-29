@@ -11,22 +11,22 @@ rooms:
               - "Palace of Darkness - Mimics 2"
           pots:
             - name: "Palace of Darkness - Fairies - Pot 1"
-              position: 0x0510
+              position: { x: 0x08, y: 0x0a, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Fairies - Pot 2"
-              position: 0x052c
+              position: { x: 0x16, y: 0x0a, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Palace of Darkness - Fairies - Pot 3"
-              position: 0x0610
+              position: { x: 0x08, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Fairies - Pot 4"
-              position: 0x062c
+              position: { x: 0x16, y: 0x0c, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Fairies - Pot 5"
-              position: 0x0710
+              position: { x: 0x08, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Fairies - Pot 6"
-              position: 0x072c
+              position: { x: 0x16, y: 0x0e, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Palace of Darkness - Fairies - Crystal Switch"
@@ -69,16 +69,16 @@ rooms:
               itemset: ["pod"]
           pots:
             - name: "Palace of Darkness - Fairies - Pot 7"
-              position: 0x1592
+              position: { x: 0x09, y: 0x2b, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Fairies - Pot 8"
-              position: 0x15aa
+              position: { x: 0x15, y: 0x2b, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Palace of Darkness - Fairies - Pot 9"
-              position: 0x1692
+              position: { x: 0x09, y: 0x2d, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Fairies - Pot 10"
-              position: 0x16aa
+              position: { x: 0x15, y: 0x2d, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Palace of Darkness - Fairies - Red Bari 1"

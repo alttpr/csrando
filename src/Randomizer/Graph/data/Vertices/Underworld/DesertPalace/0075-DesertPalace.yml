@@ -11,13 +11,13 @@ rooms:
               - "Desert Palace - Trap Room"
           pots:
             - name: "Desert Palace - Trap Room - Pot 1"
-              position: 0x1694
+              position: { x: 0x0a, y: 0x2d, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Desert Palace - Trap Room - Pot 2"
-              position: 0x16a0
+              position: { x: 0x10, y: 0x2d, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Trap Room - Pot 3"
-              position: 0x16ac
+              position: { x: 0x16, y: 0x2d, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Desert Palace - Trap Room - Red Devalant 2"

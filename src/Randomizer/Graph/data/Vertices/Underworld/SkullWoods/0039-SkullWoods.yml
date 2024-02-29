@@ -11,10 +11,10 @@ rooms:
               - "Skull Woods - Boss Drop"
           pots:
             - name: "Skull Woods - Play Pen - Pot 1"
-              position: 0x140c
+              position: { x: 0x06, y: 0x28, z: 0x00 }
               sprite: "@Heart"
             - name: "Skull Woods - Play Pen - Pot 2"
-              position: 0x1c30
+              position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Skull Woods - Play Pen - Gibdo Key"
@@ -50,10 +50,10 @@ rooms:
               - "Skull Woods - Play Pen"
           pots:
             - name: "Skull Woods - Boss Drop - Pot 1"
-              position: 0x1664
+              position: { x: 0x32, y: 0x2c, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Boss Drop - Pot 2"
-              position: 0x1a64
+              position: { x: 0x32, y: 0x34, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Skull Woods - Boss Drop - Spike Trap 1"

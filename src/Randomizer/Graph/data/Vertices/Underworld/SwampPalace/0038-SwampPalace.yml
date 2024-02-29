@@ -14,17 +14,17 @@ rooms:
 
           pots:
             - name: "Swamp Palace - Long Hall Key"
-              position: 0x13a4
+              position: { x: 0x12, y: 0x27, z: 0x00 }
               item: "KeyD2"
               itemset: ["swamp"]
             - name: "Swamp Palace - Long Hall - Pot 1"
-              position: 0x0ca4
+              position: { x: 0x12, y: 0x19, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Swamp Palace - Long Hall - Pot 2"
-              position: 0x0da4
+              position: { x: 0x12, y: 0x1b, z: 0x00 }
               sprite: "@Key"
             - name: "Swamp Palace - Long Hall - Pot 3"
-              position: 0x12a4
+              position: { x: 0x12, y: 0x25, z: 0x00 }
               sprite: "@ArrowRefill5"
 
           mobs:

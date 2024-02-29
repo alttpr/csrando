@@ -10,10 +10,10 @@ rooms:
               - "Death Mountain Descent Cave Left"
           pots:
             - name: "Death Mountain Descent Cave Right - Pot 1"
-              position: 0x0544
+              position: { x: 0x22, y: 0x0a, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Death Mountain Descent Cave Right - Pot 2"
-              position: 0x0548
+              position: { x: 0x24, y: 0x0a, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
             - name: "Death Mountain Descent Cave Right - Keese 1"

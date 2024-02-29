@@ -14,7 +14,7 @@ rooms:
               - "Fairy Pond Cave Entrance"
           pots:
             - name: "Fairy Pond Cave - Pot"
-              position: 0x0e58
+              position: { x: 0x2c, y: 0x1c, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Fairy Pond Cave - Fairy 1"

@@ -24,16 +24,16 @@ rooms:
               - "Agahnims Tower - Dark Corner"
           pots:
             - name: "Agahnims Tower - Dark Corner - Pot 1"
-              position: 0x0a30
+              position: { x: 0x18, y: 0x14, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Agahnims Tower - Dark Corner - Pot 2"
-              position: 0x0e0c
+              position: { x: 0x06, y: 0x1c, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Agahnims Tower - Dark Corner - Pot 3"
-              position: 0x1a0c
+              position: { x: 0x06, y: 0x34, z: 0x00 }
               sprite: "@Heart"
             - name: "Agahnims Tower - Dark Corner - Pot 4"
-              position: 0x1b1c
+              position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
             - name: "Agahnims Tower - Dark Corner - Blue Guard 2"

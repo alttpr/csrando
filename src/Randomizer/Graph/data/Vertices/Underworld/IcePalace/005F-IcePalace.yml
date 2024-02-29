@@ -19,7 +19,7 @@ rooms:
 
           pots:
             - name: "Ice Palace - Bari University - Pot"
-              position: 0x1b2c
+              position: { x: 0x16, y: 0x36, z: 0x00 }
               sprite: "FloorSwitch"
 
           mobs:

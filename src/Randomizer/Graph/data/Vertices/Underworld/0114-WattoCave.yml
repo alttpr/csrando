@@ -20,20 +20,20 @@ rooms:
               - "Watto Cave"
           pots:
             - name: "Watto Cave - Pot 1"
-              position: 0x045c
+              position: { x: 0x2e, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Watto Cave - Pot 2"
-              position: 0x0460
+              position: { x: 0x30, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Watto Cave - Pot 3"
-              position: 0x055c
+              position: { x: 0x2e, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Watto Cave - Pot 4"
-              position: 0x0560
+              position: { x: 0x30, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Watto Cave - Pot 5"
-              position: 0x0a5c
+              position: { x: 0x2e, y: 0x14, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Watto Cave - Pot 6"
-              position: 0x0a60
+              position: { x: 0x30, y: 0x14, z: 0x00 }
               sprite: "@Heart"

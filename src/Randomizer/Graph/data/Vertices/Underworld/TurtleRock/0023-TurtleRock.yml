@@ -33,17 +33,17 @@ rooms:
               - "Turtle Rock - Laser Entrance Top"
           pots:
             - name: "Turtle Rock - Laser Entrance - Pot 1"
-              position: 0x1a56
+              position: { x: 0x2b, y: 0x34, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Turtle Rock - Laser Entrance - Pot 2"
-              position: 0x1a5a
+              position: { x: 0x2d, y: 0x34, z: 0x00 }
               sprite: "@Heart"
             - name: "Turtle Rock - Laser Entrance - Pot 3"
-              position: 0x1a5e
+              position: { x: 0x2f, y: 0x34, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Turtle Rock - Laser Entrance - Pot 4"
-              position: 0x1a62
+              position: { x: 0x31, y: 0x34, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Turtle Rock - Laser Entrance - Pot 5"
-              position: 0x1a66
+              position: { x: 0x33, y: 0x34, z: 0x00 }
               sprite: "@RupeeGreen"

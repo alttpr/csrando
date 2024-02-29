@@ -13,16 +13,16 @@ rooms:
               - "Ice Palace - Slime Party"
           pots:
             - name: "Ice Palace - Vanilla Ice - Pot 1"
-              position: 0x0f56
+              position: { x: 0x2b, y: 0x1e, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Vanilla Ice - Pot 2"
-              position: 0x1a52
+              position: { x: 0x29, y: 0x34, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ice Palace - Vanilla Ice - Pot 3"
-              position: 0x1a64
+              position: { x: 0x32, y: 0x34, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Ice Palace - Vanilla Ice - Pot 4"
-              position: 0x1a68
+              position: { x: 0x34, y: 0x34, z: 0x00 }
           mobs:
             - name: "Ice Palace - Vanilla Ice - Bumper"
               position: { x: 0x17, y: 0x11, z: 0x00 }

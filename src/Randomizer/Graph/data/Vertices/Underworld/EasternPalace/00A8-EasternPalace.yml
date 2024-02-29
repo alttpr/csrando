@@ -49,17 +49,17 @@ rooms:
               - "Eastern Palace - West Wing - Corner"
           pots:
             - name: "Eastern Palace - West Wing - Top - Pot 1"
-              position: 0x138a
+              position: { x: 0x05, y: 0x27, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - West Wing - Top - Pot 2"
-              position: 0x181e
+              position: { x: 0x0f, y: 0x30, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Eastern Palace - West Wing - Top - Pot 3"
-              position: 0x13b2
+              position: { x: 0x19, y: 0x27, z: 0x00 }
             - name: "Eastern Palace - West Wing - Top - Pot 4"
-              position: 0x1c8a
+              position: { x: 0x05, y: 0x39, z: 0x00 }
             - name: "Eastern Palace - West Wing - Top - Pot 5"
-              position: 0x1cb2
+              position: { x: 0x19, y: 0x39, z: 0x00 }
           mobs:
             - name: "Eastern Palace - West Wing - Stalfos Ambush - Stalfos Party"
               position: { x: 0x08, y: 0x16, z: 0x00 }

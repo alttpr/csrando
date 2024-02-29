@@ -42,20 +42,20 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Blind's Hideout Trove - Pot 1"
-              position: 0x063c
+              position: { x: 0x1e, y: 0x0c, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Blind's Hideout Trove - Pot 2"
-              position: 0x0640
+              position: { x: 0x20, y: 0x0c, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Blind's Hideout Trove - Pot 3"
-              position: 0x073c
+              position: { x: 0x1e, y: 0x0e, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Blind's Hideout Trove - Pot 4"
-              position: 0x0740
+              position: { x: 0x20, y: 0x0e, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Blind's Hideout Trove - Pot 5"
-              position: 0x083c
+              position: { x: 0x1e, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Blind's Hideout Trove - Pot 6"
-              position: 0x0840
+              position: { x: 0x20, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"

@@ -10,10 +10,10 @@ rooms:
               - "Hyrule Castle - West"
           pots:
             - name: "Hyrule Castle - North West Passage - Pot 1"
-              position: 0x2660
+              position: { x: 0x30, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
             - name: "Hyrule Castle - North West Passage - Pot 2"
-              position: 0x2664
+              position: { x: 0x32, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Hyrule Castle - North West Passage - Green Guard"

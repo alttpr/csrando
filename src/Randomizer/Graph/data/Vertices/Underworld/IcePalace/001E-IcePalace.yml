@@ -71,7 +71,7 @@ rooms:
               - "Ice Palace - Bomb Switch Top"
           pots:
             - name: "Ice Palace - Blob Ambush - Pot"
-              position: 0x0954
+              position: { x: 0x2a, y: 0x12, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Ice Palace - Blob Ambush - Crystal Switch"

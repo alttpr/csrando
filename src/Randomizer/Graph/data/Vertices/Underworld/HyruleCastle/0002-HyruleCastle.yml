@@ -9,13 +9,13 @@ rooms:
               - "Sewers - Switch Puzzle"
           pots:
             - name: "Sewers - Rat Pots - Pot 1"
-              position: 0x0650
+              position: { x: 0x28, y: 0x0c, z: 0x00 }
             - name: "Sewers - Rat Pots - Pot 2"
-              position: 0x0850
+              position: { x: 0x28, y: 0x10, z: 0x00 }
             - name: "Sewers - Rat Pots - Pot 3"
-              position: 0x082c
+              position: { x: 0x16, y: 0x10, z: 0x00 }
             - name: "Sewers - Rat Pots - Pot 4"
-              position: 0x0a2c
+              position: { x: 0x16, y: 0x14, z: 0x00 }
           mobs:
             - name: "Sewers - Rat Pots - Rat 1"
               position: { x: 0x12, y: 0x05, z: 0x01 }

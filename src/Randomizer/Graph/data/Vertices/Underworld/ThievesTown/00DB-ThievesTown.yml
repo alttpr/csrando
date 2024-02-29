@@ -15,13 +15,13 @@ rooms:
               itemset: ["thieves"]
           pots:
             - name: "Thieves' Town - Grand Room SW - Pot 1"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Thieves' Town - Grand Room SW - Pot 2"
-              position: 0x1058
+              position: { x: 0x2c, y: 0x20, z: 0x00 }
               sprite: "@Heart"
             - name: "Thieves' Town - Grand Room SW - Pot 3"
-              position: 0x233e
+              position: { x: 0x1f, y: 0x06, z: 0x00 }
           mobs:
             - name: "Thieves' Town - Grand Room SW - Bunny Beam"
               position: { x: 0x03, y: 0x04, z: 0x00 }

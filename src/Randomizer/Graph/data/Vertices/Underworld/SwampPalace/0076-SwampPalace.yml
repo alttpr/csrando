@@ -11,7 +11,7 @@ rooms:
               - "Swamp Palace - Toilet Left"
           pots:
             - name: "Swamp Palace - Toilet Left - Pot 1"
-              position: 0x0c70
+              position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Swamp Palace - Toilet Right - Push Switch"
@@ -120,8 +120,8 @@ rooms:
               itemset: ["swamp"]
           pots:
             - name: "Swamp Palace - Toilet Left - Pot 2"
-              position: 0x1754
+              position: { x: 0x2a, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
             - name: "Swamp Palace - Toilet Left - Pot 3"
-              position: 0x1760
+              position: { x: 0x30, y: 0x2e, z: 0x00 }
               sprite: "@Heart"

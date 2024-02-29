@@ -17,16 +17,16 @@ rooms:
               - "Palace of Darkness - Shooter Room"
           pots:
             - name: "Palace of Darkness - Lobby - Pot 1"
-              position: 0x050e
+              position: { x: 0x07, y: 0x0a, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Palace of Darkness - Lobby - Pot 2"
-              position: 0x0520
+              position: { x: 0x10, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Lobby - Pot 6"
-              position: 0x0b0e
+              position: { x: 0x07, y: 0x16, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Lobby - Pot 7"
-              position: 0x0b20
+              position: { x: 0x10, y: 0x16, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
             - name: "Palace of Darkness - Lobby - Mini Helmasaur 1"
@@ -42,23 +42,23 @@ rooms:
               - "Palace of Darkness - Pit Room"
           pots:
             - name: "Palace of Darkness - Lobby - Pot 3"
-              position: 0x055c
+              position: { x: 0x2e, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Lobby - Pot 4"
-              position: 0x056e
+              position: { x: 0x37, y: 0x0a, z: 0x00 }
               sprite: "FloorSwitch"
             # TODO: Add missing pot in the middle
             - name: "Palace of Darkness - Lobby - Pot 5"
-              position: 0x0838
+              position: { x: 0x1c, y: 0x10, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Lobby - Pot 8"
-              position: 0x0b5c
+              position: { x: 0x2e, y: 0x16, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Palace of Darkness - Lobby - Pot 9"
-              position: 0x0b6e
+              position: { x: 0x37, y: 0x16, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Lobby - Pot 10"
-              position: 0x0844
+              position: { x: 0x22, y: 0x10, z: 0x00 }
           mobs:
             - name: "Palace of Darkness - Lobby - Statue"
               position: { x: 0x14, y: 0x07, z: 0x00 }

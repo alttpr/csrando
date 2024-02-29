@@ -12,13 +12,13 @@ rooms:
 
           pots:
             - name: "Ganon's Tower - Spike Alley - Pot 1"
-              position: 0x25de
+              position: { x: 0x2f, y: 0x0b, z: 0x00 }
               sprite: "FloorSwitch"
               item: "GanonsTowerSpikeAlleyFloorSwitch"
             - name: "Ganon's Tower - Spike Alley - Pot 2"
-              position: 0x25da
+              position: { x: 0x2d, y: 0x0b, z: 0x00 }
             - name: "Ganon's Tower - Spike Alley - Pot 3"
-              position: 0x25e2
+              position: { x: 0x31, y: 0x0b, z: 0x00 }
 
           mobs:
             - name: "Ganon's Tower - Spike Alley - Crystal Switch 1"

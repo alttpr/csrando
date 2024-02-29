@@ -32,24 +32,24 @@ rooms:
               itemset: ["agahnim"]
           pots:
             - name: "Agahnims Tower - Dark Maze - Pot 1"
-              position: 0x059e
+              position: { x: 0x0f, y: 0x0b, z: 0x00 }
             - name: "Agahnims Tower - Dark Maze - Pot 2"
-              position: 0x0b8c
+              position: { x: 0x06, y: 0x17, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Agahnims Tower - Dark Maze - Pot 3"
-              position: 0x0d2a
+              position: { x: 0x15, y: 0x1a, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Agahnims Tower - Dark Maze - Pot 4"
-              position: 0x1030
+              position: { x: 0x18, y: 0x20, z: 0x00 }
               sprite: "@Heart"
             - name: "Agahnims Tower - Dark Maze - Pot 5"
-              position: 0x14b0
+              position: { x: 0x18, y: 0x29, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Agahnims Tower - Dark Maze - Pot 6"
-              position: 0x1792
+              position: { x: 0x09, y: 0x2f, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Agahnims Tower - Dark Maze - Pot 7"
-              position: 0x1c0c
+              position: { x: 0x06, y: 0x38, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Agahnims Tower - Dark Maze - Keese 1"

@@ -43,20 +43,20 @@ rooms:
               - "Sewers - Dark Three Islands"
           pots:
             - name: "Sewers - Dark U - Pot 1"
-              position: 0x18a8
+              position: { x: 0x14, y: 0x31, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Sewers - Dark U - Pot 2"
-              position: 0x1c30
+              position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "@Heart"
             - name: "Sewers - Dark U - Pot 3"
-              position: 0x1c52
+              position: { x: 0x29, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Sewers - Dark U - Pot 4"
-              position: 0x14a0
+              position: { x: 0x10, y: 0x29, z: 0x00 }
             - name: "Sewers - Dark U - Pot 5"
-              position: 0x1c64
+              position: { x: 0x32, y: 0x38, z: 0x00 }
             - name: "Sewers - Dark U - Pot 6"
-              position: 0x1c68
+              position: { x: 0x34, y: 0x38, z: 0x00 }
           mobs:
             - name: "Sewers - Dark U - Rat 4"
               position: { x: 0x07, y: 0x14, z: 0x00 }

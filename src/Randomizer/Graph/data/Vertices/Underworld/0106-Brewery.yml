@@ -12,5 +12,5 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Brewery - Pot"
-              position: 0x1B6C
+              position: { x: 0x36, y: 0x36, z: 0x00 }
               sprite: "@Heart"

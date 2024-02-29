@@ -13,20 +13,20 @@ rooms:
               - "Ganon's Tower - Laser Restock"
           pots:
             - name: "Ganon's Tower - Torches 1 - Pot 1"
-              position: 0x1120
+              position: { x: 0x10, y: 0x22, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ganon's Tower - Torches 1 - Pot 2"
-              position: 0x1820
+              position: { x: 0x10, y: 0x30, z: 0x00 }
               sprite: "@MagicRefillSmall"
 
             - name: "Ganon's Tower - Torches 1 - Pot 5"
-              position: 0x0520
+              position: { x: 0x10, y: 0x0a, z: 0x00 }
             - name: "Ganon's Tower - Torches 1 - Pot 6"
-              position: 0x0b2e
+              position: { x: 0x17, y: 0x16, z: 0x00 }
             - name: "Ganon's Tower - Torches 1 - Pot 7"
-              position: 0x120e
+              position: { x: 0x07, y: 0x24, z: 0x00 }
             - name: "Ganon's Tower - Torches 1 - Pot 8"
-              position: 0x180e
+              position: { x: 0x07, y: 0x30, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - Torches 1 - Fire Bar (Clockwise)"
               position: { x: 0x08, y: 0x0b, z: 0x00 }
@@ -49,10 +49,10 @@ rooms:
               - "Ganon's Tower - Torches 2"
           pots:
             - name: "Ganon's Tower - Torches 1 - Pot 3"
-              position: 0x154c
+              position: { x: 0x26, y: 0x2a, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - Torches 1 - Pot 4"
-              position: 0x1570
+              position: { x: 0x38, y: 0x2a, z: 0x00 }
               sprite: "@MagicRefillFull"
           mobs:
             - name: "Ganon's Tower - Torches 1 - Laser Eye (Left) 1"

@@ -13,7 +13,7 @@ rooms:
               - "Hookshot Cave Cross"
           pots:
             - name: "Hookshot Cave - Pot 5"
-              position: 0x1360
+              position: { x: 0x30, y: 0x26, z: 0x00 }
               sprite: "@Heart"
 
         - name: "Hookshot Cave - Top Left Pad"
@@ -26,7 +26,7 @@ rooms:
               sprite: "HardhatBeetle"
           pots:
             - name: "Hookshot Cave - Pot 1"
-              position: 0x0818
+              position: { x: 0x0c, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
 
         - name: "Hookshot Cave - Top Right Pad"
@@ -40,7 +40,7 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Hookshot Cave - Pot 2"
-              position: 0x0c40
+              position: { x: 0x20, y: 0x18, z: 0x00 }
               sprite: "@RupeeBlue"
 
         - name: "Hookshot Cave - Middle Left Pad"
@@ -67,7 +67,7 @@ rooms:
           pots:
             # TODO: Check which is the missing empty pot south of the pad
             - name: "Hookshot Cave - Pot 3"
-              position: 0x0e14
+              position: { x: 0x0a, y: 0x1c, z: 0x00 }
               sprite: "@RupeeGreen"
 
         - name: "Hookshot Cave - Middle Center North Pad"
@@ -118,10 +118,10 @@ rooms:
           pots:
             # TODO: Check if those are correct
             - name: "Hookshot Cave - Pot 4"
-              position: 0x1244
+              position: { x: 0x22, y: 0x24, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Hookshot Cave - Pot 6"
-              position: 0x1440
+              position: { x: 0x20, y: 0x28, z: 0x00 }
               sprite: "@RupeeBlue"
 
         # South pad accessible with boots
@@ -136,5 +136,5 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Hookshot Cave - Pot 7"
-              position: 0x1a40
+              position: { x: 0x20, y: 0x34, z: 0x00 }
               sprite: "@RupeeBlue"

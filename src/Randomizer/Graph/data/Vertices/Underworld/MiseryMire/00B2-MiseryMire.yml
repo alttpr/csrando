@@ -73,20 +73,20 @@ rooms:
               - "Misery Mire - Bridge Room - Left"
           pots:
             - name: "Misery Mire - Popo Push - Pot 1"
-              position: 0x2830
+              position: { x: 0x18, y: 0x10, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Misery Mire - Popo Push - Pot 2"
-              position: 0x284c
+              position: { x: 0x26, y: 0x10, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Misery Mire - Popo Push - Pot 3"
-              position: 0x294c
+              position: { x: 0x26, y: 0x12, z: 0x00 }
               sprite: "@Heart"
             - name: "Misery Mire - Popo Push - Pot 4"
-              position: 0x2930
+              position: { x: 0x18, y: 0x12, z: 0x00 }
             - name: "Misery Mire - Popo Push - Pot 5"
-              position: 0x2A30
+              position: { x: 0x18, y: 0x14, z: 0x00 }
             - name: "Misery Mire - Popo Push - Pot 6"
-              position: 0x2A4C
+              position: { x: 0x26, y: 0x14, z: 0x00 }
           mobs:
             - name: "Misery Mire - Popo Push - Wizzrobe"
               position: { x: 0x14, y: 0x08, z: 0x01 }

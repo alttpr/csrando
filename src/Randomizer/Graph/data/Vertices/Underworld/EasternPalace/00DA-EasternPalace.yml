@@ -11,16 +11,16 @@ rooms:
               - "Eastern Palace - Eyegore Switches"
           pots:
             - name: "Eastern Palace - Antifairy Playground - Pot 1"
-              position: 0x1718
+              position: { x: 0x0c, y: 0x2e, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Antifairy Playground - Pot 2"
-              position: 0x1724
+              position: { x: 0x12, y: 0x2e, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Antifairy Playground - Pot 3"
-              position: 0x1918
+              position: { x: 0x0c, y: 0x32, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Eastern Palace - Antifairy Playground - Pot 4"
-              position: 0x1924
+              position: { x: 0x12, y: 0x32, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Eastern Palace - Antifairy Playground - Antifairy 1"

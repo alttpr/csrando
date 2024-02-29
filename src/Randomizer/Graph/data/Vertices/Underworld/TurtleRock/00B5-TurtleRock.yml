@@ -19,22 +19,22 @@ rooms:
 
           pots:
             - name: "Turtle Rock - Dark Maze Top - Pot 1"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Turtle Rock - Dark Maze Top - Pot 2"
-              position: 0x0f70
+              position: { x: 0x38, y: 0x1e, z: 0x00 }
               sprite: "@Heart"
             - name: "Turtle Rock - Dark Maze Top - Pot 3"
-              position: 0x104c
+              position: { x: 0x26, y: 0x20, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Turtle Rock - Dark Maze Top - Pot 4"
-              position: 0x1070
+              position: { x: 0x38, y: 0x20, z: 0x00 }
               sprite: "@MagicRefillFull"
             - name: "Turtle Rock - Dark Maze Top - Pot 5"
-              position: 0x1170
+              position: { x: 0x38, y: 0x22, z: 0x00 }
               sprite: "@Heart"
             - name: "Turtle Rock - Dark Maze Top - Pot 6"
-              position: 0x1c70
+              position: { x: 0x38, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
 
           mobs:

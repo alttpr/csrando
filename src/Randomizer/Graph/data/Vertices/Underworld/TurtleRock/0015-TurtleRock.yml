@@ -10,28 +10,28 @@ rooms:
               - "Turtle Rock - Chain Chomps Room"
           pots:
             - name: "Turtle Rock - Cold Tubes - Pot 1"
-              position: 0x0460
+              position: { x: 0x30, y: 0x08, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Turtle Rock - Cold Tubes - Pot 2"
-              position: 0x0464
+              position: { x: 0x32, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Turtle Rock - Cold Tubes - Pot 3"
-              position: 0x0468
+              position: { x: 0x34, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Turtle Rock - Cold Tubes - Pot 4"
-              position: 0x046c
+              position: { x: 0x36, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Turtle Rock - Cold Tubes - Pot 5"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Turtle Rock - Cold Tubes - Pot 6"
-              position: 0x060c
+              position: { x: 0x06, y: 0x0c, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Turtle Rock - Cold Tubes - Pot 7"
-              position: 0x0610
+              position: { x: 0x08, y: 0x0c, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Turtle Rock - Cold Tubes - Pot 8"
-              position: 0x0614
+              position: { x: 0x0a, y: 0x0c, z: 0x00 }
               sprite: "@RupeeBlue"
           mobs:
             - name: "Turtle Rock - Cold Tubes - Down Pipe 1"
@@ -72,5 +72,5 @@ rooms:
               - "Turtle Rock - Cold Tubes"
           pots:
             - name: "Turtle Rock - Cold Tubes - Pot 9"
-              position: 0x0b46
+              position: { x: 0x23, y: 0x16, z: 0x00 }
               sprite: "@MagicRefillFull"

@@ -9,11 +9,11 @@ rooms:
               - "Grandma's House Left"
           pots:
             - name: "Grandma's House Right - Pot 1"
-              position: 0x1428
+              position: { x: 0x14, y: 0x28, z: 0x00 }
             - name: "Grandma's House Right - Pot 2"
-              position: 0x142c
+              position: { x: 0x16, y: 0x28, z: 0x00 }
             - name: "Grandma's House Right - Pot 3"
-              position: 0x1430
+              position: { x: 0x18, y: 0x28, z: 0x00 }
           mobs:
             - name: "Grandma's House Right - Sahasrahla's wife"
               position: { x: 0x06, y: 0x14, z: 0x00 }

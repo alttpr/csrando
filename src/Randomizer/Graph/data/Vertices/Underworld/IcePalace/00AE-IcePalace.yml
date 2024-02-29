@@ -18,7 +18,7 @@ rooms:
 
           pots:
             - name: "Ice Palace - Ice T - Pot"
-              position: 0x0c4c
+              position: { x: 0x26, y: 0x18, z: 0x00 }
               sprite: "FloorSwitch"
 
           mobs:

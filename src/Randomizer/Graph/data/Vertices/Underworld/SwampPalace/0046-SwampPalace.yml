@@ -10,7 +10,7 @@ rooms:
               - "Swamp Palace - Big O Bottom"
           pots:
             - name: "Swamp Palace - Big O Top - Pot 1"
-              position: 0x0560
+              position: { x: 0x30, y: 0x0a, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Swamp Palace - Big O Top - Hover 1"
@@ -44,7 +44,7 @@ rooms:
               - "Swamp Palace - Big O Top Left"
           pots:
             - name: "Swamp Palace - Big O Top - Pot 2"
-              position: 0x1b1c
+              position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Swamp Palace - Big O Top - Hover 2"

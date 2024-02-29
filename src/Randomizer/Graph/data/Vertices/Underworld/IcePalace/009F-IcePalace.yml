@@ -11,45 +11,45 @@ rooms:
 
           pots:
             - name: "Ice Palace - Pottery Barn Key"
-              position: 0x158a
+              position: { x: 0x05, y: 0x2b, z: 0x00 }
               item: "KeyD5"
               itemset: ["ice"]
             - name: "Ice Palace - Pottery Barn - Pot 1"
-              position: 0x138a
+              position: { x: 0x05, y: 0x27, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Pottery Barn - Pot 2"
-              position: 0x13b2
+              position: { x: 0x19, y: 0x27, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Pottery Barn - Pot 3"
-              position: 0x1528
+              position: { x: 0x14, y: 0x2a, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Ice Palace - Pottery Barn - Pot 4"
-              position: 0x1b14
+              position: { x: 0x0a, y: 0x36, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Pottery Barn - Pot 5"
-              position: 0x1b8a
+              position: { x: 0x05, y: 0x37, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Pottery Barn - Pot 6"
-              position: 0x1cb2
+              position: { x: 0x19, y: 0x39, z: 0x00 }
               sprite: "@Heart"
             - name: "Ice Palace - Pottery Barn - Pot 7"
-              position: 0x148a
+              position: { x: 0x05, y: 0x29, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 8"
-              position: 0x1514
+              position: { x: 0x0a, y: 0x2a, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 9"
-              position: 0x14b2
+              position: { x: 0x19, y: 0x29, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 10"
-              position: 0x15b2
+              position: { x: 0x19, y: 0x2b, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 11"
-              position: 0x1ab2
+              position: { x: 0x19, y: 0x35, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 12"
-              position: 0x1bb2
+              position: { x: 0x19, y: 0x37, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 13"
-              position: 0x1b28
+              position: { x: 0x14, y: 0x36, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 14"
-              position: 0x1a8a
+              position: { x: 0x05, y: 0x35, z: 0x00 }
             - name: "Ice Palace - Pottery Barn - Pot 15"
-              position: 0x1c8a
+              position: { x: 0x05, y: 0x39, z: 0x00 }
 
           mobs:
             - name: "Ice Palace - Pottery Barn - Babasu 1"

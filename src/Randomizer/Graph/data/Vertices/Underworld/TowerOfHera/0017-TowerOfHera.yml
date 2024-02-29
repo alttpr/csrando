@@ -13,40 +13,40 @@ rooms:
 
           pots:
             - name: "Tower Of Hera - Bumper Room - Pot 1"
-              position: 0x0d64
+              position: { x: 0x32, y: 0x1a, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 2"
-              position: 0x0e64
+              position: { x: 0x32, y: 0x1c, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 3"
-              position: 0x0f64
+              position: { x: 0x32, y: 0x1e, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 4"
-              position: 0x1064
+              position: { x: 0x32, y: 0x20, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 5"
-              position: 0x1164
+              position: { x: 0x32, y: 0x22, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 6"
-              position: 0x1264
+              position: { x: 0x32, y: 0x24, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 7"
-              position: 0x0d68
+              position: { x: 0x34, y: 0x1a, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 8"
-              position: 0x0e68
+              position: { x: 0x34, y: 0x1c, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 9"
-              position: 0x0f68
+              position: { x: 0x34, y: 0x1e, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 10"
-              position: 0x1068
+              position: { x: 0x34, y: 0x20, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 11"
-              position: 0x1168
+              position: { x: 0x34, y: 0x22, z: 0x00 }
               sprite: "@Heart"
             - name: "Tower Of Hera - Bumper Room - Pot 12"
-              position: 0x1268
+              position: { x: 0x34, y: 0x24, z: 0x00 }
               sprite: "@Heart"
 
           mobs:

@@ -10,16 +10,16 @@ rooms:
               - "Desert Palace - West"
           pots:
             - name: "Desert Palace - Left Hallway - Pot 1"
-              position: 0x044c
+              position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Left Hallway - Pot 2"
-              position: 0x0450
+              position: { x: 0x28, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Desert Palace - Left Hallway - Pot 3"
-              position: 0x1c4c
+              position: { x: 0x26, y: 0x38, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Desert Palace - Left Hallway - Pot 4"
-              position: 0x1c50
+              position: { x: 0x28, y: 0x38, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Desert Palace - Left Hallway - Blue Devalant 1"

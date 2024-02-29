@@ -13,12 +13,12 @@ rooms:
               - "Thieves' Town - Basement Block Totems Bottom"
           pots:
             - name: "Thieves' Town - Basement Block Totems - Block"
-              position: 0x079c
+              position: { x: 0x0e, y: 0x0f, z: 0x00 }
             - name: "Thieves' Town - Basement Block Totems - Pot 1"
-              position: 0x040c
+              position: { x: 0x06, y: 0x08, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Thieves' Town - Basement Block Totems - Pot 2"
-              position: 0x0c30
+              position: { x: 0x18, y: 0x18, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Thieves' Town - Basement Block Totems - Red Zazak"
@@ -91,9 +91,9 @@ rooms:
               - "Thieves' Town - Cell 3"
           pots:
             - name: "Thieves' Town - Cells - Pot 1"
-              position: 0x0b5c
+              position: { x: 0x2e, y: 0x16, z: 0x00 }
             - name: "Thieves' Town - Cells - Pot 2"
-              position: 0x0b6c
+              position: { x: 0x36, y: 0x16, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Thieves' Town - Cells - Bunny Beam"
@@ -117,10 +117,10 @@ rooms:
               itemset: ["thieves"]
           pots:
             - name: "Thieves' Town - Cells - Pot 4"
-              position: 0x10dc
+              position: { x: 0x2e, y: 0x21, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Thieves' Town - Cells - Pot 5"
-              position: 0x10ec
+              position: { x: 0x36, y: 0x21, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Thieves' Town - Cell 3 - Blind"

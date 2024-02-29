@@ -25,7 +25,7 @@ rooms:
               - "Ice Palace - Over Boss - Top"
           pots:
             - name: "Ice Palace - Block Switch - Pot"
-              position: 0x195c
+              position: { x: 0x2e, y: 0x32, z: 0x00 }
               sprite: "FloorSwitch"
           mobs:
             - name: "Ice Palace - Block Switch - Freezor"

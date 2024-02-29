@@ -11,10 +11,10 @@ rooms:
               - "Palace of Darkness - Bow Statue"
           pots:
             - name: "Palace of Darkness - Mimics 2 - Pot 1"
-              position: 0x1714
+              position: { x: 0x0a, y: 0x2e, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Palace of Darkness - Mimics 2 - Pot 2"
-              position: 0x1728
+              position: { x: 0x14, y: 0x2e, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Palace of Darkness - Mimics 2 - Red Eyegore"

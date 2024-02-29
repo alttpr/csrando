@@ -49,17 +49,17 @@ rooms:
               - "Eastern Palace - East Wing - Gap Right"
           pots:
             - name: "Eastern Palace - East Wing - Top - Pot 1"
-              position: 0x085e
+              position: { x: 0x2f, y: 0x10, z: 0x00 }
               sprite: "FloorSwitch"
             - name: "Eastern Palace - East Wing - Top - Pot 5"
-              position: 0x05e8
+              position: { x: 0x34, y: 0x0b, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - East Wing - Top - Pot 6"
-              position: 0x0ae8
+              position: { x: 0x34, y: 0x15, z: 0x00 }
             - name: "Eastern Palace - East Wing - Top - Pot 7"
-              position: 0x0ad4
+              position: { x: 0x2a, y: 0x15, z: 0x00 }
             - name: "Eastern Palace - East Wing - Top - Pot 8"
-              position: 0x05d4
+              position: { x: 0x2a, y: 0x0b, z: 0x00 }
           mobs:
             - name: "Eastern Palace - East Wing - Top - Antifairy"
               position: { x: 0x18, y: 0x06, z: 0x00 }
@@ -84,11 +84,11 @@ rooms:
               - "Eastern Palace - East Wing - Gap Right"
           pots:
             - name: "Eastern Palace - East Wing - Top - Pot 2"
-              position: 0x376c
+              position: { x: 0x36, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - East Wing - Top - Pot 3"
-              position: 0x386c
+              position: { x: 0x36, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Eastern Palace - East Wing - Top - Pot 4"
-              position: 0x396c
+              position: { x: 0x36, y: 0x32, z: 0x00 }
               sprite: "@Heart"

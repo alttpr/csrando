@@ -12,20 +12,20 @@ rooms:
               - "Misery Mire - Fish Room Bottom"
           pots:
             - name: "Misery Mire - Fish Room - Eye Pot"
-              position: 0x0696
+              position: { x: 0x0b, y: 0x0d, z: 0x00 }
               item: "KeyD6"
               itemset: ["mire"]
             - name: "Misery Mire - Fish Room - blue - Pot 1"
-              position: 0x0b64
+              position: { x: 0x32, y: 0x16, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Misery Mire - Fish Room - blue - Pot 2"
-              position: 0x0c68
+              position: { x: 0x34, y: 0x18, z: 0x00 }
               sprite: "@Heart"
             - name: "Misery Mire - Fish Room - blue - Pot 3"
-              position: 0x0d6c
+              position: { x: 0x36, y: 0x1a, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Misery Mire - Fish Room - blue - Pot 4"
-              position: 0x0e70
+              position: { x: 0x38, y: 0x1c, z: 0x00 }
               sprite: "@Heart"
           mobs:
             - name: "Misery Mire - Fish Room - blue - Crystal Switch"
@@ -59,16 +59,16 @@ rooms:
               - "Misery Mire - Fish Room Top"
           pots:
             - name: "Misery Mire - Fish Room - blue - Pot 5"
-              position: 0x1760
+              position: { x: 0x30, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
             - name: "Misery Mire - Fish Room - blue - Pot 6"
-              position: 0x155c
+              position: { x: 0x2e, y: 0x2a, z: 0x00 }
             - name: "Misery Mire - Fish Room - blue - Pot 7"
-              position: 0x1c4c
+              position: { x: 0x26, y: 0x38, z: 0x00 }
             - name: "Misery Mire - Fish Room - blue - Pot 8"
-              position: 0x1c70
+              position: { x: 0x38, y: 0x38, z: 0x00 }
             - name: "Misery Mire - Fish Room - blue - Pot 9"
-              position: 0x1b60
+              position: { x: 0x30, y: 0x36, z: 0x00 }
           mobs:
             - name: "Misery Mire - Fish Room - blue - Medusa 1"
               position: { x: 0x15, y: 0x15, z: 0x00 }

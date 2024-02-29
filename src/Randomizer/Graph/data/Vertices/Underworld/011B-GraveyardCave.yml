@@ -9,28 +9,28 @@ rooms:
               - "Graveyard Cave - Back"
           pots:
             - name: "Graveyard Cave - Pot 1"
-              position: 0x165c
+              position: { x: 0x2e, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 2"
-              position: 0x1660
+              position: { x: 0x30, y: 0x2c, z: 0x00 }
               sprite: "@Heart"
             - name: "Graveyard Cave - Pot 3"
-              position: 0x175c
+              position: { x: 0x2e, y: 0x2e, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 4"
-              position: 0x1760
+              position: { x: 0x30, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
             - name: "Graveyard Cave - Pot 5"
-              position: 0x185c
+              position: { x: 0x2e, y: 0x30, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 6"
-              position: 0x1860
+              position: { x: 0x30, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Graveyard Cave - Pot 7"
-              position: 0x195c
+              position: { x: 0x2e, y: 0x32, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 8"
-              position: 0x1960
+              position: { x: 0x30, y: 0x32, z: 0x00 }
               sprite: "@Heart"
 
         - name: "Graveyard Cave - Back"

@@ -10,10 +10,10 @@ rooms:
               - "Magic Bat Altar"
           pots:
             - name: "Magic Bat Entry - Pot 1"
-              position: 0x3964
+              position: { x: 0x32, y: 0x32, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Magic Bat Entry - Pot 2"
-              position: 0x3758
+              position: { x: 0x2c, y: 0x2e, z: 0x00 }
 
         - name: "Magic Bat Altar"
           connections:

@@ -460,10 +460,8 @@ public partial class Entity
     [YamlMember(Alias = "name")]
     public required string Name { get; set; }
 
-    // TODO: Some entries (pots) use a short, some have an x,y,z triple. Fix data
     [YamlMember(Alias = "position")]
-    //public Position Position { get; set; }
-    public object? Position { get; set; }
+    public required Position Position { get; set; }
 
     [YamlMember(Alias = "sprite")]
     public required string Sprite { get; set; }

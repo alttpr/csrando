@@ -34,16 +34,16 @@ rooms:
               - "Ganon's Tower - Gauntlet 3"
           pots:
             - name: "Ganon's Tower - Gauntlet 1 - Pot 1"
-              position: 0x0510
+              position: { x: 0x08, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 2"
-              position: 0x052c
+              position: { x: 0x16, y: 0x0a, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 3"
-              position: 0x0b10
+              position: { x: 0x08, y: 0x16, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 4"
-              position: 0x0b2c
+              position: { x: 0x16, y: 0x16, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Ganon's Tower - Gauntlet 2 - Stalfos T"
@@ -70,16 +70,16 @@ rooms:
               - "Ganon's Tower - Gauntlet 4"
           pots:
             - name: "Ganon's Tower - Gauntlet 1 - Pot 5"
-              position: 0x140c
+              position: { x: 0x06, y: 0x28, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 6"
-              position: 0x1430
+              position: { x: 0x18, y: 0x28, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 7"
-              position: 0x1c0c
+              position: { x: 0x06, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 8"
-              position: 0x1c30
+              position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Ganon's Tower - Gauntlet 3 - Beamos TL"

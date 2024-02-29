@@ -24,12 +24,12 @@ rooms:
               type: "event"
           pots:
             - name: "Ganon's Tower - The Zoo - Pot 1"
-              position: 0x0670
+              position: { x: 0x38, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
             - name: "Ganon's Tower - The Zoo - Pot 5"
-              position: 0x0c2c
+              position: { x: 0x16, y: 0x18, z: 0x00 }
             - name: "Ganon's Tower - The Zoo - Pot 6"
-              position: 0x062c
+              position: { x: 0x16, y: 0x0c, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - The Zoo - Fire Snake 1"
               position: { x: 0x11, y: 0x06, z: 0x00 }
@@ -107,10 +107,10 @@ rooms:
               - "Ganon's Tower - Long Torch Puzzle"
           pots:
             - name: "Ganon's Tower - The Zoo - Pot 3"
-              position: 0x1472
+              position: { x: 0x39, y: 0x28, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - The Zoo - Pot 4"
-              position: 0x1c4c
+              position: { x: 0x26, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Ganon's Tower - The Zoo - Stalfos"
@@ -145,5 +145,5 @@ rooms:
               - "Ganon's Tower - Beetle Pits Right"
           pots:
             - name: "Ganon's Tower - The Zoo - Pot 2"
-              position: 0x146c
+              position: { x: 0x36, y: 0x28, z: 0x00 }
               sprite: "@ArrowRefill5"

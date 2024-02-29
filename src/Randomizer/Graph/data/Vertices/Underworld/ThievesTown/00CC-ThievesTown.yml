@@ -12,10 +12,10 @@ rooms:
               - "Thieves' Town - Torch Hallway"
           pots:
             - name: "Thieves' Town - Grand Room NE - Pot 2"
-              position: 0x0470
+              position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Thieves' Town - Grand Room NE - Pot 4"
-              position: 0x1c70
+              position: { x: 0x38, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
             - name: "Thieves' Town - Grand Room NE - Fire Snake 1"
@@ -67,10 +67,10 @@ rooms:
               - "Thieves' Town - Grand Room NW"
           pots:
             - name: "Thieves' Town - Grand Room NE - Pot 1"
-              position: 0x0424
+              position: { x: 0x12, y: 0x08, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Thieves' Town - Grand Room NE - Pot 3"
-              position: 0x1c24
+              position: { x: 0x12, y: 0x38, z: 0x00 }
               sprite: "@RupeeBlue"
           mobs:
             - name: "Thieves' Town - Grand Room NE - Bunny Beam 2"

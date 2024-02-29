@@ -17,10 +17,10 @@ rooms:
               - "Hookshot Cave"
           pots:
             - name: "Hookshot Cave Cross - Pot 1"
-              position: 0x186c
+              position: { x: 0x36, y: 0x30, z: 0x00 }
               sprite: "@Heart"
             - name: "Hookshot Cave Cross - Pot 2"
-              position: 0x1870
+              position: { x: 0x38, y: 0x30, z: 0x00 }
               sprite: "@Heart"
 
         - name: "Hookshot Cave Fairy"

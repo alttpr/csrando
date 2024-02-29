@@ -12,10 +12,10 @@ rooms:
               - "Misery Mire - Basement Switch"
           pots:
             - name: "Misery Mire - Basement - Pot 1"
-              position: 0x0454
+              position: { x: 0x2a, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Misery Mire - Basement - Pot 2"
-              position: 0x0468
+              position: { x: 0x34, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Misery Mire - Basement - Spike Trap"

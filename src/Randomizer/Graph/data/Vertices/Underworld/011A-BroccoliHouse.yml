@@ -24,14 +24,14 @@ rooms:
               - "Broccoli House"
           pots:
             - name: "Broccoli House - Pot 1"
-              position: 0x0ad6
+              position: { x: 0x2b, y: 0x15, z: 0x00 }
               sprite: "@Heart"
             - name: "Broccoli House - Pot 2"
-              position: 0x0ada
+              position: { x: 0x2d, y: 0x15, z: 0x00 }
               sprite: "@Heart"
             - name: "Broccoli House - Pot 3"
-              position: 0x0ae2
+              position: { x: 0x31, y: 0x15, z: 0x00 }
               sprite: "@Heart"
             - name: "Broccoli House - Pot 4"
-              position: 0x0ae6
+              position: { x: 0x33, y: 0x15, z: 0x00 }
               sprite: "@Heart"

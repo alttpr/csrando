@@ -38,26 +38,26 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Spike Cave Refill - Pot 1"
-              position: 0x038a
+              position: { x: 0x05, y: 0x07, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 2"
-              position: 0x038e
+              position: { x: 0x07, y: 0x07, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 3"
-              position: 0x03a6
+              position: { x: 0x13, y: 0x07, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 4"
-              position: 0x03aa
+              position: { x: 0x15, y: 0x07, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 5"
-              position: 0x048a
+              position: { x: 0x05, y: 0x09, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 6"
-              position: 0x048e
+              position: { x: 0x07, y: 0x09, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 7"
-              position: 0x04a6
+              position: { x: 0x13, y: 0x09, z: 0x00 }
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 8"
-              position: 0x04aa
+              position: { x: 0x15, y: 0x09, z: 0x00 }
               sprite: "@Heart"

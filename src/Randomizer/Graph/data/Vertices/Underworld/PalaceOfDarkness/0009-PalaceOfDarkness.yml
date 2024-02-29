@@ -15,13 +15,13 @@ rooms:
               itemset: ["pod"]
           pots:
             - name: "Palace of Darkness - Shooter Room - Pot 1"
-              position: 0x040c
+              position: { x: 0x06, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Palace of Darkness - Shooter Room - Pot 2"
-              position: 0x0430
+              position: { x: 0x18, y: 0x08, z: 0x00 }
               sprite: "@Heart"
             - name: "Palace of Darkness - Shooter Room - Pot 3"
-              position: 0x0c0c
+              position: { x: 0x06, y: 0x18, z: 0x00 }
               sprite: "FloorSwitch"
           mobs:
             - name: "Palace of Darkness - Shooter Room - Medusa 1"

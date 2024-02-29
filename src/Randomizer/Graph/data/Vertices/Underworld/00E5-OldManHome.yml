@@ -10,16 +10,16 @@ rooms:
               - "Old Man Home Back"
           pots:
             - name: "Old Man Home Circle - Pot 1"
-              position: 0x0430
+              position: { x: 0x18, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Old Man Home Circle - Pot 2"
-              position: 0x044c
+              position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Old Man Home Circle - Pot 3"
-              position: 0x1070
+              position: { x: 0x38, y: 0x20, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Old Man Home Circle - Pot 4"
-              position: 0x1240
+              position: { x: 0x20, y: 0x24, z: 0x00 }
               sprite: "@RupeeBlue"
           mobs:
             - name: "Old Man Home Circle - Keese 1"

@@ -13,23 +13,23 @@ rooms:
               - "Desert Palace - Main Room - Right"
           pots:
             - name: "Desert Palace - Main Room - Left - Pot 1"
-              position: 0x0718
+              position: { x: 0x0c, y: 0x0e, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Main Room - Left - Pot 2"
-              position: 0x0764
+              position: { x: 0x32, y: 0x0e, z: 0x00 }
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Main Room - Left - Pot 3"
-              position: 0x0618
+              position: { x: 0x0c, y: 0x0c, z: 0x00 }
             - name: "Desert Palace - Main Room - Left - Pot 4"
-              position: 0x0664
+              position: { x: 0x32, y: 0x0c, z: 0x00 }
             - name: "Desert Palace - Main Room - Left - Pot 5"
-              position: 0x0e50
+              position: { x: 0x28, y: 0x1c, z: 0x00 }
             - name: "Desert Palace - Main Room - Left - Pot 6"
-              position: 0x113c
+              position: { x: 0x1e, y: 0x22, z: 0x00 }
             - name: "Desert Palace - Main Room - Left - Pot 7"
-              position: 0x0e2c
+              position: { x: 0x16, y: 0x1c, z: 0x00 }
             - name: "Desert Palace - Main Room - Left - Pot 8"
-              position: 0x1140
+              position: { x: 0x20, y: 0x22, z: 0x00 }
           mobs:
             - name: "Desert Palace - Main Room - Left - Beamos"
               position: { x: 0x0f, y: 0x07, z: 0x00 }

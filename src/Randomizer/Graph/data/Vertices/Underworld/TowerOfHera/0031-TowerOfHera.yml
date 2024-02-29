@@ -13,10 +13,10 @@ rooms:
               - "Tower Of Hera - Beetle Gate - Pot Bypass"
           pots:
             - name: "Tower Of Hera - Maze - Pot 1"
-              position: 0x1c5c
+              position: { x: 0x2e, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Tower Of Hera - Maze - Pot 2"
-              position: 0x1c60
+              position: { x: 0x30, y: 0x38, z: 0x00 }
           mobs:
             - name: "Tower Of Hera - Beetle Gate - Hardhat Beetle R"
               position: { x: 0x1b, y: 0x15, z: 0x00 }

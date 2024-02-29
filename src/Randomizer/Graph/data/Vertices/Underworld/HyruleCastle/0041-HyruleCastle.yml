@@ -12,16 +12,16 @@ rooms:
               - "Hyrule Castle - Mantle"
           pots:
             - name: "Sewers - Dark Cactus - Pot 1"
-              position: 0x0a64
+              position: { x: 0x32, y: 0x14, z: 0x00 }
               sprite: "@Heart"
             - name: "Sewers - Dark Cactus - Pot 2"
-              position: 0x0f34
+              position: { x: 0x1a, y: 0x1e, z: 0x00 }
               sprite: "@RupeeGreen"
             - name: "Sewers - Dark Cactus - Pot 3"
-              position: 0x1034
+              position: { x: 0x1a, y: 0x20, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Sewers - Dark Cactus - Pot 4"
-              position: 0x1694
+              position: { x: 0x0a, y: 0x2d, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Sewers - Dark Cactus - Rat 1"

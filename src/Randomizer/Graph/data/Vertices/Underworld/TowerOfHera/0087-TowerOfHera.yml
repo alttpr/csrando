@@ -10,17 +10,17 @@ rooms:
               - "Tower Of Hera - Basement Corner"
           pots:
             - name: "Tower Of Hera - Tile Room - Pot 3"
-              position: 0x0c28
+              position: { x: 0x14, y: 0x18, z: 0x00 }
             - name: "Tower Of Hera - Tile Room - Pot 4"
-              position: 0x0c20
+              position: { x: 0x10, y: 0x18, z: 0x00 }
             - name: "Tower Of Hera - Tile Room - Pot 5"
-              position: 0x0c18
+              position: { x: 0x0c, y: 0x18, z: 0x00 }
             - name: "Tower Of Hera - Tile Room - Pot 6"
-              position: 0x0c10
+              position: { x: 0x08, y: 0x18, z: 0x00 }
             - name: "Tower Of Hera - Tile Room - Pot 7"
-              position: 0x0b10
+              position: { x: 0x08, y: 0x16, z: 0x00 }
             - name: "Tower Of Hera - Tile Room - Pot 8"
-              position: 0x0b0c
+              position: { x: 0x06, y: 0x16, z: 0x00 }
           mobs:
             - name: "Tower Of Hera - Tile Room - Tile Room"
               position: { x: 0x07, y: 0x08, z: 0x00 }
@@ -43,10 +43,10 @@ rooms:
               itemset: ["hera"]
           pots:
             - name: "Tower Of Hera - Tile Room - Pot 1"
-              position: 0x144c
+              position: { x: 0x26, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillSmall"
             - name: "Tower Of Hera - Tile Room - Pot 2"
-              position: 0x1470
+              position: { x: 0x38, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillFull"
           mobs:
             - name: "Tower Of Hera - Tile Room - Mini Moldorm 1"

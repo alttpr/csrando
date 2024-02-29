@@ -13,7 +13,7 @@ rooms:
 
           pots:
             - name: "Thieves' Town - Spike Dodge Pot Key"
-              position: 0x1814
+              position: { x: 0x0a, y: 0x30, z: 0x00 }
               item: "KeyD4"
               itemset: ["thieves"]
 

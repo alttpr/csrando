@@ -38,10 +38,10 @@ rooms:
               itemset: ["event"]
           pots:
             - name: "Thieves' Town - Attic Window - Pot 1"
-              position: 0x1c64
+              position: { x: 0x32, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
             - name: "Thieves' Town - Attic Window - Pot 2"
-              position: 0x1c68
+              position: { x: 0x34, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
 
           mobs:

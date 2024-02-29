@@ -6,16 +6,16 @@ rooms:
           inletid: 0x6f
           pots:
             - name: "Cheap Secret Thief - Pot 1"
-              position: 0x1918
+              position: { x: 0x0c, y: 0x32, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Cheap Secret Thief - Pot 2"
-              position: 0x191c
+              position: { x: 0x0e, y: 0x32, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Cheap Secret Thief - Pot 3"
-              position: 0x1920
+              position: { x: 0x10, y: 0x32, z: 0x00 }
               sprite: "@RupeeBlue"
             - name: "Cheap Secret Thief - Pot 4"
-              position: 0x1924
+              position: { x: 0x12, y: 0x32, z: 0x00 }
               sprite: "@RupeeBlue"
           mobs:
             - name: "Cheap Secret Thief - Thief"
