@@ -44,6 +44,9 @@ internal sealed class ItemPooler
             var itemType = vertex.SubType ?? vertex.Type;
             if (_itemLocationTypes[vertex.World].Contains(itemType))
             {
+                // FIXME: switches are something different, and shuffling them might have logic implications. ignore them for now.
+                if (itemType == VertexType.Pot && vertex.Sprite?.Name == "FloorSwitch")
+                    continue;
                 setLocations.Add(vertex, [ItemSetName.DefaultSet, .. vertex.ItemSet]);
             }
         }
@@ -174,6 +177,24 @@ internal sealed class ItemPooler
             worldSet.AddRange(Enumerable.Repeat((ItemSetName.DefaultSet, 3, world.GetItem("TriforcePiece")), triforcePiecesToPlace));
         }
 
+        if (world.Config.PotShuffle != PotShuffleOption.None)
+        {
+            // TODO: verify those counts.
+            worldSet.AddRange([
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("MagicRefillSmall")), 85),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("MagicRefillFull")), 17),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("RupeeGreen")), 51),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("RupeeBlue")), 68),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("ArrowRefill5")), 62),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("Heart")), 214),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("BombRefill1")), 83),
+                .. Enumerable.Repeat((ItemSetName.DefaultSet, 9999, world.GetItem("Chicken")), 3),
+                // force "Nothing" to stay under a pot (or some other inconsequential location,) rather than going into chests
+                .. Enumerable.Repeat((new ItemSetName("inconsequential", world), 9999, world.GetItem("Nothing")), 185),
+            ]);
+            _itemLocationTypes[world].Add(VertexType.Pot);
+        }
+
         if (
             world.Config.Glitches != GlitchesOption.None
             && (world.Config.State == StateOption.Inverted
@@ -254,6 +275,21 @@ internal sealed class ItemPooler
             .. Enumerable.Repeat(new PooledItem(new ItemSetName("gt", world), 1, world.GetItem("KeyA2")), 4),
         ];
 
+        if (world.Config.PotShuffle != PotShuffleOption.None)
+        {
+            keys =
+            [
+                .. keys,
+                new PooledItem(new ItemSetName("eastern", world), 1, world.GetItem("KeyP1")),
+                .. Enumerable.Repeat(new PooledItem(new ItemSetName("desert", world), 1, world.GetItem("KeyP2")), 3),
+                .. Enumerable.Repeat(new PooledItem(new ItemSetName("swamp", world), 1, world.GetItem("KeyD2")), 5),
+                new PooledItem(new ItemSetName("skull", world), 1, world.GetItem("KeyD3")),
+                .. Enumerable.Repeat(new PooledItem(new ItemSetName("thieves", world), 1, world.GetItem("KeyD4")), 2),
+                new PooledItem(new ItemSetName("ice", world), 1, world.GetItem("KeyD5")),
+                .. Enumerable.Repeat(new PooledItem(new ItemSetName("mire", world), 1, world.GetItem("KeyD6")), 2),
+                .. Enumerable.Repeat(new PooledItem(new ItemSetName("gt", world), 1, world.GetItem("KeyA2")), 3),
+            ];
+        }
         if (world.Config.RegionWildKeys)
             keys = [.. keys.Select(key => new PooledItem(ItemSetName.DefaultSet, 3, key.Item))];
 

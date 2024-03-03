@@ -61,6 +61,7 @@ public sealed class Randomizer
             DarknessGraphifier.AdjustEdges(Worlds[i], PRNG);
             EnemyShuffler.AdjustEdges(Worlds[i], PRNG);
             BossShuffler.AdjustEdges(Worlds[i], PRNG);
+            PotShuffler.AdjustEdges(Worlds[i], PRNG);
             BunnyGraphifier.AdjustEdges(Worlds[i], PRNG);
             PrizePackShuffler.AdjustEdges(Worlds[i], PRNG);
             DoorReplacer.AdjustEdges(Worlds[i], PRNG);

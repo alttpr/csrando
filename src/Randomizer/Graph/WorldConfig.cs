@@ -106,6 +106,7 @@ public class WorldConfig
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
     public bool EnableHints { get; init; } = false;
+    public PotShuffleOption PotShuffle { get; init; } = PotShuffleOption.None;
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }
@@ -137,3 +138,17 @@ public enum GoalIconOption { Triforce, Star }
 public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }
+public enum PotShuffleOption
+{
+    None, // Vanilla pots, no shuffle
+    Shuffled, // TODO: this just adds every pot into the pool, without regard for anything.
+    // FIXME: actually use these options (or make our own, if we don't want/need DoorRando compat)
+    //Keys, // The pots that have keys are in the pool.
+    //Cave, // The pots that are not found in dungeons are in the pool. (Includes the large block in Spike Cave.)
+    //CaveKeys, // Combination of Keys and Cave.
+    //Reduced, // Same as Cave+Keys but also roughly a quarter of dungeon pots are added to the location pool picked at random.
+    //Clustered, // Like reduced but pots are grouped by logical sets and roughly 50% of pots are chosen from those groups.
+    //NonEmpty, // All pots that had some sort of objects under them are chosen to be in the location pool.
+    //Dungeon, // The pots that are in dungeons are in the pool. (Includes serveral large blocks.)
+    //Lottery, // All pots and large blocks are in the pool.
+}

@@ -363,6 +363,8 @@ internal class VertexCollector
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(pot.Item),
+                        // FIXME: that sprite is used as a blacklist to exclude switches; we should mark that in a different way.
+                        Sprite = Sprite.Get(pot.Sprite),
                         State = pot.State.ToArray(),
                         ItemSet = pot.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(pot.Trophy),
