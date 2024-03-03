@@ -19,10 +19,16 @@ rooms:
               - "Palace of Darkness - Lonely Turtle"
           pots:
             - name: "Palace of Darkness - Callback - Pot 1"
+              addresses: [0x01DE0F]
               position: { x: 0x25, y: 0x07, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Callback - Pot 2"
+              addresses: [0x01DE12]
               position: { x: 0x25, y: 0x19, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
           mobs:
             - name: "Palace of Darkness - Callback - Crystal Switch"

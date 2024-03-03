@@ -15,13 +15,21 @@ rooms:
               - "Misery Mire - Dark Weave - Spike Area"
           pots:
             - name: "Misery Mire - Dark Weave - Pot 1"
+              # no match for position in base rom
               position: { x: 0x2b, y: 0x2e, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
             - name: "Misery Mire - Dark Weave - Pot 2"
+              # no match for position in base rom
               position: { x: 0x2e, y: 0x2e, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
             - name: "Misery Mire - Dark Weave - Pot 3"
+              # no match for position in base rom
               position: { x: 0x31, y: 0x2e, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
             - name: "Misery Mire - Dark Weave - Pot 4"
+              # no match for position in base rom
               position: { x: 0x34, y: 0x2e, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
           mobs:
             - name: "Misery Mire - Dark Weave - Crystal Switch 1"
               position: { x: 0x18, y: 0x09, z: 0x00 }

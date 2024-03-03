@@ -31,34 +31,63 @@ rooms:
               - "Desert Palace - Northwest Corner"
           pots:
             - name: "Desert Palace - Beemos Room - Pot 1"
+              addresses: [0x01E1DE]
               position: { x: 0x0d, y: 0x2b, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Beemos Room - Pot 2"
+              addresses: [0x01E1E1]
               position: { x: 0x0f, y: 0x2b, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Desert Palace - Beemos Room - Pot 3"
+              addresses: [0x01E1E4]
               position: { x: 0x0a, y: 0x2e, z: 0x00 }
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "FloorSwitch"
             - name: "Desert Palace - Beemos Room - Pot 4"
+              addresses: [0x01E1E7]
               position: { x: 0x12, y: 0x2e, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Palace - Beemos Room - Pot 5"
+              addresses: [0x01E1EA]
               position: { x: 0x08, y: 0x31, z: 0x00 }
+              item: "Heart"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Desert Palace - Beemos Room - Pot 6"
+              addresses: [0x01E1ED]
               position: { x: 0x14, y: 0x31, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Desert Palace - Beemos Room - Pot 7"
+              addresses: [0x01E1F0]
               position: { x: 0x0a, y: 0x34, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Desert Palace - Beemos Room - Pot 8"
+              addresses: [0x01E1F3]
               position: { x: 0x12, y: 0x34, z: 0x00 }
+              item: "Heart"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Desert Palace - Beemos Room - Pot 9"
+              addresses: [0x01E1F6]
               position: { x: 0x0d, y: 0x37, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Desert Palace - Beemos Room - Pot 10"
+              addresses: [0x01E1F9]
               position: { x: 0x0f, y: 0x37, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
           mobs:
             - name: "Desert Palace - Beemos Room - Beamos"

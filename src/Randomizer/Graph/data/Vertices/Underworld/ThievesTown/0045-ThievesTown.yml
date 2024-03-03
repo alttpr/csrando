@@ -13,12 +13,20 @@ rooms:
               - "Thieves' Town - Basement Block Totems Bottom"
           pots:
             - name: "Thieves' Town - Basement Block Totems - Block"
+              # no match for position in base rom
               position: { x: 0x0e, y: 0x0f, z: 0x00 }
+              itemset: ["thieves", "inconsequential", "pot"]
             - name: "Thieves' Town - Basement Block Totems - Pot 1"
+              addresses: [0x01E00E]
               position: { x: 0x06, y: 0x08, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["thieves", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Thieves' Town - Basement Block Totems - Pot 2"
+              addresses: [0x01E014]
               position: { x: 0x18, y: 0x18, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["thieves", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Thieves' Town - Basement Block Totems - Red Zazak"
@@ -91,9 +99,14 @@ rooms:
               - "Thieves' Town - Cell 3"
           pots:
             - name: "Thieves' Town - Cells - Pot 1"
+              # no match for position in base rom
               position: { x: 0x2e, y: 0x16, z: 0x00 }
+              itemset: ["thieves", "inconsequential", "pot"]
             - name: "Thieves' Town - Cells - Pot 2"
+              addresses: [0x01E011]
               position: { x: 0x36, y: 0x16, z: 0x00 }
+              item: "Heart"
+              itemset: ["thieves", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Thieves' Town - Cells - Bunny Beam"
@@ -117,10 +130,16 @@ rooms:
               itemset: ["thieves"]
           pots:
             - name: "Thieves' Town - Cells - Pot 4"
+              addresses: [0x01E017]
               position: { x: 0x2e, y: 0x21, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["thieves", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Thieves' Town - Cells - Pot 5"
+              addresses: [0x01E01A]
               position: { x: 0x36, y: 0x21, z: 0x00 }
+              item: "Heart"
+              itemset: ["thieves", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Thieves' Town - Cell 3 - Blind"

@@ -10,7 +10,10 @@ rooms:
               - "Old Man Cave Lost Space"
           pots:
             - name: "Old Man Maze - Pot"
+              addresses: [0x01E574]
               position: { x: 0x20, y: 0x0a, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Old Man Maze - Keese 1"

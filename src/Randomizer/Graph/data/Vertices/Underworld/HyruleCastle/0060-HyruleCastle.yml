@@ -11,10 +11,16 @@ rooms:
               - "Hyrule Castle - Lobby"
           pots:
             - name: "Hyrule Castle - West - Pot 1"
+              addresses: [0x01E138]
               position: { x: 0x26, y: 0x08, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Hyrule Castle - West - Pot 2"
+              addresses: [0x01E13B]
               position: { x: 0x38, y: 0x08, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Hyrule Castle - West - Blue Guard"

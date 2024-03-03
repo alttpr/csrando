@@ -6,7 +6,10 @@ rooms:
           inletid: 0x3e
           pots:
             - name: "West Snitch House - Pot"
+              addresses: [0x01E597]
               position: { x: 0x06, y: 0x28, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "West Snitch - Rupee Pull"

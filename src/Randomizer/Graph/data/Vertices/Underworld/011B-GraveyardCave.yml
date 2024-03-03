@@ -9,28 +9,52 @@ rooms:
               - "Graveyard Cave - Back"
           pots:
             - name: "Graveyard Cave - Pot 1"
+              addresses: [0x01E63C]
               position: { x: 0x2e, y: 0x2c, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 2"
+              addresses: [0x01E63F]
               position: { x: 0x30, y: 0x2c, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Graveyard Cave - Pot 3"
+              addresses: [0x01E645]
               position: { x: 0x2e, y: 0x2e, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 4"
+              addresses: [0x01E648]
               position: { x: 0x30, y: 0x2e, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Graveyard Cave - Pot 5"
+              addresses: [0x01E64E]
               position: { x: 0x2e, y: 0x30, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 6"
+              addresses: [0x01E651]
               position: { x: 0x30, y: 0x30, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Graveyard Cave - Pot 7"
+              addresses: [0x01E654]
               position: { x: 0x2e, y: 0x32, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Graveyard Cave - Pot 8"
+              addresses: [0x01E657]
               position: { x: 0x30, y: 0x32, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
 
         - name: "Graveyard Cave - Back"

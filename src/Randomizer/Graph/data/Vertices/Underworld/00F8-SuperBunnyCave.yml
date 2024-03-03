@@ -40,5 +40,8 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Super Bunny Treasure - Pot"
+              addresses: [0x01E579]
               position: { x: 0x39, y: 0x1b, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["inconsequential", "pot"]
               sprite: "@MagicRefillFull"

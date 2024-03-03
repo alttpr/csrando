@@ -13,13 +13,21 @@ rooms:
               - "Swamp Palace - Lobby North Ledge"
           pots:
             - name: "Swamp Palace - Big Spoon - Pot 3"
+              addresses: [0x01DED5]
               position: { x: 0x0b, y: 0x27, z: 0x00 }
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "FloorSwitch"
             - name: "Swamp Palace - Big Spoon - Pot 4"
+              addresses: [0x01DED8]
               position: { x: 0x0b, y: 0x34, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Swamp Palace - Big Spoon - Pot 5"
+              addresses: [0x01DEDB]
               position: { x: 0x2e, y: 0x35, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Swamp Palace - Big Spoon - Statue"
@@ -55,10 +63,16 @@ rooms:
               - "Swamp Palace - Little Spoon"
           pots:
             - name: "Swamp Palace - Big Spoon - Pot 1"
+              addresses: [0x01DECF]
               position: { x: 0x0e, y: 0x08, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Swamp Palace - Big Spoon - Pot 2"
+              addresses: [0x01DED2]
               position: { x: 0x06, y: 0x10, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Swamp Palace - Big Spoon - Medusa 1"

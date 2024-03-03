@@ -37,13 +37,21 @@ rooms:
               - "Ganon's Tower - Bari Corridor"
           pots:
             - name: "Ganon's Tower - Randomizer Room - Pot 1"
+              addresses: [0x01E233]
               position: { x: 0x0e, y: 0x08, z: 0x00 }
+              item: "Heart"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Ganon's Tower - Randomizer Room - Pot 2"
+              addresses: [0x01E236]
               position: { x: 0x10, y: 0x08, z: 0x00 }
+              item: "Heart"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Ganon's Tower - Randomizer Room - Pot 3"
+              # no match for position in base rom
               position: { x: 0x12, y: 0x2a, z: 0x00 }
+              itemset: ["gt", "inconsequential", "pot"]
           mobs:
             - name: "Ganon's Tower - Randomizer Room - Fire Bar (Counterclockwise)"
               position: { x: 0x06, y: 0x0c, z: 0x00 }

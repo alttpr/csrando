@@ -18,8 +18,14 @@ rooms:
               - "Turtle Rock - Chasm Top"
           pots:
             - name: "Turtle Rock - Chasm Top - Pot 1"
+              addresses: [0x01E3A2]
               position: { x: 0x16, y: 0x38, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
             - name: "Turtle Rock - Chasm Top - Pot 2"
+              addresses: [0x01E3A5]
               position: { x: 0x18, y: 0x38, z: 0x00 }
+              item: "Heart"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@Heart"

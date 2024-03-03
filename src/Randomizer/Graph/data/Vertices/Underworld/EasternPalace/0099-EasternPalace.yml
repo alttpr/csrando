@@ -14,10 +14,16 @@ rooms:
               - "Eastern Palace - Main Room"
           pots:
             - name: "Eastern Palace - Dark Cash - Pot 1"
+              addresses: [0x01E2DD]
               position: { x: 0x14, y: 0x28, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["eastern", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Eastern Palace - Dark Cash - Pot 2"
+              addresses: [0x01E2E0]
               position: { x: 0x2a, y: 0x28, z: 0x00 }
+              item: "Heart"
+              itemset: ["eastern", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Eastern Palace - Eyegore Key - Right Eyegore"

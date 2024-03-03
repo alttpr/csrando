@@ -142,14 +142,26 @@ rooms:
               - "Ganon's Tower - Wizzrobes 1"
           pots:
             - name: "Ganon's Tower - Lanmolas - Pot 1"
+              addresses: [0x01E1C2]
               position: { x: 0x0a, y: 0x0c, z: 0x00 }
+              item: "Heart"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Ganon's Tower - Lanmolas - Pot 2"
+              addresses: [0x01E1C5]
               position: { x: 0x14, y: 0x0c, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Ganon's Tower - Lanmolas - Pot 3"
+              addresses: [0x01E1C8]
               position: { x: 0x0a, y: 0x14, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Lanmolas - Pot 4"
+              addresses: [0x01E1CB]
               position: { x: 0x14, y: 0x14, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"

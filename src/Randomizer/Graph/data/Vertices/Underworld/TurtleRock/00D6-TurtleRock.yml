@@ -10,10 +10,16 @@ rooms:
               - "Turtle Rock - Entrance Platform"
           pots:
             - name: "Turtle Rock - Entrance - Pot 1"
+              addresses: [0x01E4DD]
               position: { x: 0x2e, y: 0x2c, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
             - name: "Turtle Rock - Entrance - Pot 2"
+              addresses: [0x01E4E0]
               position: { x: 0x30, y: 0x2c, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@BombRefill1"
 
         - name: "Turtle Rock - Entrance Platform"

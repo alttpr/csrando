@@ -18,7 +18,10 @@ rooms:
               itemset: ["turtlerock"]
           pots:
             - name: "Turtle Rock - Roller Room - Pot"
+              addresses: [0x01E3C3]
               position: { x: 0x0f, y: 0x0a, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Turtle Rock - Roller Room - Roller (Horizontal, Left)"

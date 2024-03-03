@@ -11,22 +11,39 @@ rooms:
               - "Palace of Darkness - Mimics 2"
           pots:
             - name: "Palace of Darkness - Fairies - Pot 1"
+              addresses: [0x01DEFC]
               position: { x: 0x08, y: 0x0a, z: 0x00 }
+              item: "Heart"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Palace of Darkness - Fairies - Pot 2"
+              addresses: [0x01DEFF]
               position: { x: 0x16, y: 0x0a, z: 0x00 }
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "FloorSwitch"
             - name: "Palace of Darkness - Fairies - Pot 3"
+              addresses: [0x01DF02]
               position: { x: 0x08, y: 0x0c, z: 0x00 }
+              item: "Heart"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Palace of Darkness - Fairies - Pot 4"
+              addresses: [0x01DF05]
               position: { x: 0x16, y: 0x0c, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Fairies - Pot 5"
+              addresses: [0x01DF08]
               position: { x: 0x08, y: 0x0e, z: 0x00 }
+              item: "Heart"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Palace of Darkness - Fairies - Pot 6"
+              addresses: [0x01DF0B]
               position: { x: 0x16, y: 0x0e, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
           mobs:
             - name: "Palace of Darkness - Fairies - Crystal Switch"
@@ -69,16 +86,28 @@ rooms:
               itemset: ["pod"]
           pots:
             - name: "Palace of Darkness - Fairies - Pot 7"
+              addresses: [0x01DF0E]
               position: { x: 0x09, y: 0x2b, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Fairies - Pot 8"
+              addresses: [0x01DF11]
               position: { x: 0x15, y: 0x2b, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Palace of Darkness - Fairies - Pot 9"
+              addresses: [0x01DF14]
               position: { x: 0x09, y: 0x2d, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Fairies - Pot 10"
+              addresses: [0x01DF17]
               position: { x: 0x15, y: 0x2d, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Palace of Darkness - Fairies - Red Bari 1"

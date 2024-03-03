@@ -13,11 +13,14 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Middle"
           pots:
             - name: "Ganon's Tower - Map Room - Pot 3"
+              # no match for position in base rom
               position: { x: 0x26, y: 0x18, z: 0x00 }
+              itemset: ["gt", "inconsequential", "pot"]
             - name: "Ganon's Tower - Whackamole Pot BR"
+              addresses: [0x01E28A]
               position: { x: 0x38, y: 0x18, z: 0x00 }
               item: "KeyA2"
-              itemset: ["gt"]
+              itemset: ["gt", "inconsequential", "pot"]
           mobs:
             - name: "Ganon's Tower - Map Room - Bumper"
               position: { x: 0x15, y: 0x07, z: 0x00 }
@@ -51,7 +54,9 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Bottom Upper"
           pots:
             - name: "Ganon's Tower - Map Room - Pot 1"
+              # no match for position in base rom
               position: { x: 0x26, y: 0x28, z: 0x00 }
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Ganon's Tower - Map Room - Spike Trap"
@@ -78,9 +83,13 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Bottom Upper - Orange Transition"
           pots:
             - name: "Ganon's Tower - Map Room - Pot 5"
+              # no match for position in base rom
               position: { x: 0x0e, y: 0x2e, z: 0x00 }
+              itemset: ["gt", "inconsequential", "pot"]
             - name: "Ganon's Tower - Map Room - Pot 6"
+              # no match for position in base rom
               position: { x: 0x10, y: 0x2e, z: 0x00 }
+              itemset: ["gt", "inconsequential", "pot"]
           mobs:
             - name: "Ganon's Tower - Map Room - Crystal Switch 1"
               position: { x: 0x04, y: 0x18, z: 0x00 }
@@ -121,10 +130,16 @@ rooms:
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Map Room - Pot 2"
+              addresses: [0x01E290]
               position: { x: 0x26, y: 0x38, z: 0x00 }
+              item: "Heart"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Ganon's Tower - Map Room - Pot 4"
+              addresses: [0x01E28D]
               position: { x: 0x10, y: 0x12, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["gt", "inconsequential", "pot"]
           mobs:
             - name: "Ganon's Tower - Map Room - Fire Bar (Clockwise)"
               position: { x: 0x18, y: 0x18, z: 0x00 }

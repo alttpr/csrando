@@ -9,10 +9,16 @@ rooms:
               - "Turtle Rock - Lobby ESE"
           pots:
             - name: "Turtle Rock - Torch Puzzle - Pot 3"
+              addresses: [0x01E47B]
               position: { x: 0x06, y: 0x2c, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Turtle Rock - Torch Puzzle - Pot 4"
+              addresses: [0x01E47E]
               position: { x: 0x06, y: 0x38, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
 
         - name: "Turtle Rock - Torch Puzzle"
@@ -23,10 +29,16 @@ rooms:
               - "Turtle Rock - Torch Puzzle track"
           pots:
             - name: "Turtle Rock - Torch Puzzle - Pot 1"
+              addresses: [0x01E475]
               position: { x: 0x06, y: 0x14, z: 0x00 }
+              item: "Heart"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Turtle Rock - Torch Puzzle - Pot 2"
+              addresses: [0x01E478]
               position: { x: 0x06, y: 0x16, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
 
         - name: "Turtle Rock - Torch Puzzle track"

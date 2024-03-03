@@ -12,14 +12,20 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Tavern - Pot 1"
+              addresses: [0x01E5AA]
               position: { x: 0x06, y: 0x0f, z: 0x00 }
+              item: "Chicken"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Chicken"
 
         - name: "Tavern Front"
           inletid: 0x42
           pots:
             - name: "Tavern - Pot 2"
+              addresses: [0x01E5AD]
               position: { x: 0x06, y: 0x18, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Tavern - Drunkard"

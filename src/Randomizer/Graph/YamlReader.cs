@@ -477,6 +477,9 @@ public partial class Entity
     [YamlMember(Alias = "name")]
     public required string Name { get; set; }
 
+    [YamlMember(Alias = "addresses")]
+    public List<int> Addresses { get; set; } = new();
+
     [YamlMember(Alias = "position")]
     public required Position Position { get; set; }
 

@@ -25,7 +25,9 @@ rooms:
               - "Ice Palace - Over Boss - Top"
           pots:
             - name: "Ice Palace - Block Switch - Pot"
+              addresses: [0x01E41E]
               position: { x: 0x2e, y: 0x32, z: 0x00 }
+              itemset: ["ice", "inconsequential", "pot"]
               sprite: "FloorSwitch"
           mobs:
             - name: "Ice Palace - Block Switch - Freezor"

@@ -73,20 +73,35 @@ rooms:
               - "Misery Mire - Bridge Room - Left"
           pots:
             - name: "Misery Mire - Popo Push - Pot 1"
+              addresses: [0x01E38C]
               position: { x: 0x18, y: 0x10, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["mire", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Misery Mire - Popo Push - Pot 2"
+              addresses: [0x01E38F]
               position: { x: 0x26, y: 0x10, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["mire", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Misery Mire - Popo Push - Pot 3"
+              addresses: [0x01E392]
               position: { x: 0x26, y: 0x12, z: 0x00 }
+              item: "Heart"
+              itemset: ["mire", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Misery Mire - Popo Push - Pot 4"
+              # no match for position in base rom
               position: { x: 0x18, y: 0x12, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
             - name: "Misery Mire - Popo Push - Pot 5"
+              # no match for position in base rom
               position: { x: 0x18, y: 0x14, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
             - name: "Misery Mire - Popo Push - Pot 6"
+              # no match for position in base rom
               position: { x: 0x26, y: 0x14, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
           mobs:
             - name: "Misery Mire - Popo Push - Wizzrobe"
               position: { x: 0x14, y: 0x08, z: 0x01 }

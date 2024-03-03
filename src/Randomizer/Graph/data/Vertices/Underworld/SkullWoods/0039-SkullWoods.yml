@@ -11,10 +11,16 @@ rooms:
               - "Skull Woods - Boss Drop"
           pots:
             - name: "Skull Woods - Play Pen - Pot 1"
+              addresses: [0x01DF8E]
               position: { x: 0x06, y: 0x28, z: 0x00 }
+              item: "Heart"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Skull Woods - Play Pen - Pot 2"
+              addresses: [0x01DF97]
               position: { x: 0x18, y: 0x38, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Skull Woods - Play Pen - Gibdo Key"
@@ -50,10 +56,16 @@ rooms:
               - "Skull Woods - Play Pen"
           pots:
             - name: "Skull Woods - Boss Drop - Pot 1"
+              addresses: [0x01DF91]
               position: { x: 0x32, y: 0x2c, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Boss Drop - Pot 2"
+              addresses: [0x01DF94]
               position: { x: 0x32, y: 0x34, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Skull Woods - Boss Drop - Spike Trap 1"

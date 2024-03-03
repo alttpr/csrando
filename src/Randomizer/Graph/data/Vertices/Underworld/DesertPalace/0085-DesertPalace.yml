@@ -54,10 +54,16 @@ rooms:
               - "Desert Palace - Compass Room"
           pots:
             - name: "Desert Palace - Right Hallway - Pot 1"
+              addresses: [0x01E27A]
               position: { x: 0x16, y: 0x38, z: 0x00 }
+              item: "Heart"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Desert Palace - Right Hallway - Pot 2"
+              addresses: [0x01E27D]
               position: { x: 0x18, y: 0x38, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Desert Palace - Right Hallway - Blue Devalant"

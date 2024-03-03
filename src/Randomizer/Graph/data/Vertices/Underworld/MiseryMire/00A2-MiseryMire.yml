@@ -17,7 +17,10 @@ rooms:
               - "Misery Mire - Antifairy Refill"
           pots:
             - name: "Misery Mire - Bridge Room - Left - Pot"
+              addresses: [0x01E328]
               position: { x: 0x06, y: 0x38, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["mire", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
 
         - name: "Misery Mire - Bridge Room - Right"

@@ -13,7 +13,10 @@ rooms:
           pots:
             # TODO: Missing a pot, there should be 2 under the main bridge
             - name: "Skull Woods - Bridge Room - Pot 1"
+              addresses: [0x01E0F9]
               position: { x: 0x0d, y: 0x16, z: 0x00 }
+              item: "Heart"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Skull Woods - Bridge Room - Mini Moldorm 1"
@@ -60,9 +63,13 @@ rooms:
               - "Skull Woods - Bridge Room Alcove"
           pots:
             - name: "Skull Woods - Bridge Room - Pot 2"
+              # no match for position in base rom
               position: { x: 0x26, y: 0x38, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
             - name: "Skull Woods - Bridge Room - Pot 3"
+              # no match for position in base rom
               position: { x: 0x38, y: 0x38, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
           mobs:
             - name: "Skull Woods - Bridge Room - Bumper 1"
               position: { x: 0x14, y: 0x0f, z: 0x01 }

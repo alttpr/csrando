@@ -55,28 +55,52 @@ rooms:
               - "Swamp Palace - Pool Center Ledge"
           pots:
             - name: "Swamp Palace - Pool - Pot 1"
+              addresses: [0x01DE42]
               position: { x: 0x1e, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Swamp Palace - Pool - Pot 2"
+              addresses: [0x01DE45]
               position: { x: 0x20, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Swamp Palace - Pool - Pot 3"
+              addresses: [0x01DE48]
               position: { x: 0x1e, y: 0x09, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Swamp Palace - Pool - Pot 4"
+              addresses: [0x01DE4B]
               position: { x: 0x20, y: 0x09, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Swamp Palace - Pool - Pot 5"
+              addresses: [0x01DE4E]
               position: { x: 0x1e, y: 0x0b, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Swamp Palace - Pool - Pot 6"
+              addresses: [0x01DE51]
               position: { x: 0x20, y: 0x0b, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Swamp Palace - Pool - Pot 7"
+              addresses: [0x01DE54]
               position: { x: 0x1e, y: 0x0d, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Swamp Palace - Pool - Pot 8"
+              addresses: [0x01DE57]
               position: { x: 0x20, y: 0x0d, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@BombRefill1"
           mobs:
             - name: "Swamp Palace - Pool - Zol 3"
@@ -145,6 +169,7 @@ rooms:
               - "Swamp Palace - Pool"
           pots:
             - name: "Swamp Palace - Pool Key Ledge Key"
+              addresses: [0x01DE5A]
               position: { x: 0x38, y: 0x27, z: 0x00 }
               item: "KeyD2"
-              itemset: ["swamp"]
+              itemset: ["swamp", "inconsequential", "pot"]

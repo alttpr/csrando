@@ -21,20 +21,32 @@ rooms:
               - "Desert Palace - Bridge"
           pots:
             - name: "Desert Palace - Tiles 1 - Pot 1"
+              addresses: [0x01E145]
               position: { x: 0x18, y: 0x10, z: 0x00 }
+              item: "Heart"
+              itemset: ["desert", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Desert Palace - Tiles 1 - Pot 2"
+              # no match for position in base rom
               position: { x: 0x06, y: 0x10, z: 0x00 }
+              itemset: ["desert", "inconsequential", "pot"]
             - name: "Desert Palace - Tiles 1 - Pot 3"
+              # no match for position in base rom
               position: { x: 0x06, y: 0x08, z: 0x00 }
+              itemset: ["desert", "inconsequential", "pot"]
             - name: "Desert Palace - Tiles 1 - Pot 4"
+              # no match for position in base rom
               position: { x: 0x18, y: 0x08, z: 0x00 }
+              itemset: ["desert", "inconsequential", "pot"]
             - name: "Desert Palace - Tiles 1 - Pot 5"
+              # no match for position in base rom
               position: { x: 0x18, y: 0x18, z: 0x00 }
+              itemset: ["desert", "inconsequential", "pot"]
             - name: "Desert Palace - Tiles 1 - BL Pot"
+              addresses: [0x01E148]
               position: { x: 0x06, y: 0x18, z: 0x00 }
               item: "KeyP2"
-              itemset: ["desert"]
+              itemset: ["desert", "inconsequential", "pot"]
           mobs:
             - name: "Desert Palace - Tiles 1 - TileRoom"
               position: { x: 0x07, y: 0x08, z: 0x00 }

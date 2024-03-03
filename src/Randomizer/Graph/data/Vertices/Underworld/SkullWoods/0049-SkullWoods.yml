@@ -11,27 +11,49 @@ rooms:
               - "Skull Woods - Bridge Room"
           pots:
             - name: "Skull Woods - Bari Pits - Pot 3"
+              addresses: [0x01E02D]
               position: { x: 0x08, y: 0x27, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bari Pits - Pot 4"
+              addresses: [0x01E030]
               position: { x: 0x16, y: 0x29, z: 0x00 }
+              item: "Heart"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Skull Woods - Bari Pits - Pot 5"
+              addresses: [0x01E033]
               position: { x: 0x08, y: 0x37, z: 0x00 }
+              item: "Heart"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Skull Woods - Bari Pits - Pot 6"
+              addresses: [0x01E036]
               position: { x: 0x16, y: 0x39, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bari Pits - Pot 7"
+              # no match for position in base rom
               position: { x: 0x08, y: 0x29, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
             - name: "Skull Woods - Bari Pits - Pot 8"
+              # no match for position in base rom
               position: { x: 0x16, y: 0x2f, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
             - name: "Skull Woods - Bari Pits - Pot 9"
+              # no match for position in base rom
               position: { x: 0x16, y: 0x31, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
             - name: "Skull Woods - Bari Pits - Pot 10"
+              # no match for position in base rom
               position: { x: 0x10, y: 0x37, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
             - name: "Skull Woods - Bari Pits - Pot 11"
+              # no match for position in base rom
               position: { x: 0x0e, y: 0x37, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
           mobs:
             - name: "Skull Woods - Bari Pits - Wallmaster"
               position: { x: 0x0f, y: 0x0f, z: 0x00 }
@@ -54,10 +76,16 @@ rooms:
               - "Skull Woods - Vine Door Room"
           pots:
             - name: "Skull Woods - Bari Pits - Pot 1"
+              addresses: [0x01E027]
               position: { x: 0x34, y: 0x1e, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Bari Pits - Pot 2"
+              addresses: [0x01E02A]
               position: { x: 0x34, y: 0x20, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Skull Woods - Bari Pits - Gibdo 2"

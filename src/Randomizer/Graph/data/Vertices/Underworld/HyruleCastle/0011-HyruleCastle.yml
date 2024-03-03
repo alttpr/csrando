@@ -66,18 +66,34 @@ rooms:
               itemset: ["escape"]
           pots:
             - name: "Sewers - Secret Room - Pot 1"
+              addresses: [0x01DE17]
               position: { x: 0x08, y: 0x1f, z: 0x00 }
+              item: "Heart"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Sewers - Secret Room - Pot 2"
+              addresses: [0x01DE1A]
               position: { x: 0x10, y: 0x1f, z: 0x00 }
+              item: "Heart"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Sewers - Secret Room - Pot 3"
+              addresses: [0x01DE1D]
               position: { x: 0x08, y: 0x27, z: 0x00 }
+              item: "Heart"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Sewers - Secret Room - Pot 4"
+              addresses: [0x01DE20]
               position: { x: 0x10, y: 0x27, z: 0x00 }
+              item: "Heart"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Sewers - Secret Room - Pot 5"
+              # no match for position in base rom
               position: { x: 0x0c, y: 0x1f, z: 0x00 }
+              itemset: ["escape", "inconsequential", "pot"]
             - name: "Sewers - Secret Room - Pot 6"
+              # no match for position in base rom
               position: { x: 0x0c, y: 0x27, z: 0x00 }
+              itemset: ["escape", "inconsequential", "pot"]

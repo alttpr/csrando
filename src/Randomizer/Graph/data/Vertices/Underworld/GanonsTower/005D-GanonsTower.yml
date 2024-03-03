@@ -34,16 +34,28 @@ rooms:
               - "Ganon's Tower - Gauntlet 3"
           pots:
             - name: "Ganon's Tower - Gauntlet 1 - Pot 1"
+              addresses: [0x01E10B]
               position: { x: 0x08, y: 0x0a, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 2"
+              addresses: [0x01E10E]
               position: { x: 0x16, y: 0x0a, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 3"
+              addresses: [0x01E111]
               position: { x: 0x08, y: 0x16, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 4"
+              addresses: [0x01E114]
               position: { x: 0x16, y: 0x16, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
           mobs:
             - name: "Ganon's Tower - Gauntlet 2 - Stalfos T"
@@ -70,16 +82,28 @@ rooms:
               - "Ganon's Tower - Gauntlet 4"
           pots:
             - name: "Ganon's Tower - Gauntlet 1 - Pot 5"
+              addresses: [0x01E117]
               position: { x: 0x06, y: 0x28, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 6"
+              addresses: [0x01E11A]
               position: { x: 0x18, y: 0x28, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 7"
+              addresses: [0x01E11D]
               position: { x: 0x06, y: 0x38, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Ganon's Tower - Gauntlet 1 - Pot 8"
+              addresses: [0x01E120]
               position: { x: 0x18, y: 0x38, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@BombRefill1"
           mobs:
             - name: "Ganon's Tower - Gauntlet 3 - Beamos TL"

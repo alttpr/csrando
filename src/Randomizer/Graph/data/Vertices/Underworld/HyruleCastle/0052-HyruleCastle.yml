@@ -10,10 +10,16 @@ rooms:
               - "Hyrule Castle - East"
           pots:
             - name: "Hyrule Castle - North East Passage - Pot 1"
+              addresses: [0x01E076]
               position: { x: 0x05, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Hyrule Castle - North East Passage - Pot 2"
+              addresses: [0x01E079]
               position: { x: 0x21, y: 0x35, z: 0x00 }
+              item: "Heart"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Hyrule Castle - North East Passage - Green Guard"

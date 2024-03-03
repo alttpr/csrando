@@ -12,10 +12,16 @@ rooms:
               itemset: ["lw"]
           pots:
             - name: "Sick Kid House - Pot 1"
+              addresses: [0x01E5A2]
               position: { x: 0x09, y: 0x27, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Sick Kid House - Pot 2"
+              addresses: [0x01E5A5]
               position: { x: 0x0b, y: 0x27, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Sick Kid House - Bug-Catching Kid"

@@ -13,9 +13,10 @@ rooms:
 
           pots:
             - name: "Thieves' Town - Spike Dodge Pot Key"
+              addresses: [0x01E35A]
               position: { x: 0x0a, y: 0x30, z: 0x00 }
               item: "KeyD4"
-              itemset: ["thieves"]
+              itemset: ["thieves", "inconsequential", "pot"]
 
           mobs:
             - name: "Thieves' Town - Spike Dodge - Crystal Switch"

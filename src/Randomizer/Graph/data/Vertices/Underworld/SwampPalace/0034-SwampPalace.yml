@@ -99,10 +99,16 @@ rooms:
               - "Swamp Palace - West Wing Right Ledge - Right"
           pots:
             - name: "Swamp Palace - West Wing - Pot 1"
+              addresses: [0x01DF48]
               position: { x: 0x27, y: 0x10, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Swamp Palace - West Wing - Pot 2"
+              addresses: [0x01DF4B]
               position: { x: 0x2e, y: 0x10, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
 
         - name: "Swamp Palace - West Wing Right Ledge - Right"

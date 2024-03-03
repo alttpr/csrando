@@ -14,10 +14,15 @@ rooms:
               - "Misery Mire - Room 45"
           pots:
             - name: "Misery Mire - Dark Switch - Pot 1"
+              addresses: [0x01E2C7]
               position: { x: 0x0e, y: 0x0e, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
               sprite: "FloorSwitch"
             - name: "Misery Mire - Dark Switch - Pot 2"
+              addresses: [0x01E2CA]
               position: { x: 0x30, y: 0x0e, z: 0x00 }
+              item: "Heart"
+              itemset: ["mire", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Misery Mire - Room 45 - Medusa 1"
@@ -48,7 +53,9 @@ rooms:
               - "Misery Mire - Dark Weave - Spike Area"
           pots:
             - name: "Misery Mire - Big Block - Block"
+              # no match for position in base rom
               position: { x: 0x0e, y: 0x2f, z: 0x00 }
+              itemset: ["mire", "inconsequential", "pot"]
           mobs:
             - name: "Misery Mire - Room 45 - Stalfos 1"
               position: { x: 0x04, y: 0x15, z: 0x00 }

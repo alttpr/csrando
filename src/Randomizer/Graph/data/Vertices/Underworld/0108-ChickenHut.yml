@@ -9,7 +9,10 @@ rooms:
               - "Chicken Hut Hidden Room"
           pots:
             - name: "Chicken Hut - Pot"
+              addresses: [0x01E5DF]
               position: { x: 0x13, y: 0x27, z: 0x00 }
+              item: "Chicken"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Chicken"
           mobs:
             - name: "Chicken Hut - Chicken 1"

@@ -6,34 +6,54 @@ rooms:
           inletid: 0x6d
           pots:
             - name: "Desert Thief Hideout - Pot 1"
+              # no match for position in base rom
               position: { x: 0x0a, y: 0x28, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 2"
+              # no match for position in base rom
               position: { x: 0x14, y: 0x28, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 3"
+              # no match for position in base rom
               position: { x: 0x0a, y: 0x2a, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 4"
+              # no match for position in base rom
               position: { x: 0x14, y: 0x2a, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 5"
+              # no match for position in base rom
               position: { x: 0x0a, y: 0x2c, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 6"
+              # no match for position in base rom
               position: { x: 0x14, y: 0x2c, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 7"
+              # no match for position in base rom
               position: { x: 0x0c, y: 0x30, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 8"
+              # no match for position in base rom
               position: { x: 0x0e, y: 0x30, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 9"
+              # no match for position in base rom
               position: { x: 0x10, y: 0x30, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Desert Thief Hideout - Pot 10"
+              # no match for position in base rom
               position: { x: 0x12, y: 0x30, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
           mobs:
             - name: "Desert Thief Hideout - Thief"

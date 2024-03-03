@@ -10,10 +10,14 @@ rooms:
               - "Ice Palace - Big Key View"
           pots:
             - name: "Ice Palace - Big Key View - Pot 1"
+              addresses: [0x01DEA0]
               position: { x: 0x0e, y: 0x32, z: 0x00 }
+              itemset: ["ice", "inconsequential", "pot"]
               sprite: "FloorSwitch"
             - name: "Ice Palace - Big Key View - Pot 4"
+              # no match for position in base rom
               position: { x: 0x0e, y: 0x2e, z: 0x00 }
+              itemset: ["ice", "inconsequential", "pot"]
           mobs:
             - name: "Ice Palace - Big Key View - Pengator 1"
               position: { x: 0x04, y: 0x15, z: 0x00 }
@@ -55,9 +59,13 @@ rooms:
               - "Ice Palace - Big Key Right Nook"
           pots:
             - name: "Ice Palace - Big Key View - Pot 2"
+              # no match for position in base rom
               position: { x: 0x2b, y: 0x34, z: 0x00 }
+              itemset: ["ice", "inconsequential", "pot"]
             - name: "Ice Palace - Big Key View - Pot 3"
+              # no match for position in base rom
               position: { x: 0x2b, y: 0x36, z: 0x00 }
+              itemset: ["ice", "inconsequential", "pot"]
 
         - name: "Ice Palace - Big Key Right Nook"
           connections:

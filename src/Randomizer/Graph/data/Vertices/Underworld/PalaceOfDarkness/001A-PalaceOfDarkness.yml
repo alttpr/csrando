@@ -17,16 +17,28 @@ rooms:
               - "Palace of Darkness - Falling Bridge Top"
           pots:
             - name: "Palace of Darkness - Compass Room - Pot 1"
+              addresses: [0x01DE85]
               position: { x: 0x0e, y: 0x0a, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Compass Room - Pot 2"
+              addresses: [0x01DE88]
               position: { x: 0x10, y: 0x0a, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Compass Room - Pot 3"
+              addresses: [0x01DE8B]
               position: { x: 0x0e, y: 0x36, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Palace of Darkness - Compass Room - Pot 4"
+              addresses: [0x01DE8E]
               position: { x: 0x10, y: 0x36, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["pod", "inconsequential", "pot"]
               sprite: "@BombRefill1"
           mobs:
             - name: "Palace of Darkness - Compass Room - Mini Helmasaur 1"
@@ -128,9 +140,13 @@ rooms:
               itemset: ["pod"]
           pots:
             - name: "Palace of Darkness - Compass Room - Pot 5"
+              # no match for position in base rom
               position: { x: 0x2a, y: 0x27, z: 0x00 }
+              itemset: ["pod", "inconsequential", "pot"]
             - name: "Palace of Darkness - Compass Room - Pot 6"
+              # no match for position in base rom
               position: { x: 0x34, y: 0x27, z: 0x00 }
+              itemset: ["pod", "inconsequential", "pot"]
           mobs:
             - name: "Palace of Darkness - Compass Room - Spike Trap 1"
               position: { x: 0x16, y: 0x15, z: 0x00 }

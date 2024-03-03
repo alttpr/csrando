@@ -24,16 +24,28 @@ rooms:
               - "Agahnims Tower - Dark Corner"
           pots:
             - name: "Agahnims Tower - Dark Corner - Pot 1"
+              addresses: [0x01E437]
               position: { x: 0x18, y: 0x14, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Agahnims Tower - Dark Corner - Pot 2"
+              addresses: [0x01E43A]
               position: { x: 0x06, y: 0x1c, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Agahnims Tower - Dark Corner - Pot 3"
+              addresses: [0x01E43D]
               position: { x: 0x06, y: 0x34, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Agahnims Tower - Dark Corner - Pot 4"
+              addresses: [0x01E440]
               position: { x: 0x0e, y: 0x36, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeGreen"
           mobs:
             - name: "Agahnims Tower - Dark Corner - Blue Guard 2"

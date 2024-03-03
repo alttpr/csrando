@@ -82,7 +82,10 @@ rooms:
               - "Turtle Rock - Tile Room"
           pots:
             - name: "Turtle Rock - Refill Room - Pot"
+              addresses: [0x01E3BE]
               position: { x: 0x2f, y: 0x12, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
           mobs:
             - name: "Turtle Rock - Tile Room - Fairy"

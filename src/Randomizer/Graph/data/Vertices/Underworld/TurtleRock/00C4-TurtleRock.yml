@@ -14,28 +14,52 @@ rooms:
 
           pots:
             - name: "Turtle Rock - Switch Block Puzzle - Pot 1"
+              addresses: [0x01E453]
               position: { x: 0x2a, y: 0x12, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 2"
+              addresses: [0x01E456]
               position: { x: 0x0c, y: 0x1c, z: 0x00 }
+              item: "Heart"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 3"
+              addresses: [0x01E459]
               position: { x: 0x1c, y: 0x22, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 4"
+              addresses: [0x01E45C]
               position: { x: 0x2a, y: 0x22, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 5"
+              addresses: [0x01E45F]
               position: { x: 0x06, y: 0x2a, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 6"
+              addresses: [0x01E462]
               position: { x: 0x26, y: 0x2e, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 7"
+              addresses: [0x01E465]
               position: { x: 0x18, y: 0x32, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Turtle Rock - Switch Block Puzzle - Pot 8"
+              addresses: [0x01E468]
               position: { x: 0x06, y: 0x34, z: 0x00 }
+              item: "Heart"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@Heart"
 
           mobs:

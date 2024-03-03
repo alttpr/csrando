@@ -17,16 +17,28 @@ rooms:
               itemset: ["skull"]
           pots:
             - name: "Skull Woods - Big Key Room - Pot 3"
+              addresses: [0x01E0CB]
               position: { x: 0x2e, y: 0x2e, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Skull Woods - Big Key Room - Pot 4"
+              addresses: [0x01E0CE]
               position: { x: 0x32, y: 0x2e, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Big Key Room - Pot 5"
+              addresses: [0x01E0D1]
               position: { x: 0x2a, y: 0x32, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
             - name: "Skull Woods - Big Key Room - Pot 6"
+              addresses: [0x01E0D4]
               position: { x: 0x26, y: 0x36, z: 0x00 }
+              item: "Heart"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Skull Woods - Big Key Room - Gibdo 4"
@@ -54,13 +66,21 @@ rooms:
               - "Skull Woods - Statue Puzzle Nook"
           pots:
             - name: "Skull Woods - Big Key Room - Pot 2"
+              addresses: [0x01E0C8]
               position: { x: 0x06, y: 0x28, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Big Key Room - Pot 7"
+              addresses: [0x01E0D7]
               position: { x: 0x18, y: 0x28, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Skull Woods - Big Key Room - Pot 8"
+              addresses: [0x01E0DA]
               position: { x: 0x0f, y: 0x2c, z: 0x00 }
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "FloorSwitch"
           mobs:
             - name: "Skull Woods - Big Key Room - Wallmaster"
@@ -144,5 +164,8 @@ rooms:
               - "Skull Woods - Big Key Room"
           pots:
             - name: "Skull Woods - Big Key Room - Pot 1"
+              addresses: [0x01E0C5]
               position: { x: 0x2e, y: 0x0e, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["skull", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"

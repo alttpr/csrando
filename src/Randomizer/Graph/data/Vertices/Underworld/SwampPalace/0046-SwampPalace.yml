@@ -10,7 +10,10 @@ rooms:
               - "Swamp Palace - Big O Bottom"
           pots:
             - name: "Swamp Palace - Big O Top - Pot 1"
+              addresses: [0x01E01F]
               position: { x: 0x30, y: 0x0a, z: 0x00 }
+              item: "Heart"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Swamp Palace - Big O Top - Hover 1"
@@ -44,7 +47,10 @@ rooms:
               - "Swamp Palace - Big O Top Left"
           pots:
             - name: "Swamp Palace - Big O Top - Pot 2"
+              addresses: [0x01E022]
               position: { x: 0x0e, y: 0x36, z: 0x00 }
+              item: "Heart"
+              itemset: ["swamp", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Swamp Palace - Big O Top - Hover 2"

@@ -10,28 +10,52 @@ rooms:
               - "Turtle Rock - Chain Chomps Room"
           pots:
             - name: "Turtle Rock - Cold Tubes - Pot 1"
+              addresses: [0x01DE25]
               position: { x: 0x30, y: 0x08, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Turtle Rock - Cold Tubes - Pot 2"
+              addresses: [0x01DE28]
               position: { x: 0x32, y: 0x08, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Turtle Rock - Cold Tubes - Pot 3"
+              addresses: [0x01DE2B]
               position: { x: 0x34, y: 0x08, z: 0x00 }
+              item: "Heart"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Turtle Rock - Cold Tubes - Pot 4"
+              addresses: [0x01DE2E]
               position: { x: 0x36, y: 0x08, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
             - name: "Turtle Rock - Cold Tubes - Pot 5"
+              addresses: [0x01DE31]
               position: { x: 0x38, y: 0x08, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Turtle Rock - Cold Tubes - Pot 6"
+              addresses: [0x01DE34]
               position: { x: 0x06, y: 0x0c, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Turtle Rock - Cold Tubes - Pot 7"
+              addresses: [0x01DE37]
               position: { x: 0x08, y: 0x0c, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Turtle Rock - Cold Tubes - Pot 8"
+              addresses: [0x01DE3A]
               position: { x: 0x0a, y: 0x0c, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@RupeeBlue"
           mobs:
             - name: "Turtle Rock - Cold Tubes - Down Pipe 1"
@@ -72,5 +96,8 @@ rooms:
               - "Turtle Rock - Cold Tubes"
           pots:
             - name: "Turtle Rock - Cold Tubes - Pot 9"
+              addresses: [0x01DE3D]
               position: { x: 0x23, y: 0x16, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["turtlerock", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"

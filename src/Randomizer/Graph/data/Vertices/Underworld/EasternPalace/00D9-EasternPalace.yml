@@ -10,10 +10,16 @@ rooms:
               - "Eastern Palace - Antifairy Playground"
           pots:
             - name: "Eastern Palace - Dodgeball - Pot 1"
+              addresses: [0x01E4FF]
               position: { x: 0x2e, y: 0x28, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["eastern", "inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Eastern Palace - Dodgeball - Pot 2"
+              addresses: [0x01E502]
               position: { x: 0x2e, y: 0x38, z: 0x00 }
+              item: "Heart"
+              itemset: ["eastern", "inconsequential", "pot"]
               sprite: "@Heart"
           mobs:
             - name: "Eastern Palace - Dodgeball - Green Eyegore 1"

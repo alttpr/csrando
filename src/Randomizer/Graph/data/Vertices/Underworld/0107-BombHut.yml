@@ -6,27 +6,50 @@ rooms:
           inletid: 0x4a
           pots:
             - name: "Bomb Hut - Pot 1"
+              addresses: [0x01E5C8]
               position: { x: 0x2b, y: 0x2f, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Bomb Hut - Pot 2"
+              addresses: [0x01E5CB]
               position: { x: 0x2f, y: 0x2f, z: 0x00 }
+              item: "ArrowRefill5"
+              itemset: ["inconsequential", "pot"]
               sprite: "@ArrowRefill5"
             - name: "Bomb Hut - Pot 3"
+              addresses: [0x01E5CE]
               position: { x: 0x33, y: 0x2f, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Bomb Hut - Pot 4"
+              addresses: [0x01E5D1]
               position: { x: 0x2b, y: 0x33, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Bomb Hut - Pot 8"
+              # no match for position in base rom
               position: { x: 0x2f, y: 0x33, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
             - name: "Bomb Hut - Pot 5"
+              addresses: [0x01E5D4]
               position: { x: 0x33, y: 0x33, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeGreen"
             - name: "Bomb Hut - Pot 6"
+              addresses: [0x01E5D7]
               position: { x: 0x2b, y: 0x37, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
             - name: "Bomb Hut - Pot 7"
+              addresses: [0x01E5DA]
               position: { x: 0x33, y: 0x37, z: 0x00 }
+              item: "BombRefill1"
+              itemset: ["inconsequential", "pot"]
               sprite: "@BombRefill1"
           mobs:
             - name: "Bomb Hut - Rat 1"

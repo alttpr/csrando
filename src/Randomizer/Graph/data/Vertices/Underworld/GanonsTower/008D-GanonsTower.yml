@@ -56,7 +56,10 @@ rooms:
           pots:
             # TODO: Missing empty pot around gibdo
             - name: "Ganon's Tower - Tile Room - Pot 1"
+              addresses: [0x01E2AC]
               position: { x: 0x26, y: 0x1d, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
           mobs:
             - name: "Ganon's Tower - Tile Room - Gibdo"
@@ -106,13 +109,22 @@ rooms:
               - "Ganon's Tower - Long Torch Puzzle"
           pots:
             - name: "Ganon's Tower - Tile Room - Pot 2"
+              addresses: [0x01E2AF]
               position: { x: 0x0e, y: 0x2e, z: 0x00 }
+              item: "Heart"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Ganon's Tower - Tile Room - Pot 3"
+              addresses: [0x01E2B2]
               position: { x: 0x12, y: 0x2e, z: 0x00 }
+              item: "Heart"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Ganon's Tower - Tile Room - Pot 4"
+              addresses: [0x01E2B5]
               position: { x: 0x10, y: 0x30, z: 0x00 }
+              item: "MagicRefillFull"
+              itemset: ["gt", "inconsequential", "pot"]
               sprite: "@MagicRefillFull"
           mobs:
             - name: "Ganon's Tower - Tile Room - Fire Bar (Clockwise)"

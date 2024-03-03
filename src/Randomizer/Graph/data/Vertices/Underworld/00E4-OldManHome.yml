@@ -9,7 +9,10 @@ rooms:
               - "Old Man Home Back"
           pots:
             - name: "Old Man Home - Pot 1"
+              addresses: [0x01E535]
               position: { x: 0x10, y: 0x12, z: 0x00 }
+              item: "RupeeBlue"
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeBlue"
           mobs:
             - name: "Old Man Home - Lost Old Man"
@@ -25,7 +28,10 @@ rooms:
               - "Old Man Home Circle"
           pots:
             - name: "Old Man Home - Pot 2"
+              addresses: [0x01E538]
               position: { x: 0x38, y: 0x14, z: 0x00 }
+              item: "RupeeGreen"
+              itemset: ["inconsequential", "pot"]
               sprite: "@RupeeGreen"
           mobs:
             - name: "Old Man Home - Keese 1"

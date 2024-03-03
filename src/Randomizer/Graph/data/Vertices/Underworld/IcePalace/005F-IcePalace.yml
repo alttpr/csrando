@@ -19,7 +19,9 @@ rooms:
 
           pots:
             - name: "Ice Palace - Bari University - Pot"
+              addresses: [0x01E133]
               position: { x: 0x16, y: 0x36, z: 0x00 }
+              itemset: ["ice", "inconsequential", "pot"]
               sprite: "FloorSwitch"
 
           mobs:

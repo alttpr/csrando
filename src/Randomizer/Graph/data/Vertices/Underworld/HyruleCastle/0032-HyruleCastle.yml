@@ -19,7 +19,10 @@ rooms:
               itemset: ["escape"]
           pots:
             - name: "Sewers - Dark Cross - Pot"
+              addresses: [0x01DF43]
               position: { x: 0x0e, y: 0x1a, z: 0x00 }
+              item: "MagicRefillSmall"
+              itemset: ["escape", "inconsequential", "pot"]
               sprite: "@MagicRefillSmall"
           mobs:
             - name: "Sewers - Dark Cross - Keese 1"

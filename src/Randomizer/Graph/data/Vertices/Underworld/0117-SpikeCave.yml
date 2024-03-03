@@ -38,26 +38,50 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Spike Cave Refill - Pot 1"
+              addresses: [0x01E5FD]
               position: { x: 0x05, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 2"
+              addresses: [0x01E600]
               position: { x: 0x07, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 3"
+              addresses: [0x01E603]
               position: { x: 0x13, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 4"
+              addresses: [0x01E606]
               position: { x: 0x15, y: 0x07, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 5"
+              addresses: [0x01E609]
               position: { x: 0x05, y: 0x09, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 6"
+              addresses: [0x01E60C]
               position: { x: 0x07, y: 0x09, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 7"
+              addresses: [0x01E60F]
               position: { x: 0x13, y: 0x09, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
             - name: "Spike Cave Refill - Pot 8"
+              addresses: [0x01E612]
               position: { x: 0x15, y: 0x09, z: 0x00 }
+              item: "Heart"
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"

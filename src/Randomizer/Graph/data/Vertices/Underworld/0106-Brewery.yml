@@ -12,5 +12,7 @@ rooms:
               itemset: ["dw"]
           pots:
             - name: "Brewery - Pot"
+              # no match for position in base rom
               position: { x: 0x36, y: 0x36, z: 0x00 }
+              itemset: ["inconsequential", "pot"]
               sprite: "@Heart"
