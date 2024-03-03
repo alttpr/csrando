@@ -3,7 +3,7 @@ rooms:
     nodes:
       regions:
         - name: "West Snitch House"
-          inletid: 0x3f
+          inletid: 0x3e
           pots:
             - name: "West Snitch House - Pot"
               position: { x: 0x06, y: 0x28, z: 0x00 }
