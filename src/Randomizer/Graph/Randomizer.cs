@@ -108,6 +108,36 @@ public sealed class Randomizer
         {
             if (!searcher.HasFound(world.GetItem("Triforce")))
             {
+#if DEBUG
+                string[] interrestingItems =
+                [
+                    "Crystal1", "Crystal2", "Crystal3", "Crystal4", "Crystal5", "Crystal6", "Crystal7",
+                    "PendantOfCourage", "PendantOfWisdom", "PendantOfPower",
+                    "AgahnimDefeated", "Agahnim2Defeated",
+                ];
+                foreach (string item in interrestingItems)
+                {
+                    var worldItem = world.GetItem(item);
+                    System.Console.WriteLine("World {0}: {1} {2}obtainable at {3}",
+                        world.Id,
+                        item,
+                        searcher.HasFound(worldItem) ? "" : "NOT ",
+                        Graph.GetVertices().FirstOrDefault(v => v.World == world && v.Item == worldItem)?.Name);
+                }
+                string[] interrestingLocations =
+                [
+                    "Ganon's Tower - Bob's Torch", "Ganon's Tower - Pre-Moldorm Chest", "Ganon's Tower - Moldorm Chest"
+                ];
+                foreach (string location in interrestingLocations)
+                {
+                    var locationVertex = world.GetLocation(location);
+                    System.Console.WriteLine("World {0}: {1} {2}reachable at {3}",
+                        world.Id,
+                        locationVertex.Item?.Name ?? "location",
+                        searcher.HasVisited(locationVertex) ? "" : "NOT ",
+                        locationVertex.Name);
+                }
+#endif
                 return false;
             }
         }
