@@ -7,31 +7,9 @@ namespace Randomizer.Graph;
 /// </summary>
 public sealed class Graph
 {
-    // TODO: this (and _setLocations) feel like they shouldn't be here.
-    //       they probably make more sense over in the ItemPooler.
-    private static readonly HashSet<VertexType> ITEM_LOCATIONS = new()
-    {
-        VertexType.BigChest,
-        VertexType.Bonk,
-        VertexType.Chest,
-        VertexType.Drop,
-        VertexType.Dig,
-        VertexType.Event,
-        VertexType.Medallion,
-        //VertexType.Mob,
-        VertexType.Npc,
-        VertexType.Pedestal,
-        //VertexType.Pot,
-        VertexType.Prize,
-        VertexType.Refill,
-        VertexType.ShopItem,
-        VertexType.Standing,
-    };
-
     private readonly HashSet<Vertex> _vertices = new();
     private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = new();
-    private readonly Dictionary<ItemSetName, List<Vertex>> _setLocations = new() { { ItemSetName.DefaultSet, new() } };
     public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
     public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys = new();
     public Dictionary<Item /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys = new();
@@ -40,11 +18,6 @@ public sealed class Graph
     public IEnumerable<Vertex> GetVertices()
     {
         return _vertices;
-    }
-
-    public IEnumerable<Vertex> GetSetLocations(ItemSetName set)
-    {
-        return _setLocations[set];
     }
 
     public Vertex GetVertex(string name)
@@ -72,16 +45,6 @@ public sealed class Graph
 
         _vertices.Add(vertex);
         _verticesByName.Add($"{vertex.Name}:{vertex.World.Id}", vertex);
-
-        if (ITEM_LOCATIONS.Contains(vertex.SubType ?? vertex.Type))
-        {
-            _setLocations[ItemSetName.DefaultSet].Add(vertex);
-            foreach (var set in vertex.ItemSet)
-            {
-                _setLocations.TryAdd(set, new());
-                _setLocations[set].Add(vertex);
-            }
-        }
 
         return vertex;
     }

@@ -10,6 +10,7 @@ public class Searcher
     private readonly Graph _graph;
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
+    private readonly SetLocations _setLocations;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -17,7 +18,7 @@ public class Searcher
     /// <param name="graph">The graph to search</param>
     /// <param name="start">The starting point to search from</param>
     /// <param name="inventory">The current inventory to use while searching</param>
-    public Searcher(Graph graph, Vertex start, Inventory inventory)
+    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null)
     {
         _graph = graph;
         _visited = new(graph);
@@ -25,6 +26,7 @@ public class Searcher
         _searchStarts = new(graph);
         _searchStarts.Add(start);
         _inventory = inventory;
+        _setLocations = setLocations ?? new();
 
         bool newItemsFound;
         do
@@ -331,7 +333,7 @@ public class Searcher
     /// <param name="onlyReachable">only return reachable locations</param>
     public IEnumerable<Vertex> GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool onlyReachable = true)
     {
-        var emptyLocations = _graph.GetSetLocations(itemSet).Where((vertex) =>
+        var emptyLocations = _setLocations[itemSet].Where((vertex) =>
         {
             return (!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null;
         }).OrderBy(v => v.Name).ToList();
@@ -342,7 +344,7 @@ public class Searcher
             if (setName.World == null)
                 continue;
 
-            var setLocations = _graph.GetSetLocations(setName).Where(static (location) => location.Item == null);
+            var setLocations = _setLocations[setName].Where(static (location) => location.Item == null);
             if (setLocations.Count() < setCount)
                 throw new Exception($"Not enough set locations available: {setName}");
             // if a set has the same number of items to place as set locations

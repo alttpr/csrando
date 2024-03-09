@@ -4,10 +4,56 @@ using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
 /// <summary>Get the sets of items to place.</summary>
 /// <param name="worlds">worlds to get Item pools for</param>
-internal sealed class ItemPooler(World[] worlds, PRNG prng)
+internal sealed class ItemPooler
 {
+    // these are item locations that will ALWAYS receive items, regardless of randomizer options.
+    // TODO: this isn't true at the moment; things like ShopItem should probably only be here during Shop randomizer.
+    private static readonly HashSet<VertexType> ITEM_LOCATIONS =
+    [
+        VertexType.BigChest,
+        VertexType.Bonk,
+        VertexType.Chest,
+        VertexType.Drop,
+        VertexType.Dig,
+        VertexType.Event,
+        VertexType.Medallion,
+        VertexType.Npc,
+        VertexType.Pedestal,
+        VertexType.Prize,
+        VertexType.Refill,
+        VertexType.ShopItem,
+        VertexType.Standing,
+    ];
+
+    private readonly PRNG _prng;
+    private readonly Dictionary<World, HashSet<VertexType>> _itemLocationTypes;
+
+    public ItemPooler(World[] worlds, PRNG prng)
+    {
+        _prng = prng;
+        _itemLocationTypes = worlds.ToDictionary(k => k, v => new HashSet<VertexType>(ITEM_LOCATIONS));
+        Pool = [.. worlds.SelectMany(GetPoolForWorld)];
+        SetLocations = BuildLocations(worlds);
+    }
+
+    private SetLocations BuildLocations(World[] worlds)
+    {
+        var setLocations = new SetLocations();
+        foreach (var vertex in worlds.SelectMany(world => world.GetLocations()))
+        {
+            var itemType = vertex.SubType ?? vertex.Type;
+            if (_itemLocationTypes[vertex.World].Contains(itemType))
+            {
+                setLocations.Add(vertex, [ItemSetName.DefaultSet, .. vertex.ItemSet]);
+            }
+        }
+        return setLocations;
+    }
+
+    /// <summary>Get a list possible locations, keyed by item set.</summary>
+    public SetLocations SetLocations { get; }
     /// <summary>Get list of all items in their weighted sets.</summary>
-    public PooledItem[] GetPool() => [.. worlds.SelectMany(GetPoolForWorld)];
+    public PooledItem[] Pool { get; }
 
     /// <summary>Get list of all items for <paramref name="world"/> in their weighted sets.</summary>
     private List<PooledItem> GetPoolForWorld(World world)
@@ -128,14 +174,14 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
         {
             float crystalRatio = world.Config.CrystalsTower / 7f;
             int fillCount = world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal or GoalOption.Trifecta
-                ? prng.GetRandomInt((int)(15 * crystalRatio), (int)(25 * crystalRatio))
-                : prng.GetRandomInt((int)(15 * crystalRatio));
+                ? _prng.GetRandomInt((int)(15 * crystalRatio), (int)(25 * crystalRatio))
+                : _prng.GetRandomInt((int)(15 * crystalRatio));
             if (fillCount > 0)
             {
                 var junkItems = worldSet.Where(p => p.Weight == 9999).ToArray();
                 for (int i = 0; i < fillCount; i++)
                 {
-                    var junkItem = prng.GetRandomElement(junkItems);
+                    var junkItem = _prng.GetRandomElement(junkItems);
                     worldSet.Remove(junkItem);
                     worldSet.Add(new(new ItemSetName("gt", world), 2, junkItem.Item));
                 }
@@ -156,8 +202,8 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         return
         [
-            new PooledItem(new ItemSetName("mm-medallion", world), 0, world.GetItem(prng.GetRandomElement(_mireEntry))),
-            new PooledItem(new ItemSetName("tr-medallion", world), 0, world.GetItem(prng.GetRandomElement(_trEntry))),
+            new PooledItem(new ItemSetName("mm-medallion", world), 0, world.GetItem(_prng.GetRandomElement(_mireEntry))),
+            new PooledItem(new ItemSetName("tr-medallion", world), 0, world.GetItem(_prng.GetRandomElement(_trEntry))),
         ];
     }
 
@@ -299,12 +345,12 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
     {
         return
         [
-            new PooledItem(new ItemSetName("bottle", world), 0, world.GetItem("Fairy" + prng.GetRandomElement(_bottles))),
-            new PooledItem(new ItemSetName("bottle", world), 0, world.GetItem("Fairy" + prng.GetRandomElement(_bottles))),
-            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem(prng.GetRandomElement(_bottles))),
-            new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(prng.GetRandomElement(_bottles))),
-            new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(prng.GetRandomElement(_bottles))),
-            new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(prng.GetRandomElement(_bottles))),
+            new PooledItem(new ItemSetName("bottle", world), 0, world.GetItem("Fairy" + _prng.GetRandomElement(_bottles))),
+            new PooledItem(new ItemSetName("bottle", world), 0, world.GetItem("Fairy" + _prng.GetRandomElement(_bottles))),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem(_prng.GetRandomElement(_bottles))),
+            new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(_prng.GetRandomElement(_bottles))),
+            new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(_prng.GetRandomElement(_bottles))),
+            new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(_prng.GetRandomElement(_bottles))),
         ];
     }
 
@@ -326,5 +372,21 @@ internal sealed class ItemPooler(World[] worlds, PRNG prng)
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BlueShield")), 2),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedShield")), 1)
         ];
+    }
+}
+
+public sealed class SetLocations
+{
+    private readonly Dictionary<ItemSetName, List<Vertex>> _setLocations = new() { { ItemSetName.DefaultSet, new() } };
+    private static readonly List<Vertex> EmptyList = [];
+
+    public IReadOnlyList<Vertex> this[ItemSetName itemSet] => _setLocations.GetValueOrDefault(itemSet, EmptyList);
+    public void Add(Vertex vertex, params ItemSetName[] itemSets)
+    {
+        foreach (var itemSet in itemSets)
+        {
+            _setLocations.TryAdd(itemSet, []);
+            _setLocations[itemSet].Add(vertex);
+        }
     }
 }

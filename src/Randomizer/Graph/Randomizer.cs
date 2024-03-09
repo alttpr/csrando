@@ -17,6 +17,7 @@ public sealed class Randomizer
 
     private readonly Inventory _startingItems = new();
     private readonly Vertex _start;
+    private readonly ItemPooler _itemPooler;
 
     /// <summary>
     /// Set up the Randomizer. This involves:
@@ -65,6 +66,7 @@ public sealed class Randomizer
         }
 
         Graph.SetVertexIds();
+        _itemPooler = new ItemPooler(Worlds, PRNG);
 
         System.Console.WriteLine($"Graph configuration took {sw.Elapsed}");
     }
@@ -76,7 +78,7 @@ public sealed class Randomizer
     public void Randomize()
     {
         var filler = new RandomAssumedFiller(this, PRNG);
-        var sets = new ItemPooler(Worlds, PRNG).GetPool();
+        var sets = _itemPooler.Pool;
 
         filler.FillGraph(sets);
     }
@@ -86,7 +88,7 @@ public sealed class Randomizer
     /// </summary>
     public Searcher GetSearcherForInventory(IEnumerable<Item> items, World? world = null)
     {
-        return new(Graph, world?.GetLocation("start") ?? _start, _startingItems.Merge(new Inventory(items.ToArray())));
+        return new(Graph, world?.GetLocation("start") ?? _start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
     }
 
     /// <summary>

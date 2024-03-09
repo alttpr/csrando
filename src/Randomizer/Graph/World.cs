@@ -86,7 +86,7 @@ public sealed class World
 
     private void PruneConfigEdges()
     {
-        foreach (var v in Graph.GetVertices().Where(v => v.World == this))
+        foreach (var v in GetLocations())
         {
             v.Edges = v.Edges.Where(e => !e.Condition.Item.Name.StartsWith("ConfigWorld") || StartingItems.Has(e.Condition.Item)).ToList();
         }
@@ -113,14 +113,12 @@ public sealed class World
         return Graph.HasVertex($"{locationName}:{Id}");
     }
 
-    /// <summary>
-    /// Get all vertices of a given type.
-    /// </summary>
+    /// <summary>Get all vertices in this world.</summary>
+    /// <returns></returns>
+    public IEnumerable<Vertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
+    /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type)
-    {
-        return Graph.GetVertices().Where(vertex => vertex.World == this && vertex.Type == type);
-    }
+    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
 
     public Item GetItem(string name)
     {
