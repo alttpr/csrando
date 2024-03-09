@@ -1,15 +1,18 @@
 namespace Randomizer.Graph;
 
-using System.Data.Common;
 using System.Diagnostics;
 
 // FIXME: we need a sprite class that does something.
-public record class Sprite(string Name)
+public record class Sprite(string Name, byte[]? Bytes = null)
 {
     public byte?[] Sheets = [null, null, null, null];
     public static Sprite Get(string name)
     {
-        return new(name);
+        var spriteData = YamlReader.LoadSprites();
+        byte[]? spriteBytes = null;
+        if (spriteData.TryGetValue(name, out var sprite))
+            spriteBytes = sprite?.Bytes;
+        return new(name, spriteBytes);
     }
 }
 

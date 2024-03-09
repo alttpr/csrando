@@ -109,8 +109,10 @@ internal class VertexCollector
                     Type = VertexType.PrizePack,
                     Name = prizepack.Name,
                     World = world,
-                    Offset = prizepack.Offset,
+                    Addresses = prizepack.Addresses,
                     Sprite = Sprite.Get(prizepack.Sprite),
+                    Deny = prizepack.Deny.ToArray(),
+                    Allow = prizepack.Allow.ToArray(),
                 });
             }
             foreach (var region in map.Nodes.Regions)

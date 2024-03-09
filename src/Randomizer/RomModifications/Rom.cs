@@ -514,40 +514,10 @@ public sealed class Rom : IDisposable
         Write(0x6D323, [0x00, 0x00, 0xe4, 0xff, 0x08, 0x0E]);
     }
 
-    /// <summary>Set the sprite that spawns when a stunned Enemy is killed</summary>
-    /// <param name="sprite">id of sprite to drop (0xD9 green rupee)</param>
-    public void SetStunnedSpritePrize(byte sprite = 0xD9)
-        => Write(0x37993, [sprite]);
-
     /// <summary>Set the sprite that spawns when powdered sprite that usually spawns a faerie is powdered.</summary>
     /// <param name="sprite">id of sprite to drop</param>
     public void SetPowderedSpriteFairyPrize(byte sprite = 0xE3)
         => Write(0x36DD0, [sprite]);
-
-    public void SetPrizePacks(byte[] pack)
-        => Write(0x37A78, pack);
-
-    /// <summary>Set pull tree prizes</summary>
-    /// <param name="low">id of sprite to drop (0xD9 green rupee)</param>
-    /// <param name="mid">id of sprite to drop (0xDA blue rupee)</param>
-    /// <param name="high">id of sprite to drop (0xDB red rupee)</param>
-    public void SetPullTreePrizes(byte low = 0xD9, byte mid = 0xDA, byte high = 0xDB)
-        => Write(0xEFBD4, [low, mid, high]);
-
-
-    /// <summary>Set rupee crab, first and final prizes</summary>
-    /// <param name="main">id of sprite to drop (0xD9 green rupee)</param>
-    /// <param name="final">id of sprite to drop (0xDB red rupee)</param>
-    public void SetRupeeCrabPrizes(byte main = 0xD9, byte final = 0xDB)
-    {
-        Write(0x329C8, [main]);
-        Write(0x329C4, [final]);
-    }
-
-    /// <summary>Set fish save prize</summary>
-    /// <param name="prize">id of sprite to drop (0xDB red rupee)</param>
-    public void SetFishSavePrize(byte prize = 0xDB)
-        => Write(0xE82CC, [prize]);
 
     /// <summary>Set Overworld bonk prizes</summary>
     /// <param name="prizes">ids of sprites to drop (0x03 empty)</param>
@@ -1655,6 +1625,38 @@ public sealed class Rom : IDisposable
             return true;
         }
         catch { return false; }
+    }
+
+    public void WriteSprite(Vertex location, Sprite? spriteToWrite = null)
+    {
+        if (location?.Addresses == null)
+            return;
+
+        spriteToWrite ??= location.Sprite;
+        if (spriteToWrite == null)
+            return;
+
+        var spriteBytes = spriteToWrite.Bytes;
+        // FIXME: is this a data issue, or something that needs special handling?
+        if (spriteBytes == null)
+            return;
+
+        // TODO: some sprites have more than one byte, because they are alternates.
+        //       those might be location specific and/or a reason to split it into two sprites.
+        //       at the moment, this always uses the first of the bytes (rather than a random pick)
+        //       under the assumption that the location only has a single address (which should be
+        //       true for most locations that spawn sprites, such as prize packs or pots)
+        for (int i = 0; i < Math.Min(spriteBytes.Length, location.Addresses.Length); i++)
+        {
+            if (i >= location.Addresses.Length)
+                break;
+            long address = location.Addresses[i];
+            byte? itemByte = spriteBytes.ElementAtOrDefault(i);
+            if (itemByte == null)
+                continue;
+
+            Write((Address)address, [itemByte.Value]);
+        }
     }
 
     public void WriteItem(Vertex location, Item? itemToWrite = null)

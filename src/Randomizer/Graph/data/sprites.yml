@@ -1,0 +1,795 @@
+# comments/names based on values.asm of the JP 1.0 disassembly
+# when they differ from the internally used sprite name (to help discoverability when searching for them.)
+Empty:
+  bytes: [] #FIXME: is this "NULL" 0x03?
+  flags: NoPlace
+Raven:
+  bytes: [0x00]
+  flags: Challenge
+Vulture:
+  bytes: [0x01]
+  flags: Challenge
+FlyingStalfosHead: #STALFOS HEAD
+  bytes: [0x02]
+  flags: Challenge
+#NULL:
+#  bytes: [0x03]
+PullSwitchGood: #CORRECT PULL SWITCH
+  bytes: [0x04]
+  flags: NoPlace
+PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH
+  bytes: [0x05]
+  flags: NoPlace
+PullSwitchBad: #WRONG PULL SWITCH
+  bytes: [0x06]
+  flags: NoPlace
+PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH
+  bytes: [0x07]
+  flags: NoPlace
+Octorok1: #OKTOROK
+  bytes: [0x08]
+  flags: Challenge
+Moldorm:
+  bytes: [0x09]
+  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+Octorok4: #OCTOROK 4WAY
+  bytes: [0x0A]
+  flags: Challenge
+Chicken: #CUCCO
+  bytes: [0x0B]
+  flags: Challenge
+OctorokStone: #OCTOROK STONE
+  bytes: [0x0C]
+  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+Buzzblob:
+  bytes: [0x0D]
+  flags: Challenge
+Snapdragon:
+  bytes: [0x0E]
+  flags: Challenge
+Octoballoon:
+  bytes: [0x0F]
+  flags: Challenge
+Octobaby: #OCTOBALLOON BABY
+  bytes: [0x10]
+  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+Hinox:
+  bytes: [0x11]
+  flags: Challenge
+Moblin:
+  bytes: [0x12]
+  flags: Challenge
+MiniHelmasaur: #MINI HELMASAUR
+  bytes: [0x13]
+  flags: Challenge
+ForkGate: #THIEVES TOWN GRATE?
+  bytes: [0x14]
+  flags: NoPlace
+Antifairy:
+  bytes: [0x15, 0x77]
+Sahasrahla: #SAHASRAHLA / AGINAH
+  bytes: [0x16]
+  flags: NoPlace
+BushHoarder: #HOARDER
+  bytes: [0x17]
+  flags: Challenge
+MiniMoldorm: #MINI MOLDORM
+  bytes: [0x18]
+  flags: Challenge
+Poe:
+  bytes: [0x19]
+  flags: Challenge
+DwarfSmith: #SMITHY
+  bytes: [0x1A]
+  flags: NoPlace
+SpriteArrow: #ARROW
+  bytes: [0x1B]
+  flags: NoPlace
+Statue:
+  bytes: [0x1C]
+FluteQuest:
+  bytes: [0x1D]
+  flags: NoPlace
+CrystalSwitch: #CRYSTAL SWITCH
+  bytes: [0x1E]
+  flags: NoPlace
+SickKid: #SICK KID
+  bytes: [0x1F]
+  flags: NoPlace
+Sluggula:
+  bytes: [0x20]
+  flags: Challenge
+PushSwitch: #WATER SWITCH
+  bytes: [0x21]
+  flags: NoPlace
+Ropa:
+  bytes: [0x22]
+  flags: Challenge
+RedBari: #RED BARI
+  bytes: [0x23]
+  flags: Challenge
+BlueBari: #BLUE BARI
+  bytes: [0x24]
+  flags: Challenge
+TalkingTree: #TALKING TREE
+  bytes: [0x25]
+  flags: NoPlace
+HardhatBeetle: #HARDHAT BEETLE
+  bytes: [0x26]
+  flags: Challenge
+Deadrock:
+  bytes: [0x27]
+  flags: Challenge
+Storyteller: #DARK WORLD HINT NPC
+  bytes: [0x28]
+  flags: NoPlace
+Adult:
+  bytes: [0x29]
+  flags: NoPlace
+SweepingLady: #SWEEPING LADY
+  bytes: [0x2A]
+  flags: NoPlace
+Hobo:
+  bytes: [0x2B]
+  flags: NoPlace
+Lumberjack: #LUMBERJACKS
+  bytes: [0x2C]
+  flags: NoPlace
+#NECKLESS MAN:
+#  bytes: [0x2D]
+FluteKid: #FLUTE KID
+  bytes: [0x2E]
+  flags: NoPlace
+RaceGameLady: #RACE GAME LADY
+  bytes: [0x2F]
+  flags: NoPlace
+RaceGameBoy: #RACE GAME GUY?
+  bytes: [0x30]
+  flags: NoPlace
+FortuneTeller: #FORTUNE TELLER
+  bytes: [0x31]
+  flags: NoPlace
+AngryBrother: #ARGUE BROS?
+  bytes: [0x32]
+  flags: NoPlace
+PullForRupees: #RUPEE PULL?
+  bytes: [0x33]
+  flags: NoPlace
+YoungSnitch: #YOUNG SNITCH
+  bytes: [0x34]
+  flags: NoPlace
+Innkeeper:
+  bytes: [0x35]
+  flags: NoPlace
+Witch:
+  bytes: [0x36]
+  flags: NoPlace
+Waterfall:
+  bytes: [0x37]
+  flags: NoPlace
+ArrowTarget: #EYE STATUE
+  bytes: [0x38]
+  flags: NoPlace
+AverageMan: #LOCKSMITH?
+  bytes: [0x39]
+  flags: NoPlace
+MagicBat: #MAGIC BAT
+  bytes: [0x3A]
+  flags: NoPlace
+DashItem: #BONK ITEM
+  bytes: [0x3B]
+  flags: NoPlace
+VillageKid: #KID IN KAK?
+  bytes: [0x3C]
+  flags: NoPlace
+OldSnitch: #OLD SNITCH
+  bytes: [0x3D]
+  flags: NoPlace
+RockHoarder: #HOARDER?
+  bytes: [0x3E]
+  flags: Challenge
+TutorialGuard: #TUTORIAL GUARD
+  bytes: [0x3F]
+  flags: NoPlace
+LightningLock: #LIGHTNING GATE
+  bytes: [0x40]
+  flags: NoPlace
+BlueSwordGuard: #BLUE GUARD?
+  bytes: [0x41]
+  flags: Challenge
+GreenSwordGuard: #GREEN GUARD?
+  bytes: [0x42]
+  flags: Challenge
+RedSpearGuard: #RED SPEAR GUARD
+  bytes: [0x43]
+  flags: Challenge
+AssaultSwordGuard: #BLUESAIN BOLT
+  bytes: [0x44]
+  flags: Challenge
+FastRedSpearGuard: #USAIN BOLT
+  bytes: [0x45]
+  flags: Challenge
+BlueArcher: #BLUE ARCHER
+  bytes: [0x46]
+  flags: Challenge
+GreenArcher: #GREEN BUSH GUARD?
+  bytes: [0x47]
+  flags: Challenge
+RedJavelinGuard: #RED JAVELIN GUARD
+  bytes: [0x48]
+  flags: Challenge
+RedJavelinGuard2: #RED BUSH GUARD?
+  bytes: [0x49]
+  flags: Challenge
+RedBombGuard: #BOMB GUARD?
+  bytes: [0x4A]
+  flags: Challenge
+GreenGuardRecruit: #GREEN KNIFE GUARD?
+  bytes: [0x4B]
+  flags: Challenge
+Geldman:
+  bytes: [0x4C]
+  flags: Challenge
+Rabbit: #TOPPO?
+  bytes: [0x4D]
+  flags: Challenge
+Popo:
+  bytes: [0x4E]
+  flags: Challenge
+Popo2: #POPO?
+  bytes: [0x4F]
+  flags: Challenge
+Cannonball:
+  bytes: [0x50]
+  flags: NoPlace
+Armos: #ARMOS STATUE
+  bytes: [0x51]
+  flags: Challenge
+KingZora: #KING ZORA
+  bytes: [0x52]
+  flags: NoPlace
+ArmosKnight: #ARMOS KNIGHT
+  bytes: [0x53]
+  flags: NoPlace
+Lanmolas:
+  bytes: [0x54]
+  flags: NoPlace
+FireballZora: #ZORA / FIREBALL?
+  bytes: [0x55]
+WalkingZora: #ZORA?
+  bytes: [0x56]
+  flags: Challenge
+DesertPalaceBarrier: #DESERT STATUE?
+  bytes: [0x57]
+  flags: NoPlace
+Crab:
+  bytes: [0x58]
+  flags: Challenge
+Bird: #LOST WOODS BIRD
+  bytes: [0x59]
+Squirrel: #LOST WOODS SQUIRREL?
+  bytes: [0x5A]
+SparkCW: #SPARK CLOCKWISE
+  bytes: [0x5B]
+SparkCCW: #SPARK COUNTERCLOCKWISE
+  bytes: [0x5C]
+RollerVD: #ROLLER VERTICAL DOWN FIRST?
+  bytes: [0x5D]
+RollerVU: #ROLLER VERTICAL UP FIRST
+  bytes: [0x5E]
+RollerHR: #ROLLER HORIZONTAL RIGHT FIRST
+  bytes: [0x5F]
+RollerHL: #ROLLER HORIZONTAL LEFT FIRST
+  bytes: [0x60]
+Beamos:
+  bytes: [0x61]
+MasterSword:
+  bytes: [0x62]
+  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+DevalantBlue: #DEBIRANDO PIT
+  bytes: [0x63]
+DevalantRed: #DEBIRANDO
+  bytes: [0x64]
+  flags: Challenge
+ShootingGalleryNPC: #ARCHERY GUY
+  bytes: [0x65]
+  flags: NoPlace
+CannonBallShooterL: #WALL CANNON VERTICAL LEFT
+  bytes: [0x66]
+CannonBallShooterR: #WALL CANNON VERTICAL RIGHT
+  bytes: [0x67]
+CannonBallShooterU: #WALL CANNON HORIZONTAL TOP
+  bytes: [0x68]
+CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM
+  bytes: [0x69]
+BallNChainTrooper: #BALL N CHAIN
+  bytes: [0x6A]
+  flags: Challenge
+CannonGuard: #CANNONBALL / CANNON TROOPER
+  bytes: [0x6B]
+  flags: Challenge
+MirrorPortal: #MIRROR PORTAL
+  bytes: [0x6C]
+  flags: NoPlace
+Rat: #RAT / CRICKET
+  bytes: [0x6D]
+  flags: Challenge
+Snake: #SNAKE? ROPE?
+  bytes: [0x6E]
+  flags: Challenge
+Keese:
+  bytes: [0x6F]
+HelmasaurFireball: #KING HELMASAUR FIREBALL
+  bytes: [0x70]
+  flags: NoPlace
+Leever:
+  bytes: [0x71]
+  flags: Challenge
+PondActivation: #FAIRY POND TRIGGER?
+  bytes: [0x72]
+  flags: NoPlace
+Uncle: #UNCLE / PRIEST / MANTLE
+  bytes: [0x73]
+  flags: NoPlace
+Priest: #UNCLE / PRIEST / MANTLE
+  bytes: [0x73]
+  flags: NoPlace
+Mantle: #UNCLE / PRIEST / MANTLE
+  bytes: [0x73]
+  flags: NoPlace
+RunningMan: #RUNNING MAN
+  bytes: [0x74]
+  flags: NoPlace
+BottleSalesman: #BOTTLE MERCHANT
+  bytes: [0x75]
+  flags: NoPlace
+Zelda:
+  bytes: [0x76]
+  flags: NoPlace
+SahaWife: #SAHASRAHLAS WIFE
+  bytes: [0x78]
+  flags: NoPlace
+Bee:
+  bytes: [0x79]
+  flags: NoPlace
+Agahnim:
+  bytes: [0x7A]
+  flags: NoPlace
+AgahnimBall: #AGAHNIMS BALLS
+  bytes: [0x7B]
+  flags: NoPlace
+GreenStalfos: #GREEN STALFOS
+  bytes: [0x7C]
+  flags: Challenge
+BigSpikeTrap: #BIG SPIKE?
+  bytes: [0x7D]
+FireBarCW: #FIREBAR CLOCKWISE
+  bytes: [0x7E]
+FireBarCCW: #FIREBAR COUNTERCLOCKWISE
+  bytes: [0x7F]
+FireSnake:
+  bytes: [0x80]
+Hover:
+  bytes: [0x81]
+  flags: Challenge
+AntifairyCircle: #ANTIFAIRY CIRCLE
+  bytes: [0x82]
+EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
+  bytes: [0x83]
+  flags: Challenge
+EyegoreRed: #RED EYEGORE / RED MIMIC
+  bytes: [0x84]
+  flags: Challenge
+#YELLOW STALFOS:
+#  bytes: [0x85]
+Kodongo:
+  bytes: [0x86]
+  flags: Challenge
+#KONDONGO FIRE:
+#  bytes: [0x87]
+Mothula:
+  bytes: [0x88]
+  flags: NoPlace
+MothulaBeam: #MOTHULA BEAM
+  bytes: [0x89]
+  flags: NoPlace
+SpikeTrap: #SPIKE BLOCK
+  bytes: [0x8A]
+Gibdo:
+  bytes: [0x8B]
+  flags: Challenge
+Arrghus:
+  bytes: [0x8C]
+  flags: NoPlace
+ArrghusSpawn: #ARRGHI
+  bytes: [0x8D]
+  flags: NoPlace
+Terrorpin:
+  bytes: [0x8E]
+  flags: Challenge
+Zol: #BLOB?
+  bytes: [0x8F]
+  flags: Challenge
+Wallmaster:
+  bytes: [0x90]
+  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+StalfosKnight: #STALFOS KNIGHT
+  bytes: [0x91]
+  flags: Challenge
+Helmasaur: #KING HELMASAUR
+  bytes: [0x92]
+  flags: NoPlace
+Bumper:
+  bytes: [0x93]
+Pirogusu: #PIROGUSU / TILE ROOM TILE?
+  bytes: [0x94]
+  flags: NoPlace
+LaserEyeL: #LASER EYE LEFT
+  bytes: [0x95]
+  flags: NoPlace
+LaserEyeR: #LASER EYE RIGHT
+  bytes: [0x96]
+  flags: NoPlace
+LaserEyeU: #LASER EYE TOP
+  bytes: [0x97]
+  flags: NoPlace
+LaserEyeD: #LASER EYE BOTTOM
+  bytes: [0x98]
+  flags: NoPlace
+Pengator:
+  bytes: [0x99]
+  flags: Challenge
+Kyameron:
+  bytes: [0x9A]
+Wizzrobe:
+  bytes: [0x9B]
+  flags: Challenge
+Zoro:
+  bytes: [0x9C]
+  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+Babasu:
+  bytes: [0x9D]
+  flags: Challenge
+OstrichHG: #HAUNTED GROVE OSTRITCH
+  bytes: [0x9E]
+RabbitHG: #HAUNTED GROVE RABBIT
+  bytes: [0x9F]
+BirdHG: #HAUNTED GROVE BIRD
+  bytes: [0xA0]
+Freezor:
+  bytes: [0xA1]
+  flags: NoPlace
+Kholdstare:
+  bytes: [0xA2]
+  flags: NoPlace
+KholdstareShell: #KHOLDSTARE SHELL
+  bytes: [0xA3]
+  flags: NoPlace
+FallingIce: #FALLING ICE
+  bytes: [0xA4]
+ZazakBlue: #BLUE ZAZAK
+  bytes: [0xA5]
+  flags: Challenge
+ZazakRed: #RED ZAZAK
+  bytes: [0xA6]
+  flags: Challenge
+Stalfos:
+  bytes: [0xA7]
+  flags: Challenge
+ZirroGreen: #GREEN ZIRRO
+  bytes: [0xA8]
+  flags: Challenge
+ZirroBlue: #BLUE ZIRRO
+  bytes: [0xA9]
+  flags: Challenge
+Pikit:
+  bytes: [0xAA]
+  flags: Challenge
+Maiden: #CRYSTAL MAIDEN?
+  bytes: [0xAB]
+  flags: NoPlace
+Apple:
+  bytes: [0xAC]
+  flags: NoPlace
+LostOldMan: #OLD MAN
+  bytes: [0xAD]
+  flags: NoPlace
+PipeD: #PIPE DOWN
+  bytes: [0xAE]
+  flags: NoPlace
+PipeU: #PIPE UP
+  bytes: [0xAF]
+  flags: NoPlace
+PipeR: #PIPE RIGHT
+  bytes: [0xB0]
+  flags: NoPlace
+PipeL: #PIPE LEFT
+  bytes: [0xB1]
+  flags: NoPlace
+BeeGood: #GOOD BEE
+  bytes: [0xB2]
+  flags: NoPlace
+HylianPlaque: #PEDESTAL PLAQUE?
+  bytes: [0xB3]
+  flags: NoPlace
+PurpleChest: #PURPLE CHEST
+  bytes: [0xB4]
+  flags: NoPlace
+BombSalesman: #BOMB SHOP GUY
+  bytes: [0xB5]
+  flags: NoPlace
+Kiki:
+  bytes: [0xB6]
+  flags: NoPlace
+BlindMaiden: #BLIND MAIDEN
+  bytes: [0xB7]
+  flags: NoPlace
+DialogueTester: #DIALOGUE TESTER
+  bytes: [0xB8]
+  flags: Challenge
+FeudingFriends: #BULLY / PINK BALL
+  bytes: [0xB9]
+  flags: NoPlace
+Whirlpool:
+  bytes: [0xBA]
+  flags: NoPlace
+Salesman: #SHOPKEEPER / CHEST GAME GUY
+  bytes: [0xBB]
+  flags: NoPlace
+Drunkard:
+  bytes: [0xBC]
+  flags: NoPlace
+Vitreous:
+  bytes: [0xBD]
+  flags: NoPlace
+VitreousSmallEyeball: #VITREOUS SMALL EYE
+  bytes: [0xBE]
+  flags: NoPlace
+Lightning:
+  bytes: [0xBF]
+  flags: NoPlace
+Catfish:
+  bytes: [0xC0]
+  flags: NoPlace
+AgahnimCutscene: #CUTSCENE AGAHNIM
+  bytes: [0xC1]
+  flags: NoPlace
+Boulders:
+  bytes: [0xC2]
+  flags: NoPlace, OverworldOnly
+Gibo:
+  bytes: [0xC3]
+  flags: Challenge
+Thief:
+  bytes: [0xC4]
+  flags: Challenge
+Medusa:
+  bytes: [0xC5]
+  flags: NoPlace
+YomoMedusa: #4WAY SHOOTER
+  bytes: [0xC6]
+  flags: NoPlace
+Pokey:
+  bytes: [0xC7]
+  flags: Challenge
+FairyBig: #BIG FAIRY
+  bytes: [0xC8]
+  flags: NoPlace
+Tektite: #TEKTITE / FIREBAT
+  bytes: [0xC9]
+  flags: Challenge
+ChainChomp: #CHAIN CHOMP
+  bytes: [0xCA]
+Trinexx: #TRINEXX ROCK HEAD
+  bytes: [0xCB]
+  flags: NoPlace
+TrinexxHeadFire: #TRINEXX FIRE HEAD
+  bytes: [0xCC]
+  flags: NoPlace
+TrinexxHeadIce: #TRINEXX ICE HEAD
+  bytes: [0xCD]
+  flags: NoPlace
+Blind:
+  bytes: [0xCE]
+  flags: NoPlace
+Swamola:
+  bytes: [0xCF]
+  flags: Challenge
+Lynel:
+  bytes: [0xD0]
+  flags: Challenge
+BunnyBeam: #BUNNYBEAM / SMOKE
+  bytes: [0xD1]
+  flags: NoPlace
+FloppingFish: #FLOPPING FISH
+  bytes: [0xD2]
+Stal:
+  bytes: [0xD3]
+  flags: Challenge
+Landmine:
+  bytes: [0xD4]
+  flags: Challenge
+DiggingGameNPC: #DIG GAME GUY
+  bytes: [0xD5]
+  flags: NoPlace
+Ganon:
+  bytes: [0xD6]
+  flags: NoPlace
+GanonInvisible:
+  bytes: [0xD7]
+  flags: NoPlace
+Heart:
+  bytes: [0xD8]
+  flags: NoPlace
+RupeeGreen: #GREEN RUPEE
+  bytes: [0xD9]
+  flags: NoPlace
+RupeeBlue: #BLUE RUPEE
+  bytes: [0xDA]
+  flags: NoPlace
+RupeeRed: #RED RUPEE
+  bytes: [0xDB]
+  flags: NoPlace
+BombRefill1: #BOMB REFILL 1
+  bytes: [0xDC]
+  flags: NoPlace
+BombRefill4: #BOMB REFILL 4
+  bytes: [0xDD]
+  flags: NoPlace
+BombRefill8: #BOMB REFILL 8
+  bytes: [0xDE]
+  flags: NoPlace
+MagicRefillSmall: #SMALL MAGIC DECANTER
+  bytes: [0xDF]
+  flags: NoPlace
+MagicRefillFull: #LARGE MAGIC DECANTER
+  bytes: [0xE0]
+  flags: NoPlace
+ArrowRefill5: #ARROW REFILL 5
+  bytes: [0xE1]
+  flags: NoPlace
+ArrowRefill10: #ARROW REFILL 10
+  bytes: [0xE2]
+  flags: NoPlace
+Fairy:
+  bytes: [0xE3]
+  flags: NoPlace
+Key: #SMALL KEY
+  bytes: [0xE4]
+  flags: NoPlace
+BigKey: #BIG KEY
+  bytes: [0xE5]
+  flags: NoPlace
+Shield: #STOLEN SHIELD
+  bytes: [0xE6]
+  flags: NoPlace
+Mushroom:
+  bytes: [0xE7]
+  flags: NoPlace
+FakeMasterSword: #FAKE MASTER SWORD
+  bytes: [0xE8]
+PotionShop: #MAGIC SHOP ASSISTANT
+  bytes: [0xE9]
+  flags: NoPlace
+HeartContainer: #HEART CONTAINER
+  bytes: [0xEA]
+  flags: NoPlace
+HeartPiece: #HEART PIECE
+  bytes: [0xEB]
+  flags: NoPlace
+Throwable: #THROWN ITEM
+  bytes: [0xEC]
+  flags: NoPlace
+SomariaPlatform: #SOMARIA PLATFORM
+  bytes: [0xED]
+  flags: NoPlace
+#CASTLE MANTLE:
+#  bytes: [0xEE]
+SomariaPlatform1: #UNUSED SOMARIA PLATFORM
+  bytes: [0xEF]
+  flags: NoPlace
+SomariaPlatform2: #UNUSED SOMARIA PLATFORM
+  bytes: [0xF0]
+  flags: NoPlace
+SomariaPlatform3: #UNUSED SOMARIA PLATFORM
+  bytes: [0xF1]
+  flags: NoPlace
+MedallionTablet: #MEDALLION TABLET
+  bytes: [0xF2]
+  flags: NoPlace
+
+# overlords
+Position Target: #POSITION TARGET
+  bytes: [0x01]
+  flags: NoPlace, OverworldOnly, Overlord
+FullRoomCannons: #FULL ROOM CANNONS
+  bytes: [0x02]
+  flags: NoPlace, Overlord
+VerticalCannon: #VERTICAL CANNON
+  bytes: [0x03]
+  flags: NoPlace, Overlord
+#UNUSED STALFOS SPAWNER:
+#  bytes: [0x04]
+FallingStalfos: #FALLING STALFOS
+  bytes: [0x05]
+  flags: NoPlace, Overlord
+BadSwitchSnake: #BAD SWITCH SNAKE
+  bytes: [0x06]
+  flags: NoPlace, Overlord
+MovingFloor: #MOVING FLOOR
+  bytes: [0x07]
+  flags: NoPlace, Overlord
+BlobSpawner: #BLOB SPAWNER
+  bytes: [0x08]
+  flags: NoPlace, Overlord
+Wallmaster Overlord: #WALLMASTER
+  bytes: [0x09]
+  flags: NoPlace, Overlord
+FallingSquare: #FALLING SQUARE
+  bytes: [0x0A]
+  flags: NoPlace, Overlord
+FallingBridge: #FALLING BRIDGE
+  bytes: [0x0B]
+  flags: NoPlace, Overlord
+FallingTilesWestToEast: #FALLING TILES WEST TO EAST
+  bytes: [0x0C]
+  flags: NoPlace, Overlord
+FallingTilesNorthToSouth: #FALLING TILES NORTH TO SOUTH
+  bytes: [0x0D]
+  flags: NoPlace, Overlord
+FallingTilesEastToWest: #FALLING TILES EAST TO WEST
+  bytes: [0x0E]
+  flags: NoPlace, Overlord
+FallingTilesSouthToNorth: #FALLING TILES SOUTH TO NORTH
+  bytes: [0x0F]
+  flags: NoPlace, Overlord
+PirogusuSpawnerLeft: #PIROGUSU SPAWNER LEFT
+  bytes: [0x10]
+  flags: NoPlace, Overlord
+PirogusuSpawnerRight: #PIROGUSU SPAWNER RIGHT
+  bytes: [0x11]
+  flags: NoPlace, Overlord
+PirogusuSpawnerTop: #PIROGUSU SPAWNER TOP
+  bytes: [0x12]
+  flags: NoPlace, Overlord
+PirogusuSpawnerBottom: #PIROGUSU SPAWNER BOTTOM
+  bytes: [0x13]
+  flags: NoPlace, Overlord
+TileRoom: #TILE ROOM
+  bytes: [0x14]
+  flags: NoPlace, Overlord
+WizzrobeSpawner: #WIZZROBE SPAWNER
+  bytes: [0x15]
+  flags: NoPlace, Overlord
+ZoroSpawner: #ZORO SPAWNER
+  bytes: [0x16]
+  flags: NoPlace, Overlord
+PotTrap: #POT TRAP
+  bytes: [0x17]
+  flags: NoPlace, Overlord
+InvisibleStalfos: #INVISIBLE STALFOS
+  bytes: [0x18]
+  flags: NoPlace, Overlord
+ArmosCoordinator: #ARMOS COORDINATOR
+  bytes: [0x19]
+  flags: NoPlace, Overlord
+BadSwitchBomb: #BAD SWITCH BOMB
+  bytes: [0x1A]
+  flags: NoPlace, Overlord
+
+# other sprites that appear in code, for example for use under pots
+# bytes may not correspond to actual sprite bytes, and are specific to under-pot usage.
+Hole:
+  bytes: [0x80]
+  flags: NoPlace
+FloorSwitch:
+  bytes: [0x88]
+  flags: NoPlace
+
+# sprites that used to be in noplace.yml, but don't seem to match anything else in here
+TelepathyTile:
+  bytes: []
+  flags: NoPlace
+Flames:
+  bytes: []
+  flags: NoPlace

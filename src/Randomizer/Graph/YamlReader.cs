@@ -71,11 +71,22 @@ public class YamlReader
 
         return result;
     });
+    private static readonly Lazy<Dictionary<string, YamlSprite>> _cachedSprites = new(() =>
+    {
+        string itemsYML = Path.Combine(DataRoot, "sprites.yml");
+
+        var deserializer = new DeserializerBuilder().Build();
+        using var reader = File.OpenText(itemsYML);
+        var result = deserializer.Deserialize<Dictionary<string, YamlSprite>>(reader);
+
+        return result;
+    });
 
     private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
     private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
     public static Dictionary<string, YamlItem> LoadItems() => _cachedItems.Value;
+    public static Dictionary<string, YamlSprite> LoadSprites() => _cachedSprites.Value;
 
     public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromTech(string name) => _cachedTechEdges.GetOrAdd(name, name =>
     {
@@ -245,17 +256,24 @@ public class YamlItem
 
 public class YamlSprite
 {
-    [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
-
-    [YamlMember(Alias = "position")]
-    public required Position Position { get; set; }
-
-    [YamlMember(Alias = "roomid")]
-    public int RoomId { get; set; }
-
-    [YamlMember(Alias = "sprite")]
-    public required string Sprite { get; set; }
+    [YamlMember(Alias = "bytes")]
+    public required byte[] Bytes { get; set; }
+    [YamlMember(Alias = "flags")]
+    public YamlSpriteFlags Flags { get; set; }
+}
+[Flags]
+public enum YamlSpriteFlags
+{
+    /// <summary>Nothing special.</summary>
+    None = 0,
+    /// <summary>Never place this sprite when randomizing sprites.</summary>
+    NoPlace = 1 << 0,
+    /// <summary>This sprite only works correctly on the overworld.</summary>
+    OverworldOnly = 1 << 1,
+    /// <summary>This sprite is an Overlord.</summary>
+    Overlord = 1 << 2,
+    /// <summary>This sprite may be placed in a challenge room.</summary>
+    Challenge = 1 << 3,
 }
 
 public class DirectedUndirectedPair
@@ -325,11 +343,17 @@ public class Prizepack
     [YamlMember(Alias = "name")]
     public required string Name { get; set; }
 
-    [YamlMember(Alias = "offset")]
-    public byte Offset { get; set; }
+    [YamlMember(Alias = "addresses")]
+    public required long[] Addresses { get; set; }
 
     [YamlMember(Alias = "sprite")]
     public required string Sprite { get; set; }
+
+    [YamlMember(Alias = "deny")]
+    public List<string> Deny { get; set; } = [];
+
+    [YamlMember(Alias = "allow")]
+    public List<string> Allow { get; set; } = [];
 }
 
 public partial class Entrance

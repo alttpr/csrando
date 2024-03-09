@@ -722,115 +722,39 @@ public static class RomWriter
     }
 
     /// <summary>
-    /// This is a quick hack to get prizes shuffled, will adjust later when we model sprites.
-    /// this now also handles prize pull trees.
+    /// Writes prize pack locations and updates dig locations for rupee bow.
     /// </summary>
     /// <param name="rom">ROM to write data to</param>
     /// <param name="world"></param>
     private static void WritePrizePacksToRom(World world, Rom rom)
     {
-#if PrizePacksWork
         var config = world.Config;
 
-        var emptyDrops = getEmptyDropSlots();
-        var dropPool = getDropsPool();
-
-        for (int i = 0; i < emptyDrops.Count; i++)
-            emptyDrops[i].setDrop(dropPool[i]);
-
-        byte[] dropBytes = getAllDrops().Select(prize => prize.getDrop().getBytes()[0]).ToArray();
-
-        // hard+ does not allow fairies/full magics
-        if (config('rom.NoFarieDrops', false))
-            dropBytes = str_replace([0xE0, 0xE3], [0xDF, 0xD8], dropBytes);
+        foreach (var prizePack in world.GetLocationsOfType(VertexType.PrizePack))
+            rom.WriteSprite(prizePack);
 
         if (config.RomRupeeBow)
         {
-            dropBytes = str_replace([0xE1, 0xE2], [0xDA, 0xDB], dropBytes);
             rom.SetOverworldDigPrizes([
-                0xB2,
-                0xD8,
-                0xD8,
-                0xD8,
-                0xD8,
-                0xD8,
-                0xD8,
-                0xD8,
-                0xD8,
-                0xD9,
-                0xD9,
-                0xD9,
-                0xD9,
-                0xD9,
-                0xDA,
-                0xDA,
-                0xDA,
-                0xDA,
-                0xDA,
-                0xDB,
-                0xDB,
-                0xDB,
-                0xDB,
-                0xDB,
-                0xDC,
-                0xDC,
-                0xDC,
-                0xDC,
-                0xDC,
-                0xDD,
-                0xDD,
-                0xDD,
-                0xDD,
-                0xDD,
-                0xDE,
-                0xDE,
-                0xDE,
-                0xDE,
-                0xDE,
-                0xDF,
-                0xDF,
-                0xDF,
-                0xDF,
-                0xDF,
-                0xE0,
-                0xE0,
-                0xE0,
-                0xE0,
-                0xE0,
-                0xDA,
-                0xDA,
-                0xDA,
-                0xDA,
-                0xDA,
-                0xDB,
-                0xDB,
-                0xDB,
-                0xDB,
-                0xDB,
-                0xE3,
-                0xE3,
-                0xE3,
-                0xE3,
-                0xE3,
+                0xB2, // good bee
+                .. Enumerable.Repeat((byte)0xD8, 3), // heart
+                .. Enumerable.Repeat((byte)0xD8, 5), // heart
+                .. Enumerable.Repeat((byte)0xD9, 5), // green rupee
+                .. Enumerable.Repeat((byte)0xDA, 5), // blue rupee
+                .. Enumerable.Repeat((byte)0xDB, 5), // red rupee
+                .. Enumerable.Repeat((byte)0xDC, 5), // 1 bomb refill
+                .. Enumerable.Repeat((byte)0xDD, 5), // 4 bomb refill
+                .. Enumerable.Repeat((byte)0xDE, 5), // 8 bomb refill
+                .. Enumerable.Repeat((byte)0xDF, 5), // small magic
+                .. Enumerable.Repeat((byte)0xE0, 5), // large magic
+                // replace arrow refills with rupees
+                .. Enumerable.Repeat((byte)0xDA, 5), // blue rupee
+                .. Enumerable.Repeat((byte)0xDB, 5), // red rupee
+                .. Enumerable.Repeat((byte)0xE3, 5), // fairy
             ]);
         }
-
-        // write to prize packs
-        rom.SetPrizePacks(dropBytes[..56]);
-
-        // write to trees
-        rom.SetPullTreePrizes(dropBytes[56], dropBytes[57], dropBytes[58]);
-
-        // write to prize crab
-        rom.SetRupeeCrabPrizes(dropBytes[59], dropBytes[60]);
-
-        // write to stunned
-        rom.SetStunnedSpritePrize(dropBytes[61]);
-
-        // write to saved fish
-        rom.SetFishSavePrize(dropBytes[62]);
-#endif
     }
+
     private static void WriteEntrancesToRom(World world, Rom rom)
     {
         var sourcesByTarget = world.Graph.GetVertices()
