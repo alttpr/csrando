@@ -120,9 +120,18 @@ rooms:
               - name: "Desert Palace - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x07, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Desert Palace - Boss"
+        - name: "Desert Palace - Boss"
+          connections:
+            fixed:
+              - "Desert Palace - Boss Item"
+              - "Desert Palace - Prize"
 
       items:
-        - name: "Desert Palace - Boss"
+        - name: "Desert Palace - Boss Item"
           addresses: [0x180151]
           type: "drop"
           itemset: ["desert"]

@@ -130,9 +130,18 @@ rooms:
               - name: "Thieves' Town - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x17, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Thieves' Town - Boss"
+        - name: "Thieves' Town - Boss"
+          connections:
+            fixed:
+              - "Thieves' Town - Boss Item"
+              - "Thieves' Town - Prize"
 
       items:
-        - name: "Thieves' Town - Boss"
+        - name: "Thieves' Town - Boss Item"
           addresses: [0x180156]
           type: "drop"
           itemset: ["thieves"]

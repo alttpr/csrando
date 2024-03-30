@@ -120,9 +120,18 @@ rooms:
               - name: "Misery Mire - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x07, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Misery Mire - Boss"
+        - name: "Misery Mire - Boss"
+          connections:
+            fixed:
+              - "Misery Mire - Boss Item"
+              - "Misery Mire - Prize"
 
       items:
-        - name: "Misery Mire - Boss"
+        - name: "Misery Mire - Boss Item"
           addresses: [0x180158]
           type: "drop"
           itemset: ["mire"]

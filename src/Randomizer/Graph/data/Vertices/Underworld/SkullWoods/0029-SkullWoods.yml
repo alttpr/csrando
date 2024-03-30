@@ -137,9 +137,18 @@ rooms:
               - name: "Skull Woods - Boss Room - Vitreous Moving Floor"
                 position: { x: 0x07, y: 0x16, z: 0x00 }
                 sprite: "MovingFloor"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Skull Woods - Boss"
+        - name: "Skull Woods - Boss"
+          connections:
+            fixed:
+              - "Skull Woods - Boss Item"
+              - "Skull Woods - Prize"
 
       items:
-        - name: "Skull Woods - Boss"
+        - name: "Skull Woods - Boss Item"
           addresses: [0x180155]
           type: "drop"
           itemset: ["skull"]

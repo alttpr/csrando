@@ -120,9 +120,18 @@ rooms:
               - name: "Eastern Palace - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x17, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Eastern Palace - Boss"
+        - name: "Eastern Palace - Boss"
+          connections:
+            fixed:
+              - "Eastern Palace - Boss Item"
+              - "Eastern Palace - Prize"
 
       items:
-        - name: "Eastern Palace - Boss"
+        - name: "Eastern Palace - Boss Item"
           addresses: [0x180150]
           type: "drop"
           itemset: ["eastern"]

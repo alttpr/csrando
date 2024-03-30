@@ -120,9 +120,18 @@ rooms:
               - name: "Palace of Darkness - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x17, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Palace of Darkness - Boss"
+        - name: "Palace of Darkness - Boss"
+          connections:
+            fixed:
+              - "Palace of Darkness - Boss Item"
+              - "Palace of Darkness - Prize"
 
       items:
-        - name: "Palace of Darkness - Boss"
+        - name: "Palace of Darkness - Boss Item"
           addresses: [0x180153]
           type: "drop"
           itemset: ["pod"]

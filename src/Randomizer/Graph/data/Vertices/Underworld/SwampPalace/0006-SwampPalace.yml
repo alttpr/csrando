@@ -120,9 +120,18 @@ rooms:
               - name: "Swamp Palace - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x07, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Swamp Palace - Boss"
+        - name: "Swamp Palace - Boss"
+          connections:
+            fixed:
+              - "Swamp Palace - Boss Item"
+              - "Swamp Palace - Prize"
 
       items:
-        - name: "Swamp Palace - Boss"
+        - name: "Swamp Palace - Boss Item"
           addresses: [0x180154]
           type: "drop"
           itemset: ["swamp"]

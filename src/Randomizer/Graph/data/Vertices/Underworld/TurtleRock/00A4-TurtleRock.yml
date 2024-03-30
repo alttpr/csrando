@@ -120,9 +120,18 @@ rooms:
               - name: "Turtle Rock - Boss Room - Trinexx (Ice Head)"
                 position: { x: 0x07, y: 0x15, z: 0x00 }
                 sprite: "TrinexxHeadIce"
+          connections:
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Turtle Rock - Boss"
+        - name: "Turtle Rock - Boss"
+          connections:
+            fixed:
+              - "Turtle Rock - Boss Item"
+              - "Turtle Rock - Prize"
 
       items:
-        - name: "Turtle Rock - Boss"
+        - name: "Turtle Rock - Boss Item"
           addresses: [0x180159]
           type: "drop"
           itemset: ["turtlerock"]
