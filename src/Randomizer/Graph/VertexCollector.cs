@@ -142,9 +142,8 @@ internal class VertexCollector
                         State = mob.State.ToArray(),
                         ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
-                        // TODO: Add deny, allow to Vertex.
-                        // Deny = mob.Deny,
-                        // Allow = mob.Allow,
+                        Deny = mob.Deny.ToArray(),
+                        Allow = mob.Allow.ToArray(),
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
@@ -303,9 +302,8 @@ internal class VertexCollector
                         State = mob.State.ToArray(),
                         ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
-                        // TODO: Add deny, allow to Vertex.
-                        // Deny = mob.Deny,
-                        // Allow = mob.Allow,
+                        Deny = mob.Deny.ToArray(),
+                        Allow = mob.Allow.ToArray(),
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
@@ -366,12 +364,35 @@ internal class VertexCollector
                         State = pot.State.ToArray(),
                         ItemSet = pot.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(pot.Trophy),
-                        // TODO: Add deny, allow to Vertex.
-                        // Deny = pot.Deny,
-                        // Allow = pot.Allow,
+                        Deny = pot.Deny.ToArray(),
+                        Allow = pot.Allow.ToArray(),
                     };
                     structuredVertices.Add(pot.Name, potVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
+                }
+
+                foreach (var bosses in region.Bosses)
+                {
+                    foreach (var boss in bosses.Value)
+                    {
+                        var bossVertex = new Vertex
+                        {
+                            Type = VertexType.Mob,
+                            Name = boss.Name,
+                            World = world,
+                            RoomId = room.Roomid,
+                            Group = room.Group.GetValueOrDefault(0),
+                            Sprite = Sprite.Get(boss.Sprite),
+                            Item = world.GetItemOrNull(boss.Item),
+                            State = boss.State.ToArray(),
+                            ItemSet = boss.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
+                            Trophy = world.GetItemOrNull(boss.Trophy),
+                            Deny = boss.Deny.ToArray(),
+                            Allow = boss.Allow.ToArray(),
+                        };
+                        structuredVertices.Add(boss.Name, bossVertex);
+                        regionVertex.Edges.Add(new Edge(regionVertex, bossVertex, new ItemCondition(world.GetItem(bosses.Key), 1)));
+                    }
                 }
 
                 foreach (var connection in region.Connections)
@@ -398,13 +419,6 @@ internal class VertexCollector
                     Addresses = item.Addresses.ToArray(),
                 });
             }
-
-            //if (room["bosses"] ?? false)
-            //{
-            //    foreach (var (from, sprites) in room["bosses"]) {
-            //        // do stuff
-            //    }
-            //}
         }
 
         // Link all the pending edges

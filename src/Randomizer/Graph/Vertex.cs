@@ -63,7 +63,6 @@ public sealed class Vertex : ICloneable
     public Item? Item { get; set; }
     public Item? Trophy { get; init; }
     public Sprite? Sprite { get; set; }
-    public string? EnemizerBoss { get; set; }
     public int? RoomId { get; init; }
     public int? Map { get; init; }
     public bool? MoonPearl { get; init; }
@@ -78,6 +77,8 @@ public sealed class Vertex : ICloneable
     public int[]? EntranceIds { get; init; }
     public int? ShopStyle { get; init; }
     public int? Shopkeeper { get; init; }
+    public string[]? Allow { get; init; }
+    public string[]? Deny { get; init; }
     public int? Group { get; init; }
     public Item? Key { get; init; }
 

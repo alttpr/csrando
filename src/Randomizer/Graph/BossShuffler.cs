@@ -19,38 +19,6 @@ internal sealed class BossShuffler : IWorldModifier
         { "Agahnim2", "DefeatAgahnim2" },
         { "Ganon", "DefeatGanon" },
     };
-    private static readonly string[] NEVER_PLACE =
-    [
-        "DefeatAgahnim",
-        "DefeatAgahnim2",
-        "DefeatGanon",
-    ];
-    private static readonly Dictionary<string, string[]> NO_PLACE = new()
-    {
-        {  "Ganon's Tower - Moldorm", new[] {
-            "DefeatArmos",
-            "DefeatArrghus",
-            "DefeatBlind",
-            "DefeatLanmolas",
-            "DefeatTrinexx",
-        } },
-        { "Ganon's Tower - Lanmolas", new[] {
-            "DefeatBlind",
-        } },
-        { "Ganon's Tower - Ice Armos", new[] {
-        "DefeatTrinexx",
-        } },
-        { "Skull Woods - Boss", new[] {
-        "DefeatTrinexx",
-        } },
-        { "Tower Of Hera - Boss", new[] {
-            "DefeatArmos",
-            "DefeatArrghus",
-            "DefeatBlind",
-            "DefeatLanmolas",
-            "DefeatTrinexx",
-        } },
-    };
     private static readonly Dictionary<string, string> BOSS_FROM_LOCATION = new()
     {
         { "Ganon's Tower - Moldorm", "Ganon's Tower - Moldorm - Kill Zone" },
@@ -71,9 +39,6 @@ internal sealed class BossShuffler : IWorldModifier
     /// <summary>Swap Entrances based on world settings.</summary>
     public static void AdjustEdges(World world, PRNG prng)
     {
-        var bossLocationMap = YamlReader.LoadSpriteLocations()
-            .ToDictionary(x => x.Key, x => x.Value);
-
         // most restrictive first
         var bossLocations = new List<string>()
         {
@@ -97,7 +62,7 @@ internal sealed class BossShuffler : IWorldModifier
         {
             // remove Ice Palace
             bossLocations.RemoveAt(9);
-            PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world, bossLocationMap);
+            PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world);
         }
 
         List<string> placeBosses;
@@ -106,11 +71,9 @@ internal sealed class BossShuffler : IWorldModifier
             case BossShuffleOption.Random:
                 foreach (string location in bossLocations)
                 {
-                    var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
-                        ? BOSS_ITEMS.Values.Except(noPlaceLocations).Except(NEVER_PLACE)
-                        : BOSS_ITEMS.Values.Except(NEVER_PLACE);
+                    var bosses = BOSS_ITEMS.Values;
                     string boss = prng.Shuffle(bosses).First();
-                    PlaceBossItemInLocation(boss, location, world, bossLocationMap);
+                    PlaceBossItemInLocation(boss, location, world);
                 }
                 break;
             case BossShuffleOption.Full: // 1 copy of each, +3 other copies
@@ -131,12 +94,10 @@ internal sealed class BossShuffler : IWorldModifier
 
                 foreach (string location in bossLocations)
                 {
-                    var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
-                        ? placeBosses.Except(noPlaceLocations).Except(NEVER_PLACE)
-                        : placeBosses.Except(NEVER_PLACE);
+                    var bosses = placeBosses;
                     string boss = prng.Shuffle(bosses).First();
                     placeBosses.Remove(boss);
-                    PlaceBossItemInLocation(boss, location, world, bossLocationMap);
+                    PlaceBossItemInLocation(boss, location, world);
                 }
                 break;
             case BossShuffleOption.Simple: // 1:1
@@ -159,30 +120,28 @@ internal sealed class BossShuffler : IWorldModifier
 
                 foreach (string location in bossLocations)
                 {
-                    var bosses = NO_PLACE.TryGetValue(location, out string[]? noPlaceLocations)
-                        ? placeBosses.Except(noPlaceLocations).Except(NEVER_PLACE)
-                        : placeBosses.Except(NEVER_PLACE);
+                    var bosses = placeBosses;
                     string boss = prng.Shuffle(bosses).First();
                     placeBosses.Remove(boss);
-                    PlaceBossItemInLocation(boss, location, world, bossLocationMap);
+                    PlaceBossItemInLocation(boss, location, world);
                 }
                 break;
             case BossShuffleOption.None:
             default:
-                PlaceBossItemInLocation("DefeatArmosKnight", "Eastern Palace - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatLanmolas", "Desert Palace - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatMoldorm", "Tower Of Hera - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatHelmasaur", "Palace of Darkness - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatArrghus", "Swamp Palace - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatMothula", "Skull Woods - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatBlind", "Thieves' Town - Boss", world, bossLocationMap);
+                PlaceBossItemInLocation("DefeatArmosKnight", "Eastern Palace - Boss", world);
+                PlaceBossItemInLocation("DefeatLanmolas", "Desert Palace - Boss", world);
+                PlaceBossItemInLocation("DefeatMoldorm", "Tower Of Hera - Boss", world);
+                PlaceBossItemInLocation("DefeatHelmasaur", "Palace of Darkness - Boss", world);
+                PlaceBossItemInLocation("DefeatArrghus", "Swamp Palace - Boss", world);
+                PlaceBossItemInLocation("DefeatMothula", "Skull Woods - Boss", world);
+                PlaceBossItemInLocation("DefeatBlind", "Thieves' Town - Boss", world);
                 if (world.Config.Weapon != WeaponOption.Swordless)
-                    PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatVitreous", "Misery Mire - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatTrinexx", "Turtle Rock - Boss", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatArmosKnight", "Ganon's Tower - Ice Armos", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatLanmolas", "Ganon's Tower - Lanmolas", world, bossLocationMap);
-                PlaceBossItemInLocation("DefeatMoldorm", "Ganon's Tower - Moldorm", world, bossLocationMap);
+                    PlaceBossItemInLocation("DefeatKholdstare", "Ice Palace - Boss", world);
+                PlaceBossItemInLocation("DefeatVitreous", "Misery Mire - Boss", world);
+                PlaceBossItemInLocation("DefeatTrinexx", "Turtle Rock - Boss", world);
+                PlaceBossItemInLocation("DefeatArmosKnight", "Ganon's Tower - Ice Armos", world);
+                PlaceBossItemInLocation("DefeatLanmolas", "Ganon's Tower - Lanmolas", world);
+                PlaceBossItemInLocation("DefeatMoldorm", "Ganon's Tower - Moldorm", world);
                 break;
         }
     }
@@ -191,7 +150,7 @@ internal sealed class BossShuffler : IWorldModifier
     /// <param name="bossItem">Boss item name</param>
     /// <param name="location">Location name</param>
     /// <exception cref="Exception">If can't place boss in location</exception>
-    private static void PlaceBossItemInLocation(string bossItem, string location, World world, Dictionary<string, Dictionary<string, List<YamlSprite>>> bossLocationMap)
+    private static void PlaceBossItemInLocation(string bossItem, string location, World world)
     {
         var worldBossItem = world.GetItem(bossItem);
         string fromLocation = BOSS_FROM_LOCATION[location];
@@ -200,29 +159,14 @@ internal sealed class BossShuffler : IWorldModifier
 
         if (from is null || toBoss is null)
         {
-            //Log.error("Can't place boss.", [fromLocation, from, location, toBoss]);
-
             throw new Exception("Can't place boss.");
         }
 
-        toBoss.EnemizerBoss = BOSS_ITEMS.FirstOrDefault(kvp => kvp.Value == bossItem).Key;
-        UpdateSprites(from, bossItem, world, bossLocationMap);
+        UpdateSprites(from, bossItem, world);
         world.Graph.AddDirected(from, toBoss, worldBossItem);
     }
 
-    private static void UpdateSprites(Vertex bossRoom, string boss, World world, Dictionary<string, Dictionary<string, List<YamlSprite>>> bossLocationMap)
+    private static void UpdateSprites(Vertex bossRoom, string boss, World world)
     {
-        foreach (var spriteDefinition in bossLocationMap[bossRoom.Name][boss])
-        {
-            world.Graph.AddVertex(new Vertex
-            {
-                Type = VertexType.Mob,
-                Name = spriteDefinition.Name,
-                World = world,
-                Position = spriteDefinition.Position,
-                RoomId = spriteDefinition.RoomId,
-                Sprite = Sprite.Get(spriteDefinition.Sprite),
-            });
-        }
     }
 }

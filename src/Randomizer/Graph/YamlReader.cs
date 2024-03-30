@@ -30,7 +30,6 @@ public class YamlReader
     private const string VerticesPath = "Vertices";
     private const string BossesPath = "bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
-    private const string SpriteLocationsPath = "Bosses/SpriteLocations.yml";
 
     private static readonly Lazy<Vertices> _cachedVertices = new(() =>
     {
@@ -70,14 +69,6 @@ public class YamlReader
         using var reader = File.OpenText(itemsYML);
         var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
 
-        return result;
-    });
-    private static readonly Lazy<Dictionary<string, Dictionary<string, List<YamlSprite>>>> _cachedSpriteLocations = new(() =>
-    {
-        string spritesYML = Path.Combine(DataRoot, SpriteLocationsPath);
-        using var reader = File.OpenText(spritesYML);
-        var deserializer = new DeserializerBuilder().Build();
-        var result = deserializer.Deserialize<Dictionary<string, Dictionary<string, List<YamlSprite>>>>(reader);
         return result;
     });
 
@@ -166,8 +157,6 @@ public class YamlReader
     public static Dictionary<string, List<string>> LoadBosses() => _cachedBosses.Value;
     public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
-    public static Dictionary<string, Dictionary<string, List<YamlSprite>>> LoadSpriteLocations() => _cachedSpriteLocations.Value;
-
     public static IReadOnlyDictionary<string, string> LoadCreditsForFluteSpot(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "flute.yml"));
     public static IReadOnlyDictionary<string, string> LoadCreditsForPedestal(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "pedestal.yml"));
     public static IReadOnlyDictionary<string, string> LoadCreditsForSickKid(string language) => LoadKeyedLocalizedText(Path.Combine("text", language, "credits", "sick-kid.yml"));
@@ -244,7 +233,7 @@ public class YamlReader
         using var reader = File.OpenText(textYML);
         var deserializer = new DeserializerBuilder().Build();
         return deserializer.Deserialize<List<string>>(reader) ?? [];
-}
+    }
 }
 public class YamlItem
 {
@@ -543,6 +532,9 @@ public partial class Region
 
     [YamlMember(Alias = "connections")]
     public Dictionary<string, List<string>> Connections { get; set; } = new();
+
+    [YamlMember(Alias = "bosses")]
+    public Dictionary<string, List<Entity>> Bosses { get; set; } = new();
 }
 
 public class Vertices

@@ -53,11 +53,4 @@ public class YamlReaderTest
         var result = YamlReader.LoadEnemies();
         Assert.IsTrue(result.Count > 0);
     }
-
-    [TestMethod]
-    public void LoadSpriteLocationsTest()
-    {
-        var result = YamlReader.LoadSpriteLocations();
-        Assert.IsTrue(result.Count > 0);
-    }
 }
