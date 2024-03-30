@@ -149,6 +149,7 @@ internal sealed class BossShuffler : IWorldModifier
     /// <summary>Place Boss item in location.</summary>
     /// <param name="bossItem">Boss item name</param>
     /// <param name="location">Location name</param>
+    /// <param name="world">World</param>
     /// <exception cref="Exception">If can't place boss in location</exception>
     private static void PlaceBossItemInLocation(string bossItem, string location, World world)
     {
@@ -162,11 +163,7 @@ internal sealed class BossShuffler : IWorldModifier
             throw new Exception("Can't place boss.");
         }
 
-        UpdateSprites(from, bossItem, world);
-        world.Graph.AddDirected(from, toBoss, worldBossItem);
-    }
-
-    private static void UpdateSprites(Vertex bossRoom, string boss, World world)
-    {
+        from.Edges.RemoveAll(e => e.To != toBoss);
+        from.Edges.Find(e => e.To == toBoss)!.Condition = new ItemCondition(worldBossItem, 1);
     }
 }
