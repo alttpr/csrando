@@ -149,6 +149,7 @@ internal sealed class BossShuffler : IWorldModifier
 
         from.Edges.RemoveAll(isDifferentBoss);
         bossEdge.Condition = new ItemCondition(worldBossItem, 1);
+        System.Console.WriteLine("[BS] Placing {0} in '{1}'", bossItem.Replace("Defeat", ""), from.Name);
 
         bool isDifferentBoss(Edge edge)
         {
