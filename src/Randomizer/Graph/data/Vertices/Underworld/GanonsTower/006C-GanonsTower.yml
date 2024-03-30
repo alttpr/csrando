@@ -15,7 +15,7 @@ rooms:
 
         - name: "Ganon's Tower - Lanmolas"
           bosses:
-            DefeatArmos:
+            DefeatArmosKnight:
               - name: "Ganon's Tower - Gauntlet Refill - Armos Knight 1"
                 position: { x: 0x04, y: 0x15, z: 0x00 }
                 sprite: "ArmosKnight"

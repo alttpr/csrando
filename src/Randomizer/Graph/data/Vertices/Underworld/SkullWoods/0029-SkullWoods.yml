@@ -5,7 +5,7 @@ rooms:
       regions:
         - name: "Skull Woods - Boss Room"
           bosses:
-            DefeatArmos:
+            DefeatArmosKnight:
               - name: "Skull Woods - Boss Room - Armos Knight 1"
                 position: { x: 0x14, y: 0x15, z: 0x00 }
                 sprite: "ArmosKnight"
