@@ -18,6 +18,7 @@ public sealed class Randomizer
     private readonly Inventory _startingItems = new();
     private readonly Vertex _start;
     private readonly ItemPooler _itemPooler;
+    public SpoilerLog? SpoilerLog;
 
     /// <summary>
     /// Set up the Randomizer. This involves:
@@ -81,6 +82,8 @@ public sealed class Randomizer
         var sets = _itemPooler.Pool;
 
         filler.FillGraph(sets);
+
+        SpoilerLog = new SpoilerLog(this);
     }
 
     /// <summary>

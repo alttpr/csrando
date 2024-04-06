@@ -34,6 +34,7 @@ internal sealed class Randomize : Command
     private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>("bps", "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
     private readonly Option<DirectoryInfo> _outputDirectory = new Option<DirectoryInfo>("outdir", "output directory for generated games");
     private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>("settings", "JSON serialized settings file").ExistingOnly();
+    private readonly Option<Boolean> _dumpSpoiler = new Option<Boolean>("spoiler", "dump spoiler log");
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -60,6 +61,7 @@ internal sealed class Randomize : Command
         Add(_baseBPS);
         Add(_outputDirectory);
         Add(_settingsFile);
+        Add(_dumpSpoiler);
 
         AddValidator(Validate);
 
@@ -105,6 +107,7 @@ internal sealed class Randomize : Command
         var baseRom = context.ParseResult.GetValueForOption(_baseRom);
         var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
         var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
+        var dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
@@ -127,9 +130,12 @@ internal sealed class Randomize : Command
                 else
                     System.Console.WriteLine("Writing a ROM requires all options: {0}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
             }
+            if (dumpSpoiler)
+            {
+                Info("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions { WriteIndented = true }));
+            }
         }
         Info("Randomization took {0}", sw.Elapsed);
-
         return 0;
     }
 
