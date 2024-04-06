@@ -13,7 +13,8 @@ public class SpoilerLog
         _graph = randomizer.Graph;
         var world = randomizer.Worlds[0];
 
-        Spoiler = new Dictionary<string, Dictionary<string, string>>(){
+        Spoiler = new Dictionary<string, Dictionary<string, string>>()
+        {
             { "Equipped", new() },
             { "Locations", new() }
         };
@@ -47,27 +48,31 @@ public class SpoilerLog
 
         if (world.Config.BossShuffle != BossShuffleOption.None)
         {
-            Spoiler["Bosses"] = new Dictionary<string, string>(){
-                { "Eastern Palace", world.GetLocation("Eastern Palace - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Desert Palace", world.GetLocation("Desert Palace - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Tower Of Hera", world.GetLocation("Tower Of Hera - Boss")?.Sprite?.Name ?? "Unknown" },
+            Spoiler["Bosses"] = new Dictionary<string, string>()
+            {
+                { "Eastern Palace", GetBossAt(world, "Eastern Palace - Boss Room") },
+                { "Desert Palace", GetBossAt(world, "Desert Palace - Boss Room") },
+                { "Tower Of Hera", GetBossAt(world, "Tower Of Hera - Boss Room") },
                 { "Hyrule Castle", "Agahnim" },
-                { "Palace Of Darkness", world.GetLocation("Palace of Darkness - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Swamp Palace", world.GetLocation("Swamp Palace - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Skull Woods", world.GetLocation("Skull Woods - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Thieves Town", world.GetLocation("Thieves' Town - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Ice Palace", world.GetLocation("Ice Palace - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Misery Mire", world.GetLocation("Misery Mire - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Turtle Rock", world.GetLocation("Turtle Rock - Boss")?.Sprite?.Name ?? "Unknown" },
-                { "Ganon's Tower Basement", world.GetLocation("Ganon's Tower - Ice Armos")?.Sprite?.Name ?? "Unknown" },
-                { "Ganon's Tower Middle", world.GetLocation("Ganon's Tower - Lanmolas")?.Sprite?.Name ?? "Unknown" },
-                { "Ganon's Tower Top", world.GetLocation("Ganon's Tower - Moldorm")?.Sprite?.Name ?? "Unknown" },
+                { "Palace Of Darkness", GetBossAt(world, "Palace of Darkness - Boss Room") },
+                { "Swamp Palace", GetBossAt(world, "Swamp Palace - Boss Room") },
+                { "Skull Woods", GetBossAt(world, "Skull Woods - Boss Room") },
+                // TODO: this one deviates because of bringing the maiden to the boss room.
+                { "Thieves Town", GetBossAt(world, "Thieves' Town - Boss Room - Blind Active") },
+                //{ "Thieves Town", GetBossAt(world, "Thieves' Town - Boss Room") },
+                { "Ice Palace", GetBossAt(world, "Ice Palace - Boss Room") },
+                { "Misery Mire", GetBossAt(world, "Misery Mire - Boss Room") },
+                { "Turtle Rock", GetBossAt(world, "Turtle Rock - Boss Room") },
+                { "Ganon's Tower Basement", GetBossAt(world, "Ganon's Tower - Ice Room") },
+                { "Ganon's Tower Middle", GetBossAt(world, "Ganon's Tower - Lanmolas") },
+                { "Ganon's Tower Top", GetBossAt(world, "Ganon's Tower - Moldorm - Kill Zone") },
                 { "Ganon's Tower", "Agahnim 2" },
                 { "Ganon", "Ganon" },
             };
         }
 
-        Spoiler["meta"] = new Dictionary<string, string>() {
+        Spoiler["meta"] = new Dictionary<string, string>()
+        {
             { "accessibility", world.Config.Accessibility.ToString() },
             { "goal", world.Config.Goal.ToString() },
             { "mode", world.Config.State.ToString() },
@@ -79,4 +84,16 @@ public class SpoilerLog
         };
     }
 
+    private static string GetBossAt(World world, string locationName)
+    {
+        var location = world.GetLocation(locationName);
+        if (location == null)
+            return "Unknown Location";
+
+        var defeatCondition = location.Edges.FirstOrDefault(e => e.To.Type == VertexType.Boss);
+        if (defeatCondition == null)
+            return "Unknown";
+
+        return defeatCondition.Condition.Item.Name.Replace("DarkDefeat", "").Replace("Defeat", "");
+    }
 }

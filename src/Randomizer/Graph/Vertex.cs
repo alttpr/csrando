@@ -21,6 +21,7 @@ public enum VertexType
     BigChest,
     BigKeydoor,
     Bonk,
+    Boss,
     Chest,
     Drop,
     Dig,

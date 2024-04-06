@@ -379,7 +379,7 @@ internal class VertexCollector
                     {
                         var bossVertex = new Vertex
                         {
-                            Type = VertexType.Mob,
+                            Type = VertexType.Boss,
                             Name = boss.Name,
                             World = world,
                             RoomId = room.Roomid,
