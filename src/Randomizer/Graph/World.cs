@@ -8,6 +8,7 @@ public sealed class World
     public Inventory StartingItems { get; }
     public WorldConfig Config { get; }
     private readonly Dictionary<string, Item> _allItems = new();
+    public ushort PlacedItemCount { get; set; }
 
     /// <summary>
     /// Creates an internal-use world that acts as host for <see cref="Graph"/> nodes that do not belong to a player world.

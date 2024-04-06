@@ -90,6 +90,8 @@ internal sealed class RandomAssumedFiller
             );
 
             location.Item = item;
+            if (location.SubType is not VertexType.Medallion and not VertexType.Refill and not VertexType.Prize)
+                location.World.PlacedItemCount++;
             setCounts[itemSet]--;
         }
 
@@ -129,6 +131,7 @@ internal sealed class RandomAssumedFiller
                 continue;
             }
             location.Item = item;
+            location.World.PlacedItemCount++;
             locations.Remove(location);
             System.Console.WriteLine("[FF] Placing: `{0}` in `{1}` ({2}:{3})",
                 item,

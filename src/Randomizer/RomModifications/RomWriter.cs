@@ -326,7 +326,7 @@ public static class RomWriter
         rom.WriteCredits();
         rom.WriteText();
         rom.WriteInitialSram();
-        //rom.SetTotalItemCount(getTotalItemCount());
+        rom.SetTotalItemCount(world.PlacedItemCount);
 
         rom.SetSeedString("VT CSharp v32".PadRight(32));
         // FIXME: is this a useful hash? it should be the same for the same seed...

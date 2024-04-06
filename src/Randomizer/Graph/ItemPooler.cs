@@ -133,21 +133,29 @@ internal sealed class ItemPooler
                 var uncleSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
                 worldSet.Remove(uncleSword);
                 world.GetLocation("Link's Uncle").Item = world.GetItem("UncleSword");
+                world.PlacedItemCount++;
 
                 var masterSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
                 worldSet.Remove(masterSword);
                 if (world.GetLocation("Master Sword Pedestal") is { Item.Name: not "Triforce" } pedestal)
+                {
                     pedestal.Item = masterSword.Item;
+                    world.PlacedItemCount++;
+                }
                 else
+                {
                     worldSet.Add((ItemSetName.DefaultSet, 9999, world.GetItem("TwentyRupees")));
+                }
 
                 var baconSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
                 worldSet.Remove(baconSword);
                 world.GetLocation("Blacksmith Item").Item = baconSword.Item;
+                world.PlacedItemCount++;
 
                 var goldSword = worldSet.First(p => p.Item.Name == "ProgressiveSword");
                 worldSet.Remove(goldSword);
                 world.GetLocation("Pyramid Fairy - Left").Item = goldSword.Item;
+                world.PlacedItemCount++;
                 break;
             case WeaponOption.Swordless:
                 var swordLess = worldSet.Where(p => p.Item.Name == "ProgressiveSword").ToArray();
