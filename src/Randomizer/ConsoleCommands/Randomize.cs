@@ -1,4 +1,4 @@
-namespace Randomizer.Console.Commands;
+namespace Randomizer.ConsoleCommands;
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
@@ -136,7 +136,7 @@ internal sealed class Randomize : Command
             }
             if (dumpSpoiler)
             {
-                System.Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
+                Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
                 {
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                     WriteIndented = true
