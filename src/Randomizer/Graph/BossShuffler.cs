@@ -1,8 +1,12 @@
 namespace Randomizer.Graph;
 
+using Microsoft.Extensions.Logging;
+
 /// <summary>Modify the edges of the graph to place bosses.</summary>
 internal sealed class BossShuffler : IWorldModifier
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     private const string BOSS_SHUFFLER_ITEM_CONDITION = "bossKillShufflerOverwrite";
     private static readonly Dictionary<string, string> VANILLA_BOSSES = new()
     {
@@ -149,7 +153,7 @@ internal sealed class BossShuffler : IWorldModifier
 
         from.Edges.RemoveAll(isDifferentBoss);
         bossEdge.Condition = new ItemCondition(worldBossItem, 1);
-        System.Console.WriteLine("[BS] Placing {0} in '{1}'", bossItem.Replace("Defeat", ""), from.Name);
+        _logger.LogInformation("[BS] Placing {Boss} in '{Location}'", bossItem.Replace("Defeat", ""), from.Name);
 
         bool isDifferentBoss(Edge edge)
         {

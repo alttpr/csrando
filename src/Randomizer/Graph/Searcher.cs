@@ -1,10 +1,13 @@
 namespace Randomizer.Graph;
 
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
 public class Searcher
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     private readonly VertexHashSet _visited;
     private readonly VertexHashSet _collected;
     private readonly Graph _graph;
@@ -68,7 +71,7 @@ public class Searcher
             int uncollectedFixedKeys = visited.Graph.FixedKeys[key].Count(v => !visited.Contains(v));
             if (keyCount + uncollectedFixedKeys >= lockedDoorCount)
             {
-                // System.Console.WriteLine($"Opening all doors with key {key}");
+                _logger.LogTrace("Opening all doors with key {Key}", key);
                 foreach (var door in doors)
                 {
                     if (!inventory.Has(door.Key))
@@ -140,7 +143,10 @@ public class Searcher
         return newItemsFound;
     }
 
-    public bool HasFound(Item item) => _inventory.Has(item);
+    public bool HasFound(Item item)
+    {
+        return _inventory.Has(item);
+    }
 
     /// <summary>
     /// Get all vertices that were visited in a given search (which has been called first) from a set starting point.
@@ -150,7 +156,10 @@ public class Searcher
         return _visited;
     }
 
-    public bool HasVisited(Vertex vertex) => _visited.Contains(vertex);
+    public bool HasVisited(Vertex vertex)
+    {
+        return _visited.Contains(vertex);
+    }
 
     /// <summary>
     /// Basic graph searcher. Returns a set of vertices that are absolutely reachable from the given starting points.
@@ -271,8 +280,8 @@ public class Searcher
 
             // Check what's behind the door
             Vertex[] startAt = [.. newVerticesFromDoor, .. additionalStarts];
-            VertexHashSet weakLocations = new VertexHashSet(visitedBeforeRecursion.Graph);
-            VertexHashSet weakSearchStarts = new VertexHashSet(visitedBeforeRecursion.Graph);
+            var weakLocations = new VertexHashSet(visitedBeforeRecursion.Graph);
+            var weakSearchStarts = new VertexHashSet(visitedBeforeRecursion.Graph);
             do
             {
                 var (weakLocations2, weakSearchStarts2) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);

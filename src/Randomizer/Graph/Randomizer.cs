@@ -1,6 +1,7 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// This is the primary entry point for randomization. A new object is created
@@ -11,6 +12,8 @@ using System.Diagnostics;
 /// </summary>
 public sealed class Randomizer
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     public Graph Graph { get; private set; }
     public World[] Worlds { get; }
     public PRNG PRNG { get; }
@@ -33,7 +36,7 @@ public sealed class Randomizer
     {
         var sw = Stopwatch.StartNew();
         PRNG = new PRNG(seed);
-        System.Console.WriteLine($"Using seed: {PRNG.Seed}");
+        _logger.LogInformation("Using seed: {Seed}", PRNG.Seed);
 
         Graph = new Graph();
         _start = Graph.AddVertex(new Vertex
@@ -69,7 +72,7 @@ public sealed class Randomizer
         Graph.SetVertexIds();
         _itemPooler = new ItemPooler(Worlds, PRNG);
 
-        System.Console.WriteLine($"Graph configuration took {sw.Elapsed}");
+        _logger.LogInformation("Graph configuration took {TimeElapsed}", sw.Elapsed);
     }
 
     /// <summary>

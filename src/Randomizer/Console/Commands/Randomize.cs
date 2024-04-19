@@ -1,17 +1,21 @@
 namespace Randomizer.Console.Commands;
 
-using Randomizer.Graph;
-using Randomizer.RomModifications;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
+using Randomizer.Graph;
+using Randomizer.RomModifications;
 
 /// <summary>Run randomizer as command.</summary>
 internal sealed class Randomize : Command
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     private readonly Option<GoalOption> _goal = new("goal", () => GoalOption.Ganon, "set game goal");
     private readonly Option<StateOption> _state = new("state", () => StateOption.Open, "set game state");
     private readonly Option<WeaponOption> _weapons = new("weapons", () => WeaponOption.Randomized, "set weapons mode");
@@ -25,16 +29,16 @@ internal sealed class Randomize : Command
     private readonly Option<int[]> _crystalsGanon = new Option<int[]>("crystals_ganon", ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
     private readonly Option<int[]> _crystalsTower = new Option<int[]>("crystals_tower", ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
-    private readonly Option<List<string>> _startingItems = new Option<List<string>>("items", "set starting items (comma separated)");
+    private readonly Option<List<string>> _startingItems = new("items", "set starting items (comma separated)");
     private readonly Option<int> _bulk = new("bulk", () => 1, "generate multiple ROMs");
     private readonly Option<int> _multiworld = new("multiworld", () => 1, "multiworld player count");
     private readonly Option<int?> _seed = new("seed", "set starting seed");
     private readonly Option<FileInfo> _baseRom = new Option<FileInfo>("rom", "set base rom").ExistingOnly();
     // TODO: we should probably have the base rom patch "built in" and not require a path.
     private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>("bps", "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
-    private readonly Option<DirectoryInfo> _outputDirectory = new Option<DirectoryInfo>("outdir", "output directory for generated games");
+    private readonly Option<DirectoryInfo> _outputDirectory = new("outdir", "output directory for generated games");
     private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>("settings", "JSON serialized settings file").ExistingOnly();
-    private readonly Option<Boolean> _dumpSpoiler = new Option<Boolean>("spoiler", "dump spoiler log");
+    private readonly Option<bool> _dumpSpoiler = new("spoiler", "dump spoiler log");
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -97,7 +101,7 @@ internal sealed class Randomize : Command
             errors.Add("Bulk count needs to be at least 1");
         }
 
-        result.ErrorMessage = String.Join('\n', errors);
+        result.ErrorMessage = string.Join('\n', errors);
     }
 
     /// <summary>Execute the console command.</summary>
@@ -107,7 +111,7 @@ internal sealed class Randomize : Command
         var baseRom = context.ParseResult.GetValueForOption(_baseRom);
         var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
         var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
-        var dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
+        bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
@@ -128,14 +132,18 @@ internal sealed class Randomize : Command
                 if (baseRom != null && outputDirectory != null)
                     RomWriter.Write(randomizer, baseRom, baseBPS, outputDirectory);
                 else
-                    System.Console.WriteLine("Writing a ROM requires all options: {0}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
+                    _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
             }
             if (dumpSpoiler)
             {
-                Info("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions { WriteIndented = true }));
+                System.Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    WriteIndented = true
+                }));
             }
         }
-        Info("Randomization took {0}", sw.Elapsed);
+        _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);
         return 0;
     }
 
@@ -158,7 +166,7 @@ internal sealed class Randomize : Command
                 var configArray = JsonSerializer.Deserialize<WorldConfig[]>(settingsStream, _options);
                 if (configArray != null)
                 {
-                    Info("Read {0} worlds from passed config file.", configArray.Length);
+                    _logger.LogInformation("Read {WorldConfigCount} worlds from passed config file.", configArray.Length);
                     return configArray;
                 }
             }
@@ -170,14 +178,14 @@ internal sealed class Randomize : Command
                 var singleConfig = JsonSerializer.Deserialize<WorldConfig>(settingsStream, _options);
                 if (singleConfig != null)
                 {
-                    Info("Read single world from passed config file.");
+                    _logger.LogInformation("Read single world from passed config file.");
                     return Enumerable.Repeat(singleConfig, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
                 }
             }
             catch { }
         }
 
-        Info("Using directly passed options to construct world.");
+        _logger.LogInformation("Using directly passed options to construct world.");
         var worldConfigs = Enumerable.Repeat(new WorldConfig
         {
             Accessibility = context.ParseResult.GetValueForOption(_accessibility),
@@ -195,17 +203,5 @@ internal sealed class Randomize : Command
         }, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
 
         return worldConfigs;
-    }
-
-    private static void Info(string format, params object[] args)
-    {
-        System.Console.WriteLine(format, args);
-    }
-    private static void Error(string format, params object[] args)
-    {
-        var previousColor = System.Console.ForegroundColor;
-        System.Console.ForegroundColor = ConsoleColor.Red;
-        System.Console.WriteLine(format, args);
-        System.Console.ForegroundColor = previousColor;
     }
 }

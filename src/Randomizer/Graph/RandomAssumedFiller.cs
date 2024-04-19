@@ -1,10 +1,14 @@
 namespace Randomizer.Graph;
 
+using Microsoft.Extensions.Logging;
+
 // NOTE: same as in ItemPooler, except we cannot reuse aliases this way
 using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
 internal sealed class RandomAssumedFiller
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     private readonly Randomizer _randomizer;
     private readonly PRNG _prng;
 
@@ -28,7 +32,7 @@ internal sealed class RandomAssumedFiller
         var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
 
-        Searcher[] searchers = new Searcher[_randomizer.Worlds.Length];
+        var searchers = new Searcher[_randomizer.Worlds.Length];
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
         {
             searchers[i] = _randomizer.GetSearcherForInventory(
@@ -39,7 +43,7 @@ internal sealed class RandomAssumedFiller
                 );
         }
 
-        var itemsToPlaceCount = flatItems.Where(i => i.Weight <= 9000).Count();
+        int itemsToPlaceCount = flatItems.Where(i => i.Weight <= 9000).Count();
 
         foreach (var itemKey in flatItemsArray)
         {
@@ -80,13 +84,13 @@ internal sealed class RandomAssumedFiller
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
             var location = _prng.GetRandomElement(locations);
-            System.Console.WriteLine("({5}%) [{0}] Placing `{1}` in `{2}` ({3}:{4})",
+            _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+                (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
                 itemWeight,
                 item,
                 location,
                 itemSet,
-                locations.Count,
-                (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount
+                locations.Count
             );
 
             location.Item = item;
@@ -104,7 +108,7 @@ internal sealed class RandomAssumedFiller
     /// <param name="fillItems">Items to be placed</param>
     private void FastFillItemsInLocations(List<(ItemSetName Set, int Weight, Item Item)> fillItems)
     {
-        System.Console.WriteLine("Fast Filling {0} items", fillItems.Count);
+        _logger.LogInformation("Fast Filling {ItemCount} items", fillItems.Count);
         // assure smaller location groups are filled first
         fillItems.Sort((a, b) =>
         {
@@ -127,13 +131,13 @@ internal sealed class RandomAssumedFiller
             var location = locations.LastOrDefault();
             if (location is null)
             {
-                System.Console.WriteLine("No Location: `{0}` `{1}`", item, itemSet);
+                _logger.LogWarning("No Location: `{Item}` `{ItemSet}`", item, itemSet);
                 continue;
             }
             location.Item = item;
             location.World.PlacedItemCount++;
             locations.Remove(location);
-            System.Console.WriteLine("[FF] Placing: `{0}` in `{1}` ({2}:{3})",
+            _logger.LogInformation("[FF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 item,
                 location,
                 itemSet,

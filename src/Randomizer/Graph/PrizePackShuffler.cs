@@ -1,10 +1,13 @@
 namespace Randomizer.Graph;
 
 using System;
+using Microsoft.Extensions.Logging;
 
 /// <summary>Modify Prizepacks based on configuration.</summary>
 internal sealed class PrizePackShuffler : IWorldModifier
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     private static readonly string[][] _vanillaPrizePacks =
     [
         ["Heart", "Heart", "Heart", "Heart", "RupeeGreen", "Heart", "Heart", "RupeeGreen"],
@@ -48,7 +51,7 @@ internal sealed class PrizePackShuffler : IWorldModifier
                 else
                     pack.Sprite = Sprite.Get(spriteName);
 
-                Console.WriteLine("[PP] Placing '{0}' in '{1}'", pack.Name, pack.Sprite?.Name);
+                _logger.LogInformation("[PP] Placing '{Sprite}' in '{PrizePack}'", pack.Sprite?.Name, pack.Name);
             }
 
             // TODO: this doesn't keep multi-drop packs (crab and tree pulls) together...
@@ -64,7 +67,7 @@ internal sealed class PrizePackShuffler : IWorldModifier
                     prizeSprites = prizeSprites.Except(pack.Deny);
 
                 pack.Sprite = Sprite.Get(prng.GetRandomElement(prizeSprites));
-                Console.WriteLine("[PP] Placing '{0}' in '{1}'", pack.Name, pack.Sprite.Name);
+                _logger.LogInformation("[PP] Placing '{Sprite}' in '{PrizePack}'", pack.Sprite.Name, pack.Name);
             }
         }
 

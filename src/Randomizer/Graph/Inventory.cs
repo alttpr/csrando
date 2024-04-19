@@ -2,13 +2,16 @@ namespace Randomizer.Graph;
 
 using System.Collections;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Representation of Players inventory for graph based traversal.
 /// </summary>
 public sealed class Inventory
 {
-    private BitArray _bits = new BitArray(400);
+    private static readonly ILogger _logger = ClassLogger.Get();
+
+    private readonly BitArray _bits = new(400);
     private readonly Dictionary<Item, int> _itemCount = new();
     private readonly Dictionary<World, float> _health = new();
 
@@ -30,17 +33,17 @@ public sealed class Inventory
         }
     }
 
-    [ConditionalAttribute("DEBUG")]
+    [Conditional("DEBUG")]
     private static void CheckItemId(Item item)
     {
         if (item.Id < 0)
-        {
-            System.Console.WriteLine($"Item {item.Name} does not have an ID");
-        }
+            _logger.LogWarning("Item {Name} does not have an ID", item.Name);
     }
 
     public void AddItem(Item item, int count = 1)
     {
+        CheckItemId(item);
+
         if (item.Id >= _bits.Length)
         {
             _bits.Length = item.Id + 1;
@@ -73,7 +76,7 @@ public sealed class Inventory
             throw new Exception("Trying to remove an item not in inventory.");
         }
 
-        var previousCount = _itemCount[item];
+        int previousCount = _itemCount[item];
         if (previousCount > count)
         {
             _itemCount[item] -= count;
@@ -130,7 +133,10 @@ public sealed class Inventory
         return _itemCount.GetValueOrDefault(item, 0) >= count;
     }
 
-    internal IReadOnlyDictionary<Item, int> All() => _itemCount.AsReadOnly();
+    internal IReadOnlyDictionary<Item, int> All()
+    {
+        return _itemCount.AsReadOnly();
+    }
 
     /// <summary>
     /// Get new Inventory with merge from another Inventory.
@@ -145,15 +151,15 @@ public sealed class Inventory
         foreach (var (item, count) in inventory._itemCount)
         {
             newInventory._itemCount[item] = newInventory._itemCount.GetValueOrDefault(item, 0) + count;
-            if (newInventory._bits != null)
-            {
-                newInventory._bits.Set(item.Id, true);
-            }
+            newInventory._bits?.Set(item.Id, true);
         }
 
         return newInventory;
     }
-    public Inventory Clone() => new(this);
+    public Inventory Clone()
+    {
+        return new(this);
+    }
 
     /// <summary>
     /// Get the health value available based on items in this world.
