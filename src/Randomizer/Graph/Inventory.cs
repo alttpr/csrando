@@ -11,7 +11,6 @@ public sealed class Inventory
 {
     private BitArray _bits = new BitArray(500);
     private static readonly ILogger _logger = ClassLogger.Get();    
-    private BitArray _bits = new BitArray(500);
     private readonly Dictionary<Item, int> _itemCount = new();
     private readonly Dictionary<World, float> _health = new();
 
