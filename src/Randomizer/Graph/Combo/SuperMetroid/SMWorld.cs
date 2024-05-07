@@ -11,13 +11,52 @@ using System.Threading.Tasks;
 using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
 using PooledItem = (ItemSetName Set, int Weight, Item Item);
+using System.Diagnostics.CodeAnalysis;
+using static global::Randomizer.Graph.Combo.Zelda.ZeldaYamlReader;
 
+public enum ComplexRequirementType
+{
+    Always,
+    Never,
+    Single,
+    And,
+    Not,
+    Or,
+    Ammo,
+    AmmoDrain,
+    Refill,
+    EnemyKill,
+    AcidFrames,
+    GravitylessAcidFrames,
+    DraygonElectricityFrames,
+    EnemyDamage,
+    HeatFrames,
+    GravitylessHeatFrames,
+    HibashiHits,
+    LavaFrames,
+    GravitylessLavaFrames,
+    SamusEaterFrames,
+    MetroidFrames,
+    EnergyAtMost,
+    AutoReserveTrigger,
+    SpikeHits,
+    ThornHits,
+    DoorUnlockedAtNode,
+    ObstaclesCleared,
+    ObstaclesNotCleared,
+    ResourceCapacity,
+    CanShineCharge,
+    Shinespark,
+    ResetRoom,
+    ItemNotCollectedAtNode
+}
 
 // Represents a complex requirement for an edge
 // This is more or less a copy of the requirement record from the SM model with some changes
 // For example this will resolve item requirements to item objects for faster lookup later
 public abstract record ComplexRequirement
 {
+    public ComplexRequirementType RequirementType { get; init; }
     internal record Always : ComplexRequirement;
     internal record Never : ComplexRequirement;
     internal record Single(Item Item) : ComplexRequirement;
@@ -90,6 +129,47 @@ public abstract record ComplexRequirement
     ) : ComplexRequirement;
     internal record ItemNotCollectedAtNode(int Node) : ComplexRequirement;
 
+    public ComplexRequirement()
+    {
+        RequirementType = this switch
+        {
+            Always _ => ComplexRequirementType.Always,
+            Never _ => ComplexRequirementType.Never,
+            Single _ => ComplexRequirementType.Single,
+            And _ => ComplexRequirementType.And,
+            Not _ => ComplexRequirementType.Not,
+            Or _ => ComplexRequirementType.Or,
+            Ammo _ => ComplexRequirementType.Ammo,
+            AmmoDrain _ => ComplexRequirementType.AmmoDrain,
+            Refill _ => ComplexRequirementType.Refill,
+            EnemyKill _ => ComplexRequirementType.EnemyKill,
+            AcidFrames _ => ComplexRequirementType.AcidFrames,
+            GravitylessAcidFrames _ => ComplexRequirementType.GravitylessAcidFrames,
+            DraygonElectricityFrames _ => ComplexRequirementType.DraygonElectricityFrames,
+            EnemyDamage _ => ComplexRequirementType.EnemyDamage,
+            HeatFrames _ => ComplexRequirementType.HeatFrames,
+            GravitylessHeatFrames _ => ComplexRequirementType.GravitylessHeatFrames,
+            HibashiHits _ => ComplexRequirementType.HibashiHits,
+            LavaFrames _ => ComplexRequirementType.LavaFrames,
+            GravitylessLavaFrames _ => ComplexRequirementType.GravitylessLavaFrames,
+            SamusEaterFrames _ => ComplexRequirementType.SamusEaterFrames,
+            MetroidFrames _ => ComplexRequirementType.MetroidFrames,
+            EnergyAtMost _ => ComplexRequirementType.EnergyAtMost,
+            AutoReserveTrigger _ => ComplexRequirementType.AutoReserveTrigger,
+            SpikeHits _ => ComplexRequirementType.SpikeHits,
+            ThornHits _ => ComplexRequirementType.ThornHits,
+            DoorUnlockedAtNode _ => ComplexRequirementType.DoorUnlockedAtNode,
+            ObstaclesCleared _ => ComplexRequirementType.ObstaclesCleared,
+            ObstaclesNotCleared _ => ComplexRequirementType.ObstaclesNotCleared,
+            ResourceCapacity _ => ComplexRequirementType.ResourceCapacity,
+            CanShineCharge _ => ComplexRequirementType.CanShineCharge,
+            Shinespark _ => ComplexRequirementType.Shinespark,
+            ResetRoom _ => ComplexRequirementType.ResetRoom,
+            ItemNotCollectedAtNode _ => ComplexRequirementType.ItemNotCollectedAtNode,
+            _ => throw new NotImplementedException()
+        };
+    }
+
     public static ComplexRequirement FromRequirement(World world, Model.Requirement requirement)
     {
         return requirement switch
@@ -97,9 +177,9 @@ public abstract record ComplexRequirement
             Model.Requirement.Always => new Always(),
             Model.Requirement.Never => new Never(),
             Model.Requirement.Single single => new Single(world.GetItem("SM" + single.Req, Game.SuperMetroid)),
-            Model.Requirement.And and => new And(and.Reqs.Select(r => FromRequirement(world, r)).ToArray()),
+            Model.Requirement.And and => and.Reqs.Length == 0 ? new Always() : (and.Reqs.Length == 1 ? FromRequirement(world, and.Reqs.First()) : new And(and.Reqs.Select(r => FromRequirement(world, r)).ToArray())),
             Model.Requirement.Not not => new Not(FromRequirement(world, not.Req)),
-            Model.Requirement.Or or => new Or(or.Reqs.Select(r => FromRequirement(world, r)).ToArray()),
+            Model.Requirement.Or or => or.Reqs.Length == 0 ? new Always() : (or.Reqs.Length == 1 ? FromRequirement(world, or.Reqs.First()) : new Or(or.Reqs.Select(r => FromRequirement(world, r)).ToArray())),
             Model.Requirement.Ammo ammo => new Ammo(world.GetItem("SM" + ammo.Type, Game.SuperMetroid), ammo.Count),
             Model.Requirement.AmmoDrain ammoDrain => new AmmoDrain(ammoDrain.Type, ammoDrain.Count),
             Model.Requirement.Refill refill => new Refill(refill.Resources),
@@ -143,45 +223,45 @@ public abstract record ComplexRequirement
 
     internal bool Check(Inventory inventory)
     {
-        return this switch
+        return this.RequirementType switch
         {
-            Always => true,
-            Never => false,
-            Single req => inventory.Has(req.Item),
-            And reqs => reqs.Reqs.All(req => req.Check(inventory)),
-            Not req => !req.Req.Check(inventory),
-            Or reqs => reqs.Reqs.Any(req => req.Check(inventory)),
-            Ammo ammo => inventory.HasAtLeast(ammo.Item, ammo.Count / 5),
-            AmmoDrain ammo => true,
-            Refill resources => true,
-            EnemyKill enemies => enemies.CanKillWith(inventory),
-            AcidFrames frames => false,
-            GravitylessAcidFrames frames => false,
-            DraygonElectricityFrames frames => true,
-            EnemyDamage enemy => true,
-            HeatFrames frames => false,
-            GravitylessHeatFrames frames => false,
-            HibashiHits hits => true,
-            LavaFrames frames => false,
-            GravitylessLavaFrames frames => false,
-            SamusEaterFrames frames => true,
-            MetroidFrames frames => true,
-            EnergyAtMost energy => true,
-            AutoReserveTrigger minMax => false,
-            SpikeHits hits => true,
-            ThornHits hits => true,
-            DoorUnlockedAtNode node => false,
-            ObstaclesCleared obstacles => true,
-            ObstaclesNotCleared obstacles => true,
-            ResourceCapacity capacity => capacity.Capacity.All(c => inventory.HasAtLeast(c.Item1, c.Item2)),
-            CanShineCharge usedTiles => usedTiles.UsedTiles switch
+            ComplexRequirementType.Always => true,
+            ComplexRequirementType.Never => false,
+            ComplexRequirementType.Single when this is Single req => inventory.Has(req.Item),
+            ComplexRequirementType.And when this is And reqs => reqs.Reqs.All(req => req.Check(inventory)),
+            ComplexRequirementType.Not when this is Not req => !req.Req.Check(inventory),
+            ComplexRequirementType.Or when this is Or reqs => reqs.Reqs.Any(req => req.Check(inventory)),
+            ComplexRequirementType.Ammo when this is Ammo ammo => inventory.HasAtLeast(ammo.Item, ammo.Count / 5),
+            ComplexRequirementType.AmmoDrain => true,
+            ComplexRequirementType.Refill => true,
+            ComplexRequirementType.EnemyKill when this is EnemyKill enemies => enemies.CanKillWith(inventory),
+            ComplexRequirementType.AcidFrames => false,
+            ComplexRequirementType.GravitylessAcidFrames => false,
+            ComplexRequirementType.DraygonElectricityFrames => true,
+            ComplexRequirementType.EnemyDamage => true,
+            ComplexRequirementType.HeatFrames => false,
+            ComplexRequirementType.GravitylessHeatFrames => false,
+            ComplexRequirementType.HibashiHits => true,
+            ComplexRequirementType.LavaFrames => false,
+            ComplexRequirementType.GravitylessLavaFrames => false,
+            ComplexRequirementType.SamusEaterFrames  => true,
+            ComplexRequirementType.MetroidFrames => true,
+            ComplexRequirementType.EnergyAtMost => true,
+            ComplexRequirementType.AutoReserveTrigger => false,
+            ComplexRequirementType.SpikeHits => true,
+            ComplexRequirementType.ThornHits => true,
+            ComplexRequirementType.DoorUnlockedAtNode => false,
+            ComplexRequirementType.ObstaclesCleared => true,
+            ComplexRequirementType.ObstaclesNotCleared => true,
+            ComplexRequirementType.ResourceCapacity when this is ResourceCapacity capacity => capacity.Capacity.All(c => inventory.HasAtLeast(c.Item1, c.Item2)),
+            ComplexRequirementType.CanShineCharge when this is CanShineCharge usedTiles => usedTiles.UsedTiles switch
             {
                 33 => inventory.Has(usedTiles.world.GetItem("SMcanShinespark")),
                 _ => false,
             },
-            Shinespark frames => true,
-            ResetRoom nodes => false,
-            ItemNotCollectedAtNode node => false,
+            ComplexRequirementType.Shinespark => true,
+            ComplexRequirementType.ResetRoom => false,
+            ComplexRequirementType.ItemNotCollectedAtNode => false,
             _ => throw new NotImplementedException()
         };
     }
@@ -278,7 +358,19 @@ internal class SMWorld
             //var requirementCount = int.Parse(edgeCollectionData.Skip(1).FirstOrDefault() ?? "1");
 
             var complexRequirement = ComplexRequirement.FromRequirement(world, edgeCollection.Key);
-            var simpleRequirement = world.GetItem("SMComplexRequirement", Game.SuperMetroid);
+            
+            // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
+            var convertedRequirement = complexRequirement switch
+            {
+                ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
+                ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
+                ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
+                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
+                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
+                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+                _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, complexRequirement)
+            };
 
             foreach (var edges in edgeCollection.Value.Directed)
             {
@@ -289,7 +381,7 @@ internal class SMWorld
                     throw new Exception("Name Connection Mismatch: " + $"({edges[0]}, {edges[1]}) => " + $"({from}, {to})");
                 }
 
-                world.Graph.AddDirected(from, to, new ItemCondition(simpleRequirement, 1, complexRequirement));
+                world.Graph.AddDirected(from, to, convertedRequirement);
                 //Console.WriteLine($"Added directed edge from {from.Name} to {to.Name}");
             }
 
@@ -302,8 +394,8 @@ internal class SMWorld
                     throw new Exception("Name Connection Mismatch: " + $"({edges[0]}, {edges[1]}) => " + $"({from}, {to})");
                 }
 
-                world.Graph.AddDirected(from, to, new ItemCondition(simpleRequirement, 1, complexRequirement));
-                world.Graph.AddDirected(to, from, new ItemCondition(simpleRequirement, 1, complexRequirement));
+                world.Graph.AddDirected(from, to, convertedRequirement);
+                world.Graph.AddDirected(to, from, convertedRequirement);
                 //Console.WriteLine($"Added undirected edge from {from.Name} to {to.Name}");
             }
         }
@@ -330,7 +422,20 @@ internal class SMWorld
                 Game = Game.SuperMetroid
             };
 
-            var helperRequirement = new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, ComplexRequirement.FromRequirement(world, helper.Requires));
+            var complexRequirement = ComplexRequirement.FromRequirement(world, helper.Requires);
+
+            // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
+            var helperRequirement = complexRequirement switch
+            {
+                ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
+                ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
+                ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
+                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
+                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
+                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+                _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, complexRequirement)
+            };
 
             world.Graph.AddVertex(helperVertex);
             world.Graph.AddDirected(smMeta, helperVertex, helperRequirement);
@@ -344,8 +449,6 @@ internal class SMWorld
 
         // Connect SM to the main world graph
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("SM - Meta"), world.GetItem("fixed"));
-
-
 
         // Add undirected path between the games
         //world.Graph.AddDirected(world.GetLocation("Lake Hylia North West Shore"), world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetItem("fixed"));
@@ -414,10 +517,23 @@ internal class SMWorld
             Game = Game.SuperMetroid
         };
 
-        var techRequirement = new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, ComplexRequirement.FromRequirement(world, tech.Requires));
+        var techRequirement = ComplexRequirement.FromRequirement(world, tech.Requires);
+
+        // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
+        var helperRequirement = techRequirement switch
+        {
+            ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
+            ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
+            ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
+            ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
+            ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+            ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
+            ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+            _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, techRequirement)
+        };
 
         world.Graph.AddVertex(techVertex);
-        world.Graph.AddDirected(meta, techVertex, techRequirement);
+        world.Graph.AddDirected(meta, techVertex, helperRequirement);
 
         foreach (var extTech in tech.ExtensionTechs ?? [])
         {

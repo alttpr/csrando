@@ -1737,7 +1737,8 @@ public sealed class Rom : IDisposable
                 if (itemByte == null)
                     continue;
 
-            Write((Address)address, [itemByte.Value], (location.Game == Game.Alttp || location.Game == null) ? 0x400000 : 0);
+                Write((Address)address, [itemByte.Value], (location.Game == Game.Alttp || location.Game == null) ? 0x400000 : 0);
+            }
         }
     }
     public void WriteCreditsText(WorldConfig config, Vertex location, Item? item)

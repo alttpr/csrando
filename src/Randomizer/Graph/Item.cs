@@ -37,7 +37,7 @@ public sealed class Item
         if (!Enum.TryParse<ItemType>(typeString, out var itemType))
             itemType = ItemType.Meta;
         Type = itemType;
-        Bytes = yamlItem?.Bytes.ToArray();
+        Bytes = yamlItem?.Bytes.ToDictionary(x => x.Key, x => x.Value?.ToArray()) ?? new Dictionary<string, byte[]?>();
     }
 
     public override string ToString() => $"{Name}:{World.Id}";

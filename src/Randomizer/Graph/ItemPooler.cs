@@ -23,6 +23,9 @@ internal sealed class ItemPooler
         VertexType.Refill,
         VertexType.ShopItem,
         VertexType.Standing,
+        VertexType.Hidden,
+        VertexType.Chozo,
+        VertexType.Visible
     ];
 
     private readonly PRNG _prng;
