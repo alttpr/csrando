@@ -21,14 +21,15 @@ public class PRNG
         return source.OrderBy(_ => _random.Next());
     }
 
-    public int GetRandomInt(int max)
+    public int GetRandomInt(Range range) => GetRandomInt(range.Start.Value, range.End.Value + 1);
+    public int GetRandomInt(int maxExclusive)
     {
-        return GetRandomInt(min: 0, max);
+        return GetRandomInt(minInclusive: 0, maxExclusive);
     }
 
-    public int GetRandomInt(int min, int max)
+    public int GetRandomInt(int minInclusive, int maxExclusive)
     {
-        return _random.Next(min, max);
+        return _random.Next(minInclusive, maxExclusive);
     }
 
     public T[] Shuffle<T>(T[] array)

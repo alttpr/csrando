@@ -215,7 +215,7 @@ public static class RomWriter
         rom.SetCompassCountTotals();
         rom.SetFreeItemTextMode(); //rom.freeItemText
         rom.SetFreeItemMenu(); //rom.freeItemMenu
-        rom.SetDiggingGameRng((byte)prng.GetRandomInt(1, 30));
+        rom.SetDiggingGameRng((byte)prng.GetRandomInt(1..30));
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
 
@@ -829,7 +829,7 @@ public static class RomWriter
         var updateTable = world.Config.EnemyDamage switch
         {
             EnemyDamageOption.Shuffled => prng.Shuffle(damageBytes.Select(v => v & 0x0F)).ToArray(),
-            _ => Enumerable.Range(0, 0xF3).Select(_ => prng.GetRandomInt(0, 9)).ToArray(),
+            _ => Enumerable.Range(0, 0xF3).Select(_ => prng.GetRandomInt(0..9)).ToArray(),
         };
 
         for (int i = 0; i < 0xF3; i++)
@@ -884,7 +884,7 @@ public static class RomWriter
         {
             if (healthBytes[i] == 0xFF || _enemyHealthBlacklist.Contains(i))
                 continue;
-            healthBytes[i] = (byte)prng.GetRandomInt(lowest, highest);
+            healthBytes[i] = (byte)prng.GetRandomInt(lowest..highest);
         }
 
         rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
