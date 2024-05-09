@@ -262,6 +262,10 @@ public class YamlSprite
     public required byte[] Bytes { get; set; }
     [YamlMember(Alias = "flags")]
     public YamlSpriteFlags Flags { get; set; }
+    [YamlMember(Alias = "subtype")]
+    public byte SubType { get; set; } = 0x00;
+    [YamlMember(Alias = "sheets")]
+    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
 }
 [Flags]
 public enum YamlSpriteFlags

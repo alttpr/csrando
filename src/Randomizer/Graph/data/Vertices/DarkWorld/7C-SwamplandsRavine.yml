@@ -16,7 +16,7 @@ maps:
               state: [1, 2]
             - name: "Swamplands Ravine - Blue Guard"
               position: { x: 0x07, y: 0x06 }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Swamplands Ravine - Rupee Pull"
               position: { x: 0x0f, y: 0x06 }

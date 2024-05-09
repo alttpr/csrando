@@ -32,21 +32,21 @@ maps:
               state: [1, 2]
             - name: "Village Peg Puzzle West - Chicken 1"
               position: { x: 0x13, y: 0x11 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village Peg Puzzle West - Chicken 2"
               position: { x: 0x11, y: 0x13 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village Peg Puzzle West - Chicken 3"
               position: { x: 0x15, y: 0x15 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village Peg Puzzle West - Chicken 4"
               position: { x: 0x09, y: 0x16 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village Peg Puzzle West - Chicken 5"
               position: { x: 0x11, y: 0x17 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]

@@ -35,11 +35,11 @@ maps:
               state: [1, 2]
             - name: "Dark Lake Hylia River Bend - Blue Guard 1"
               position: { x: 0x08, y: 0x0b }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Dark Lake Hylia River Bend - Blue Guard 2"
               position: { x: 0x10, y: 0x0e }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Dark Lake Hylia River Bend - Ropa"
               position: { x: 0x1a, y: 0x18 }

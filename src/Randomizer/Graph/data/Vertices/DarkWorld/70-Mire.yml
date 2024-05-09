@@ -26,15 +26,15 @@ maps:
           mobs:
             - name: "Mire - Raven 1"
               position: { x: 0x21, y: 0x1b }
-              sprite: "Raven"
+              sprite: "Dacto"
               state: [1, 2]
             - name: "Mire - Fireball Zora 1"
               position: { x: 0x2b, y: 0x1c }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Mire - Fireball Zora 2"
               position: { x: 0x12, y: 0x21 }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Mire - Swamola 1"
               position: { x: 0x1b, y: 0x24 }
@@ -46,15 +46,15 @@ maps:
               state: [1, 2]
             - name: "Mire - Raven 2"
               position: { x: 0x07, y: 0x28 }
-              sprite: "Raven"
+              sprite: "Dacto"
               state: [1, 2]
             - name: "Mire - Fireball Zora 3"
               position: { x: 0x16, y: 0x2b }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Mire - Fireball Zora 4"
               position: { x: 0x1e, y: 0x2e }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Mire - Swamola 3"
               position: { x: 0x17, y: 0x33 }
@@ -62,11 +62,11 @@ maps:
               state: [1, 2]
             - name: "Mire - Fireball Zora 5"
               position: { x: 0x11, y: 0x38 }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Mire - Fireball Zora 6"
               position: { x: 0x23, y: 0x2b }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Mire - Swamola 4"
               position: { x: 0x27, y: 0x2c }

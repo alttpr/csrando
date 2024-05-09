@@ -38,5 +38,5 @@ maps:
           mobs:
             - name: "Lake of Bad Omen - Fireball Zora"
               position: { x: 0x19, y: 0x08 }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]

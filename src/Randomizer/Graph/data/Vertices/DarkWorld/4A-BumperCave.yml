@@ -57,11 +57,11 @@ maps:
               state: [1, 2]
             - name: "Bumper Cave Ledge - Raven 1"
               position: { x: 0x13, y: 0x13 }
-              sprite: "Raven"
+              sprite: "Dacto"
               state: [1, 2]
             - name: "Bumper Cave Ledge - Raven 2"
               position: { x: 0x13, y: 0x14 }
-              sprite: "Raven"
+              sprite: "Dacto"
               state: [1, 2]
             - name: "Bumper Cave Ledge - Ropa"
               position: { x: 0x0e, y: 0x18 }

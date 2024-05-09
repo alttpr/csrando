@@ -24,7 +24,7 @@ maps:
           mobs:
             - name: "Dark Shopping Mall - Octorok (One Way) 1"
               position: { x: 0x11, y: 0x08 }
-              sprite: "Octorok1"
+              sprite: "Slarok1"
               state: [1, 2]
             - name: "Dark Shopping Mall - Stal"
               position: { x: 0x09, y: 0x0a }
@@ -36,15 +36,15 @@ maps:
               state: [1, 2]
             - name: "Dark Shopping Mall - Octorok (One Way) 2"
               position: { x: 0x18, y: 0x11 }
-              sprite: "Octorok1"
+              sprite: "Slarok1"
               state: [1, 2]
             - name: "Dark Shopping Mall - Fireball Zora 1"
               position: { x: 0x07, y: 0x12 }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Dark Shopping Mall - Fireball Zora 2"
               position: { x: 0x12, y: 0x19 }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
 
         - name: "Dark Lake Hylia River End Brook"

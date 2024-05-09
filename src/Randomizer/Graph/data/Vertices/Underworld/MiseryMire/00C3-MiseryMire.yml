@@ -45,7 +45,7 @@ rooms:
               - "Misery Mire - Main Lobby"
               - "Misery Mire - Falling Bridge South - Bottom Door"
           mobs:
-            - name: "Misery Mire - Falling Bridge - Chicken"
+            - name: "Misery Mire - Falling Bridge - Falling Bridge Overlord"
               position: { x: 0x17, y: 0x1a, z: 0x00 }
               sprite: "FallingBridge"
             - name: "Misery Mire - Falling Bridge - Antifairy"

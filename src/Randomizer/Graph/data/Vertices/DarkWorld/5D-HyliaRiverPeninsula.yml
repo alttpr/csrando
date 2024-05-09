@@ -24,7 +24,7 @@ maps:
               state: [1, 2]
             - name: "Dark Hylia River Peninsula - Blue Guard"
               position: { x: 0x08, y: 0x11 }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
 
         - name: "Dark Hylia River Peninsula Eastern Ledge"

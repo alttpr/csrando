@@ -38,7 +38,7 @@ maps:
               state: [1, 2]
             - name: "Village of Outcasts - Blue Guard 1"
               position: { x: 0x07, y: 0x1c }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Village of Outcasts - Moblin 2"
               position: { x: 0x35, y: 0x0a }
@@ -46,11 +46,11 @@ maps:
               state: [1, 2]
             - name: "Village of Outcasts - Poe 1"
               position: { x: 0x2b, y: 0x0c }
-              sprite: "Poe"
+              sprite: "Hyu"
               state: [1, 2]
             - name: "Village of Outcasts - Thief 1"
               position: { x: 0x2e, y: 0x17 }
-              sprite: "Thief"
+              sprite: "Pikku"
               state: [1, 2]
             - name: "Village of Outcasts - Gargoyle's Domain Gate"
               position: { x: 0x20, y: 0x1c }
@@ -58,15 +58,15 @@ maps:
               state: [1, 2]
             - name: "Village of Outcasts - Poe 2"
               position: { x: 0x18, y: 0x25 }
-              sprite: "Poe"
+              sprite: "Hyu"
               state: [1, 2]
             - name: "Village of Outcasts - Thief 2"
               position: { x: 0x0d, y: 0x27 }
-              sprite: "Thief"
+              sprite: "Pikku"
               state: [1, 2]
             - name: "Village of Outcasts - Poe 3"
               position: { x: 0x1d, y: 0x28 }
-              sprite: "Poe"
+              sprite: "Hyu"
               state: [1, 2]
             - name: "Village of Outcasts - Moblin 3"
               position: { x: 0x12, y: 0x2e }
@@ -74,23 +74,23 @@ maps:
               state: [1, 2]
             - name: "Village of Outcasts - Chicken 1"
               position: { x: 0x16, y: 0x34 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village of Outcasts - Chicken 2"
               position: { x: 0x15, y: 0x37 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village of Outcasts - Chicken 3"
               position: { x: 0x28, y: 0x27 }
-              sprite: "Chicken"
+              sprite: "SkullChicken"
               state: [1, 2]
             - name: "Village of Outcasts - Blue Guard 2"
               position: { x: 0x33, y: 0x2f }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Village of Outcasts - Poe 4"
               position: { x: 0x2c, y: 0x34 }
-              sprite: "Poe"
+              sprite: "Hyu"
               state: [1, 2]
             - name: "Village of Outcasts - Talking Tree 2"
               position: { x: 0x37, y: 0x35 }

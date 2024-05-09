@@ -106,5 +106,5 @@ maps:
               state: [1, 2]
             - name: "East Dark World Maze - Raven"
               position: { x: 0x29, y: 0x37 }
-              sprite: "Raven"
+              sprite: "Dacto"
               state: [1, 2]

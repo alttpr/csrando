@@ -6,164 +6,238 @@ Empty:
 Raven:
   bytes: [0x00]
   flags: Challenge
+  sheets: [null, null, null, [0x11]]
+Dacto:
+  bytes: [0x00]
+  flags: Challenge
+  sheets: [null, null, null, [0x19]]
 Vulture:
   bytes: [0x01]
   flags: Challenge
+  sheets: [null, null, [0x12], null]
 FlyingStalfosHead: #STALFOS HEAD
   bytes: [0x02]
   flags: Challenge
+  sheets: [[0x1F], null, null, null]
 #NULL:
 #  bytes: [0x03]
 PullSwitchGood: #CORRECT PULL SWITCH
   bytes: [0x04]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH
   bytes: [0x05]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 PullSwitchBad: #WRONG PULL SWITCH
   bytes: [0x06]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH
   bytes: [0x07]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 Octorok1: #OKTOROK
   bytes: [0x08]
   flags: Challenge
+  sheets: [null, null, [0x0C], null]
+Slarok1: #SLAROK
+  bytes: [0x08]
+  flags: Challenge
+  sheets: [null, null, [0x18], null]
 Moldorm:
   bytes: [0x09]
-  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+  flags: NoPlace
+  sheets: [null, null, [0x30], null]
 Octorok4: #OCTOROK 4WAY
   bytes: [0x0A]
   flags: Challenge
+  sheets: [null, null, [0x0C], null]
+Slarok4: #SLAROK 4WAY
+  bytes: [0x0A]
+  flags: Challenge
+  sheets: [null, null, [0x18], null]
 Chicken: #CUCCO
   bytes: [0x0B]
   flags: Challenge
+  sheets: [null, null, null, [0x50]]
+SkullChicken: #SKULL CUCCO
+  bytes: [0x0B]
+  flags: Challenge
+  sheets: [null, null, null, [0x15]]
 OctorokStone: #OCTOROK STONE
   bytes: [0x0C]
-  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+  flags: NoPlace
+  sheets: [null, null, [0x0C], null]
+SlarokStone: #SLAROK STONE
+  bytes: [0x0C]
+  flags: NoPlace
+  sheets: [null, null, [0x18], null]
 Buzzblob:
   bytes: [0x0D]
   flags: Challenge
+  sheets: [null, null, null, [0x11]]
 Snapdragon:
   bytes: [0x0E]
   flags: Challenge
+  sheets: [[0x16], null, [0x17], null]
 Octoballoon:
   bytes: [0x0F]
   flags: Challenge
+  sheets: [null, null, [0x0C], null]
 Octobaby: #OCTOBALLOON BABY
   bytes: [0x10]
-  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+  flags: NoPlace
+  sheets: [null, null, [0x0C], null]
 Hinox:
   bytes: [0x11]
   flags: Challenge
+  sheets: [[0x16], null, null, null]
 Moblin:
   bytes: [0x12]
   flags: Challenge
+  sheets: [null, null, [0x17], null]
 MiniHelmasaur: #MINI HELMASAUR
   bytes: [0x13]
   flags: Challenge
+  sheets: [null, [0x1E], null, null]
 ForkGate: #THIEVES TOWN GRATE?
   bytes: [0x14]
   flags: NoPlace
 Antifairy:
-  bytes: [0x15, 0x77]
+  bytes: [0x15]
+  sheets: [null, null, null, [0x52, 0x53]]
 Sahasrahla: #SAHASRAHLA / AGINAH
   bytes: [0x16]
   flags: NoPlace
+  sheets: [null, null, [0x4C], null]
 BushHoarder: #HOARDER
   bytes: [0x17]
   flags: Challenge
+  sheets: [null, null, null, [0x10, 0x11]]
 MiniMoldorm: #MINI MOLDORM
   bytes: [0x18]
   flags: Challenge
+  sheets: [null, [0x1E], null, null]
 Poe:
   bytes: [0x19]
   flags: Challenge
+  sheets: [null, null, null, [0x15]]
+Hyu:
+  bytes: [0x19]
+  flags: Challenge
+  sheets: [null, null, null, [0x0E]]
 DwarfSmith: #SMITHY
   bytes: [0x1A]
   flags: NoPlace
+  sheets: [null, [0x4D], null, [0x15]]
 SpriteArrow: #ARROW
   bytes: [0x1B]
   flags: NoPlace
 Statue:
   bytes: [0x1C]
+  sheets: [null, null, null, [0x52, 0x53]]
 FluteQuest:
   bytes: [0x1D]
   flags: NoPlace
 CrystalSwitch: #CRYSTAL SWITCH
   bytes: [0x1E]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 SickKid: #SICK KID
   bytes: [0x1F]
   flags: NoPlace
+  sheets: [[0x51], null, null, null]
 Sluggula:
   bytes: [0x20]
   flags: Challenge
+  sheets: [null, null, [0x25], null]
 PushSwitch: #WATER SWITCH
   bytes: [0x21]
   flags: NoPlace
+  sheets: [null, null, null, [0x53]]
 Ropa:
   bytes: [0x22]
   flags: Challenge
+  sheets: [[0x16], null, null, null]
 RedBari: #RED BARI
   bytes: [0x23]
   flags: Challenge
+  sheets: [[0x1F], null, null, null]
 BlueBari: #BLUE BARI
   bytes: [0x24]
   flags: Challenge
+  sheets: [[0x1F], null, null, null]
 TalkingTree: #TALKING TREE
   bytes: [0x25]
   flags: NoPlace
+  sheets: [null, null, null, [0x15]]
 HardhatBeetle: #HARDHAT BEETLE
   bytes: [0x26]
   flags: Challenge
+  sheets: [null, [0x1E], null, null]
 Deadrock:
   bytes: [0x27]
   flags: Challenge
+  sheets: [null, null, null, [0x10]]
 Storyteller: #DARK WORLD HINT NPC
   bytes: [0x28]
   flags: NoPlace
+  sheets: [[0x4B], [0x4D], null, null]
 Adult:
   bytes: [0x29]
   flags: NoPlace
+  sheets: [[0x0E, 0x4F], null, [0x4A], null]
 SweepingLady: #SWEEPING LADY
   bytes: [0x2A]
   flags: NoPlace
+  sheets: [null, null, [0x4A], null]
 Hobo:
   bytes: [0x2B]
   flags: NoPlace
+  sheets: [null, null, [0x37], null]
 Lumberjack: #LUMBERJACKS
   bytes: [0x2C]
   flags: NoPlace
-#NECKLESS MAN:
-#  bytes: [0x2D]
+  sheets: [null, null, [0x4A], null]
+TelepathyTile: #NECKLESS MAN?
+  bytes: [0x2D]
+  flags: NoPlace
 FluteKid: #FLUTE KID
   bytes: [0x2E]
   flags: NoPlace
+  sheets: [null, null, [0x4E], [0x4C]]
 RaceGameLady: #RACE GAME LADY
   bytes: [0x2F]
   flags: NoPlace
+  sheets: [[0x4F], null, null, [0x50]]
 RaceGameBoy: #RACE GAME GUY?
   bytes: [0x30]
   flags: NoPlace
+  sheets: [[0x4F], null, null, [0x50]]
 FortuneTeller: #FORTUNE TELLER
   bytes: [0x31]
   flags: NoPlace
+  sheets: [[0x4B], [0x4D], null, null]
 AngryBrother: #ARGUE BROS?
   bytes: [0x32]
   flags: NoPlace
+  sheets: [[0x4F], null, null, null]
 PullForRupees: #RUPEE PULL?
   bytes: [0x33]
   flags: NoPlace
 YoungSnitch: #YOUNG SNITCH
   bytes: [0x34]
   flags: NoPlace
+  sheets: [[0x4F], null, null, [0x50]]
 Innkeeper:
   bytes: [0x35]
   flags: NoPlace
+  sheets: [null, null, null, [0x50]]
 Witch:
   bytes: [0x36]
   flags: NoPlace
+  sheets: [null, null, [0x4C], null]
 Waterfall:
   bytes: [0x37]
   flags: NoPlace
@@ -173,318 +247,516 @@ ArrowTarget: #EYE STATUE
 AverageMan: #LOCKSMITH?
   bytes: [0x39]
   flags: NoPlace
+  sheets: [null, null, null, [0x11]]
 MagicBat: #MAGIC BAT
   bytes: [0x3A]
   flags: NoPlace
+  sheets: [null, null, null, [0x1D]]
 DashItem: #BONK ITEM
   bytes: [0x3B]
   flags: NoPlace
 VillageKid: #KID IN KAK?
   bytes: [0x3C]
   flags: NoPlace
+  sheets: [null, null, [0x4A], null]
 OldSnitch: #OLD SNITCH
   bytes: [0x3D]
   flags: NoPlace
+  sheets: [null, null, null, [0x50]]
 RockHoarder: #HOARDER?
   bytes: [0x3E]
   flags: Challenge
+  sheets: [null, null, null, [0x10, 0x11]]
 TutorialGuard: #TUTORIAL GUARD
   bytes: [0x3F]
   flags: NoPlace
+  sheets: [[0x48], [0x49], null, null]
 LightningLock: #LIGHTNING GATE
   bytes: [0x40]
   flags: NoPlace
-BlueSwordGuard: #BLUE GUARD?
+  sheets: [null, null, null, [0x1D]]
+BlueSwordGuard: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
-GreenSwordGuard: #GREEN GUARD?
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard01: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x01
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard02: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x02
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard03: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x03
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard05: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x05
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard13: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x13
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard15: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x15
+  sheets: [null, [0x49], [0x13], null]
+BlueSwordGuard1B: #BLUE GUARD
+  bytes: [0x41]
+  flags: Challenge
+  subtype: 0x1B
+  sheets: [null, [0x49], [0x13], null]
+BlueTaros: #BLUE TAROS
+  bytes: [0x41]
+  flags: Challenge
+  sheets: [null, [0x0D], [0x29], null] # 0x29 in slot 2 is the falling taros sprite
+GreenSwordGuard: #GREEN GUARD
   bytes: [0x42]
   flags: Challenge
+  sheets: [null, [0x49], [0x13], null]
+GreenSwordGuard01: #GREEN GUARD
+  bytes: [0x42]
+  flags: Challenge
+  subtype: 0x01
+  sheets: [null, [0x49], [0x13], null]
+GreenSwordGuard03: #GREEN GUARD
+  bytes: [0x42]
+  flags: Challenge
+  subtype: 0x03
+  sheets: [null, [0x49], [0x13], null]
+GreenSwordGuard1B: #GREEN GUARD
+  bytes: [0x42]
+  flags: Challenge
+  subtype: 0x1B
+  sheets: [null, [0x49], [0x13], null]
+RedTaros: #RED TAROS?
+  bytes: [0x43]
+  flags: Challenge
+  sheets: [null, [0x0D], [0x29], null] # 0x29 in slot 2 is the falling taros sprite
 RedSpearGuard: #RED SPEAR GUARD
   bytes: [0x43]
   flags: Challenge
+  sheets: [null, [0x49], null, null]
 AssaultSwordGuard: #BLUESAIN BOLT
   bytes: [0x44]
   flags: Challenge
+  sheets: [[0x46], [0x49], null, null]
 FastRedSpearGuard: #USAIN BOLT
   bytes: [0x45]
   flags: Challenge
+  sheets: [null, [0x49], null, null]
+FastRedTaros: #USAIN BOLT but dark world?
+  bytes: [0x45]
+  flags: Challenge
+  sheets: [null, [0x0D], [0x29], null] # 0x29 in slot 2 is the falling taros sprite
 BlueArcher: #BLUE ARCHER
   bytes: [0x46]
   flags: Challenge
+  sheets: [[0x48], [0x49], null, null]
 GreenArcher: #GREEN BUSH GUARD?
   bytes: [0x47]
   flags: Challenge
+  sheets: [[0x48], [0x49], null, null]
 RedJavelinGuard: #RED JAVELIN GUARD
   bytes: [0x48]
   flags: Challenge
+  sheets: [[0x46], [0x49], null, null]
 RedJavelinGuard2: #RED BUSH GUARD?
   bytes: [0x49]
   flags: Challenge
-RedBombGuard: #BOMB GUARD?
+  sheets: [[0x46], [0x49], null, null]
+RedBombGuard: #BOMB GUARD
   bytes: [0x4A]
   flags: Challenge
-GreenGuardRecruit: #GREEN KNIFE GUARD?
+  sheets: [[0x46], [0x49], null, null]
+GreenGuardRecruit: #GREEN KNIFE GUARD
   bytes: [0x4B]
   flags: Challenge
+  sheets: [null, [0x49], [0x13], null] # 0x13 in slot 2 is the knife guard legs and the falling guard sprite
 Geldman:
   bytes: [0x4C]
   flags: Challenge
+  sheets: [null, null, [0x12], null]
 Rabbit: #TOPPO?
   bytes: [0x4D]
   flags: Challenge
+  sheets: [null, null, null, [0x11]]
 Popo:
   bytes: [0x4E]
   flags: Challenge
+  sheets: [null, [0x2C], null, null]
 Popo2: #POPO?
   bytes: [0x4F]
   flags: Challenge
+  sheets: [null, [0x2C], null, null]
 Cannonball:
   bytes: [0x50]
   flags: NoPlace
+  sheets: [null, null, [0x2E], null]
 Armos: #ARMOS STATUE
   bytes: [0x51]
   flags: Challenge
+  sheets: [null, null, null, [0x10]]
 KingZora: #KING ZORA
   bytes: [0x52]
   flags: NoPlace
+  sheets: [null, null, null, [0x44]]
 ArmosKnight: #ARMOS KNIGHT
   bytes: [0x53]
   flags: NoPlace
+  sheets: [null, null, null, [0x1D]]
 Lanmolas:
   bytes: [0x54]
   flags: NoPlace
+  sheets: [null, null, null, [0x31]]
 FireballZora: #ZORA / FIREBALL?
   bytes: [0x55]
+  sheets: [null, null, [0x0C], null]
+FireballKu: #KU / FIREBALL?
+  bytes: [0x55]
+  sheets: [null, null, [0x18], null]
 WalkingZora: #ZORA?
   bytes: [0x56]
   flags: Challenge
+  sheets: [null, null, [0x0C], [0x44]]
+WalkingKu: #KU?
+  bytes: [0x56]
+  flags: Challenge
+  sheets: [null, null, [0x18], [0x44]]
 DesertPalaceBarrier: #DESERT STATUE?
   bytes: [0x57]
   flags: NoPlace
+  sheets: [null, null, [0x12], null]
 Crab:
   bytes: [0x58]
   flags: Challenge
+  sheets: [null, null, [0x0C], null]
 Bird: #LOST WOODS BIRD
   bytes: [0x59]
+  sheets: [null, null, null, [0x36]]
 Squirrel: #LOST WOODS SQUIRREL?
   bytes: [0x5A]
+  sheets: [null, null, null, [0x36]]
 SparkCW: #SPARK CLOCKWISE
   bytes: [0x5B]
+  sheets: [[0x1F], null, null, null]
 SparkCCW: #SPARK COUNTERCLOCKWISE
   bytes: [0x5C]
+  sheets: [[0x1F], null, null, null]
 RollerVD: #ROLLER VERTICAL DOWN FIRST?
   bytes: [0x5D]
+  sheets: [null, null, [0x27], null]
 RollerVU: #ROLLER VERTICAL UP FIRST
   bytes: [0x5E]
+  sheets: [null, null, [0x27], null]
 RollerHR: #ROLLER HORIZONTAL RIGHT FIRST
   bytes: [0x5F]
+  sheets: [null, null, [0x27], null]
 RollerHL: #ROLLER HORIZONTAL LEFT FIRST
   bytes: [0x60]
+  sheets: [null, null, [0x27], null]
 Beamos:
   bytes: [0x61]
+  sheets: [null, [0x2C], null, null]
 MasterSword:
   bytes: [0x62]
-  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+  flags: NoPlace
+  sheets: [null, null, [0x37], [0x36]]
 DevalantBlue: #DEBIRANDO PIT
   bytes: [0x63]
+  sheets: [[0x2F], null, null, null]
 DevalantRed: #DEBIRANDO
   bytes: [0x64]
   flags: Challenge
+  sheets: [[0x2F], null, null, null]
 ShootingGalleryNPC: #ARCHERY GUY
   bytes: [0x65]
   flags: NoPlace
+  sheets: [[0x4B], null, null, null]
 CannonBallShooterL: #WALL CANNON VERTICAL LEFT
   bytes: [0x66]
+  sheets: [[0x2F], null, null, null]
 CannonBallShooterR: #WALL CANNON VERTICAL RIGHT
   bytes: [0x67]
+  sheets: [[0x2F], null, null, null]
 CannonBallShooterU: #WALL CANNON HORIZONTAL TOP
   bytes: [0x68]
+  sheets: [[0x2F], null, null, null]
 CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM
   bytes: [0x69]
+  sheets: [[0x2F], null, null, null]
 BallNChainTrooper: #BALL N CHAIN
   bytes: [0x6A]
   flags: Challenge
+  sheets: [[0x46], [0x49], null, null]
 CannonGuard: #CANNONBALL / CANNON TROOPER
   bytes: [0x6B]
   flags: Challenge
+  sheets: [[0x46], [0x49], null, null]
 MirrorPortal: #MIRROR PORTAL
   bytes: [0x6C]
   flags: NoPlace
 Rat: #RAT / CRICKET
   bytes: [0x6D]
   flags: Challenge
-Snake: #SNAKE? ROPE?
+  sheets: [null, null, [0x1C], null]
+Buzz: #BUZZ / CRICKET
+  bytes: [0x6D]
+  flags: Challenge
+  sheets: [null, null, [0x24], null]
+Rope: #SNAKE? ROPE?
   bytes: [0x6E]
   flags: Challenge
+  sheets: [null, null, [0x1C], null]
+Skullrope: #SKULL ROPE?
+  bytes: [0x6E]
+  flags: Challenge
+  sheets: [null, null, [0x24], null]
 Keese:
   bytes: [0x6F]
+  sheets: [null, null, [0x1C], null]
+Chasupa:
+  bytes: [0x6F]
+  sheets: [null, null, [0x24], null]
 HelmasaurFireball: #KING HELMASAUR FIREBALL
   bytes: [0x70]
   flags: NoPlace
+  sheets: [null, null, null, [0x3E]]
 Leever:
   bytes: [0x71]
   flags: Challenge
+  sheets: [[0x2F], null, null, null]
 PondActivation: #FAIRY POND TRIGGER?
   bytes: [0x72]
   flags: NoPlace
+  sheets: [null, null, null, [0x36]]
 Uncle: #UNCLE / PRIEST / MANTLE
   bytes: [0x73]
   flags: NoPlace
+  sheets: [[0x51], null, null, null]
 Priest: #UNCLE / PRIEST / MANTLE
   bytes: [0x73]
   flags: NoPlace
-Mantle: #UNCLE / PRIEST / MANTLE
-  bytes: [0x73]
-  flags: NoPlace
+  sheets: [[0x47], null, null, null]
 RunningMan: #RUNNING MAN
   bytes: [0x74]
   flags: NoPlace
+  sheets: [[0x4F], null, null, [0x50]]
 BottleSalesman: #BOTTLE MERCHANT
   bytes: [0x75]
   flags: NoPlace
+  sheets: [null, null, [0x4A], null]
 Zelda:
   bytes: [0x76]
   flags: NoPlace
-SahaWife: #SAHASRAHLAS WIFE
+#UNUSED ANTIFAIRY: (probably from the AntifairyCircle, they change id when separating?)
+#  bytes: [0x77]
+SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
   bytes: [0x78]
   flags: NoPlace
+  sheets: [null, null, [0x4A], null]
 Bee:
   bytes: [0x79]
   flags: NoPlace
 Agahnim:
   bytes: [0x7A]
   flags: NoPlace
+  sheets: [null, [0x1A], [0x42], [0x43]] #TODO: DR has 0x55 in slot 0 (zelda capture cutscene), and 0x3D in slot 1 as well (combat lightning)
 AgahnimBall: #AGAHNIMS BALLS
   bytes: [0x7B]
   flags: NoPlace
-GreenStalfos: #GREEN STALFOS
+  sheets: [null, null, null, [0x43]]
+GreenStalfos: #GREEN STALFOS, DR: Floating Skull
   bytes: [0x7C]
   flags: Challenge
+  sheets: [[0x1F], null, null, null]
 BigSpikeTrap: #BIG SPIKE?
   bytes: [0x7D]
+  sheets: [null, null, null, [0x52, 0x53]]
 FireBarCW: #FIREBAR CLOCKWISE
   bytes: [0x7E]
+  sheets: [[0x1F], null, null, null]
 FireBarCCW: #FIREBAR COUNTERCLOCKWISE
   bytes: [0x7F]
+  sheets: [[0x1F], null, null, null]
 FireSnake:
   bytes: [0x80]
+  sheets: [[0x1F], null, null, null]
 Hover:
   bytes: [0x81]
   flags: Challenge
+  sheets: [null, null, [0x22], null]
 AntifairyCircle: #ANTIFAIRY CIRCLE
   bytes: [0x82]
+  sheets: [null, null, null, [0x52, 0x53]]
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   bytes: [0x83]
   flags: Challenge
+  sheets: [null, null, [0x2E], null]
+MimicGreen: #GREEN EYEGORE / GREEN MIMIC
+  bytes: [0x83] #DR uses the unused somaria platform 0xEF
+  flags: Challenge
+  sheets: [null, null, [0x2E], null]
 EyegoreRed: #RED EYEGORE / RED MIMIC
   bytes: [0x84]
   flags: Challenge
-#YELLOW STALFOS:
-#  bytes: [0x85]
+  sheets: [null, null, [0x2E], null]
+MimicRed: #RED EYEGORE / RED MIMIC
+  bytes: [0x84] #DR uses the unused somaria platform 0xF0
+  flags: Challenge
+  sheets: [null, null, [0x2E], null]
+StalfosYellow: #YELLOW STALFOS, DR says it doesnt spawn
+  bytes: [0x85]
+  sheets: [[0x1F], null, null, null]
 Kodongo:
   bytes: [0x86]
   flags: Challenge
-#KONDONGO FIRE:
-#  bytes: [0x87]
+  sheets: [null, null, [0x2A], null]
+Flames: #KONDONGO FIRE
+  bytes: [0x87]
+  flags: NoPlace
+  sheets: [null, null, [0x2A], null]
 Mothula:
   bytes: [0x88]
   flags: NoPlace
+  sheets: [null, null, [0x38], null] #TODO: DR has 0x52 in slot 3 (spikes)
 MothulaBeam: #MOTHULA BEAM
   bytes: [0x89]
   flags: NoPlace
+  sheets: [null, null, [0x38], null]
 SpikeTrap: #SPIKE BLOCK
   bytes: [0x8A]
+  sheets: [null, null, null, [0x52, 0x53]]
 Gibdo:
   bytes: [0x8B]
   flags: Challenge
+  sheets: [null, null, [0x23], null]
 Arrghus:
   bytes: [0x8C]
   flags: NoPlace
+  sheets: [null, null, [0x39], null]
 ArrghusSpawn: #ARRGHI
   bytes: [0x8D]
   flags: NoPlace
+  sheets: [null, null, [0x39], null]
 Terrorpin:
   bytes: [0x8E]
   flags: Challenge
+  sheets: [null, null, [0x2A], null]
 Zol: #BLOB?
   bytes: [0x8F]
   flags: Challenge
+  sheets: [null, [0x20], null, null]
 Wallmaster:
   bytes: [0x90]
-  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+  flags: NoPlace
+  sheets: [null, null, [0x23], null]
 StalfosKnight: #STALFOS KNIGHT
   bytes: [0x91]
   flags: Challenge
+  sheets: [null, [0x20], null, null]
 Helmasaur: #KING HELMASAUR
   bytes: [0x92]
   flags: NoPlace
+  sheets: [null, null, [0x3A], [0x3E]]
 Bumper:
   bytes: [0x93]
+  sheets: [null, null, null, [0x52, 0x53]]
 Pirogusu: #PIROGUSU / TILE ROOM TILE?
   bytes: [0x94]
   flags: NoPlace
+  sheets: [null, null, [0x22], null]
 LaserEyeL: #LASER EYE LEFT
   bytes: [0x95]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 LaserEyeR: #LASER EYE RIGHT
   bytes: [0x96]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 LaserEyeU: #LASER EYE TOP
   bytes: [0x97]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 LaserEyeD: #LASER EYE BOTTOM
   bytes: [0x98]
   flags: NoPlace
+  sheets: [null, null, null, [0x52, 0x53]]
 Pengator:
   bytes: [0x99]
   flags: Challenge
+  sheets: [null, null, [0x26], null]
 Kyameron:
   bytes: [0x9A]
+  sheets: [null, null, [0x22], null]
 Wizzrobe:
   bytes: [0x9B]
   flags: Challenge
+  # sheet id 0x25 is the regular one, 0x29 is the purple/skull one from GT
+  sheets: [null, null, [0x25, 0x29], null]
 Zoro:
   bytes: [0x9C]
-  flags: NoPlace, Challenge #FIXME: probably wrong, shouldn't be both
+  flags: NoPlace
+  sheets: [null, [0x20], null, null]
 Babasu:
   bytes: [0x9D]
   flags: Challenge
+  sheets: [null, [0x20], null, null]
 OstrichHG: #HAUNTED GROVE OSTRITCH
   bytes: [0x9E]
+  sheets: [null, null, [0x4E], null]
 RabbitHG: #HAUNTED GROVE RABBIT
   bytes: [0x9F]
+  sheets: [null, null, [0x4E], null]
 BirdHG: #HAUNTED GROVE BIRD
   bytes: [0xA0]
+  sheets: [null, null, [0x4E], null]
 Freezor:
   bytes: [0xA1]
   flags: NoPlace
+  sheets: [null, null, [0x26], null]
 Kholdstare:
   bytes: [0xA2]
   flags: NoPlace
+  sheets: [null, null, [0x3C], null]
 KholdstareShell: #KHOLDSTARE SHELL
   bytes: [0xA3]
   flags: NoPlace
 FallingIce: #FALLING ICE
   bytes: [0xA4]
+  sheets: [null, null, [0x3C], null]
 ZazakBlue: #BLUE ZAZAK
   bytes: [0xA5]
   flags: Challenge
+  sheets: [null, null, [0x28], null]
 ZazakRed: #RED ZAZAK
   bytes: [0xA6]
   flags: Challenge
+  sheets: [null, null, [0x28], null]
 Stalfos:
   bytes: [0xA7]
   flags: Challenge
+  sheets: [[0x1F], null, null, null]
 ZirroGreen: #GREEN ZIRRO
   bytes: [0xA8]
   flags: Challenge
+  sheets: [null, null, null, [0x1B]]
 ZirroBlue: #BLUE ZIRRO
   bytes: [0xA9]
   flags: Challenge
+  sheets: [null, null, null, [0x1B]]
 Pikit:
   bytes: [0xAA]
   flags: Challenge
+  sheets: [null, null, null, [0x1B]]
 Maiden: #CRYSTAL MAIDEN?
   bytes: [0xAB]
   flags: NoPlace
@@ -494,6 +766,7 @@ Apple:
 LostOldMan: #OLD MAN
   bytes: [0xAD]
   flags: NoPlace
+  sheets: [null, null, [0x1C], null]
 PipeD: #PIPE DOWN
   bytes: [0xAE]
   flags: NoPlace
@@ -515,12 +788,15 @@ HylianPlaque: #PEDESTAL PLAQUE?
 PurpleChest: #PURPLE CHEST
   bytes: [0xB4]
   flags: NoPlace
+  sheets: [null, null, null, [0x15]]
 BombSalesman: #BOMB SHOP GUY
   bytes: [0xB5]
   flags: NoPlace
+  sheets: [null, [0x4D], null, [0x5A]]
 Kiki:
   bytes: [0xB6]
   flags: NoPlace
+  sheets: [null, null, null, [0x19]]
 BlindMaiden: #BLIND MAIDEN
   bytes: [0xB7]
   flags: NoPlace
@@ -530,39 +806,58 @@ DialogueTester: #DIALOGUE TESTER
 FeudingFriends: #BULLY / PINK BALL
   bytes: [0xB9]
   flags: NoPlace
+  sheets: [null, null, null, [0x14]]
 Whirlpool:
   bytes: [0xBA]
   flags: NoPlace
 Salesman: #SHOPKEEPER / CHEST GAME GUY
   bytes: [0xBB]
   flags: NoPlace
+  sheets: [[0x4B], [0x4D], null, [0x5A]]
+Shopkeeper: #SHOPKEEPER / CHEST GAME GUY
+  bytes: [0xBB]
+  flags: NoPlace
+  sheets: [[0x0E, 0x4F], null, [0x4A], null]
 Drunkard:
   bytes: [0xBC]
   flags: NoPlace
+  sheets: [[0x4F], null, [0x4A], null]
 Vitreous:
   bytes: [0xBD]
   flags: NoPlace
+  sheets: [null, null, null, [0x3D]]
 VitreousSmallEyeball: #VITREOUS SMALL EYE
   bytes: [0xBE]
   flags: NoPlace
+  sheets: [null, null, null, [0x3D]]
 Lightning:
   bytes: [0xBF]
   flags: NoPlace
+  sheets: [null, null, null, [0x3D]]
 Catfish:
   bytes: [0xC0]
   flags: NoPlace
+  sheets: [null, null, [0x18], null]
 AgahnimCutscene: #CUTSCENE AGAHNIM
   bytes: [0xC1]
   flags: NoPlace
+  sheets: [[0x55], [0x3D], [0x42], [0x43]]
 Boulders:
-  bytes: [0xC2]
+  bytes: [0xC2] # TODO: this belongs to overlord 0xF4?
   flags: NoPlace, OverworldOnly
+  sheets: [null, null, null, [0x10]]
 Gibo:
   bytes: [0xC3]
   flags: Challenge
+  sheets: [null, null, [0x28], null]
 Thief:
   bytes: [0xC4]
   flags: Challenge
+  sheets: [[0x0E], null, null, null]
+Pikku:
+  bytes: [0xC4]
+  flags: Challenge
+  sheets: [[0x15], null, null, null]
 Medusa:
   bytes: [0xC5]
   flags: NoPlace
@@ -572,32 +867,42 @@ YomoMedusa: #4WAY SHOOTER
 Pokey:
   bytes: [0xC7]
   flags: Challenge
+  sheets: [null, null, [0x27], null]
 FairyBig: #BIG FAIRY
   bytes: [0xC8]
   flags: NoPlace
+  sheets: [null, null, [0x39], null] #TODO: DR has 0x36 in slot 3 (fat fairy)
 Tektite: #TEKTITE / FIREBAT
   bytes: [0xC9]
   flags: Challenge
+  sheets: [null, null, null, [0x10]]
 ChainChomp: #CHAIN CHOMP
   bytes: [0xCA]
+  sheets: [null, null, [0x27], null]
 Trinexx: #TRINEXX ROCK HEAD
   bytes: [0xCB]
   flags: NoPlace
+  sheets: [[0x40], null, null, [0x3F]]
 TrinexxHeadFire: #TRINEXX FIRE HEAD
   bytes: [0xCC]
   flags: NoPlace
+  sheets: [[0x40], null, null, null]
 TrinexxHeadIce: #TRINEXX ICE HEAD
   bytes: [0xCD]
   flags: NoPlace
+  sheets: [[0x40], null, null, null]
 Blind:
   bytes: [0xCE]
   flags: NoPlace
+  sheets: [null, null, [0x3B], null] #TODO: DR has 0x2C in slot 1 (blind laser)
 Swamola:
   bytes: [0xCF]
   flags: Challenge
+  sheets: [null, null, null, [0x19]]
 Lynel:
   bytes: [0xD0]
   flags: Challenge
+  sheets: [null, null, null, [0x14]]
 BunnyBeam: #BUNNYBEAM / SMOKE
   bytes: [0xD1]
   flags: NoPlace
@@ -612,12 +917,15 @@ Landmine:
 DiggingGameNPC: #DIG GAME GUY
   bytes: [0xD5]
   flags: NoPlace
+  sheets: [null, [0x2A], null, null]
 Ganon:
   bytes: [0xD6]
   flags: NoPlace
+  sheets: [[0x21], [0x41], [0x45], [0x33]]
 GanonInvisible:
   bytes: [0xD7]
   flags: NoPlace
+  sheets: [[0x21], [0x41], [0x45], [0x33]]
 Heart:
   bytes: [0xD8]
   flags: NoPlace
@@ -663,14 +971,17 @@ BigKey: #BIG KEY
 Shield: #STOLEN SHIELD
   bytes: [0xE6]
   flags: NoPlace
+  sheets: [null, null, null, [0x1B]]
 Mushroom:
   bytes: [0xE7]
   flags: NoPlace
 FakeMasterSword: #FAKE MASTER SWORD
   bytes: [0xE8]
+  sheets: [null, null, null, [0x11]]
 PotionShop: #MAGIC SHOP ASSISTANT
   bytes: [0xE9]
   flags: NoPlace
+  sheets: [[0x4B], [0x4D], null, [0x5A]]
 HeartContainer: #HEART CONTAINER
   bytes: [0xEA]
   flags: NoPlace
@@ -683,20 +994,27 @@ Throwable: #THROWN ITEM
 SomariaPlatform: #SOMARIA PLATFORM
   bytes: [0xED]
   flags: NoPlace
-#CASTLE MANTLE:
-#  bytes: [0xEE]
+  sheets: [null, null, [0x27], null]
+Mantle: #CASTLE MANTLE
+  bytes: [0xEE]
+  sheets: [[0x5D], null, null, null]
+  flags: NoPlace
 SomariaPlatform1: #UNUSED SOMARIA PLATFORM
   bytes: [0xEF]
   flags: NoPlace
+  sheets: [null, null, [0x27], null]
 SomariaPlatform2: #UNUSED SOMARIA PLATFORM
   bytes: [0xF0]
   flags: NoPlace
+  sheets: [null, null, [0x27], null]
 SomariaPlatform3: #UNUSED SOMARIA PLATFORM
   bytes: [0xF1]
   flags: NoPlace
+  sheets: [null, null, [0x27], null]
 MedallionTablet: #MEDALLION TABLET
   bytes: [0xF2]
   flags: NoPlace
+  sheets: [null, null, [0x12], null]
 
 # overlords
 Position Target: #POSITION TARGET
@@ -705,77 +1023,121 @@ Position Target: #POSITION TARGET
 FullRoomCannons: #FULL ROOM CANNONS
   bytes: [0x02]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x2E], null]
 VerticalCannon: #VERTICAL CANNON
   bytes: [0x03]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x2E], null]
 #UNUSED STALFOS SPAWNER:
 #  bytes: [0x04]
 FallingStalfos: #FALLING STALFOS
   bytes: [0x05]
   flags: NoPlace, Overlord
+  sheets: [[0x1F], null, null, null]
 BadSwitchSnake: #BAD SWITCH SNAKE
   bytes: [0x06]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  # sheet id 0x1C regular rope, 0x24 skull rope
+  sheets: [null, null, [0x1C, 0x24], null]
 MovingFloor: #MOVING FLOOR
   bytes: [0x07]
   flags: NoPlace, Overlord
 BlobSpawner: #BLOB SPAWNER
   bytes: [0x08]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, [0x20], null, null]
 Wallmaster Overlord: #WALLMASTER
   bytes: [0x09]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x23], null]
 FallingSquare: #FALLING SQUARE
   bytes: [0x0A]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x33, 0x52]]
 FallingBridge: #FALLING BRIDGE
   bytes: [0x0B]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x33, 0x52]]
 FallingTilesWestToEast: #FALLING TILES WEST TO EAST
   bytes: [0x0C]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x33, 0x52]]
 FallingTilesNorthToSouth: #FALLING TILES NORTH TO SOUTH
   bytes: [0x0D]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x33, 0x52]]
 FallingTilesEastToWest: #FALLING TILES EAST TO WEST
   bytes: [0x0E]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x33, 0x52]]
 FallingTilesSouthToNorth: #FALLING TILES SOUTH TO NORTH
   bytes: [0x0F]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x33, 0x52]]
 PirogusuSpawnerLeft: #PIROGUSU SPAWNER LEFT
   bytes: [0x10]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x22], null]
 PirogusuSpawnerRight: #PIROGUSU SPAWNER RIGHT
   bytes: [0x11]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x22], null]
 PirogusuSpawnerTop: #PIROGUSU SPAWNER TOP
   bytes: [0x12]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x22], null]
 PirogusuSpawnerBottom: #PIROGUSU SPAWNER BOTTOM
   bytes: [0x13]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x22], null]
 TileRoom: #TILE ROOM
   bytes: [0x14]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, null, [0x52, 0x53]]
 WizzrobeSpawner: #WIZZROBE SPAWNER
   bytes: [0x15]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x25, 0x29], null]
 ZoroSpawner: #ZORO SPAWNER
   bytes: [0x16]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, [0x20], null, null]
 PotTrap: #POT TRAP
   bytes: [0x17]
   flags: NoPlace, Overlord
+  subtype: 0x07
 InvisibleStalfos: #INVISIBLE STALFOS
   bytes: [0x18]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [[0x1F], null, null, null]
 ArmosCoordinator: #ARMOS COORDINATOR
   bytes: [0x19]
   flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [[0x1F], null, null, null]
 BadSwitchBomb: #BAD SWITCH BOMB
   bytes: [0x1A]
   flags: NoPlace, Overlord
+  subtype: 0x07
 
 # other sprites that appear in code, for example for use under pots
 # bytes may not correspond to actual sprite bytes, and are specific to under-pot usage.
@@ -784,12 +1146,4 @@ Hole:
   flags: NoPlace
 FloorSwitch:
   bytes: [0x88]
-  flags: NoPlace
-
-# sprites that used to be in noplace.yml, but don't seem to match anything else in here
-TelepathyTile:
-  bytes: []
-  flags: NoPlace
-Flames:
-  bytes: []
   flags: NoPlace

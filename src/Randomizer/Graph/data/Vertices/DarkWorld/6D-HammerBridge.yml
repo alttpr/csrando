@@ -23,11 +23,11 @@ maps:
               state: [1, 2]
             - name: "Hammer Bridge North - Blue Guard 1"
               position: { x: 0x12, y: 0x08 }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Hammer Bridge North - Blue Guard 2"
               position: { x: 0x10, y: 0x0a }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
 
         - name: "Hammer Bridge River"

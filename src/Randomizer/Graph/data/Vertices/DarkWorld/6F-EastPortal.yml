@@ -28,7 +28,7 @@ maps:
               state: [1, 2]
             - name: "East Dark World Portal Way - Raven"
               position: { x: 0x17, y: 0x0c }
-              sprite: "Raven"
+              sprite: "Dacto"
               state: [1, 2]
             - name: "East Dark World Portal Way - Stal"
               position: { x: 0x09, y: 0x17 }

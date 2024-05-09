@@ -21,11 +21,11 @@ maps:
               state: [1, 2]
             - name: "Dark Northwest Pond - Blue Guard 1"
               position: { x: 0x07, y: 0x10 }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Dark Northwest Pond - Blue Guard 2"
               position: { x: 0x14, y: 0x17 }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
               state: [1, 2]
             - name: "Dark Northwest Pond - Moblin 2"
               position: { x: 0x0e, y: 0x18 }

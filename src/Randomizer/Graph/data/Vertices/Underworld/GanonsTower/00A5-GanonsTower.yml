@@ -41,7 +41,7 @@ rooms:
                 - "Kodongo"
             - name: "Ganon's Tower - Laser Bridge - Red Spear Guard"
               position: { x: 0x12, y: 0x17, z: 0x00 }
-              sprite: "RedSpearGuard"
+              sprite: "RedTaros"
               deny:
                 - "RollerHL"
                 - "RollerHR"
@@ -50,7 +50,7 @@ rooms:
                 - "Bumper"
             - name: "Ganon's Tower - Laser Bridge - Blue Guard"
               position: { x: 0x13, y: 0x18, z: 0x00 }
-              sprite: "BlueSwordGuard"
+              sprite: "BlueTaros"
 
         - name: "Ganon's Tower - Wizzrobes 2"
           connections:

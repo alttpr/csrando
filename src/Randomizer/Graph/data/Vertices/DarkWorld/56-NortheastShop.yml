@@ -46,9 +46,9 @@ maps:
           mobs:
             - name: "Dark World Northeast Shop - Fireball Zora 1"
               position: { x: 0x0a, y: 0x06 }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]
             - name: "Dark World Northeast Shop - Fireball Zora 2"
               position: { x: 0x13, y: 0x0a }
-              sprite: "FireballZora"
+              sprite: "FireballKu"
               state: [1, 2]

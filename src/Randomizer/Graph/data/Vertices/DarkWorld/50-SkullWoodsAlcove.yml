@@ -13,7 +13,7 @@ maps:
           mobs:
             - name: "Skull Woods Alcove West - Poe"
               position: { x: 0x16, y: 0x0b }
-              sprite: "Poe"
+              sprite: "Hyu"
               state: [1, 2]
             - name: "Skull Woods Alcove West - Chicken"
               position: { x: 0x19, y: 0x13 }
