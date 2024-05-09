@@ -144,6 +144,7 @@ internal class VertexCollector
                         State = mob.State.ToArray(),
                         ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
+                        Position = mob.Position,
                         Deny = mob.Deny.ToArray(),
                         Allow = mob.Allow.ToArray(),
                     };
@@ -307,6 +308,7 @@ internal class VertexCollector
                         State = mob.State.ToArray(),
                         ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
+                        Position = mob.Position,
                         Deny = mob.Deny.ToArray(),
                         Allow = mob.Allow.ToArray(),
                     };

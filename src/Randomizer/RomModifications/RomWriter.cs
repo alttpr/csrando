@@ -223,6 +223,7 @@ public static class RomWriter
         WriteEntrancesToRom(world, rom);
         WriteEnemyDamageToRom(world, rom, prng);
         WriteEnemyHealthToRom(world, rom, prng);
+        WriteEnemiesToRom(world, rom);
 
         rom.SetPyramidFairyChests(true); //region.swordsInPool
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
@@ -890,114 +891,107 @@ public static class RomWriter
         rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
     }
 
-    /**
-     * Write Room headers, and room data for all enemies in game.
-     *
-     * @param World $world world to pull config from
-     * @param Rom $rom rom to write data to
-    private static void function WriteEnemiesToRom(World $world, Rom $rom)
+    private static readonly byte[] _oamLayeredRooms = [0x14, 0x15, 0x51, 0x59, 0x5B, 0x60, 0x62, 0x81, 0x86, 0xA8, 0xAA, 0xB2, 0xB9, 0xC2, 0xCB, 0xCC, 0xDB, 0xDC];
+    /// <summary>
+    /// Write Room headers, and room data for all enemies in game.
+    /// </summary>
+    /// <param name="world">world to pull config from</param>
+    /// <param name="rom">rom to write data to</param>
+    private static void WriteEnemiesToRom(World world, Rom rom)
     {
-        $enemies = $world->getLocationsOfType('mob');
+        var enemies = world.GetLocationsOfType(VertexType.Mob);
+        var enemyRooms = enemies.ToLookup(enemy => enemy.RoomId);
 
-        // @TODO check if I can just use 'roomid'
-        $enemy_rooms = $enemies->groupBy(fn ($enemy) => $enemy->roomid);
-
-        $output_offsets = [];
+        var outputOffsets = new ushort[0x180];
         // empty room ;)
-        $output_bytes = [0x00, 0xFF];
-        for ($i = 0; $i < 0x180; $i++) {
-            if (!isset($enemy_rooms[$i]) || count($enemy_rooms[$i]) === 0) {
-                $output_offsets[$i] = 0x0000;
+        List<byte> outputBytes = [0x00, 0xFF];
+        for (int i = 0; i < outputOffsets.Length; i++)
+        {
+            if (!enemyRooms[i].Any())
+            {
+                outputOffsets[i] = 0x0000;
                 continue;
             }
-            $output_offsets[$i] = count($output_bytes);
+            outputOffsets[i] = (ushort)outputBytes.Count;
             // Some OAM forcing magic stuff based on room_id
-            $output_bytes[] = (int) in_array($i, [0x14, 0x15, 0x51, 0x59, 0x5B, 0x60, 0x62, 0x81, 0x86, 0xA8, 0xAA, 0xB2, 0xB9, 0xC2, 0xCB, 0xCC, 0xDB, 0xDC]);
-            foreach ($enemy_rooms[$i] as $enemy) {
-                $sprite = $enemy->sprite;
-                $output_bytes[] = (($sprite->subtype & 0x18) << 2)
-                    + ($enemy->position['z'] << 7)
-                    + $enemy->position['y'];
-                $output_bytes[] = (($sprite->subtype & 0x07) << 5)
-                    + $enemy->position['x'];
-                $output_bytes[] = $sprite->byte;
-                if ($enemy->item) {
+            // TODO: move this into data?
+            outputBytes.Add((byte)(_oamLayeredRooms.Contains((byte)i) ? 0x01 : 0x00));
+            foreach (var enemy in enemyRooms[i])
+            {
+                var sprite = enemy.Sprite!;
+                outputBytes.Add((byte)(((sprite.SubType & 0x18) << 2)
+                    + (enemy.Position!.Z.GetValueOrDefault() << 7)
+                    + enemy.Position.Y));
+                outputBytes.Add((byte)(((sprite.SubType & 0x07) << 5)
+                    + enemy.Position.X));
+                // TODO: random byte instead?
+                outputBytes.Add(sprite.Bytes![0]);
+                if (enemy.Item != null)
+                {
                     // @todo update this when we can place any item
-                    $output_bytes[] = strpos($enemy->item->name, 'BigKey') !== false ? 0xFD : 0xFE;
-                    $output_bytes[] = 0x00;
-                    $output_bytes[] = 0xE4;
+                    outputBytes.Add((byte)(enemy.Item.Type == ItemType.BigKey ? 0xFD : 0xFE));
+                    outputBytes.Add(0x00);
+                    outputBytes.Add(0xE4);
                 }
             }
-            $output_bytes[] = 0xFF;
-            // room header
-            $rom->write(snes_to_pc(0x30DA00) + ($i * 14) + 3, pack('C', $world->sprite_sheets['underworld'][$i] ?? 0x00));
+            outputBytes.Add(0xFF);
         }
 
-        // SNES table start _09D62E
-        $data_start = 0xD62E + count($output_offsets) * 2;
-        foreach ($output_offsets as $room_id => $offset) {
-            $rom->write(snes_to_pc(0x9D62E) + $room_id * 2, pack('S', $data_start + $offset));
-        }
-        $rom->write(snes_to_pc(0x9D62E) + count($output_offsets) * 2, pack('C*', ...$output_bytes));
+        rom.WriteUnderworldEnemies([.. outputBytes], outputOffsets, world.SpriteSheets.Underworld);
 
         // Overworld
-        $output_offsets = [];
+        List<ushort>[] owPointerOffsets = [[], [], []];
+        List<ushort> owOutputOffsets = [];
         // empty map ;)
-        $output_bytes = [0xFF];
-        $enemy_maps = $enemies->groupBy(fn ($enemy) => $enemy->map);
-        $state_pointer_start = 0x9C881;
-        $maps_bytes = [0x0000 => $output_bytes];
-        foreach ([0 => 0x9C4F0, 1 => 0x9C504, 2 => 0x9C4FA] as $state => $pointers) {
+        outputBytes = [0xFF];
+        var enemyMaps = enemies.ToLookup(enemy => enemy.Map);
+        var mapsBytes = new Dictionary<ushort, byte[]> { [0x0000] = [.. outputBytes] };
+        for (int state = 0; state <= 2; state++)
+        {
             // Pointer to pointer table
-            $offset = count($output_offsets) * 2;
-            $rom->write(snes_to_pc($pointers), pack('S', $state_pointer_start + $offset));
-            $rom->write(snes_to_pc($pointers + 5), pack('S', $state_pointer_start + $offset + 1));
+            owPointerOffsets[state].Add((ushort)(owOutputOffsets.Count * 2));
 
-            for ($i = 0; $i <= 0x81; $i++) {
-                if ($state === 0 && $i > 0x3f) {
+            for (int i = 0; i <= 0x81; i++)
+            {
+                // rain state only has light world in the table; the game doesn't expect you in dark world before rescuing Zelda.
+                if (state == 0 && i > 0x3f)
                     break;
-                }
-                if (!isset($enemy_maps[$i]) || count($enemy_maps[$i]) === 0) {
-                    $output_offsets[] = 0x0000;
-                    continue;
-                }
-                $output_map = [];
-                foreach ($enemy_maps[$i] as $enemy) {
-                    if (!in_array($state, $enemy->state)) {
+
+                List<byte> outputMap = [];
+                foreach (var enemy in enemyMaps[i])
+                {
+                    if (enemy.State != null && !enemy.State.Contains(state))
                         continue;
-                    }
-                    $output_map[] = $enemy->position['y'];
-                    $output_map[] = $enemy->position['x'];
-                    $output_map[] = $enemy->sprite->byte;
-                }
-                $output_map[] = 0xFF;
 
-                $possible_repeat = array_search($output_map, $maps_bytes);
-                if ($possible_repeat !== false) {
-                    $output_offsets[] = $possible_repeat;
+                    outputMap.Add((byte)enemy.Position!.Y);
+                    outputMap.Add((byte)enemy.Position.X);
+                    // TODO: random byte instead?
+                    outputMap.Add(enemy.Sprite!.Bytes![0]);
+                }
+
+                if (outputMap.Count == 0)
+                {
+                    owOutputOffsets.Add(0x0000);
                     continue;
                 }
 
-                $output_offsets[] = count($output_bytes);
-                $maps_bytes[count($output_bytes)] = $output_map;
-                $output_bytes = array_merge($output_bytes, $output_map);
+                outputMap.Add(0xFF);
+
+                ushort possibleRepeat = mapsBytes.FirstOrDefault(k => k.Value.SequenceEqual(outputMap)).Key;
+                if (possibleRepeat != 0)
+                {
+                    owOutputOffsets.Add(possibleRepeat);
+                    continue;
+                }
+
+                owOutputOffsets.Add((ushort)outputBytes.Count);
+                mapsBytes[(ushort)outputBytes.Count] = [.. outputMap];
+                outputBytes.AddRange(outputMap);
             }
         }
 
-        // OW sheets PC 0x7A41
-        $data_start = $state_pointer_start + count($output_offsets) * 2;
-        foreach ($output_offsets as $map => $offset) {
-            $rom->write(snes_to_pc($state_pointer_start) + $map * 2, pack('S', $data_start + $offset));
-        }
-        $rom->write(snes_to_pc($state_pointer_start) + count($output_offsets) * 2, pack('C*', ...$output_bytes));
-        if (count($output_bytes) > 0x0B29) {
-            throw new Exception("Trying to write too many enemy sprites to OW!");
-        }
-
+        rom.WriteOverworldEnemies([.. outputBytes], [.. owOutputOffsets], owPointerOffsets, world.SpriteSheets.Overworld);
         // write new sheet sets
-        $rom->write(snes_to_pc(0x00DB97), pack('C*', ...Arr::flatten($world->sprite_sheets['sets'])));
-        $rom->write(snes_to_pc(0x00FA41), pack('C*', ...Arr::flatten($world->sprite_sheets['overworld'])));
-        // special OW 0x02E575 // zora/msp/hobo
+        rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
     }
-    */
 }

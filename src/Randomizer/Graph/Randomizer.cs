@@ -59,8 +59,10 @@ public sealed class Randomizer
             DoorShuffler.AdjustEdges(Worlds[i], PRNG);
             EntranceShuffler.AdjustEdges(Worlds[i], PRNG);
             DarknessGraphifier.AdjustEdges(Worlds[i], PRNG);
-            EnemyShuffler.AdjustEdges(Worlds[i], PRNG);
+            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
+            // (and placing bosses in their respective rooms already)
             BossShuffler.AdjustEdges(Worlds[i], PRNG);
+            EnemyShuffler.AdjustEdges(Worlds[i], PRNG);
             BunnyGraphifier.AdjustEdges(Worlds[i], PRNG);
             PrizePackShuffler.AdjustEdges(Worlds[i], PRNG);
             DoorReplacer.AdjustEdges(Worlds[i], PRNG);

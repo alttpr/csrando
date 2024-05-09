@@ -1,13 +1,14 @@
 namespace Randomizer.Graph;
 
-using System.Diagnostics;
-using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Modify the edges of the graph to shuffle entrances.
 /// </summary>
 internal sealed class EnemyShuffler : IWorldModifier
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     /// <summary>
     /// Swap Edges based on new enemy locations settings.
     ///
@@ -70,9 +71,11 @@ internal sealed class EnemyShuffler : IWorldModifier
 
         CreateBosses(world);
 
-        // Replaces the fixed condition to mobs with a Defeat condition
+        UpdateSpriteSheets(world, prng);
+
+        // Replace the fixed condition to mobs with a Defeat condition
         // if one exists.
-        foreach (var vertex in world.Graph.GetVertices().Where(v => v.World == world))
+        foreach (var vertex in world.GetLocations())
         {
             foreach (var edge in vertex.Edges)
             {
@@ -364,103 +367,105 @@ internal sealed class EnemyShuffler : IWorldModifier
             }
         }
     }
-}
 
-/*
-    // remove this and use the same alg for UW enemies
-    const OW_MAP_SHEETS = [
-        0x02 => [0x0F, null, 0x4A, null],
-        0x03 => [null, null, 0x12, 0x10],
-        0x14 => [0x0E, null, null, null],
-        0x18 => [0x4F, 0x49, 0x4A, 0x50],
-        0x1B => [null, null, null, 0x1D],
-        0x30 => [null, null, 0x12, null],
-        0x3A => [null, null, null, 0x11], // this should be handled?
-        0x4F => [null, null, 0x18, null],
-        0x5E => [null, null, null, 0x19],
-    ];
-
-    private readonly array $defeats;
-    private readonly array $challenge_enemies;
-    private readonly array $no_place_sprites;
-
-    public function __construct(private World $world)
+    // this dictionary forces certain sheets onto certain maps,
+    // which is required for those screens to work.
+    // TODO: remove this and use the same alg for UW enemies
+    private static readonly Dictionary<byte, byte[]?[]> OW_MAP_SHEETS = new()
     {
-        $this->defeats = Yaml::parse(file_get_contents(app_path('Graph/data/Enemizer/enemies.yml'))) ?? [];
-        $this->challenge_enemies = Yaml::parse(file_get_contents(app_path('Graph/data/Enemizer/challenge.yml'))) ?? [];
-        $this->no_place_sprites = Yaml::parse(file_get_contents(app_path('Graph/data/Enemizer/noplace.yml'))) ?? [];
+        [0x02] = [[0x0F], null, [0x4A], null],
+        [0x03] = [null, null, [0x12], [0x10]],
+        [0x14] = [[0x0E], null, null, null],
+        [0x18] = [[0x4F], [0x49], [0x4A], [0x50]],
+        [0x1B] = [null, null, null, [0x1D]],
+        [0x30] = [null, null, [0x12], null],
+        [0x3A] = [null, null, null, [0x11]], // this should be handled?
+        [0x4F] = [null, null, [0x18], null],
+        [0x5E] = [null, null, null, [0x19]],
+    };
+    private static void UpdateSpriteSheets(World world, PRNG prng)
+    {
+        var enemyVertices = world.GetLocationsOfType(VertexType.Mob);
 
-        $world_id = $this->world->id;
-        foreach (array_keys($this->defeats) as $token) {
-            $this->world->graph->newVertex([
-                'name' => "$token:$world_id",
-                'type' => 'meta',
-                'item' => Item::get($token, $world_id),
-            ]);
-        }
-
-        $enemies = $world->getLocationsOfType('mob');
-
-        $enemy_rooms = $enemies->groupBy(fn ($enemy) => $enemy->roomid);
-        $enemy_ows = $enemies->groupBy(fn ($enemy) => $enemy->map);
+        var enemyRooms = enemyVertices.ToLookup(enemy => enemy.RoomId);
+        var enemyOWs = enemyVertices.ToLookup(enemy => enemy.Map);
 
         // Set up sprite sheets
-        $sheetable_sprites = Sprite::all()->filter(
-            fn ($s) => count(array_filter($s->sheets, fn ($v) => $v !== null)) !== 0
+        var sheetableSprites = Sprite.All().Where(
+            s => s.Sheets.Any(v => v != null)
         );
         // sprites that can be moved to any room as they don't have any sheet
         // requirements
-        $nosheet_sprites = Sprite::all()->filter(
-            fn ($s) => count(array_filter($s->sheets, fn ($v) => $v !== null)) === 0
-                && !in_array($s->name, $this->no_place_sprites)
-        )->all();
+        var nosheetSprites = Sprite.All().Where(
+            s => s.Sheets.All(v => v == null)
+                && !s.Flags.HasFlag(YamlSpriteFlags.NoPlace)
+        ).ToHashSet();
 
-        $sheet_sets = array_fill(0, 124, [null, null, null, null]);
-        $sheets_to_sprites = array_fill(0, 124, $nosheet_sprites);
+        const int MandatorySheets = 124;
+        // NOTE: this cannot be Enumerable.Repeat, we need a distinct copy for every entry, since we modify them later.
+        // those are available sheet sets (of 4 sprite sheets) that may be used later
+        var sheetSets = Enumerable.Range(0, MandatorySheets).Select(_ => (new byte[]?[] { null, null, null, null })).ToList();
+        // list of sprites possible when using a particular sprite sheet
+        var sheetsToSprites = Enumerable.Range(0, MandatorySheets).Select(_ => nosheetSprites.ToHashSet()).ToArray();
 
-        $room_sheets = [];
-        $ow_sheets = [];
+        var roomSheets = new byte[0x180];
+        Array.Fill(roomSheets, (byte)0x00);
+        var owSheets = new byte[0x80];
+        Array.Fill(owSheets, (byte)0xFF);
 
-        // deal with OW required sheet sets ($j carries over to next block, it's
+        // deal with OW required sheet sets (set index carries over to next block, it's
         // important for filling the array properly)
-        $j = 0;
-        foreach (self::OW_MAP_SHEETS as $map => $ow_set) {
-            $ow_sheets[$map] = $j;
-            $sheet_sets[$j] = $ow_set;
-            $j++;
+        int sheetSetIndex = 0;
+        foreach (var (map, owSet) in OW_MAP_SHEETS)
+        {
+            owSheets[map] = (byte)sheetSetIndex;
+            sheetSets[sheetSetIndex] = owSet;
+            sheetSetIndex++;
         }
 
-        if ($world->config('enemizer.enemyShuffle') === 'none') {
-            for ($i = 0; $i < 0x80; $i++) {
-                if (!isset($enemy_ows[$i]) || count($enemy_ows[$i]) === 0) {
-                    $ow_sheets[$i] = 0xFF;
+        if (world.Config.EnemyShuffle == EnemyShuffleOption.None)
+        {
+            for (int i = 0; i < owSheets.Length; i++)
+            {
+                if (!enemyOWs[i].Any())
+                {
+                    owSheets[i] = 0xFF;
                     continue;
                 }
-                if (!isset($ow_sheets[$i])) {
-                    $fixed_set = [];
-                    $enemies = $enemy_ows[$i]->map(fn ($e) => $e->sprite)->all();
-                    foreach ($enemies as $sprite) {
-                        $filtered_sprite = array_filter($sprite->sheets, fn ($v) => $v !== null);
-                        $filtered_set = array_filter($fixed_set, fn ($v) => $v !== null);
-                        $fixed_set = array_replace([null, null, null, null], $filtered_set, $filtered_sprite);
+
+                if (owSheets[i] == 0xFF)
+                {
+                    var fixedSet = new byte[]?[4];
+                    var enemies = enemyOWs[i].Select(e => e.Sprite!).ToList();
+                    foreach (var sprite in enemies)
+                    {
+                        foreach (var (idx, value) in sprite.Sheets.Indexed(v => v != null))
+                            fixedSet[idx] = value;
                     }
-                    if (empty(array_filter($fixed_set, fn ($v) => $v !== null))) {
+                    if (!fixedSet.Any(v => v != null))
                         continue;
-                    }
-                    for ($k = 0; $k < $j; ++$k) {
+
+                    bool next = false;
+                    for (byte k = 0; k < sheetSetIndex; ++k)
+                    {
+                        byte[]?[] kSet = sheetSets[k];
                         if (
-                            ($fixed_set[0] === null || $sheet_sets[$k][0] === $fixed_set[0])
-                            && ($fixed_set[1] === null || $sheet_sets[$k][1] === $fixed_set[1])
-                            && ($fixed_set[2] === null || $sheet_sets[$k][2] === $fixed_set[2])
-                            && ($fixed_set[3] === null || $sheet_sets[$k][3] === $fixed_set[3])
-                        ) {
-                            $ow_sheets[$i] = $k;
-                            continue 2;
+                            (fixedSet[0] == null || fixedSet[0]!.SequenceEqual(kSet[0] ?? []))
+                            && (fixedSet[1] == null || fixedSet[1]!.SequenceEqual(kSet[1] ?? []))
+                            && (fixedSet[2] == null || fixedSet[2]!.SequenceEqual(kSet[2] ?? []))
+                            && (fixedSet[3] == null || fixedSet[3]!.SequenceEqual(kSet[3] ?? []))
+                        )
+                        {
+                            owSheets[i] = k;
+                            next = true;
+                            break;
                         }
                     }
-                    $sheet_sets[$j] = $fixed_set;
-                    $ow_sheets[$i] = $j;
-                    ++$j;
+                    if (next)
+                        continue;
+                    sheetSets[sheetSetIndex] = fixedSet;
+                    owSheets[i] = (byte)sheetSetIndex;
+                    ++sheetSetIndex;
                 }
             }
         }
@@ -468,193 +473,194 @@ internal sealed class EnemyShuffler : IWorldModifier
         // force fixed room sets! If we have a few "no move" sprites in a room
         // we need to guarantee that a sheet set exists for that room to look
         // correct.
-        for ($i = 0; $i < 0x180; $i++) {
-            if (!isset($enemy_rooms[$i]) || count($enemy_rooms[$i]) === 0) {
+        for (int i = 0; i < roomSheets.Length; i++)
+        {
+            if (!enemyRooms[i].Any())
                 continue;
-            }
-            $filtered = $enemy_rooms[$i]->filter(
-                fn ($e) => $world->config('enemizer.enemyShuffle') === 'none'
-                    || in_array($e->sprite->name, $this->no_place_sprites)
+
+            var filtered = enemyRooms[i].Where(
+                e => world.Config.EnemyShuffle == EnemyShuffleOption.None
+                    || e.Sprite!.Flags.HasFlag(YamlSpriteFlags.NoPlace)
             );
-            if (count($filtered) === 0) {
+            if (!filtered.Any())
                 continue;
+
+            var fixedSet = new byte[]?[4];
+            var enemies = filtered.Select(e => e.Sprite).ToList();
+            foreach (var sprite in enemies)
+            {
+                foreach (var (idx, value) in sprite!.Sheets.Indexed(v => v != null))
+                    fixedSet[idx] = value;
             }
-            $fixed_set = [];
-            $enemies = $filtered->map(fn ($e) => $e->sprite)->all();
-            foreach ($enemies as $sprite) {
-                $filtered_sprite = array_filter($sprite->sheets, fn ($v) => $v !== null);
-                $filtered_set = array_filter($fixed_set, fn ($v) => $v !== null);
-                $fixed_set = array_replace([null, null, null, null], $filtered_set, $filtered_sprite);
-            }
-            if (empty(array_filter($fixed_set, fn ($v) => $v !== null))) {
+            if (!fixedSet.Any(v => v != null))
                 continue;
-            }
+
+            bool next = false;
             // potential bug here where fixed set is full, we may end up making 2+ copies in table
-            if ($world->config('enemizer.enemyShuffle') === 'none' || get_random_int(0, 1)) {
-                for ($k = 0; $k < $j; ++$k) {
+            if (world.Config.EnemyShuffle == EnemyShuffleOption.None || prng.GetRandomInt(0..1) == 1)
+            {
+                for (byte k = 0; k < sheetSetIndex; ++k)
+                {
                     if (
-                        ($fixed_set[0] === null || $sheet_sets[$k][0] === $fixed_set[0])
-                        && ($fixed_set[1] === null || $sheet_sets[$k][1] === $fixed_set[1])
-                        && ($fixed_set[2] === null || $sheet_sets[$k][2] === $fixed_set[2])
-                        && ($fixed_set[3] === null || $sheet_sets[$k][3] === $fixed_set[3])
-                    ) {
-                        $room_sheets[$i] = $k;
-                        continue 2;
+                        (fixedSet[0] == null || fixedSet[0]!.SequenceEqual(sheetSets[k][0] ?? []))
+                        && (fixedSet[1] == null || fixedSet[1]!.SequenceEqual(sheetSets[k][1] ?? []))
+                        && (fixedSet[2] == null || fixedSet[2]!.SequenceEqual(sheetSets[k][2] ?? []))
+                        && (fixedSet[3] == null || fixedSet[3]!.SequenceEqual(sheetSets[k][3] ?? []))
+                    )
+                    {
+                        roomSheets[i] = k;
+                        next = true;
+                        break;
                     }
                 }
             }
-            $sheet_sets[$j] = $fixed_set;
-            $room_sheets[$i] = $j;
-            ++$j;
+            if (next)
+                continue;
+            // FIXME: this looks terribad, can we just start with an empty collection all the time?
+            while (sheetSetIndex >= sheetSets.Count)
+                sheetSets.Add([]);
+            sheetSets[sheetSetIndex] = fixedSet;
+
+            roomSheets[i] = (byte)sheetSetIndex;
+            ++sheetSetIndex;
         }
 
         // fill in all sheet sets with valid layouts for sprites
-        for ($i = 0; $i < 124; ++$i) {
-            while (in_array(null, $sheet_sets[$i], true)) {
-                $sprite = $sheetable_sprites->random();
+        // those first 124 (0x7C) entries are necessary for the game to work
+        // (items, title screen gfx, overworld terrain, etc.)
+        for (int i = 0; i < MandatorySheets; ++i)
+        {
+            while (sheetSets[i].Any(s => s == null))
+            {
+                var sprite = prng.GetRandomElement(sheetableSprites);
                 if (
-                    ($sprite->sheets[0] === null || $sheet_sets[$i][0] === null)
-                    && ($sprite->sheets[1] === null || $sheet_sets[$i][1] === null)
-                    && ($sprite->sheets[2] === null || $sheet_sets[$i][2] === null)
-                    && ($sprite->sheets[3] === null || $sheet_sets[$i][3] === null)
-                ) {
-                    $filtered_sprite = array_filter($sprite->sheets, fn ($v) => $v !== null);
-                    $filtered_set = array_filter($sheet_sets[$i], fn ($v) => $v !== null);
-                    $sheet_sets[$i] = array_replace([null, null, null, null], $filtered_set, $filtered_sprite);
+                    (sprite.Sheets[0] == null || sheetSets[i][0] == null)
+                    && (sprite.Sheets[1] == null || sheetSets[i][1] == null)
+                    && (sprite.Sheets[2] == null || sheetSets[i][2] == null)
+                    && (sprite.Sheets[3] == null || sheetSets[i][3] == null)
+                )
+                {
+                    foreach (var (idx, value) in sprite.Sheets.Indexed(v => v != null))
+                        sheetSets[i][idx] = value;
                 }
             }
         }
 
         // find all the sprites that can be placed validly with a particular sheet set.
-        foreach ($sheetable_sprites as $sprite) {
-            foreach ($sheet_sets as $i => $set) {
+        foreach (var sprite in sheetableSprites)
+        {
+            foreach (var (i, set) in sheetSets.Indexed())
+            {
                 if (
-                    $world->config('enemizer.enemyShuffle') !== 'none'
-                    && ($sprite->sheets[0] === null || $set[0] === $sprite->sheets[0])
-                    && ($sprite->sheets[1] === null || $set[1] === $sprite->sheets[1])
-                    && ($sprite->sheets[2] === null || $set[2] === $sprite->sheets[2])
-                    && ($sprite->sheets[3] === null || $set[3] === $sprite->sheets[3])
-                    && !in_array($sprite->name, $this->no_place_sprites)
-                ) {
-                    $sheets_to_sprites[$i][$sprite->name] = $sprite;
+                    world.Config.EnemyShuffle != EnemyShuffleOption.None
+                    && (sprite.Sheets[0] == null || sprite.Sheets[0]!.SequenceEqual(set[0]))
+                    && (sprite.Sheets[1] == null || sprite.Sheets[1]!.SequenceEqual(set[1]))
+                    && (sprite.Sheets[2] == null || sprite.Sheets[2]!.SequenceEqual(set[2]))
+                    && (sprite.Sheets[3] == null || sprite.Sheets[3]!.SequenceEqual(set[3]))
+                    && !sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)
+                )
+                {
+                    sheetsToSprites[i].Add(sprite);
                 }
             }
         }
 
-        $all_challenge_enemies = array_map(fn ($e) => "$e:{$this->world->id}", Arr::flatten(self::CHALLENGE_ROOMS));
-        for ($i = 0; $i < 0x180; $i++) {
-            if (!isset($enemy_rooms[$i]) || count($enemy_rooms[$i]) === 0) {
-                $room_sheets[$i] = 0x00;
+        for (int i = 0; i < roomSheets.Length; i++)
+        {
+            if (!enemyRooms[i].Any())
+            {
+                roomSheets[i] = 0x00;
                 continue;
             }
-            if (!isset($room_sheets[$i])) {
-                do {
-                    $sheet = get_random_key($sheets_to_sprites);
-                } while (count($sheets_to_sprites[$sheet]) === 0);
-                $room_sheets[$i] = $sheet;
+
+            if (roomSheets[i] == 0x00)
+            {
+                roomSheets[i] = (byte)prng.GetRandomElement(sheetsToSprites.Indexed(sprites => sprites.Count != 0)).Index;
+                //do
+                //{
+                //    sheet = get_random_key(sheets_to_sprites);
+                //} while (count(sheets_to_sprites[sheet]) == 0);
+                //room_sheets[i] = sheet;
             }
-            $sheet = $room_sheets[$i];
-            $filtered_placable = $enemy_rooms[$i]->filter(
-                fn ($e) => $world->config('enemizer.enemyShuffle') !== 'none'
-                    && !in_array($e->sprite->name, $this->no_place_sprites)
+            byte sheet = roomSheets[i];
+            var filteredPlacable = enemyRooms[i].Where(
+                e => world.Config.EnemyShuffle != EnemyShuffleOption.None
+                    && !e.Sprite!.Flags.HasFlag(YamlSpriteFlags.NoPlace)
             );
-            if (count($filtered_placable) === 0) {
+            if (!filteredPlacable.Any())
                 continue;
-            }
-            foreach ($filtered_placable as $enemy) {
-                if (in_array($enemy->name, $all_challenge_enemies)) {
-                    $new = get_random_element(array_filter(
-                        $sheets_to_sprites[$sheet],
-                        fn ($sprite) => in_array($sprite->name, $this->challenge_enemies)
-                    ));
-                    if (!$new) {
-                        throw new Exception('ugh');
-                    }
-                } else {
-                    $new = get_random_element($sheets_to_sprites[$sheet]);
+
+            foreach (var enemy in filteredPlacable)
+            {
+                Sprite newEnemy;
+                if (enemy.Trophy != null)
+                {
+                    newEnemy = prng.GetRandomElement(sheetsToSprites[sheet].Where(sprite => sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)))
+                        ?? throw new Exception("Cannot find challenge enemy");
                 }
-                Log::debug(vsprintf('%s: placing %s', [
-                    $enemy->name,
-                    $new->getNiceName(),
-                ]));
-                $enemy->sprite = $new;
+                else
+                {
+                    newEnemy = prng.GetRandomElement(sheetsToSprites[sheet]);
+                }
+                _logger.LogDebug("{Location}: placing {Enemy}", enemy.Name, newEnemy.Name);
+                enemy.Sprite = newEnemy;
             }
         }
 
-        for ($i = 0; $i < 0x80; $i++) {
-            if (!isset($enemy_ows[$i]) || count($enemy_ows[$i]) === 0) {
-                $ow_sheets[$i] = 0xFF;
+        for (int i = 0; i < owSheets.Length; i++)
+        {
+            if (!enemyOWs[i].Any())
+            {
+                owSheets[i] = 0xFF;
                 continue;
             }
-            if (!isset($ow_sheets[$i])) {
-                do {
-                    $sheet = get_random_key($sheets_to_sprites);
-                } while (count($sheets_to_sprites[$sheet]) === 0);
-                $ow_sheets[$i] = $sheet;
+
+            if (owSheets[i] == 0xFF)
+            {
+                owSheets[i] = (byte)prng.GetRandomElement(sheetsToSprites.Indexed(sprites => sprites.Count != 0)).Index;
+                //do
+                //{
+                //    sheet = get_random_key(sheets_to_sprites);
+                //} while (count(sheets_to_sprites[sheet]) == 0);
+                //ow_sheets[i] = sheet;
             }
-            $sheet = $ow_sheets[$i];
-            $filtered_placable = $enemy_ows[$i]->filter(
-                fn ($e) => $world->config('enemizer.enemyShuffle') !== 'none'
-                    && !in_array($e->sprite->name, $this->no_place_sprites)
+            byte sheet = owSheets[i];
+            var filteredPlacable = enemyOWs[i].Where(
+                e => world.Config.EnemyShuffle != EnemyShuffleOption.None
+                    && !e.Sprite!.Flags.HasFlag(YamlSpriteFlags.NoPlace)
             );
-            if (count($filtered_placable) === 0) {
+            if (!filteredPlacable.Any())
                 continue;
-            }
-            foreach ($filtered_placable as $enemy) {
-                $new = get_random_element($sheets_to_sprites[$sheet]);
-                Log::debug(vsprintf('%s: placing %s', [
-                    $enemy->name,
-                    $new->getNiceName(),
-                ]));
-                $enemy->sprite = $new;
+
+            foreach (var enemy in filteredPlacable)
+            {
+                var newEnemy = prng.GetRandomElement(sheetsToSprites[sheet]);
+                _logger.LogDebug("{Location}: placing {Enemy}", enemy.Name, newEnemy.Name);
+                enemy.Sprite = newEnemy;
             }
         }
-        ksort($ow_sheets);
-        $ow_sheets = array_merge(
-            array_slice($ow_sheets, 0, 0x40),
-            array_slice($ow_sheets, 0, 0x40),
-            array_slice($ow_sheets, 0, 0x40),
-            array_slice($ow_sheets, 0x40, 0x80),
-        );
+
+        byte[] finalOverworldSheets = [
+            .. owSheets[0x00..0x40], // light world rain state (0)
+            .. owSheets[0x00..0x40], // light world before aga (1)
+            .. owSheets[0x00..0x40], // light world after aga (2)
+            .. owSheets[0x40..0x80], // dark world
+        ];
 
         // pick random sheets where we have options
-        $sheet_sets = array_map(
-            fn ($set) => array_map(
-                fn ($sheet) => is_array($sheet) ? get_random_element($sheet) : $sheet,
-                $set
-            ),
-            $sheet_sets
+        // flatten at the end, since this is a contiguous table in ROM
+        byte[] flatSheetSets = sheetSets
+            .SelectMany(set => set
+                .Select(sheets => sheets != null ? prng.GetRandomElement(sheets) : (byte)0))
+            .ToArray();
+
+        for (int i = 0; i < roomSheets.Length; i++)
+            roomSheets[i] -= 0x40;
+
+        world.SpriteSheets = (
+            Underworld: roomSheets, // array_map(fn (s) => s - 0x40, room_sheets)
+            Overworld: finalOverworldSheets,
+            Sets: flatSheetSets
         );
-
-        $world->sprite_sheets = [
-            'underworld' => array_map(fn ($s) => $s - 0x40, $room_sheets),
-            'overworld' => $ow_sheets,
-            'sets' => $sheet_sets,
-        ];
-    }
-
-    public function adjustEdges(): void
-    {
-        $from = $this->world->getLocation('Meta');
-        $world_id = $this->world->id;
-        foreach ($this->defeats as $token => $items) {
-            $to = $this->world->graph->getVertex($token . ":$world_id");
-            foreach ($items as $item) {
-                $this->world->graph->addDirected($from, $to, "$item:$world_id");
-            }
-        }
-
-        foreach (self::CHALLENGE_ROOMS as $room => $enemies) {
-            $from = $this->world->getLocation($room);
-            foreach ($enemies as $enemy) {
-                $to = $this->world->getLocation($enemy);
-                if (!$to) {
-                    dd([$enemy, $to]);
-                }
-                $take = 'Defeat' . $to->sprite->name . ":$world_id";
-                $this->world->graph->addDirected($from, $to, $take);
-            }
-        }
     }
 }
-*/
