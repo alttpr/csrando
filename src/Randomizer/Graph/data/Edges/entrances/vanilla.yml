@@ -37,6 +37,9 @@ fixed:
   - ["Old Man Home Circle - In", "Old Man Home Circle"]
   - ["Old Man Home Circle - Exit", "Old Man Home Circle - Out"]
 
+  - ["Old Man Maze - In", "Old Man Maze"]
+  - ["Old Man Maze - Exit", "Old Man Maze - Out"]
+
   # Map 0x05
   - ["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right"]
   - ["Fairy Ascension Cave - Pits Right - Exit", "Fairy Ascension Cave - Pits Right - Out"]
@@ -64,6 +67,10 @@ fixed:
 
   - ["Paradox Cave - Top - In", "Paradox Cave - Top"]
   - ["Paradox Cave - Top - Exit", "Paradox Cave - Top - Out"]
+
+  # Map 0x0A
+  - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge"]
+  - ["Old Man Cave Ledge - Exit", "Death Mountain Foot Cave Entrance - Out"]
 
   # Map 0x0F
   - ["Waterfall of Wishing - In", "Waterfall Fairy"]
