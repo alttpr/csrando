@@ -16,7 +16,7 @@ internal sealed class EntranceShuffler : IWorldModifier
             EntranceShuffleOption.Restricted => "vanilla",
             EntranceShuffleOption.Full => "vanilla",
             EntranceShuffleOption.Crossed => "vanilla",
-            EntranceShuffleOption.Insanity => "vanilla",
+            EntranceShuffleOption.Insanity => "insanity",
             EntranceShuffleOption.None => "vanilla",
             _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.Config.EntranceShuffle)
         };
@@ -30,28 +30,32 @@ internal sealed class EntranceShuffler : IWorldModifier
             var to = world.GetLocation(connection[1]);
             world.Graph.AddDirected(from, to, fixedItem);
         }
-        /* TODO: Let's only do vanilla in the meantime...
-        foreach (var group in this.definition.Connections) {
-            var ins = PHP.fy_shuffle(group.In.ToArray());
-            var outs = PHP.fy_shuffle(group.Out.ToArray());
-            if (ins.Length != outs.Length) {
+
+        foreach (var group in definition.Connections)
+        {
+            var ins = new Queue<List<string>>(prng.Shuffle(group.In));
+            var outs = new Queue<List<string>>(prng.Shuffle(group.Out));
+            if (ins.Count != outs.Count)
+            {
                 throw new Exception("Entrance count mismatch");
             }
 
-            while (ins.Length > 0) {
-                in_items = Arr.wrap(array_pop(ins));
-                out_items = Arr.wrap(array_pop(outs));
-                if (count(in_items) != count(out_items)) {
+            while (ins.Count > 0)
+            {
+                var from_items = ins.Dequeue();
+                var to_items = outs.Dequeue();
+                if (from_items.Count != to_items.Count)
+                {
                     throw new Exception("Entrance sub-count mismatch");
                 }
-                foreach (var offset => in in in_items) {
-                    out = out_items[offset];
-                    from = this.world.graph.getVertex(${in}:{world_id}");
-                    to = this.world.graph.getVertex($"{out}:{world_id}");
-                    this.world.graph.addDirected(from, to, $"fixed:{world_id}");
+
+                for (var i = 0; i < from_items.Count; i++)
+                {
+                    var from = world.GetLocation(from_items[i]);
+                    var to = world.GetLocation(to_items[i]);
+                    world.Graph.AddDirected(from, to, fixedItem);
                 }
             }
         }
-        */
     }
 }

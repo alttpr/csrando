@@ -5,5 +5,4 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "editor.formatOnSave": true,
-    "yaml.format.printWidth": 120
 }

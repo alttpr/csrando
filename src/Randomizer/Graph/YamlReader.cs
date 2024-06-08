@@ -289,9 +289,9 @@ public class DirectedUndirectedPair
 public class ConnectionGroup
 {
     [YamlMember(Alias = "in")]
-    public List<string> In { get; set; } = new();
+    public List<List<string>> In { get; set; } = new();
     [YamlMember(Alias = "out")]
-    public List<string> Out { get; set; } = new();
+    public List<List<string>> Out { get; set; } = new();
 }
 
 public class Entrances
