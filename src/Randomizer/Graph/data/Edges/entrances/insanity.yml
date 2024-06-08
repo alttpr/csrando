@@ -30,6 +30,9 @@ connections:
       - ["Ganon's Room"]
   # entrances
   - in:
+      - ["Old Man Maze - In"]
+      - ["Ganon's Tower - In"]
+      - ["Death Mountain Foot Cave Entrance - In"]
       - ["Thief Hideout - In"]
       - ["High Stakes Chest Game - In"]
       - ["Lumberjacks Cave - In"]
@@ -150,6 +153,9 @@ connections:
       - ["Dev Cave - In"]
       - ["Swamp Palace - In"]
     out:
+      - ["Old Man Maze"]
+      - ["Ganon's Tower - Lobby"]
+      - ["Old Man Cave Ledge"]
       - ["Thief Hideout"]
       - ["Money Making Game"]
       - ["Lumberjacks Cave"]
@@ -271,6 +277,9 @@ connections:
       - ["Swamp Palace - Entrance"]
   # exits
   - in:
+      - ["Old Man Maze - Exit"]
+      - ["Ganon's Tower - Lobby - Exit"]
+      - ["Old Man Cave Ledge - Exit"]
       - ["Thief Hideout - Exit"]
       - ["Money Making Game - Exit"]
       - ["Lumberjacks Cave - Exit"]
@@ -391,6 +400,9 @@ connections:
       - ["Dev Cave - Exit"]
       - ["Swamp Palace - Entrance - Exit"]
     out:
+      - ["Old Man Maze - Out"]
+      - ["Ganon's Tower - Out"]
+      - ["Death Mountain Foot Cave Entrance - Out"]
       - ["Thief Hideout - Out"]
       - ["High Stakes Chest Game - Out"]
       - ["Lumberjacks Cave - Out"]

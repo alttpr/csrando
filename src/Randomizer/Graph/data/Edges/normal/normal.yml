@@ -4,9 +4,6 @@ fixed:
     - ["Link's House - In", "Link's House - Bedroom"]
     - ["Link's House - Bedroom - Exit", "Link's House - Out"]
 
-    - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge"]
-    - ["Old Man Cave Ledge - Exit", "Death Mountain Foot Cave Entrance - Out"]
-
     - ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left"]
     - ["Death Mountain Descent Cave Left - Exit", "Death Mountain Foot Descent Ledge - Out"]
 
@@ -14,9 +11,6 @@ fixed:
     - ["Agahnims Tower - Entrance - Exit", "Hyrule Castle - Agahnim's Tower Entrance - Out"]
 
     # Lightworld DM
-    - ["Old Man Maze - In", "Old Man Maze"]
-    - ["Old Man Maze - Exit", "Old Man Maze - Out"]
-
     - ["Death Mountain Descent - In", "Death Mountain Descent Cave Right"]
     - ["Death Mountain Descent Cave Right - Exit", "Death Mountain Descent - Out"]
 
