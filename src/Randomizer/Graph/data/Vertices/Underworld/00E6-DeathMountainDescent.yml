@@ -19,18 +19,18 @@ rooms:
               position: { x: 0x1c, y: 0x30, z: 0x00 }
               sprite: "@Heart"
           mobs:
-            - name: Death Mountain Descent Cave Left - Keese 1"
+            - name: "Death Mountain Descent Cave Left - Keese 1"
               position: { x: 0x1b, y: 0x0b, z: 0x00 }
               sprite: "Keese"
-            - name: Death Mountain Descent Cave Left - Keese 2"
+            - name: "Death Mountain Descent Cave Left - Keese 2"
               position: { x: 0x17, y: 0x0f, z: 0x00 }
               sprite: "Keese"
-            - name: Death Mountain Descent Cave Left - Keese 3"
+            - name: "Death Mountain Descent Cave Left - Keese 3"
               position: { x: 0x13, y: 0x13, z: 0x00 }
               sprite: "Keese"
-            - name: Death Mountain Descent Cave Left - Keese 4"
+            - name: "Death Mountain Descent Cave Left - Keese 4"
               position: { x: 0x0f, y: 0x17, z: 0x00 }
               sprite: "Keese"
-            - name: Death Mountain Descent Cave Left - Keese 5"
+            - name: "Death Mountain Descent Cave Left - Keese 5"
               position: { x: 0x0b, y: 0x1b, z: 0x00 }
               sprite: "Keese"
