@@ -7,9 +7,6 @@ fixed:
     - ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left"]
     - ["Death Mountain Descent Cave Left - Exit", "Death Mountain Foot Descent Ledge - Out"]
 
-    - ["Hyrule Castle - Agahnim's Tower Entrance - In", "Agahnims Tower - Entrance"]
-    - ["Agahnims Tower - Entrance - Exit", "Hyrule Castle - Agahnim's Tower Entrance - Out"]
-
     # Lightworld DM
     - ["Death Mountain Descent - In", "Death Mountain Descent Cave Right"]
     - ["Death Mountain Descent Cave Right - Exit", "Death Mountain Descent - Out"]
@@ -27,9 +24,6 @@ fixed:
     # Darkworld DM
     - ["West Death Mountain Big Fairy - In", "Death Mountain Big Fairy"]
     - ["Death Mountain Big Fairy - Exit", "West Death Mountain Big Fairy - Out"]
-
-    - ["Ganon's Tower - In", "Ganon's Tower - Lobby"]
-    - ["Ganon's Tower - Lobby - Exit", "Ganon's Tower - Out"]
   undirected: []
 
 AgahnimDefeated:
