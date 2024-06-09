@@ -88,6 +88,10 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
             {
                 if (edge.Condition.Item.Name == "PegOrange")
                     continue;
+                if (edge.To.OutletId != null)
+                    continue;
+                if (edge.To.Map != null)
+                    continue;
 
                 var edgeTo = edge.To;
                 var edgeCondition = edge.Condition;
