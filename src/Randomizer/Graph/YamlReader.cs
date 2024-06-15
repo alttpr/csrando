@@ -150,6 +150,8 @@ public class YamlReader
         return result;
     });
 
+    public static bool DataFileExists(string path) => File.Exists(Path.Combine(DataRoot, path));
+
     private static Vertices LoadVerticesFromFile(string path)
     {
         string verticesYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);

@@ -29,7 +29,10 @@ internal sealed class EntranceShuffler : IWorldModifier
         } + "/" + definitionName;
 
         var definition = YamlReader.LoadEntrances(definitionName);
-        var definitionState = YamlReader.LoadEntrances(definitionStateName);
+        var definitionState = YamlReader.DataFileExists(definitionStateName)
+            ? YamlReader.LoadEntrances(definitionStateName)
+            : new Entrances();
+
         var fixedItem = world.GetItem("fixed");
 
         foreach (var connection in definition.Fixed.Concat(definitionState.Fixed))
