@@ -19,14 +19,10 @@ internal sealed class AssembleBaseRom : Command
     }
     private void Assemble(FileInfo jpRom, bool featurePatreonSupporters)
     {
-        // TODO: we probably want to get this (and/or the detail paths) from a config file later
-        string rootDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, "../../../../..");
+        string asmDirectory = Config.AsmDirectory;
+        string baseRomFile = Config.BaseRomFile;
 
-        string asmDirectory = Path.Combine(rootDirectory, "asm");
-        string dataDirectory = Path.Combine(rootDirectory, "data");
-        string baseRomFile = Path.Combine(dataDirectory, "randomizer.sfc");
-
-        Directory.CreateDirectory(dataDirectory);
+        Directory.CreateDirectory(Config.DataDirectory);
         jpRom.CopyTo(baseRomFile, overwrite: true);
 
         string asar = 0 switch

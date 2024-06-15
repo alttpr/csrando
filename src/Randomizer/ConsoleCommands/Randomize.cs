@@ -113,6 +113,9 @@ internal sealed class Randomize : Command
         var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
         bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
 
+        if (baseRom == null && File.Exists(Config.BaseRomFile))
+            baseRom = new FileInfo(Config.BaseRomFile);
+
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
