@@ -20,18 +20,26 @@ internal sealed class EntranceShuffler : IWorldModifier
             EntranceShuffleOption.None => "vanilla",
             _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.Config.EntranceShuffle)
         };
+        string definitionStateName = world.Config.State switch
+        {
+            StateOption.Standard => "normal",
+            StateOption.Open => "normal",
+            StateOption.Inverted => "inverted",
+            _ => throw new ArgumentException("Unknown State option: " + world.Config.State)
+        } + "/" + definitionName;
 
         var definition = YamlReader.LoadEntrances(definitionName);
+        var definitionState = YamlReader.LoadEntrances(definitionStateName);
         var fixedItem = world.GetItem("fixed");
 
-        foreach (var connection in definition.Fixed)
+        foreach (var connection in definition.Fixed.Concat(definitionState.Fixed))
         {
             var from = world.GetLocation(connection[0]);
             var to = world.GetLocation(connection[1]);
             world.Graph.AddDirected(from, to, fixedItem);
         }
 
-        foreach (var group in definition.Connections)
+        foreach (var group in definition.Connections.Concat(definitionState.Connections))
         {
             var ins = new Queue<List<string>>(prng.Shuffle(group.In));
             var outs = new Queue<List<string>>(prng.Shuffle(group.Out));
