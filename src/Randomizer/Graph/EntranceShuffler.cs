@@ -29,7 +29,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         } + "/" + definitionName;
 
         var definition = YamlReader.LoadEntrances(definitionName);
-        var definitionState = YamlReader.DataFileExists(definitionStateName)
+        var definitionState = YamlReader.EntranceDataFileExists(definitionStateName)
             ? YamlReader.LoadEntrances(definitionStateName)
             : new Entrances();
 

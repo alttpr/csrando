@@ -150,7 +150,7 @@ public class YamlReader
         return result;
     });
 
-    public static bool DataFileExists(string path) => File.Exists(Path.Combine(DataRoot, path));
+    public static bool EntranceDataFileExists(string name) => File.Exists(Path.Combine(DataRoot, "Edges/entrances", name + ".yml"));
 
     private static Vertices LoadVerticesFromFile(string path)
     {
