@@ -16,29 +16,29 @@ internal sealed class Randomize : Command
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private readonly Option<GoalOption> _goal = new("goal", () => GoalOption.Ganon, "set game goal");
-    private readonly Option<StateOption> _state = new("state", () => StateOption.Open, "set game state");
-    private readonly Option<WeaponOption> _weapons = new("weapons", () => WeaponOption.Randomized, "set weapons mode");
-    private readonly Option<GlitchesOption> _glitches = new("glitches", () => GlitchesOption.None, "set glitches");
-    private readonly Option<AccessibilityOption> _accessibility = new("accessibility", "set item/location accessibility");
-    private readonly Option<BossShuffleOption> _bossShuffle = new("bossshuffle", () => BossShuffleOption.None, "set boss shuffle mode");
-    private readonly Option<EntranceShuffleOption> _entranceShuffle = new("entrance", () => EntranceShuffleOption.None, "set entrance shuffle mode");
-    private readonly Option<ShopSupplyOption> _shopSupply = new("shopsupply", () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
+    private readonly Option<GoalOption> _goal = new(["goal", "--goal"], () => GoalOption.Ganon, "set game goal");
+    private readonly Option<StateOption> _state = new(["state", "--state"], () => StateOption.Open, "set game state");
+    private readonly Option<WeaponOption> _weapons = new(["weapons", "--weapons"], () => WeaponOption.Randomized, "set weapons mode");
+    private readonly Option<GlitchesOption> _glitches = new(["glitches", "--glitches"], () => GlitchesOption.None, "set glitches");
+    private readonly Option<AccessibilityOption> _accessibility = new(["accessibility", "--accessibility"], "set item/location accessibility");
+    private readonly Option<BossShuffleOption> _bossShuffle = new(["bossshuffle", "--bossshuffle"], () => BossShuffleOption.None, "set boss shuffle mode");
+    private readonly Option<EntranceShuffleOption> _entranceShuffle = new(["entrance", "--entrance"], () => EntranceShuffleOption.None, "set entrance shuffle mode");
+    private readonly Option<ShopSupplyOption> _shopSupply = new(["shopsupply", "--shopsupply"], () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
     private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
     private static readonly int[] _defaultCrystals = [7];
-    private readonly Option<int[]> _crystalsGanon = new Option<int[]>("crystals_ganon", ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
-    private readonly Option<int[]> _crystalsTower = new Option<int[]>("crystals_tower", ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
-    private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>("tech", "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
-    private readonly Option<List<string>> _startingItems = new("items", "set starting items (comma separated)");
-    private readonly Option<int> _bulk = new("bulk", () => 1, "generate multiple ROMs");
-    private readonly Option<int> _multiworld = new("multiworld", () => 1, "multiworld player count");
-    private readonly Option<int?> _seed = new("seed", "set starting seed");
-    private readonly Option<FileInfo> _baseRom = new Option<FileInfo>("rom", "set base rom").ExistingOnly();
+    private readonly Option<int[]> _crystalsGanon = new Option<int[]>(["crystals_ganon", "--crystals_ganon"], ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
+    private readonly Option<int[]> _crystalsTower = new Option<int[]>(["crystals_tower", "--crystals_tower"], ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
+    private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>(["tech", "--tech"], "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
+    private readonly Option<List<string>> _startingItems = new(["items", "--items"], "set starting items (comma separated)");
+    private readonly Option<int> _bulk = new(["bulk", "--bulk"], () => 1, "generate multiple ROMs");
+    private readonly Option<int> _multiworld = new(["multiworld", "--multiworld"], () => 1, "multiworld player count");
+    private readonly Option<int?> _seed = new(["seed", "--seed"], "set starting seed");
+    private readonly Option<FileInfo> _baseRom = new Option<FileInfo>(["rom", "--rom"], "set base rom").ExistingOnly();
     // TODO: we should probably have the base rom patch "built in" and not require a path.
-    private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>("bps", "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
-    private readonly Option<DirectoryInfo> _outputDirectory = new("outdir", "output directory for generated games");
-    private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>("settings", "JSON serialized settings file").ExistingOnly();
-    private readonly Option<bool> _dumpSpoiler = new("spoiler", "dump spoiler log");
+    private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>(["bps", "--bps"], "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
+    private readonly Option<DirectoryInfo> _outputDirectory = new(["outdir", "--outdir"], "output directory for generated games");
+    private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>(["settings", "--settings"], "JSON serialized settings file").ExistingOnly();
+    private readonly Option<bool> _dumpSpoiler = new(["spoiler", "--spoiler"], "dump spoiler log");
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
