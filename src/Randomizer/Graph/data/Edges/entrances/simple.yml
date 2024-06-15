@@ -5,14 +5,6 @@
 # Single-Entrance Caves All entrances are grouped and randomized with each
 # other. This does not include any of Light World Death Mountain. Example:
 # houses.
-#
-# Multi-Entrance Caves All entrances are grouped and randomized with each other.
-# Locations that are originally spanned by two-entrance caves (e.g. Kakariko
-# Elder’s House) will remain connected to each other via a two-entrance cave.
-# This does not include any of Light World Death Mountain.
-fixed:
-  - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge"]
-  - ["Old Man Cave Ledge - Exit", "Death Mountain Foot Cave Entrance - Out"]
 connections:
   - # Single-Entrance Dungeons
     # All entrances are grouped and randomized with each other. This includes the
@@ -192,3 +184,21 @@ connections:
       - ["Secret Passage Uncle", "Secret Passage Stairs", "Secret Passage Stairs - Out"]
       - ["Magic Bat Entry", "Magic Bat Left", "Magic Bat - Out"]
       - ["Ganon's Room", "Ganon's Drop", "Pyramid Ganon Fail - Out"]
+
+# Multi-Entrance Caves All entrances are grouped and randomized with each other.
+# Locations that are originally spanned by two-entrance caves (e.g. Kakariko
+# Elder’s House) will remain connected to each other via a two-entrance
+# cave. This does not include any of Light World Death Mountain.
+multi:
+  in:
+    - ["Grandma's House Right - In", "Grandma's House Right - Exit", "Grandma's House Left - In", "Grandma's House Left - Exit"]
+    - ["Brothers House Left - In", "Brothers House Left - Exit", "Brothers House Right - In", "Brothers House Right - Exit"]
+    - ["Ice Cave - West - In", "Ice Cave - West - Exit", "Ice Cave - East - In", "Ice Cave - East - Exit"]
+    - ["Dark Floating Island - In", "Hookshot Cave Corner - Exit", "East Dark Death Mountain Summit Rock - In", "Hookshot Cave - Exit"]
+    - ["East Dark Death Mountain Summit Bunny - In", "Super Bunny Exit - Exit", "East Dark Death Mountain Running Man Bunny - In", "Super Bunny Entrance Bottom - Exit"]
+  out:
+    - ["Grandma's House Right", "Grandma's House Right - Out", "Grandma's House Left", "Grandma's House Left - Out"]
+    - ["Brothers House Left", "Brothers House Left - Out", "Brothers House Right", "Brothers House Right - Out"]
+    - ["Ice Cave - West", "Ice Cave - West - Out", "Ice Cave - East", "Ice Cave - East - Out"]
+    - ["Hookshot Cave Corner", "Dark Floating Island - Out", "Hookshot Cave", "East Dark Death Mountain Summit Rock - Out"]
+    - ["Super Bunny Exit", "East Dark Death Mountain Summit Bunny - Out", "Super Bunny Entrance Bottom", "East Dark Death Mountain Running Man Bunny - Out"]

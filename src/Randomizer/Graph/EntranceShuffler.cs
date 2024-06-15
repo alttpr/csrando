@@ -24,6 +24,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         {
             StateOption.Standard => "normal",
             StateOption.Open => "normal",
+            StateOption.Retro => "normal",
             StateOption.Inverted => "inverted",
             _ => throw new ArgumentException("Unknown State option: " + world.Config.State)
         } + "/" + definitionName;
@@ -66,6 +67,35 @@ internal sealed class EntranceShuffler : IWorldModifier
                     var to = world.GetLocation(to_items[i]);
                     world.Graph.AddDirected(from, to, fixedItem);
                 }
+            }
+        }
+
+        // Deal with multi-entrances. unfortunately this is a bit of a mess.
+        var multiIns = new Queue<List<string>>(prng.Shuffle(definition.Multi.In.Concat(definitionState.Multi.In)));
+        var multiOuts = new Queue<List<string>>(prng.Shuffle(definition.Multi.Out.Concat(definitionState.Multi.Out)));
+        if (multiIns.Count != multiOuts.Count)
+        {
+            throw new Exception("Entrance count mismatch");
+        }
+
+        while (multiIns.Count > 0)
+        {
+            var from_items = multiIns.Dequeue();
+            var to_items = multiOuts.Dequeue();
+            if (from_items.Count != to_items.Count)
+            {
+                throw new Exception("Entrance sub-count mismatch");
+            }
+
+            // Shuffle pairs of froms, so that entrances and exits if
+            // multientra are not in the same order.
+            var from_pairs = prng.Shuffle(from_items.Chunk(2)).SelectMany(x => x).ToList();
+
+            for (var i = 0; i < from_items.Count; i++)
+            {
+                var from = world.GetLocation(from_pairs[i]);
+                var to = world.GetLocation(to_items[i]);
+                world.Graph.AddDirected(from, to, fixedItem);
             }
         }
     }

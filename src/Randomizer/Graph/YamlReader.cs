@@ -302,6 +302,8 @@ public class Entrances
     public List<List<string>> Fixed { get; set; } = new();
     [YamlMember(Alias = "connections")]
     public List<ConnectionGroup> Connections { get; set; } = new();
+    [YamlMember(Alias = "multi")]
+    public ConnectionGroup Multi { get; set; } = new();
 }
 
 public partial class Map

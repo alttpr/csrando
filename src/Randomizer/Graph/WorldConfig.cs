@@ -110,7 +110,7 @@ public class WorldConfig
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }
 public enum AccessibilityOption { Items, Locations, None }
-public enum StateOption { Standard, Inverted, Open }
+public enum StateOption { Standard, Inverted, Open, Retro }
 public enum GlitchesOption
 {
     None,

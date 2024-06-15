@@ -1,0 +1,15 @@
+# This setting uses the highest number of entrance type groupings. This
+# restricts how thoroughly different entrances are randomized with the intention
+# of keeping things simple.
+fixed:
+  - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge"]
+  - ["Old Man Cave Ledge - Exit", "Death Mountain Foot Cave Entrance - Out"]
+# Multi-Entrance Caves All entrances are grouped and randomized with each other.
+# Locations that are originally spanned by two-entrance caves (e.g. Kakariko
+# Elder’s House) will remain connected to each other via a two-entrance
+# cave. This does not include any of Light World Death Mountain.
+multi:
+  in:
+    - ["Bumper Cave Entrance Bottom - In", "Bumper Cave Bottom - Exit", "Bumper Cave Ledge Top - In", "Bumper Cave Top Exit - Exit"]
+  out:
+    - ["Bumper Cave Bottom", "Bumper Cave Entrance Bottom - Out", "Bumper Cave Top Exit", "Bumper Cave Ledge Top - Out"]
