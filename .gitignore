@@ -31,3 +31,5 @@
 *.user
 *.suo
 *.bak
+
+/data/randomizer.sfc
