@@ -223,47 +223,82 @@ public abstract record ComplexRequirement
 
     internal bool Check(Inventory inventory)
     {
-        return this.RequirementType switch
+        if (RequirementType is ComplexRequirementType.And)
         {
-            ComplexRequirementType.Always => true,
-            ComplexRequirementType.Never => false,
-            ComplexRequirementType.Single when this is Single req => inventory.Has(req.Item),
-            ComplexRequirementType.And when this is And reqs => reqs.Reqs.All(req => req.Check(inventory)),
-            ComplexRequirementType.Not when this is Not req => !req.Req.Check(inventory),
-            ComplexRequirementType.Or when this is Or reqs => reqs.Reqs.Any(req => req.Check(inventory)),
-            ComplexRequirementType.Ammo when this is Ammo ammo => inventory.HasAtLeast(ammo.Item, ammo.Count / 5),
-            ComplexRequirementType.AmmoDrain => true,
-            ComplexRequirementType.Refill => true,
-            ComplexRequirementType.EnemyKill when this is EnemyKill enemies => enemies.CanKillWith(inventory),
-            ComplexRequirementType.AcidFrames => false,
-            ComplexRequirementType.GravitylessAcidFrames => false,
-            ComplexRequirementType.DraygonElectricityFrames => true,
-            ComplexRequirementType.EnemyDamage => true,
-            ComplexRequirementType.HeatFrames => false,
-            ComplexRequirementType.GravitylessHeatFrames => false,
-            ComplexRequirementType.HibashiHits => true,
-            ComplexRequirementType.LavaFrames => false,
-            ComplexRequirementType.GravitylessLavaFrames => false,
-            ComplexRequirementType.SamusEaterFrames  => true,
-            ComplexRequirementType.MetroidFrames => true,
-            ComplexRequirementType.EnergyAtMost => true,
-            ComplexRequirementType.AutoReserveTrigger => false,
-            ComplexRequirementType.SpikeHits => true,
-            ComplexRequirementType.ThornHits => true,
-            ComplexRequirementType.DoorUnlockedAtNode => false,
-            ComplexRequirementType.ObstaclesCleared => true,
-            ComplexRequirementType.ObstaclesNotCleared => true,
-            ComplexRequirementType.ResourceCapacity when this is ResourceCapacity capacity => capacity.Capacity.All(c => inventory.HasAtLeast(c.Item1, c.Item2)),
-            ComplexRequirementType.CanShineCharge when this is CanShineCharge usedTiles => usedTiles.UsedTiles switch
+            foreach (var req in (this as And)!.Reqs)
             {
-                33 => inventory.Has(usedTiles.world.GetItem("SMcanShinespark")),
-                _ => false,
-            },
-            ComplexRequirementType.Shinespark => true,
-            ComplexRequirementType.ResetRoom => false,
-            ComplexRequirementType.ItemNotCollectedAtNode => false,
-            _ => throw new NotImplementedException()
-        };
+                if (!req.Check(inventory))
+                    return false;
+            }
+
+            return true;
+        }
+        else if (RequirementType is ComplexRequirementType.Or)
+        {
+            foreach (var req in (this as Or)!.Reqs)
+            {
+                if (req.Check(inventory))
+                    return true;
+            }
+
+            return false;
+        }
+        else if (RequirementType is ComplexRequirementType.Single)
+        {
+            return inventory.Has((this as Single)!.Item);
+        }
+        else if (RequirementType is ComplexRequirementType.Not)
+        {
+            return !((this as Not)!.Req.Check(inventory));
+        }
+        else if (RequirementType is ComplexRequirementType.Ammo)
+        {
+            return inventory.HasAtLeast((this as Ammo)!.Item, (this as Ammo)!.Count / 5);
+        }
+        else
+        {
+            return this.RequirementType switch
+            {
+                ComplexRequirementType.Always => true,
+                ComplexRequirementType.Never => false,
+                //ComplexRequirementType.Single when this is Single req => inventory.Has(req.Item),
+                //ComplexRequirementType.And when this is And reqs => reqs.Reqs.All(req => req.Check(inventory)),
+                //ComplexRequirementType.Not when this is Not req => !req.Req.Check(inventory),
+                //ComplexRequirementType.Or when this is Or reqs => reqs.Reqs.Any(req => req.Check(inventory)),
+                //ComplexRequirementType.Ammo when this is Ammo ammo => inventory.HasAtLeast(ammo.Item, ammo.Count / 5),
+                ComplexRequirementType.AmmoDrain => true,
+                ComplexRequirementType.Refill => true,
+                ComplexRequirementType.EnemyKill when this is EnemyKill enemies => enemies.CanKillWith(inventory),
+                ComplexRequirementType.AcidFrames => false,
+                ComplexRequirementType.GravitylessAcidFrames => false,
+                ComplexRequirementType.DraygonElectricityFrames => true,
+                ComplexRequirementType.EnemyDamage => true,
+                ComplexRequirementType.HeatFrames => false,
+                ComplexRequirementType.GravitylessHeatFrames => false,
+                ComplexRequirementType.HibashiHits => true,
+                ComplexRequirementType.LavaFrames => false,
+                ComplexRequirementType.GravitylessLavaFrames => false,
+                ComplexRequirementType.SamusEaterFrames => true,
+                ComplexRequirementType.MetroidFrames => true,
+                ComplexRequirementType.EnergyAtMost => true,
+                ComplexRequirementType.AutoReserveTrigger => false,
+                ComplexRequirementType.SpikeHits => true,
+                ComplexRequirementType.ThornHits => true,
+                ComplexRequirementType.DoorUnlockedAtNode => false,
+                ComplexRequirementType.ObstaclesCleared => true,
+                ComplexRequirementType.ObstaclesNotCleared => true,
+                ComplexRequirementType.ResourceCapacity when this is ResourceCapacity capacity => capacity.Capacity.All(c => inventory.HasAtLeast(c.Item1, c.Item2)),
+                ComplexRequirementType.CanShineCharge when this is CanShineCharge usedTiles => usedTiles.UsedTiles switch
+                {
+                    33 => inventory.Has(usedTiles.world.GetItem("SMcanShinespark")),
+                    _ => false,
+                },
+                ComplexRequirementType.Shinespark => true,
+                ComplexRequirementType.ResetRoom => false,
+                ComplexRequirementType.ItemNotCollectedAtNode => false,
+                _ => throw new NotImplementedException()
+            };
+        }
     }
 
     internal bool IsUnconditional()

@@ -64,6 +64,23 @@ public class VertexHashSet : ICollection<Vertex>
             _count++;
     }
 
+    public bool CheckAdd(Vertex item)
+    {
+        if (_bitArray == null) AllocateBitArray();
+
+        if (!_bitArray[item.Id])
+        {
+            _bitArray[item.Id] = true;
+            if (_count != -1)
+            {
+                _count++;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
     public void Clear()
     {
         _bitArray?.SetAll(false);

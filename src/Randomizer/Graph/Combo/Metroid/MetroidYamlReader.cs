@@ -10,8 +10,8 @@ using System.Xml.Linq;
 internal class MetroidYamlReader
 {
     private YamlData? data;
-    private Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
-    private Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
+    private readonly Dictionary<string, Dictionary<string, object>> vertices = [];
+    private readonly Dictionary<string, DirectedUndirectedPair> edges = [];
 
     public YamlData? Data { get { return data; } }
 

@@ -212,9 +212,9 @@ public class Searcher
                 }
 
                 unvisitedEdges--;
-                if (!marked.Contains(edge.To))
+                if (marked.CheckAdd(edge.To))
                 {
-                    marked.Add(edge.To);
+                    //marked.Add(edge.To);
                     queue.Enqueue(edge.To);
                 }
             }

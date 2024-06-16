@@ -89,7 +89,7 @@ internal sealed class Randomize : Command
 
     private void Validate(CommandResult result)
     {
-        List<string> errors = new();
+        List<string> errors = [];
 
         if (result.GetValueForOption(_multiworld) <= 0)
         {
@@ -135,7 +135,7 @@ internal sealed class Randomize : Command
                 if (baseRom != null && outputDirectory != null)
                     RomWriter.Write(randomizer, baseRom, baseBPS, outputDirectory);
                 else
-                    _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
+                    _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", _baseRom.Name, _outputDirectory.Name));
             }
             if (dumpSpoiler)
             {
