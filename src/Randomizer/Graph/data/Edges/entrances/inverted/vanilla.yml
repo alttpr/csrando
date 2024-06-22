@@ -12,6 +12,7 @@ fixed:
   - ["Hyrule Castle - Agahnim's Tower Entrance - In", "Ganon's Tower - Lobby"]
   - ["Ganon's Tower - Lobby - Exit", "Hyrule Castle - Agahnim's Tower Entrance - Out"]
 
+  # this isn't in insanity??
   - ["Hyrule Castle - Lobby", "Hyrule Castle - Lobby - Exit"]
   - ["Hyrule Castle - East", "Hyrule Castle - East - Exit"]
   - ["Hyrule Castle - West", "Hyrule Castle - West - Exit"]
