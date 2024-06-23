@@ -4,6 +4,8 @@ using BpsNet;
 using Randomizer.Graph;
 using Randomizer.Graph.Combo.Metroid;
 using SpanDex;
+using System.Reflection;
+using System.Reflection.Metadata;
 
 public sealed class Rom : IDisposable
 {
@@ -1930,6 +1932,43 @@ public sealed class Rom : IDisposable
     public void WriteSMBossRewards(World world)
     {
 
+    }
+
+    public void WriteComboVersionStrings(PRNG prng)
+    {
+        // Get the current Git commit hash
+        string commitHash = ThisAssembly.Git.Commit;
+        Version version = Assembly.GetEntryAssembly()!.GetName().Version!;
+        string versionString = $"Quad v.{version.Revision}.{prng.Seed:X08}";
+        string commitString = $"{DateTime.Now.ToShortDateString()} - #{commitHash}".PadLeft(26, ' ');
+
+        Write(0x7C0001, ConvertStringToByteArray(versionString), 0);
+        Write(0x7C001D, ConvertStringToByteArray(commitString), 0);
+        Write(0x7FFFF0, BitConverter.GetBytes(prng.Seed), 0);
+
+    }
+
+    private static readonly Dictionary<char, byte> charToByteMap = new Dictionary<char, byte>
+    {
+        {'A', 0x50}, {'a', 0x50}, {'B', 0x51}, {'b', 0x51}, {'C', 0x52}, {'c', 0x52},
+        {'D', 0x53}, {'d', 0x53}, {'E', 0x54}, {'e', 0x54}, {'F', 0x55}, {'f', 0x55},
+        {'G', 0x56}, {'g', 0x56}, {'H', 0x57}, {'h', 0x57}, {'I', 0x58}, {'i', 0x58},
+        {'J', 0x59}, {'j', 0x59}, {'K', 0x5A}, {'k', 0x5A}, {'L', 0x5B}, {'l', 0x5B},
+        {'M', 0x5C}, {'m', 0x5C}, {'N', 0x5D}, {'n', 0x5D}, {'O', 0x5E}, {'o', 0x5E},
+        {'P', 0x5F}, {'p', 0x5F}, {'Q', 0x60}, {'q', 0x60}, {'R', 0x61}, {'r', 0x61},
+        {'S', 0x62}, {'s', 0x62}, {'T', 0x63}, {'t', 0x63}, {'U', 0x64}, {'u', 0x64},
+        {'V', 0x65}, {'v', 0x65}, {'W', 0x66}, {'w', 0x66}, {'X', 0x67}, {'x', 0x67},
+        {'Y', 0x68}, {'y', 0x68}, {'Z', 0x69}, {'z', 0x69}, {':', 0x4A}, {'!', 0x6A},
+        {'.', 0x6B}, {'-', 0x6C}, {',', 0x6D}, {'?', 0x6E}, {'#', 0x6F}, {' ', 0x1F},
+        {'0', 0x70}, {'1', 0x71}, {'2', 0x72}, {'3', 0x73}, {'4', 0x74}, {'5', 0x75},
+        {'6', 0x76}, {'7', 0x77}, {'8', 0x78}, {'9', 0x79}, {'\'', 0x7E}, {'(', 0x88},
+        {')', 0x89}, {'%', 0x8A}, {'+', 0x8B}
+    };
+
+    public static byte[] ConvertStringToByteArray(string input)
+    {
+        return input.Select(c => charToByteMap.TryGetValue(c, out byte value) ? value : (byte)0)
+                    .ToArray();
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>

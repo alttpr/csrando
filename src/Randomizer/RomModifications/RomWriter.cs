@@ -40,8 +40,8 @@ public static class RomWriter
         // TODO: tournament mode
 
         // Patch in combo specific things
-
-        rom.UpdateChecksum();
+        rom.WriteComboVersionStrings(prng);
+        rom.UpdateChecksum(); 
 
         outputDirectory.Create();
         string outputFile = Path.Combine(

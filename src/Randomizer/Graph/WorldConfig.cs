@@ -82,7 +82,7 @@ public class WorldConfig
     public bool EscapeAssist { get; init; } = false;
     public bool PseudoBoots { get; init; } = false;
     public bool FastRom { get; init; } = true;
-    public bool QuickSwap { get; init; } = false;
+    public bool QuickSwap { get; init; } = true;
     public bool NoMusic { get; init; } = false;
     public byte CapeMagicUsageNormal { get; init; } = 0x04;
     public byte CapeMagicUsageHalf { get; init; } = 0x08;
