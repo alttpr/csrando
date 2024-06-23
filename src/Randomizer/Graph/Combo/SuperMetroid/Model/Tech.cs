@@ -13,7 +13,8 @@ internal record TechCategory(
 
 internal record Tech(
     string Name,
-    Requirement Requires,
+    Requirement TechRequires,
+    Requirement OtherRequires,
     List<Tech> ExtensionTechs,
     Note? Note,
     Note? DevNote

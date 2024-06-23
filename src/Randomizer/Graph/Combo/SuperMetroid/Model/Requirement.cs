@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using OneOf;
 
 internal record ResourceTypeCount(string Type, int Count);
+internal record Drop(string Enemy, int Count);
 
 [JsonConverter(typeof(RequirementConverter))]
 public abstract record Requirement
@@ -23,6 +24,7 @@ public abstract record Requirement
     internal record Ammo(string Type, int Count) : Requirement;
     internal record AmmoDrain(string Type, int Count) : Requirement;
     internal record Refill(string[] Resources) : Requirement;
+    internal record PartialRefill(string Resources, int Limit) : Requirement;
     internal record EnemyKill(
         string[][] Enemies,
         string[]? ExplicitWeapons = null,
@@ -34,6 +36,7 @@ public abstract record Requirement
     internal record DraygonElectricityFrames(int Frames) : Requirement;
     internal record EnemyDamage(string Enemy, string Type, int Hits) : Requirement;
     internal record HeatFrames(int Frames) : Requirement;
+    internal record HeatFramesWithEnergyDrops(int Frames, Drop[] Drops) : Requirement;
     internal record GravitylessHeatFrames(int Frames) : Requirement;
     internal record HibashiHits(int Hits) : Requirement;
     internal record LavaFrames(int Frames) : Requirement;
@@ -48,8 +51,28 @@ public abstract record Requirement
     internal record ObstaclesCleared(string[] Obstacles) : Requirement;
     internal record ObstaclesNotCleared(string[] Obstacles) : Requirement;
     internal record ResourceCapacity(ResourceTypeCount[] Capacity) : Requirement;
+    internal record ResourceAvailable(ResourceTypeCount[] Available) : Requirement;
+    internal record ResourceMissingAtMost(ResourceTypeCount[] Missing) : Requirement;
     internal record CanShineCharge(
         decimal UsedTiles,
+        decimal OpenEnd,
+        decimal? GentleUpTiles = null,
+        decimal? GentleDownTiles = null,
+        decimal? SteepUpTiles = null,
+        decimal? SteepDownTiles = null,
+        decimal? StartingDownTiles = null
+    ) : Requirement;
+    internal record GetBlueSpeed(
+        decimal UsedTiles,
+        decimal OpenEnd,
+        decimal? GentleUpTiles = null,
+        decimal? GentleDownTiles = null,
+        decimal? SteepUpTiles = null,
+        decimal? SteepDownTiles = null,
+        decimal? StartingDownTiles = null
+    ) : Requirement;
+    internal record SpeedBall(
+        decimal Length,
         decimal OpenEnd,
         decimal? GentleUpTiles = null,
         decimal? GentleDownTiles = null,
@@ -64,6 +87,10 @@ public abstract record Requirement
         bool? MustStayPut = null
     ) : Requirement;
     internal record ItemNotCollectedAtNode(int Node) : Requirement;
+    internal record GainFlashSuit() : Requirement;
+    internal record UseFlashSuit() : Requirement;
+    internal record NoFlashSuit() : Requirement;
+    internal record Tech(string TechRequirement) : Requirement;
 
     internal Requirement ModifyObstacleState(string[] obstaclesCleared)
     {
@@ -112,6 +139,7 @@ internal class RequirementConverter : JsonConverter<Requirement>
                 "ammo" => new Requirement.Ammo(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
                 "ammoDrain" => new Requirement.AmmoDrain(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
                 "refill" => new Requirement.Refill(property.Value.EnumerateArray().Select(r => r.GetString()!).ToArray()),
+                "partialRefill" => new Requirement.PartialRefill(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("limit").GetInt32()),
                 "enemyKill" => new Requirement.EnemyKill(
                     property.Value.GetProperty("enemies").EnumerateArray().Select(e => e.EnumerateArray().Select(ee => ee.GetString()!).ToArray()).ToArray(),
                     property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? explicitWeapons.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!,
@@ -122,6 +150,9 @@ internal class RequirementConverter : JsonConverter<Requirement>
                 "draygonElectricityFrames" => new Requirement.DraygonElectricityFrames(property.Value.GetInt32()),
                 "enemyDamage" => new Requirement.EnemyDamage(property.Value.GetProperty("enemy").GetString()!, property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("hits").GetInt32()),
                 "heatFrames" => new Requirement.HeatFrames(property.Value.GetInt32()),
+                "heatFramesWithEnergyDrops" => new Requirement.HeatFramesWithEnergyDrops(
+                    property.Value.GetProperty("frames").GetInt32(),
+                    property.Value.GetProperty("drops").EnumerateArray().Select(d => new Drop(d.GetProperty("enemy").GetString()!, d.GetProperty("count").GetInt32())).ToArray()),
                 "gravitylessHeatFrames" => new Requirement.GravitylessHeatFrames(property.Value.GetInt32()),
                 "hibashiHits" => new Requirement.HibashiHits(property.Value.GetInt32()),
                 "lavaFrames" => new Requirement.LavaFrames(property.Value.GetInt32()),
@@ -139,8 +170,26 @@ internal class RequirementConverter : JsonConverter<Requirement>
                 "obstaclesCleared" => new Requirement.ObstaclesCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToArray()),
                 "obstaclesNotCleared" => new Requirement.ObstaclesNotCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToArray()),
                 "resourceCapacity" => new Requirement.ResourceCapacity(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
+                "resourceAvailable" => new Requirement.ResourceAvailable(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
+                "resourceMissingAtMost" => new Requirement.ResourceMissingAtMost(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
                 "canShineCharge" => new Requirement.CanShineCharge(
                     property.Value.GetProperty("usedTiles").GetDecimal(),
+                    property.Value.GetProperty("openEnd").GetDecimal(),
+                    property.Value.TryGetProperty("gentleUpTiles", out var gentleUpTiles) ? gentleUpTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("steepUpTiles", out var steepUpTiles) ? steepUpTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("steepDownTiles", out var steepDownTiles) ? steepDownTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("startingDownTiles", out var startingDownTiles) ? startingDownTiles.GetDecimal() : null!),
+                "getBlueSpeed" => new Requirement.GetBlueSpeed(
+                    property.Value.GetProperty("usedTiles").GetDecimal(),
+                    property.Value.GetProperty("openEnd").GetDecimal(),
+                    property.Value.TryGetProperty("gentleUpTiles", out var gentleUpTiles) ? gentleUpTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("steepUpTiles", out var steepUpTiles) ? steepUpTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("steepDownTiles", out var steepDownTiles) ? steepDownTiles.GetDecimal() : null!,
+                    property.Value.TryGetProperty("startingDownTiles", out var startingDownTiles) ? startingDownTiles.GetDecimal() : null!),
+                "speedBall" => new Requirement.SpeedBall(
+                    property.Value.GetProperty("length").GetDecimal(),
                     property.Value.GetProperty("openEnd").GetDecimal(),
                     property.Value.TryGetProperty("gentleUpTiles", out var gentleUpTiles) ? gentleUpTiles.GetDecimal() : null!,
                     property.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetDecimal() : null!,
@@ -153,6 +202,10 @@ internal class RequirementConverter : JsonConverter<Requirement>
                     property.Value.TryGetProperty("nodesToAvoid", out var nodesToAvoid) ? nodesToAvoid.EnumerateArray().Select(n => n.GetInt32()).ToArray() : null!,
                     property.Value.TryGetProperty("mustStayPut", out var mustStayPut) ? mustStayPut.GetBoolean() : null!),
                 "itemNotCollectedAtNode" => new Requirement.ItemNotCollectedAtNode(property.Value.GetInt32()),
+                "gainFlashSuit" => new Requirement.GainFlashSuit(),
+                "useFlashSuit" => new Requirement.UseFlashSuit(),
+                "noFlashSuit" => new Requirement.NoFlashSuit(),
+                "tech" => new Requirement.Tech(property.Value.GetString()!),
                 _ => throw new Exception($"Unknown requirement: {property.Name}")
             };
         }

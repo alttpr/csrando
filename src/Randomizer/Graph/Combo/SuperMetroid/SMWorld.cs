@@ -25,12 +25,14 @@ public enum ComplexRequirementType
     Ammo,
     AmmoDrain,
     Refill,
+    PartialRefill,
     EnemyKill,
     AcidFrames,
     GravitylessAcidFrames,
     DraygonElectricityFrames,
     EnemyDamage,
     HeatFrames,
+    HeatFramesWithEnergyDrops,
     GravitylessHeatFrames,
     HibashiHits,
     LavaFrames,
@@ -45,10 +47,18 @@ public enum ComplexRequirementType
     ObstaclesCleared,
     ObstaclesNotCleared,
     ResourceCapacity,
+    ResourceAvailable,
+    ResourceMissingAtMost,
     CanShineCharge,
+    GetBlueSpeed,
+    SpeedBall,
     Shinespark,
     ResetRoom,
-    ItemNotCollectedAtNode
+    ItemNotCollectedAtNode,
+    GainFlashSuit,
+    UseFlashSuit,
+    NoFlashSuit,
+    Tech
 }
 
 // Represents a complex requirement for an edge
@@ -66,6 +76,7 @@ public abstract record ComplexRequirement
     internal record Ammo(Item Item, int Count) : ComplexRequirement;
     internal record AmmoDrain(string Type, int Count) : ComplexRequirement;
     internal record Refill(string[] Resources) : ComplexRequirement;
+    internal record PartialRefill(string Resources, int Limit) : ComplexRequirement;
     internal record EnemyKill(
         string[][] Enemies,
         string[]? ExplicitWeapons = null,
@@ -97,6 +108,7 @@ public abstract record ComplexRequirement
     internal record DraygonElectricityFrames(int Frames) : ComplexRequirement;
     internal record EnemyDamage(string Enemy, string Type, int Hits) : ComplexRequirement;
     internal record HeatFrames(int Frames) : ComplexRequirement;
+    internal record HeatFramesWithEnergyDrops(int Frames, Model.Drop[] Drops) : ComplexRequirement;
     internal record GravitylessHeatFrames(int Frames) : ComplexRequirement;
     internal record HibashiHits(int Hits) : ComplexRequirement;
     internal record LavaFrames(int Frames) : ComplexRequirement;
@@ -111,9 +123,31 @@ public abstract record ComplexRequirement
     internal record ObstaclesCleared(string[] Obstacles) : ComplexRequirement;
     internal record ObstaclesNotCleared(string[] Obstacles) : ComplexRequirement;
     internal record ResourceCapacity((Item, int)[] Capacity) : ComplexRequirement;
+    internal record ResourceAvailable((Item, int)[] Available) : ComplexRequirement;
+    internal record ResourceMissingAtMost((Item, int)[] MissingAtMost) : ComplexRequirement;
     internal record CanShineCharge(
         World world,
         decimal UsedTiles,
+        decimal OpenEnd,
+        decimal? GentleUpTiles = null,
+        decimal? GentleDownTiles = null,
+        decimal? SteepUpTiles = null,
+        decimal? SteepDownTiles = null,
+        decimal? StartingDownTiles = null
+    ) : ComplexRequirement;
+    internal record GetBlueSpeed(
+        World world,
+        decimal UsedTiles,
+        decimal OpenEnd,
+        decimal? GentleUpTiles = null,
+        decimal? GentleDownTiles = null,
+        decimal? SteepUpTiles = null,
+        decimal? SteepDownTiles = null,
+        decimal? StartingDownTiles = null
+    ) : ComplexRequirement;
+    internal record SpeedBall(
+        World world,
+        decimal Length,
         decimal OpenEnd,
         decimal? GentleUpTiles = null,
         decimal? GentleDownTiles = null,
@@ -128,6 +162,10 @@ public abstract record ComplexRequirement
         bool? MustStayPut = null
     ) : ComplexRequirement;
     internal record ItemNotCollectedAtNode(int Node) : ComplexRequirement;
+    internal record GainFlashSuit() : ComplexRequirement;
+    internal record UseFlashSuit() : ComplexRequirement;
+    internal record NoFlashSuit() : ComplexRequirement;
+    internal record Tech(Item TechRequirement) : ComplexRequirement;
 
     public ComplexRequirement()
     {
@@ -142,12 +180,14 @@ public abstract record ComplexRequirement
             Ammo _ => ComplexRequirementType.Ammo,
             AmmoDrain _ => ComplexRequirementType.AmmoDrain,
             Refill _ => ComplexRequirementType.Refill,
+            PartialRefill _ => ComplexRequirementType.PartialRefill,
             EnemyKill _ => ComplexRequirementType.EnemyKill,
             AcidFrames _ => ComplexRequirementType.AcidFrames,
             GravitylessAcidFrames _ => ComplexRequirementType.GravitylessAcidFrames,
             DraygonElectricityFrames _ => ComplexRequirementType.DraygonElectricityFrames,
             EnemyDamage _ => ComplexRequirementType.EnemyDamage,
             HeatFrames _ => ComplexRequirementType.HeatFrames,
+            HeatFramesWithEnergyDrops _ => ComplexRequirementType.HeatFramesWithEnergyDrops,
             GravitylessHeatFrames _ => ComplexRequirementType.GravitylessHeatFrames,
             HibashiHits _ => ComplexRequirementType.HibashiHits,
             LavaFrames _ => ComplexRequirementType.LavaFrames,
@@ -162,10 +202,18 @@ public abstract record ComplexRequirement
             ObstaclesCleared _ => ComplexRequirementType.ObstaclesCleared,
             ObstaclesNotCleared _ => ComplexRequirementType.ObstaclesNotCleared,
             ResourceCapacity _ => ComplexRequirementType.ResourceCapacity,
+            ResourceAvailable _ => ComplexRequirementType.ResourceAvailable,
+            ResourceMissingAtMost _ => ComplexRequirementType.ResourceMissingAtMost,
             CanShineCharge _ => ComplexRequirementType.CanShineCharge,
+            GetBlueSpeed _ => ComplexRequirementType.GetBlueSpeed,
+            SpeedBall _ => ComplexRequirementType.SpeedBall,
             Shinespark _ => ComplexRequirementType.Shinespark,
             ResetRoom _ => ComplexRequirementType.ResetRoom,
             ItemNotCollectedAtNode _ => ComplexRequirementType.ItemNotCollectedAtNode,
+            GainFlashSuit _ => ComplexRequirementType.GainFlashSuit,
+            UseFlashSuit _ => ComplexRequirementType.UseFlashSuit,
+            NoFlashSuit _ => ComplexRequirementType.NoFlashSuit,
+            Tech _ => ComplexRequirementType.Tech,
             _ => throw new NotImplementedException()
         };
     }
@@ -183,15 +231,17 @@ public abstract record ComplexRequirement
             Model.Requirement.Ammo ammo => new Ammo(world.GetItem("SM" + ammo.Type, Game.SuperMetroid), ammo.Count),
             Model.Requirement.AmmoDrain ammoDrain => new AmmoDrain(ammoDrain.Type, ammoDrain.Count),
             Model.Requirement.Refill refill => new Refill(refill.Resources),
+            Model.Requirement.PartialRefill partialRefill => new PartialRefill(partialRefill.Resources, partialRefill.Limit),
             Model.Requirement.EnemyKill enemyKill => new EnemyKill(enemyKill.Enemies, enemyKill.ExplicitWeapons, enemyKill.ExcludedWeapons, enemyKill.FarmableAmmo),
             Model.Requirement.AcidFrames acidFrames => new AcidFrames(acidFrames.Frames),
             Model.Requirement.GravitylessAcidFrames gravitylessAcidFrames => new GravitylessAcidFrames(gravitylessAcidFrames.Frames),
             Model.Requirement.DraygonElectricityFrames draygonElectricityFrames => new DraygonElectricityFrames(draygonElectricityFrames.Frames),
             Model.Requirement.EnemyDamage enemyDamage => new EnemyDamage(enemyDamage.Enemy, enemyDamage.Type, enemyDamage.Hits),
             Model.Requirement.HeatFrames heatFrames => new Single(world.GetItem("SMVaria", Game.SuperMetroid)), //new HeatFrames(heatFrames.Frames),
+            Model.Requirement.HeatFramesWithEnergyDrops heatFramesWithEnergyDrops => new Single(world.GetItem("SMVaria", Game.SuperMetroid)),  //new HeatFramesWithEnergyDrops(heatFramesWithEnergyDrops.Frames, heatFramesWithEnergyDrops.Drops.Select(d => new Model.Drop(d.Type, d.Amount)).ToArray()),
             Model.Requirement.GravitylessHeatFrames gravitylessHeatFrames => new Single(world.GetItem("SMVaria", Game.SuperMetroid)), // new GravitylessHeatFrames(gravitylessHeatFrames.Frames),
             Model.Requirement.HibashiHits hibashiHits => new HibashiHits(hibashiHits.Hits),
-            Model.Requirement.LavaFrames lavaFrames => new Single(world.GetItem("SMGravity", Game.SuperMetroid)),
+            Model.Requirement.LavaFrames lavaFrames => new And([new Single(world.GetItem("SMGravity", Game.SuperMetroid)), new Single(world.GetItem("SMVaria", Game.SuperMetroid))]),
             Model.Requirement.GravitylessLavaFrames gravitylessLavaFrames => new GravitylessLavaFrames(gravitylessLavaFrames.Frames),
             Model.Requirement.SamusEaterFrames samusEaterFrames => new SamusEaterFrames(samusEaterFrames.Frames),
             Model.Requirement.MetroidFrames metroidFrames => new MetroidFrames(metroidFrames.Frames),
@@ -213,10 +263,18 @@ public abstract record ComplexRequirement
                     _ => throw new NotImplementedException()
                 }).ToArray()
             ),
+            Model.Requirement.ResourceAvailable resourceAvailable => new Never(),
+            Model.Requirement.ResourceMissingAtMost resourceMissingAtMost => new Never(),
             Model.Requirement.CanShineCharge canShineCharge => new CanShineCharge(world, canShineCharge.UsedTiles, canShineCharge.OpenEnd, canShineCharge.GentleUpTiles, canShineCharge.GentleDownTiles, canShineCharge.SteepUpTiles, canShineCharge.SteepDownTiles, canShineCharge.StartingDownTiles),
+            Model.Requirement.GetBlueSpeed getBlueSpeed => new Never(), //new GetBlueSpeed(world, getBlueSpeed.UsedTiles, getBlueSpeed.OpenEnd, getBlueSpeed.GentleUpTiles, getBlueSpeed.GentleDownTiles, getBlueSpeed.SteepUpTiles, getBlueSpeed.SteepDownTiles, getBlueSpeed.StartingDownTiles),
+            Model.Requirement.SpeedBall speedBall => new Never(),//new SpeedBall(world, speedBall.Length, speedBall.OpenEnd, speedBall.GentleUpTiles, speedBall.GentleDownTiles, speedBall.SteepUpTiles, speedBall.SteepDownTiles, speedBall.StartingDownTiles),
             Model.Requirement.Shinespark shinespark => new Shinespark(shinespark.Frames, shinespark.ExcessFrames),
             Model.Requirement.ResetRoom resetRoom => new ResetRoom(resetRoom.Nodes, resetRoom.NodesToAvoid, resetRoom.MustStayPut),
             Model.Requirement.ItemNotCollectedAtNode itemNotCollectedAtNode => new ItemNotCollectedAtNode(itemNotCollectedAtNode.Node),
+            Model.Requirement.GainFlashSuit gainFlashSuit => new Always(),
+            Model.Requirement.UseFlashSuit useFlashSuit => new Never(),
+            Model.Requirement.NoFlashSuit noFlashSuit => new Always(),
+            Model.Requirement.Tech tech => new Single(world.GetItem("SM" + tech.TechRequirement, Game.SuperMetroid)),
             _ => throw new NotImplementedException()
         };
     }
@@ -268,6 +326,7 @@ public abstract record ComplexRequirement
                 //ComplexRequirementType.Ammo when this is Ammo ammo => inventory.HasAtLeast(ammo.Item, ammo.Count / 5),
                 ComplexRequirementType.AmmoDrain => true,
                 ComplexRequirementType.Refill => true,
+                ComplexRequirementType.PartialRefill => true,
                 ComplexRequirementType.EnemyKill when this is EnemyKill enemies => enemies.CanKillWith(inventory),
                 ComplexRequirementType.AcidFrames => false,
                 ComplexRequirementType.GravitylessAcidFrames => false,
@@ -315,12 +374,14 @@ public abstract record ComplexRequirement
             Ammo ammo => false,
             AmmoDrain ammo => false,
             Refill resources => false,
+            PartialRefill resources => false,
             EnemyKill enemies => false,
             AcidFrames frames => false,
             GravitylessAcidFrames frames => false,
             DraygonElectricityFrames frames => false,
             EnemyDamage enemy => false,
             HeatFrames frames => false,
+            HeatFramesWithEnergyDrops frames => false,
             GravitylessHeatFrames frames => false,
             HibashiHits hits => false,
             LavaFrames frames => false,
@@ -335,10 +396,18 @@ public abstract record ComplexRequirement
             ObstaclesCleared obstacles => false,
             ObstaclesNotCleared obstacles => false,
             ResourceCapacity capacity => false,
+            ResourceAvailable available => false,
+            ResourceMissingAtMost missing => false,
             CanShineCharge usedTiles => false,
+            GetBlueSpeed usedTiles => false,
+            SpeedBall length => false,
             Shinespark frames => false,
             ResetRoom nodes => false,
             ItemNotCollectedAtNode node => false,
+            GainFlashSuit => false,
+            UseFlashSuit => false,
+            NoFlashSuit => false,
+            Tech tech => false,
             _ => throw new NotImplementedException()
         };
     }
@@ -552,7 +621,7 @@ internal class SMWorld
             Game = Game.SuperMetroid
         };
 
-        var techRequirement = ComplexRequirement.FromRequirement(world, tech.Requires);
+        var techRequirement = ComplexRequirement.FromRequirement(world, new Model.Requirement.And([tech.TechRequires, tech.OtherRequires]));
 
         // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
         var helperRequirement = techRequirement switch

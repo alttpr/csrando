@@ -202,7 +202,9 @@ abstract internal record EntranceCondition
     internal record ComeInNormally() : EntranceCondition;
     internal record ComeInRunning(string SpeedBooster, decimal MinTiles, decimal? MaxTiles) : EntranceCondition;
     internal record ComeInJumping(string SpeedBooster, decimal MinTiles, decimal? MaxTiles) : EntranceCondition;
+    internal record ComeInSpaceJumping(string SpeedBooster, decimal MinTiles, decimal? MaxTiles) : EntranceCondition;
     internal record ComeInShineCharging(decimal Length, decimal OpenEnd, decimal? GentleUpTiles, decimal? GentleDownTiles, decimal? SteepUpTiles, decimal? SteepDownTiles) : EntranceCondition;
+    internal record ComeInGettingBlueSpeed(decimal Length, int OpenEnd, int? GentleUpTiles, int? GentleDownTiles, int? SteepUpTiles, int? SteepDownTiles, string? MinExtraRunSpeed, string? MaxExtraRunSpeed) : EntranceCondition;
     internal record ComeInShineCharged(int FramesRequired) : EntranceCondition;
     internal record ComeInShineChargedJumping(int FramesRequired) : EntranceCondition;
     internal record ComeInWithSpark(string? Position) : EntranceCondition;
@@ -211,12 +213,18 @@ abstract internal record EntranceCondition
     internal record ComeInWithDoorStuckSetup() : EntranceCondition;
     internal record ComeInSpeedballing(Runway Runway) : EntranceCondition;
     internal record ComeInWithTemporaryBlue() : EntranceCondition;
+    internal record ComeInBlueSpinning(string? MinExtraRunSpeed, string? MaxExtraRunSpeed, decimal UnusableTiles) : EntranceCondition;
+    internal record ComeInWithMockball(decimal? AdjacentMinTiles, decimal[][]? RemoteAndLandingMinTiles) : EntranceCondition;
+    internal record ComeInWithSpringBallBounce(string MovementType, decimal? AdjacentMinTiles, decimal[][]? RemoteAndLandingMinTiles) : EntranceCondition;
+    internal record ComeInWithBlueSpringBallBounce(string MovementType, string? MinExtraRunSpeed, string? MaxExtraRunSpeed, decimal? MinLandingTiles) : EntranceCondition;
     internal record ComeInWithStoredFallSpeed(int FallSpeedInTiles) : EntranceCondition;
     internal record ComeInWithRMode() : EntranceCondition;
     internal record ComeInWithGMode(string Mode, bool Morphed, string? Mobility) : EntranceCondition;
     internal record ComeInWithWallJumpBelow(int MinHeight) : EntranceCondition;
     internal record ComeInWithSpaceJumpBelow() : EntranceCondition;
     internal record ComeInWithPlatformBelow(decimal? MinHeight, decimal? MaxHeight, decimal? MaxLeftPosition, decimal? MinRightPosition) : EntranceCondition;
+    internal record ComeInWithGrappleTeleport(int[][] BlockPositions) : EntranceCondition;
+    internal record ComesThroughToilet(string comesThroughToilet) : EntranceCondition;
 }
 
 internal class EntranceConditionConverter : JsonConverter<EntranceCondition>
@@ -235,6 +243,10 @@ internal class EntranceConditionConverter : JsonConverter<EntranceCondition>
                 entranceCondition.Value.GetProperty("speedBooster").ToString(),
                 entranceCondition.Value.GetProperty("minTiles").GetDecimal(),
                 entranceCondition.Value.TryGetProperty("maxTiles", out var maxTiles) ? maxTiles.GetDecimal() : null),
+            "comeInSpaceJumping" => new EntranceCondition.ComeInSpaceJumping(
+                entranceCondition.Value.GetProperty("speedBooster").ToString(),
+                entranceCondition.Value.GetProperty("minTiles").GetDecimal(),
+                entranceCondition.Value.TryGetProperty("maxTiles", out var maxTiles) ? maxTiles.GetDecimal() : null),
             "comeInShinecharging" => new EntranceCondition.ComeInShineCharging(
                 entranceCondition.Value.GetProperty("length").GetDecimal(),
                 entranceCondition.Value.GetProperty("openEnd").GetDecimal(),
@@ -242,6 +254,15 @@ internal class EntranceConditionConverter : JsonConverter<EntranceCondition>
                 entranceCondition.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetDecimal() : null,
                 entranceCondition.Value.TryGetProperty("steepUpTiles", out var steepUpTiles) ? steepUpTiles.GetDecimal() : null,
                 entranceCondition.Value.TryGetProperty("steepDownTiles", out var steepDownTiles) ? steepDownTiles.GetDecimal() : null),
+            "comeInGettingBlueSpeed" => new EntranceCondition.ComeInGettingBlueSpeed(
+                entranceCondition.Value.GetProperty("length").GetDecimal(),
+                entranceCondition.Value.GetProperty("openEnd").GetInt32(),
+                entranceCondition.Value.TryGetProperty("gentleUpTiles", out var gentleUpTiles) ? gentleUpTiles.GetInt32() : null,
+                entranceCondition.Value.TryGetProperty("gentleDownTiles", out var gentleDownTiles) ? gentleDownTiles.GetInt32() : null,
+                entranceCondition.Value.TryGetProperty("steepUpTiles", out var steepUpTiles) ? steepUpTiles.GetInt32() : null,
+                entranceCondition.Value.TryGetProperty("steepDownTiles", out var steepDownTiles) ? steepDownTiles.GetInt32() : null,
+                entranceCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                entranceCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null),
             "comeInShinecharged" => new EntranceCondition.ComeInShineCharged(entranceCondition.Value.GetProperty("framesRequired").GetInt32()),
             "comeInShinechargedJumping" => new EntranceCondition.ComeInShineChargedJumping(entranceCondition.Value.GetProperty("framesRequired").GetInt32()),
             "comeInWithSpark" => new EntranceCondition.ComeInWithSpark(
@@ -253,6 +274,22 @@ internal class EntranceConditionConverter : JsonConverter<EntranceCondition>
             "comeInSpeedballing" => new EntranceCondition.ComeInSpeedballing(
                 JsonSerializer.Deserialize<Runway>(entranceCondition.Value.GetProperty("runway").GetRawText()) ?? new Runway(0, 0, null, null, null, null)),
             "comeInWithTemporaryBlue" => new EntranceCondition.ComeInWithTemporaryBlue(),
+            "comeInBlueSpinning" => new EntranceCondition.ComeInBlueSpinning(
+                entranceCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                entranceCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null,
+                entranceCondition.Value.GetProperty("unusableTiles").GetDecimal()),
+            "comeInWithMockball" => new EntranceCondition.ComeInWithMockball(
+                entranceCondition.Value.TryGetProperty("adjacentMinTiles", out var adjacentMinTiles) ? adjacentMinTiles.GetDecimal() : null,
+                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray()).ToArray() : null),                
+            "comeInWithSpringBallBounce" => new EntranceCondition.ComeInWithSpringBallBounce(
+                entranceCondition.Value.GetProperty("movementType").GetString() ?? "",
+                entranceCondition.Value.TryGetProperty("adjacentMinTiles", out var adjacentMinTiles) ? adjacentMinTiles.GetDecimal() : null,
+                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray()).ToArray() : null),
+            "comeInWithBlueSpringBallBounce" => new EntranceCondition.ComeInWithBlueSpringBallBounce(
+                entranceCondition.Value.GetProperty("movementType").GetString() ?? "",
+                entranceCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                entranceCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null,
+                entranceCondition.Value.TryGetProperty("minLandingTiles", out var minLandingTiles) ? minLandingTiles.GetDecimal() : null),
             "comeInWithStoredFallSpeed" => new EntranceCondition.ComeInWithStoredFallSpeed(entranceCondition.Value.GetProperty("fallSpeedInTiles").GetInt32()),
             "comeInWithRMode" => new EntranceCondition.ComeInWithRMode(),
             "comeInWithGMode" => new EntranceCondition.ComeInWithGMode(
@@ -266,6 +303,9 @@ internal class EntranceConditionConverter : JsonConverter<EntranceCondition>
                 entranceCondition.Value.TryGetProperty("maxHeight", out var maxHeight) ? maxHeight.GetDecimal() : null,
                 entranceCondition.Value.TryGetProperty("maxLeftPosition", out var maxLeftPosition) ? maxLeftPosition.GetDecimal() : null,
                 entranceCondition.Value.TryGetProperty("minRightPosition", out var minRightPosition) ? minRightPosition.GetDecimal() : null),
+            "comeInWithGrappleTeleport" => new EntranceCondition.ComeInWithGrappleTeleport(
+                entranceCondition.Value.GetProperty("blockPositions").EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetInt32()).ToArray()).ToArray()),
+            "comesThroughToilet" => new EntranceCondition.ComesThroughToilet(entranceCondition.Value.GetString() ?? ""),
             _ => throw new Exception($"Unknown entrance condition: {entranceCondition.Name}")
         };
     }
@@ -285,14 +325,21 @@ internal class EntranceConditionConverter : JsonConverter<EntranceCondition>
 [JsonConverter(typeof(ExitConditionConverter))]
 abstract internal record ExitCondition
 {
+    internal record LeaveNormally() : ExitCondition;
     internal record LeaveWithRunway(decimal Length, decimal OpenEnd, decimal? GentleUpTiles, decimal? GentleDownTiles, decimal? SteepUpTiles, decimal? SteepDownTiles, decimal? StartingDownTiles) : ExitCondition;
     internal record LeaveShineCharged(int FramesRequired) : ExitCondition;
+    internal record LeaveWithTemporaryBlue(string? Direction) : ExitCondition;
     internal record LeaveWithSpark(string? Position) : ExitCondition;
+    internal record LeaveSpinning(Runway RemoteRunway, string? MinExtraRunSpeed, string? MaxExtraRunSpeed, string? Blue) : ExitCondition;
+    internal record LeaveWithMockball(Runway RemoteRunway, Runway LandingRunway, string? MinExtraRunSpeed, string? MaxExtraRunSpeed, string? Blue) : ExitCondition;
+    internal record LeaveWithSpringBallBounce(Runway RemoteRunway, Runway LandingRunway, string? MinExtraRunSpeed, string? MaxExtraRunSpeed, string? Blue, string MovementType) : ExitCondition;
+    internal record LeaveSpaceJumping(Runway RemoteRunway, string? MinExtraRunSpeed, string? MaxExtraRunSpeed, string? Blue) : ExitCondition;
     internal record LeaveWithStoredFallSpeed(int FallSpeedInTiles) : ExitCondition;
     internal record LeaveWithGModeSetup(bool Knockback) : ExitCondition;
     internal record LeaveWithGMode(bool Morphed) : ExitCondition;
     internal record LeaveWithDoorFrameBelow(decimal Height) : ExitCondition;
     internal record LeaveWithPlatformBelow(decimal Height, decimal LeftPosition, decimal RightPosition) : ExitCondition;
+    internal record LeaveWithGrappleTeleport(int[][] BlockPositions) : ExitCondition;
 }
 
 internal class ExitConditionConverter : JsonConverter<ExitCondition>
@@ -302,6 +349,7 @@ internal class ExitConditionConverter : JsonConverter<ExitCondition>
         var exitCondition = element.EnumerateObject().First();
         return exitCondition.Name switch
         {
+            "leaveNormally" => new ExitCondition.LeaveNormally(),
             "leaveWithRunway" => new ExitCondition.LeaveWithRunway(
                 exitCondition.Value.GetProperty("length").GetDecimal(),
                 exitCondition.Value.GetProperty("openEnd").GetDecimal(),
@@ -322,8 +370,38 @@ internal class ExitConditionConverter : JsonConverter<ExitCondition>
                     _ => throw new Exception($"Unknown shinecharged exit condition: {exitCondition.Value.GetProperty("framesRemaining").GetString()}")
                 }
             ),
+            "leaveWithTemporaryBlue" => new ExitCondition.LeaveWithTemporaryBlue(
+                exitCondition.Value.TryGetProperty("direction", out var direction) ? direction.GetString() : null
+            ),
             "leaveWithSpark" => new ExitCondition.LeaveWithSpark(
                 exitCondition.Value.TryGetProperty("position", out var position) ? position.GetString() : null
+            ),
+            "leaveSpinning" => new ExitCondition.LeaveSpinning(
+                JsonSerializer.Deserialize<Runway>(exitCondition.Value.GetProperty("remoteRunway").GetRawText()) ?? new Runway(0, 0, null, null, null, null),
+                exitCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("blue", out var blue) ? blue.GetString() : null
+            ),
+            "leaveWithMockball" => new ExitCondition.LeaveWithMockball(
+                JsonSerializer.Deserialize<Runway>(exitCondition.Value.GetProperty("remoteRunway").GetRawText()) ?? new Runway(0, 0, null, null, null, null),
+                JsonSerializer.Deserialize<Runway>(exitCondition.Value.GetProperty("landingRunway").GetRawText()) ?? new Runway(0, 0, null, null, null, null),
+                exitCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("blue", out var blue) ? blue.GetString() : null
+            ),
+            "leaveWithSpringBallBounce" => new ExitCondition.LeaveWithSpringBallBounce(
+                JsonSerializer.Deserialize<Runway>(exitCondition.Value.GetProperty("remoteRunway").GetRawText()) ?? new Runway(0, 0, null, null, null, null),
+                JsonSerializer.Deserialize<Runway>(exitCondition.Value.GetProperty("landingRunway").GetRawText()) ?? new Runway(0, 0, null, null, null, null),
+                exitCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("blue", out var blue) ? blue.GetString() : null,
+                exitCondition.Value.GetProperty("movementType").GetString() ?? ""
+            ),
+            "leaveSpaceJumping" => new ExitCondition.LeaveSpaceJumping(
+                JsonSerializer.Deserialize<Runway>(exitCondition.Value.GetProperty("remoteRunway").GetRawText()) ?? new Runway(0, 0, null, null, null, null),
+                exitCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("maxExtraRunSpeed", out var maxExtraRunSpeed) ? maxExtraRunSpeed.GetString() : null,
+                exitCondition.Value.TryGetProperty("blue", out var blue) ? blue.GetString() : null
             ),
             "leaveWithStoredFallSpeed" => new ExitCondition.LeaveWithStoredFallSpeed(exitCondition.Value.GetProperty("fallSpeedInTiles").GetInt32()),
             "leaveWithGModeSetup" => new ExitCondition.LeaveWithGModeSetup(
@@ -335,6 +413,8 @@ internal class ExitConditionConverter : JsonConverter<ExitCondition>
                 exitCondition.Value.GetProperty("height").GetDecimal(),
                 exitCondition.Value.GetProperty("leftPosition").GetDecimal(),
                 exitCondition.Value.GetProperty("rightPosition").GetDecimal()),
+            "leaveWithGrappleTeleport" => new ExitCondition.LeaveWithGrappleTeleport(
+                exitCondition.Value.GetProperty("blockPositions").EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetInt32()).ToArray()).ToArray()),
             _ => throw new Exception($"Unknown exit condition: {exitCondition.Name}")
         };
     }

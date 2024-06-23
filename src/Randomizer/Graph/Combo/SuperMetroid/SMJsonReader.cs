@@ -489,7 +489,10 @@ internal class SMJsonReader
                 {
                     if (strat.EntranceCondition != null)
                     {
-                        if (strat.EntranceCondition is not EntranceCondition.ComeInNormally)
+                        if (strat.EntranceCondition is not EntranceCondition.ComeInNormally &&
+                            strat.EntranceCondition is not EntranceCondition.ComeInRunning &&
+                            strat.EntranceCondition is not EntranceCondition.ComeInJumping
+                            )
                         {
                             // Let's not deal with any entrance conditions for now
                             continue;
