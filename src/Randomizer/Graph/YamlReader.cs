@@ -290,10 +290,13 @@ public class DirectedUndirectedPair
 
 public class ConnectionGroup
 {
+    [YamlMember(Alias = "group")]
+    public string Group { get; set; } = string.Empty;
+
     [YamlMember(Alias = "in")]
-    public List<List<string>> In { get; set; } = new();
+    public List<List<List<string>>> In { get; set; } = new();
     [YamlMember(Alias = "out")]
-    public List<List<string>> Out { get; set; } = new();
+    public List<List<List<string>>> Out { get; set; } = new();
 }
 
 public class Entrances
@@ -302,8 +305,6 @@ public class Entrances
     public List<List<string>> Fixed { get; set; } = new();
     [YamlMember(Alias = "connections")]
     public List<ConnectionGroup> Connections { get; set; } = new();
-    [YamlMember(Alias = "multi")]
-    public ConnectionGroup Multi { get; set; } = new();
 }
 
 public partial class Map

@@ -292,11 +292,8 @@ connections:
       - ["Dev Cave"]
       - ["Swamp Palace - Entrance"]
   # exits
-  - in:
+  - in: # TODO this data seems WROND!
       - ["Thief Hideout - Exit"]
-      - ["Money Making Game - Exit"]
-      - ["Lumberjacks Cave - Exit"]
-      - ["Lumberjacks House - Exit"]
       - ["Tower Of Hera - Entrance - Exit"]
       - ["Spectacle Rock Cave Top - Exit"]
       - ["Spectacle Rock Cave Middle - Exit"]
@@ -344,7 +341,6 @@ connections:
       - ["Blacksmith House - Exit"]
       - ["Brothers House Left - Exit"]
       - ["Library - Entrance - Exit"]
-      - ["Money Making Game Library - Exit"]
       - ["Brothers House Right - Exit"]
       - ["West Woods Fairy Pond - Exit"]
       - ["Houlihan Room - Exit"]

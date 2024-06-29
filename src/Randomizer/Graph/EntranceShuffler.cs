@@ -43,10 +43,12 @@ internal sealed class EntranceShuffler : IWorldModifier
             world.Graph.AddDirected(from, to, fixedItem);
         }
 
-        foreach (var group in definition.Connections.Concat(definitionState.Connections))
+        /// I apologize for the following code and data structure. It does allow
+        /// for the most flexibility in the entrance shuffle.
+        foreach (var connectionGroups in definition.Connections.Concat(definitionState.Connections).GroupBy(x => x.Group))
         {
-            var ins = new Queue<List<string>>(prng.Shuffle(group.In));
-            var outs = new Queue<List<string>>(prng.Shuffle(group.Out));
+            var ins = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.In)));
+            var outs = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Out)));
             if (ins.Count != outs.Count)
             {
                 throw new Exception("Entrance count mismatch");
@@ -54,48 +56,29 @@ internal sealed class EntranceShuffler : IWorldModifier
 
             while (ins.Count > 0)
             {
-                var from_items = ins.Dequeue();
-                var to_items = outs.Dequeue();
+                var from_items = new Queue<List<string>>(prng.Shuffle(ins.Dequeue()));
+                var to_items = new Queue<List<string>>(prng.Shuffle(outs.Dequeue()));
                 if (from_items.Count != to_items.Count)
                 {
                     throw new Exception("Entrance sub-count mismatch");
                 }
 
-                for (var i = 0; i < from_items.Count; i++)
+                while (from_items.Count > 0)
                 {
-                    var from = world.GetLocation(from_items[i]);
-                    var to = world.GetLocation(to_items[i]);
-                    world.Graph.AddDirected(from, to, fixedItem);
+                    var froms = from_items.Dequeue();
+                    var tos = to_items.Dequeue();
+                    if (froms.Count != tos.Count)
+                    {
+                        throw new Exception("Entrance sub-sub-count mismatch");
+                    }
+
+                    for (var i = 0; i < froms.Count; i++)
+                    {
+                        var from = world.GetLocation(froms[i]);
+                        var to = world.GetLocation(tos[i]);
+                        world.Graph.AddDirected(from, to, fixedItem);
+                    }
                 }
-            }
-        }
-
-        // Deal with multi-entrances. unfortunately this is a bit of a mess.
-        var multiIns = new Queue<List<string>>(prng.Shuffle(definition.Multi.In.Concat(definitionState.Multi.In)));
-        var multiOuts = new Queue<List<string>>(prng.Shuffle(definition.Multi.Out.Concat(definitionState.Multi.Out)));
-        if (multiIns.Count != multiOuts.Count)
-        {
-            throw new Exception("Entrance count mismatch");
-        }
-
-        while (multiIns.Count > 0)
-        {
-            var from_items = multiIns.Dequeue();
-            var to_items = multiOuts.Dequeue();
-            if (from_items.Count != to_items.Count)
-            {
-                throw new Exception("Entrance sub-count mismatch");
-            }
-
-            // Shuffle pairs of froms, so that entrances and exits if
-            // multientra are not in the same order.
-            var from_pairs = prng.Shuffle(from_items.Chunk(2)).SelectMany(x => x).ToList();
-
-            for (var i = 0; i < from_items.Count; i++)
-            {
-                var from = world.GetLocation(from_pairs[i]);
-                var to = world.GetLocation(to_items[i]);
-                world.Graph.AddDirected(from, to, fixedItem);
             }
         }
     }

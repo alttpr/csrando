@@ -1,204 +1,346 @@
 # This setting uses the highest number of entrance type groupings. This
 # restricts how thoroughly different entrances are randomized with the intention
 # of keeping things simple.
-#
-# Single-Entrance Caves All entrances are grouped and randomized with each
-# other. This does not include any of Light World Death Mountain. Example:
-# houses.
+fixed:
+  - ["Houlihan Room - In", "Houlihan Room"]
+  - ["Houlihan Room - Exit", "Houlihan Room - Out"]
 connections:
-  - # Single-Entrance Dungeons
-    # All entrances are grouped and randomized with each other. This includes the
-    # final section of Skull Woods (leading to the boss) but does not include any
-    # other Skull Woods entrances.
+  # Single-Entrance Dungeons
+  # All entrances are grouped and randomized with each other. This includes the
+  # final section of Skull Woods (leading to the boss) but does not include any
+  # other Skull Woods entrances.
+  - group: single_entrance_dungeons
     in:
-      - ["Eastern Palace - In", "Eastern Palace - Entrance - Exit"]
-      - ["Tower Of Hera - Entrance - In", "Tower Of Hera - Entrance - Exit"]
-      - ["Palace of Darkness Door - In", "Palace of Darkness - Lobby - Exit"]
-      - ["Swamp Palace - In", "Swamp Palace - Entrance - Exit"]
-      - ["Skull Woods Back - In", "Skull Woods - Bridge Room - Exit"]
-      - ["Thieves Town - In", "Thieves' Town - Grand Room SW - Exit"]
-      - ["Ice Palace - In", "Ice Palace - Entrance - Exit"]
-      - ["Mire - In", "Misery Mire - Entrance - Exit"]
-      - ["Ganon's Tower - In", "Ganon's Tower - Lobby - Exit"]
+      - [["Eastern Palace - In", "Eastern Palace - Entrance - Exit"]]
+      - [["Tower Of Hera - Entrance - In", "Tower Of Hera - Entrance - Exit"]]
+      - [["Palace of Darkness Door - In", "Palace of Darkness - Lobby - Exit"]]
+      - [["Swamp Palace - In", "Swamp Palace - Entrance - Exit"]]
+      - [["Skull Woods Back - In", "Skull Woods - Bridge Room - Exit"]]
+      - [["Thieves Town - In", "Thieves' Town - Grand Room SW - Exit"]]
+      - [["Ice Palace - In", "Ice Palace - Entrance - Exit"]]
+      - [["Mire - In", "Misery Mire - Entrance - Exit"]]
+      - [["Ganon's Tower - In", "Ganon's Tower - Lobby - Exit"]]
     out:
-      - ["Eastern Palace - Entrance", "Eastern Palace - Out"]
-      - ["Tower Of Hera - Entrance", "Tower Of Hera - Entrance - Out"]
-      - ["Palace of Darkness - Lobby", "Palace of Darkness Door - Out"]
-      - ["Swamp Palace - Entrance", "Swamp Palace - Out"]
-      - ["Skull Woods - Bridge Room", "Skull Woods Back - Out"]
-      - ["Thieves' Town - Grand Room SW", "Thieves Town - Out"]
-      - ["Ice Palace - Entrance", "Ice Palace - Out"]
-      - ["Misery Mire - Entrance", "Mire - Out"]
-      - ["Ganon's Tower - Lobby", "Ganon's Tower - Out"]
+      - [["Eastern Palace - Entrance", "Eastern Palace - Out"]]
+      - [["Tower Of Hera - Entrance", "Tower Of Hera - Entrance - Out"]]
+      - [["Palace of Darkness - Lobby", "Palace of Darkness Door - Out"]]
+      - [["Swamp Palace - Entrance", "Swamp Palace - Out"]]
+      - [["Skull Woods - Bridge Room", "Skull Woods Back - Out"]]
+      - [["Thieves' Town - Grand Room SW", "Thieves Town - Out"]]
+      - [["Ice Palace - Entrance", "Ice Palace - Out"]]
+      - [["Misery Mire - Entrance", "Mire - Out"]]
+      - [["Ganon's Tower - Lobby", "Ganon's Tower - Out"]]
 
-  - # Skull Woods (excluding final dungeon entrance) All entrances (including all of
-    # the holes) remain confined to the Skull Woods overworld region and are
-    # randomized with each other. Skull-entrances are randomized with
-    # skull-entrances; and holes are randomized with holes.
+  # Skull Woods (excluding final dungeon entrance) All entrances (including all of
+  # the holes) remain confined to the Skull Woods overworld region and are
+  # randomized with each other. Skull-entrances are randomized with
+  # skull-entrances; and holes are randomized with holes.
+  - group: skull_woods
     in:
-      - ["Skull Woods Second Section West - In", "Skull Woods - Bumper Buddy - Exit"]
-      - ["Skull Woods Second Section East - In", "Skull Woods - Statue Puzzle - Exit"]
-      - ["Skull Woods First Section - In", "Skull Woods - Main Entrance - Exit"]
+      - [["Skull Woods Second Section West - In", "Skull Woods - Bumper Buddy - Exit"]]
+      - [["Skull Woods Second Section East - In", "Skull Woods - Statue Puzzle - Exit"]]
+      - [["Skull Woods First Section - In", "Skull Woods - Main Entrance - Exit"]]
     out:
-      - ["Skull Woods - Bumper Buddy", "Skull Woods Second Section West - Out"]
-      - ["Skull Woods - Statue Puzzle", "Skull Woods Second Section East - Out"]
-      - ["Skull Woods - Main Entrance", "Skull Woods First Section - Out"]
-  - # Skull Woods holes
+      - [["Skull Woods - Bumper Buddy", "Skull Woods Second Section West - Out"]]
+      - [["Skull Woods - Statue Puzzle", "Skull Woods Second Section East - Out"]]
+      - [["Skull Woods - Main Entrance", "Skull Woods First Section - Out"]]
+  # Skull Woods holes
+  - group: skull_woods_holes
     in:
-      - ["Skull Woods Back - Hole"]
-      - ["Skull Woods First Section North - Hole"]
-      - ["Skull Woods First Section East - Hole"]
-      - ["Skull Woods First Section West - Hole"]
+      - [["Skull Woods Back - Hole"]]
+      - [["Skull Woods First Section North - Hole"]]
+      - [["Skull Woods First Section East - Hole"]]
+      - [["Skull Woods First Section West - Hole"]]
     out:
-      - ["Skull Woods - Dumb Switches Top"]
-      - ["Skull Woods - Hourglass Top"]
-      - ["Skull Woods - Pinball Room"]
-      - ["Skull Woods - Firebar Pits"]
+      - [["Skull Woods - Dumb Switches Top"]]
+      - [["Skull Woods - Hourglass Top"]]
+      - [["Skull Woods - Pinball Room"]]
+      - [["Skull Woods - Firebar Pits"]]
 
-  - # Multi-Entrance Dungeons (excluding Skull Woods)
-    # Each of the 4 entrances of Hyrule Castle, Desert Palace and Turtle Rock
-    # remain grouped together. Each group of 4 are randomized with each other
-    # using a static mapping. For example if Hyrule Castle and Desert Palace are
-    # randomized with each other, the main entrance of Desert Palace will lead to
-    # the main entrance of Hyrule Castle, the left entrance of Desert Palace will
-    # lead to the left entrance of Hyrule Castle, and so on. However Hyrule Castle
-    # is not randomized on Standard World State.
+  # Multi-Entrance Dungeons (excluding Skull Woods)
+  # Each of the 4 entrances of Hyrule Castle, Desert Palace and Turtle Rock
+  # remain grouped together. Each group of 4 are randomized with each other
+  # using a static mapping. For example if Hyrule Castle and Desert Palace are
+  # randomized with each other, the main entrance of Desert Palace will lead to
+  # the main entrance of Hyrule Castle, the left entrance of Desert Palace will
+  # lead to the left entrance of Hyrule Castle, and so on. However Hyrule Castle
+  # is not randomized on Standard World State.
+  - group: multi_entrance_dungeons
     in:
       - # Hyrule Castle
-        - "Hyrule Castle - Main Entrance - In"
-        - "Hyrule Castle - Lobby - Exit"
-        - "Hyrule Castle - West Entrance - In"
-        - "Hyrule Castle - West - Exit"
-        - "Hyrule Castle - East Entrance - In"
-        - "Hyrule Castle - East - Exit"
-        - "Hyrule Castle - Agahnim's Tower Entrance - In"
-        - "Agahnims Tower - Entrance - Exit"
+        - - "Hyrule Castle - Main Entrance - In"
+          - "Hyrule Castle - Lobby - Exit"
+          - "Hyrule Castle - West Entrance - In"
+          - "Hyrule Castle - West - Exit"
+          - "Hyrule Castle - East Entrance - In"
+          - "Hyrule Castle - East - Exit"
+          - "Hyrule Castle - Agahnim's Tower Entrance - In"
+          - "Agahnims Tower - Entrance - Exit"
       - # Desert Palace
-        - "Desert Palace - Lobby - In"
-        - "Desert Palace - Main Room - Center - Exit"
-        - "Desert Palace - West - In"
-        - "Desert Palace - West - Exit"
-        - "Desert Palace - East - In"
-        - "Desert Palace - East - Exit"
-        - "Desert Palace - Back - In"
-        - "Desert Palace - Beemos 2 - Exit"
+        - - "Desert Palace - Lobby - In"
+          - "Desert Palace - Main Room - Center - Exit"
+          - "Desert Palace - West - In"
+          - "Desert Palace - West - Exit"
+          - "Desert Palace - East - In"
+          - "Desert Palace - East - Exit"
+          - "Desert Palace - Back - In"
+          - "Desert Palace - Beemos 2 - Exit"
       - # Turtle Rock
-        - "Turtle Rock - In"
-        - "Turtle Rock - Entrance - Exit"
-        - "Turtle Rock Outside Bridge East - In"
-        - "Turtle Rock - Big Chest Entrance - Exit"
-        - "Turtle Rock Outside Rest Area - In"
-        - "Turtle Rock - Eye Bridge - Bomb Door - Exit"
-        - "Turtle Rock Outside Bridge West - In"
-        - "Turtle Rock - Laser Entrance - Exit"
+        - - "Turtle Rock - In"
+          - "Turtle Rock - Entrance - Exit"
+          - "Turtle Rock Outside Bridge East - In"
+          - "Turtle Rock - Big Chest Entrance - Exit"
+          - "Turtle Rock Outside Rest Area - In"
+          - "Turtle Rock - Eye Bridge - Bomb Door - Exit"
+          - "Turtle Rock Outside Bridge West - In"
+          - "Turtle Rock - Laser Entrance - Exit"
     out:
       - # Hyrule Castle
-        - "Hyrule Castle - Lobby"
-        - "Hyrule Castle - Main Entrance - Out"
-        - "Hyrule Castle - West"
-        - "Hyrule Castle - West Entrance - Out"
-        - "Hyrule Castle - East"
-        - "Hyrule Castle - East Entrance - Out"
-        - "Agahnims Tower - Entrance"
-        - "Hyrule Castle - Agahnim's Tower Entrance - Out"
+        - - "Hyrule Castle - Lobby"
+          - "Hyrule Castle - Main Entrance - Out"
+          - "Hyrule Castle - West"
+          - "Hyrule Castle - West Entrance - Out"
+          - "Hyrule Castle - East"
+          - "Hyrule Castle - East Entrance - Out"
+          - "Agahnims Tower - Entrance"
+          - "Hyrule Castle - Agahnim's Tower Entrance - Out"
       - # Desert Palace
-        - "Desert Palace - Main Room - Center"
-        - "Desert Palace - Lobby - Out"
-        - "Desert Palace - West"
-        - "Desert Palace - West - Out"
-        - "Desert Palace - East"
-        - "Desert Palace - East - Out"
-        - "Desert Palace - Beemos 2"
-        - "Desert Palace - Back - Out"
+        - - "Desert Palace - Main Room - Center"
+          - "Desert Palace - Lobby - Out"
+          - "Desert Palace - West"
+          - "Desert Palace - West - Out"
+          - "Desert Palace - East"
+          - "Desert Palace - East - Out"
+          - "Desert Palace - Beemos 2"
+          - "Desert Palace - Back - Out"
       - # Turtle Rock
-        - "Turtle Rock - Entrance"
-        - "Turtle Rock - Out"
-        - "Turtle Rock - Big Chest Entrance"
-        - "Turtle Rock Outside Bridge East - Out"
-        - "Turtle Rock - Eye Bridge - Bomb Door"
-        - "Turtle Rock Outside Rest Area - Out"
-        - "Turtle Rock - Laser Entrance"
-        - "Turtle Rock Outside Bridge West - Out"
+        - - "Turtle Rock - Entrance"
+          - "Turtle Rock - Out"
+          - "Turtle Rock - Big Chest Entrance"
+          - "Turtle Rock Outside Bridge East - Out"
+          - "Turtle Rock - Eye Bridge - Bomb Door"
+          - "Turtle Rock Outside Rest Area - Out"
+          - "Turtle Rock - Laser Entrance"
+          - "Turtle Rock Outside Bridge West - Out"
 
-  - # Light World Death Mountain All entrances remain confined to the Light World
-    # Death Mountain overworld region and are randomized with each other. Note that
-    # the entrance to Death Mountain (via the cave where the Old Man is lost) is
-    # also not randomized.
+  # Light World Death Mountain All entrances remain confined to the Light World
+  # Death Mountain overworld region and are randomized with each other. Note that
+  # the entrance to Death Mountain (via the cave where the Old Man is lost) is
+  # also not randomized.
+  - group: light_world_death_mountain
     in:
       # east
-      - ["Spectacle Rock Cave Top - In", "Spectacle Rock Cave Top - Exit"]
-      - ["Spectacle Rock Cave Middle - In", "Spectacle Rock Cave Middle - Exit"]
-      - ["Spectacle Rock Cave Exit - In", "Spectacle Rock Cave Exit - Exit"]
-      - ["Old Man Home - In", "Old Man Home - Exit"]
-      - ["Old Man Home Circle - In", "Old Man Home Circle - Exit"]
-      - ["Old Man Maze - In", "Old Man Maze - Exit"]
+      - [["Spectacle Rock Cave Top - In", "Spectacle Rock Cave Top - Exit"]]
+      - [["Spectacle Rock Cave Middle - In", "Spectacle Rock Cave Middle - Exit"]]
+      - [["Spectacle Rock Cave Exit - In", "Spectacle Rock Cave Exit - Exit"]]
+      - [["Old Man Home - In", "Old Man Home - Exit"]]
+      - [["Old Man Home Circle - In", "Old Man Home Circle - Exit"]]
+      - [["Old Man Maze - In", "Old Man Maze - Exit"]]
       # west
-      - ["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right - Exit"]
-      - ["Mimic Cave Entrance - In", "Mimic Cave Entrance - Exit"]
-      - ["Paradox Cave - Middle - In", "Paradox Cave - Middle - Exit"]
-      - ["Paradox Cave - Bottom Entrance - In", "Paradox Cave - Bottom Entrance - Exit"]
-      - ["Spiral Cave Exit - In", "Spiral Cave Exit - Exit"]
-      - ["Fairy Pond Cave Entrance - In", "Fairy Pond Cave Entrance - Exit"]
-      - ["Fairy Ascension Cave - Bottom - In", "Fairy Ascension Cave - Bottom - Exit"]
-      - ["Spiral Cave Top - In", "Spiral Cave Top - Exit"]
-      - ["Paradox Cave - Top - In", "Paradox Cave - Top - Exit"]
+      - [["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right - Exit"]]
+      - [["Mimic Cave Entrance - In", "Mimic Cave Entrance - Exit"]]
+      - [["Paradox Cave - Middle - In", "Paradox Cave - Middle - Exit"]]
+      - [["Paradox Cave - Bottom Entrance - In", "Paradox Cave - Bottom Entrance - Exit"]]
+      - [["Spiral Cave Exit - In", "Spiral Cave Exit - Exit"]]
+      - [["Fairy Pond Cave Entrance - In", "Fairy Pond Cave Entrance - Exit"]]
+      - [["Fairy Ascension Cave - Bottom - In", "Fairy Ascension Cave - Bottom - Exit"]]
+      - [["Spiral Cave Top - In", "Spiral Cave Top - Exit"]]
+      - [["Paradox Cave - Top - In", "Paradox Cave - Top - Exit"]]
     out:
       # east
-      - ["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Out"]
-      - ["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Out"]
-      - ["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Out"]
-      - ["Old Man Home", "Old Man Home - Out"]
-      - ["Old Man Home Circle", "Old Man Home Circle - Out"]
-      - ["Old Man Maze", "Old Man Maze - Out"]
+      - [["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Out"]]
+      - [["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Out"]]
+      - [["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Out"]]
+      - [["Old Man Home", "Old Man Home - Out"]]
+      - [["Old Man Home Circle", "Old Man Home Circle - Out"]]
+      - [["Old Man Maze", "Old Man Maze - Out"]]
       # west
-      - ["Fairy Ascension Cave - Pits Right", "Fairy Ascension Cave - Pits Right - Out"]
-      - ["Mimic Cave Entrance", "Mimic Cave Entrance - Out"]
-      - ["Paradox Cave - Middle", "Paradox Cave - Middle - Out"]
-      - ["Paradox Cave - Bottom Entrance", "Paradox Cave - Bottom Entrance - Out"]
-      - ["Spiral Cave Exit", "Spiral Cave Exit - Out"]
-      - ["Fairy Pond Cave Entrance", "Fairy Pond Cave Entrance - Out"]
-      - ["Fairy Ascension Cave - Bottom", "Fairy Ascension Cave - Bottom - Out"]
-      - ["Spiral Cave Top", "Spiral Cave Top - Out"]
-      - ["Paradox Cave - Top", "Paradox Cave - Top - Out"]
+      - [["Fairy Ascension Cave - Pits Right", "Fairy Ascension Cave - Pits Right - Out"]]
+      - [["Mimic Cave Entrance", "Mimic Cave Entrance - Out"]]
+      - [["Paradox Cave - Middle", "Paradox Cave - Middle - Out"]]
+      - [["Paradox Cave - Bottom Entrance", "Paradox Cave - Bottom Entrance - Out"]]
+      - [["Spiral Cave Exit", "Spiral Cave Exit - Out"]]
+      - [["Fairy Pond Cave Entrance", "Fairy Pond Cave Entrance - Out"]]
+      - [["Fairy Ascension Cave - Bottom", "Fairy Ascension Cave - Bottom - Out"]]
+      - [["Spiral Cave Top", "Spiral Cave Top - Out"]]
+      - [["Paradox Cave - Top", "Paradox Cave - Top - Out"]]
 
-  - # Overworld Holes (excluding those in Skull Woods) All holes are grouped and
-    # randomized with each other. Holes and their associated cave entrance remain
-    # paired together. For example falling in a hole and exiting will take you to
-    # the overworld cave associated with that hole, regardless of which interior
-    # rooms the hole led to.
+  # Overworld Holes (excluding those in Skull Woods) All holes are grouped and
+  # randomized with each other. Holes and their associated cave entrance remain
+  # paired together. For example falling in a hole and exiting will take you to
+  # the overworld cave associated with that hole, regardless of which interior
+  # rooms the hole led to.
+  - group: overworld_holes
     in:
-      - ["Thief Hideout - Hole", "Thief Hideout - In", "Thief Hideout - Exit"]
-      - ["Sewers - Block Puzzle - Hole", "Sanctuary Hall - In", "Sanctuary Hall - Exit"]
-      - ["Lumberjacks Tree - Hole", "Lumberjacks Cave - In", "Lumberjacks Cave - Exit"]
-      - ["Drop Great Fairy - Hole", "Drop Great Fairy - In", "Drop Great Fairy Exit - Exit"]
-      - ["Kakariko Well - Hole", "Kakariko Well - In", "Kakariko Well - Exit"]
-      - ["Secret Passage Uncle - Hole", "Secret Passage Stairs - In", "Secret Passage Stairs - Exit"]
-      - ["Magic Bat - Hole", "Magic Bat - In", "Magic Bat Left - Exit"]
-      - ["Pyramid - Hole", "Pyramid Ganon Fail - In", "Ganon's Drop - Exit"]
+      - [["Thief Hideout - Hole", "Thief Hideout - In", "Thief Hideout - Exit"]]
+      - [["Sewers - Block Puzzle - Hole", "Sanctuary Hall - In", "Sanctuary Hall - Exit"]]
+      - [["Lumberjacks Tree - Hole", "Lumberjacks Cave - In", "Lumberjacks Cave - Exit"]]
+      - [["Drop Great Fairy - Hole", "Drop Great Fairy - In", "Drop Great Fairy Exit - Exit"]]
+      - [["Kakariko Well - Hole", "Kakariko Well - In", "Kakariko Well - Exit"]]
+      - [["Secret Passage Uncle - Hole", "Secret Passage Stairs - In", "Secret Passage Stairs - Exit"]]
+      - [["Magic Bat - Hole", "Magic Bat - In", "Magic Bat Left - Exit"]]
+      - [["Pyramid - Hole", "Pyramid Ganon Fail - In", "Ganon's Drop - Exit"]]
     out:
-      - ["Thief Hideout - Ledge", "Thief Hideout", "Thief Hideout - Out"]
-      - ["Sewers - Block Puzzle", "Sanctuary Hall", "Sanctuary Hall - Out"]
-      - ["Lumberjacks Cave Fairies", "Lumberjacks Cave", "Lumberjacks Cave - Out"]
-      - ["Drop Great Fairy Antechamber", "Drop Great Fairy Exit", "Drop Great Fairy - Out"]
-      - ["Kakariko Well", "Kakariko Well - Water", "Kakariko Well - Out"]
-      - ["Secret Passage Uncle", "Secret Passage Stairs", "Secret Passage Stairs - Out"]
-      - ["Magic Bat Entry", "Magic Bat Left", "Magic Bat - Out"]
-      - ["Ganon's Room", "Ganon's Drop", "Pyramid Ganon Fail - Out"]
+      - [["Thief Hideout - Ledge", "Thief Hideout", "Thief Hideout - Out"]]
+      - [["Sewers - Block Puzzle", "Sanctuary Hall", "Sanctuary Hall - Out"]]
+      - [["Lumberjacks Cave Fairies", "Lumberjacks Cave", "Lumberjacks Cave - Out"]]
+      - [["Drop Great Fairy Antechamber", "Drop Great Fairy Exit", "Drop Great Fairy - Out"]]
+      - [["Kakariko Well", "Kakariko Well - Water", "Kakariko Well - Out"]]
+      - [["Secret Passage Uncle", "Secret Passage Stairs", "Secret Passage Stairs - Out"]]
+      - [["Magic Bat Entry", "Magic Bat Left", "Magic Bat - Out"]]
+      - [["Ganon's Room", "Ganon's Drop", "Pyramid Ganon Fail - Out"]]
 
-# Multi-Entrance Caves All entrances are grouped and randomized with each other.
-# Locations that are originally spanned by two-entrance caves (e.g. Kakariko
-# Elder’s House) will remain connected to each other via a two-entrance
-# cave. This does not include any of Light World Death Mountain.
-multi:
-  in:
-    - ["Grandma's House Right - In", "Grandma's House Right - Exit", "Grandma's House Left - In", "Grandma's House Left - Exit"]
-    - ["Brothers House Left - In", "Brothers House Left - Exit", "Brothers House Right - In", "Brothers House Right - Exit"]
-    - ["Ice Cave - West - In", "Ice Cave - West - Exit", "Ice Cave - East - In", "Ice Cave - East - Exit"]
-    - ["Dark Floating Island - In", "Hookshot Cave Corner - Exit", "East Dark Death Mountain Summit Rock - In", "Hookshot Cave - Exit"]
-    - ["East Dark Death Mountain Summit Bunny - In", "Super Bunny Exit - Exit", "East Dark Death Mountain Running Man Bunny - In", "Super Bunny Entrance Bottom - Exit"]
-  out:
-    - ["Grandma's House Right", "Grandma's House Right - Out", "Grandma's House Left", "Grandma's House Left - Out"]
-    - ["Brothers House Left", "Brothers House Left - Out", "Brothers House Right", "Brothers House Right - Out"]
-    - ["Ice Cave - West", "Ice Cave - West - Out", "Ice Cave - East", "Ice Cave - East - Out"]
-    - ["Hookshot Cave Corner", "Dark Floating Island - Out", "Hookshot Cave", "East Dark Death Mountain Summit Rock - Out"]
-    - ["Super Bunny Exit", "East Dark Death Mountain Summit Bunny - Out", "Super Bunny Entrance Bottom", "East Dark Death Mountain Running Man Bunny - Out"]
+  # Single-Entrance Caves All entrances are grouped and randomized with each
+  # other. This does not include any of Light World Death Mountain. Example:
+  # houses.
+  - group: single_entrance_caves
+    in:
+      - [["High Stakes Chest Game - In", "Money Making Game - Exit"]]
+      - [["Lumberjacks House - In", "Lumberjacks House - Exit"]]
+      - [["Waterfall of Wishing - In", "Waterfall Fairy - Exit"]]
+      - [["Kakariko Fortune Teller - In", "Fortune Teller - Exit"]]
+      - [["Sanctuary Bonk Rocks - In", "Bonk Rocks - Exit"]]
+      - [["King's Tomb - In", "King's Tomb - Exit"]]
+      - [["Graveyard Cave - In", "Graveyard Cave - Exit"]]
+      - [["Witch's Hut - In", "Potion Shop - Exit"]]
+      - [["Blind's Hideout Upstairs - In", "Blind's Hideout Upstairs - Exit"]]
+      - [["West Snitch House - In", "West Snitch House - Exit"]]
+      - [["East Snitch House - In", "East Snitch House - Exit"]]
+      - [["Chicken Hut - In", "Chicken Hut - Exit"]]
+      - [["Sick Kid's House - In", "Sick Kid's House - Exit"]]
+      - [["Kakariko Village Bomb Hut - In", "Bomb Hut - Exit"]]
+      - [["Kakariko Village Bush House - In", "Bush House - Exit"]]
+      - [["Kakariko Shop - In", "Kakariko Shop - Exit"]]
+      - [["Tavern Back - In", "Tavern Back - Exit"]]
+      - [["Tavern Front - In", "Tavern Front - Exit"]]
+      - [["Sahasrahla's Hut - In", "Sahasrahla's Room - Exit"]]
+      - [["Blacksmith House - In", "Blacksmith House - Exit"]]
+      - [["Library - In", "Library - Entrance - Exit"]]
+      - [["Money Making Game Library - In", "Money Making Game Library - Exit"]]
+      - [["West Woods Fairy Pond - In", "West Woods Fairy Pond - Exit"]]
+      - [["South of Ruins Big Fairy - In", "South of Ruins Big Fairy - Exit"]]
+      - [["Eastern Ruins Fairy Cave - In", "Eastern Ruins Fairy Cave - Exit"]]
+      - [["Aginah's Cave - In", "Aginah's Cave - Exit"]]
+      - [["Checkerboard Cave - In", "Checkerboard Cave - Entrance - Exit"]]
+      - [["Cave 45 - In", "Cave 45 Right - Exit"]]
+      - [["Wetlands Big Fairy - In", "Wetlands Big Fairy - Exit"]]
+      - [["Lake Hylia Shop - In", "Lake Hylia Shop - Exit"]]
+      - [["Lake Hylia Fortune Teller - In", "Fortune Teller - Exit"]]
+      - [["Mini Moldorm Cave - In", "Mini Moldorm Cave Entrance - Exit"]]
+      - [["Pond of Happiness - In", "Pond of Happiness - Exit"]]
+      - [["Ice Cave - West - In", "Ice Cave - West - Exit"]]
+      - [["Ice Cave - East - In", "Ice Cave - East - Exit"]]
+      - [["Ice Cave Thief Hideout - In", "Ice Cave Thief Hideout - Exit"]]
+      - [["Desert Big Fairy - In", "Desert Big Fairy - Exit"]]
+      - [["Desert Thief Hideout - In", "Desert Thief Hideout - Exit"]]
+      - [["Floodgate - In", "Floodgate - Exit"]]
+      - [["Lumberjack Shop - In", "Lumberjack Shop - Exit"]]
+      - [["Spike Cave - In", "Spike Cave Entrance - Exit"]]
+      - [["East Dark Death Mountain Shop - In", "Dark Death Mountain Shop - Exit"]]
+      - [["North of Outcasts Psychic - In", "Fortune Teller Dark - Exit"]]
+      - [["Dark Sanctuary - In", "Dark Sanctuary - Exit"]]
+      - [["Dark World Northeast Shop - In", "Dark Northeast Shop - Exit"]]
+      - [["Chest Game - In", "Chest Game Room - Exit"]]
+      - [["Brewery - In", "Brewery Room - Exit"]]
+      - [["C House - In", "C-Shaped House C - Exit"]]
+      - [["Village of Outcasts Storefront - In", "Village Of Outcasts Shop - Exit"]]
+      - [["Outcasts Orchard Shop - In", "Outcasts Orchard Shop - Exit"]]
+      - [["Pyramid Fairy - In", "Pyramid Fairy - Exit"]]
+      - [["Bonzai Cave - In", "Broccoli House - Exit"]]
+      - [["Peg Cave - In", "Peg Cave - Exit"]]
+      - [["Arrow Game - In", "Arrow Game - Exit"]]
+      - [["West of Bomb Shoppe Fairy Pond - In", "Fairy Refill - Exit"]]
+      - [["Dark Lake Hylia River Bend Fairy - In", "South of POD Big Fairy - Exit"]]
+      - [["East Dark World Portal Cave - In", "Hint Giver Cave - Birdo - Exit"]]
+      - [["Mire Shed - In", "Mire Shed - Exit"]]
+      - [["Mire Big Fairy - In", "Mire Big Fairy - Exit"]]
+      - [["Mire Watto - In", "Watto Cave - Exit"]]
+      - [["Hype Cave - In", "Hype Cave Entrance - Exit"]]
+      - [["Dark Lake Hylia Shop - In", "Dark Lake Hylia Shop - Exit"]]
+      - [["Dark Shopping Mall Big Fairy - In", "Shopping Mall Big Fairy - Exit"]]
+      - [["Hint Giver Cave - In", "Hint Giver Cave - Glove - Exit"]]
+      - [["Dev Cave - In", "Dev Cave - Exit"]]
+    out:
+      - [["Money Making Game", "High Stakes Chest Game - Out"]]
+      - [["Lumberjacks House", "Lumberjacks House - Out"]]
+      - [["Waterfall Fairy", "Waterfall of Wishing - Out"]]
+      - [["Fortune Teller", "Kakariko Fortune Teller - Out"]]
+      - [["Bonk Rocks", "Sanctuary Bonk Rocks - Out"]]
+      - [["King's Tomb", "King's Tomb - Out"]]
+      - [["Graveyard Cave", "Graveyard Cave - Out"]]
+      - [["Potion Shop", "Witch's Hut - Out"]]
+      - [["Blind's Hideout Upstairs", "Blind's Hideout Upstairs - Out"]]
+      - [["West Snitch House", "West Snitch House - Out"]]
+      - [["East Snitch House", "East Snitch House - Out"]]
+      - [["Chicken Hut", "Chicken Hut - Out"]]
+      - [["Sick Kid's House", "Sick Kid's House - Out"]]
+      - [["Bomb Hut", "Kakariko Village Bomb Hut - Out"]]
+      - [["Bush House", "Kakariko Village Bush House - Out"]]
+      - [["Kakariko Shop", "Kakariko Shop - Out"]]
+      - [["Tavern Back", "Tavern Back - Out"]]
+      - [["Tavern Front", "Tavern Front - Out"]]
+      - [["Sahasrahla's Room", "Sahasrahla's Hut - Out"]]
+      - [["Blacksmith House", "Blacksmith House - Out"]]
+      - [["Library - Entrance", "Library - Out"]]
+      - [["Money Making Game Library", "Money Making Game Library - Out"]]
+      - [["West Woods Fairy Pond", "West Woods Fairy Pond - Out"]]
+      - [["South of Ruins Big Fairy", "South of Ruins Big Fairy - Out"]]
+      - [["Eastern Ruins Fairy Cave", "Eastern Ruins Fairy Cave - Out"]]
+      - [["Aginah's Cave", "Aginah's Cave - Out"]]
+      - [["Checkerboard Cave - Entrance", "Checkerboard Cave - Out"]]
+      - [["Cave 45 Right", "Cave 45 - Out"]]
+      - [["Wetlands Big Fairy", "Wetlands Big Fairy - Out"]]
+      - [["Lake Hylia Shop", "Lake Hylia Shop - Out"]]
+      - [["Fortune Teller", "Lake Hylia Fortune Teller - Out"]]
+      - [["Mini Moldorm Cave Entrance", "Mini Moldorm Cave - Out"]]
+      - [["Pond of Happiness", "Pond of Happiness - Out"]]
+      - [["Ice Cave - West", "Ice Cave - West - Out"]]
+      - [["Ice Cave - East", "Ice Cave - East - Out"]]
+      - [["Ice Cave Thief Hideout", "Ice Cave Thief Hideout - Out"]]
+      - [["Desert Big Fairy", "Desert Big Fairy - Out"]]
+      - [["Desert Thief Hideout", "Desert Thief Hideout - Out"]]
+      - [["Floodgate", "Floodgate - Out"]]
+      - [["Lumberjack Shop", "Lumberjack Shop - Out"]]
+      - [["Spike Cave Entrance", "Spike Cave - Out"]]
+      - [["Dark Death Mountain Shop", "East Dark Death Mountain Shop - Out"]]
+      - [["Fortune Teller Dark", "North of Outcasts Psychic - Out"]]
+      - [["Dark Sanctuary", "Dark Sanctuary - Out"]]
+      - [["Dark Northeast Shop", "Dark World Northeast Shop - Out"]]
+      - [["Chest Game Room", "Chest Game - Out"]]
+      - [["Brewery Room", "Brewery - Out"]]
+      - [["C-Shaped House C", "C House - Out"]]
+      - [["Village Of Outcasts Shop", "Village of Outcasts Storefront - Out"]]
+      - [["Outcasts Orchard Shop", "Outcasts Orchard Shop - Out"]]
+      - [["Pyramid Fairy", "Pyramid Fairy - Out"]]
+      - [["Broccoli House", "Bonzai Cave - Out"]]
+      - [["Peg Cave", "Peg Cave - Out"]]
+      - [["Arrow Game", "Arrow Game - Out"]]
+      - [["Fairy Refill", "West of Bomb Shoppe Fairy Pond - Out"]]
+      - [["South of POD Big Fairy", "Dark Lake Hylia River Bend Fairy - Out"]]
+      - [["Hint Giver Cave - Birdo", "East Dark World Portal Cave - Out"]]
+      - [["Mire Shed", "Mire Shed - Out"]]
+      - [["Mire Big Fairy", "Mire Big Fairy - Out"]]
+      - [["Watto Cave", "Mire Watto - Out"]]
+      - [["Hype Cave Entrance", "Hype Cave - Out"]]
+      - [["Dark Lake Hylia Shop", "Dark Lake Hylia Shop - Out"]]
+      - [["Shopping Mall Big Fairy", "Dark Shopping Mall Big Fairy - Out"]]
+      - [["Hint Giver Cave - Glove", "Hint Giver Cave - Out"]]
+      - [["Dev Cave", "Dev Cave - Out"]]
+
+  # Multi-Entrance Caves All entrances are grouped and randomized with each other.
+  # Locations that are originally spanned by two-entrance caves (e.g. Kakariko
+  # Elder’s House) will remain connected to each other via a two-entrance
+  # cave. This does not include any of Light World Death Mountain.
+  - group: multi_entrance_caves
+    in:
+      - [["Grandma's House Right - In", "Grandma's House Right - Exit"], ["Grandma's House Left - In", "Grandma's House Left - Exit"]]
+      - [["Brothers House Left - In", "Brothers House Left - Exit"], ["Brothers House Right - In", "Brothers House Right - Exit"]]
+      - [["Ice Cave - West - In", "Ice Cave - West - Exit"], ["Ice Cave - East - In", "Ice Cave - East - Exit"]]
+      - [["Dark Floating Island - In", "Hookshot Cave Corner - Exit"], ["East Dark Death Mountain Summit Rock - In", "Hookshot Cave - Exit"]]
+      - [["East Dark Death Mountain Summit Bunny - In", "Super Bunny Exit - Exit"], ["East Dark Death Mountain Running Man Bunny - In", "Super Bunny Entrance Bottom - Exit"]]
+    out:
+      - [["Grandma's House Right", "Grandma's House Right - Out"], ["Grandma's House Left", "Grandma's House Left - Out"]]
+      - [["Brothers House Left", "Brothers House Left - Out"], ["Brothers House Right", "Brothers House Right - Out"]]
+      - [["Ice Cave - West", "Ice Cave - West - Out"], ["Ice Cave - East", "Ice Cave - East - Out"]]
+      - [["Hookshot Cave Corner", "Dark Floating Island - Out"], ["Hookshot Cave", "East Dark Death Mountain Summit Rock - Out"]]
+      - [["Super Bunny Exit", "East Dark Death Mountain Summit Bunny - Out"], ["Super Bunny Entrance Bottom", "East Dark Death Mountain Running Man Bunny - Out"]]
