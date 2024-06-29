@@ -278,42 +278,42 @@ LightningLock: #LIGHTNING GATE
 BlueSwordGuard: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard01: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x01
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard02: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x02
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard03: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x03
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard05: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x05
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard13: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x13
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard15: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x15
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueSwordGuard1B: #BLUE GUARD
   bytes: [0x41]
   flags: Challenge
   subtype: 0x1B
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 BlueTaros: #BLUE TAROS
   bytes: [0x41]
   flags: Challenge
@@ -321,22 +321,22 @@ BlueTaros: #BLUE TAROS
 GreenSwordGuard: #GREEN GUARD
   bytes: [0x42]
   flags: Challenge
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 GreenSwordGuard01: #GREEN GUARD
   bytes: [0x42]
   flags: Challenge
   subtype: 0x01
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 GreenSwordGuard03: #GREEN GUARD
   bytes: [0x42]
   flags: Challenge
   subtype: 0x03
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 GreenSwordGuard1B: #GREEN GUARD
   bytes: [0x42]
   flags: Challenge
   subtype: 0x1B
-  sheets: [null, [0x49], [0x13], null]
+  sheets: [null, [0x49], null, null]
 RedTaros: #RED TAROS?
   bytes: [0x43]
   flags: Challenge

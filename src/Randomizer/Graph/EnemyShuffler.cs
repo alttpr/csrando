@@ -368,6 +368,255 @@ internal sealed class EnemyShuffler : IWorldModifier
         }
     }
 
+    private sealed class EnemySprite(Sprite sprite)
+    {
+        public Sprite Sprite { get; } = sprite;
+        public SheetSet Sheets { get; } = new SheetSet(sprite.Sheets);
+    }
+    private sealed class SheetSet(byte[]?[] sheets) : IEquatable<SheetSet>
+    {
+        private readonly byte[]?[] _sheets = sheets;
+
+        public SheetSet() : this(new byte[4][]) { }
+        public bool IsEmpty => _sheets.All(b => b == null);
+        public bool IsFull => _sheets.All(b => b != null);
+        public bool CanMergeWith(SheetSet other) => CanMergeWith(other._sheets);
+        public bool CanMergeWith(byte[]?[]? otherSheets)
+        {
+            if (otherSheets == null)
+                return true;
+
+            for (int idx = 0; idx < Math.Min(_sheets.Length, otherSheets.Length); idx++)
+            {
+                if (_sheets[idx] == null || otherSheets[idx] == null)
+                    continue;
+
+                if (!_sheets[idx]!.Intersect(otherSheets[idx]!).Any())
+                    return false;
+            }
+
+            return true;
+        }
+        public SheetSet Merge(SheetSet other)
+        {
+            var merged = new SheetSet([.. _sheets]);
+            merged.Merge(other._sheets);
+            return merged;
+        }
+        public void Merge(byte[]?[]? otherSheets)
+        {
+            if (otherSheets == null)
+                return;
+
+            for (int idx = 0; idx < Math.Min(_sheets.Length, otherSheets.Length); idx++)
+            {
+                if (otherSheets[idx] == null)
+                    continue;
+                if (_sheets[idx] == null)
+                {
+                    _sheets[idx] = otherSheets[idx];
+                    continue;
+                }
+
+                _sheets[idx] = _sheets[idx]!.Intersect(otherSheets[idx]!).ToArray();
+            }
+        }
+        public SheetSet Freeze(PRNG prng)
+        {
+            var finalSet = new byte[4][];
+            for (int i = 0; i < finalSet.Length; i++)
+            {
+                byte[] options = _sheets.ElementAtOrDefault(i) ?? [];
+                byte sheet = options.Length == 0 ? (byte)0 : prng.GetRandomElement(options);
+                finalSet[i] = [sheet];
+            }
+
+            return new(finalSet);
+        }
+        public IEnumerable<byte> Flatten()
+        {
+#if DEBUG
+            System.Diagnostics.Debug.Assert(_sheets is null || _sheets.Length is 0 or 4, "This SheetSet is not empty, but doesn't contain exactly 4 entries. Review initialization for errors.");
+            System.Diagnostics.Debug.Assert(_sheets?.Length != 4 || _sheets.All(b => b is null || b.Length == 1), "This SheetSet is not empty, but doesn't contain exactly 4 entries. Try Freezing it before use.");
+#endif
+            return _sheets?.SelectMany(b => b ?? []) ?? [];
+        }
+
+        public override int GetHashCode() => 0; // force Equals to be used, since the contents change over time.
+        public override bool Equals(object? obj) => Equals(obj as SheetSet);
+        public bool Equals(SheetSet? other)
+        {
+            if (other is null)
+                return false;
+            if (other._sheets is null)
+                return _sheets is null;
+            if (ReferenceEquals(other, this))
+                return true;
+            if (other._sheets.Length != _sheets.Length)
+                return false;
+            for (int i = 0; i < _sheets.Length; i++)
+            {
+                if (_sheets[i] is null && other._sheets[i] is null)
+                    continue;
+                if (_sheets[i] is null || other._sheets[i] is null)
+                    return false;
+                if (!_sheets[i]!.SequenceEqual(other._sheets[i]!))
+                    return false;
+            }
+            return true;
+        }
+    }
+
+    private static void UpdateSpriteSheets(World world, PRNG prng)
+    {
+        // a sprite sheet is a quarter of a square set. four of those are loaded at a time per screen.
+        // we do one of two possible things here:
+        // 1. enemies are already placed (including no enemization): read enemies, calculate sets for them.
+        // 2. enemies are not placed: pick random sheets, match other enemies to them to create sets, write enemies.
+        // the latter tries to maximize variability in placement (vs. placing enemies first then trying to match sets.)
+
+        var enemyVertices = world.GetLocationsOfType(VertexType.Mob);
+
+        var enemyRooms = enemyVertices.ToLookup(enemy => enemy.RoomId);
+        var enemyOWs = enemyVertices.ToLookup(enemy => enemy.Map);
+
+        var allEnemies = Sprite.All().Select(e => new EnemySprite(e)).ToArray();
+        // Set up sprite sheets
+        var sheetableSprites = allEnemies.Where(s => !s.Sheets.IsEmpty);
+        // sprites that can be moved to any room as they don't have any sheet
+        // requirements
+        var nosheetSprites = allEnemies.Where(
+            s => s.Sheets.IsEmpty
+                && !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)
+        ).ToHashSet();
+
+        var roomSheets = Enumerable.Range(0, 0x180).Select(_ => new SheetSet()).ToArray();
+        // this is 3 times light world (rain state, zelda rescued, aga down) plus 1 times dark world
+        var owSheets = Enumerable.Range(0, 4 * 0x40).Select(_ => new SheetSet()).ToArray();
+
+        if (world.Config.EnemyShuffle == EnemyShuffleOption.None)
+        {
+            for (int owIdx = 0; owIdx < owSheets.Length; owIdx++)
+            {
+                int mapId = owIdx % 0x40;
+                int state = owIdx / 0x40; // 0..2 is light world state, 3 is just a left-over for dark world (which should never be a state in data)
+                if (state == 3)
+                {
+                    // this is considered dark world, up the map id and just pick a random state (we don't really switch sprites between pre-aga/post-aga there)
+                    mapId += 0x40;
+                    state = 2;
+                }
+                var enemies = enemyOWs[mapId].Where(e => e.State is null || e.State.Contains(state)).ToArray();
+                if (enemies.Length == 0)
+                    continue;
+
+                foreach (var enemy in enemies)
+                {
+                    if (!owSheets[owIdx].CanMergeWith(enemy.Sprite?.Sheets))
+                        throw new Exception($"Enemy '{enemy.Sprite?.Name}' does not fit on map 0x{mapId:x02}");
+
+                    owSheets[owIdx].Merge(enemy.Sprite?.Sheets);
+                }
+            }
+            for (int roomId = 0; roomId < roomSheets.Length; roomId++)
+            {
+                if (!enemyRooms[roomId].Any())
+                    continue;
+
+                foreach (var enemy in enemyRooms[roomId])
+                {
+                    if (!roomSheets[roomId].CanMergeWith(enemy.Sprite?.Sheets))
+                        throw new Exception($"Enemy '{enemy.Sprite?.Name}' does not fit in room 0x{roomId:x04}");
+
+                    roomSheets[roomId].Merge(enemy.Sprite?.Sheets);
+                }
+            }
+        }
+        else
+        {
+            // FIXME: randomize sprites:
+            // 1. place sprites that must not move from the room
+            // 2. build a list of suitable sprites based on what the room currently has in the sheet set
+            // 3. pick possible enemies from that list
+        }
+
+        // sprite sheets have 3 major locations:
+        // 1. underworld:
+        //    - vanilla room headers (room pointer tables plus room data, OAM and sprites in the room) 
+        //    - randomizer room headers (sprite sheet)
+        // 2. overworld:
+        //    - vanilla map headers (map pointer tables per state plus map data, sprites on the map)
+        //    - vanilla sprite sets (table, 1 sheet set per map)
+        // 3. sheet set table (4 sheets each, referenced by the other two)
+        //
+        // based on room/map sprites, matching sheets need to be loaded.
+        // 4 sheets are grouped into a sheet set and referenced by the room/map.
+        //
+        // to get there, we'll build a matching sheet set per room/map,
+        // then find unique ones and write them to the set table.
+        // for every usage, we refer to an entry in this table.
+
+        // attempt to consolidate sheets first. not every sheet uses every slot, so we can combine those to save space.
+        bool mergedSomething = true;
+        while (mergedSomething)
+        {
+            mergedSomething = false;
+            for (int i = 0; i < roomSheets.Length; i++)
+            {
+                var thisSheet = roomSheets[i];
+                if (thisSheet.IsEmpty || thisSheet.IsFull)
+                    continue;
+                var matchingSheets = roomSheets.Where(s => !s.IsEmpty && s != thisSheet && !s.Equals(thisSheet) && s.CanMergeWith(thisSheet)).ToArray();
+                if (matchingSheets.Length > 0)
+                {
+                    var mergeThat = prng.GetRandomElement(matchingSheets);
+                    foreach (var (index, _) in roomSheets.Indexed(s => s.Equals(thisSheet) || s.Equals(mergeThat)))
+                        roomSheets[index] = thisSheet.Merge(mergeThat);
+                    mergedSomething = true;
+                }
+            }
+        }
+
+        // freeze the remaining values to lock in slots that still have choices left.
+        SheetSet[] overworldSheets = owSheets.Select(s => s.Freeze(prng)).ToArray();
+        SheetSet[] underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
+
+        // build a list of unique sheet sets. overworld first, since underworld is stored as sheet-0x40.
+        // this doesn't fully get us over 0x40 for sheets that fit in both, but it helps a little with duplication later.
+        var uniqueSheets = overworldSheets.Except(underworldSheets).Distinct().ToList();
+        uniqueSheets.AddRange(underworldSheets.Except(uniqueSheets).Distinct());
+
+        // grab indices for the room/map headers from that set.
+        byte[] roomSheetBytes = underworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
+        byte[] mapSheetBytes = overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
+
+        for (int i = 0; i < roomSheetBytes.Length; i++)
+        {
+            // underworld: make sure our IDs are above 0x40. if not, just add duplicates at the end.
+            // chances are we have at least 0x40 in the list already, and shouldn't have to worry about filling up.
+            if (roomSheetBytes[i] < 0x40)
+                roomSheetBytes[i] = (byte)uniqueSheets.LastIndexOf(underworldSheets[i]);
+            if (roomSheetBytes[i] < 0x40)
+            {
+                do
+                {
+                    uniqueSheets.Add(uniqueSheets[roomSheetBytes[i]]);
+                } while (uniqueSheets.Count < 0x40);
+                roomSheetBytes[i] = (byte)uniqueSheets.LastIndexOf(underworldSheets[i]);
+            }
+
+            roomSheetBytes[i] -= 0x40;
+        }
+
+        // flatten at the end, since this is a contiguous table in ROM
+        byte[] flatSheetSets = uniqueSheets.SelectMany(s => s.Flatten()).ToArray();
+
+        world.SpriteSheets = (
+            Underworld: roomSheetBytes,
+            Overworld: mapSheetBytes,
+            Sets: flatSheetSets
+        );
+    }
     // this dictionary forces certain sheets onto certain maps,
     // which is required for those screens to work.
     // TODO: remove this and use the same alg for UW enemies
@@ -383,7 +632,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         [0x4F] = [null, null, [0x18], null],
         [0x5E] = [null, null, null, [0x19]],
     };
-    private static void UpdateSpriteSheets(World world, PRNG prng)
+    private static void UpdateSpriteSheetsPHP(World world, PRNG prng)
     {
         var enemyVertices = world.GetLocationsOfType(VertexType.Mob);
 
