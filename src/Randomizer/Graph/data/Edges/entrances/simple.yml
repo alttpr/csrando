@@ -335,12 +335,10 @@ connections:
     in:
       - [["Grandma's House Right - In", "Grandma's House Right - Exit"], ["Grandma's House Left - In", "Grandma's House Left - Exit"]]
       - [["Brothers House Left - In", "Brothers House Left - Exit"], ["Brothers House Right - In", "Brothers House Right - Exit"]]
-      - [["Ice Cave - West - In", "Ice Cave - West - Exit"], ["Ice Cave - East - In", "Ice Cave - East - Exit"]]
       - [["Dark Floating Island - In", "Hookshot Cave Corner - Exit"], ["East Dark Death Mountain Summit Rock - In", "Hookshot Cave - Exit"]]
       - [["East Dark Death Mountain Summit Bunny - In", "Super Bunny Exit - Exit"], ["East Dark Death Mountain Running Man Bunny - In", "Super Bunny Entrance Bottom - Exit"]]
     out:
       - [["Grandma's House Right", "Grandma's House Right - Out"], ["Grandma's House Left", "Grandma's House Left - Out"]]
       - [["Brothers House Left", "Brothers House Left - Out"], ["Brothers House Right", "Brothers House Right - Out"]]
-      - [["Ice Cave - West", "Ice Cave - West - Out"], ["Ice Cave - East", "Ice Cave - East - Out"]]
       - [["Hookshot Cave Corner", "Dark Floating Island - Out"], ["Hookshot Cave", "East Dark Death Mountain Summit Rock - Out"]]
       - [["Super Bunny Exit", "East Dark Death Mountain Summit Bunny - Out"], ["Super Bunny Entrance Bottom", "East Dark Death Mountain Running Man Bunny - Out"]]
