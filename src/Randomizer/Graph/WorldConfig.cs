@@ -39,7 +39,7 @@ public class WorldConfig
             _crystalsTower = prng.GetRandomElement(CrystalsTowerChoices);
     }
 
-    public ushort TriforcePieces { get; set; } = 50;
+    public ushort TriforcePieces { get; set; } = 100;
 
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 
@@ -99,7 +99,7 @@ public class WorldConfig
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.None;
-    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
+    public ushort GoalRequiredCount { get; init; } = 66; // default 30/50 triforce pieces
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
     public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;

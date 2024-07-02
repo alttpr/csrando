@@ -487,6 +487,7 @@ internal class SMJsonReader
 
                 foreach (var strat in linkStrats)
                 {
+                    // TODO: This should be mostly safe in a vanilla world to skip for now, but this needs proper handling
                     if (strat.EntranceCondition != null)
                     {
                         if (strat.EntranceCondition is not EntranceCondition.ComeInNormally &&

@@ -1,0 +1,49 @@
+﻿@typeparam TEnum
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+
+<div class="form-group">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="@Label-label">@Label</span>
+        </div>
+        <select id="@DropdownId" class="form-control form-select" @onchange="OnValueChanged">
+            @foreach (var value in GetEnumValues())
+            {
+                <option value="@value">@GetEnumDisplayName(value)</option>
+            }
+        </select>
+    </div>
+</div>
+
+@code {
+    private string DropdownId = Guid.NewGuid().ToString();
+
+    [Parameter]
+    public TEnum SelectedValue { get; set; }
+
+    [Parameter]
+    public EventCallback<TEnum> SelectedValueChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    private IEnumerable<TEnum> GetEnumValues()
+    {
+        return Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+    }
+
+    private string GetEnumDisplayName(TEnum value)
+    {
+        var fieldInfo = value.GetType().GetField(value.ToString());
+        var descriptionAttributes = (DisplayAttribute[])fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false);
+
+        return descriptionAttributes.Length > 0 ? descriptionAttributes[0].Name : value.ToString();
+    }
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        SelectedValue = (TEnum)Enum.Parse(typeof(TEnum), e.Value.ToString());
+        await SelectedValueChanged.InvokeAsync(SelectedValue);
+    }
+}

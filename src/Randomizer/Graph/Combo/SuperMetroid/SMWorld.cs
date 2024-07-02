@@ -604,7 +604,15 @@ internal class SMWorld
             "canShinechargeMovement",
             "canUseSpeedEchoes",
             "canAwakenZebes",
-            "canCarefulJump"
+            "canCarefulJump",
+            "canDisableEquipment",
+            "canDownGrab",
+            "canTrivialMidAirMorph",
+            "canMidAirMorph",
+            "canConsecutiveWalljump",
+            "canJumpIntoIBJ",
+            "canBombAboveIBJ",
+            "canPseudoScrew",
         ];
 
         if (!allowedTechs.Contains(tech.Name))
