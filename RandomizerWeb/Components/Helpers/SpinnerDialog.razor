@@ -1,0 +1,23 @@
+﻿@namespace RandomizerWeb.Components.Helpers
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+}
+
+@if (IsVisible)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Please wait...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

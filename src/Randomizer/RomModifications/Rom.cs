@@ -11,21 +11,24 @@ public sealed class Rom : IDisposable
 {
     private const int RomSize = 8 * 1024 * 1024;
 
-    private readonly string _tempRom;
-    private readonly FileStream _rom;
+    //private readonly string _tempRom;
+    //private readonly Stream _rom;
     private readonly Text _text;
     private readonly Credits _credits;
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(string baseRomPath, string language)
-    {
-        if (!File.Exists(baseRomPath))
-            throw new FileNotFoundException("Could not load base ROM file.", baseRomPath);
+    private readonly Dictionary<int, byte[]> _patchData = new();
 
-        _tempRom = Path.GetTempFileName();
-        File.Copy(baseRomPath, _tempRom, overwrite: true);
-        _rom = new FileStream(_tempRom, FileMode.Open, FileAccess.ReadWrite, FileShare.Read, bufferSize: 32 * 1024, FileOptions.RandomAccess | FileOptions.DeleteOnClose);
+
+    public Rom(string language)
+    {
+        //if (!File.Exists(baseRomPath))
+        //    throw new FileNotFoundException("Could not load base ROM file.", baseRomPath);
+
+        //_tempRom = Path.GetTempFileName();
+        //File.Copy(baseRomPath, _tempRom, overwrite: true);
+        //_rom = new FileStream(_tempRom, FileMode.Open, FileAccess.ReadWrite, FileShare.Read, bufferSize: 32 * 1024, FileOptions.RandomAccess | FileOptions.DeleteOnClose);
         InitialSram = new();
         _text = new(language);
         _text.RemoveUnwanted();
@@ -34,50 +37,50 @@ public sealed class Rom : IDisposable
 
     /// <summary>resize ROM to a given size</summary>
     /// <param name="size">number of bytes the ROM should be</param>
-    public void Resize(int size = RomSize) => _rom.SetLength(size);
+    //public void Resize(int size = RomSize) => _rom.SetLength(size);
 
-    public void ApplyBasePatch(FileInfo baseBPS)
-    {
-        var patcher = new BpsPatch(File.ReadAllBytes(baseBPS.FullName));
-        _rom.Seek(0, SeekOrigin.Begin);
-        Span<byte> oldRom = new byte[_rom.Length];
-        _rom.ReadExactly(oldRom);
-        Span<byte> newRom = patcher.Apply(oldRom.ToArray());
-        _rom.Seek(0, SeekOrigin.Begin);
-        _rom.Write(newRom);
-    }
+    //public void ApplyBasePatch(FileInfo baseBPS)
+    //{
+    //    var patcher = new BpsPatch(File.ReadAllBytes(baseBPS.FullName));
+    //    _rom.Seek(0, SeekOrigin.Begin);
+    //    Span<byte> oldRom = new byte[_rom.Length];
+    //    _rom.ReadExactly(oldRom);
+    //    Span<byte> newRom = patcher.Apply(oldRom.ToArray());
+    //    _rom.Seek(0, SeekOrigin.Begin);
+    //    _rom.Write(newRom);
+    //}
 
     /// <summary>Update the ROM's checksum to be proper</summary>
     // TODO: this checksum isn't what emulators expect, but fortunately they ignore it.
     public void UpdateChecksum()
     {
-        _rom.Seek(0, SeekOrigin.Begin);
+        //_rom.Seek(0, SeekOrigin.Begin);
 
-        int sum = 0x1FE;
-        Span<byte> block = stackalloc byte[1024];
-        for (int i = 0; i < _rom.Length; i += block.Length)
-        {
-            int bytesRead = _rom.Read(block);
-            if (bytesRead == 0)
-                throw new Exception("Could not read block.");
+        //int sum = 0x1FE;
+        //Span<byte> block = stackalloc byte[1024];
+        //for (int i = 0; i < _rom.Length; i += block.Length)
+        //{
+        //    int bytesRead = _rom.Read(block);
+        //    if (bytesRead == 0)
+        //        throw new Exception("Could not read block.");
 
-            for (int j = 0; j < bytesRead; ++j)
-            {
-                // this skips checksum/inverse in LoROM; HiROM has those at 0xFFDC - 0xFFDF
-                // during calculation, they assume 0x0000 and 0xFFFF (which is the initial 0x1FE sum)
-                if (j + i >= 0x7FDC && j + i < 0x7FE0)
-                    continue;
-                sum += block[j];
-            }
-        }
+        //    for (int j = 0; j < bytesRead; ++j)
+        //    {
+        //        // this skips checksum/inverse in LoROM; HiROM has those at 0xFFDC - 0xFFDF
+        //        // during calculation, they assume 0x0000 and 0xFFFF (which is the initial 0x1FE sum)
+        //        if (j + i >= 0x7FDC && j + i < 0x7FE0)
+        //            continue;
+        //        sum += block[j];
+        //    }
+        //}
 
-        ushort checksum = (ushort)(sum & 0xFFFF);
-        ushort inverse = (ushort)(checksum ^ 0xFFFF);
+        //ushort checksum = (ushort)(sum & 0xFFFF);
+        //ushort inverse = (ushort)(checksum ^ 0xFFFF);
 
-        SpanWriter data = stackalloc byte[4];
-        data.WriteUInt16LittleEndian(inverse);
-        data.WriteUInt16LittleEndian(checksum);
-        Write(0x7FDC, data.Span);
+        //SpanWriter data = stackalloc byte[4];
+        //data.WriteUInt16LittleEndian(inverse);
+        //data.WriteUInt16LittleEndian(checksum);
+        //Write(0x7FDC, data.Span);
     }
 
     /// <summary>Write subsitutions</summary>
@@ -1623,14 +1626,15 @@ public sealed class Rom : IDisposable
 
     /// <summary>Save the changes to this output file</summary>
     /// <param name="outputLocation">location on the filesystem to write the new ROM.</param>
-    public bool Save(string outputLocation)
+    public Dictionary<int, byte[]> Save()
     {
-        try
-        {
-            File.Copy(_tempRom, outputLocation, overwrite: true);
-            return true;
-        }
-        catch { return false; }
+        return _patchData;
+        //try
+        //{
+        //    File.Copy(_tempRom, outputLocation, overwrite: true);
+        //    return true;
+        //}
+        //catch { return false; }
     }
 
     public void WriteSprite(Vertex location, Sprite? spriteToWrite = null)
@@ -1976,8 +1980,11 @@ public sealed class Rom : IDisposable
     /// <param name="data">Data to write.</param>
     private void Write(Address address, in ReadOnlySpan<byte> data, int offset = 0x400000)
     {
-        _rom.Seek(address.Value + offset, SeekOrigin.Begin);
-        _rom.Write(data);
+        //_rom.Seek(address.Value + offset, SeekOrigin.Begin);
+        //_rom.Write(data);
+
+        _patchData.Add(address.Value + offset, data.ToArray());
+
     }
 
     /// <summary>
@@ -1987,15 +1994,21 @@ public sealed class Rom : IDisposable
     /// <param name="length">Number of bytes to read.</param>
     private byte[] Read(Address address, int length)
     {
-        _rom.Seek(address.Value, SeekOrigin.Begin);
-        var data = new byte[length];
-        _rom.Read(data);
-        return data;
+        //_rom.Seek(address.Value, SeekOrigin.Begin);
+        //var data = new byte[length];
+        //_rom.Read(data);
+        //return data;
+
+        // Check if patchdata contains the address
+        if (_patchData.TryGetValue(address.Value, out var data))
+            return data;
+        else
+            throw new Exception("Address not found in patch data");
     }
 
     public void Dispose()
     {
-        _rom.Dispose();
+        //_rom.Dispose();
     }
 
     private readonly struct Address

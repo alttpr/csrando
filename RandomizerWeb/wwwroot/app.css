@@ -51,6 +51,19 @@ h1:focus {
 }
 
 .settings-container {
-    width: 60%;
+    width: 66%;
     margin: 0 auto;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+}
+
+.modal {
+    z-index: 1050;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
 }

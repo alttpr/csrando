@@ -1,27 +1,53 @@
 ﻿namespace Randomizer.RomModifications;
 
 using Randomizer.Graph;
+using System.Net.NetworkInformation;
+using System.Reflection;
 
 public static class RomWriter
 {
-    public static void Write(Randomizer randomizer, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
+    public static byte[] GetBasePatch()
     {
+        // Open "quad.bps" from the embedded resources and return it as a byte array.
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream("Randomizer.quad.bps");
+        if (stream is null)
+            throw new InvalidOperationException("Could not find embedded resource 'quad.bps'");
+
+        using var reader = new BinaryReader(stream);
+        return reader.ReadBytes((int)stream.Length);
+    }
+
+    public static string GetFilenameString(int seed)
+    {
+        string commitHash = ThisAssembly.Git.Commit;
+        Version version = Assembly.GetEntryAssembly()!.GetName().Version!;
+        return @$"QuadRando-v{version.Revision}b-#{commitHash}-{seed:X08}.sfc";
+    }
+
+    public static List<Dictionary<int, byte[]>> Write(Randomizer randomizer, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
+    {
+        var results = new List<Dictionary<int, byte[]>>();
         foreach (var (i, world) in randomizer.Worlds.Select((world, index) => (index + 1, world)))
-            WriteForWorld(world, baseRom, baseBPS, outputDirectory, randomizer.PRNG, randomizer.Worlds.Length > 1 ? $"_W{i}" : null);
+        {
+            results.Add(WriteForWorld(world, baseRom, baseBPS, outputDirectory, randomizer.PRNG, randomizer.Worlds.Length > 1 ? $"_W{i}" : null));
+        }
+
+        return results;
     }
 
     private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
-    public static void WriteForWorld(World world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
+    public static Dictionary<int, byte[]> WriteForWorld(World world, FileInfo? baseRom, FileInfo? baseBPS, DirectoryInfo? outputDirectory, PRNG prng, string? worldSuffix = null)
     {
-        using var rom = new Rom(baseRom.FullName, world.Config.Language);
+        using var rom = new Rom(world.Config.Language);
         // TODO: check hash? do we need that?
 
         // assume we either have a vanilla rom and a BPS, or an already pre-patched base rom.
-        if (baseBPS != null)
-        {
-            rom.Resize();
-            rom.ApplyBasePatch(baseBPS);
-        }
+        //if (baseBPS != null)
+        //{
+        //    rom.Resize();
+        //    rom.ApplyBasePatch(baseBPS);
+        //}
 
         var heartColor = world.Config.HeartColor; //option('heartcolor')
         if (heartColor == HeartColorOption.Random)
@@ -43,11 +69,12 @@ public static class RomWriter
         rom.WriteComboVersionStrings(prng);
         rom.UpdateChecksum(); 
 
-        outputDirectory.Create();
-        string outputFile = Path.Combine(
-            outputDirectory.FullName,
-            $"alttpr_{world.Config.Glitches}_{world.Config.State}_{world.Config.Goal}_{prng.Seed:x08}{worldSuffix}.sfc");
-        rom.Save(outputFile);
+        //outputDirectory.Create();
+        //string outputFile = Path.Combine(
+        //    outputDirectory.FullName,
+        //    $"alttpr_{world.Config.Glitches}_{world.Config.State}_{world.Config.Goal}_{prng.Seed:x08}{worldSuffix}.sfc");
+        
+        return rom.Save();
     }
     private static void WriteWorld(World world, Rom rom, PRNG prng)
     {

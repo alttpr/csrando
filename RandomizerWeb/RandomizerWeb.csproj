@@ -6,8 +6,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<RuntimeIdentifiers>win-x64;osx-x64;linux-x64</RuntimeIdentifiers>
+	</PropertyGroup>
+
+	<ItemGroup>
+    <Content Remove="Components\Pages\SpinnerDialog.razor" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\src\Randomizer\Randomizer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\SpinnerDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\SpinnerDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Pages\SpinnerDialog.razor" />
   </ItemGroup>
 
 </Project>

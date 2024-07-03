@@ -1,34 +1,39 @@
 ﻿@page "/configure"
 @rendermode InteractiveServer
 @using RandomizerWeb.Components.Helpers
-@using Randomizer.Graph
+@using RandomizerWeb.Components.Components
+@using System.Runtime.InteropServices
+
+@using static Randomizer.Graph.GoalOption
+@using static Randomizer.Graph.StateOption
+@using static Randomizer.Graph.AccessibilityOption
+
 
 <h3>Create new game</h3>
 
-<h4>Settings</h4>
-<div class="container settings-container mt-4">
-    
+<div class="container settings-container mt-4">    
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="seedLabel">Seed</span>
+                        <span class="input-group-text" id="seedLabel">Seed (0 = Random)</span>
                     </div>
                     <input type="number" id="seed" class="form-control" @bind="@Seed" aria-describedby="seedLabel" />
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <EnumDropdown TEnum="GoalOption" @bind-SelectedValue="@Goal" Label="Goal" />
+            <EnumDropdown TEnum="Randomizer.Graph.GoalOption" @bind-SelectedValue="@Goal" Label="Goal" Default=Ganon Deny=[Pedestal,FastGanon,Trifecta,Dungeons] />
         </div>
     </div>
+
     <div class="row mt-2">
         <div class="col-md-6">
-            <EnumDropdown TEnum="StateOption" @bind-SelectedValue="@State" Label="State" />
+            <EnumDropdown TEnum="Randomizer.Graph.StateOption" @bind-SelectedValue="@State" Label="State" Default=Open Deny=[Retro,Standard,Inverted] />
         </div>
         <div class="col-md-6">
-            <EnumDropdown TEnum="AccessibilityOption" @bind-SelectedValue="@Accessibility" Label="Accessibility" />
+            <EnumDropdown TEnum="Randomizer.Graph.AccessibilityOption" @bind-SelectedValue="@Accessibility" Label="Accessibility" Default=Items Deny=[None,Locations] />
         </div>
     </div>
 
@@ -39,27 +44,49 @@
     </div>
 </div>
 
+<SpinnerDialog IsVisible="isLoading" />
 
-
-
+<Seed Rando="@Rando" />
 
 @code 
 {
     private int Seed { get; set; }
-    private GoalOption Goal { get; set; }
-    private StateOption State { get; set; }
-    private AccessibilityOption Accessibility { get; set; }
+    private Randomizer.Graph.GoalOption Goal { get; set; }
+    private Randomizer.Graph.StateOption State { get; set; }
+    private Randomizer.Graph.AccessibilityOption Accessibility { get; set; }
+    private Randomizer.Graph.Randomizer? Rando { get; set; }
 
-    private void GenerateGame()
+    private bool isLoading = false;
+
+    private async void GenerateGame()
     {
-        var worldConfig = new WorldConfig() 
+        isLoading = true;
+        StateHasChanged();
+        await Task.Yield();
+
+        if (Seed == 0)
+            Seed = new Random().Next(Int32.MinValue, Int32.MaxValue);
+
+        var worldConfig = new Randomizer.Graph.WorldConfig()
             {
                 Goal = Goal,
                 State = State,
                 Accessibility = Accessibility
             };
 
-        var randomizer = new Randomizer([worldConfig], Seed);
+        // Set this if we're running as a published app
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            Randomizer.Graph.YamlReader.DataRoot = "/app/Graph/data";
+        }
+        
+        var randomizer = new Randomizer.Graph.Randomizer([worldConfig], Seed);
         randomizer.Randomize();
+
+        Rando = randomizer;
+
+        isLoading = false;
+        StateHasChanged();
+
     }
 }

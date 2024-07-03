@@ -1,0 +1,64 @@
+﻿@namespace RandomizerWeb.Components.Components
+@using System.IO.Hashing
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@Game</h5>
+            <div class="form-group">                
+                <label for="romFile">@FileName</label>
+                <InputFile class="form-control-file" id="romFile" accept=".sfc, .smc, .nes" OnChange="HandleFileUpload" />
+            </div>
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3" role="alert">
+                    @ErrorMessage
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string ErrorMessage { get; set; }
+
+    [Parameter]
+    public string Game { get; set; }
+
+    [Parameter]
+    public string FileName { get; set; }
+
+    [Parameter]
+    public string Hash { get; set; }
+
+    [Parameter]
+    public EventCallback<(string, byte[])> OnFileUploaded { get; set; }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.GetMultipleFiles().FirstOrDefault();
+
+        if (file == null)
+        {
+            ErrorMessage = "No file selected";
+            return;
+        }
+
+        var fileContent = new StreamContent(file.OpenReadStream(file.Size));
+        var fileData = await fileContent.ReadAsByteArrayAsync();
+
+        var fileHash = Convert.ToHexString(System.Security.Cryptography.SHA1.HashData(fileData)).ToLower();
+        var expectedHash = Hash.ToLower();
+
+        if (fileHash != expectedHash)
+        {
+            ErrorMessage = $"The selected ROM file has an incorrect SHA-1 checksum. Expected: {expectedHash}, Got: {fileHash}. Make sure you have selected ROM for the correct game.";
+            return;
+        } else {
+            ErrorMessage = string.Empty;
+        }
+
+        await OnFileUploaded.InvokeAsync((Game, fileData));
+    }
+}

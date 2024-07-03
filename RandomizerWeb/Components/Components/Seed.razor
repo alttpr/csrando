@@ -1,0 +1,116 @@
+﻿@namespace RandomizerWeb.Components.Components
+@rendermode InteractiveServer
+@inject IndexedDbAccessor IndexedDbAccessor
+@inject RomPatcher RomPatcher
+
+
+@* @if (Rando != null) {
+    <h3>Seed</h3>
+
+    <div class="container settings-container mt-4">
+        <span>Seed: @Rando.PRNG.Seed</span>
+    </div>
+
+
+} *@
+
+@if (doneLoading)
+{
+    @if (ROMs.Any(r => r.Data == null))
+    {
+        <div class="card mt-4">
+            <div class="card-body pb-4">
+                <h5 class="alert alert-warning card-title mb-4">Game ROMs are missing</h5>
+                @foreach (var rom in ROMs)
+                {
+                    @if (rom.Data == null)
+                    {
+                        <RomUploader OnFileUploaded="HandleFile" Game="@rom.Game" FileName="@rom.FileName" Hash="@rom.Hash" />
+                    } else
+                    {
+                        <div class="alert alert-success">ROM for @rom.Game already selected.</div>
+                    }
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (Rando != null)
+        {
+            <div class="card card-body mt-4 mx-4">
+                <h5 class="card-title">Seed information</h5>
+                 <div class="row">
+                    <div class="col-md-6">Seed: @Rando.PRNG.Seed</div>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary" @onclick="DownloadGame">Download randomized game</button>
+                </div>
+            </div>
+        }
+    }
+}
+
+
+@code {
+    private record RomRecord(int Id, string Game, string FileName, string Hash, byte[]? Data);
+
+    [Parameter]
+    public Randomizer.Graph.Randomizer? Rando { get; set; }
+    private List<RomRecord> ROMs { get; set; } = [
+        new RomRecord(1, "Super Metroid", "Super Metroid (Japan, USA) (En,Ja).sfc", "da957f0d63d14cb441d215462904c4fa8519c613", null),
+    new RomRecord(2, "A Link to the Past", "Zelda no Densetsu - Kamigami no Triforce (Japan).sfc", "e7e852f0159ce612e3911164878a9b08b3cb9060", null),
+    new RomRecord(3, "Metroid 1", "Metroid (U).nes", "166a5b1344b17f98b6b18794094f745f8a7435b8", null),
+    new RomRecord(4, "Zelda 1", "Legend of Zelda, The (U) (PRG 0).nes", "dab79c84934f9aa5db4e7dad390e5d0c12443fa2", null),
+    ];
+
+    private bool doneLoading = false;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await IndexedDbAccessor.InitializeAsync();
+            await LoadROM();
+            doneLoading = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task DownloadGame()
+    {
+        // Get the bps base patch
+        var bpsPatch = Randomizer.RomModifications.RomWriter.GetBasePatch();
+        var randoChanges = Randomizer.RomModifications.RomWriter.WriteForWorld(Rando!.Worlds[0], null, null, null, Rando!.PRNG, null);
+        var success = await RomPatcher.PatchRomAsync(Randomizer.RomModifications.RomWriter.GetFilenameString(Rando!.PRNG.Seed), bpsPatch, randoChanges);
+    }
+
+    private async Task LoadROM()
+    {
+        foreach (var rom in ROMs.ToList())
+        {
+            // Check if the ROM exists in IndexedDB
+            var romUploaded = await IndexedDbAccessor.ExistsValueAsync<RomRecord>("Roms", rom.Id);
+            if(romUploaded)
+            {
+                var index = ROMs.FindIndex(r => r.Game == rom.Game);
+                ROMs[index] = new RomRecord(rom.Id, rom.Game, rom.FileName, rom.Hash, []);
+            }
+        }
+    }
+
+    private async Task HandleFile((string, byte[]) fileData)
+    {
+        var currentRomRecord = ROMs.Find(r => r.Game == fileData.Item1)!;
+
+        var romRecord = new RomRecord(currentRomRecord.Id, currentRomRecord.Game, currentRomRecord.FileName, currentRomRecord.Hash, fileData.Item2);
+        await IndexedDbAccessor.SetValueAsync("Roms", romRecord);
+        
+        var index = ROMs.FindIndex(r => r.Game == fileData.Item1);
+        ROMs[index] = romRecord;
+
+        StateHasChanged();
+    }
+
+}

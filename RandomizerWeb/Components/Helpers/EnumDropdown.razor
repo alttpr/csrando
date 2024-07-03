@@ -1,4 +1,5 @@
 ﻿@typeparam TEnum
+@namespace RandomizerWeb.Components.Helpers
 @using System.ComponentModel.DataAnnotations
 @using System.Reflection
 
@@ -10,7 +11,12 @@
         <select id="@DropdownId" class="form-control form-select" @onchange="OnValueChanged">
             @foreach (var value in GetEnumValues())
             {
-                <option value="@value">@GetEnumDisplayName(value)</option>
+                if (Deny != null && Deny.Contains(value))
+                {
+                    continue;
+                }
+
+                <option value="@value" "@(DefaultValue != null && value == DefaultValue ? "selected" : "")">@GetEnumDisplayName(value)</option>
             }
         </select>
     </div>
@@ -27,6 +33,13 @@
 
     [Parameter]
     public string Label { get; set; }
+
+    [Parameter]
+    public TEnum? Default { get; set; }
+
+    [Parameter]
+    public TEnum[]? Deny { get; set; }
+
 
     private IEnumerable<TEnum> GetEnumValues()
     {
