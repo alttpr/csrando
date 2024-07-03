@@ -77,7 +77,9 @@
         // Set this if we're running as a published app
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            Randomizer.Graph.YamlReader.DataRoot = "/app/Graph/data";
+            // Get the path to the executing assembly
+            var assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            Randomizer.Graph.YamlReader.DataRoot = Path.Combine(Path.GetDirectoryName(assemblyPath), "Graph/data/");
         }
         
         var randomizer = new Randomizer.Graph.Randomizer([worldConfig], Seed);

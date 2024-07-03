@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Randomizer\Randomizer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UpToDateCheckInput Remove="Components\Pages\SpinnerDialog.razor" />
   </ItemGroup>
 
@@ -28,6 +24,10 @@
 
   <ItemGroup>
     <None Include="Components\Pages\SpinnerDialog.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Randomizer\Randomizer.csproj" />
   </ItemGroup>
 
 </Project>
