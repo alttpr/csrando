@@ -80,6 +80,8 @@ public class SpoilerLog
             { "world_id", world.Id.ToString() },
             { "crystals_ganon", world.Config.CrystalsGanon.ToString() },
             { "crystals_tower", world.Config.CrystalsTower.ToString() },
+            { "sm_bosses", world.Config.SMBosses.ToString() },
+            { "z1_triforces", world.Config.Z1Triforces.ToString() },
             { "size", "2" },
         };
     }

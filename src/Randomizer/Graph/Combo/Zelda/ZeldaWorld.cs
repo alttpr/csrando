@@ -98,6 +98,14 @@ internal class ZeldaWorld
         var formattedStartMap = startMap.ToString("X2");
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Map {formattedStartMap} - Left exit"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation($"Z1 - Overworld - Meta - Meta"), world.GetItem("fixed"));
+
+        // Patch the Level 9 entrance edge to account for different triforce requirements
+        var levelEntrance = world.GetLocation("Z1 - Level 9 - Entrance");
+        var entranceEdge = levelEntrance.Edges.Find(e => e.Condition.Item.Name == "Z1Triforce")!;
+        var newEdge = new Edge(entranceEdge.From, entranceEdge.To, new ItemCondition(entranceEdge.Condition.Item, world.Config.Z1Triforces));
+        levelEntrance.Edges.Remove(entranceEdge);
+        levelEntrance.Edges.Add(newEdge);
+
     }
 
     public static PooledItem[] GetItemSet(World world)
