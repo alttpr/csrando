@@ -33,3 +33,7 @@
 *.bak
 
 /data/randomizer.sfc
+/RandomizerWeb/Properties/PublishProfiles
+/RandomizerWeb/Properties/ServiceDependencies/RandomizerWeb - Zip Deploy/profile.arm.json
+/src/Randomizer/out
+/src/Randomizer/Properties/PublishProfiles

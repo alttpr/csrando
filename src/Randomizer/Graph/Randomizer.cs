@@ -1,6 +1,7 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
+using System.Reflection;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
@@ -148,5 +149,12 @@ public sealed class Randomizer
         }
 
         return true;
+    }
+
+    public static string GetVersionString()
+    {
+        var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
+        string commitHash = ThisAssembly.Git.Commit ?? "#unknown";
+        return $"v{version}b (#{commitHash})";
     }
 }

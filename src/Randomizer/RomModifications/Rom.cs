@@ -1928,9 +1928,16 @@ public sealed class Rom : IDisposable
         }
     }
 
+    public void WriteZ1TriforcesNeeded(World world)
+    {
+        var triforcesNeeded = (byte)world.Config.Z1Triforces;
+        Write(0x657000, [triforcesNeeded]);
+    }
+
     public void WriteSMBossesNeeded(World world)
     {
-        //Write()
+        var smBossesNeeded = (byte)world.Config.SMBosses;
+        Write(0x3F0200, [smBossesNeeded]);
     }
 
     public void WriteSMBossRewards(World world)
@@ -1943,7 +1950,7 @@ public sealed class Rom : IDisposable
         // Get the current Git commit hash
         string commitHash = ThisAssembly.Git.Commit;
         Version version = Assembly.GetEntryAssembly()!.GetName().Version!;
-        string versionString = $"Quad v.{version.Revision}.{prng.Seed:X08}";
+        string versionString = $"Quad v.{version.Major}.{version.Minor}.{version.Revision} S{prng.Seed:X08}";
         string commitString = $"{DateTime.Now.ToShortDateString()} - #{commitHash}".PadLeft(26, ' ');
 
         Write(0x7C0001, ConvertStringToByteArray(versionString), 0);

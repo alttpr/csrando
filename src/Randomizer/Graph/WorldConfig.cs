@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class WorldConfig
 {
     public static readonly int[] RandomCrystals = [0, 1, 2, 3, 4, 5, 6, 7];
+    public static readonly int[] RandomBosses = [0, 1, 2, 3, 4];
+    public static readonly int[] RandomTriforces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
     // game/text language. english only at the moment.
     public string Language { get; init; } = "en";
@@ -18,6 +20,11 @@ public class WorldConfig
     public int[] CrystalsGanonChoices { get; set; } = RandomCrystals;
     public int[] CrystalsTowerChoices { get; set; } = RandomCrystals;
 
+    public int[] SMBossChoices { get; set; } = RandomBosses;
+
+    public int[] TriforceGoalChoices { get; set; } = RandomTriforces;
+
+
     private int? _crystalsGanon;
     public int CrystalsGanon
     {
@@ -30,6 +37,19 @@ public class WorldConfig
         get => _crystalsTower.GetValueOrDefault(7);
         set => _crystalsTower = value;
     }
+    private int? _smBosses;
+    public int SMBosses
+    {
+        get => _smBosses.GetValueOrDefault(4);
+        set => _smBosses = value;
+    }
+    private int? _z1Triforces;
+    public int Z1Triforces
+    {
+        get => _z1Triforces.GetValueOrDefault(0);
+        set => _z1Triforces = value;
+    }
+
 
     public void SelectRandomValues(PRNG prng)
     {
@@ -37,6 +57,10 @@ public class WorldConfig
             _crystalsGanon = prng.GetRandomElement(CrystalsGanonChoices);
         if (!_crystalsTower.HasValue)
             _crystalsTower = prng.GetRandomElement(CrystalsTowerChoices);
+        if (!_smBosses.HasValue)
+            _smBosses = prng.GetRandomElement(SMBossChoices);
+        if (!_z1Triforces.HasValue)
+            _z1Triforces = prng.GetRandomElement(TriforceGoalChoices);
     }
 
     public ushort TriforcePieces { get; set; } = 100;

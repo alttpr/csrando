@@ -16,7 +16,7 @@
                     continue;
                 }
 
-                <option value="@value" "@(DefaultValue != null && value == DefaultValue ? "selected" : "")">@GetEnumDisplayName(value)</option>
+                <option value="@value" selected="@(EqualityComparer<TEnum>.Default.Equals(Default, value))">@GetEnumDisplayName(value)</option>
             }
         </select>
     </div>

@@ -17,12 +17,12 @@ public static class RomWriter
         using var reader = new BinaryReader(stream);
         return reader.ReadBytes((int)stream.Length);
     }
-
+  
     public static string GetFilenameString(int seed)
     {
         string commitHash = ThisAssembly.Git.Commit;
         Version version = Assembly.GetEntryAssembly()!.GetName().Version!;
-        return @$"QuadRando-v{version.Revision}b-#{commitHash}-{seed:X08}.sfc";
+        return @$"QuadRando-v{version.Major}.{version.Major}.{version.Revision}b-#{commitHash}-{seed:X08}.sfc";
     }
 
     public static List<Dictionary<int, byte[]>> Write(Randomizer randomizer, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
@@ -379,6 +379,11 @@ public static class RomWriter
         {
             rom.WriteSMBossesNeeded(world);
             rom.WriteSMBossRewards(world);
+        }
+
+        if(world.Config.Games.Contains(Game.Zelda))
+        {
+            rom.WriteZ1TriforcesNeeded(world);
         }
     }
 
