@@ -21,8 +21,8 @@ public static class RomWriter
     public static string GetFilenameString(int seed)
     {
         string commitHash = ThisAssembly.Git.Commit;
-        Version version = Assembly.GetEntryAssembly()!.GetName().Version!;
-        return @$"QuadRando-v{version.Major}.{version.Major}.{version.Revision}b-#{commitHash}-{seed:X08}.sfc";
+        var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
+        return @$"QuadRando-v{version.Major}.{version.Minor}.{version.Build}b-#{commitHash}-{seed:X08}.sfc";
     }
 
     public static List<Dictionary<int, byte[]>> Write(Randomizer randomizer, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)

@@ -1949,8 +1949,8 @@ public sealed class Rom : IDisposable
     {
         // Get the current Git commit hash
         string commitHash = ThisAssembly.Git.Commit;
-        Version version = Assembly.GetEntryAssembly()!.GetName().Version!;
-        string versionString = $"Quad v.{version.Major}.{version.Minor}.{version.Revision} S{prng.Seed:X08}";
+        var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
+        string versionString = $"Quad v.{version.Major}.{version.Minor}.{version.Build} S{prng.Seed:X08}";
         string commitString = $"{DateTime.Now.ToShortDateString()} - #{commitHash}".PadLeft(26, ' ');
 
         Write(0x7C0001, ConvertStringToByteArray(versionString), 0);
