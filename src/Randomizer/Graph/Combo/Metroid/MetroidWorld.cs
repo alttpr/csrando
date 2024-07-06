@@ -189,8 +189,9 @@ internal class MetroidWorld
         {
             throw new Exception("No Metroid Data for world " + world.Id);
         }
-        
-        var room = data.rooms.Where(r => vertexName.Contains(r.name)).First();
+
+        var roomName = vertexName.Split(" - ")[2].Trim();
+        var room = data.rooms.Where(r => r.name == roomName).First();
 
         // The screen is embedded in the vertex name within parentheses, extract it using regex
         var screenIndex = Int32.Parse(System.Text.RegularExpressions.Regex.Match(vertexName, @"\(([^)]*)\)").Groups[1].Value);
