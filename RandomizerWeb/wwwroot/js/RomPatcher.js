@@ -1,8 +1,10 @@
 ﻿import { get } from "./IndexedDbAccessor.js"
+import { applySprite } from "./rdc.js"
 import { parse, apply } from 'https://cdn.jsdelivr.net/npm/bps@2.0.1/+esm'
 import fileSaver from 'https://cdn.jsdelivr.net/npm/file-saver@2.0.5/+esm'
 
-export async function patchRom(fileName, bpsPatch, patchData)
+
+export async function patchRom(fileName, bpsPatch, patchData, spritePaths)
 {
 
   let mergedRom = await mergeRoms();
@@ -21,6 +23,25 @@ export async function patchRom(fileName, bpsPatch, patchData)
       quadRomArray[intAddress + i] = patch[i];
     }
   }
+
+  if (spritePaths)
+  {
+    if (spritePaths.sm) {
+      var sprite = { path: spritePaths.sm };
+      await applySprite(quadRomArray, 'sa1sm', 'samus_sprite', sprite);
+    }
+
+    if (spritePaths.z3) {
+      var sprite = { path: spritePaths.z3 };
+      await applySprite(quadRomArray, 'sa1z3', 'link_sprite', sprite);
+    }
+
+    // Set vanilla screw attack flag
+    quadRomArray[0x3F0204] = 0x01;
+
+  }
+
+  
 
   fileSaver.saveAs(new Blob([quadRomArray]), fileName)
 

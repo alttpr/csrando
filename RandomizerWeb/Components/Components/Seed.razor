@@ -47,6 +47,14 @@
                  <div class="row">
                     <div class="col-md-6">Seed: @Rando.PRNG.Seed</div>
                 </div>
+                <div class="row mt-4 mb-4">
+                    <div class="col-md-6">
+                        <SpriteSelector Game="z3" @bind-SpritePath="@Z3SpritePath" />
+                    </div>
+                    <div class="col-md-6">
+                        <SpriteSelector Game="sm" @bind-SpritePath="@SMSpritePath" />
+                    </div>
+                </div>
                 <div class="col-md-4">
                     <button class="btn btn-primary" @onclick="DownloadGame">Download randomized game</button>
                 </div>
@@ -84,6 +92,9 @@
     [Parameter]
     public Randomizer.Graph.Randomizer? Rando { get; set; }
 
+    private string Z3SpritePath { get; set; } = "";
+    private string SMSpritePath { get; set; } = "";
+
 
     private List<RomRecord> ROMs { get; set; } = [
         new RomRecord(1, "Super Metroid", "Super Metroid (Japan, USA) (En,Ja).sfc", "da957f0d63d14cb441d215462904c4fa8519c613", null),
@@ -110,10 +121,16 @@
 
     private async Task DownloadGame()
     {
+        var spritePaths = new Dictionary<string, string>
+        {
+            { "z3", Z3SpritePath },
+            { "sm", SMSpritePath }
+        };
+
         // Get the bps base patch        
         var bpsPatch = Randomizer.RomModifications.RomWriter.GetBasePatch();
         var randoChanges = Randomizer.RomModifications.RomWriter.WriteForWorld(Rando!.Worlds[0], null, null, null, Rando!.PRNG, null);
-        var success = await RomPatcher.PatchRomAsync(Randomizer.RomModifications.RomWriter.GetFilenameString(Rando!.PRNG.Seed), bpsPatch, randoChanges);
+        var success = await RomPatcher.PatchRomAsync(Randomizer.RomModifications.RomWriter.GetFilenameString(Rando!.PRNG.Seed), bpsPatch, randoChanges, spritePaths);
     }
 
     private async Task LoadROM()

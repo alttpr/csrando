@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.StaticFiles;
 using RandomizerWeb;
 using RandomizerWeb.Components;
 
@@ -23,7 +24,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings[".rdc"] = "application/octet-stream";
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
+
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

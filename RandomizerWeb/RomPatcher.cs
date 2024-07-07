@@ -27,9 +27,9 @@ public class RomPatcher : IAsyncDisposable
         }
     }
 
-    public async Task<bool> PatchRomAsync(string fileName, byte[] bpsPatch, Dictionary<int, byte[]> patchData)
+    public async Task<bool> PatchRomAsync(string fileName, byte[] bpsPatch, Dictionary<int, byte[]> patchData, Dictionary<string, string> spritePaths)
     {
         await WaitForReference();
-        return await _patcherJsRef.Value.InvokeAsync<bool>("patchRom", fileName, bpsPatch, patchData);
+        return await _patcherJsRef.Value.InvokeAsync<bool>("patchRom", fileName, bpsPatch, patchData, spritePaths);
     }    
 }

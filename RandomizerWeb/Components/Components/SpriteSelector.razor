@@ -1,0 +1,76 @@
+﻿@namespace RandomizerWeb.Components.Components
+@rendermode InteractiveServer
+@using System.Text.Json
+
+<div class="form-group">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="@Game-sprite-label">Select @Game sprite</span>
+        </div>
+        <select id="@DropdownId" class="form-control form-select" @onchange="OnValueChanged">
+            @foreach (var sprite in Sprites)
+            {
+                <option value="@sprite.title">@sprite.title</option>
+            }
+        </select>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Game { get; set; }
+
+    [Parameter]
+    public string SpritePath { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SpritePathChanged { get; set; }
+
+    private SpriteData CurrentSprite { get; set; }
+
+    private List<SpriteData> Sprites { get; set; }
+    private string DropdownId = Guid.NewGuid().ToString();
+
+    private async Task OnValueChanged(ChangeEventArgs e)
+    {
+        var spriteName = e.Value.ToString();
+        CurrentSprite = Sprites.First(s => s.title == spriteName);
+        await SpritePathChanged.InvokeAsync(CurrentSprite.path);
+    }
+
+    private record SpriteCollection
+    {
+        public List<SpriteData> z3 { get; set; }
+        public List<SpriteData> sm { get; set; }
+    }
+
+    private record SpriteData
+    {
+        public string title { get; set; }
+        public string path { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load sprite inventory from JSON file
+
+        // get executable base path
+        var basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+        var json = File.ReadAllText(Path.Combine(basePath, "Data/inventory.json"));
+        var sprites = JsonSerializer.Deserialize<SpriteCollection>(json);
+
+        Sprites = Game.ToLower() switch
+        {
+            "z3" => sprites.z3,
+            "sm" => sprites.sm,
+            _ => throw new Exception("Invalid game")
+        };
+
+        var defaultSprite = new SpriteData { title = "Default", path = "" };
+        Sprites.Insert(0, defaultSprite);
+        await SpritePathChanged.InvokeAsync(defaultSprite.path);
+        
+    }
+
+}

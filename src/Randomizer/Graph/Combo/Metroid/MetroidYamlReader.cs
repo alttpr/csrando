@@ -509,7 +509,7 @@ internal class MetroidYamlReader
         data.rooms.Add(newRoom);
 
         // This should take care of the logic implications of this new door, now add the patch data
-        patchData.Add(0x70253E + (0x20 * 0x0C) + 0x0B, new byte[] { 0x03, 0x1F });
+        patchData.Add(0x68253E + (0x20 * 0x0C) + 0x0B, new byte[] { 0x03, 0x1F });
 
 
         return patchData;
