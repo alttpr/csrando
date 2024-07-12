@@ -411,10 +411,118 @@ public abstract record ComplexRequirement
             _ => throw new NotImplementedException()
         };
     }
+
+    internal ComplexRequirement Condense()
+    {
+        // Condenses a ComplexRequirement into its simplest form
+        // For example, an And with a single child is the same as the child
+        // An Or with a single child is the same as the child
+        // Childs that are "always" can be removed
+        // And with a single child that is "never" can be condensed to "never"
+        // Or with a single child that is "always" can be condensed to "always"
+        // And with all childs as "always" can be condensed to "always"
+        // Or with all childs as "always" can be condensed to "always"
+
+        // Start by replacing disallowed techs with "never" to make sure we prune those conditions
+
+        if (this is Single single && single.Item.Name.StartsWith("SMcan"))
+        {
+            var techName = single.Item.Name.Substring(2);
+            if (!SMWorld.allowedTechs.Contains(techName))
+            {
+                return new Never();
+            }
+        }
+
+        if (IsUnconditional())
+        {
+            return new Always();
+        }
+
+        if (this is And and)
+        {
+            var condensedAnd = and.Reqs.Select(r => r.Condense()).ToArray();
+            if (condensedAnd.All(r => r is Always))
+            {
+                return new Always();
+            }
+
+            if (condensedAnd.Any(r => r is Never))
+            {
+                return new Never();
+            }
+
+            if (condensedAnd.Length == 1)
+            {
+                return condensedAnd.First();
+            }
+
+            if (condensedAnd.Length == 0)
+            {
+                return new Always();
+            }
+
+            return new And(condensedAnd);
+        }
+
+        if (this is Or or)
+        {
+            var condensedOr = or.Reqs.Select(r => r.Condense()).ToArray();
+            if (condensedOr.Any(r => r is Always))
+            {
+                return new Always();
+            }
+
+            if (condensedOr.All(r => r is Never))
+            {
+                return new Never();
+            }
+
+            if (condensedOr.Length == 1)
+            {
+                return condensedOr.First();
+            }
+
+            if (condensedOr.Length == 0)
+            {
+                return new Always();
+            }
+
+            return new Or(condensedOr);
+        }
+
+        return this;
+
+    }
 }
 
 internal class SMWorld
 {
+    public static string[] allowedTechs = [
+            "canMidAirMorph",
+            "canUseGrapple",
+            "canCrouchJump",
+            "canWalljump",
+            "canUnmorphBombBoost",
+            "canIBJ",
+            "canJumpIntoIBJ",
+            "canShinespark",
+            "canHorizontalShinespark",
+            "canMidairShinespark",
+            "canShinechargeMovement",
+            "canUseSpeedEchoes",
+            "canAwakenZebes",
+            "canCarefulJump",
+            "canDisableEquipment",
+            "canDownGrab",
+            "canTrivialMidAirMorph",
+            "canMidAirMorph",
+            "canConsecutiveWalljump",
+            "canJumpIntoIBJ",
+            "canBombAboveIBJ",
+            "canPseudoScrew",
+        ];
+
     public static void AdjustWorld(World world)
     {
         var jsonReader = new SMJsonReader();
@@ -461,7 +569,7 @@ internal class SMWorld
             //var requirement = world.GetItem(requirementName, Game.SuperMetroid);
             //var requirementCount = int.Parse(edgeCollectionData.Skip(1).FirstOrDefault() ?? "1");
 
-            var complexRequirement = ComplexRequirement.FromRequirement(world, edgeCollection.Key);
+            var complexRequirement = ComplexRequirement.FromRequirement(world, edgeCollection.Key).Condense();
             
             // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
             var convertedRequirement = complexRequirement switch
@@ -469,12 +577,14 @@ internal class SMWorld
                 ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
                 ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
                 ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
-                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
-                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
-                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
-                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+                ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, ammo.Count / 5),
                 _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, complexRequirement)
             };
+
+            if (convertedRequirement.Item.Name == "never")
+            {
+                continue;
+            }
 
             foreach (var edges in edgeCollection.Value.Directed)
             {
@@ -526,7 +636,7 @@ internal class SMWorld
                 Game = Game.SuperMetroid
             };
 
-            var complexRequirement = ComplexRequirement.FromRequirement(world, helper.Requires);
+            var complexRequirement = ComplexRequirement.FromRequirement(world, helper.Requires).Condense();
 
             // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
             var helperRequirement = complexRequirement switch
@@ -534,10 +644,7 @@ internal class SMWorld
                 ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
                 ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
                 ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
-                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
-                ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
-                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
-                ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+                ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, ammo.Count / 5),
                 _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, complexRequirement)
             };
 
@@ -586,34 +693,12 @@ internal class SMWorld
         );
 
         world.StartingItems.AddItem(world.GetItem("SMf_ZebesAwake"), 1);
+
     }
 
     private static void AddTech(World world, Vertex meta, Model.Tech tech)
     {
-        string[] allowedTechs = [
-            "canMidAirMorph",
-            "canUseGrapple",
-            "canCrouchJump",
-            "canWalljump",
-            "canUnmorphBombBoost",
-            "canIBJ",
-            "canJumpIntoIBJ",
-            "canShinespark",
-            "canHorizontalShinespark",
-            "canMidairShinespark",
-            "canShinechargeMovement",
-            "canUseSpeedEchoes",
-            "canAwakenZebes",
-            "canCarefulJump",
-            "canDisableEquipment",
-            "canDownGrab",
-            "canTrivialMidAirMorph",
-            "canMidAirMorph",
-            "canConsecutiveWalljump",
-            "canJumpIntoIBJ",
-            "canBombAboveIBJ",
-            "canPseudoScrew",
-        ];
+
 
         if (!allowedTechs.Contains(tech.Name))
         {
@@ -629,7 +714,7 @@ internal class SMWorld
             Game = Game.SuperMetroid
         };
 
-        var techRequirement = ComplexRequirement.FromRequirement(world, new Model.Requirement.And([tech.TechRequires, tech.OtherRequires]));
+        var techRequirement = ComplexRequirement.FromRequirement(world, new Model.Requirement.And([tech.TechRequires, tech.OtherRequires])).Condense();
 
         // Simplify requirements from complex requirements to simple item conditions whenever possible for faster lookup
         var helperRequirement = techRequirement switch
@@ -637,10 +722,7 @@ internal class SMWorld
             ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
             ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
             ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
-            ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
-            ComplexRequirement.And a when a.Reqs.All(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
-            ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Always) => new ItemCondition(world.GetItem("fixed"), 1),
-            ComplexRequirement.Or o when o.Reqs.Any(r => r.RequirementType == ComplexRequirementType.Never) => new ItemCondition(world.GetItem("never"), 1),
+            ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, ammo.Count / 5),
             _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, techRequirement)
         };
 
@@ -651,6 +733,7 @@ internal class SMWorld
         {
             AddTech(world, meta, extTech);
         }
+
     }
 
     public static PooledItem[] GetItemSet(World world)

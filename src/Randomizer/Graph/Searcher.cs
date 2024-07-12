@@ -171,7 +171,7 @@ public class Searcher
     /// <returns>
     /// Returns the list of new reachable nodes and nodes with remaining accessible regions.
     /// </returns>
-    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
+    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt, bool alttpOnly = false)
     {
         SpendObviousKeys(collected, visited);
 
@@ -181,6 +181,9 @@ public class Searcher
         var queue = new Queue<Vertex>();
         foreach (var start in startAt)
         {
+            if (alttpOnly && start.Game != null && start.Game != Game.Alttp)
+                continue;
+
             if (!visited.Contains(start))
             {
                 marked.Add(start);
@@ -191,6 +194,9 @@ public class Searcher
 
         while (queue.TryDequeue(out var vertex))
         {
+            if (alttpOnly && vertex.Game != null && vertex.Game != Game.Alttp)
+                continue;
+
             int unvisitedEdges = vertex.Edges.Count;
 
             foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
@@ -285,7 +291,10 @@ public class Searcher
     private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (inventory.GetCount(key) == 0)
-            return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
+        {
+            return InternalSearch(inventory, visitedBeforeDoors, additionalStarts, true);
+            //return (new VertexHashSet(visitedBeforeDoors.Graph), new VertexHashSet(visitedBeforeDoors.Graph));
+        }
 
         inventory = inventory.Clone();
 
@@ -323,7 +332,7 @@ public class Searcher
             var weakSearchStarts = new VertexHashSet(visitedBeforeRecursion.Graph);
             do
             {
-                var (weakLocations2, weakSearchStarts2) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
+                var (weakLocations2, weakSearchStarts2) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt, true);
 
                 visitedBeforeRecursion.UnionWith(weakLocations2);
                 weakLocations.UnionWith(weakLocations2);
