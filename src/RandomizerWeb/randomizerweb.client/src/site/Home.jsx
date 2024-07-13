@@ -6,11 +6,12 @@ export default function Smz3Home() {
         <>
             <Jumbotron>
                 <Container>
-                    <h1 className="display-4">Super Metroid and A Link to the Past</h1>
-                    <h1 style={{ textAlign: "right" }} className="display-4">Crossover Randomizer</h1>
+                    <h1 className="display-4">A Link to the Past, Super Metroid, Zelda 1 and Metroid 1</h1>
+                    <h1 style={{ textAlign: "right" }} className="display-4">Quad Crossover Randomizer</h1>
                     <h5>Welcome!</h5>
-                    <p>This randomizer mixes Super Metroid and A Link to the Past together into one experience and will randomize both games items to any location in either game creating a new kind of multi-game challenge. The goal is to kill both Ganon and Mother Brain and then finish either game.</p>
-                    <p>Travel between the two game can be done by using certain doors and entrances in either game</p>
+                    <p>This randomizer mixes Super Metroid, A Link to the Past, Zelda 1 and Metroid 1 together into one experience and will randomize all games items to any location in either game creating a new kind of multi-game challenge.
+                        The goal is to kill both Ganon and Mother Brain (in all games) and then finish any of the games.</p>
+                    <p>Travel between the four games can be done by using certain doors and entrances in any of the games</p>
                 </Container>
             </Jumbotron>
             <Container>
