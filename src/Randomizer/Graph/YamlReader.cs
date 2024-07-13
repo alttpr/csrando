@@ -307,6 +307,8 @@ public class Entrances
 {
     [YamlMember(Alias = "fixed")]
     public List<List<string>> Fixed { get; set; } = new();
+    [YamlMember(Alias = "scoped")]
+    public List<ConnectionGroup> Scoped { get; set; } = new();
     [YamlMember(Alias = "connections")]
     public List<ConnectionGroup> Connections { get; set; } = new();
 }

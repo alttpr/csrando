@@ -4,7 +4,7 @@
 fixed:
   - ["Houlihan Room - In", "Houlihan Room"]
   - ["Houlihan Room - Exit", "Houlihan Room - Out"]
-forcedregion:
+scoped:
   - group: light_world_death_mountain
     in:
       - [["Old Man Maze - In", "Old Man Maze - Exit"]]

@@ -43,10 +43,45 @@ internal sealed class EntranceShuffler : IWorldModifier
             world.Graph.AddDirected(from, to, fixedItem);
         }
 
+        var scopedGroups = definition.Scoped.Concat(definitionState.Scoped).GroupBy(x => x.Group);
         /// I apologize for the following code and data structure. It does allow
         /// for the most flexibility in the entrance shuffle.
         foreach (var connectionGroups in definition.Connections.Concat(definitionState.Connections).GroupBy(x => x.Group))
         {
+            /// do scoped things
+            var connected = new List<string>();
+            var scopedGroup = scopedGroups.FirstOrDefault(x => x.Key == connectionGroups.Key);
+            if (scopedGroup != null)
+            {
+                var scopedIns = new Queue<List<List<string>>>(prng.Shuffle(scopedGroup.SelectMany(x => x.In)));
+                var scopedOuts = new Queue<List<List<string>>>(prng.Shuffle(scopedGroup.SelectMany(x => x.Out)));
+                if (scopedIns.Count > scopedOuts.Count)
+                {
+                    throw new Exception("Entrance count mismatch (scoped)");
+                }
+
+                while (scopedIns.Count > 0)
+                {
+                    var from_items = new Queue<List<string>>(prng.Shuffle(scopedIns.Dequeue()));
+                    var to_items = new Queue<List<string>>(prng.Shuffle(scopedOuts.Dequeue()));
+
+                    while (from_items.Count > 0)
+                    {
+                        var froms = from_items.Dequeue();
+                        var tos = to_items.Dequeue();
+
+                        connected.Add(froms[0]);
+                        connected.Add(tos[0]);
+                        for (var i = 0; i < froms.Count; i++)
+                        {
+                            var from = world.GetLocation(froms[i]);
+                            var to = world.GetLocation(tos[i]);
+                            world.Graph.AddDirected(from, to, fixedItem);
+                        }
+                    }
+                }
+            }
+
             var ins = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.In)));
             var outs = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Out)));
             if (ins.Count != outs.Count)
@@ -56,6 +91,16 @@ internal sealed class EntranceShuffler : IWorldModifier
 
             while (ins.Count > 0)
             {
+                if (connected.Contains(ins.Peek()[0][0]))
+                {
+                    ins.Dequeue();
+                    continue;
+                }
+                if (connected.Contains(outs.Peek()[0][0]))
+                {
+                    outs.Dequeue();
+                    continue;
+                }
                 var from_items = new Queue<List<string>>(prng.Shuffle(ins.Dequeue()));
                 var to_items = new Queue<List<string>>(prng.Shuffle(outs.Dequeue()));
                 if (from_items.Count != to_items.Count)
