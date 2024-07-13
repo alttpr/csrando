@@ -130,7 +130,7 @@ internal sealed class Randomize : Command
                 throw new Exception($"Game Unwinnable.");
             }
 
-            if (baseRom != null || outputDirectory != null)
+            if (outputDirectory != null)
             {
                 if (baseRom != null && outputDirectory != null)
                     RomWriter.Write(randomizer, baseRom, baseBPS, outputDirectory);
