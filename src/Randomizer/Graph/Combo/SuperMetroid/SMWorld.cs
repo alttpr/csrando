@@ -452,6 +452,9 @@ public abstract record ComplexRequirement
                 return new Never();
             }
 
+            // Remove always conditions, since they don't affect the outcome
+            condensedAnd = condensedAnd.Where(r => !(r is Always)).ToArray();
+
             if (condensedAnd.Length == 1)
             {
                 return condensedAnd.First();
@@ -477,6 +480,9 @@ public abstract record ComplexRequirement
             {
                 return new Never();
             }
+
+            // Remove never conditions, since they don't affect the outcome
+            condensedOr = condensedOr.Where(r => !(r is Never)).ToArray();
 
             if (condensedOr.Length == 1)
             {

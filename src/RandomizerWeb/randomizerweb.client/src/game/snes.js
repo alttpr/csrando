@@ -9,6 +9,7 @@ export function snesToPc(mapping, addr) {
     }
     if (mapping === 'sa1rom') {
         const lorom = ((addr & 0x7F0000) >>> 1) | (addr & 0x7FFF);
+
         if (addr >= 0x800000 && addr < 0xC00000) {
             return lorom;
         }

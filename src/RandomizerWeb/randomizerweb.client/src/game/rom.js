@@ -32,6 +32,8 @@ export async function prepareRom(worldPatch, settings, baseBps) {
 
     rom = applyBps(rom, basePatch);
 
+    applySeed(rom, worldPatch);
+
     await applySprite(rom, mapping, 'link_sprite', settings.z3Sprite);
     await applySprite(rom, mapping, 'samus_sprite', settings.smSprite);
 
@@ -46,8 +48,6 @@ export async function prepareRom(worldPatch, settings, baseBps) {
     if (!settings.smEnergyBeep) {
         smEnergyBeepOff(rom, mapping);
     }
-
-    applySeed(rom, worldPatch);
 
     return rom;
 }
@@ -100,19 +100,8 @@ function smSpinjumps(rom, mapping) {
 }
 
 function z3HeartColor(rom, mapping, setting) {
-    const values = {
-        red:    [0x24, [0x18, 0x00]],
-        yellow: [0x28, [0xBC, 0x02]],
-        blue:   [0x2C, [0xC9, 0x69]],
-        green:  [0x3C, [0x04, 0x17]]
-    };
-    const [hud, fileSelect] = defaultTo(values[setting], values.red);
-
-    each(range(0, 20, 2), i => {
-        rom[snesToPc(mapping, 0xDFA1E + i)] = hud;
-    });
-
-    rom.set(fileSelect, snesToPc(mapping, 0x1BD6AA));
+    const b = setting === 'blue' ? 0x01 : setting === 'green' ? 0x02 : setting === 'yellow' ? 0x03 : 0x00;
+    rom[0x587020] = b;
 }
 
 function z3HeartBeep(rom, setting) {
@@ -124,11 +113,11 @@ function z3HeartBeep(rom, setting) {
         quarter: 0x80
     };
     /* Redirected to low bank $40 in combo */
-    rom[0x400033] = defaultTo(values[setting], values.half);
+    rom[0x580033] = defaultTo(values[setting], values.half);
 }
 
 function z3QuickSwap(rom, setting) {
-    rom[0x40004B] = setting ? 0x01 : 0x00;
+    rom[0x58004B] = setting ? 0x01 : 0x00;
 }
 
 function smEnergyBeepOff(rom, mapping) {
