@@ -4,6 +4,17 @@
 fixed:
   - ["Houlihan Room - In", "Houlihan Room"]
   - ["Houlihan Room - Exit", "Houlihan Room - Out"]
+forcedregion:
+  - group: light_world_death_mountain
+    in:
+      - [["Old Man Maze - In", "Old Man Maze - Exit"]]
+    out:
+      - [["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Out"]]
+      - [["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Out"]]
+      - [["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Out"]]
+      - [["Old Man Home", "Old Man Home - Out"]]
+      - [["Old Man Home Circle", "Old Man Home Circle - Out"]]
+      - [["Old Man Maze", "Old Man Maze - Out"]]
 connections:
   # Single-Entrance Dungeons
   # All entrances are grouped and randomized with each other. This includes the
@@ -129,14 +140,14 @@ connections:
   # also not randomized.
   - group: light_world_death_mountain
     in:
-      # east
+      # west
       - [["Spectacle Rock Cave Top - In", "Spectacle Rock Cave Top - Exit"]]
       - [["Spectacle Rock Cave Middle - In", "Spectacle Rock Cave Middle - Exit"]]
       - [["Spectacle Rock Cave Exit - In", "Spectacle Rock Cave Exit - Exit"]]
       - [["Old Man Home - In", "Old Man Home - Exit"]]
       - [["Old Man Home Circle - In", "Old Man Home Circle - Exit"]]
       - [["Old Man Maze - In", "Old Man Maze - Exit"]]
-      # west
+      # east
       - [["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right - Exit"]]
       - [["Mimic Cave Entrance - In", "Mimic Cave Entrance - Exit"]]
       - [["Paradox Cave - Middle - In", "Paradox Cave - Middle - Exit"]]
@@ -147,14 +158,14 @@ connections:
       - [["Spiral Cave Top - In", "Spiral Cave Top - Exit"]]
       - [["Paradox Cave - Top - In", "Paradox Cave - Top - Exit"]]
     out:
-      # east
+      # west
       - [["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Out"]]
       - [["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Out"]]
       - [["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Out"]]
       - [["Old Man Home", "Old Man Home - Out"]]
       - [["Old Man Home Circle", "Old Man Home Circle - Out"]]
       - [["Old Man Maze", "Old Man Maze - Out"]]
-      # west
+      # east
       - [["Fairy Ascension Cave - Pits Right", "Fairy Ascension Cave - Pits Right - Out"]]
       - [["Mimic Cave Entrance", "Mimic Cave Entrance - Out"]]
       - [["Paradox Cave - Middle", "Paradox Cave - Middle - Out"]]
