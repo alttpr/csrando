@@ -1931,13 +1931,13 @@ public sealed class Rom : IDisposable
     public void WriteZ1TriforcesNeeded(World world)
     {
         var triforcesNeeded = (byte)world.Config.Z1Triforces;
-        Write(0x657000, [triforcesNeeded]);
+        Write(0x657000, [triforcesNeeded], 0);
     }
 
     public void WriteSMBossesNeeded(World world)
     {
         var smBossesNeeded = (byte)world.Config.SMBosses;
-        Write(0x3F0200, [smBossesNeeded]);
+        Write(0x3F0200, [smBossesNeeded], 0);
     }
 
     public void WriteSMBossRewards(World world)
@@ -1989,6 +1989,12 @@ public sealed class Rom : IDisposable
     {
         //_rom.Seek(address.Value + offset, SeekOrigin.Begin);
         //_rom.Write(data);
+
+        var addressToWrite = address.Value + offset;
+        if(addressToWrite >= 0x800000)
+        {
+            throw new Exception("Address out of bounds");
+        }
 
         _patchData.Add(address.Value + offset, data.ToArray());
 

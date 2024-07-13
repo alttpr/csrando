@@ -1,0 +1,43 @@
+{
+  "name": "randomizerweb.client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "bootstrap": "4.6.2",
+    "bootstrap-switch-button-react": "^1.2.0",
+    "bps": "^2.0.1",
+    "buffer": "^6.0.3",
+    "file-saver": "^2.0.5",
+    "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
+    "pako": "^2.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-markdown": "8.0.7",
+    "react-router-dom": "5.3.4",
+    "reactstrap": "8.10.1",
+    "semver": "^7.6.2",
+    "slugid": "^5.0.1",
+    "styled-components": "^6.1.11",
+    "util": "^0.12.5",
+    "xxhashjs": "^0.2.2",
+    "yaml": "^2.4.5"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.80",
+    "@types/react-dom": "17.0.25",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "vite": "^5.3.1"
+  }
+}

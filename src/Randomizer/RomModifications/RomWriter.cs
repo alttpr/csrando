@@ -3,6 +3,7 @@
 using Randomizer.Graph;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Security.Cryptography;
 
 public static class RomWriter
 {
@@ -16,6 +17,14 @@ public static class RomWriter
 
         using var reader = new BinaryReader(stream);
         return reader.ReadBytes((int)stream.Length);
+    }
+
+    public static string GetBasePatchHash()
+    {
+        // Returns the SHA256 hash of the base patch.
+        using var sha256 = SHA256.Create();
+        byte[] hash = sha256.ComputeHash(GetBasePatch());
+        return BitConverter.ToString(hash).Replace("-", "");
     }
   
     public static string GetFilenameString(int seed)

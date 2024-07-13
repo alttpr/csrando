@@ -153,8 +153,17 @@ public sealed class Randomizer
 
     public static string GetVersionString()
     {
+        return $"v{GetAssemblyVersion()}b (#{GetGitCommit()})";
+    }
+
+    public static string GetGitCommit()
+    {
+        return ThisAssembly.Git.Commit ?? "#unknown";
+    }
+
+    public static string GetAssemblyVersion()
+    {
         var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
-        string commitHash = ThisAssembly.Git.Commit ?? "#unknown";
-        return $"v{version}b (#{commitHash})";
+        return $"{version.Major}.{version.Minor}.{version.Build}";
     }
 }
