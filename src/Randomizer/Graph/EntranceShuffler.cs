@@ -1,10 +1,14 @@
 namespace Randomizer.Graph;
 
+using Microsoft.Extensions.Logging;
+
 /// <summary>
 /// Modify the edges of the graph to shuffle entrances.
 /// </summary>
 internal sealed class EntranceShuffler : IWorldModifier
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     /// <summary>
     /// Connect Entrances, Exits, Outlets, and rooms based on World settings.
     /// </summary>
@@ -33,6 +37,9 @@ internal sealed class EntranceShuffler : IWorldModifier
         var definitionState = YamlReader.EntranceDataFileExists(definitionStateName)
             ? YamlReader.LoadEntrances(definitionStateName)
             : new Entrances();
+
+        // local logger, for things that only matters during entrance shuffle.
+        var logger = world.Config.EntranceShuffle != EntranceShuffleOption.None ? _logger : null;
 
         var fixedItem = world.GetItem("fixed");
 
@@ -77,6 +84,7 @@ internal sealed class EntranceShuffler : IWorldModifier
                             var from = world.GetLocation(froms[i]);
                             var to = world.GetLocation(tos[i]);
                             world.Graph.AddDirected(from, to, fixedItem);
+                            logger?.LogInformation("Scoped '{From}' -> '{To}' ({Condition})", from.Name, to.Name, fixedItem.Name);
                         }
                     }
                 }
@@ -122,6 +130,7 @@ internal sealed class EntranceShuffler : IWorldModifier
                         var from = world.GetLocation(froms[i]);
                         var to = world.GetLocation(tos[i]);
                         world.Graph.AddDirected(from, to, fixedItem);
+                        logger?.LogInformation("Linked '{From}' -> '{To}' ({Condition})", from.Name, to.Name, fixedItem.Name);
                     }
                 }
             }
