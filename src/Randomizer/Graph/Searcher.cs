@@ -240,7 +240,7 @@ public class Searcher
         _searchStarts.UnionWith(strongSearchStarts);
         bool foundItems = CollectItems(inventory, _visited, _collected);
 
-        return strongLocations.Any() || foundItems;
+        return strongLocations.Count != 0 || foundItems;
     }
 
     private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
@@ -269,7 +269,7 @@ public class Searcher
                 if (seenA != seenB)
                     newVerticesFromDoor.Add(seenA ? b : a);
             }
-            if (!newVerticesFromDoor.Any())
+            if (newVerticesFromDoor.Count == 0)
                 continue;
 
             var inventoryForIteration = inventory.Clone();

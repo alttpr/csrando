@@ -311,7 +311,7 @@ internal class VertexCollector
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
                 }
 
-                if (region.Entrances.Any())
+                if (region.Entrances.Count != 0)
                     throw new Exception("Found old style entrance in underworld region node.");
 
                 foreach (var item in region.Items)

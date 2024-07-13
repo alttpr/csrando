@@ -80,7 +80,7 @@ internal sealed class RandomAssumedFiller
                 }
             }
 
-            if (!locations.Any())
+            if (locations.Count == 0)
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
             var location = _prng.GetRandomElement(locations);

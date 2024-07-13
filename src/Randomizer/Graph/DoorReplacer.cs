@@ -73,7 +73,7 @@ internal sealed class DoorReplacer : IWorldModifier
             Queue<Vertex> vertexQueue = new();
             vertexQueue.Enqueue(world.GetLocation("start"));
 
-            while (vertexQueue.Any())
+            while (vertexQueue.Count != 0)
             {
                 Vertex v = vertexQueue.Dequeue();
                 allVisited.Add(v);
@@ -101,7 +101,7 @@ internal sealed class DoorReplacer : IWorldModifier
                 VertexHashSet visitedWithoutDoor = new(world.Graph);
                 vertexQueue.Enqueue(world.GetLocation("start"));
 
-                while (vertexQueue.Any())
+                while (vertexQueue.Count != 0)
                 {
                     Vertex v = vertexQueue.Dequeue();
                     visitedWithoutDoor.Add(v);
@@ -147,7 +147,7 @@ internal sealed class DoorReplacer : IWorldModifier
             VertexHashSet visitedWithoutDoor = new(world.Graph);
             vertexQueue.Enqueue(world.GetLocation("start"));
 
-            while (vertexQueue.Any())
+            while (vertexQueue.Count != 0)
             {
                 Vertex v = vertexQueue.Dequeue();
                 visitedWithoutDoor.Add(v);

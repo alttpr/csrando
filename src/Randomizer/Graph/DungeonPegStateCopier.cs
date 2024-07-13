@@ -59,7 +59,7 @@ internal sealed class DungeonPegStateCopier : IWorldModifier
 
         foreach (var dungeonsWithSwitches in groups.Where(i => i.Value.Any(v => v.Switch)))
         {
-            if (dungeonsWithSwitches.Value.Any())
+            if (dungeonsWithSwitches.Value.Count != 0)
                 TransformRegionWithPegs(world, dungeonsWithSwitches.Value);
         }
     }
