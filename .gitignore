@@ -40,3 +40,6 @@
 /src/RandomizerWeb/RandomizerWeb.Server/.config
 /src/RandomizerWeb/RandomizerWeb.Server/DB/
 *.pubxml
+/src/RandomizerWeb/RandomizerWeb.Server/DB/randomizer.db
+/src/RandomizerWeb/RandomizerWeb.Server/DB/randomizer.db-shm
+/src/RandomizerWeb/RandomizerWeb.Server/DB/randomizer.db-wal
