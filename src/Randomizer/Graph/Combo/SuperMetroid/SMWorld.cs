@@ -434,6 +434,11 @@ public abstract record ComplexRequirement
             }
         }
 
+        if(this is Single singleNever && singleNever.Item.Name.ToLower() == "smnever")
+        {
+            return new Never();
+        }
+
         if (IsUnconditional())
         {
             return new Always();
@@ -666,6 +671,7 @@ internal class SMWorld
 
         // Connect SM to the main world graph
         world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("SM - Meta"), world.GetItem("fixed"));
+        world.Graph.AddDirected(world.GetLocation("start"), world.GetLocation("SM - Crateria - Landing Site - Bottom Left Door"), world.GetItem("fixed"));
 
         // Add undirected path between the games
         //world.Graph.AddDirected(world.GetLocation("Lake Hylia North West Shore"), world.GetLocation("SM - Crateria - Parlor and Alcatraz - Bottom Right Door (On the Left Shaft)"), world.GetItem("fixed"));
@@ -704,7 +710,6 @@ internal class SMWorld
 
     private static void AddTech(World world, Vertex meta, Model.Tech tech)
     {
-
 
         if (!allowedTechs.Contains(tech.Name))
         {
