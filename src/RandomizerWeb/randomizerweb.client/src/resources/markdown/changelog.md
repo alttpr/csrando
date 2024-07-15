@@ -1,5 +1,15 @@
 # Randomizer Changes
 
+## 2024-07-15 - Version 0.1.5
+* Gameplay Changes
+  * Moved the Up+A (Up+B on a SNES controller) shorcuts in Z1 and M1 to controller one.
+  * Fixed a placement issue where Long Beam and Screw Attach when placed in M1 would not function correctly.
+  * Fixed the crash in M1 after defeating Mother Brain if it was not the final boss.
+  * Moved the auto-saving in M1 to direclty when the Password screen shows up.
+  * Fixed an issue in Z1 where it was not saving items correctly, it now saves when the "Continue/Save/Retry" screen shows up.
+  * Fixed a bug in the music engine for Z1 and M1 that should now make some music and effects sound better.
+
+
 ## 2024-07-13 - Version 0.1.4
 * Systems Changes
   * The website has been updated to use a version of the website used for SMZ3.
