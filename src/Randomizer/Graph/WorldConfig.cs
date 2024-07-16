@@ -132,6 +132,8 @@ public class WorldConfig
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
     public bool EnableHints { get; init; } = false;
+
+    public Z1EntranceShuffleOption Z1EntranceShuffle { get; init; } = Z1EntranceShuffleOption.None;
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }
@@ -164,3 +166,5 @@ public enum GoalIconOption { None, Triforce, Star }
 public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }
+
+public enum Z1EntranceShuffleOption { None, Overworld }

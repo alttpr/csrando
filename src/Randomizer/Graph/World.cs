@@ -10,6 +10,10 @@ public sealed class World
     private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
 
+    // Store some extra world building state that we need later to write patches
+    internal Combo.Metroid.MetroidData MetroidData { get; set; } = new Combo.Metroid.MetroidData();
+    internal Combo.Zelda.ZeldaData ZeldaData { get; set; } = new Combo.Zelda.ZeldaData();
+
     /// <summary>
     /// Creates an internal-use world that acts as host for <see cref="Graph"/> nodes that do not belong to a player world.
     /// </summary>

@@ -12,18 +12,22 @@ internal class ZeldaEntranceShuffler
     private World _world;
     private PRNG _prng;
 
-    public ZeldaEntranceShuffler(YamlData data, World world, PRNG prng)
+    public ZeldaEntranceShuffler(World world, PRNG prng)
     {
-        _data = data;
+        _data = world.ZeldaData.Data!;
         _world = world;
         _prng = prng;
     }
 
     public void Shuffle()
     {
+        /* Disallow shuffling the portal caves for now */
+        /* TODO: Make this configurable */
+        List<int> portalMapIds = [0x66];
+
         /* Find all caves and dungeon levels */
-        var caveIds = _data.overworld_maps.Where(m => m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).Select(m => m.cave).ToList();
-        var maps = _data.overworld_maps.Where(m => m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).ToList();
+        var caveIds = _data.overworld_maps.Where(m => !portalMapIds.Contains(m.map) && m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).Select(m => m.cave).ToList();
+        var maps = _data.overworld_maps.Where(m => !portalMapIds.Contains(m.map) && m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).ToList();
 
         /* Shuffle the caves */
         caveIds = _prng.Shuffle(caveIds).ToList();

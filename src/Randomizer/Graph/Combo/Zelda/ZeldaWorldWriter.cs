@@ -16,9 +16,12 @@ internal static class ZeldaWorldWriter
 
     public static void WriteZeldaWorld(this Rom rom, World world, PRNG prng)
     {
-        var data = ZeldaWorld.Data[world]!;
-        WriteOverworldMapData(rom, world, prng, data);
-        WriteSpecial(rom, world, prng, data);
+        var data = world.ZeldaData.Data!;
+        if (world.Config.Z1EntranceShuffle != Z1EntranceShuffleOption.None)
+        {
+            WriteOverworldMapData(rom, world, prng, data);
+            WriteSpecial(rom, world, prng, data);
+        }
     }
 
     public static void WriteSpecial(Rom rom, World world, PRNG prng, ZeldaYamlReader.YamlData data)

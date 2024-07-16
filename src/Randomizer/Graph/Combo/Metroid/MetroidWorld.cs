@@ -10,21 +10,25 @@ using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<I
 using WeightedSet = Dictionary<int, List<Item>>;
 using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
+internal class MetroidData
+{
+    public MetroidYamlReader.YamlData? Data { get; set; } = null;
+    public Dictionary<int, byte[]> PatchData { get; set; } = new();
+}
+
 internal class MetroidWorld
 {
-    public static Dictionary<World, MetroidYamlReader.YamlData?> Data = new Dictionary<World, MetroidYamlReader.YamlData?>();
-    public static Dictionary<World, Dictionary<int, byte[]>> PatchData = new Dictionary<World, Dictionary<int, byte[]>>();
-
     // Adjusts the world as needed to randomize Metroid
     public static void AdjustWorld(World world)
     {
         // Load the Metroid Yaml Data and hook up the world to the current world graph
-        var yamlReader = new MetroidYamlReader();
-        PatchData[world] = yamlReader.BuildPortalRooms(world);
+        var yamlReader = new MetroidYamlReader();        
+
+        world.MetroidData.PatchData = yamlReader.BuildPortalRooms(world);
         yamlReader.BuildGraph();
 
         var metroidVertices = yamlReader.LoadYmlData(world);
-        Data[world] = yamlReader.Data;
+        world.MetroidData.Data = yamlReader.Data;
 
         foreach (var vtx in metroidVertices)
         {
@@ -183,7 +187,7 @@ internal class MetroidWorld
     // But we'll do this for now to get things working
     private static int? GetItemLocationAddress(World world, string vertexName)
     {
-        var data = Data[world];
+        var data = world.MetroidData.Data;
 
         if (data is null)
         {

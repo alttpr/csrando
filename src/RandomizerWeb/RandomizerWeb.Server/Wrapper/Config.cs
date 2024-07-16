@@ -163,6 +163,15 @@ public enum Z1Triforces
     EightTriforces = 8
 }
 
+[DefaultValue(None)]
+public enum Z1EntranceShuffle
+{
+    [Description("None")]
+    None,
+    [Description("Overworld")]
+    Overworld,
+}
+
 public class Config
 {
 
@@ -173,6 +182,7 @@ public class Config
     public GanonVulnerable GanonVulnerable { get; set; } = GanonVulnerable.SevenCrystals;
     public OpenSMTourian OpenSMTourian { get; set; } = OpenSMTourian.FourBosses;
     public Z1Triforces Z1Triforces { get; set; } = Z1Triforces.EightTriforces;
+    public Z1EntranceShuffle Z1EntranceShuffle { get; set; } = Z1EntranceShuffle.None;
 
 
     public bool SingleWorld => GameMode == GameMode.Normal;

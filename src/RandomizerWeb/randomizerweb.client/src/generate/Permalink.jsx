@@ -57,6 +57,7 @@ export default function Permalink() {
               ganonvulnerable: 'sevencrystals',
               opensmtourian: 'fourbosses',
               z1triforces: 'eighttriforces',
+              z1entranceshuffle: 'none'
           });
       }
 
@@ -142,6 +143,15 @@ export default function Permalink() {
                                     eighttriforces: 'Eight Triforces',
                                 }[settings.z1triforces]
                                 }</Col>
+                            </Row>
+                            <Row>
+                                <Col md="3">Z1 Entrance Shuffle:</Col>
+                                <Col>
+                                    {{
+                                        none: 'None',
+                                        overworld: 'Overworld'
+                                    }[settings.z1entranceshuffle]}
+                                </Col>
                             </Row>
                         </>
                     )}

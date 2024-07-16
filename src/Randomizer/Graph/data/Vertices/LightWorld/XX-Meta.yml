@@ -12,8 +12,8 @@ maps:
             fixed:
               - "DefaultItems"
               - "Enemies"
-              - "Turtle Rock - Entry"
-              - "Misery Mire - Entry"
+              # - "Turtle Rock - Entry"
+              # - "Misery Mire - Entry"
               - "Tower Entry - Check"
             ConfigWorldWeaponSwordless:
               - "Swordless - Check"

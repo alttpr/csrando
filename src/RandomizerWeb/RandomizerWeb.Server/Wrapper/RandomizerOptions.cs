@@ -14,6 +14,7 @@ public class RandomizerOptions
             CreateEnumOption<GanonVulnerable>("Ganon Vulnerable"),
             CreateEnumOption<OpenSMTourian>("Open SM Tourian"),
             CreateEnumOption<Z1Triforces>("Open Z1 Level Nine"),
+            CreateEnumOption<Z1EntranceShuffle>("Z1 Entrance Shuffle"),
             CreateSeedOption(),
             CreateBoolOption("Race", "Race ROM (no spoilers)", false),
             //CreateEnumOption<GameMode>("Game mode"),
@@ -68,6 +69,7 @@ public class RandomizerOptions
             GanonVulnerable = ParseOption(options, GanonVulnerable.SevenCrystals),
             OpenSMTourian = ParseOption(options, OpenSMTourian.FourBosses),
             Z1Triforces = ParseOption(options, Z1Triforces.EightTriforces),
+            Z1EntranceShuffle = ParseOption(options, Z1EntranceShuffle.None),
             Race = ParseOption(options, "Race", false),
         };
     }

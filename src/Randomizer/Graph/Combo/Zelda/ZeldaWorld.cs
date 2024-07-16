@@ -10,22 +10,26 @@ using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<I
 using WeightedSet = Dictionary<int, List<Item>>;
 using PooledItem = (ItemSetName Set, int Weight, Item Item);
 
+internal class ZeldaData
+{
+    public ZeldaYamlReader.YamlData? Data { get; set; } = null;
+}
+
 internal class ZeldaWorld
 {
-    // Cache the yaml data used for any given world
-    // TODO: Remove this cache when we have a better way to handle the data
-    public static Dictionary<World, ZeldaYamlReader.YamlData?> Data = new Dictionary<World, ZeldaYamlReader.YamlData?>();
-
     // Adjusts the world as needed to randomize Metroid
     public static void AdjustWorld(World world, PRNG prng)
     {
         // Load the Metroid Yaml Data and hook up the world to the current world graph
         var yamlReader = new ZeldaYamlReader();
         yamlReader.Load();
-        Data[world] = yamlReader.Data;
+        world.ZeldaData.Data = yamlReader.Data;
 
-        var entranceShuffler = new ZeldaEntranceShuffler(Data[world]!, world, prng);
-        entranceShuffler.Shuffle();
+        if (world.Config.Z1EntranceShuffle == Z1EntranceShuffleOption.Overworld)
+        {
+            var entranceShuffler = new ZeldaEntranceShuffler(world, prng);
+            entranceShuffler.Shuffle();
+        }
 
         yamlReader.BuildGraph();
 

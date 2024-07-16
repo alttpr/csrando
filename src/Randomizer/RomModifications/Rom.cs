@@ -1921,7 +1921,7 @@ public sealed class Rom : IDisposable
 
     public void WriteMetroidPatches(World world)
     {
-        var patchData = MetroidWorld.PatchData[world];
+        var patchData = world.MetroidData.PatchData;
         foreach (var (address, data) in patchData)
         {
             Write((Address)address, data, 0);

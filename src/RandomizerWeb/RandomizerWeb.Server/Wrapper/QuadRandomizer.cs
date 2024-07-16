@@ -86,6 +86,11 @@ public class QuadRandomizer : IRandomizer
             {
                 Z1Triforces.Random => randoRnd.Next(0, 8),
                 _ => (int)config.Z1Triforces
+            },
+            Z1EntranceShuffle = config.Z1EntranceShuffle switch
+            {
+                Z1EntranceShuffle.Overworld => Z1EntranceShuffleOption.Overworld,
+                _ => Z1EntranceShuffleOption.None
             }
         };
 
