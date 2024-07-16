@@ -10,7 +10,7 @@ nodes:
     - name: "Right exit"
       type: Scroll
       direction: Right
-      
+  
 edges:
   undirected:
     fixed:

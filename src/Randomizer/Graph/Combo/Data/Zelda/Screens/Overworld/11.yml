@@ -11,7 +11,13 @@ nodes:
       type: Scroll
       direction: Up
       
+  caves:
+    - name: "Bomb cave"
+      type: Bomb
+
 edges:
   undirected:
     fixed:
       - ["Right exit", "Up exit"]
+    UseBombs:
+      - ["Bomb cave", "Right exit"]

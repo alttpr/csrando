@@ -85,6 +85,8 @@ for m in range(0, 128):
     enemy_sides = (overworld_data[LevelInfoF + m] & 0x08) >> 3
     exit_y = (overworld_data[LevelInfoF + m] & 0x07)
 
+    level_info_e = overworld_data[LevelInfoE + m]
+
     template = f"""name: "Map {m:02X}"
 area: Overworld
 map: 0x{m:02X}
@@ -100,6 +102,7 @@ cave: 0x{cave_index:02X}
 stairs: 0x{stairs:02X}
 secret: [0x{q1_secret:02X}, 0x{q2_secret:02X}]
 exit: [0x{exit_x:02X}, 0x{exit_y:02X}]
+level_info_e: 0x{level_info_e:02X}
 """
     
     f = open(f"Maps/Overworld/{m:02X}.yml", "w")

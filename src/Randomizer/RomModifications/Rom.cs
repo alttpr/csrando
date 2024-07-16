@@ -1940,10 +1940,6 @@ public sealed class Rom : IDisposable
         Write(0x3F0200, [smBossesNeeded], 0);
     }
 
-    public void WriteSMBossRewards(World world)
-    {
-
-    }
 
     public void WriteComboVersionStrings(PRNG prng)
     {
@@ -1985,7 +1981,7 @@ public sealed class Rom : IDisposable
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
-    private void Write(Address address, in ReadOnlySpan<byte> data, int offset = 0x400000)
+    public void Write(Address address, in ReadOnlySpan<byte> data, int offset = 0x400000)
     {
         //_rom.Seek(address.Value + offset, SeekOrigin.Begin);
         //_rom.Write(data);
@@ -2005,7 +2001,7 @@ public sealed class Rom : IDisposable
     /// </summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="length">Number of bytes to read.</param>
-    private byte[] Read(Address address, int length)
+    public byte[] Read(Address address, int length)
     {
         //_rom.Seek(address.Value, SeekOrigin.Begin);
         //var data = new byte[length];
@@ -2024,12 +2020,12 @@ public sealed class Rom : IDisposable
         //_rom.Dispose();
     }
 
-    private readonly struct Address
+    public readonly struct Address
     {
         public int Value { get; init; }
         public static implicit operator Address(int value) => new() { Value = value };
     }
-    private readonly struct SNES
+    public readonly struct SNES
     {
         public int Value { get; init; }
         public static explicit operator SNES(int value) => new() { Value = value };

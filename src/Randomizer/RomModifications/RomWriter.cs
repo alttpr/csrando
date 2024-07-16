@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.RomModifications;
 
 using Randomizer.Graph;
+using Randomizer.Graph.Combo.Zelda;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -387,11 +388,11 @@ public static class RomWriter
         if(world.Config.Games.Contains(Game.SuperMetroid))
         {
             rom.WriteSMBossesNeeded(world);
-            rom.WriteSMBossRewards(world);
         }
 
         if(world.Config.Games.Contains(Game.Zelda))
         {
+            rom.WriteZeldaWorld(world, prng);
             rom.WriteZ1TriforcesNeeded(world);
         }
     }

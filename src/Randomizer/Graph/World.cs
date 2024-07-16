@@ -82,21 +82,6 @@ public sealed class World
             }
         }
 
-        if (Config.Games.Contains(Game.Metroid))
-        {
-            Combo.Metroid.MetroidWorld.AdjustWorld(this);
-        }
-        
-        if (Config.Games.Contains(Game.Zelda))
-        {
-            Combo.Zelda.ZeldaWorld.AdjustWorld(this);
-        }
-
-        if (Config.Games.Contains(Game.SuperMetroid))
-        {
-            Combo.SuperMetroid.SMWorld.AdjustWorld(this);
-        }
-
         PruneConfigEdges();
     }
 

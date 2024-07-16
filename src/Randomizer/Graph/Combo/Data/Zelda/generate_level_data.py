@@ -1,4 +1,4 @@
-def to_hex_array(nums):
+ def to_hex_array(nums):
     return '[' + ', '.join(f"0x{num:02X}" for num in nums) + ']'
 
 levelinfo_data = [

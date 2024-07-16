@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <Folder Include="Graph\Combo\Data\SuperMetroid\" />
+    <Folder Include="out\" />
   </ItemGroup>
 
 </Project>

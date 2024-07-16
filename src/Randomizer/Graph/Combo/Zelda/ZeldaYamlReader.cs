@@ -111,6 +111,7 @@ internal class ZeldaYamlReader
         public int stairs;
         public int[] secret;
         public int[] exit;
+        public int level_info_e;
     }
 
     internal class UnderworldMap
@@ -191,8 +192,12 @@ internal class ZeldaYamlReader
         public int armos_item_x;
         public int armos_item_id;
         public int[] armos_stairs;
+        public int[] armos_x_pos;
         public int[] step_ladder;
         public int[] recorder_stairs;
+        public int[] recorder_dests;
+        public int[] recorder_y_pos;
+        public int[] any_road_x_pos;
         public int start;
     }
 
@@ -338,7 +343,7 @@ internal class ZeldaYamlReader
         AddEdge(from, to, edgeGroup, true);
     }
 
-    private void Load()
+    public void Load()
     {
         var path = Path.Combine(YamlReader.DataRoot, "../Combo/Data/Zelda");
         var levels = LoadFiles<Level>(Path.Combine(path, "Levels"));
@@ -363,40 +368,24 @@ internal class ZeldaYamlReader
             caves = caves
         };
 
-        BuildGraph();
     }
 
     public int GetStartMap()
     {
-        if (data is null)
-        {
-            Load();
-        }
-
         return data.special.start;
     }
 
     public Dictionary<string, DirectedUndirectedPair> GetForWorld(World world)
     {
-        if (data is null)
-        {
-            Load();
-        }
-
         return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"Z1 - {d[0]}"; d[1] = $"Z1 - {d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"Z1 - {d[0]}"; d[1] = $"Z1 - {d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
     public List<Dictionary<string, object>> LoadYmlData(World world)
     {
-        if (data is null)
-        {
-            Load();
-        }
-
         return vertices.Values.Select(v => { v["name"] = $"Z1 - {v["name"]}"; return v; }).ToList();
     }
 
-    private void BuildGraph()
+    public void BuildGraph()
     {
         foreach (var map in data.overworld_maps)
         {
@@ -513,7 +502,7 @@ internal class ZeldaYamlReader
 
         foreach (var cave in screen.nodes.caves ?? [])
         {
-            if (map.cave > 0 && (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || map.secret[0] == 1))
+            if (map.cave > 0 && (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || cave.type == CaveType.Tree || cave.type == CaveType.Grave || map.secret[0] == 1))
             {
                 var caveName = $"{mapName} - {cave.name}";
                 var caveNode = FindOrCreateNode(caveName);
@@ -589,7 +578,7 @@ internal class ZeldaYamlReader
             var cave = screen.nodes.caves?.FirstOrDefault() ?? null;
             if (cave != null)
             {
-                if (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || map.secret[0] == 1)
+                if (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || cave.type == CaveType.Tree || cave.type == CaveType.Grave || map.secret[0] == 1)
                 {
                     if (map.cave < 10)
                     {

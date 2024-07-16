@@ -67,6 +67,22 @@ public sealed class Randomizer
             DoorReplacer.AdjustEdges(Worlds[i], PRNG);
             DungeonPegStateCopier.AdjustEdges(Worlds[i], PRNG);
 
+            if (Worlds[i].Config.Games.Contains(Game.Metroid))
+            {
+                Combo.Metroid.MetroidWorld.AdjustWorld(Worlds[i]);
+            }
+
+            if (Worlds[i].Config.Games.Contains(Game.Zelda))
+            {
+                Combo.Zelda.ZeldaWorld.AdjustWorld(Worlds[i], PRNG);
+            }
+
+            if (Worlds[i].Config.Games.Contains(Game.SuperMetroid))
+            {
+                Combo.SuperMetroid.SMWorld.AdjustWorld(Worlds[i]);
+            }
+
+
             Graph.AddDirected(_start, Worlds[i].GetLocation("start"), Worlds[i].GetItem("fixed"));
         }
 

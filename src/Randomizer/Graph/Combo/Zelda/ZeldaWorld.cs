@@ -17,12 +17,19 @@ internal class ZeldaWorld
     public static Dictionary<World, ZeldaYamlReader.YamlData?> Data = new Dictionary<World, ZeldaYamlReader.YamlData?>();
 
     // Adjusts the world as needed to randomize Metroid
-    public static void AdjustWorld(World world)
+    public static void AdjustWorld(World world, PRNG prng)
     {
         // Load the Metroid Yaml Data and hook up the world to the current world graph
         var yamlReader = new ZeldaYamlReader();
-        var zeldaVertices = yamlReader.LoadYmlData(world);
+        yamlReader.Load();
         Data[world] = yamlReader.Data;
+
+        var entranceShuffler = new ZeldaEntranceShuffler(Data[world]!, world, prng);
+        entranceShuffler.Shuffle();
+
+        yamlReader.BuildGraph();
+
+        var zeldaVertices = yamlReader.LoadYmlData(world);
 
         foreach (var vtx in zeldaVertices)
         {

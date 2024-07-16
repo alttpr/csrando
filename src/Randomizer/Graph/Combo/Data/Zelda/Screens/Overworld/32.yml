@@ -10,6 +10,10 @@ nodes:
     - name: "Up exit"
       type: Scroll
       direction: Up
+
+  caves:
+    - name: "Bomb cave"
+      type: Bomb    
       
   meta:
     - name: "Armos Knight"
@@ -20,3 +24,5 @@ edges:
     fixed:
       - ["Left exit", "Up exit"]
       - ["Armos Knight", "Left exit"]
+    UseBombs:
+      - ["Bomb cave", "Left exit"]
