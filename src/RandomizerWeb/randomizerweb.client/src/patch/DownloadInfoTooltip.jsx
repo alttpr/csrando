@@ -29,6 +29,9 @@ Filename parts legend:
   * 8 Triforces if missing
   * Random if \`r\`
   * 0-8 Triforces if \`[0-7]\`
+* \`Ze\`: Zelda 1 Entrance Shuffle
+  * None if missing
+  * Overworld if \`o\`
 
 * Seed number, or seed guid for race roms
 `;

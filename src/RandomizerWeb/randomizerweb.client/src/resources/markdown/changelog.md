@@ -1,5 +1,15 @@
 # Randomizer Changes
 
+## 2024-07-15 - Version 0.1.6
+* Gameplay Changes
+  * Added an initial implementation of Zelda 1 Overworld Shuffle (WARNING: Be aware that this may be very buggy)
+  * Fixed a bug that cause Turtle Rock and Misery Mire entry logic checks not to work properlyin Zelda 3
+  * Fixed a bug with ammo calcuation in Super Metroid that caused ammo checks to be broken
+  * Reverted the music engine change for Z1 since it caused notes to be stuck
+  * Fixed the issue where Bombos would be invisible in Z1 dungeons
+  * Fixed issues with the Super Metroid logic where it didn't properly connect the starting location.
+
+
 ## 2024-07-15 - Version 0.1.5
 * Gameplay Changes
   * Moved the Up+A (Up+B on a SNES controller) shorcuts in Z1 and M1 to controller one.
@@ -9,7 +19,7 @@
   * Fixed an issue in Z1 where it was not saving items correctly, it now saves when the "Continue/Save/Retry" screen shows up.
   * Fixed a bug in the music engine for Z1 and M1 that should now make some music and effects sound better.
 
-
+	
 ## 2024-07-13 - Version 0.1.4
 * Systems Changes
   * The website has been updated to use a version of the website used for SMZ3.
