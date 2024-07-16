@@ -255,11 +255,11 @@ public abstract record ComplexRequirement
             Model.Requirement.ResourceCapacity resourceCapacity => new ResourceCapacity(
                 resourceCapacity.Capacity.Select(c => c.Type switch
                 {
-                    "Missile" => (world.GetItem("SMMissile", Game.SuperMetroid), c.Count / 5),
-                    "Super" => (world.GetItem("SMSuper", Game.SuperMetroid), c.Count / 5),
-                    "PowerBomb" => (world.GetItem("SMPowerBomb", Game.SuperMetroid), c.Count / 5),
-                    "RegularEnergy" => (world.GetItem("SMETank", Game.SuperMetroid), c.Count / 100),
-                    "ReserveEnergy" => (world.GetItem("SMReserveTank", Game.SuperMetroid), c.Count / 100),
+                    "Missile" => (world.GetItem("SMMissile", Game.SuperMetroid), (int)Math.Ceiling(c.Count / 5m)),
+                    "Super" => (world.GetItem("SMSuper", Game.SuperMetroid), (int)Math.Ceiling(c.Count / 5m)),
+                    "PowerBomb" => (world.GetItem("SMPowerBomb", Game.SuperMetroid), (int)Math.Ceiling(c.Count / 5m)),
+                    "RegularEnergy" => (world.GetItem("SMETank", Game.SuperMetroid), (int)Math.Ceiling(c.Count / 100m)),
+                    "ReserveEnergy" => (world.GetItem("SMReserveTank", Game.SuperMetroid), (int)Math.Ceiling(c.Count / 100m)),
                     _ => throw new NotImplementedException()
                 }).ToArray()
             ),
@@ -311,7 +311,7 @@ public abstract record ComplexRequirement
         }
         else if (RequirementType is ComplexRequirementType.Ammo)
         {
-            return inventory.HasAtLeast((this as Ammo)!.Item, (this as Ammo)!.Count / 5);
+            return inventory.HasAtLeast((this as Ammo)!.Item, (int)Math.Ceiling((this as Ammo)!.Count / 5m));
         }
         else
         {
@@ -588,7 +588,7 @@ internal class SMWorld
                 ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
                 ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
                 ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
-                ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, ammo.Count / 5),
+                ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, (int)Math.Ceiling(ammo.Count / 5m)),
                 _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, complexRequirement)
             };
 
@@ -655,7 +655,7 @@ internal class SMWorld
                 ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
                 ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
                 ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
-                ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, ammo.Count / 5),
+                ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, (int)Math.Ceiling(ammo.Count / 5m)),
                 _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, complexRequirement)
             };
 
@@ -733,7 +733,7 @@ internal class SMWorld
             ComplexRequirement.Always => new ItemCondition(world.GetItem("fixed"), 1),
             ComplexRequirement.Never => new ItemCondition(world.GetItem("never"), 1),
             ComplexRequirement.Single single => new ItemCondition(single.Item, 1),
-            ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, ammo.Count / 5),
+            ComplexRequirement.Ammo ammo => new ItemCondition(ammo.Item, (int)Math.Ceiling(ammo.Count / 5m)),
             _ => new ItemCondition(world.GetItem("SMComplexRequirement", Game.SuperMetroid), 1, techRequirement)
         };
 
