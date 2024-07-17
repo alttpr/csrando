@@ -19,10 +19,11 @@ const continousSpace = / +/g;
 
 export async function prepareRom(worldPatch, settings, baseBps) {
     let rom = null;
-    const smRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
-    const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
-    const m1Rom = await readAsArrayBuffer(await localForage.getItem("baseRomM1"));
-    const z1Rom = await readAsArrayBuffer(await localForage.getItem("baseRomZ1"));
+    const smRom = new Uint8Array(await readAsArrayBuffer(await localForage.getItem("baseRomSM")));
+    const lttpRom = new Uint8Array(await readAsArrayBuffer(await localForage.getItem("baseRomLTTP")));
+    const m1Rom = new Uint8Array(await readAsArrayBuffer(await localForage.getItem("baseRomM1")));
+    const z1Rom = new Uint8Array(await readAsArrayBuffer(await localForage.getItem("baseRomZ1")));
+
 
     /* Replace Z1 and M1 headers with the ones used for patch generation */
     const m1Header = [0x4E, 0x45, 0x53, 0x1A, 0x08, 0x00, 0x11, 0x00, 0x00, 0x00, 0x4E, 0x49, 0x20, 0x31, 0x2E, 0x33];
@@ -34,7 +35,7 @@ export async function prepareRom(worldPatch, settings, baseBps) {
         z1Rom[i] = z1Header[i];
     }
 
-    rom = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom), new Uint8Array(m1Rom), new Uint8Array(z1Rom));
+    rom = mergeRoms(smRom, lttpRom, m1Rom, z1Rom);
 
     const basePatch = Uint8Array.from(atob(baseBps), c => c.charCodeAt(0));
     worldPatch = Uint8Array.from(atob(worldPatch), c => c.charCodeAt(0));
