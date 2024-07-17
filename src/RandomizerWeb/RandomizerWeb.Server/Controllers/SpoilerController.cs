@@ -47,8 +47,11 @@ namespace RandomizerWeb.Controllers {
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSpoiler(string seedGuid, string key = null, bool yaml = false) {
             try {
-                var seedData = await context.Seeds.Include(x => x.Worlds).ThenInclude(x => x.Locations).SingleOrDefaultAsync(x => x.Guid == seedGuid);
+                //var seedData = await context.Seeds.Include(x => x.Worlds).ThenInclude(x => x.Locations).SingleOrDefaultAsync(x => x.Guid == seedGuid);
+                var seedData = await context.Seeds.Where(x => x.Guid == seedGuid).SingleAsync();
                 if (seedData != null) {
+
+                    var worlds = await context.Worlds.Where(x => x.SeedId == seedData.Id).ToListAsync();
                     
                     IRandomizer randomizer = seedData.GameId switch
                     {
@@ -59,7 +62,7 @@ namespace RandomizerWeb.Controllers {
                     var locationData = randomizer.GetLocations();
 
                     /* Return 400 Bad Request if someone is trying to get the spoiler for a race rom */
-                    foreach (var world in seedData.Worlds) {
+                    foreach (var world in worlds) {
                         try {
                             var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(world.Settings);
                             if (settings["race"] == "true" && (!settings.ContainsKey("spoilerKey") || settings["spoilerKey"] != key)) 
@@ -73,8 +76,9 @@ namespace RandomizerWeb.Controllers {
 
                     /* Generate spoiler location data */
                     var spoilerLocationData = new List<SpoilerLocationData>();
-                    foreach(var world in seedData.Worlds) {
-                        foreach(var location in world.Locations) {
+                    foreach(var world in worlds) {
+                        var worldLocations = await context.Locations.Where(x => x.WorldId == world.Id).ToListAsync();
+                        foreach(var location in worldLocations) {
                             var id = location.LocationId;
 
                             if(!locationData.ContainsKey(id)) {
