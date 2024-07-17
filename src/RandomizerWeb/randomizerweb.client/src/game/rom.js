@@ -23,6 +23,17 @@ export async function prepareRom(worldPatch, settings, baseBps) {
     const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
     const m1Rom = await readAsArrayBuffer(await localForage.getItem("baseRomM1"));
     const z1Rom = await readAsArrayBuffer(await localForage.getItem("baseRomZ1"));
+
+    /* Replace Z1 and M1 headers with the ones used for patch generation */
+    const m1Header = [0x4E, 0x45, 0x53, 0x1A, 0x08, 0x00, 0x11, 0x00, 0x00, 0x00, 0x4E, 0x49, 0x20, 0x31, 0x2E, 0x33];
+    const z1Header = [0x4E, 0x45, 0x53, 0x1A, 0x08, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+
+    for (let i = 0; i < 0x10; i++)
+    {
+        m1Rom[i] = m1Header[i];
+        z1Rom[i] = z1Header[i];
+    }
+
     rom = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom), new Uint8Array(m1Rom), new Uint8Array(z1Rom));
 
     const basePatch = Uint8Array.from(atob(baseBps), c => c.charCodeAt(0));
