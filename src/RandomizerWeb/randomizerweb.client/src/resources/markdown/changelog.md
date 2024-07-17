@@ -1,5 +1,10 @@
 # Randomizer Changes
 
+## 2024-07-15 - Version 0.1.7
+* Gameplay Changes
+  * Fixed a bug when Z1 Overworld shuffle was enabled that cause the coast item and armos item to not be placed properly.
+  * Fixed a bug in M1 where the top right energy tank location did not get its item written properly.
+
 ## 2024-07-15 - Version 0.1.6
 * Gameplay Changes
   * Added an initial implementation of Zelda 1 Overworld Shuffle (WARNING: Be aware that this may be very buggy)
