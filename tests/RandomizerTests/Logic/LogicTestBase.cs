@@ -58,7 +58,7 @@ public abstract class LogicTestBase
         ], location, expected, inventory);
     }
 
-    private Randomizer GetRandomizerForConfig(WorldConfig[] config)
+    protected Randomizer GetRandomizerForConfig(WorldConfig[] config)
     {
         return _cachedRandomizers.GetOrAdd(config, config => new Lazy<Randomizer>(() =>
                 {

@@ -69,6 +69,7 @@ public class TurtleRockTest : OpenNoGlitchesLogicTests
 
         ["Turtle Rock - Big Key Chest", false, new string[] { "TurtleRockEntry" }],
         ["Turtle Rock - Big Key Chest", false, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7", "BigKeyD7" }],
+        ["Turtle Rock - Big Key Chest", false, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],
         ["Turtle Rock - Big Key Chest", true, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],
         ["Turtle Rock - Big Key Chest", true, new string[] { "TurtleRockEntry", "Lamp", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "UncleSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],
         ["Turtle Rock - Big Key Chest", true, new string[] { "TurtleRockEntry", "OcarinaActive", "MagicMirror", "MoonPearl", "TitansMitt", "Hammer", "Quake", "ProgressiveSword", "CaneOfSomaria", "KeyD7", "KeyD7" }],
@@ -175,5 +176,21 @@ public class TurtleRockTest : OpenNoGlitchesLogicTests
     public override void TestLogic(string location, bool expected, string[] inventory)
     {
         base.TestLogic(location, expected, inventory);
+    }
+
+    [TestMethod]
+    public void TestMedallions()
+    {
+        var randomizer = GetRandomizerForConfig([GetWorldConfig()]);
+
+        var world = randomizer.Worlds[0];
+
+        var vertex = world.GetLocation("Turtle Rock - Entry");
+        vertex.Item = world.GetExistingItem("TurtleRockEntryEther");
+
+        var inventory = new[] { "Hammer", "MoonPearl", "Ether", "ProgressiveSword", "OcarinaActive", "MagicMirror", "TitansMitt", "CaneOfSomaria", "KeyD7", "KeyD7" };
+
+        var searcher = randomizer.GetSearcherForInventory(inventory.Select(world.GetItem));
+        Assert.AreEqual(true, searcher.GetVisited().Any(v => v.Name == "Turtle Rock - Big Key Chest"));
     }
 }
