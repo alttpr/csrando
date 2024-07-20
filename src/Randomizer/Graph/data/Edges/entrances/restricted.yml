@@ -6,7 +6,7 @@ fixed:
   - ["Houlihan Room - In", "Houlihan Room"]
   - ["Houlihan Room - Exit", "Houlihan Room - Out"]
 scoped:
-  - group: light_world_death_mountain
+  - group: caves
     in:
       - [["Old Man Maze - In", "Old Man Maze - Exit"]]
     out:
