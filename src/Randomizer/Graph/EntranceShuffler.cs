@@ -17,7 +17,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         string definitionName = world.Config.EntranceShuffle switch
         {
             EntranceShuffleOption.Simple => "simple",
-            EntranceShuffleOption.Restricted => "vanilla",
+            EntranceShuffleOption.Restricted => "restricted",
             EntranceShuffleOption.Full => "vanilla",
             EntranceShuffleOption.Crossed => "vanilla",
             EntranceShuffleOption.Insanity => "insanity",
