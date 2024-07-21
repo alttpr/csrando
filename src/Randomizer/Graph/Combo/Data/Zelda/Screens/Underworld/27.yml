@@ -18,12 +18,14 @@ nodes:
     - name: "Bottom edge"
       type: Scroll
       direction: Down
+
+  regions:
+    - name: "Middle"
+      type: Region
+      from: [0, 0]
+      to: [11, 6]
       
   meta:
-    - name: "Middle"
-      position: Middle
-      type: Meta
-      
     - name: "Push block"
       type: Push
 

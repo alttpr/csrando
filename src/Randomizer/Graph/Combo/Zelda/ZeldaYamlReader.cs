@@ -26,6 +26,7 @@ internal class ZeldaYamlReader
     {
         public List<Exit> exits;
         public List<Cave> caves;
+        public List<Region> regions;
         public List<Meta> meta;
     }
 
@@ -56,6 +57,14 @@ internal class ZeldaYamlReader
         public string? item;
     }
 
+    internal class Region
+    {
+        public string name;
+        public RegionType type;
+        public int[] from;
+        public int[] to;
+    }
+
     internal enum MetaType
     {
         Meta,
@@ -84,6 +93,11 @@ internal class ZeldaYamlReader
     internal enum ExitType
     {
         Scroll
+    }
+
+    internal enum RegionType
+    {
+        Region
     }
 
     internal enum Direction
@@ -801,6 +815,13 @@ internal class ZeldaYamlReader
                 }
             }
 
+            // Create all region nodes
+            foreach (var region in screen.nodes.regions)
+            {
+                var regionName = $"{mapName} - {region.name}";
+                var regionNode = FindOrCreateNode(regionName);
+            }
+
             // Does this room have an item? (This should be 2F when writing back combo data)
             if (map.room_item != 0x03 && level.triforce_room_id != map.map && map.screen != 0x28)
             {
@@ -820,10 +841,22 @@ internal class ZeldaYamlReader
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 
-                // Connect this to the middle node of the screen for now (TODO: Fix logic for the actual item position)
-                var middleNode = screen.nodes.meta.Where(m => m.type == MetaType.Meta && m.position == "Middle").First();
-                var middleNodeName = $"{mapName} - {middleNode.name}";
-                var middleNodeNode = FindOrCreateNode(middleNodeName);
+                
+                // Look up item position for this room
+                var levelItemPositions = level.shortcut_or_item_pos_array[map.item_pos];
+                var itemX = (levelItemPositions >> 4) - 2;
+                var itemY = (levelItemPositions & 0x0F) - 6;
+
+                // Find the region on the screen that contains the coordinates of the item
+                // A region has a from [x,y] and a to [x,y] coordinate that defines a rectangle
+
+                var itemRegionNode = screen.nodes.regions.Where(r => r.from[0] <= itemX && r.from[1] <= itemY && r.to[0] >= itemX && r.to[1] >= itemY).FirstOrDefault();
+                if(itemRegionNode == null)
+                {
+                    throw new Exception($"Could not find region for item in room {mapName}");
+                }
+                var itemRegionNodeName = $"{mapName} - {itemRegionNode.name}";
+                var itemRegionNodeNode = FindOrCreateNode(itemRegionNodeName);
 
                 var roomItemRequirement = (RoomBehaviour)map.behaviour switch
                 {
@@ -832,7 +865,7 @@ internal class ZeldaYamlReader
                     _ => "fixed"
                 };
 
-                AddDirectedEdge(middleNodeNode, roomItemNode, roomItemRequirement);
+                AddDirectedEdge(itemRegionNodeNode, roomItemNode, roomItemRequirement);
             }
 
             // Add all undirected edges in the room
@@ -897,26 +930,37 @@ internal class ZeldaYamlReader
                 var leftRoom = data.underworld_maps.Where(m => m.area == map.area && m.map == left_room).First();
                 var leftScreen = data.underworld_screens.Where(s => s.area == leftRoom.area && s.screen == leftRoom.screen).First();
                 var leftStairs = leftScreen.nodes.meta.Where(m => m.type == MetaType.Stairs).FirstOrDefault();
+                var leftStairsName = "";
 
                 if(leftStairs == null)
                 {
-                    // Connect to Middle node instead (TODO: Fix this to have a "top right" node in each screen)
-                    leftStairs = leftScreen.nodes.meta.Where(m => m.type == MetaType.Meta && m.position == "Middle").First();
+                    // Connect to the region that has the top right coordinate (11,0) defined in its from and to coordinates
+                    var leftStairsRegion = leftScreen.nodes.regions.Where(r => r.from[0] <= 11 && r.from[1] >= 0 && r.to[0] >= 11 && r.to[1] >= 0).First();
+                    leftStairsName = leftStairsRegion.name;
+                } 
+                else
+                {
+                    leftStairsName = leftStairs.name;
                 }
 
                 var rightRoom = data.underworld_maps.Where(m => m.area == map.area && m.map == right_room).First();
                 var rightScreen = data.underworld_screens.Where(s => s.area == rightRoom.area && s.screen == rightRoom.screen).First();
                 var rightStairs = rightScreen.nodes.meta.Where(m => m.type == MetaType.Stairs).FirstOrDefault();
+                var rightStairsName = "";
 
                 if (rightStairs == null)
                 {
-                    // Connect to Middle node instead (TODO: Fix this to have a "top right" node in each screen)
-                    rightStairs = rightScreen.nodes.meta.Where(m => m.type == MetaType.Meta && m.position == "Middle").First();
+                    var rightStairsRegion = leftScreen.nodes.regions.Where(r => r.from[0] <= 11 && r.from[1] >= 0 && r.to[0] >= 11 && r.to[1] >= 0).First();
+                    rightStairsName = rightStairsRegion.name;
+                }
+                else
+                {
+                    rightStairsName = rightStairs.name;
                 }
 
                 // Connect the left and right nodes to the left and right room stairs
-                AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairs.name}"), "fixed");
-                AddUndirectedEdge(rightNode, FindOrCreateNode($"{map.area} - {level.name} - {rightRoom.name} - {rightStairs.name}"), "fixed");
+                AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairsName}"), "fixed");
+                AddUndirectedEdge(rightNode, FindOrCreateNode($"{map.area} - {level.name} - {rightRoom.name} - {rightStairsName}"), "fixed");
 
                 // Connect the passage nodes
                 AddUndirectedEdge(leftNode, rightNode, "fixed");
@@ -945,15 +989,21 @@ internal class ZeldaYamlReader
 
                 if (leftStairs == null)
                 {
-                    // Connect to Middle node instead (TODO: Fix this to have a "top right" node in each screen)
-                    leftStairs = leftScreen.nodes.meta.Where(m => m.type == MetaType.Meta && m.position == "Middle").First();
-                }
+                    // Connect to the region that has the top right coordinate (11,0) defined in its from and to coordinates
+                    var topRightRegionNode = leftScreen.nodes.regions.Where(r => r.from[0] <= 11 && r.from[1] >= 0 && r.to[0] >= 11 && r.to[1] >= 0).First();
 
-                // Connect the left nodes to the left stairs
-                AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairs.name}"), "fixed");
+                    // Connect the left node to the top right region
+                    AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {topRightRegionNode.name}"), "fixed");
+                } else
+                {
+                    // Connect the left nodes to the left stairs
+                    AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairs.name}"), "fixed");
+                }
 
                 // Connect the left node to the item
                 AddUndirectedEdge(leftNode, itemNode, "fixed");
+
+
             }
         }
     }

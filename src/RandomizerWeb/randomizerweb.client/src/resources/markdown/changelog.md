@@ -1,5 +1,9 @@
 # Randomizer Changes
 
+## 2024-07-21 - Version 0.1.8
+* Gameplay Changes
+  * Rewrote Z1 dungeon screen logic to properly take into account the placement position of items in a room in logic.
+
 ## 2024-07-15 - Version 0.1.7
 * Gameplay Changes
   * Fixed a bug when Z1 Overworld shuffle was enabled that cause the coast item and armos item to not be placed properly.

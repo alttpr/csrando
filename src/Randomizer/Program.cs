@@ -2,7 +2,7 @@
 using Randomizer.ConsoleCommands;
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.1.7.*")]
+[assembly: AssemblyVersion("0.1.8.*")]
 
 var alttpr = new RootCommand("The Legend of Zelda: A Link to the Past Randomizer");
 alttpr.AddCommand(new Randomize());

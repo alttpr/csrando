@@ -19,10 +19,11 @@ nodes:
       type: Scroll
       direction: Down
       
-  meta:
+  regions:
     - name: "Middle"
-      position: Middle
-      type: Meta
+      type: Region
+      from: [0, 0]
+      to: [11, 6]
       
 edges:
   undirected:

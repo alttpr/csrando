@@ -18,23 +18,59 @@ nodes:
     - name: "Bottom edge"
       type: Scroll
       direction: Down
-      
+
+  regions:
+    - name: "Left path"
+      type: Region
+      from: [0, 3]
+      to: [5, 3]
+
+    - name: "Right path"
+      type: Region
+      from: [7, 3]
+      to: [11, 3]
+
+    - name: "Top path"
+      type: Region
+      from: [5, 0]
+      to: [6, 2]
+
+    - name: "Bottom path"
+      type: Region
+      from: [5, 4]
+      to: [6, 6]
+
   meta:
-    - name: "Middle"
-      position: Middle
-      type: Meta
-      
     - name: "Push block"
       type: Push
       
 edges:
+  undirected:
+    fixed:
+      - ["Left edge", "Left path"]
+      - ["Right edge", "Right path"]
+      - ["Top edge", "Top path"]
+      - ["Bottom edge", "Bottom path"]
   directed:
     fixed:
-      - ["Left edge", "Top edge"]
-      - ["Left edge", "Bottom edge"]
-      - ["Top edge", "Left edge"]
-      - ["Top edge", "Right edge"]
-      - ["Bottom edge", "Left edge"]
-      - ["Bottom edge", "Right edge"]
-      - ["Right edge", "Top edge"]
-      - ["Right edge", "Bottom edge"]
+      - ["Left path", "Push block"]
+      - ["Right path", "Push block"]
+      - ["Top path", "Push block"]
+      - ["Bottom path", "Push block"]  
+      
+      - ["Left path", "Top path"]
+      - ["Left path", "Bottom path"]
+
+      - ["Right path", "Top path"]
+      - ["Right path", "Bottom path"]
+
+      - ["Top path", "Left path"]
+      - ["Top path", "Right path"]
+
+      - ["Bottom path", "Left path"]
+      - ["Bottom path", "Right path"] 
+
+
+      
+       
+

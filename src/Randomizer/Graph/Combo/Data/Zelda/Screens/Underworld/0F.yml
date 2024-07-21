@@ -18,14 +18,27 @@ nodes:
     - name: "Bottom edge"
       type: Scroll
       direction: Down
-      
-  meta:
-    - name: "Middle"
-      position: Middle
-      type: Meta
+
+  regions:
+    - name: "Middle path"
+      type: Region
+      from: [0, 3]
+      to: [11, 3]
+
+    - name: "Top side"
+      type: Region
+      from: [0, 0]
+      to: [11, 1]
+
+    - name: "Bottom side"
+      type: Region
+      from: [0, 5]
+      to: [11, 6]
       
 edges:
   undirected:
     fixed:
-      - ["Left edge", "Right edge"]
-      - ["Left edge", "Middle"]
+      - ["Left edge", "Middle path"]
+      - ["Right edge", "Middle path"]
+      - ["Top edge", "Top side"]
+      - ["Bottom edge", "Bottom side"] 

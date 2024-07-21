@@ -18,16 +18,35 @@ nodes:
     - name: "Bottom edge"
       type: Scroll
       direction: Down
-      
-  meta:
+
+  regions:
+    - name: "Left strip"
+      type: Region
+      from: [0, 0]
+      to: [0, 6]
+
     - name: "Middle"
-      position: Middle
-      type: Meta
+      type: Region
+      from: [2, 3]
+      to: [8, 6]
+
+    - name: "Top strip"
+      type: Region
+      from: [3, 0]
+      to: [10, 0]
+
+    - name: "Right strip"
+      type: Region
+      from: [11, 0]
+      to: [11, 6]
 
 edges:
   undirected:
     fixed:
+      - ["Left edge" , "Left strip"]
       - ["Bottom edge", "Middle"]
-      - ["Right edge", "Top edge"]
+      - ["Right edge", "Right strip"]
+      - ["Top edge", "Top strip"]
+      - ["Right strip", "Top strip"]
     StepLadder:
-      - ["Left edge", "Middle"] 
+      - ["Left strip", "Middle"]
