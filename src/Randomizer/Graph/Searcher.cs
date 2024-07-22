@@ -1,6 +1,8 @@
 namespace Randomizer.Graph;
 
+using System.ComponentModel;
 using System.Runtime.InteropServices;
+using global::Randomizer.Graph.Combo.SuperMetroid.Model;
 using Microsoft.Extensions.Logging;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
@@ -106,7 +108,7 @@ public class Searcher
         }
     }
 
-    private static bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
+    private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
         var newlyVisited = visited.Clone();
@@ -115,6 +117,16 @@ public class Searcher
         World? world = null;
         foreach (var itemLocation in newlyVisited)
         {
+            if(itemLocation.Game == Game.SuperMetroid && 
+               itemLocation.SubType != VertexType.Helper &&
+               itemLocation.SubType != VertexType.Tech &&
+               itemLocation.Item is not null && 
+               !itemLocation.Name.Contains("Tourian") &&
+               !InternalBacktrackSearch(itemLocation, inventory))
+            {
+                continue;
+            }
+
             collected.Add(itemLocation);
             if (itemLocation.Item is not null)
             {
@@ -141,6 +153,71 @@ public class Searcher
         }
 
         return newItemsFound;
+    }
+
+    private bool InternalBacktrackSearch(Vertex startLocation, Inventory collected)
+    {
+        var visited = new VertexHashSet(_graph);
+        var startAt = new List<Vertex> { startLocation };
+
+        // This is an item we only add for the purpose of backtracking, because SM items nodes are tagged with a path back from the item node, but only for backtracking.
+        var backtrackItem = startLocation.World.GetItem("SMBacktrackSearch", Game.SuperMetroid);
+        collected.AddItem(startLocation.Item);
+        collected.AddItem(backtrackItem);
+
+        var newlyVisited = new VertexHashSet(visited.Graph);
+        var newSearchStarts = new VertexHashSet(visited.Graph);
+        var marked = new VertexHashSet(visited.Graph);
+        var queue = new Queue<Vertex>();
+
+        foreach (var start in startAt)
+        {
+            if (!visited.Contains(start))
+            {
+                marked.Add(start);
+                newlyVisited.Add(start);
+            }
+            queue.Enqueue(start);
+        }
+
+        bool foundBacktrackTarget = false;
+        while (queue.TryDequeue(out var vertex))
+        {
+            if(vertex.Game != Game.SuperMetroid)
+            {
+                foundBacktrackTarget = true;
+                break;
+            }
+
+            foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
+            {
+                if (!edge.Condition.IsUnconditional)
+                {
+                    if (edge.Condition.ComplexRequirement == null)
+                    {
+                        if (!collected.Has(edge.Condition))
+                            continue;
+                    }
+                    else
+                    {
+                        if (!edge.Condition.ComplexRequirement.Check(collected))
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                if (marked.CheckAdd(edge.To))
+                {
+                    //marked.Add(edge.To);
+                    queue.Enqueue(edge.To);
+                }
+            }
+        }
+
+        collected.RemoveItem(startLocation.Item);
+        collected.RemoveItem(backtrackItem);
+        return foundBacktrackTarget;
     }
 
     public bool HasFound(Item item)
@@ -288,7 +365,7 @@ public class Searcher
         return _visited;
     }
 
-    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (inventory.GetCount(key) == 0)
         {

@@ -12,6 +12,7 @@ using Combo.SuperMetroid.Model;
 using static global::Randomizer.Graph.Combo.Zelda.ZeldaYamlReader;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Security;
+using System.IO;
 
 internal class SMJsonReader
 {
@@ -332,6 +333,8 @@ internal class SMJsonReader
                             });
 
                             AddDirectedEdge(lockClearedNode, lockYieldsNode, new Requirement.Always());
+                            AddDirectedEdge(lockYieldsNode, newNode, new Requirement.Single("BacktrackSearch"));
+
                         }
                     }
                 }
@@ -388,6 +391,8 @@ internal class SMJsonReader
                         {
                             AddDirectedEdge(newNode, yieldNode, new Requirement.Always());
                         }
+
+                        AddDirectedEdge(yieldNode, newNode, new Requirement.Single("BacktrackSearch"));
                     }
                 }
             }
@@ -474,6 +479,19 @@ internal class SMJsonReader
     {
         var fromNodeName = obstacleState == "" ? $"{room.Area} - {room.Name} - {from.Name}" : $"{room.Area} - {room.Name} - {from.Name} - {obstacleState}";
         var fromNodeData = FindNode(fromNodeName)!;
+
+        if (from.SpawnAt != null)
+        {
+            // Create a fixed link to node id in spawnAt
+            var spawnNode = room.Nodes.Where(n => n.Id == from.SpawnAt).FirstOrDefault()!;
+            var spawnNodeName = $"{room.Area} - {room.Name} - {spawnNode.Name}";
+            var spawnNodeData = FindNode(spawnNodeName)!;
+            if (spawnNodeData != null)
+            {
+                AddDirectedEdge(fromNodeData, spawnNodeData, new Requirement.Always());
+            }
+        }
+
 
         // Get all the nodes that are connected from this one (all edges are directed)
         var links = room.Links.Where(l => l.From == from.Id).ToList();

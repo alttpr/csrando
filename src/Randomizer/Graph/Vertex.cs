@@ -53,7 +53,9 @@ public enum VertexType
     Warp,
     Visible,
     Chozo,
-    Hidden
+    Hidden,
+    Helper,
+    Tech
 }
 
 /// <summary>

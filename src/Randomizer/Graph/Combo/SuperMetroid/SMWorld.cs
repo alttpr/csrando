@@ -532,6 +532,7 @@ internal class SMWorld
             "canJumpIntoIBJ",
             "canBombAboveIBJ",
             "canPseudoScrew",
+            "canUseEnemies"
         ];
 
     public static void AdjustWorld(World world)
@@ -643,6 +644,7 @@ internal class SMWorld
                 World = world,
                 Name = $"SM - Helper - {helper.Name}",
                 Type = VertexType.Meta,
+                SubType = VertexType.Helper,
                 Item = world.GetItem("SM" + helper.Name, Game.SuperMetroid),
                 Game = Game.SuperMetroid
             };
@@ -721,6 +723,7 @@ internal class SMWorld
             World = world,
             Name = $"SM - Tech - {tech.Name}",
             Type = VertexType.Meta,
+            SubType = VertexType.Tech,
             Item = world.GetItem("SM" + tech.Name, Game.SuperMetroid),
             Game = Game.SuperMetroid
         };
