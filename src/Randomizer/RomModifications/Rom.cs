@@ -1862,6 +1862,22 @@ public sealed class Rom : IDisposable
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
     }
 
+    /// <summary>
+    /// The vanilla game has room headers in bank 04, but randomizer packs them into tables.asm for easier access.
+    /// </summary>
+    public void RepointRoomHeaders()
+    {
+        // Vanilla room pointer table (RoomHeader_RoomToPointer, bank_04.asm)
+        Span<byte> data = stackalloc byte[2];
+        for (int roomId = 0x00; roomId < 0x140; roomId++)
+        {
+            BinaryPrimitives.WriteUInt16LittleEndian(data, (ushort)(0xB0DA00 + (roomId * 14)));
+            Write((SNES)(0x04F1E2 + (roomId * 2)), data);
+        }
+        // patch LDA.b in bank_01 that points to RoomHeader_RoomToPointer; except we bend it into bank 30 (where tables.asm lives)
+        Write((SNES)0x01B5E7, [0x30]);
+    }
+
     public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets)
     {
         // room headers (RoomHeaders in tables.asm)

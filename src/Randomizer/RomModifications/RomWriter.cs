@@ -219,6 +219,7 @@ public static class RomWriter
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
 
+        rom.RepointRoomHeaders();
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
         WriteEnemyDamageToRom(world, rom, prng);
