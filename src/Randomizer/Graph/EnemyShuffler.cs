@@ -490,7 +490,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                 && !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)
         ).ToHashSet();
 
-        var roomSheets = Enumerable.Range(0, 0x180).Select(_ => new SheetSet()).ToArray();
+        var roomSheets = Enumerable.Range(0, 0x140).Select(_ => new SheetSet()).ToArray();
         // this is 3 times light world (rain state, zelda rescued, aga down) plus 1 times dark world
         var owSheets = Enumerable.Range(0, 4 * 0x40).Select(_ => new SheetSet()).ToArray();
 
@@ -657,7 +657,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         // list of sprites possible when using a particular sprite sheet
         var sheetsToSprites = Enumerable.Range(0, MandatorySheets).Select(_ => nosheetSprites.ToHashSet()).ToArray();
 
-        var roomSheets = new byte[0x180];
+        var roomSheets = new byte[0x140];
         Array.Fill(roomSheets, (byte)0x00);
         var owSheets = new byte[0x80];
         Array.Fill(owSheets, (byte)0xFF);

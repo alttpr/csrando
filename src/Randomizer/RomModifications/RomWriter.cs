@@ -903,7 +903,7 @@ public static class RomWriter
         var enemies = world.GetLocationsOfType(VertexType.Mob);
         var enemyRooms = enemies.ToLookup(enemy => enemy.RoomId);
 
-        var outputOffsets = new ushort[0x180];
+        var outputOffsets = new ushort[0x140];
         // empty room ;)
         List<byte> outputBytes = [0x00, 0xFF];
         for (int i = 0; i < outputOffsets.Length; i++)
