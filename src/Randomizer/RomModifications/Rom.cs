@@ -360,7 +360,7 @@ public sealed class Rom : IDisposable
         {
             BinaryPrimitives.WriteUInt16LittleEndian(dataP, pointer);
             dataP = dataP[2..];
-    }
+        }
         Write(0x76CC0, p);
     }
 
@@ -1862,28 +1862,13 @@ public sealed class Rom : IDisposable
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
     }
 
-    /// <summary>
-    /// The vanilla game has room headers in bank 04, but randomizer packs them into tables.asm for easier access.
-    /// </summary>
-    public void RepointRoomHeaders()
-    {
-        // Vanilla room pointer table (RoomHeader_RoomToPointer, bank_04.asm)
-        Span<byte> data = stackalloc byte[2];
-        for (int roomId = 0x00; roomId < 0x140; roomId++)
-        {
-            BinaryPrimitives.WriteUInt16LittleEndian(data, (ushort)(0xB0DA00 + (roomId * 14)));
-            Write((SNES)(0x04F1E2 + (roomId * 2)), data);
-        }
-        // patch LDA.b in bank_01 that points to RoomHeader_RoomToPointer; except we bend it into bank 30 (where tables.asm lives)
-        Write((SNES)0x01B5E7, [0x30]);
-    }
-
     public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets)
     {
-        // room headers (RoomHeaders in tables.asm)
-        // 14 bytes per entry, offset 3 is the sprite sheet
-        for (int i = 0; i < spriteSheets.Length; i++)
-            Write((SNES)(0xB0DA00 + (i * 14) + 3), [spriteSheets[i]]);
+        // full room headers (roomheaders.asm)
+        // 32 bytes per entry, offset 0x10 for the 4 sprite sheet ids
+        // offset 3 (the old sprite sheet set id) is unused
+        for (int i = 0; i < spriteSheets.Length / 4; i++)
+            Write((SNES)(0xB58000 + (i * 32) + 0x10), [spriteSheets[(i * 4) + 0], spriteSheets[(i * 4) + 1], spriteSheets[(i * 4) + 2], spriteSheets[(i * 4) + 3]]);
 
         // SNES table start _09D62E (RoomData_SpritePointers)
         int dataStart = 0x9D62E + offsets.Length * 2;
@@ -1938,7 +1923,7 @@ public sealed class Rom : IDisposable
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)
-            throw new Exception("Trying to write too many sprite sheet sets");
+            throw new Exception($"Trying to write too many sprite sheet sets (got 0x{spriteSheetSets.Length / 4:X02} which exceeds 0xBF)");
 
         Write((SNES)0x00DB97, spriteSheetSets);
         // special OW 0x02E575 // zora/msp/hobo

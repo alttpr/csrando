@@ -485,59 +485,106 @@ internal sealed class EnemyShuffler : IWorldModifier
         var sheetableSprites = allEnemies.Where(s => !s.Sheets.IsEmpty);
         // sprites that can be moved to any room as they don't have any sheet
         // requirements
-        var nosheetSprites = allEnemies.Where(
-            s => s.Sheets.IsEmpty
-                && !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)
-        ).ToHashSet();
+        var placableSprites = allEnemies.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)).ToHashSet();
+        var challengeSprites = placableSprites.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)).ToHashSet();
 
         var roomSheets = Enumerable.Range(0, 0x140).Select(_ => new SheetSet()).ToArray();
         // this is 3 times light world (rain state, zelda rescued, aga down) plus 1 times dark world
         var owSheets = Enumerable.Range(0, 4 * 0x40).Select(_ => new SheetSet()).ToArray();
 
-        if (world.Config.EnemyShuffle == EnemyShuffleOption.None)
+        // 1. place sprites that aren't shuffled. this is either all of them, or NoPlace sprites (such as NPCs, statues and other fixed stuff)
+        for (int owIdx = 0; owIdx < owSheets.Length; owIdx++)
         {
+            var (mapId, state) = IndexToMapState(owIdx);
+            var enemiesToPlace = enemyOWs[mapId]
+                .Where(e =>
+                    (e.State is null || e.State.Contains(state)) &&
+                    (world.Config.EnemyShuffle == EnemyShuffleOption.None || e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == true));
+
+            foreach (var enemy in enemiesToPlace)
+            {
+                if (!owSheets[owIdx].CanMergeWith(enemy.Sprite?.Sheets))
+                    throw new Exception($"Enemy '{enemy.Sprite?.Name}' does not fit on map 0x{mapId:x02}");
+
+                owSheets[owIdx].Merge(enemy.Sprite?.Sheets);
+            }
+        }
+        for (int roomId = 0; roomId < roomSheets.Length; roomId++)
+        {
+            var enemiesToPlace = enemyRooms[roomId].Where(e =>
+                    (world.Config.EnemyShuffle == EnemyShuffleOption.None || e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == true));
+
+            foreach (var enemy in enemiesToPlace)
+            {
+                if (!roomSheets[roomId].CanMergeWith(enemy.Sprite?.Sheets))
+                    throw new Exception($"Enemy '{enemy.Sprite?.Name}' does not fit in room 0x{roomId:x04}");
+
+                roomSheets[roomId].Merge(enemy.Sprite?.Sheets);
+            }
+        }
+
+        // in case shuffle is off, we're done. no need to worry about the actual shuffle code.
+        if (world.Config.EnemyShuffle != EnemyShuffleOption.None)
+        {
+            // this cannot be a VertexHashSet, since the world isn't fully built yet at this point.
+            var alreadyRandomized = new HashSet<Vertex>();
             for (int owIdx = 0; owIdx < owSheets.Length; owIdx++)
             {
-                int mapId = owIdx % 0x40;
-                int state = owIdx / 0x40; // 0..2 is light world state, 3 is just a left-over for dark world (which should never be a state in data)
-                if (state == 3)
-                {
-                    // this is considered dark world, up the map id and just pick a random state (we don't really switch sprites between pre-aga/post-aga there)
-                    mapId += 0x40;
-                    state = 2;
-                }
-                var enemies = enemyOWs[mapId].Where(e => e.State is null || e.State.Contains(state)).ToArray();
-                if (enemies.Length == 0)
-                    continue;
+                var (mapId, state) = IndexToMapState(owIdx);
+                var enemiesToPlace = enemyOWs[mapId]
+                    .Where(e =>
+                        (e.State is null || e.State.Contains(state)) &&
+                        (e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false));
 
-                foreach (var enemy in enemies)
+                // trophy enemies first, they need to be there and we want variance.
+                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null))
                 {
-                    if (!owSheets[owIdx].CanMergeWith(enemy.Sprite?.Sheets))
-                        throw new Exception($"Enemy '{enemy.Sprite?.Name}' does not fit on map 0x{mapId:x02}");
+                    if (!alreadyRandomized.Add(enemy))
+                    {
+                        owSheets[owIdx].Merge(enemy.Sprite!.Sheets);
+                        continue;
+                    }
 
-                    owSheets[owIdx].Merge(enemy.Sprite?.Sheets);
+                    // 2. build a list of suitable sprites based on what the room currently has in the sheet set
+                    var spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                    var viableSprites = spriteSource.Where(e => owSheets[owIdx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
+                    if (viableSprites.Length == 0)
+                        throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}");
+
+                    // 3. pick possible enemies from that list
+                    var newEnemy = prng.GetRandomElement(viableSprites);
+                    owSheets[owIdx] = owSheets[owIdx].Merge(newEnemy.Sheets);
+                    _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
+                    enemy.Sprite = newEnemy.Sprite;
                 }
             }
             for (int roomId = 0; roomId < roomSheets.Length; roomId++)
             {
-                if (!enemyRooms[roomId].Any())
-                    continue;
+                var enemiesToPlace = enemyRooms[roomId].Where(e =>
+                        (e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false));
 
-                foreach (var enemy in enemyRooms[roomId])
+                // trophy enemies first, they need to be there and we want variance.
+                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null))
                 {
-                    if (!roomSheets[roomId].CanMergeWith(enemy.Sprite?.Sheets))
-                        throw new Exception($"Enemy '{enemy.Sprite?.Name}' does not fit in room 0x{roomId:x04}");
+                    if (!alreadyRandomized.Add(enemy))
+                    {
+                        roomSheets[roomId].Merge(enemy.Sprite!.Sheets);
+                        continue;
+                    }
 
-                    roomSheets[roomId].Merge(enemy.Sprite?.Sheets);
+                    // 2. build a list of suitable sprites based on what the room currently has in the sheet set
+                    var spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                    var viableSprites = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly) && roomSheets[roomId].CanMergeWith(e.Sprite?.Sheets)).ToArray();
+                    if (viableSprites.Length == 0)
+                        throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{roomId:x04}");
+
+                    // 3. pick possible enemies from that list
+                    var newEnemy = prng.GetRandomElement(viableSprites);
+                    roomSheets[roomId] = roomSheets[roomId].Merge(newEnemy.Sheets);
+                    _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
+                    enemy.Sprite = newEnemy.Sprite;
                 }
             }
-        }
-        else
-        {
-            // FIXME: randomize sprites:
-            // 1. place sprites that must not move from the room
-            // 2. build a list of suitable sprites based on what the room currently has in the sheet set
-            // 3. pick possible enemies from that list
         }
 
         // sprite sheets have 3 major locations:
@@ -555,6 +602,10 @@ internal sealed class EnemyShuffler : IWorldModifier
         // to get there, we'll build a matching sheet set per room/map,
         // then find unique ones and write them to the set table.
         // for every usage, we refer to an entry in this table.
+        //
+        // however, because enemization put too many constraints on how enemies could be placed,
+        // the randomizer moved the underworld room headers and extended them to directly contain sprite sheet ids.
+        // rather than cramming them into the sheet set table at the end, we just write them directly to the room.
 
         // attempt to consolidate sheets first. not every sheet uses every slot, so we can combine those to save space.
         bool mergedSomething = true;
@@ -581,41 +632,35 @@ internal sealed class EnemyShuffler : IWorldModifier
         SheetSet[] overworldSheets = owSheets.Select(s => s.Freeze(prng)).ToArray();
         SheetSet[] underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
 
-        // build a list of unique sheet sets. overworld first, since underworld is stored as sheet-0x40.
-        // this doesn't fully get us over 0x40 for sheets that fit in both, but it helps a little with duplication later.
-        var uniqueSheets = overworldSheets.Except(underworldSheets).Distinct().ToList();
-        uniqueSheets.AddRange(underworldSheets.Except(uniqueSheets).Distinct());
+        // build a list of unique sheet sets. overworld only (vanilla storage,) we write underworld directly to the room header (rando-specific.)
+        var uniqueSheets = overworldSheets.Distinct().ToList();
 
-        // grab indices for the room/map headers from that set.
-        byte[] roomSheetBytes = underworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
+        // grab indices for the map headers from that set.
         byte[] mapSheetBytes = overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
-
-        for (int i = 0; i < roomSheetBytes.Length; i++)
-        {
-            // underworld: make sure our IDs are above 0x40. if not, just add duplicates at the end.
-            // chances are we have at least 0x40 in the list already, and shouldn't have to worry about filling up.
-            if (roomSheetBytes[i] < 0x40)
-                roomSheetBytes[i] = (byte)uniqueSheets.LastIndexOf(underworldSheets[i]);
-            if (roomSheetBytes[i] < 0x40)
-            {
-                do
-                {
-                    uniqueSheets.Add(uniqueSheets[roomSheetBytes[i]]);
-                } while (uniqueSheets.Count < 0x40);
-                roomSheetBytes[i] = (byte)uniqueSheets.LastIndexOf(underworldSheets[i]);
-            }
-
-            roomSheetBytes[i] -= 0x40;
-        }
 
         // flatten at the end, since this is a contiguous table in ROM
         byte[] flatSheetSets = uniqueSheets.SelectMany(s => s.Flatten()).ToArray();
+        byte[] roomSheetBytes4 = underworldSheets.SelectMany(s => s.Flatten()).ToArray();
 
         world.SpriteSheets = (
-            Underworld: roomSheetBytes,
+            Underworld: roomSheetBytes4,
             Overworld: mapSheetBytes,
             Sets: flatSheetSets
         );
+
+        static (int MapId, int State) IndexToMapState(int owIdx)
+        {
+            int mapId = owIdx % 0x40;
+            int state = owIdx / 0x40;
+            if (state == 3)
+            {
+                // this is considered dark world, up the map id and just pick a random state (we don't really switch sprites between pre-aga/post-aga there)
+                mapId += 0x40;
+                state = 2;
+            }
+
+            return (mapId, state);
+        }
     }
     // this dictionary forces certain sheets onto certain maps,
     // which is required for those screens to work.
