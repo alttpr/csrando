@@ -10,9 +10,12 @@ internal static class Config
         AsmDirectory = Path.Combine(RootDirectory, "asm");
         DataDirectory = Path.Combine(RootDirectory, "data");
         BaseRomFile = Path.Combine(DataDirectory, "randomizer.sfc");
+        SettingsFile = Path.Combine(DataDirectory, "settings.json");
     }
     public static string RootDirectory { get; }
     public static string AsmDirectory { get; }
     public static string DataDirectory { get; }
     public static string BaseRomFile { get; }
+
+    public static string SettingsFile { get; }
 }

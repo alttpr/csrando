@@ -160,6 +160,8 @@ internal sealed class Randomize : Command
     private WorldConfig[] GetWorldConfigs(InvocationContext context)
     {
         var settingsFile = context.ParseResult.GetValueForOption(_settingsFile);
+        if (settingsFile == null && File.Exists(Config.SettingsFile))
+            settingsFile = new FileInfo(Config.SettingsFile);
         if (settingsFile != null && settingsFile.Exists)
         {
             using var settingsStream = settingsFile.OpenRead();
