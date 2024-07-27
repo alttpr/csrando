@@ -1,8 +1,8 @@
 ﻿namespace Randomizer.RomModifications;
 
+using System.Buffers.Binary;
 using BpsNet;
 using Randomizer.Graph;
-using SpanDex;
 
 public sealed class Rom : IDisposable
 {
@@ -71,10 +71,10 @@ public sealed class Rom : IDisposable
         ushort checksum = (ushort)(sum & 0xFFFF);
         ushort inverse = (ushort)(checksum ^ 0xFFFF);
 
-        SpanWriter data = stackalloc byte[4];
-        data.WriteUInt16LittleEndian(inverse);
-        data.WriteUInt16LittleEndian(checksum);
-        Write(0x7FDC, data.Span);
+        Span<byte> data = stackalloc byte[4];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, inverse);
+        BinaryPrimitives.WriteUInt16LittleEndian(data[2..], checksum);
+        Write(0x7FDC, data);
     }
 
     /// <summary>Write subsitutions</summary>
@@ -90,9 +90,9 @@ public sealed class Rom : IDisposable
     /// <summary>Set the Rupoor value to take rupees</summary>
     public void SetRupoorValue(ushort value = 10)
     {
-        SpanWriter data = stackalloc byte[2];
-        data.WriteUInt16LittleEndian(value);
-        Write(0x180036, data.Span);
+        Span<byte> data = stackalloc byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, value);
+        Write(0x180036, data);
     }
 
     /// <summary>Set Cane of Byrna Cave spike floor damage</summary>
@@ -192,36 +192,36 @@ public sealed class Rom : IDisposable
     /// <param name="seconds">time in seconds;</param>
     public void SetStartingTime(int seconds = 0)
     {
-        SpanWriter data = stackalloc byte[4];
-        data.WriteInt32LittleEndian(seconds * 60);
-        Write(0x18020C, data.Span);
+        Span<byte> data = stackalloc byte[4];
+        BinaryPrimitives.WriteInt32LittleEndian(data, seconds * 60);
+        Write(0x18020C, data);
     }
 
     /// <summary>Set time adjustment for collecting Red Clock Item</summary>
     /// <param name="seconds">time in seconds;</param>
     public void SetRedClock(int seconds = 0)
     {
-        SpanWriter data = stackalloc byte[4];
-        data.WriteInt32LittleEndian(seconds * 60);
-        Write(0x180200, data.Span);
+        Span<byte> data = stackalloc byte[4];
+        BinaryPrimitives.WriteInt32LittleEndian(data, seconds * 60);
+        Write(0x180200, data);
     }
 
     /// <summary>Set time adjustment for collecting Blue Clock Item</summary>
     /// <param name="seconds">time in seconds;</param>
     public void SetBlueClock(int seconds = 0)
     {
-        SpanWriter data = stackalloc byte[4];
-        data.WriteInt32LittleEndian(seconds * 60);
-        Write(0x180204, data.Span);
+        Span<byte> data = stackalloc byte[4];
+        BinaryPrimitives.WriteInt32LittleEndian(data, seconds * 60);
+        Write(0x180204, data);
     }
 
     /// <summary>Set time adjustment for collecting Green Clock Item</summary>
     /// <param name="seconds">time in seconds;</param>
     public void SetGreenClock(int seconds = 0)
     {
-        SpanWriter data = stackalloc byte[4];
-        data.WriteInt32LittleEndian(seconds * 60);
-        Write(0x180208, data.Span);
+        Span<byte> data = stackalloc byte[4];
+        BinaryPrimitives.WriteInt32LittleEndian(data, seconds * 60);
+        Write(0x180208, data);
     }
 
     /// <summary>Set the Digging Game Rng</summary>
@@ -242,9 +242,9 @@ public sealed class Rom : IDisposable
     /// <summary>Set the number of goal items to collect</summary>
     public void SetGoalRequiredCount(ushort goal = 0)
     {
-        SpanWriter data = stackalloc byte[2];
-        data.WriteUInt16LittleEndian(goal);
-        Write(0x180167, data.Span);
+        Span<byte> data = stackalloc byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, goal);
+        Write(0x180167, data);
     }
 
     /// <summary>Set the goal item icon</summary>
@@ -354,10 +354,14 @@ public sealed class Rom : IDisposable
         var (pointers, data) = _credits.GetBinaryData();
 
         Write(0x181500, data);
-        SpanWriter p = stackalloc byte[pointers.Length * 2];
+        Span<byte> p = stackalloc byte[pointers.Length * 2];
+        var dataP = p;
         foreach (ushort pointer in pointers)
-            p.WriteUInt16LittleEndian(pointer);
-        Write(0x76CC0, p.Span);
+        {
+            BinaryPrimitives.WriteUInt16LittleEndian(dataP, pointer);
+            dataP = dataP[2..];
+    }
+        Write(0x76CC0, p);
     }
 
     /// <summary>Set Menu Speed</summary>
@@ -702,18 +706,18 @@ public sealed class Rom : IDisposable
     /// <param name="reveals">bitfield of what he reveals</param>
     public void SetMapRevealSahasrahla(ushort reveals = 0x0000)
     {
-        SpanWriter data = stackalloc byte[2];
-        data.WriteUInt16LittleEndian(reveals);
-        Write(0x18017A, data.Span);
+        Span<byte> data = stackalloc byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, reveals);
+        Write(0x18017A, data);
     }
 
     /// <summary>Set whether Bomb Shop dude updates your map with Red Cyrstals when you talk to him</summary>
     /// <param name="reveals">bitfield of what he reveals</param>
     public void SetMapRevealBombShop(ushort reveals = 0x0000)
     {
-        SpanWriter data = stackalloc byte[2];
-        data.WriteUInt16LittleEndian(reveals);
-        Write(0x18017C, data.Span);
+        Span<byte> data = stackalloc byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, reveals);
+        Write(0x18017C, data);
     }
 
     /// <summary>Set it so trade fairies only trade bottles</summary>
@@ -746,9 +750,9 @@ public sealed class Rom : IDisposable
         if (refillArrows)
             flags |= 0b001;
         Write(0x18004E, [flags]);
-        SpanWriter data = stackalloc byte[2];
-        data.WriteUInt16LittleEndian(rupees);
-        Write(0x180183, data.Span);
+        Span<byte> data = stackalloc byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, rupees);
+        Write(0x180183, data);
     }
 
     /// <summary>Set Uncle Refills on respawn</summary>
@@ -1602,9 +1606,9 @@ public sealed class Rom : IDisposable
     /// <param name="count">total number of items</param>
     public void SetTotalItemCount(ushort count)
     {
-        SpanWriter data = stackalloc byte[2];
-        data.WriteUInt16LittleEndian(count);
-        Write(0x180196, data.Span);
+        Span<byte> data = stackalloc byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(data, count);
+        Write(0x180196, data);
     }
 
     /// <summary>Set Zelda Save and Quit Mirror Fix</summary>
