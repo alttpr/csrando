@@ -802,7 +802,7 @@ BlindMaiden: #BLIND MAIDEN
   flags: NoPlace
 DialogueTester: #DIALOGUE TESTER
   bytes: [0xB8]
-  flags: Challenge
+  flags: NoPlace
 FeudingFriends: #BULLY / PINK BALL
   bytes: [0xB9]
   flags: NoPlace
