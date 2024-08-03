@@ -1035,6 +1035,7 @@ VerticalCannon: #VERTICAL CANNON
 FallingStalfos: #FALLING STALFOS
   bytes: [0x05]
   flags: NoPlace, Overlord
+  subtype: 0x07
   sheets: [[0x1F], null, null, null]
 BadSwitchSnake: #BAD SWITCH SNAKE
   bytes: [0x06]
