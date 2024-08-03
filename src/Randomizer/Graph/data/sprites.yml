@@ -200,7 +200,7 @@ Lumberjack: #LUMBERJACKS
   bytes: [0x2C]
   flags: NoPlace
   sheets: [null, null, [0x4A], null]
-TelepathyTile: #NECKLESS MAN?
+NecklessMan: #used to be TelepathyTile, for its message
   bytes: [0x2D]
   flags: NoPlace
 FluteKid: #FLUTE KID
