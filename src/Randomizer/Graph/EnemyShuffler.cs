@@ -546,7 +546,9 @@ internal sealed class EnemyShuffler : IWorldModifier
                     }
 
                     // 2. build a list of suitable sprites based on what the room currently has in the sheet set
-                    var spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                    IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                    if (enemy.Item != null)
+                        spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
                     var viableSprites = spriteSource.Where(e => owSheets[owIdx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                     if (viableSprites.Length == 0)
                         throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}");
@@ -573,7 +575,9 @@ internal sealed class EnemyShuffler : IWorldModifier
                     }
 
                     // 2. build a list of suitable sprites based on what the room currently has in the sheet set
-                    var spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                    IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                    if (enemy.Item != null)
+                        spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
                     var viableSprites = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly) && roomSheets[roomId].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                     if (viableSprites.Length == 0)
                         throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{roomId:x04}");

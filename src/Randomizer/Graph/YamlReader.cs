@@ -280,6 +280,8 @@ public enum YamlSpriteFlags
     Overlord = 1 << 2,
     /// <summary>This sprite may be placed in a challenge room.</summary>
     Challenge = 1 << 3,
+    /// <summary>This sprite shouldn't hold item drops that might affect progression.</summary>
+    NoDrop = 1 << 4,
 }
 
 public class DirectedUndirectedPair

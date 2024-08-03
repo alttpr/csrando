@@ -5,15 +5,15 @@ Empty:
   flags: NoPlace
 Raven:
   bytes: [0x00]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x11]]
 Dacto:
   bytes: [0x00]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x19]]
 Vulture:
   bytes: [0x01]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, [0x12], null]
 FlyingStalfosHead: #STALFOS HEAD
   bytes: [0x02]
@@ -59,11 +59,11 @@ Slarok4: #SLAROK 4WAY
   sheets: [null, null, [0x18], null]
 Chicken: #CUCCO
   bytes: [0x0B]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x50]]
 SkullChicken: #SKULL CUCCO
   bytes: [0x0B]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x15]]
 OctorokStone: #OCTOROK STONE
   bytes: [0x0C]
@@ -83,7 +83,7 @@ Snapdragon:
   sheets: [[0x16], null, [0x17], null]
 Octoballoon:
   bytes: [0x0F]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, [0x0C], null]
 Octobaby: #OCTOBALLOON BABY
   bytes: [0x10]
@@ -106,6 +106,7 @@ ForkGate: #THIEVES TOWN GRATE?
   flags: NoPlace
 Antifairy:
   bytes: [0x15]
+  flags: NoDrop
   sheets: [null, null, null, [0x52, 0x53]]
 Sahasrahla: #SAHASRAHLA / AGINAH
   bytes: [0x16]
@@ -121,11 +122,11 @@ MiniMoldorm: #MINI MOLDORM
   sheets: [null, [0x1E], null, null]
 Poe:
   bytes: [0x19]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x15]]
 Hyu:
   bytes: [0x19]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x0E]]
 DwarfSmith: #SMITHY
   bytes: [0x1A]
@@ -136,6 +137,7 @@ SpriteArrow: #ARROW
   flags: NoPlace
 Statue:
   bytes: [0x1C]
+  flags: NoDrop
   sheets: [null, null, null, [0x52, 0x53]]
 FluteQuest:
   bytes: [0x1D]
@@ -162,7 +164,7 @@ Ropa:
   sheets: [[0x16], null, null, null]
 RedBari: #RED BARI
   bytes: [0x23]
-  flags: Challenge
+  flags: Challenge, NoDrop #DR allows them to drop items with fire
   sheets: [[0x1F], null, null, null]
 BlueBari: #BLUE BARI
   bytes: [0x24]
@@ -387,7 +389,7 @@ Geldman:
   sheets: [null, null, [0x12], null]
 Rabbit: #TOPPO?
   bytes: [0x4D]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x11]]
 Popo:
   bytes: [0x4E]
@@ -419,9 +421,11 @@ Lanmolas:
   sheets: [null, null, null, [0x31]]
 FireballZora: #ZORA / FIREBALL?
   bytes: [0x55]
+  flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, [0x0C], null]
 FireballKu: #KU / FIREBALL?
   bytes: [0x55]
+  flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, [0x18], null]
 WalkingZora: #ZORA?
   bytes: [0x56]
@@ -441,30 +445,39 @@ Crab:
   sheets: [null, null, [0x0C], null]
 Bird: #LOST WOODS BIRD
   bytes: [0x59]
+  flags: NoDrop
   sheets: [null, null, null, [0x36]]
 Squirrel: #LOST WOODS SQUIRREL?
   bytes: [0x5A]
+  flags: NoDrop
   sheets: [null, null, null, [0x36]]
 SparkCW: #SPARK CLOCKWISE
   bytes: [0x5B]
+  flags: NoDrop
   sheets: [[0x1F], null, null, null]
 SparkCCW: #SPARK COUNTERCLOCKWISE
   bytes: [0x5C]
+  flags: NoDrop
   sheets: [[0x1F], null, null, null]
 RollerVD: #ROLLER VERTICAL DOWN FIRST?
   bytes: [0x5D]
+  flags: NoDrop
   sheets: [null, null, [0x27], null]
 RollerVU: #ROLLER VERTICAL UP FIRST
   bytes: [0x5E]
+  flags: NoDrop
   sheets: [null, null, [0x27], null]
 RollerHR: #ROLLER HORIZONTAL RIGHT FIRST
   bytes: [0x5F]
+  flags: NoDrop
   sheets: [null, null, [0x27], null]
 RollerHL: #ROLLER HORIZONTAL LEFT FIRST
   bytes: [0x60]
+  flags: NoDrop
   sheets: [null, null, [0x27], null]
 Beamos:
   bytes: [0x61]
+  flags: NoDrop
   sheets: [null, [0x2C], null, null]
 MasterSword:
   bytes: [0x62]
@@ -483,15 +496,19 @@ ShootingGalleryNPC: #ARCHERY GUY
   sheets: [[0x4B], null, null, null]
 CannonBallShooterL: #WALL CANNON VERTICAL LEFT
   bytes: [0x66]
+  flags: NoDrop
   sheets: [[0x2F], null, null, null]
 CannonBallShooterR: #WALL CANNON VERTICAL RIGHT
   bytes: [0x67]
+  flags: NoDrop
   sheets: [[0x2F], null, null, null]
 CannonBallShooterU: #WALL CANNON HORIZONTAL TOP
   bytes: [0x68]
+  flags: NoDrop
   sheets: [[0x2F], null, null, null]
 CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM
   bytes: [0x69]
+  flags: NoDrop
   sheets: [[0x2F], null, null, null]
 BallNChainTrooper: #BALL N CHAIN
   bytes: [0x6A]
@@ -522,9 +539,11 @@ Skullrope: #SKULL ROPE?
   sheets: [null, null, [0x24], null]
 Keese:
   bytes: [0x6F]
+  flags: NoDrop
   sheets: [null, null, [0x1C], null]
 Chasupa:
   bytes: [0x6F]
+  flags: NoDrop
   sheets: [null, null, [0x24], null]
 HelmasaurFireball: #KING HELMASAUR FIREBALL
   bytes: [0x70]
@@ -580,15 +599,19 @@ GreenStalfos: #GREEN STALFOS, DR: Floating Skull
   sheets: [[0x1F], null, null, null]
 BigSpikeTrap: #BIG SPIKE?
   bytes: [0x7D]
+  flags: NoDrop
   sheets: [null, null, null, [0x52, 0x53]]
 FireBarCW: #FIREBAR CLOCKWISE
   bytes: [0x7E]
+  flags: NoDrop
   sheets: [[0x1F], null, null, null]
 FireBarCCW: #FIREBAR COUNTERCLOCKWISE
   bytes: [0x7F]
+  flags: NoDrop
   sheets: [[0x1F], null, null, null]
 FireSnake:
   bytes: [0x80]
+  flags: NoDrop
   sheets: [[0x1F], null, null, null]
 Hover:
   bytes: [0x81]
@@ -596,6 +619,7 @@ Hover:
   sheets: [null, null, [0x22], null]
 AntifairyCircle: #ANTIFAIRY CIRCLE
   bytes: [0x82]
+  flags: NoDrop
   sheets: [null, null, null, [0x52, 0x53]]
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   bytes: [0x83]
@@ -634,6 +658,7 @@ MothulaBeam: #MOTHULA BEAM
   sheets: [null, null, [0x38], null]
 SpikeTrap: #SPIKE BLOCK
   bytes: [0x8A]
+  flags: NoDrop
   sheets: [null, null, null, [0x52, 0x53]]
 Gibdo:
   bytes: [0x8B]
@@ -669,6 +694,7 @@ Helmasaur: #KING HELMASAUR
   sheets: [null, null, [0x3A], [0x3E]]
 Bumper:
   bytes: [0x93]
+  flags: NoDrop
   sheets: [null, null, null, [0x52, 0x53]]
 Pirogusu: #PIROGUSU / TILE ROOM TILE?
   bytes: [0x94]
@@ -696,6 +722,7 @@ Pengator:
   sheets: [null, null, [0x26], null]
 Kyameron:
   bytes: [0x9A]
+  flags: NoDrop
   sheets: [null, null, [0x22], null]
 Wizzrobe:
   bytes: [0x9B]
@@ -712,12 +739,15 @@ Babasu:
   sheets: [null, [0x20], null, null]
 OstrichHG: #HAUNTED GROVE OSTRITCH
   bytes: [0x9E]
+  flags: NoDrop
   sheets: [null, null, [0x4E], null]
 RabbitHG: #HAUNTED GROVE RABBIT
   bytes: [0x9F]
+  flags: NoDrop
   sheets: [null, null, [0x4E], null]
 BirdHG: #HAUNTED GROVE BIRD
   bytes: [0xA0]
+  flags: NoDrop
   sheets: [null, null, [0x4E], null]
 Freezor:
   bytes: [0xA1]
@@ -732,6 +762,7 @@ KholdstareShell: #KHOLDSTARE SHELL
   flags: NoPlace
 FallingIce: #FALLING ICE
   bytes: [0xA4]
+  flags: NoDrop
   sheets: [null, null, [0x3C], null]
 ZazakBlue: #BLUE ZAZAK
   bytes: [0xA5]
@@ -747,11 +778,11 @@ Stalfos:
   sheets: [[0x1F], null, null, null]
 ZirroGreen: #GREEN ZIRRO
   bytes: [0xA8]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x1B]]
 ZirroBlue: #BLUE ZIRRO
   bytes: [0xA9]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x1B]]
 Pikit:
   bytes: [0xAA]
@@ -852,11 +883,11 @@ Gibo:
   sheets: [null, null, [0x28], null]
 Thief:
   bytes: [0xC4]
-  flags: Challenge
+  flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [[0x0E], null, null, null]
 Pikku:
   bytes: [0xC4]
-  flags: Challenge
+  flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [[0x15], null, null, null]
 Medusa:
   bytes: [0xC5]
@@ -878,6 +909,7 @@ Tektite: #TEKTITE / FIREBAT
   sheets: [null, null, null, [0x10]]
 ChainChomp: #CHAIN CHOMP
   bytes: [0xCA]
+  flags: NoDrop
   sheets: [null, null, [0x27], null]
 Trinexx: #TRINEXX ROCK HEAD
   bytes: [0xCB]
@@ -897,7 +929,7 @@ Blind:
   sheets: [null, null, [0x3B], null] #TODO: DR has 0x2C in slot 1 (blind laser)
 Swamola:
   bytes: [0xCF]
-  flags: Challenge
+  flags: Challenge, NoDrop
   sheets: [null, null, null, [0x19]]
 Lynel:
   bytes: [0xD0]
@@ -908,6 +940,7 @@ BunnyBeam: #BUNNYBEAM / SMOKE
   flags: NoPlace
 FloppingFish: #FLOPPING FISH
   bytes: [0xD2]
+  flags: NoDrop
 Stal:
   bytes: [0xD3]
   flags: Challenge
@@ -977,6 +1010,7 @@ Mushroom:
   flags: NoPlace
 FakeMasterSword: #FAKE MASTER SWORD
   bytes: [0xE8]
+  flags: NoDrop #TODO: DR has this as "no drop", does it need to be?
   sheets: [null, null, null, [0x11]]
 PotionShop: #MAGIC SHOP ASSISTANT
   bytes: [0xE9]
