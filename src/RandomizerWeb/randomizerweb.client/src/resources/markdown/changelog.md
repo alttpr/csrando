@@ -1,5 +1,10 @@
 # Randomizer Changes
 
+## 2024-07-21 - Version 0.1.9
+* Gameplay Changes
+  * Corrected the backtracking check in logic for SM locations to ensure that it is always possible to get back out from a location.
+  * Improved saving code in Z1 and M1 to hopefully prevent lost items in some cases.
+
 ## 2024-07-21 - Version 0.1.8
 * Gameplay Changes
   * Rewrote Z1 dungeon screen logic to properly take into account the placement position of items in a room in logic.
