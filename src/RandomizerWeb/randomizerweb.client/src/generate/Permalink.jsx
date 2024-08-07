@@ -57,7 +57,8 @@ export default function Permalink() {
               ganonvulnerable: 'sevencrystals',
               opensmtourian: 'fourbosses',
               z1triforces: 'eighttriforces',
-              z1entranceshuffle: 'none'
+              z1entranceshuffle: 'none',
+              keyshuffle: 'none',
           });
       }
 
@@ -89,6 +90,15 @@ export default function Permalink() {
                                   triforcehunt: 'Triforce hunt'
                               }[settings.goal]
                               }</Col>
+                          </Row>
+                          <Row>
+                                <Col md="3">Key Shuffle:</Col><Col> {{
+                                    none: 'None',
+                                    keysanity: 'ALTTP Keys and SM Keycards',
+                                    z3keys: 'ALTTP Keys',
+                                    smkeycards: 'SM Keycards',
+                                }[settings.keyshuffle]
+                                }</Col>
                           </Row>
                           <Row>
                               <Col md="3">Open Ganon's Tower:</Col><Col> {{

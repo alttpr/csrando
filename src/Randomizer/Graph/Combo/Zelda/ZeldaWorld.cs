@@ -159,7 +159,7 @@ internal class ZeldaWorld
             new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Z1Compass", Game.Zelda)),
             .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Z1Key", Game.Zelda)), 2),
 
-            new PooledItem(new ItemSetName("lw", world), 4, world.GetItem("Z1SwordL1", Game.Zelda)),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Z1SwordL1", Game.Zelda)),
 
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1Bombs", Game.Zelda)),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Z1StepLadder", Game.Zelda)),

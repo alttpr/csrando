@@ -16,7 +16,7 @@ public sealed class SingletonRandomizer
         new Lazy<SingletonRandomizer>(() => new SingletonRandomizer());
 
     public static SingletonRandomizer Instance => _lazy.Value;
-    public Randomizer.Graph.Randomizer Randomizer { get; init; } = new Randomizer.Graph.Randomizer([new WorldConfig()], 0);
+    public Randomizer.Graph.Randomizer Randomizer { get; init; } = new Randomizer.Graph.Randomizer([new WorldConfig { SMKeydoors = true }], 0);
     private SingletonRandomizer() { }
 }
 
@@ -91,7 +91,12 @@ public class QuadRandomizer : IRandomizer
             {
                 Z1EntranceShuffle.Overworld => Z1EntranceShuffleOption.Overworld,
                 _ => Z1EntranceShuffleOption.None
-            }
+            },
+            SMKeydoors = config.KeyShuffle == KeyShuffle.Keysanity || config.KeyShuffle == KeyShuffle.SMKeycards,
+            RegionWildBigKeys = config.KeyShuffle == KeyShuffle.Keysanity || config.KeyShuffle == KeyShuffle.Z3Keys,
+            RegionWildCompasses = config.KeyShuffle == KeyShuffle.Keysanity || config.KeyShuffle == KeyShuffle.Z3Keys,
+            RegionWildMaps = config.KeyShuffle == KeyShuffle.Keysanity || config.KeyShuffle == KeyShuffle.Z3Keys,
+            RegionWildKeys = config.KeyShuffle == KeyShuffle.Keysanity || config.KeyShuffle == KeyShuffle.Z3Keys,
         };
 
         var randomizer = new Randomizer.Graph.Randomizer([worldConfig], randoSeed);

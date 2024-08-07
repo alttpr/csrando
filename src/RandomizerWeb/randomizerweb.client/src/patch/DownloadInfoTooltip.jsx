@@ -13,6 +13,11 @@ Filename parts legend:
 * \`G\`: Goal
   * Defeat All if missing
   * Triforce hunt if \`t\`
+* \'K\': Key Shuffle
+  * None if missing
+  * ALTTP Keys and SM Keycards if \`k\`
+  * ALTTP Keys if \`a\`
+  * SM Keycards if \`s\`
 * \`Ot\`: Open Tower
   * 7 Crystals if missing
   * Random if \`r\`

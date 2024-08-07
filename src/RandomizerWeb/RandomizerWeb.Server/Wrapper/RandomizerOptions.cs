@@ -10,6 +10,7 @@ public class RandomizerOptions
 {
     public static List<IRandomizerOption> List { get; } = new List<IRandomizerOption> {
             CreateEnumOption<Goal>("Goal"),
+            CreateEnumOption<KeyShuffle>("Key Shuffle"),
             CreateEnumOption<OpenTower>("Open Ganon's Tower"),
             CreateEnumOption<GanonVulnerable>("Ganon Vulnerable"),
             CreateEnumOption<OpenSMTourian>("Open SM Tourian"),
@@ -70,6 +71,7 @@ public class RandomizerOptions
             OpenSMTourian = ParseOption(options, OpenSMTourian.FourBosses),
             Z1Triforces = ParseOption(options, Z1Triforces.EightTriforces),
             Z1EntranceShuffle = ParseOption(options, Z1EntranceShuffle.None),
+            KeyShuffle = ParseOption(options, KeyShuffle.None),
             Race = ParseOption(options, "Race", false),
         };
     }

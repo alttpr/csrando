@@ -95,6 +95,8 @@ public class WorldConfig
     public bool RegionWildCompasses { get; init; } = false;
     public bool RomRupeeBow { get; init; } = false;
 
+    public bool SMKeydoors { get; init; } = false;
+
     // TODO: Add configuration for custom prize packs
     public bool CustomPrizePacks { get; init; } = false;
 

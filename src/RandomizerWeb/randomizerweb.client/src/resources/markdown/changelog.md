@@ -1,6 +1,12 @@
 # Randomizer Changes
 
-## 2024-07-21 - Version 0.1.9
+## 2024-08-08 - Version 0.1.10
+* Gameplay Changes
+  * Fixed logic bug in SM where the logic didn't account for colored doors properly.
+  * Added key shuffle option - This will let you shuffle ALTTP dungeon items and add SM keycards.
+	* Note that this is very experimental still so it might have unexpected bugs.
+
+## 2024-08-06 - Version 0.1.9
 * Gameplay Changes
   * Corrected the backtracking check in logic for SM locations to ensure that it is always possible to get back out from a location.
   * Improved saving code in Z1 and M1 to hopefully prevent lost items in some cases.

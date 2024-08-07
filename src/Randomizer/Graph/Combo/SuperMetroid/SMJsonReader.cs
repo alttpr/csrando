@@ -218,10 +218,30 @@ internal class SMJsonReader
             return;
         }
 
+        Requirement firstRequirement = firstNode.NodeSubType switch
+        {
+            "red" => new Requirement.Single("h_canOpenRedDoors"),
+            "green" => new Requirement.Single("h_canOpenGreenDoors"),
+            "yellow" => new Requirement.Single("h_canOpenYellowDoors"),
+            "eye" => new Requirement.Single("h_canOpenEyeDoors"),
+            string kc when kc.StartsWith("keycard:") => new Requirement.Single(kc.Split(":")[1].Trim()),
+            _ => new Requirement.Always()
+        };
+
+        Requirement secondRequirement = secondNode.NodeSubType switch
+        {
+            "red" => new Requirement.Single("h_canOpenRedDoors"),
+            "green" => new Requirement.Single("h_canOpenGreenDoors"),
+            "yellow" => new Requirement.Single("h_canOpenYellowDoors"),
+            "eye" => new Requirement.Single("h_canOpenEyeDoors"),
+            string kc when kc.StartsWith("keycard:") => new Requirement.Single(kc.Split(":")[1].Trim()),
+            _ => new Requirement.Always()
+        };
+
         // Connect first to second
         var firstNodeData = FindNode($"{firstRoom.Area} - {firstRoom.Name} - {firstNode.Name} - Out")!;
         var secondNodeData = FindNode($"{secondRoom.Area} - {secondRoom.Name} - {secondNode.Name} - In")!;
-        AddDirectedEdge(firstNodeData, secondNodeData, new Requirement.Always());
+        AddDirectedEdge(firstNodeData, secondNodeData, firstRequirement);
         //Console.WriteLine($"Adding edge from {firstNodeData["name"]} to {secondNodeData["name"]}");
 
         if (connection.Direction.ToLower() == "bidirectional")
@@ -229,7 +249,7 @@ internal class SMJsonReader
             // Connect second to first
             var firstNodeRevData = FindNode($"{secondRoom.Area} - {secondRoom.Name} - {secondNode.Name} - Out")!;
             var secondNodeRevData = FindNode($"{firstRoom.Area} - {firstRoom.Name} - {firstNode.Name} - In")!;
-            AddDirectedEdge(firstNodeRevData, secondNodeRevData, new Requirement.Always());
+            AddDirectedEdge(firstNodeRevData, secondNodeRevData, secondRequirement);
             //Console.WriteLine($"Adding reverse edge from {firstNodeRevData["name"]} to {secondNodeRevData["name"]}");
         }
         

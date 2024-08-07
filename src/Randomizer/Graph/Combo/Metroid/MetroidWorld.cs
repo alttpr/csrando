@@ -128,7 +128,7 @@ internal class MetroidWorld
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("M1Missile", Game.Metroid)), 20),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("M1EnergyTank", Game.Metroid)), 6),
 
-            new PooledItem(new ItemSetName("lw", world), 4, world.GetItem("M1Morph", Game.Metroid))
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("M1Morph", Game.Metroid))
         ];
     }
 

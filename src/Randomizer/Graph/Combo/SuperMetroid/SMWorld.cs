@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 using ItemSet = Dictionary<ItemSetName, /* WeightedSet */ Dictionary<int, List<Item>>>;
 using WeightedSet = Dictionary<int, List<Item>>;
 using PooledItem = (ItemSetName Set, int Weight, Item Item);
-using System.Diagnostics.CodeAnalysis;
-using static global::Randomizer.Graph.Combo.Zelda.ZeldaYamlReader;
+using System.Formats.Asn1;
 
 public enum ComplexRequirementType
 {
@@ -539,6 +538,56 @@ internal class SMWorld
     {
         var jsonReader = new SMJsonReader();
         jsonReader.Load();
+
+        if (world.Config.SMKeydoors)
+        {
+            PatchKeyCard(jsonReader, "Crateria", "Landing Site", "Top Left Door", "CrateriaL1");
+            PatchKeyCard(jsonReader, "Crateria", "Landing Site", "Top Right Door", "CrateriaL1");
+
+            PatchKeyCard(jsonReader, "Crateria", "Crateria Kihunter Room", "Right Door", "CrateriaL2");
+
+            PatchKeyCard(jsonReader, "Crateria", "Green Pirates Shaft", "Bottom Right Door", "CrateriaBoss");
+            PatchKeyCard(jsonReader, "Crateria", "Flyway", "Right Door", "CrateriaBoss");
+
+            PatchKeyCard(jsonReader, "Brinstar", "Construction Zone", "Right Door", "BrinstarL1");
+
+            PatchKeyCard(jsonReader, "Brinstar", "Green Brinstar Main Shaft", "Below Power Bomb Blocks - Bottom Left Door", "BrinstarL2");
+            PatchKeyCard(jsonReader, "Brinstar", "Pink Brinstar Hopper Room", "Top Right Door", "BrinstarL2");
+            PatchKeyCard(jsonReader, "Brinstar", "Spore Spawn Farming Room", "Right Door", "BrinstarL2");
+
+            PatchKeyCard(jsonReader, "Brinstar", "Spore Spawn Kihunter Room", "Top Right Door", "BrinstarBoss");
+            PatchKeyCard(jsonReader, "Brinstar", "Kraid Eye Door Room", "Right Door", "BrinstarBoss");
+
+            PatchKeyCard(jsonReader, "Norfair", "Business Center", "Top Left Door", "NorfairL1");
+            PatchKeyCard(jsonReader, "Norfair", "Crocomire Speedway", "Top of the Shaft Left Door", "NorfairL1");
+
+            PatchKeyCard(jsonReader, "Norfair", "Cathedral", "Right Door", "NorfairL2");
+            PatchKeyCard(jsonReader, "Norfair", "Upper Norfair Farming Room", "Top Right Door", "NorfairL2");
+            PatchKeyCard(jsonReader, "Norfair", "Purple Shaft", "Top Door", "NorfairL2");            
+            PatchKeyCard(jsonReader, "Norfair", "Single Chamber", "Left Shaft - Top Left Door", "NorfairL2");
+
+            PatchKeyCard(jsonReader, "Norfair", "Crocomire Speedway", "Bottom Door", "NorfairBoss");
+
+            PatchKeyCard(jsonReader, "Norfair", "The Worst Room In The Game", "Top Right Door", "LowerNorfairL1");
+            PatchKeyCard(jsonReader, "Norfair", "Single Chamber", "Far Right Door", "LowerNorfairL1");
+
+            PatchKeyCard(jsonReader, "Norfair", "Lower Norfair Farming Room", "Left Door", "LowerNorfairBoss");
+
+            PatchKeyCard(jsonReader, "Maridia", "Mt. Everest", "Top Right Door", "MaridiaL1");
+            PatchKeyCard(jsonReader, "Maridia", "Aqueduct", "Middle Left Door", "MaridiaL1");
+
+            PatchKeyCard(jsonReader, "Maridia", "Botwoon Hallway", "Right Door", "MaridiaL2");
+            PatchKeyCard(jsonReader, "Maridia", "Halfie Climb Room", "Bottom Left Door", "MaridiaL2");
+
+            PatchKeyCard(jsonReader, "Maridia", "The Precious Room", "Bottom Left Door", "MaridiaBoss");
+
+            PatchKeyCard(jsonReader, "Crateria", "West Ocean", "Upper Right Section - Bottom Right Door", "WreckedShipL1");
+            PatchKeyCard(jsonReader, "Crateria", "Homing Geemer Room", "Right Door", "WreckedShipL1");
+            PatchKeyCard(jsonReader, "Wrecked Ship", "Gravity Suit Room", "Right Door", "WreckedShipL1");
+
+            PatchKeyCard(jsonReader, "Wrecked Ship", "Basement", "Right Door", "WreckedShipBoss");
+        }
+
         jsonReader.BuildGraph(world);
 
         var smVertices = jsonReader.GetVertices(world);
@@ -690,8 +739,6 @@ internal class SMWorld
         // Add lower norfair refill to mire area
         world.Graph.AddDirected(world.GetLocation("SM - Norfair - Screw Attack Room - Middle Right Door"), world.GetLocation("Mire"), world.GetItem("fixed"));
         world.Graph.AddDirected(world.GetLocation("Mire"), world.GetLocation("SM - Norfair - Screw Attack Room - Middle Right Door"), world.GetItem("fixed"));
-        
-
 
         // Patch maridia main street (since we're cheating with shinespark nodes)
         world.Graph.AddDirected(
@@ -707,7 +754,6 @@ internal class SMWorld
         );
 
         world.StartingItems.AddItem(world.GetItem("SMf_ZebesAwake"), 1);
-
     }
 
     private static void AddTech(World world, Vertex meta, Model.Tech tech)
@@ -752,7 +798,7 @@ internal class SMWorld
 
     public static PooledItem[] GetItemSet(World world)
     {
-        return
+        List<PooledItem> itemPool = 
         [
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMBombs", Game.SuperMetroid)),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("SMVaria", Game.SuperMetroid)),
@@ -780,10 +826,63 @@ internal class SMWorld
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("SMPowerBomb", Game.SuperMetroid)), 7),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("SMETank", Game.SuperMetroid)), 9),
 
-            new PooledItem(new ItemSetName("lw", world), 4, world.GetItem("SMMorph", Game.SuperMetroid))
-
-
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("SMMorph", Game.SuperMetroid)),
         ];
 
+        // Add SM keycards to the pool if enabled
+        if(world.Config.SMKeydoors)
+        {
+            itemPool.AddRange(
+            [
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMCrateriaL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMCrateriaL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMCrateriaBoss")),
+                
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMBrinstarL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMBrinstarL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMBrinstarBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMNorfairL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMNorfairL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMNorfairBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMWreckedShipL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMWreckedShipBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMMaridiaL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMMaridiaL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMMaridiaBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMLowerNorfairL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SMLowerNorfairBoss")),
+            ]);
+        }
+
+        return itemPool.ToArray();
     }
+
+    public static Model.Node PatchNodeWithKey(Model.Node node, string nameToPatch, string keycardName)
+    {
+        if (node.Name == nameToPatch)
+        {
+            return node with
+            {
+                NodeSubType = $"keycard: {keycardName}",
+            };
+        }
+        else
+        {
+            return node;
+        }
+    }
+
+    public static void PatchKeyCard(SMJsonReader reader, string areaName, string roomName, string doorName, string keyCardName)
+    {
+        var room = reader.Rooms.First(x => x.Name == roomName && x.Area == areaName);
+        var newNodes = room.Nodes.Select(x => PatchNodeWithKey(x, doorName, keyCardName));
+        var newRoom = room with { Nodes = newNodes.ToArray() };
+        reader.Rooms.Remove(room);
+        reader.Rooms.Add(newRoom);
+    }
+    
 }

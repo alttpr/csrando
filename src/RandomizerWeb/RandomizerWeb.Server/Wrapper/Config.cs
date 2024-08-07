@@ -71,8 +71,12 @@ public enum KeyShuffle
 {
     [Description("None")]
     None,
-    [Description("Keysanity")]
-    Keysanity
+    [Description("ALTTP Keys and SM Keycards")]
+    Keysanity,
+    [Description("ALTTP Keys")]
+    Z3Keys,
+    [Description("SM Keycards")]
+    SMKeycards
 }
 
 [DefaultValue(SevenCrystals)]
@@ -183,10 +187,11 @@ public class Config
     public OpenSMTourian OpenSMTourian { get; set; } = OpenSMTourian.FourBosses;
     public Z1Triforces Z1Triforces { get; set; } = Z1Triforces.EightTriforces;
     public Z1EntranceShuffle Z1EntranceShuffle { get; set; } = Z1EntranceShuffle.None;
+    public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
 
 
     public bool SingleWorld => GameMode == GameMode.Normal;
     public bool MultiWorld => GameMode == GameMode.Multiworld;
-    public bool Keysanity => false; // KeyShuffle != KeyShuffle.None;
+    public bool Keysanity => KeyShuffle != KeyShuffle.None;
 
 }

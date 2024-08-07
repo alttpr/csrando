@@ -142,7 +142,7 @@ internal record Runway
 
 internal record Strat
 (
-    int[] Link,
+    int[]? Link,
     string Name,
     bool? Notable,
     string? ReusableRoomwideNotable,

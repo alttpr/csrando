@@ -1398,9 +1398,11 @@ public sealed class Rom : IDisposable
     }
 
     /// <summary>Enable text box to show with free roaming items</summary>
-    public void SetFreeItemTextMode(bool freeCrystals = false, bool outsideDungeonItems = false, bool insideBigKey = false, bool insideMap = false, bool insideCompass = false, bool insideSmallKey = false)
+    public void SetFreeItemTextMode(bool freeCrystals = false, bool outsideDungeonItems = false, bool insideBigKey = false, bool insideMap = false, bool insideCompass = false, bool insideSmallKey = false, bool smKeycards = false)
     {
         byte bitField = 0;
+        if (smKeycards)
+            bitField |= 0b1000_0000;
         if (freeCrystals)
             bitField |= 0b0010_0000;
         if (outsideDungeonItems)
@@ -1933,13 +1935,6 @@ public sealed class Rom : IDisposable
         var triforcesNeeded = (byte)world.Config.Z1Triforces;
         Write(0x657000, [triforcesNeeded], 0);
     }
-
-    public void WriteSMBossesNeeded(World world)
-    {
-        var smBossesNeeded = (byte)world.Config.SMBosses;
-        Write(0x3F0200, [smBossesNeeded], 0);
-    }
-
 
     public void WriteComboVersionStrings(PRNG prng)
     {

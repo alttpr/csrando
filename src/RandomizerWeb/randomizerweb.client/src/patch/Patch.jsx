@@ -133,7 +133,7 @@ export default function Patch(props) {
             mode === 'multiworld' ? world.player : null
         ]);
 
-        function quadParts({ goal, opentower, ganonvulnerable, opensmtourian, z1triforces, z1entranceshuffle }) {
+        function quadParts({ goal, opentower, ganonvulnerable, opensmtourian, z1triforces, z1entranceshuffle, keyshuffle }) {
             const crystalIds = {
                 'nocrystals': '0',
                 'onecrystal': '1',
@@ -170,6 +170,7 @@ export default function Patch(props) {
 
             return [
                 goal && goal !== 'defeatall' ? `G${goal[0]}` : null,
+                keyshuffle && keyshuffle !== 'none' ? `K${keyshuffle[0]}` : null,
                 opentower && opentower !== 'sevencrystals' ? `Ot${crystalIds[opentower]}` : null,
                 ganonvulnerable && ganonvulnerable !== 'sevencrystals' ? `Vu${crystalIds[ganonvulnerable]}` : null,
                 opensmtourian && opensmtourian !== 'fourbosses' ? `St${bossIds[opensmtourian]}` : null,
