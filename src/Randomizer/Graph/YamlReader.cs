@@ -297,6 +297,9 @@ public class ConnectionGroup
     [YamlMember(Alias = "group")]
     public string Group { get; set; } = string.Empty;
 
+    [YamlMember(Alias = "symmetric")]
+    public bool Symmetric { get; set; } = false;
+
     [YamlMember(Alias = "in")]
     public List<List<List<string>>> In { get; set; } = new();
     [YamlMember(Alias = "out")]

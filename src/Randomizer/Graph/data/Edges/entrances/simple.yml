@@ -342,7 +342,9 @@ connections:
   # Locations that are originally spanned by two-entrance caves (e.g. Kakariko
   # Elder’s House) will remain connected to each other via a two-entrance
   # cave. This does not include any of Light World Death Mountain.
+  # NOTE: The order below matters between in and out, as it keeps connected caves together.
   - group: multi_entrance_caves
+    symmetric: true
     in:
       - [["Grandma's House Right - In", "Grandma's House Right - Exit"], ["Grandma's House Left - In", "Grandma's House Left - Exit"]]
       - [["Brothers House Left - In", "Brothers House Left - Exit"], ["Brothers House Right - In", "Brothers House Right - Exit"]]

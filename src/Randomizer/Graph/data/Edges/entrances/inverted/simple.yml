@@ -22,6 +22,7 @@ connections:
   # Elder’s House) will remain connected to each other via a two-entrance
   # cave. This does not include any of Light World Death Mountain.
   - group: multi_entrance_caves
+    symmetric: true
     in:
       - [["Death Mountain Foot Cave Entrance - In", "Bumper Cave Bottom - Exit"], ["Death Mountain Foot Descent Ledge - In", "Bumper Cave Top Exit - Exit"]]
     out:
