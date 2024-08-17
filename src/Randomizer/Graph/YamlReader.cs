@@ -300,6 +300,9 @@ public class ConnectionGroup
     [YamlMember(Alias = "symmetric")]
     public bool Symmetric { get; set; } = false;
 
+    [YamlMember(Alias = "crossworld")]
+    public bool CrossWorld { get; set; } = false;
+
     [YamlMember(Alias = "in")]
     public List<List<List<string>>> In { get; set; } = new();
     [YamlMember(Alias = "out")]
