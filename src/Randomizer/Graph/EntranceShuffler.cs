@@ -56,6 +56,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         foreach (var connectionGroups in definition.Connections.Concat(definitionState.Connections).GroupBy(x => x.Group))
         {
             /// do scoped things
+            /// TODO: figure out what happens when scoped collides with Symetric
             var connected = new List<string>();
             var scopedGroup = scopedGroups.FirstOrDefault(x => x.Key == connectionGroups.Key);
             if (scopedGroup != null)
@@ -102,7 +103,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         }
     }
 
-    public static void SymmetricShuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger logger, List<string> connected)
+    public static void SymmetricShuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger? logger, List<string> connected)
     {
         var ins = new List<List<List<string>>>(connectionGroups.SelectMany(x => x.In));
         var outs = new List<List<List<string>>>(connectionGroups.SelectMany(x => x.Out));
@@ -113,32 +114,26 @@ internal sealed class EntranceShuffler : IWorldModifier
 
         while (ins.Count > 0)
         {
-            if (connected.Contains(ins[0][0][0]))
-            {
-                ins.RemoveAt(0);
-                continue;
-            }
-            if (connected.Contains(outs[0][0][0]))
-            {
-                outs.RemoveAt(0);
-                continue;
-            }
-
             Queue<List<string>> from_items;
             Queue<List<string>> to_items;
             var in_index = prng.GetRandomInt(ins.Count);
             var out_index = prng.GetRandomInt(outs.Count);
+
             if (in_index == out_index)
             {
                 from_items = new(prng.Shuffle(ins.ElementAt(in_index)));
-                to_items = new(outs.ElementAt(in_index));
+                to_items = new(outs.ElementAt(out_index));
                 ins.RemoveAt(in_index);
                 outs.RemoveAt(out_index);
             }
             else
             {
-                from_items = new(prng.Shuffle(ins.ElementAt(in_index)).Concat(prng.Shuffle(ins.ElementAt(out_index))));
-                to_items = new(outs.ElementAt(out_index).Concat(outs.ElementAt(in_index)));
+                var shuffled = prng.Shuffle(ins.ElementAt(in_index).Indexed()).ToArray();
+                var unshuffled_outs = outs.ElementAt(in_index);
+                var shuffled_outs = new List<List<string>>();
+                foreach (var (index, _) in shuffled) shuffled_outs.Add(unshuffled_outs[index]);
+                from_items = new(shuffled.Select(e => e.Value).Concat(ins.ElementAt(out_index)));
+                to_items = new(outs.ElementAt(out_index).Concat(shuffled_outs));
                 ins.RemoveAt(Math.Max(in_index, out_index));
                 ins.RemoveAt(Math.Min(in_index, out_index));
                 outs.RemoveAt(Math.Max(in_index, out_index));
@@ -165,7 +160,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         }
     }
 
-    public static void Shuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger logger, List<string> connected)
+    public static void Shuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger? logger, List<string> connected)
     {
         var ins = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.In)));
         var outs = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Out)));
