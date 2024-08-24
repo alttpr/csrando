@@ -1,3 +1,3 @@
 # Entrance Shuffle
 
-crossworld: if we allow multientrance caves/dungeons to go from LW to DW.
+crossworld: put underworld cave locations in an array and they will assure that they connections all have the same moonpearliness

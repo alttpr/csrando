@@ -1,0 +1,21 @@
+# This setting uses the highest number of entrance type groupings. This
+# restricts how thoroughly different entrances are randomized with the intention
+# of keeping things simple.
+connections:
+  # Single-Entrance Caves All entrances are grouped and randomized with each
+  # other. This does not include any of Light World Death Mountain. Example:
+  # houses.
+  - group: caves
+    overworld:
+      - [["Bumper Cave Entrance Bottom - In", "Bumper Cave Entrance Bottom - Out"]]
+      - [["Link's House - In", "Link's House - Out"]]
+      - [["Bomb Shoppe - Shoppe - In", "Bomb Shoppe - Shoppe - Out"]]
+      - [["West Death Mountain Big Fairy - In", "West Death Mountain Big Fairy - Out"]]
+      - [["Death Mountain Foot Cave Entrance - In", "Death Mountain Foot Cave Entrance - Out"]]
+      - [["Death Mountain Foot Descent Ledge - In", "Death Mountain Foot Descent Ledge - Out"]]
+    underworld:
+      - [[ "Old Man Cave Ledge","Old Man Cave Ledge - Exit"]]
+      - [["Bomb Shoppe Lobby", "Bomb Shoppe Lobby - Exit"]]
+      - [["Link's House - Bedroom", "Link's House - Bedroom - Exit"]]
+      - [["Old Man Maze", "Old Man Maze - Exit"]]
+      - [["Bumper Cave Bottom", "Bumper Cave Bottom - Exit"], ["Bumper Cave Top Exit", "Bumper Cave Top Exit - Exit"]]

@@ -104,12 +104,8 @@ internal sealed class EntranceShuffler : IWorldModifier
     {
         var overworlds = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Overworld)));
         var underworlds = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Underworld)));
-        if (overworlds.Count != underworlds.Count)
-        {
-            throw new Exception("Entrance count mismatch");
-        }
 
-        while (overworlds.Count > 0)
+        while (underworlds.Count > 0)
         {
             if (connected.Contains(overworlds.Peek()[0][0]))
             {
@@ -124,9 +120,31 @@ internal sealed class EntranceShuffler : IWorldModifier
 
             var ow_items = new Queue<List<string>>(prng.Shuffle(overworlds.Dequeue()));
             var uw_items = new Queue<List<string>>(prng.Shuffle(underworlds.Dequeue()));
-            if (ow_items.Count != uw_items.Count)
+            var firstOverworld = world.GetLocation(ow_items.Peek()[0]);
+            while (ow_items.Count != uw_items.Count)
             {
-                throw new Exception("Entrance sub-count mismatch");
+                if (ow_items.Count < uw_items.Count)
+                {
+                    var owCollection = overworlds.Dequeue();
+                    foreach (var entry in owCollection)
+                    {
+                        // TODO: this has potential to be a bug, if the data has overworld
+                        // locations grouped that are both moon pearl and not moon pearl.
+                        if (world.GetLocation(entry[0]).MoonPearl != firstOverworld.MoonPearl)
+                        {
+                            overworlds.Enqueue(owCollection);
+                            break;
+                        }
+                        ow_items.Enqueue(entry);
+                    }
+                }
+                else
+                {
+                    foreach (var entry in underworlds.Dequeue())
+                    {
+                        uw_items.Enqueue(entry);
+                    }
+                }
             }
 
             while (ow_items.Count > 0)

@@ -297,9 +297,6 @@ public class ConnectionGroup
     [YamlMember(Alias = "group")]
     public string Group { get; set; } = string.Empty;
 
-    [YamlMember(Alias = "crossworld")]
-    public bool CrossWorld { get; set; } = false;
-
     [YamlMember(Alias = "overworld")]
     public List<List<List<string>>> Overworld { get; set; } = new();
     [YamlMember(Alias = "underworld")]

@@ -1,6 +1,9 @@
 # This setting uses the highest number of entrance type groupings. This
 # restricts how thoroughly different entrances are randomized with the intention
 # of keeping things simple.
+# As in Simple except all non-dungeon entrances (including all single-entrance
+# caves, all multi-entrance caves, and all of Light World Death Mountain) are
+# grouped together and randomized with each other. This includes the entrance to Death Mountain.
 fixed:
   - ["Houlihan Room - In", "Houlihan Room"]
   - ["Houlihan Room - Exit", "Houlihan Room - Out"]
@@ -134,20 +137,14 @@ connections:
           - "Turtle Rock - Laser Entrance"
           - "Turtle Rock - Laser Entrance - Exit"
 
-  # Light World Death Mountain All entrances remain confined to the Light World
-  # Death Mountain overworld region and are randomized with each other. Note that
-  # the entrance to Death Mountain (via the cave where the Old Man is lost) is
-  # also not randomized.
-  - group: light_world_death_mountain
+  - group: caves
     overworld:
-      # west
       - [["Spectacle Rock Cave Top - In", "Spectacle Rock Cave Top - Out"]]
       - [["Spectacle Rock Cave Middle - In", "Spectacle Rock Cave Middle - Out"]]
       - [["Spectacle Rock Cave Exit - In", "Spectacle Rock Cave Exit - Out"]]
       - [["Old Man Home - In", "Old Man Home - Out"]]
       - [["Old Man Home Circle - In", "Old Man Home Circle - Out"]]
       - [["Old Man Maze - In", "Old Man Maze - Out"]]
-      # east
       - [["Fairy Ascension Cave - Pits Right - In", "Fairy Ascension Cave - Pits Right - Out"]]
       - [["Mimic Cave Entrance - In", "Mimic Cave Entrance - Out"]]
       - [["Paradox Cave - Middle - In", "Paradox Cave - Middle - Out"]]
@@ -157,55 +154,6 @@ connections:
       - [["Fairy Ascension Cave - Bottom - In", "Fairy Ascension Cave - Bottom - Out"]]
       - [["Spiral Cave Top - In", "Spiral Cave Top - Out"]]
       - [["Paradox Cave - Top - In", "Paradox Cave - Top - Out"]]
-    underworld:
-      # west
-      - [["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Exit"]]
-      - [["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Exit"]]
-      - [["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Exit"]]
-      - [["Old Man Home", "Old Man Home - Exit"]]
-      - [["Old Man Home Circle", "Old Man Home Circle - Exit"]]
-      - [["Old Man Maze", "Old Man Maze - Exit"]]
-      # east
-      - [["Fairy Ascension Cave - Pits Right", "Fairy Ascension Cave - Pits Right - Exit"]]
-      - [["Mimic Cave Entrance", "Mimic Cave Entrance - Exit"]]
-      - [["Paradox Cave - Middle", "Paradox Cave - Middle - Exit"]]
-      - [["Paradox Cave - Bottom Entrance", "Paradox Cave - Bottom Entrance - Exit"]]
-      - [["Spiral Cave Exit", "Spiral Cave Exit - Exit"]]
-      - [["Fairy Pond Cave Entrance", "Fairy Pond Cave Entrance - Exit"]]
-      - [["Fairy Ascension Cave - Bottom", "Fairy Ascension Cave - Bottom - Exit"]]
-      - [["Spiral Cave Top", "Spiral Cave Top - Exit"]]
-      - [["Paradox Cave - Top", "Paradox Cave - Top - Exit"]]
-
-  # Overworld Holes (excluding those in Skull Woods) All holes are grouped and
-  # randomized with each other. Holes and their associated cave entrance remain
-  # paired together. For example falling in a hole and exiting will take you to
-  # the overworld cave associated with that hole, regardless of which interior
-  # rooms the hole led to.
-  - group: overworld_holes
-    overworld:
-      - [["Thief Hideout - Hole", "Thief Hideout - In", "Thief Hideout - Out"]]
-      - [["Sewers - Block Puzzle - Hole", "Sanctuary Hall - In", "Sanctuary Hall - Out"]]
-      - [["Lumberjacks Tree - Hole", "Lumberjacks Cave - In",  "Lumberjacks Cave - Out"]]
-      - [["Drop Great Fairy - Hole", "Drop Great Fairy - In", "Drop Great Fairy - Out"]]
-      - [["Kakariko Well - Hole", "Kakariko Well - In",  "Kakariko Well - Out"]]
-      - [["Secret Passage Uncle - Hole", "Secret Passage Stairs - In", "Secret Passage Stairs - Out"]]
-      - [["Magic Bat - Hole", "Magic Bat - In", "Magic Bat - Out"]]
-      - [["Pyramid - Hole", "Pyramid Ganon Fail - In", "Pyramid Ganon Fail - Out"]]
-    underworld:
-      - [["Thief Hideout - Ledge", "Thief Hideout", "Thief Hideout - Exit"]]
-      - [["Sewers - Block Puzzle", "Sanctuary Hall", "Sanctuary Hall - Exit"]]
-      - [["Lumberjacks Cave Fairies", "Lumberjacks Cave","Lumberjacks Cave - Exit"]]
-      - [["Drop Great Fairy Antechamber", "Drop Great Fairy Exit", "Drop Great Fairy Exit - Exit"]]
-      - [["Kakariko Well", "Kakariko Well - Water","Kakariko Well - Exit"]]
-      - [["Secret Passage Uncle", "Secret Passage Stairs", "Secret Passage Stairs - Exit"]]
-      - [["Magic Bat Entry", "Magic Bat Left", "Magic Bat Left - Exit"]]
-      - [["Ganon's Room", "Ganon's Drop", "Ganon's Drop - Exit"]]
-
-  # Single-Entrance Caves All entrances are grouped and randomized with each
-  # other. This does not include any of Light World Death Mountain. Example:
-  # houses.
-  - group: single_entrance_caves
-    overworld:
       - [["High Stakes Chest Game - In", "High Stakes Chest Game - Out"]]
       - [["Lumberjacks House - In", "Lumberjacks House - Out"]]
       - [["Waterfall of Wishing - In", "Waterfall of Wishing - Out"]]
@@ -271,7 +219,24 @@ connections:
       - [["Dark Shopping Mall Big Fairy - In", "Dark Shopping Mall Big Fairy - Out"]]
       - [["Hint Giver Cave - In", "Hint Giver Cave - Out"]]
       - [["Dev Cave - In", "Dev Cave - Out"]]
+      - [["Grandma's House Right - In", "Grandma's House Right - Out"]]
+      - [["Grandma's House Left - In", "Grandma's House Left - Out"]]
+      - [["Brothers House Left - In", "Brothers House Left - Out"]]
+      - [["Brothers House Right - In", "Brothers House Right - Out"]]
+      - [["Dark Floating Island - In", "Dark Floating Island - Out"]]
+      - [["East Dark Death Mountain Summit Rock - In", "East Dark Death Mountain Summit Rock - Out"]]
+      - [["East Dark Death Mountain Summit Bunny - In", "East Dark Death Mountain Summit Bunny - Out"]]
+      - [["East Dark Death Mountain Running Man Bunny - In", "East Dark Death Mountain Running Man Bunny - Out"]]
+      - [["Death Mountain Foot Cave Entrance - In", "Death Mountain Foot Cave Entrance - Out"]]
     underworld:
+      - [["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Exit"], ["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Exit"], ["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Exit"]]
+      - [["Old Man Home", "Old Man Home - Exit"], ["Old Man Home Circle", "Old Man Home Circle - Exit"]]
+      - [["Old Man Maze", "Old Man Maze - Exit"], ["Old Man Cave Ledge", "Old Man Cave Ledge - Exit"]]
+      - [["Mimic Cave Entrance", "Mimic Cave Entrance - Exit"]]
+      - [["Paradox Cave - Top", "Paradox Cave - Top - Exit"], ["Paradox Cave - Middle", "Paradox Cave - Middle - Exit"], ["Paradox Cave - Bottom Entrance", "Paradox Cave - Bottom Entrance - Exit"]]
+      - [["Spiral Cave Exit", "Spiral Cave Exit - Exit"], ["Spiral Cave Top", "Spiral Cave Top - Exit"]]
+      - [["Fairy Pond Cave Entrance", "Fairy Pond Cave Entrance - Exit"]]
+      - [["Fairy Ascension Cave - Pits Right", "Fairy Ascension Cave - Pits Right - Exit"], ["Fairy Ascension Cave - Bottom", "Fairy Ascension Cave - Bottom - Exit"]]
       - [["Money Making Game", "Money Making Game - Exit"]]
       - [["Lumberjacks House", "Lumberjacks House - Exit"]]
       - [["Waterfall Fairy", "Waterfall Fairy - Exit"]]
@@ -337,20 +302,32 @@ connections:
       - [["Shopping Mall Big Fairy", "Shopping Mall Big Fairy - Exit"]]
       - [["Hint Giver Cave - Glove", "Hint Giver Cave - Glove - Exit"]]
       - [["Dev Cave", "Dev Cave - Exit"]]
-
-  # Multi-Entrance Caves All entrances are grouped and randomized with each other.
-  # Locations that are originally spanned by two-entrance caves (e.g. Kakariko
-  # Elder’s House) will remain connected to each other via a two-entrance
-  # cave. This does not include any of Light World Death Mountain.
-  # NOTE: The order below matters between in and out, as it keeps connected caves together.
-  - group: multi_entrance_caves
-    overworld:
-      - [["Grandma's House Right - In", "Grandma's House Right - Out"], ["Grandma's House Left - In", "Grandma's House Left - Out"]]
-      - [["Brothers House Left - In", "Brothers House Left - Out"], ["Brothers House Right - In", "Brothers House Right - Out"]]
-      - [["Dark Floating Island - In", "Dark Floating Island - Out"], ["East Dark Death Mountain Summit Rock - In", "East Dark Death Mountain Summit Rock - Out"]]
-      - [["East Dark Death Mountain Summit Bunny - In", "East Dark Death Mountain Summit Bunny - Out"], ["East Dark Death Mountain Running Man Bunny - In", "East Dark Death Mountain Running Man Bunny - Out"]]
-    underworld:
       - [["Grandma's House Right", "Grandma's House Right - Exit"], ["Grandma's House Left", "Grandma's House Left - Exit"]]
       - [["Brothers House Left", "Brothers House Left - Exit"], ["Brothers House Right", "Brothers House Right - Exit"]]
       - [["Hookshot Cave Corner", "Hookshot Cave Corner - Exit"], ["Hookshot Cave", "Hookshot Cave - Exit"]]
       - [["Super Bunny Exit", "Super Bunny Exit - Exit"], ["Super Bunny Entrance Bottom", "Super Bunny Entrance Bottom - Exit"]]
+
+  # Overworld Holes (excluding those in Skull Woods) All holes are grouped and
+  # randomized with each other. Holes and their associated cave entrance remain
+  # paired together. For example falling in a hole and exiting will take you to
+  # the overworld cave associated with that hole, regardless of which interior
+  # rooms the hole led to.
+  - group: overworld_holes
+    overworld:
+      - [["Thief Hideout - Hole", "Thief Hideout - In", "Thief Hideout - Out"]]
+      - [["Sewers - Block Puzzle - Hole", "Sanctuary Hall - In", "Sanctuary Hall - Out"]]
+      - [["Lumberjacks Tree - Hole", "Lumberjacks Cave - In",  "Lumberjacks Cave - Out"]]
+      - [["Drop Great Fairy - Hole", "Drop Great Fairy - In", "Drop Great Fairy - Out"]]
+      - [["Kakariko Well - Hole", "Kakariko Well - In",  "Kakariko Well - Out"]]
+      - [["Secret Passage Uncle - Hole", "Secret Passage Stairs - In", "Secret Passage Stairs - Out"]]
+      - [["Magic Bat - Hole", "Magic Bat - In", "Magic Bat - Out"]]
+      - [["Pyramid - Hole", "Pyramid Ganon Fail - In", "Pyramid Ganon Fail - Out"]]
+    underworld:
+      - [["Thief Hideout - Ledge", "Thief Hideout", "Thief Hideout - Exit"]]
+      - [["Sewers - Block Puzzle", "Sanctuary Hall", "Sanctuary Hall - Exit"]]
+      - [["Lumberjacks Cave Fairies", "Lumberjacks Cave","Lumberjacks Cave - Exit"]]
+      - [["Drop Great Fairy Antechamber", "Drop Great Fairy Exit", "Drop Great Fairy Exit - Exit"]]
+      - [["Kakariko Well", "Kakariko Well - Water","Kakariko Well - Exit"]]
+      - [["Secret Passage Uncle", "Secret Passage Stairs", "Secret Passage Stairs - Exit"]]
+      - [["Magic Bat Entry", "Magic Bat Left", "Magic Bat Left - Exit"]]
+      - [["Ganon's Room", "Ganon's Drop", "Ganon's Drop - Exit"]]
