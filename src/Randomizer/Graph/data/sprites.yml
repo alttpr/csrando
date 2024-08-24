@@ -875,7 +875,7 @@ AgahnimCutscene: #CUTSCENE AGAHNIM
   flags: NoPlace
   sheets: [[0x55], [0x3D], [0x42], [0x43]]
 Boulders:
-  bytes: [0xC2] # TODO: this belongs to overlord 0xF4?
+  bytes: [0xC2] # this belongs to overlord 0xF4
   flags: NoPlace, OverworldOnly
   sheets: [null, null, null, [0x10]]
 Gibo:
@@ -1012,7 +1012,7 @@ Mushroom:
   flags: NoPlace
 FakeMasterSword: #FAKE MASTER SWORD
   bytes: [0xE8]
-  flags: NoDrop #TODO: DR has this as "no drop", does it need to be?
+  flags: NoDrop # they're more like pots rather than enemies
   sheets: [null, null, null, [0x11]]
 PotionShop: #MAGIC SHOP ASSISTANT
   bytes: [0xE9]
