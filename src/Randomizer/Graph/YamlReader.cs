@@ -434,6 +434,9 @@ public partial class Room
     [YamlMember(Alias = "roomid")]
     public int Roomid { get; set; }
 
+    [YamlMember(Alias = "oam")]
+    public byte OAM { get; set; } = 0x00;
+
     [YamlMember(Alias = "nodes")]
     public required RoomNodes Nodes { get; set; }
 

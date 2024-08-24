@@ -1,6 +1,7 @@
 rooms:
   - roomid: 0xCB
     group: 12
+    oam: 0x01 # room has overlapping layers
     nodes:
       regions:
         - name: "Thieves' Town - Grand Room NW"

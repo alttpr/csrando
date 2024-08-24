@@ -1,6 +1,7 @@
 rooms:
   - roomid: 0x51
     group: 1
+    oam: 0x01 # room has overlapping layers
     nodes:
       regions:
         - name: "Hyrule Castle - Throne Room"

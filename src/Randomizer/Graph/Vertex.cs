@@ -83,6 +83,7 @@ public sealed class Vertex : ICloneable
     public Item? Trophy { get; init; }
     public Sprite? Sprite { get; set; }
     public int? RoomId { get; init; }
+    public byte? RoomOAM { get; init; }
     public int? Map { get; init; }
     public bool? MoonPearl { get; init; }
     public ItemSetName[] ItemSet { get; init; } = [];

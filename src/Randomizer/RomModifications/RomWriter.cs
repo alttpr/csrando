@@ -891,7 +891,6 @@ public static class RomWriter
         rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
     }
 
-    private static readonly byte[] _oamLayeredRooms = [0x14, 0x15, 0x51, 0x59, 0x5B, 0x60, 0x62, 0x81, 0x86, 0xA8, 0xAA, 0xB2, 0xB9, 0xC2, 0xCB, 0xCC, 0xDB, 0xDC];
     /// <summary>
     /// Write Room headers, and room data for all enemies in game.
     /// </summary>
@@ -913,9 +912,10 @@ public static class RomWriter
                 continue;
             }
             outputOffsets[i] = (ushort)outputBytes.Count;
-            // Some OAM forcing magic stuff based on room_id
-            // TODO: move this into data?
-            outputBytes.Add((byte)(_oamLayeredRooms.Contains((byte)i) ? 0x01 : 0x00));
+            // reconfigure OAM allocation to work with overlapping layers
+            // TODO: room 0x86 is empty (so we don't have a data file,) but it has the flag set in vanilla
+            byte roomOAM = enemyRooms[i].Select(r => r.RoomOAM.GetValueOrDefault()).Concat([(byte)0x00]).Max();
+            outputBytes.Add(roomOAM);
             foreach (var enemy in enemyRooms[i])
             {
                 var sprite = enemy.Sprite!;
