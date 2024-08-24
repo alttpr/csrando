@@ -588,7 +588,7 @@ Bee:
 Agahnim:
   bytes: [0x7A]
   flags: NoPlace
-  sheets: [null, [0x1A], [0x42], [0x43]] #TODO: DR has 0x55 in slot 0 (zelda capture cutscene), and 0x3D in slot 1 as well (combat lightning)
+  sheets: [[0x55], [0x3D], [0x42], [0x43]]
 AgahnimBall: #AGAHNIMS BALLS
   bytes: [0x7B]
   flags: NoPlace
@@ -651,7 +651,8 @@ Flames: #KONDONGO FIRE
 Mothula:
   bytes: [0x88]
   flags: NoPlace
-  sheets: [null, null, [0x38], null] #TODO: DR has 0x52 in slot 3 (spikes)
+  # 0x52/0x53 in slot 3 is for the spikes. because moth spawns them, they're not in data and need to be elsewhere
+  sheets: [null, null, [0x38], [0x52, 0x53]]
 MothulaBeam: #MOTHULA BEAM
   bytes: [0x89]
   flags: NoPlace
@@ -926,7 +927,8 @@ TrinexxHeadIce: #TRINEXX ICE HEAD
 Blind:
   bytes: [0xCE]
   flags: NoPlace
-  sheets: [null, null, [0x3B], null] #TODO: DR has 0x2C in slot 1 (blind laser)
+  # 0x2C in slot 1 is blind's laser, which is spawned by blind and not in data
+  sheets: [null, [0x2C], [0x3B], null]
 Swamola:
   bytes: [0xCF]
   flags: Challenge, NoDrop
