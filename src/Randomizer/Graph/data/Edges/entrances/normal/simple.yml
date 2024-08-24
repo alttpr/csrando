@@ -11,21 +11,20 @@ connections:
   # other. This does not include any of Light World Death Mountain. Example:
   # houses.
   - group: single_entrance_caves
-    in:
-      - [["Bomb Shoppe - Shoppe - In", "Bomb Shoppe Lobby - Exit"]]
-      - [["West Death Mountain Big Fairy - In", "Death Mountain Big Fairy - Exit"]]
-    out:
-      - [["Bomb Shoppe Lobby", "Bomb Shoppe - Shoppe - Out"]]
-      - [["Death Mountain Big Fairy", "West Death Mountain Big Fairy - Out"]]
+    overworld:
+      - [["Bomb Shoppe - Shoppe - In", "Bomb Shoppe - Shoppe - Out"]]
+      - [["West Death Mountain Big Fairy - In", "West Death Mountain Big Fairy - Out"]]
+    underworld:
+      - [["Bomb Shoppe Lobby", "Bomb Shoppe Lobby - Exit"]]
+      - [["Death Mountain Big Fairy", "Death Mountain Big Fairy - Exit"]]
   # Multi-Entrance Caves All entrances are grouped and randomized with each other.
   # Locations that are originally spanned by two-entrance caves (e.g. Kakariko
   # Elder’s House) will remain connected to each other via a two-entrance
   # cave. This does not include any of Light World Death Mountain.
   - group: multi_entrance_caves
-    symmetric: true
-    in:
-      - [["Bumper Cave Entrance Bottom - In", "Bumper Cave Bottom - Exit"], ["Bumper Cave Ledge Top - In", "Bumper Cave Top Exit - Exit"]]
-      - [["Death Mountain Descent - In", "Death Mountain Descent Cave Right - Exit"], ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left - Exit"]]
-    out:
-      - [["Bumper Cave Bottom", "Bumper Cave Entrance Bottom - Out"], ["Bumper Cave Top Exit", "Bumper Cave Ledge Top - Out"]]
-      - [["Death Mountain Descent Cave Right", "Death Mountain Descent - Out"], ["Death Mountain Descent Cave Left", "Death Mountain Foot Descent Ledge - Out"]]
+    overworld:
+      - [["Bumper Cave Entrance Bottom - In", "Bumper Cave Entrance Bottom - Out"], ["Bumper Cave Ledge Top - In", "Bumper Cave Ledge Top - Out"]]
+      - [["Death Mountain Descent - In", "Death Mountain Descent - Out"], ["Death Mountain Foot Descent Ledge - In", "Death Mountain Foot Descent Ledge - Out"]]
+    underworld:
+      - [["Bumper Cave Bottom", "Bumper Cave Bottom - Exit"], ["Bumper Cave Top Exit", "Bumper Cave Top Exit - Exit"]]
+      - [["Death Mountain Descent Cave Right", "Death Mountain Descent Cave Right - Exit"], ["Death Mountain Descent Cave Left", "Death Mountain Descent Cave Left - Exit"]]

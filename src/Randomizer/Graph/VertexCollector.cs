@@ -163,6 +163,7 @@ internal class VertexCollector
                         World = world,
                         Map = map.MapMap,
                         EntranceId = entrance.EntranceId,
+                        MoonPearl = regionVertex.MoonPearl,
                     };
                     structuredVertices.Add(nameIn, entranceInVertex);
                     var entranceOutVertex = new Vertex
@@ -172,6 +173,7 @@ internal class VertexCollector
                         World = world,
                         Map = map.MapMap,
                         OutletId = entrance.OutletId,
+                        MoonPearl = regionVertex.MoonPearl,
                     };
                     structuredVertices.Add(nameOut, entranceOutVertex);
                     foreach (var condition in entrance.Conditions.DefaultIfEmpty("fixed"))
@@ -210,6 +212,7 @@ internal class VertexCollector
                         World = world,
                         Map = map.MapMap,
                         EntranceIds = hole.EntranceIds.ToArray(),
+                        MoonPearl = regionVertex.MoonPearl,
                     };
                     structuredVertices.Add(hole.Name, holeVertex);
                     foreach (var condition in hole.Conditions.DefaultIfEmpty("fixed"))

@@ -61,151 +61,97 @@ internal sealed class EntranceShuffler : IWorldModifier
             var scopedGroup = scopedGroups.FirstOrDefault(x => x.Key == connectionGroups.Key);
             if (scopedGroup != null)
             {
-                var scopedIns = new Queue<List<List<string>>>(prng.Shuffle(scopedGroup.SelectMany(x => x.In)));
-                var scopedOuts = new Queue<List<List<string>>>(prng.Shuffle(scopedGroup.SelectMany(x => x.Out)));
-                if (scopedIns.Count > scopedOuts.Count)
-                {
-                    throw new Exception("Entrance count mismatch (scoped)");
-                }
+                var scopedOverworlds = new Queue<List<List<string>>>(prng.Shuffle(scopedGroup.SelectMany(x => x.Overworld)));
+                var scopedUnderworlds = new Queue<List<List<string>>>(prng.Shuffle(scopedGroup.SelectMany(x => x.Underworld)));
 
-                while (scopedIns.Count > 0)
+                while (scopedOverworlds.Count > 0 && scopedUnderworlds.Count > 0)
                 {
-                    var from_items = new Queue<List<string>>(prng.Shuffle(scopedIns.Dequeue()));
-                    var to_items = new Queue<List<string>>(prng.Shuffle(scopedOuts.Dequeue()));
+                    var ow_items = new Queue<List<string>>(prng.Shuffle(scopedOverworlds.Dequeue()));
+                    var uw_items = new Queue<List<string>>(prng.Shuffle(scopedUnderworlds.Dequeue()));
 
-                    while (from_items.Count > 0)
+                    while (ow_items.Count > 0)
                     {
-                        var froms = from_items.Dequeue();
-                        var tos = to_items.Dequeue();
+                        var overworlds = ow_items.Dequeue();
+                        var underworlds = uw_items.Dequeue();
 
-                        connected.Add(froms[0]);
-                        connected.Add(tos[0]);
-                        for (var i = 0; i < froms.Count; i++)
+                        connected.Add(overworlds[0]);
+                        connected.Add(underworlds[0]);
+                        for (var i = 0; i < overworlds.Count; i++)
                         {
-                            var from = world.GetLocation(froms[i]);
-                            var to = world.GetLocation(tos[i]);
-                            world.Graph.AddDirected(from, to, fixedItem);
-                            logger?.LogInformation("Scoped '{From}' -> '{To}' ({Condition})", from.Name, to.Name, fixedItem.Name);
+                            var overworld = world.GetLocation(overworlds[i]);
+                            var underworld = world.GetLocation(underworlds[i]);
+                            if (overworld.Type == VertexType.Entrance || overworld.Type == VertexType.Hole)
+                            {
+                                world.Graph.AddDirected(overworld, underworld, fixedItem);
+                                logger?.LogInformation("Scoped '{From}' -> '{To}' ({Condition})", overworld.Name, underworld.Name, fixedItem.Name);
+                            }
+                            else
+                            {
+                                world.Graph.AddDirected(underworld, overworld, fixedItem);
+                                logger?.LogInformation("Scoped '{From}' -> '{To}' ({Condition})", underworld.Name, overworld.Name, fixedItem.Name);
+                            }
                         }
                     }
                 }
             }
 
-            if (connectionGroups.First().Symmetric)
-            {
-                SymmetricShuffle(prng, connectionGroups, world, logger, connected);
-            }
-            else
-            {
-                Shuffle(prng, connectionGroups, world, logger, connected);
-            }
-
+            Shuffle(prng, connectionGroups, world, logger, connected);
         }
     }
 
-    public static void SymmetricShuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger? logger, List<string> connected)
-    {
-        var ins = new List<List<List<string>>>(connectionGroups.SelectMany(x => x.In));
-        var outs = new List<List<List<string>>>(connectionGroups.SelectMany(x => x.Out));
-        if (ins.Count != outs.Count)
-        {
-            throw new Exception("Entrance count mismatch");
-        }
-
-        while (ins.Count > 0)
-        {
-            Queue<List<string>> from_items;
-            Queue<List<string>> to_items;
-            var in_index = prng.GetRandomInt(ins.Count);
-            var out_index = prng.GetRandomInt(outs.Count);
-
-            if (in_index == out_index)
-            {
-                from_items = new(prng.Shuffle(ins.ElementAt(in_index)));
-                to_items = new(outs.ElementAt(out_index));
-                ins.RemoveAt(in_index);
-                outs.RemoveAt(out_index);
-            }
-            else
-            {
-                var shuffled = prng.Shuffle(ins.ElementAt(in_index).Indexed()).ToArray();
-                var unshuffled_outs = outs.ElementAt(in_index);
-                var shuffled_outs = new List<List<string>>();
-                foreach (var (index, _) in shuffled) shuffled_outs.Add(unshuffled_outs[index]);
-                from_items = new(shuffled.Select(e => e.Value).Concat(ins.ElementAt(out_index)));
-                to_items = new(outs.ElementAt(out_index).Concat(shuffled_outs));
-                ins.RemoveAt(Math.Max(in_index, out_index));
-                ins.RemoveAt(Math.Min(in_index, out_index));
-                outs.RemoveAt(Math.Max(in_index, out_index));
-                outs.RemoveAt(Math.Min(in_index, out_index));
-            }
-
-            while (from_items.Count > 0)
-            {
-                var froms = from_items.Dequeue();
-                var tos = to_items.Dequeue();
-                if (froms.Count != tos.Count)
-                {
-                    throw new Exception("Entrance sub-sub-count mismatch");
-                }
-
-                for (var i = 0; i < froms.Count; i++)
-                {
-                    var from = world.GetLocation(froms[i]);
-                    var to = world.GetLocation(tos[i]);
-                    world.Graph.AddDirected(from, to, world.GetItem("fixed"));
-                    logger?.LogInformation("Linked '{From}' -> '{To}' ({Condition})", from.Name, to.Name, world.GetItem("fixed").Name);
-                }
-            }
-        }
-    }
 
     public static void Shuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger? logger, List<string> connected)
     {
-        var ins = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.In)));
-        var outs = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Out)));
-        if (ins.Count != outs.Count)
+        var overworlds = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Overworld)));
+        var underworlds = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Underworld)));
+        if (overworlds.Count != underworlds.Count)
         {
             throw new Exception("Entrance count mismatch");
         }
 
-        while (ins.Count > 0)
+        while (overworlds.Count > 0)
         {
-            if (connected.Contains(ins.Peek()[0][0]))
+            if (connected.Contains(overworlds.Peek()[0][0]))
             {
-                ins.Dequeue();
+                overworlds.Dequeue();
                 continue;
             }
-            if (connected.Contains(outs.Peek()[0][0]))
+            if (connected.Contains(underworlds.Peek()[0][0]))
             {
-                outs.Dequeue();
+                underworlds.Dequeue();
                 continue;
             }
 
-            Queue<List<string>> from_items;
-            Queue<List<string>> to_items;
-            from_items = new(prng.Shuffle(ins.Dequeue()));
-            to_items = new(prng.Shuffle(outs.Dequeue()));
-            if (from_items.Count != to_items.Count)
+            var ow_items = new Queue<List<string>>(prng.Shuffle(overworlds.Dequeue()));
+            var uw_items = new Queue<List<string>>(prng.Shuffle(underworlds.Dequeue()));
+            if (ow_items.Count != uw_items.Count)
             {
                 throw new Exception("Entrance sub-count mismatch");
             }
 
-            while (from_items.Count > 0)
+            while (ow_items.Count > 0)
             {
-                var froms = from_items.Dequeue();
-                var tos = to_items.Dequeue();
-                if (froms.Count != tos.Count)
+                var overworld = ow_items.Dequeue();
+                var underworld = uw_items.Dequeue();
+                if (overworld.Count != underworld.Count)
                 {
                     throw new Exception("Entrance sub-sub-count mismatch");
                 }
 
-                for (var i = 0; i < froms.Count; i++)
+                for (var i = 0; i < overworld.Count; i++)
                 {
-                    var from = world.GetLocation(froms[i]);
-                    var to = world.GetLocation(tos[i]);
-                    world.Graph.AddDirected(from, to, world.GetItem("fixed"));
-                    logger?.LogInformation("Linked '{From}' -> '{To}' ({Condition})", from.Name, to.Name, world.GetItem("fixed").Name);
+                    var ow = world.GetLocation(overworld[i]);
+                    var uw = world.GetLocation(underworld[i]);
+                    if (ow.Type == VertexType.Entrance || ow.Type == VertexType.Hole)
+                    {
+                        world.Graph.AddDirected(ow, uw, world.GetItem("fixed"));
+                        logger?.LogInformation("Linked '{From}' -> '{To}' ({Condition})", ow.Name, uw.Name, world.GetItem("fixed").Name);
+                    }
+                    else
+                    {
+                        world.Graph.AddDirected(uw, ow, world.GetItem("fixed"));
+                        logger?.LogInformation("Linked '{From}' -> '{To}' ({Condition})", uw.Name, ow.Name, world.GetItem("fixed").Name);
+                    }
                 }
             }
         }

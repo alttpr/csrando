@@ -297,16 +297,13 @@ public class ConnectionGroup
     [YamlMember(Alias = "group")]
     public string Group { get; set; } = string.Empty;
 
-    [YamlMember(Alias = "symmetric")]
-    public bool Symmetric { get; set; } = false;
-
     [YamlMember(Alias = "crossworld")]
     public bool CrossWorld { get; set; } = false;
 
-    [YamlMember(Alias = "in")]
-    public List<List<List<string>>> In { get; set; } = new();
-    [YamlMember(Alias = "out")]
-    public List<List<List<string>>> Out { get; set; } = new();
+    [YamlMember(Alias = "overworld")]
+    public List<List<List<string>>> Overworld { get; set; } = new();
+    [YamlMember(Alias = "underworld")]
+    public List<List<List<string>>> Underworld { get; set; } = new();
 }
 
 public class Entrances

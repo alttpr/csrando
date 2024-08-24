@@ -9,21 +9,20 @@ connections:
   # other. This does not include any of Light World Death Mountain. Example:
   # houses.
   - group: single_entrance_caves
-    in:
-      - [["Link's House - In", "Bomb Shoppe Lobby - Exit"]]
-      - [["Bomb Shoppe - Shoppe - In", "Link's House - Bedroom - Exit"]]
-      - [["West Death Mountain Big Fairy - In", "Old Man Maze - Exit"]]
-    out:
-      - [["Bomb Shoppe Lobby", "Link's House - Out"]]
-      - [["Link's House - Bedroom", "Bomb Shoppe - Shoppe - Out"]]
-      - [["Old Man Maze", "West Death Mountain Big Fairy - Out"]]
+    overworld:
+      - [["Link's House - In", "Link's House - Out"]]
+      - [["Bomb Shoppe - Shoppe - In", "Bomb Shoppe - Shoppe - Out"]]
+      - [["West Death Mountain Big Fairy - In", "West Death Mountain Big Fairy - Out"]]
+    underworld:
+      - [["Bomb Shoppe Lobby", "Bomb Shoppe Lobby - Exit"]]
+      - [["Link's House - Bedroom", "Link's House - Bedroom - Exit"]]
+      - [["Old Man Maze", "Old Man Maze - Exit"]]
   # Multi-Entrance Caves All entrances are grouped and randomized with each other.
   # Locations that are originally spanned by two-entrance caves (e.g. Kakariko
   # Elder’s House) will remain connected to each other via a two-entrance
   # cave. This does not include any of Light World Death Mountain.
   - group: multi_entrance_caves
-    symmetric: true
-    in:
-      - [["Death Mountain Foot Cave Entrance - In", "Bumper Cave Bottom - Exit"], ["Death Mountain Foot Descent Ledge - In", "Bumper Cave Top Exit - Exit"]]
-    out:
-      - [["Bumper Cave Bottom", "Death Mountain Foot Cave Entrance - Out"], ["Bumper Cave Top Exit", "Death Mountain Foot Descent Ledge - Out"]]
+    overworld:
+      - [["Death Mountain Foot Cave Entrance - In", "Death Mountain Foot Cave Entrance - Out"], ["Death Mountain Foot Descent Ledge - In", "Death Mountain Foot Descent Ledge - Out"]]
+    underworld:
+      - [["Bumper Cave Bottom", "Bumper Cave Bottom - Exit"], ["Bumper Cave Top Exit", "Bumper Cave Top Exit - Exit"]]
