@@ -1,6 +1,8 @@
 maps:
   - map: 0x14
     moonpearl: false
+    # 0x0E in slot 3 is the moving gravestone
+    sheets: [null, null, null, [0x0E]]
     nodes:
       regions:
         - name: "Graveyard"

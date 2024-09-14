@@ -123,11 +123,11 @@ MiniMoldorm: #MINI MOLDORM
 Poe:
   bytes: [0x19]
   flags: Challenge, NoDrop
-  sheets: [null, null, null, [0x15]]
+  sheets: [null, null, null, [0x0E]]
 Hyu:
   bytes: [0x19]
   flags: Challenge, NoDrop
-  sheets: [null, null, null, [0x0E]]
+  sheets: [null, null, null, [0x15]]
 DwarfSmith: #SMITHY
   bytes: [0x1A]
   flags: NoPlace
@@ -391,10 +391,6 @@ RedBombGuard: #BOMB GUARD
   flags: Challenge
   sheets: [[0x46], [0x49], null, null]
 GreenGuardRecruit: #GREEN KNIFE GUARD
-  bytes: [0x4B]
-  flags: Challenge
-  sheets: [null, [0x49], null, null]
-GreenGuardRecruitFalling: #GREEN KNIFE GUARD
   bytes: [0x4B]
   flags: Challenge
   sheets: [null, [0x49], [0x13], null] # 0x13 in slot 2 is the knife guard legs and the falling guard sprite

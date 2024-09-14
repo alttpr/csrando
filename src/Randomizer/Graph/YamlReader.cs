@@ -326,6 +326,9 @@ public partial class Map
     [YamlMember(Alias = "moonpearl")]
     public bool Moonpearl { get; set; }
 
+    [YamlMember(Alias = "sheets")]
+    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
+
     [YamlMember(Alias = "nodes")]
     public required MapNodes Nodes { get; set; }
 }
@@ -448,6 +451,9 @@ public partial class Room
 
     [YamlMember(Alias = "dark")]
     public bool Dark { get; set; } = false;
+
+    [YamlMember(Alias = "sheets")]
+    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "extralight")]
     public List<string> ExtraLight { get; set; } = new();

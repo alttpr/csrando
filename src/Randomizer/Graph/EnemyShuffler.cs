@@ -475,7 +475,9 @@ internal sealed class EnemyShuffler : IWorldModifier
         // 1. enemies are already placed (including no enemization): read enemies, calculate sets for them.
         // 2. enemies are not placed: pick random sheets, match other enemies to them to create sets, write enemies.
         // the latter tries to maximize variability in placement (vs. placing enemies first then trying to match sets.)
-
+        var regionVertices = world.GetLocationsOfType(VertexType.Region).ToArray();
+        var roomVertices = regionVertices.Where(v => v.RoomId.HasValue).GroupBy(v => v.RoomId).Select(v => (Key: v.Key!.Value, Value: v.First())).ToDictionary(k => k.Key, v => v.Value);
+        var mapVertices = regionVertices.Where(v => v.Map.HasValue).GroupBy(v => v.Map).Select(v => (Key: v.Key!.Value, Value: v.First())).ToDictionary(k => k.Key, v => v.Value);
         var enemyVertices = world.GetLocationsOfType(VertexType.Mob);
 
         var enemyRooms = enemyVertices.ToLookup(enemy => enemy.RoomId);
@@ -492,9 +494,20 @@ internal sealed class EnemyShuffler : IWorldModifier
         placableSprites.RemoveWhere(e => !string.IsNullOrEmpty(e.Sprite.FallingSpriteFor));
         var challengeSprites = placableSprites.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)).ToHashSet();
 
-        var roomSheets = Enumerable.Range(0, 0x140).Select(_ => new SheetSet()).ToArray();
+        var roomSheets = Enumerable.Range(0, 0x140).Select(roomId =>
+        {
+            if (roomVertices.TryGetValue(roomId, out var roomVertex) && roomVertex?.Sheets is not null)
+                return new SheetSet((byte[]?[])roomVertex.Sheets.Clone());
+            return new SheetSet();
+        }).ToArray();
         // this is 3 times light world (rain state, zelda rescued, aga down) plus 1 times dark world
-        var owSheets = Enumerable.Range(0, 4 * 0x40).Select(_ => new SheetSet()).ToArray();
+        var owSheets = Enumerable.Range(0, 4 * 0x40).Select(owIdx =>
+        {
+            var (mapId, _) = IndexToMapState(owIdx);
+            if (mapVertices.TryGetValue(mapId, out var mapVertex) && mapVertex?.Sheets is not null)
+                return new SheetSet((byte[]?[])mapVertex.Sheets.Clone());
+            return new SheetSet();
+        }).ToArray();
 
         // 1. place sprites that aren't shuffled. this is either all of them, or NoPlace sprites (such as NPCs, statues and other fixed stuff)
         for (int owIdx = 0; owIdx < owSheets.Length; owIdx++)

@@ -1,5 +1,7 @@
 rooms:
   - roomid: 0xCE
+    # 0x27 in slot 2 is the somaria platform
+    sheets: [null, null, [0x27], null]
     group: 13
     nodes:
       regions:
