@@ -920,10 +920,12 @@ public static class RomWriter
             {
                 var sprite = enemy.Sprite!;
                 outputBytes.Add((byte)(((sprite.SubType & 0x18) << 2)
-                    + (enemy.Position!.Z.GetValueOrDefault() << 7)
-                    + enemy.Position.Y));
+                    | (enemy.Position!.Z.GetValueOrDefault() << 7)
+                    | enemy.Position.Y));
+                byte overlordFlag = (byte)(sprite.Flags.HasFlag(YamlSpriteFlags.Overlord) ? 0b11111 << 5 : 0x00);
                 outputBytes.Add((byte)(((sprite.SubType & 0x07) << 5)
-                    + enemy.Position.X));
+                    | overlordFlag
+                    | enemy.Position.X));
                 // TODO: random byte instead?
                 outputBytes.Add(sprite.Bytes![0]);
                 if (enemy.Item != null)
@@ -966,7 +968,10 @@ public static class RomWriter
                     outputMap.Add((byte)enemy.Position!.Y);
                     outputMap.Add((byte)enemy.Position.X);
                     // TODO: random byte instead?
-                    outputMap.Add(enemy.Sprite!.Bytes![0]);
+                    byte enemyId = enemy.Sprite!.Bytes![0];
+                    if (enemy.Sprite.Flags.HasFlag(YamlSpriteFlags.Overlord))
+                        enemyId += 0xF2;
+                    outputMap.Add(enemyId);
                 }
 
                 if (outputMap.Count == 0)

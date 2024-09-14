@@ -885,10 +885,10 @@ AgahnimCutscene: #CUTSCENE AGAHNIM
   bytes: [0xC1]
   flags: NoPlace
   sheets: [[0x55], [0x3D], [0x42], [0x43]]
-Boulders:
-  bytes: [0xC2] # this belongs to overlord 0xF4
-  flags: NoPlace, OverworldOnly
-  sheets: [null, null, null, [0x10]]
+# Boulders: #TODO: does this sprite appear without the overlord?
+#   bytes: [0xC2] # this belongs to overlord 0xF4
+#   flags: NoPlace, OverworldOnly
+#   sheets: [null, null, null, [0x10]]
 Gibo:
   bytes: [0xC3]
   flags: Challenge
@@ -1067,6 +1067,10 @@ MedallionTablet: #MEDALLION TABLET
 Position Target: #POSITION TARGET
   bytes: [0x01]
   flags: NoPlace, OverworldOnly, Overlord
+Boulders:
+  bytes: [0x02] # this belongs to sprite 0xC2
+  flags: NoPlace, OverworldOnly, Overlord
+  sheets: [null, null, null, [0x10]]
 FullRoomCannons: #FULL ROOM CANNONS
   bytes: [0x02]
   flags: NoPlace, Overlord
