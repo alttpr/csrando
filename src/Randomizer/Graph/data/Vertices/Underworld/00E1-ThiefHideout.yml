@@ -25,6 +25,6 @@ rooms:
           mobs:
             - name: "Thief Hideout - Adult"
               position: { x: 0x07, y: 0x12, z: 0x01 }
-              sprite: "Adult"
+              sprite: "AdultThief"
               allow:
-                - "Adult"
+                - "AdultThief"

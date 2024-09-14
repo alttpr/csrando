@@ -21,24 +21,28 @@ rooms:
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Floodgate - Bad Bomb 2"
               position: { x: 0x10, y: 0x06, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Floodgate - Bad Bomb 3"
               position: { x: 0x12, y: 0x07, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Floodgate - Bad Bomb 4"
               position: { x: 0x0f, y: 0x09, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Floodgate - Pull Switch (Good)"
               position: { x: 0x12, y: 0x03, z: 0x00 }

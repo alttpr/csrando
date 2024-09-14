@@ -23,7 +23,7 @@ rooms:
             - name: "Turtle Rock - Big Money - Pot 6"
               position: { x: 0x08, y: 0x26, z: 0x00 }
           mobs:
-            - name: "Turtle Rock - Big Money - Sahasrahla / Aginah"
+            - name: "Turtle Rock - Big Money - Zoro Spawner"
               position: { x: 0x07, y: 0x12, z: 0x00 }
               sprite: "ZoroSpawner"
             - name: "Turtle Rock - Big Money - Pokey"
@@ -60,9 +60,9 @@ rooms:
           mobs:
             - name: "Turtle Rock - Big Money - Crystal Switch"
               position: { x: 0x09, y: 0x04, z: 0x00 }
-              sprite: "CrystalSwitch"
+              sprite: "CrystalSwitchAlternative"
               allow:
-                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Turtle Rock - Big Money - Roller (Horizontal, Left) 1"
               position: { x: 0x05, y: 0x07, z: 0x00 }
               sprite: "RollerHL"
@@ -85,19 +85,20 @@ rooms:
           mobs:
             - name: "Turtle Rock - Big Money - Pull Switch (Good)"
               position: { x: 0x15, y: 0x15, z: 0x00 }
-              sprite: "PullSwitchGood"
+              sprite: "PullSwitchGoodTongue"
               allow:
-                - "PullSwitchGood"
+                - "PullSwitchGoodTongue"
             - name: "Turtle Rock - Big Money - Pull Switch (Bad)"
               position: { x: 0x1a, y: 0x15, z: 0x00 }
-              sprite: "PullSwitchBad"
+              sprite: "PullSwitchBadTongue"
               allow:
-                - "PullSwitchBad"
+                - "PullSwitchBadTongue"
             - name: "Turtle Rock - Big Money - Bad Bomb 1"
               position: { x: 0x18, y: 0x15, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Turtle Rock - Bomb Ambush - Zol 1"
               position: { x: 0x1c, y: 0x15, z: 0x00 }
@@ -108,18 +109,21 @@ rooms:
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Turtle Rock - Big Money - Bad Bomb 3"
               position: { x: 0x1a, y: 0x17, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Turtle Rock - Big Money - Bad Bomb 4"
               position: { x: 0x18, y: 0x18, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Turtle Rock - Bomb Ambush - Zol 2"
               position: { x: 0x1a, y: 0x1a, z: 0x00 }

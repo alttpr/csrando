@@ -24,33 +24,38 @@ rooms:
               sprite: "Buzz"
             - name: "Thieves' Town - Attic Hall Left - Bad Snek 2"
               position: { x: 0x09, y: 0x15, z: 0x00 }
-              sprite: "BadSwitchSnake"
+              sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Thieves' Town - Attic Hall Left - Bad Snek 3"
               position: { x: 0x07, y: 0x17, z: 0x00 }
-              sprite: "BadSwitchSnake"
+              sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Thieves' Town - Attic Hall Left - Bad Snek 4"
               position: { x: 0x09, y: 0x17, z: 0x00 }
-              sprite: "BadSwitchSnake"
+              sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Thieves' Town - Attic Hall Left - Bad Snek 5"
               position: { x: 0x0b, y: 0x17, z: 0x00 }
-              sprite: "BadSwitchSnake"
+              sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Thieves' Town - Attic Hall Left - Bad Snek 6"
               position: { x: 0x09, y: 0x19, z: 0x00 }
-              sprite: "BadSwitchSnake"
+              sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
 
         - name: "Thieves' Town - Attic Gate - Left Corner"
@@ -103,9 +108,10 @@ rooms:
           mobs:
             - name: "Thieves' Town - Attic Hall Left - Bad Snek 7"
               position: { x: 0x0c, y: 0x1b, z: 0x00 }
-              sprite: "BadSwitchSnake"
+              sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
 
         - name: "Thieves' Town - Attic Hall Left"

@@ -20,6 +20,6 @@ rooms:
           mobs:
             - name: "Cheap Secret Thief - Thief"
               position: { x: 0x08, y: 0x16, z: 0x00 }
-              sprite: "Salesman"
+              sprite: "Shopkeeper"
               allow:
-                - "Salesman"
+                - "Shopkeeper"

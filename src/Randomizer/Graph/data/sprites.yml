@@ -21,22 +21,38 @@ FlyingStalfosHead: #STALFOS HEAD
   sheets: [[0x1F], null, null, null]
 #NULL:
 #  bytes: [0x03]
-PullSwitchGood: #CORRECT PULL SWITCH
+PullSwitchGood: #CORRECT PULL SWITCH (BAR)
   bytes: [0x04]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
-PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH
+  sheets: [null, null, null, [0x52]]
+PullSwitchGoodTongue: #CORRECT PULL SWITCH (TONGUE)
+  bytes: [0x04]
+  flags: NoPlace
+  sheets: [null, null, null, [0x53]]
+PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH (BAR)
   bytes: [0x05]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
-PullSwitchBad: #WRONG PULL SWITCH
+  sheets: [null, null, null, [0x52]]
+PullSwitchGoodUnusedTongue: #UNUSED CORRECT PULL SWITCH (TONGUE)
+  bytes: [0x05]
+  flags: NoPlace
+  sheets: [null, null, null, [0x53]]
+PullSwitchBad: #WRONG PULL SWITCH (BAR)
   bytes: [0x06]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
-PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH
+  sheets: [null, null, null, [0x52]]
+PullSwitchBadTongue: #WRONG PULL SWITCH (TONGUE)
+  bytes: [0x06]
+  flags: NoPlace
+  sheets: [null, null, null, [0x53]]
+PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH (BAR)
   bytes: [0x07]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
+PullSwitchBadUnusedTongue: #UNUSED WRONG PULL SWITCH (TONGUE)
+  bytes: [0x07]
+  flags: NoPlace
+  sheets: [null, null, null, [0x53]]
 Octorok1: #OKTOROK
   bytes: [0x08]
   flags: Challenge
@@ -107,7 +123,7 @@ ForkGate: #THIEVES TOWN GRATE?
 Antifairy:
   bytes: [0x15]
   flags: NoDrop
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 Sahasrahla: #SAHASRAHLA / AGINAH
   bytes: [0x16]
   flags: NoPlace
@@ -115,7 +131,11 @@ Sahasrahla: #SAHASRAHLA / AGINAH
 BushHoarder: #HOARDER
   bytes: [0x17]
   flags: Challenge
-  sheets: [null, null, null, [0x10, 0x11]]
+  sheets: [null, null, null, [0x11]]
+BushHoarderAlternative:
+  bytes: [0x17]
+  flags: Challenge
+  sheets: [null, null, null, [0x10]]
 MiniMoldorm: #MINI MOLDORM
   bytes: [0x18]
   flags: Challenge
@@ -138,14 +158,22 @@ SpriteArrow: #ARROW
 Statue:
   bytes: [0x1C]
   flags: NoDrop
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
+StatueAlternative:
+  bytes: [0x1C]
+  flags: NoDrop
+  sheets: [null, null, null, [0x53]]
 FluteQuest:
   bytes: [0x1D]
   flags: NoPlace
 CrystalSwitch: #CRYSTAL SWITCH
   bytes: [0x1E]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
+CrystalSwitchAlternative: #CRYSTAL SWITCH
+  bytes: [0x1E]
+  flags: NoPlace
+  sheets: [null, null, null, [0x53]]
 SickKid: #SICK KID
   bytes: [0x1F]
   flags: NoPlace
@@ -186,10 +214,14 @@ Storyteller: #DARK WORLD HINT NPC
   bytes: [0x28]
   flags: NoPlace
   sheets: [[0x4B], [0x4D], null, null]
+AdultThief:
+  bytes: [0x29]
+  flags: NoPlace
+  sheets: [[0x0E], null, [0x4A], [0x50]]
 Adult:
   bytes: [0x29]
   flags: NoPlace
-  sheets: [[0x0E, 0x4F], null, [0x4A], null]
+  sheets: [[0x4F], null, [0x4A], [0x50]]
 SweepingLady: #SWEEPING LADY
   bytes: [0x2A]
   flags: NoPlace
@@ -268,7 +300,11 @@ OldSnitch: #OLD SNITCH
 RockHoarder: #HOARDER?
   bytes: [0x3E]
   flags: Challenge
-  sheets: [null, null, null, [0x10, 0x11]]
+  sheets: [null, null, null, [0x11]]
+RockHoarderAlternative: #HOARDER?
+  bytes: [0x3E]
+  flags: Challenge
+  sheets: [null, null, null, [0x10]]
 TutorialGuard: #TUTORIAL GUARD
   bytes: [0x3F]
   flags: NoPlace
@@ -592,7 +628,7 @@ Zelda:
 SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
   bytes: [0x78]
   flags: NoPlace
-  sheets: [null, null, [0x4A], null]
+  sheets: [[0x4B], null, [0x4A], null]
 Bee:
   bytes: [0x79]
   flags: NoPlace
@@ -611,7 +647,7 @@ GreenStalfos: #GREEN STALFOS, DR: Floating Skull
 BigSpikeTrap: #BIG SPIKE?
   bytes: [0x7D]
   flags: NoDrop
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 FireBarCW: #FIREBAR CLOCKWISE
   bytes: [0x7E]
   flags: NoDrop
@@ -631,7 +667,7 @@ Hover:
 AntifairyCircle: #ANTIFAIRY CIRCLE
   bytes: [0x82]
   flags: NoDrop
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   bytes: [0x83]
   flags: Challenge
@@ -663,7 +699,7 @@ Mothula:
   bytes: [0x88]
   flags: NoPlace
   # 0x52/0x53 in slot 3 is for the spikes. because moth spawns them, they're not in data and need to be elsewhere
-  sheets: [null, null, [0x38], [0x52, 0x53]]
+  sheets: [null, null, [0x38], [0x52]]
 MothulaBeam: #MOTHULA BEAM
   bytes: [0x89]
   flags: NoPlace
@@ -671,7 +707,11 @@ MothulaBeam: #MOTHULA BEAM
 SpikeTrap: #SPIKE BLOCK
   bytes: [0x8A]
   flags: NoDrop
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
+SpikeTrapAlternative: #SPIKE BLOCK
+  bytes: [0x8A]
+  flags: NoDrop
+  sheets: [null, null, null, [0x53]]
 Gibdo:
   bytes: [0x8B]
   flags: Challenge
@@ -707,7 +747,7 @@ Helmasaur: #KING HELMASAUR
 Bumper:
   bytes: [0x93]
   flags: NoDrop
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 Pirogusu: #PIROGUSU / TILE ROOM TILE?
   bytes: [0x94]
   flags: NoPlace
@@ -715,19 +755,19 @@ Pirogusu: #PIROGUSU / TILE ROOM TILE?
 LaserEyeL: #LASER EYE LEFT
   bytes: [0x95]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 LaserEyeR: #LASER EYE RIGHT
   bytes: [0x96]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 LaserEyeU: #LASER EYE TOP
   bytes: [0x97]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 LaserEyeD: #LASER EYE BOTTOM
   bytes: [0x98]
   flags: NoPlace
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 Pengator:
   bytes: [0x99]
   flags: Challenge
@@ -739,8 +779,11 @@ Kyameron:
 Wizzrobe:
   bytes: [0x9B]
   flags: Challenge
-  # sheet id 0x25 is the regular one, 0x29 is the purple/skull one from GT
-  sheets: [null, null, [0x25, 0x29], null]
+  sheets: [null, null, [0x25], null]
+SkullWizzrobe:
+  bytes: [0x9B]
+  flags: Challenge
+  sheets: [null, null, [0x29], null]
 Zoro:
   bytes: [0x9C]
   flags: NoPlace
@@ -861,6 +904,10 @@ Shopkeeper: #SHOPKEEPER / CHEST GAME GUY
   bytes: [0xBB]
   flags: NoPlace
   sheets: [[0x0E], null, [0x4A], null]
+ChestGameGuy: #SHOPKEEPER / CHEST GAME GUY
+  bytes: [0xBB]
+  flags: NoPlace
+  sheets: [[0x4F], [0x4D], [0x4A], null]
 Drunkard:
   bytes: [0xBC]
   flags: NoPlace
@@ -1092,8 +1139,12 @@ BadSwitchSnake: #BAD SWITCH SNAKE
   bytes: [0x06]
   flags: NoPlace, Overlord
   subtype: 0x07
-  # sheet id 0x1C regular rope, 0x24 skull rope
-  sheets: [null, null, [0x1C, 0x24], null]
+  sheets: [null, null, [0x1C], null]
+BadSwitchSkullRope: #BAD SWITCH SKULL ROPE
+  bytes: [0x06]
+  flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x24], null]
 MovingFloor: #MOVING FLOOR
   bytes: [0x07]
   flags: NoPlace, Overlord
@@ -1111,32 +1162,32 @@ FallingSquare: #FALLING SQUARE
   bytes: [0x0A]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x33, 0x52]]
+  sheets: [null, null, null, [0x52]]
 FallingBridge: #FALLING BRIDGE
   bytes: [0x0B]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x33, 0x52]]
+  sheets: [null, null, null, [0x52]]
 FallingTilesWestToEast: #FALLING TILES WEST TO EAST
   bytes: [0x0C]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x33, 0x52]]
+  sheets: [null, null, null, [0x52]]
 FallingTilesNorthToSouth: #FALLING TILES NORTH TO SOUTH
   bytes: [0x0D]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x33, 0x52]]
+  sheets: [null, null, null, [0x52]]
 FallingTilesEastToWest: #FALLING TILES EAST TO WEST
   bytes: [0x0E]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x33, 0x52]]
+  sheets: [null, null, null, [0x52]]
 FallingTilesSouthToNorth: #FALLING TILES SOUTH TO NORTH
   bytes: [0x0F]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x33, 0x52]]
+  sheets: [null, null, null, [0x52]]
 PirogusuSpawnerLeft: #PIROGUSU SPAWNER LEFT
   bytes: [0x10]
   flags: NoPlace, Overlord
@@ -1161,12 +1212,17 @@ TileRoom: #TILE ROOM
   bytes: [0x14]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, null, [0x52, 0x53]]
+  sheets: [null, null, null, [0x52]]
 WizzrobeSpawner: #WIZZROBE SPAWNER
   bytes: [0x15]
   flags: NoPlace, Overlord
   subtype: 0x07
-  sheets: [null, null, [0x25, 0x29], null]
+  sheets: [null, null, [0x25], null]
+SkullWizzrobeSpawner: #SKULL WIZZROBE SPAWNER
+  bytes: [0x15]
+  flags: NoPlace, Overlord
+  subtype: 0x07
+  sheets: [null, null, [0x29], null]
 ZoroSpawner: #ZORO SPAWNER
   bytes: [0x16]
   flags: NoPlace, Overlord

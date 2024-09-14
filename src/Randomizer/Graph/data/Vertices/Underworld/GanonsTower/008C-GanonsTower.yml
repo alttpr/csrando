@@ -129,30 +129,35 @@ rooms:
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Ganon's Tower - Hope Room - Dwarves 2"
               position: { x: 0x15, y: 0x06, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Ganon's Tower - Hope Room - Dwarves 3"
               position: { x: 0x1a, y: 0x06, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Ganon's Tower - Hope Room - Dwarves 4"
               position: { x: 0x15, y: 0x0a, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Ganon's Tower - Hope Room - Dwarves 5"
               position: { x: 0x1a, y: 0x0a, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
+                - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
             - name: "Ganon's Tower - Hope Room - Spike Trap"
               position: { x: 0x17, y: 0x08, z: 0x00 }

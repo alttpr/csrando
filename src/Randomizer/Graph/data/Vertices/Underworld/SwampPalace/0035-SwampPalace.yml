@@ -13,9 +13,9 @@ rooms:
           mobs:
             - name: "Swamp Palace - West Lever - Crystal Switch"
               position: { x: 0x16, y: 0x06, z: 0x00 }
-              sprite: "CrystalSwitch"
+              sprite: "CrystalSwitchAlternative"
               allow:
-                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Swamp Palace - West Lever - Push Switch"
               position: { x: 0x14, y: 0x05, z: 0x00 }
               item: "SwampWater2"
@@ -28,7 +28,7 @@ rooms:
               sprite: "RedBari"
             - name: "Swamp Palace - West Lever - Spike Trap"
               position: { x: 0x13, y: 0x09, z: 0x00 }
-              sprite: "SpikeTrap"
+              sprite: "SpikeTrapAlternative"
             - name: "Swamp Palace - West Lever - Stalfos 1"
               position: { x: 0x14, y: 0x0b, z: 0x00 }
               sprite: "Stalfos"
