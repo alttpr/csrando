@@ -10,6 +10,7 @@ public record class Sprite(string Name, byte[]? Bytes = null)
     public byte[]?[] Sheets { get; init; } = [null, null, null, null];
     public YamlSpriteFlags Flags { get; init; }
     public byte SubType { get; init; }
+    public string? FallingSpriteFor { get; init; }
 
     public static Sprite Get(string name)
         => _sprites.Value.GetValueOrDefault(name)
@@ -26,6 +27,7 @@ public record class Sprite(string Name, byte[]? Bytes = null)
                 Sheets = sprite.Sheets,
                 Flags = sprite.Flags,
                 SubType = sprite.SubType,
+                FallingSpriteFor = sprite.FallingSpriteFor,
             };
         }
     }

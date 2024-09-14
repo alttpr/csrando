@@ -487,6 +487,9 @@ internal sealed class EnemyShuffler : IWorldModifier
         // sprites that can be moved to any room as they don't have any sheet
         // requirements
         var placableSprites = allEnemies.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)).ToHashSet();
+        // TODO: falling sprites sometimes have additional sheet requirements (including a falling sprite)
+        //       those need to be selected for rooms that have pits, and might limit the rest of the sprites that can go there.
+        placableSprites.RemoveWhere(e => !string.IsNullOrEmpty(e.Sprite.FallingSpriteFor));
         var challengeSprites = placableSprites.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)).ToHashSet();
 
         var roomSheets = Enumerable.Range(0, 0x140).Select(_ => new SheetSet()).ToArray();

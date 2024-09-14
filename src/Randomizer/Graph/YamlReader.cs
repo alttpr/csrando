@@ -266,6 +266,9 @@ public class YamlSprite
     public byte SubType { get; set; } = 0x00;
     [YamlMember(Alias = "sheets")]
     public byte[]?[] Sheets { get; set; } = [null, null, null, null];
+    /// <summary>When set, this sprite is the falling sprite for the one returned here.</summary>
+    [YamlMember(Alias = "falling")]
+    public string? FallingSpriteFor { get; set; }
 }
 [Flags]
 public enum YamlSpriteFlags
