@@ -7,6 +7,7 @@ public record class Sprite(string Name, byte[]? Bytes = null)
 {
     private static readonly Lazy<Dictionary<string, Sprite>> _sprites = new(() => LoadSprites().ToDictionary(k => k.Name));
 
+    public string DefeatName { get; init; } = Name;
     public byte[]?[] Sheets { get; init; } = [null, null, null, null];
     public YamlSpriteFlags Flags { get; init; }
     public byte SubType { get; init; }
@@ -27,6 +28,7 @@ public record class Sprite(string Name, byte[]? Bytes = null)
                 Sheets = sprite.Sheets,
                 Flags = sprite.Flags,
                 SubType = sprite.SubType,
+                DefeatName = sprite.AlternativeName ?? name,
                 FallingSpriteFor = sprite.FallingSpriteFor,
             };
         }

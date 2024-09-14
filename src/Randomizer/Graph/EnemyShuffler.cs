@@ -86,7 +86,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                 if (edge.To.Sprite == null)
                     continue;
 
-                var item = world.GetExistingItem($"Defeat{edge.To.Sprite!.Name}");
+                var item = world.GetExistingItem($"Defeat{edge.To.Sprite!.DefeatName}");
                 if (item != null)
                 {
                     edge.Condition = new ItemCondition(item, 1);

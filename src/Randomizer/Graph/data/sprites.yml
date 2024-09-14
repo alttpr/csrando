@@ -8,6 +8,7 @@ Raven:
   flags: Challenge, NoDrop
   sheets: [null, null, null, [0x11]]
 Dacto:
+  alternative: Raven
   bytes: [0x00]
   flags: Challenge, NoDrop
   sheets: [null, null, null, [0x19]]
@@ -58,6 +59,7 @@ Octorok1: #OKTOROK
   flags: Challenge
   sheets: [null, null, [0x0C], null]
 Slarok1: #SLAROK
+  alternative: Octorok1
   bytes: [0x08]
   flags: Challenge
   sheets: [null, null, [0x18], null]
@@ -70,6 +72,7 @@ Octorok4: #OCTOROK 4WAY
   flags: Challenge
   sheets: [null, null, [0x0C], null]
 Slarok4: #SLAROK 4WAY
+  alternative: Octorok4
   bytes: [0x0A]
   flags: Challenge
   sheets: [null, null, [0x18], null]
@@ -78,6 +81,7 @@ Chicken: #CUCCO
   flags: Challenge, NoDrop
   sheets: [null, null, null, [0x50]]
 SkullChicken: #SKULL CUCCO
+  alternative: Chicken
   bytes: [0x0B]
   flags: Challenge, NoDrop
   sheets: [null, null, null, [0x15]]
@@ -86,6 +90,7 @@ OctorokStone: #OCTOROK STONE
   flags: NoPlace
   sheets: [null, null, [0x0C], null]
 SlarokStone: #SLAROK STONE
+  alternative: OctorokStone
   bytes: [0x0C]
   flags: NoPlace
   sheets: [null, null, [0x18], null]
@@ -133,6 +138,7 @@ BushHoarder: #HOARDER
   flags: Challenge
   sheets: [null, null, null, [0x11]]
 BushHoarderAlternative:
+  alternative: BushHoarder
   bytes: [0x17]
   flags: Challenge
   sheets: [null, null, null, [0x10]]
@@ -145,6 +151,7 @@ Poe:
   flags: Challenge, NoDrop
   sheets: [null, null, null, [0x0E]]
 Hyu:
+  alternative: Poe
   bytes: [0x19]
   flags: Challenge, NoDrop
   sheets: [null, null, null, [0x15]]
@@ -160,6 +167,7 @@ Statue:
   flags: NoDrop
   sheets: [null, null, null, [0x52]]
 StatueAlternative:
+  alternative: Statue
   bytes: [0x1C]
   flags: NoDrop
   sheets: [null, null, null, [0x53]]
@@ -171,6 +179,7 @@ CrystalSwitch: #CRYSTAL SWITCH
   flags: NoPlace
   sheets: [null, null, null, [0x52]]
 CrystalSwitchAlternative: #CRYSTAL SWITCH
+  alternative: CrystalSwitch
   bytes: [0x1E]
   flags: NoPlace
   sheets: [null, null, null, [0x53]]
@@ -302,6 +311,7 @@ RockHoarder: #HOARDER?
   flags: Challenge
   sheets: [null, null, null, [0x11]]
 RockHoarderAlternative: #HOARDER?
+  alternative: RockHoarder
   bytes: [0x3E]
   flags: Challenge
   sheets: [null, null, null, [0x10]]
@@ -318,49 +328,60 @@ BlueSwordGuard: #BLUE GUARD
   flags: Challenge
   sheets: [null, [0x49], null, null]
 BlueSwordGuard01: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x01
   sheets: [null, [0x49], null, null]
 BlueSwordGuard01Falling: #BLUE GUARD
+  alternative: BlueSwordGuard
   falling: BlueSwordGuard01
   bytes: [0x41]
   subtype: 0x01
   sheets: [null, [0x49], [0x13], null] # 0x13 in slot 2 is the falling guard sprite
 BlueSwordGuard02: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x02
   sheets: [null, [0x49], null, null]
 BlueSwordGuard03: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x03
   sheets: [null, [0x49], null, null]
 BlueSwordGuard03Falling: #BLUE GUARD
+  alternative: BlueSwordGuard
   falling: BlueSwordGuard03
   bytes: [0x41]
   subtype: 0x03
   sheets: [null, [0x49], [0x13], null] # 0x13 in slot 2 is the falling guard sprite
 BlueSwordGuard05: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x05
   sheets: [null, [0x49], null, null]
 BlueSwordGuard13: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x13
   sheets: [null, [0x49], null, null]
 BlueSwordGuard15: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x15
   sheets: [null, [0x49], null, null]
 BlueSwordGuard1B: #BLUE GUARD
+  alternative: BlueSwordGuard
   bytes: [0x41]
   subtype: 0x1B
   # this sprite is used in pit rooms in vanilla
   sheets: [null, [0x49], [0x13], null] # 0x13 in slot 2 is the falling guard sprite
 BlueTaros: #BLUE TAROS
+  alternative: BlueSwordGuard
   bytes: [0x41]
   flags: Challenge
   sheets: [null, [0x0D], null, null]
 BlueTarosFalling: #BLUE TAROS
+  alternative: BlueSwordGuard
   falling: BlueTaros
   bytes: [0x41]
   flags: Challenge
@@ -370,23 +391,28 @@ GreenSwordGuard: #GREEN GUARD
   flags: Challenge
   sheets: [null, [0x49], null, null]
 GreenSwordGuardFalling: #GREEN GUARD
+  alternative: GreenSwordGuard
   falling: GreenSwordGuard
   bytes: [0x42]
   flags: Challenge
   sheets: [null, [0x49], [0x13], null] # 0x13 in slot 2 is the falling guard sprite
 GreenSwordGuard01: #GREEN GUARD
+  alternative: GreenSwordGuard
   bytes: [0x42]
   subtype: 0x01
   sheets: [null, [0x49], null, null]
 GreenSwordGuard03: #GREEN GUARD
+  alternative: GreenSwordGuard
   bytes: [0x42]
   subtype: 0x03
   sheets: [null, [0x49], null, null]
 GreenSwordGuard1B: #GREEN GUARD
+  alternative: GreenSwordGuard
   bytes: [0x42]
   subtype: 0x1B
   sheets: [null, [0x49], null, null]
 RedTaros: #RED TAROS?
+  alternative: RedSpearGuard
   bytes: [0x43]
   flags: Challenge
   sheets: [null, [0x0D], null, null]
@@ -403,6 +429,7 @@ FastRedSpearGuard: #USAIN BOLT
   flags: Challenge
   sheets: [null, [0x49], null, null]
 FastRedTaros: #USAIN BOLT but dark world?
+  alternative: FastRedSpearGuard
   bytes: [0x45]
   flags: Challenge
   sheets: [null, [0x0D], null, null]
@@ -471,6 +498,7 @@ FireballZora: #ZORA / FIREBALL?
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, [0x0C], null]
 FireballKu: #KU / FIREBALL?
+  alternative: FireballZora
   bytes: [0x55]
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, [0x18], null]
@@ -479,6 +507,7 @@ WalkingZora: #ZORA?
   flags: Challenge
   sheets: [null, null, [0x0C], [0x44]]
 WalkingKu: #KU?
+  alternative: WalkingZora
   bytes: [0x56]
   flags: Challenge
   sheets: [null, null, [0x18], [0x44]]
@@ -573,6 +602,7 @@ Rat: #RAT / CRICKET
   flags: Challenge
   sheets: [null, null, [0x1C], null]
 Buzz: #BUZZ / CRICKET
+  alternative: Rat
   bytes: [0x6D]
   flags: Challenge
   sheets: [null, null, [0x24], null]
@@ -581,6 +611,7 @@ Rope: #SNAKE? ROPE?
   flags: Challenge
   sheets: [null, null, [0x1C], null]
 Skullrope: #SKULL ROPE?
+  alternative: Rope
   bytes: [0x6E]
   flags: Challenge
   sheets: [null, null, [0x24], null]
@@ -589,6 +620,7 @@ Keese:
   flags: NoDrop
   sheets: [null, null, [0x1C], null]
 Chasupa:
+  alternative: Keese
   bytes: [0x6F]
   flags: NoDrop
   sheets: [null, null, [0x24], null]
@@ -673,6 +705,7 @@ EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   flags: Challenge
   sheets: [null, null, [0x2E], null]
 MimicGreen: #GREEN EYEGORE / GREEN MIMIC
+  alternative: EyegoreGreen
   bytes: [0x83] #DR uses the unused somaria platform 0xEF
   flags: Challenge
   sheets: [null, null, [0x2E], null]
@@ -681,6 +714,7 @@ EyegoreRed: #RED EYEGORE / RED MIMIC
   flags: Challenge
   sheets: [null, null, [0x2E], null]
 MimicRed: #RED EYEGORE / RED MIMIC
+  alternative: EyegoreRed
   bytes: [0x84] #DR uses the unused somaria platform 0xF0
   flags: Challenge
   sheets: [null, null, [0x2E], null]
@@ -709,6 +743,7 @@ SpikeTrap: #SPIKE BLOCK
   flags: NoDrop
   sheets: [null, null, null, [0x52]]
 SpikeTrapAlternative: #SPIKE BLOCK
+  alternative: SpikeTrap
   bytes: [0x8A]
   flags: NoDrop
   sheets: [null, null, null, [0x53]]
@@ -781,6 +816,7 @@ Wizzrobe:
   flags: Challenge
   sheets: [null, null, [0x25], null]
 SkullWizzrobe:
+  alternative: Wizzrobe
   bytes: [0x9B]
   flags: Challenge
   sheets: [null, null, [0x29], null]
@@ -945,6 +981,7 @@ Thief:
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [[0x0E], null, null, null]
 Pikku:
+  alternative: Thief
   bytes: [0xC4]
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [[0x15], null, null, null]
