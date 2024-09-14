@@ -1,6 +1,46 @@
 
 # Connect all Entrances to where they drop Player, and all Exits to Outlets
 fixed:
+  # Map 0x03
+  - ["Old Man Maze - In", "Old Man Maze"]
+  - ["Old Man Maze - Exit", "Old Man Maze - Out"]
+
+  - ["Death Mountain Descent - In", "Death Mountain Descent Cave Right"]
+  - ["Death Mountain Descent Cave Right - Exit", "Death Mountain Descent - Out"]
+
+  # Map 0x0A
+  - ["Death Mountain Foot Cave Entrance - In", "Old Man Cave Ledge"]
+  - ["Old Man Cave Ledge - Exit", "Death Mountain Foot Cave Entrance - Out"]
+
+  - ["Death Mountain Foot Descent Ledge - In", "Death Mountain Descent Cave Left"]
+  - ["Death Mountain Descent Cave Left - Exit", "Death Mountain Foot Descent Ledge - Out"]
+
+  # Map 0x1B
+  - ["Hyrule Castle - Agahnim's Tower Entrance - In", "Agahnims Tower - Entrance"]
+  - ["Agahnims Tower - Entrance - Exit", "Hyrule Castle - Agahnim's Tower Entrance - Out"]
+
+  # Map 0x2C
+  - ["Link's House - In", "Link's House - Bedroom"]
+  - ["Link's House - Bedroom - Exit", "Link's House - Out"]
+
+  # Darkworld
+  - ["Bomb Shoppe - Shoppe - In", "Bomb Shoppe Lobby"]
+  - ["Bomb Shoppe Lobby - Exit", "Bomb Shoppe - Shoppe - Out"]
+
+  - ["Bumper Cave Entrance Bottom - In", "Bumper Cave Bottom"]
+  - ["Bumper Cave Bottom - Exit", "Bumper Cave Entrance Bottom - Out"]
+
+  - ["Bumper Cave Ledge Top - In", "Bumper Cave Top Exit"]
+  - ["Bumper Cave Top Exit - Exit", "Bumper Cave Ledge Top - Out"]
+
+  # Darkworld DM
+  - ["West Death Mountain Big Fairy - In", "Death Mountain Big Fairy"]
+  - ["Death Mountain Big Fairy - Exit", "West Death Mountain Big Fairy - Out"]
+
+  - ["Ganon's Tower - In", "Ganon's Tower - Lobby"]
+  - ["Ganon's Tower - Lobby - Exit", "Ganon's Tower - Out"]
+
+# retro modifications
   # Map 0x2E
   - ["South of Ruins Big Fairy - In", "South of Ruins Big Fairy"]
   - ["South of Ruins Big Fairy - Exit", "South of Ruins Big Fairy - Out"]
