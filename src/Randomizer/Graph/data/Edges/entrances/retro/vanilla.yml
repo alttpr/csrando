@@ -1,0 +1,22 @@
+
+# Connect all Entrances to where they drop Player, and all Exits to Outlets
+fixed:
+  # Map 0x2E
+  - ["South of Ruins Big Fairy - In", "South of Ruins Big Fairy"]
+  - ["South of Ruins Big Fairy - Exit", "South of Ruins Big Fairy - Out"]
+
+  # Map 0x3A
+  - ["Desert Big Fairy - In", "Desert Big Fairy"]
+  - ["Desert Big Fairy - Exit", "Desert Big Fairy - Out"]
+
+  # Map 0x34 // sword upgrade?
+  - ["Wetlands Big Fairy - In", "Wetlands Big Fairy"]
+  - ["Wetlands Big Fairy - Exit", "Wetlands Big Fairy - Out"]
+
+  # Map 0x6E
+  - ["Dark Lake Hylia River Bend Fairy - In", "South of POD Big Fairy"]
+  - ["South of POD Big Fairy - Exit", "Dark Lake Hylia River Bend Fairy - Out"]
+
+  # Map 0x77
+  - ["Dark Shopping Mall Big Fairy - In", "Shopping Mall Big Fairy"]
+  - ["Shopping Mall Big Fairy - Exit", "Dark Shopping Mall Big Fairy - Out"]

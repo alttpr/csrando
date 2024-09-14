@@ -196,10 +196,6 @@ fixed:
   - ["Houlihan Room - In", "Houlihan Room"]
   - ["Houlihan Room - Exit", "Houlihan Room - Out"]
 
-  # Map 0x2E
-  - ["South of Ruins Big Fairy - In", "South of Ruins Big Fairy"]
-  - ["South of Ruins Big Fairy - Exit", "South of Ruins Big Fairy - Out"]
-
   # Map 0x2F
   - ["Eastern Ruins Fairy Cave - In", "Eastern Ruins Fairy Cave"]
   - ["Eastern Ruins Fairy Cave - Exit", "Eastern Ruins Fairy Cave - Out"]
@@ -227,10 +223,6 @@ fixed:
   - ["Cave 45 - In", "Cave 45 Right"]
   - ["Cave 45 Right - Exit", "Cave 45 - Out"]
 
-  # Map 0x34
-  - ["Wetlands Big Fairy - In", "Wetlands Big Fairy"]
-  - ["Wetlands Big Fairy - Exit", "Wetlands Big Fairy - Out"]
-
   # Map 0x35
   - ["Lake Hylia Shop - In", "Lake Hylia Shop"]
   - ["Lake Hylia Shop - Exit", "Lake Hylia Shop - Out"]
@@ -255,9 +247,6 @@ fixed:
   - ["Ice Cave Thief Hideout - Exit", "Ice Cave Thief Hideout - Out"]
 
   # Map 0x3A
-  - ["Desert Big Fairy - In", "Desert Big Fairy"]
-  - ["Desert Big Fairy - Exit", "Desert Big Fairy - Out"]
-
   - ["Desert Thief Hideout - In", "Desert Thief Hideout"]
   - ["Desert Thief Hideout - Exit", "Desert Thief Hideout - Out"]
 
@@ -386,10 +375,6 @@ fixed:
   # Map 0x6C
   # Bomb Shoppe connected in normal.yml
 
-  # Map 0x6E
-  - ["Dark Lake Hylia River Bend Fairy - In", "South of POD Big Fairy"]
-  - ["South of POD Big Fairy - Exit", "Dark Lake Hylia River Bend Fairy - Out"]
-
   # Map 0x6F
   - ["East Dark World Portal Cave - In", "Hint Giver Cave - Birdo"]
   - ["Hint Giver Cave - Birdo - Exit", "East Dark World Portal Cave - Out"]
@@ -412,16 +397,10 @@ fixed:
   - ["Hype Cave Entrance - Exit", "Hype Cave - Out"]
 
   # Map 0x75
-  - ["Dark Lake Hylia Shop - In", "Dark Lake Hylia Shop"]
-  - ["Dark Lake Hylia Shop - Exit", "Dark Lake Hylia Shop - Out"]
-
   - ["Ice Palace - In", "Ice Palace - Entrance"]
   - ["Ice Palace - Entrance - Exit", "Ice Palace - Out"]
 
   # Map 0x77
-  - ["Dark Shopping Mall Big Fairy - In", "Shopping Mall Big Fairy"]
-  - ["Shopping Mall Big Fairy - Exit", "Dark Shopping Mall Big Fairy - Out"]
-
   - ["Hint Giver Cave - In", "Hint Giver Cave - Glove"]
   - ["Hint Giver Cave - Glove - Exit", "Hint Giver Cave - Out"]
 
