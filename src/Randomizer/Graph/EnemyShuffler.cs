@@ -554,7 +554,8 @@ internal sealed class EnemyShuffler : IWorldModifier
                         (e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false));
 
                 // trophy enemies first, they need to be there and we want variance.
-                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null))
+                // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
+                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null).ThenByDescending(e => e.Allow?.Length > 0).ThenByDescending(e => e.Deny?.Length > 0))
                 {
                     if (!alreadyRandomized.Add(enemy))
                     {
@@ -566,7 +567,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
                     if (enemy.Item != null)
                         spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
-                    var viableSprites = spriteSource.Where(e => owSheets[owIdx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
+                    var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && owSheets[owIdx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                     if (viableSprites.Length == 0)
                         throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}");
 
@@ -583,7 +584,8 @@ internal sealed class EnemyShuffler : IWorldModifier
                         (e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false));
 
                 // trophy enemies first, they need to be there and we want variance.
-                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null))
+                // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
+                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null).ThenByDescending(e => e.Allow?.Length > 0).ThenByDescending(e => e.Deny?.Length > 0))
                 {
                     if (!alreadyRandomized.Add(enemy))
                     {
@@ -595,7 +597,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
                     if (enemy.Item != null)
                         spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
-                    var viableSprites = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly) && roomSheets[roomId].CanMergeWith(e.Sprite?.Sheets)).ToArray();
+                    var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && !e.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly) && roomSheets[roomId].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                     if (viableSprites.Length == 0)
                         throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{roomId:x04}");
 
@@ -682,5 +684,7 @@ internal sealed class EnemyShuffler : IWorldModifier
 
             return (mapId, state);
         }
+        static bool isAllowed(Vertex target, EnemySprite sprite) => target.Allow is null || target.Allow.Length == 0 || target.Allow.Contains(sprite.Sprite.DefeatName);
+        static bool isDenied(Vertex target, EnemySprite sprite) => target.Deny is not null && target.Deny.Length > 0 && target.Deny.Contains(sprite.Sprite.DefeatName);
     }
 }
