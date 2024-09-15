@@ -952,7 +952,7 @@ public static class RomWriter
             // Pointer to pointer table
             owPointerOffsets[state].Add((ushort)(owOutputOffsets.Count * 2));
 
-            for (int i = 0; i <= 0x81; i++)
+            for (int i = 0; i < 0x90; i++)
             {
                 // rain state only has light world in the table; the game doesn't expect you in dark world before rescuing Zelda.
                 if (state == 0 && i > 0x3f)
