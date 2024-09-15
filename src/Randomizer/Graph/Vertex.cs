@@ -3,12 +3,12 @@ namespace Randomizer.Graph;
 using System.Diagnostics;
 
 // FIXME: we need a sprite class that does something.
-public record class Sprite(string Name, byte[]? Bytes = null)
+public record class Sprite(string Name, byte Id)
 {
     private static readonly Lazy<Dictionary<string, Sprite>> _sprites = new(() => LoadSprites().ToDictionary(k => k.Name));
 
     public string DefeatName { get; init; } = Name;
-    public byte[]?[] Sheets { get; init; } = [null, null, null, null];
+    public byte?[] Sheets { get; init; } = [null, null, null, null];
     public YamlSpriteFlags Flags { get; init; }
     public byte SubType { get; init; }
     public string? FallingSpriteFor { get; init; }
@@ -23,7 +23,7 @@ public record class Sprite(string Name, byte[]? Bytes = null)
         var spriteData = YamlReader.LoadSprites();
         foreach (var (name, sprite) in spriteData)
         {
-            yield return new(name, sprite.Bytes)
+            yield return new(name, sprite.Id)
             {
                 Sheets = sprite.Sheets,
                 Flags = sprite.Flags,
@@ -89,7 +89,7 @@ public sealed class Vertex : ICloneable
     public int? RoomId { get; init; }
     public byte? RoomOAM { get; init; }
     public int? Map { get; init; }
-    public byte[]?[] Sheets { get; init; } = [null, null, null, null];
+    public byte?[] Sheets { get; init; } = [null, null, null, null];
     public bool? MoonPearl { get; init; }
     public ItemSetName[] ItemSet { get; init; } = [];
     public long[]? Addresses { get; init; }

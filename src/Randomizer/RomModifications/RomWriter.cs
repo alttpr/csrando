@@ -926,8 +926,7 @@ public static class RomWriter
                 outputBytes.Add((byte)(((sprite.SubType & 0x07) << 5)
                     | overlordFlag
                     | enemy.Position.X));
-                // TODO: random byte instead?
-                outputBytes.Add(sprite.Bytes![0]);
+                outputBytes.Add(sprite.Id);
                 if (enemy.Item != null)
                 {
                     // @todo update this when we can place any item
@@ -967,8 +966,7 @@ public static class RomWriter
 
                     outputMap.Add((byte)enemy.Position!.Y);
                     outputMap.Add((byte)enemy.Position.X);
-                    // TODO: random byte instead?
-                    byte enemyId = enemy.Sprite!.Bytes![0];
+                    byte enemyId = enemy.Sprite!.Id;
                     if (enemy.Sprite.Flags.HasFlag(YamlSpriteFlags.Overlord))
                         enemyId += 0xF2;
                     outputMap.Add(enemyId);

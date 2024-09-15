@@ -1640,27 +1640,9 @@ public sealed class Rom : IDisposable
         if (spriteToWrite == null)
             return;
 
-        var spriteBytes = spriteToWrite.Bytes;
-        // FIXME: is this a data issue, or something that needs special handling?
-        if (spriteBytes == null)
-            return;
-
-        // TODO: some sprites have more than one byte, because they are alternates.
-        //       those might be location specific and/or a reason to split it into two sprites.
-        //       at the moment, this always uses the first of the bytes (rather than a random pick)
-        //       under the assumption that the location only has a single address (which should be
-        //       true for most locations that spawn sprites, such as prize packs or pots)
-        for (int i = 0; i < Math.Min(spriteBytes.Length, location.Addresses.Length); i++)
-        {
-            if (i >= location.Addresses.Length)
-                break;
-            long address = location.Addresses[i];
-            byte? itemByte = spriteBytes.ElementAtOrDefault(i);
-            if (itemByte == null)
-                continue;
-
-            Write((Address)address, [itemByte.Value]);
-        }
+        var spriteByte = spriteToWrite.Id;
+        long address = location.Addresses[0];
+        Write((Address)address, [spriteByte]);
     }
 
     public void WriteItem(Vertex location, Item? itemToWrite = null)

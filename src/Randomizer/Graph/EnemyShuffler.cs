@@ -373,16 +373,16 @@ internal sealed class EnemyShuffler : IWorldModifier
         public Sprite Sprite { get; } = sprite;
         public SheetSet Sheets { get; } = new SheetSet(sprite.Sheets);
     }
-    [System.Diagnostics.DebuggerDisplay("[ {string.Join(\",\", _sheets[0])}, {string.Join(\",\", _sheets[1])}, {string.Join(\",\", _sheets[2])}, {string.Join(\",\", _sheets[3])} ]")]
-    private sealed class SheetSet(byte[]?[] sheets) : IEquatable<SheetSet>
+    [System.Diagnostics.DebuggerDisplay("[ {_sheets[0]}, {_sheets[1]}, {_sheets[2]}, {_sheets[3]} ]")]
+    private sealed class SheetSet(byte?[] sheets) : IEquatable<SheetSet>
     {
-        private readonly byte[]?[] _sheets = sheets;
+        private readonly byte?[] _sheets = sheets;
 
-        public SheetSet() : this(new byte[4][]) { }
+        public SheetSet() : this(new byte?[4]) { }
         public bool IsEmpty => _sheets.All(b => b == null);
         public bool IsFull => _sheets.All(b => b != null);
         public bool CanMergeWith(SheetSet other) => CanMergeWith(other._sheets);
-        public bool CanMergeWith(byte[]?[]? otherSheets)
+        public bool CanMergeWith(byte?[]? otherSheets)
         {
             if (otherSheets == null)
                 return true;
@@ -392,7 +392,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                 if (_sheets[idx] == null || otherSheets[idx] == null)
                     continue;
 
-                if (!_sheets[idx]!.Intersect(otherSheets[idx]!).Any())
+                if (_sheets[idx] != otherSheets[idx])
                     return false;
             }
 
@@ -404,7 +404,7 @@ internal sealed class EnemyShuffler : IWorldModifier
             merged.Merge(other._sheets);
             return merged;
         }
-        public void Merge(byte[]?[]? otherSheets)
+        public void Merge(byte?[]? otherSheets)
         {
             if (otherSheets == null)
                 return;
@@ -413,23 +413,17 @@ internal sealed class EnemyShuffler : IWorldModifier
             {
                 if (otherSheets[idx] == null)
                     continue;
-                if (_sheets[idx] == null)
-                {
-                    _sheets[idx] = otherSheets[idx];
-                    continue;
-                }
-
-                _sheets[idx] = _sheets[idx]!.Intersect(otherSheets[idx]!).ToArray();
+                _sheets[idx] = otherSheets[idx];
             }
         }
         public SheetSet Freeze(PRNG prng)
         {
-            var finalSet = new byte[4][];
+            var finalSet = new byte?[4];
             for (int i = 0; i < finalSet.Length; i++)
             {
-                byte[] options = _sheets.ElementAtOrDefault(i) ?? [];
-                byte sheet = options.Length == 0 ? (byte)0 : prng.GetRandomElement(options);
-                finalSet[i] = [sheet];
+                byte? option = _sheets.ElementAtOrDefault(i) ?? null;
+                byte sheet = option.GetValueOrDefault();
+                finalSet[i] = sheet;
             }
 
             return new(finalSet);
@@ -438,9 +432,9 @@ internal sealed class EnemyShuffler : IWorldModifier
         {
 #if DEBUG
             System.Diagnostics.Debug.Assert(_sheets is null || _sheets.Length is 0 or 4, "This SheetSet is not empty, but doesn't contain exactly 4 entries. Review initialization for errors.");
-            System.Diagnostics.Debug.Assert(_sheets?.Length != 4 || _sheets.All(b => b is null || b.Length == 1), "This SheetSet is not empty, but doesn't contain exactly 4 entries. Try Freezing it before use.");
+            System.Diagnostics.Debug.Assert(_sheets?.Length != 4 || _sheets.All(b => b is not null), "This SheetSet is not empty, but doesn't contain exactly 4 entries. Try Freezing it before use.");
 #endif
-            return _sheets?.SelectMany(b => b ?? []) ?? [];
+            return _sheets?.Select(b => b.GetValueOrDefault()) ?? [];
         }
 
         public override int GetHashCode() => 0; // force Equals to be used, since the contents change over time.
@@ -461,7 +455,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     continue;
                 if (_sheets[i] is null || other._sheets[i] is null)
                     return false;
-                if (!_sheets[i]!.SequenceEqual(other._sheets[i]!))
+                if (_sheets[i] != other._sheets[i])
                     return false;
             }
             return true;
@@ -497,7 +491,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         var roomSheets = Enumerable.Range(0, 0x140).Select(roomId =>
         {
             if (roomVertices.TryGetValue(roomId, out var roomVertex) && roomVertex?.Sheets is not null)
-                return new SheetSet((byte[]?[])roomVertex.Sheets.Clone());
+                return new SheetSet((byte?[])roomVertex.Sheets.Clone());
             return new SheetSet();
         }).ToArray();
         // this is 3 times light world (rain state, zelda rescued, aga down) plus 1 times dark world
@@ -505,7 +499,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         {
             var (mapId, _) = IndexToMapState(owIdx);
             if (mapVertices.TryGetValue(mapId, out var mapVertex) && mapVertex?.Sheets is not null)
-                return new SheetSet((byte[]?[])mapVertex.Sheets.Clone());
+                return new SheetSet((byte?[])mapVertex.Sheets.Clone());
             return new SheetSet();
         }).ToArray();
 

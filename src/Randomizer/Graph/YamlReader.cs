@@ -258,14 +258,14 @@ public class YamlItem
 
 public class YamlSprite
 {
-    [YamlMember(Alias = "bytes")]
-    public required byte[] Bytes { get; set; }
+    [YamlMember(Alias = "id")]
+    public required byte Id { get; set; }
     [YamlMember(Alias = "flags")]
     public YamlSpriteFlags Flags { get; set; }
     [YamlMember(Alias = "subtype")]
     public byte SubType { get; set; } = 0x00;
     [YamlMember(Alias = "sheets")]
-    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
+    public byte?[] Sheets { get; set; } = [null, null, null, null];
     [YamlMember(Alias = "alternative")]
     public string? AlternativeName { get; set; }
     /// <summary>When set, this sprite is the falling sprite for the one returned here.</summary>
@@ -329,7 +329,7 @@ public partial class Map
     public bool Moonpearl { get; set; }
 
     [YamlMember(Alias = "sheets")]
-    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
+    public byte?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "nodes")]
     public required MapNodes Nodes { get; set; }
@@ -455,7 +455,7 @@ public partial class Room
     public bool Dark { get; set; } = false;
 
     [YamlMember(Alias = "sheets")]
-    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
+    public byte?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "extralight")]
     public List<string> ExtraLight { get; set; } = new();
