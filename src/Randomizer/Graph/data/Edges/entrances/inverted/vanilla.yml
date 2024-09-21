@@ -59,6 +59,10 @@ fixed:
   - ["Dark Lake Hylia River Bend Fairy - In", "South of POD Big Fairy"]
   - ["South of POD Big Fairy - Exit", "Dark Lake Hylia River Bend Fairy - Out"]
 
+  # Map 0x75
+  - ["Dark Lake Hylia Shop - In", "Dark Lake Hylia Shop"]
+  - ["Dark Lake Hylia Shop - Exit", "Dark Lake Hylia Shop - Out"]
+
   # Map 0x77
   - ["Dark Shopping Mall Big Fairy - In", "Shopping Mall Big Fairy"]
   - ["Shopping Mall Big Fairy - Exit", "Dark Shopping Mall Big Fairy - Out"]
