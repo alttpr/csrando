@@ -107,8 +107,8 @@ public static class RomWriter
 
         rom.SetGanonAgahnimRng(config.GanonAgahnimRNG); //rom.GanonAgRNG
 
-        rom.SetTowerCrystalRequirement(config.CrystalsTower);
-        rom.SetGanonCrystalRequirement(config.CrystalsGanon);
+        rom.SetTowerCrystalRequirement(int.Parse(config.CrystalsTower));
+        rom.SetGanonCrystalRequirement(int.Parse(config.CrystalsGanon));
 
         // testing features
         rom.SetGenericKeys(config.GenericKeys); //rom.genericKeys
@@ -312,7 +312,7 @@ public static class RomWriter
             || (config.TriforcePieces > 0);
         rom.EnableHudItemCounter(!triforceHUD && config.HudItemCounter /*|| config.Goal == GoalOption.Completionist*/); //rom.hudItemCounter
 
-        if (config.CrystalsTower == 0)
+        if (config.CrystalsTower == "0")
             rom.InitialSram.PreOpenGanonsTower();
 
         rom.SetGameType("item");
@@ -430,9 +430,9 @@ public static class RomWriter
                 ? progressionHints["TriforceHandInSingular"]
                 : progressionHints["TriforceHandInPlural"]);
         }
-        if (config.CrystalsTower < 7)
+        if (int.Parse(config.CrystalsTower) < 7)
         {
-            hints.Add("sign_ganons_tower", config.CrystalsTower == 1
+            hints.Add("sign_ganons_tower", config.CrystalsTower == "1"
                 ? progressionHints["TowerCrystalCountSingular"]
                 : progressionHints["TowerCrystalCountPlural"]);
         }
@@ -446,10 +446,10 @@ public static class RomWriter
         string? pyramidSign = config.Goal switch
         {
             // TODO: do we want/need a fast-ganon trifecta?
-            GoalOption.Ganon or GoalOption.Trifecta => config.CrystalsGanon == 1
+            GoalOption.Ganon or GoalOption.Trifecta => config.CrystalsGanon == "1"
                 ? progressionHints["GanonCrystalCountSingular"]
                 : progressionHints["GanonCrystalCountPlural"],
-            GoalOption.FastGanon => config.CrystalsGanon == 1
+            GoalOption.FastGanon => config.CrystalsGanon == "1"
                 ? progressionHints["FastGanonCrystalCountSingular"]
                 : progressionHints["FastGanonCrystalCountPlural"],
             GoalOption.Dungeons => progressionHints["GanonAllDungeons"],

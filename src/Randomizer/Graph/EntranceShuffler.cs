@@ -28,7 +28,7 @@ internal sealed class EntranceShuffler : IWorldModifier
         {
             StateOption.Standard => "normal",
             StateOption.Open => "normal",
-            StateOption.Retro => "normal",
+            StateOption.Retro => "retro",
             StateOption.Inverted => "inverted",
             _ => throw new ArgumentException("Unknown State option: " + world.Config.State)
         } + "/" + definitionName;

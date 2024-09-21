@@ -43,6 +43,8 @@ maps:
               - "Pendant Of Power"
             Pendant|3:
               - "All Pendants"
+            Crystal|7:
+              - "All Crystals"
             HeartPiece|4:
               - "PHeart1"
             HeartPiece|8:
@@ -273,6 +275,10 @@ maps:
           connections:
             Crystal|7:
               - GanonVulnerable
+        - name: "ConfigWorldGanonVulnerableRequiredDungeons"
+          connections:
+            AllDungeonsComplete:
+              - GanonVulnerable
 
         - name: "Swordless - Check"
           connections:
@@ -334,9 +340,18 @@ maps:
 
         - name: "All Pendants"
           items: ["AllPendants"]
+          connections:
+            AllCrystals:
+              - "All Dungeons Complete"
 
         - name: "Red Crystals"
           items: ["RedCrystals"]
+
+        - name: "All Crystals"
+          items: ["AllCrystals"]
+
+        - name: "All Dungeons Complete"
+          items: ["AllDungeonsComplete"]
 
         - name: "Bottle"
           items: ["Bottle"]

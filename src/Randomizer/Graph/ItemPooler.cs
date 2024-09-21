@@ -180,7 +180,7 @@ internal sealed class ItemPooler
                 || !(world.Config.Glitches is GlitchesOption.Overworld or GlitchesOption.Major))
         )
         {
-            float crystalRatio = world.Config.CrystalsTower / 7f;
+            float crystalRatio = int.Parse(world.Config.CrystalsTower) / 7f;
             int fillCount = world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Pedestal or GoalOption.Trifecta
                 ? _prng.GetRandomInt((int)(15 * crystalRatio), (int)(25 * crystalRatio))
                 : _prng.GetRandomInt((int)(15 * crystalRatio));

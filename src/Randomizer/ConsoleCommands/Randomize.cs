@@ -25,9 +25,9 @@ internal sealed class Randomize : Command
     private readonly Option<EntranceShuffleOption> _entranceShuffle = new(["entrance", "--entrance"], () => EntranceShuffleOption.None, "set entrance shuffle mode");
     private readonly Option<ShopSupplyOption> _shopSupply = new(["shopsupply", "--shopsupply"], () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
     private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
-    private static readonly int[] _defaultCrystals = [7];
-    private readonly Option<int[]> _crystalsGanon = new Option<int[]>(["crystals_ganon", "--crystals_ganon"], ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
-    private readonly Option<int[]> _crystalsTower = new Option<int[]>(["crystals_tower", "--crystals_tower"], ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
+    private static readonly string[] _defaultCrystals = ["7"];
+    private readonly Option<string[]> _crystalsGanon = new Option<string[]>(["crystals_ganon", "--crystals_ganon"], ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
+    private readonly Option<string[]> _crystalsTower = new Option<string[]>(["crystals_tower", "--crystals_tower"], ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
     private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>(["tech", "--tech"], "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
     private readonly Option<List<string>> _startingItems = new(["items", "--items"], "set starting items (comma separated)");
     private readonly Option<int> _bulk = new(["bulk", "--bulk"], () => 1, "generate multiple ROMs");
@@ -72,11 +72,11 @@ internal sealed class Randomize : Command
         this.SetHandler(context => context.ExitCode = Handle(context));
     }
 
-    private static int[] ParseCrystalCount(ArgumentResult result)
+    private static string[] ParseCrystalCount(ArgumentResult result)
     {
         // option not specified: default to 7
         if (!result.Tokens.Any())
-            return [7];
+            return ["7"];
 
         // option specified as "random": allow any number
         if (result.Tokens.Any(t => "random".Equals(t.Value, StringComparison.OrdinalIgnoreCase)))
@@ -84,7 +84,7 @@ internal sealed class Randomize : Command
 
         // anything else: the user specified at least one value; we'll use those as possible choices to randomize the count
         // those values are already pre-validated, so they are guaranteed to be integers (or the string "random")
-        return result.Tokens.Select(t => int.Parse(t.Value)).ToArray();
+        return result.Tokens.Select(t => t.Value).ToArray();
     }
 
     private void Validate(CommandResult result)

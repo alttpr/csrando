@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class WorldConfig
 {
-    public static readonly int[] RandomCrystals = [0, 1, 2, 3, 4, 5, 6, 7];
+    public static readonly string[] RandomCrystals = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
     // game/text language. english only at the moment.
     public string Language { get; init; } = "en";
@@ -15,27 +15,30 @@ public class WorldConfig
 
     // Use an array of allowed random values for randomizing the number of crystals.
     // A single-element array acts as specific count to use.
-    public int[] CrystalsGanonChoices { get; set; } = RandomCrystals;
-    public int[] CrystalsTowerChoices { get; set; } = RandomCrystals;
+    public string[] CrystalsGanonChoices { get; set; } = RandomCrystals;
+    public string[] CrystalsTowerChoices { get; set; } = RandomCrystals;
 
-    private int? _crystalsGanon;
-    public int CrystalsGanon
+    private string? _crystalsGanon;
+    public string CrystalsGanon
     {
-        get => _crystalsGanon.GetValueOrDefault(7);
+        get => _crystalsGanon ?? "7";
         set => _crystalsGanon = value;
     }
-    private int? _crystalsTower;
-    public int CrystalsTower
+    private string? _crystalsTower;
+    public string CrystalsTower
     {
-        get => _crystalsTower.GetValueOrDefault(7);
+        get => _crystalsTower ?? "7";
         set => _crystalsTower = value;
     }
 
     public void SelectRandomValues(PRNG prng)
     {
-        if (!_crystalsGanon.HasValue)
+        if (Goal == GoalOption.Dungeons)
+            _crystalsGanon = "Dungeons";
+
+        if (_crystalsGanon is null)
             _crystalsGanon = prng.GetRandomElement(CrystalsGanonChoices);
-        if (!_crystalsTower.HasValue)
+        if (_crystalsTower is null)
             _crystalsTower = prng.GetRandomElement(CrystalsTowerChoices);
     }
 
