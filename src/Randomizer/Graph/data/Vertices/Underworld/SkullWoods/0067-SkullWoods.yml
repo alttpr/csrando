@@ -46,6 +46,7 @@ rooms:
 
         - name: "Skull Woods - Firebar Pits"
           inletid: 0x77
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Trap Chest Room"

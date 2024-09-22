@@ -6,6 +6,7 @@ rooms:
         # TODO: Model the switch that is accessible from the south areas with bombs / boomerang / somaria
         # TODO: Verify pots in all this file
         - name: "Ganon's Tower - Whackamole"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Torch Room"
@@ -27,6 +28,7 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Ganon's Tower - Bonk Pits - Top"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - DMs Room"
@@ -34,6 +36,7 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Islands"
 
         - name: "Ganon's Tower - Bonk Pits - Middle"
+          pit: true
           connections:
             Hookshot:
               - "Ganon's Tower - Bonk Pits - Islands"
@@ -41,6 +44,7 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Islands"
 
         - name: "Ganon's Tower - Bonk Pits - Islands"
+          pit: true
           connections:
             Hookshot:
               - "Ganon's Tower - Bonk Pits - Top"
@@ -67,6 +71,7 @@ rooms:
 
         - name: "Ganon's Tower - Bonk Pits - Bottom Upper"
           switch: true
+          pit: true
           connections:
             Hookshot:
               - "Ganon's Tower - Bonk Pits - Islands"
@@ -97,6 +102,7 @@ rooms:
         # Only accessible from the switch area, used to allow transitioning as orange
         # to the bottom area
         - name: "Ganon's Tower - Bonk Pits - Bottom Upper - Orange Transition"
+          pit: true
           connections:
             UseBomb:
               - "Ganon's Tower - Bonk Pits - Bottom Lower"
@@ -104,6 +110,7 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Bottom Lower"
 
         - name: "Ganon's Tower - Bonk Pits - Bottom Lower"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Twin Switches Top"
@@ -111,6 +118,7 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Bottom Upper"
 
         - name: "Ganon's Tower - Map Room"
+          pit: true
           connections:
             KeyA2:
               - "Ganon's Tower - Bonk Pits - Bottom Upper"

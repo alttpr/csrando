@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Skull Woods - Falling Floor"
+          pit: true
           connections:
             KeyD3:
               - "Skull Woods - Bumper Buddy North"
@@ -54,6 +55,7 @@ rooms:
 
         - name: "Skull Woods - Dumb Switches Top"
           inletid: 0x79
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Dumb Switches Bottom"
@@ -76,6 +78,7 @@ rooms:
               sprite: "SpikeTrap"
 
         - name: "Skull Woods - Dumb Switches Bottom"
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Bumper Buddy"
@@ -93,6 +96,7 @@ rooms:
 
         - name: "Skull Woods - Bumper Buddy"
           inletid: 0x28
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Dumb Switches Bottom"
@@ -118,6 +122,7 @@ rooms:
               sprite: "Wallmaster Overlord"
 
         - name: "Skull Woods - Bumper Buddy North"
+          pit: true
           connections:
             KeyD3:
               - "Skull Woods - Falling Floor"

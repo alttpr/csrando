@@ -4,6 +4,7 @@ rooms:
       regions:
         - name: "Spiral Cave Top"
           inletid: 0x1d
+          pit: true
           connections:
             fixed:
               - "Spiral Cave Ledge"

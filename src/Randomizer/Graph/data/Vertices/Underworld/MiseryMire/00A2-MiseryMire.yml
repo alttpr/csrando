@@ -10,6 +10,7 @@ rooms:
               - "Misery Mire - Elbow"
 
         - name: "Misery Mire - Bridge Room - Left"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Dark Switch"
@@ -21,6 +22,7 @@ rooms:
               sprite: "@MagicRefillFull"
 
         - name: "Misery Mire - Bridge Room - Right"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Antifairy Refill Overpass"

@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Joke Room"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Mire-go-round"
@@ -60,6 +61,7 @@ rooms:
               sprite: "Sluggula"
 
         - name: "Misery Mire - Drop Chest Room"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Drop Chest Return"

@@ -5,6 +5,7 @@ rooms:
       regions:
         # TODO: something is missing here??
         - name: "Palace of Darkness - Pit Room"
+          pit: true
           connections:
             fixed:
               - "Palace of Darkness - Stalfos Basement"

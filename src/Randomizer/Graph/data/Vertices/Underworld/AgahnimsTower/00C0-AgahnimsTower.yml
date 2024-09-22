@@ -18,6 +18,7 @@ rooms:
               sprite: "BlueSwordGuard"
 
         - name: "Agahnims Tower - Dark Bridge"
+          pit: true
           connections:
             fixed:
               - "Agahnims Tower - Dark Key Guards"

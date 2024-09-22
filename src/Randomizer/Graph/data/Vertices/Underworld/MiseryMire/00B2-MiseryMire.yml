@@ -1,6 +1,7 @@
 rooms:
   - roomid: 0xB2
     group: 14
+    oam: 0x01 # room has overlapping layers
     nodes:
       regions:
         - name: "Misery Mire - Popo Push"

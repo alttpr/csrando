@@ -258,14 +258,19 @@ public class YamlItem
 
 public class YamlSprite
 {
-    [YamlMember(Alias = "bytes")]
-    public required byte[] Bytes { get; set; }
+    [YamlMember(Alias = "id")]
+    public required byte Id { get; set; }
     [YamlMember(Alias = "flags")]
     public YamlSpriteFlags Flags { get; set; }
     [YamlMember(Alias = "subtype")]
     public byte SubType { get; set; } = 0x00;
     [YamlMember(Alias = "sheets")]
-    public byte[]?[] Sheets { get; set; } = [null, null, null, null];
+    public byte?[] Sheets { get; set; } = [null, null, null, null];
+    [YamlMember(Alias = "alternative")]
+    public string? AlternativeName { get; set; }
+    /// <summary>When set, this sprite is the falling sprite for the one returned here.</summary>
+    [YamlMember(Alias = "falling")]
+    public string? FallingSpriteFor { get; set; }
 }
 [Flags]
 public enum YamlSpriteFlags
@@ -280,6 +285,8 @@ public enum YamlSpriteFlags
     Overlord = 1 << 2,
     /// <summary>This sprite may be placed in a challenge room.</summary>
     Challenge = 1 << 3,
+    /// <summary>This sprite shouldn't hold item drops that might affect progression.</summary>
+    NoDrop = 1 << 4,
 }
 
 public class DirectedUndirectedPair
@@ -320,6 +327,9 @@ public partial class Map
 
     [YamlMember(Alias = "moonpearl")]
     public bool Moonpearl { get; set; }
+
+    [YamlMember(Alias = "sheets")]
+    public byte?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "nodes")]
     public required MapNodes Nodes { get; set; }
@@ -432,6 +442,9 @@ public partial class Room
     [YamlMember(Alias = "roomid")]
     public int Roomid { get; set; }
 
+    [YamlMember(Alias = "oam")]
+    public byte OAM { get; set; } = 0x00;
+
     [YamlMember(Alias = "nodes")]
     public required RoomNodes Nodes { get; set; }
 
@@ -440,6 +453,9 @@ public partial class Room
 
     [YamlMember(Alias = "dark")]
     public bool Dark { get; set; } = false;
+
+    [YamlMember(Alias = "sheets")]
+    public byte?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "extralight")]
     public List<string> ExtraLight { get; set; } = new();
@@ -543,6 +559,9 @@ public partial class Region
 
     [YamlMember(Alias = "switch")]
     public bool? Switch { get; set; }
+
+    [YamlMember(Alias = "pit")]
+    public bool Pit { get; set; } = false;
 
     [YamlMember(Alias = "mobs")]
     public List<Entity> Mobs { get; set; } = new();

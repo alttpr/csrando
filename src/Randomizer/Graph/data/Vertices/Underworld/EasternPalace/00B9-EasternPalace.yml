@@ -1,6 +1,7 @@
 rooms:
   - roomid: 0xB9
     group: 2
+    oam: 0x01 # room has overlapping layers
     nodes:
       regions:
         - name: "Eastern Palace - Cannonball Room"

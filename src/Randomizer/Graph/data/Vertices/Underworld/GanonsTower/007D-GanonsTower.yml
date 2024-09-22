@@ -15,6 +15,7 @@ rooms:
               itemset: ["gt"]
 
         - name: "Ganon's Tower - Fire Snakes Right"
+          pit: true
           connections:
             Hookshot:
               - "Ganon's Tower - Fire Snakes Left"

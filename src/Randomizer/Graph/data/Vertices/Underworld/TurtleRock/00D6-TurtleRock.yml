@@ -1,10 +1,13 @@
 rooms:
   - roomid: 0xD6
+    # 0x27 in slot 2 is the somaria platform
+    sheets: [null, null, 0x27, null]
     group: 15
     nodes:
       regions:
         - name: "Turtle Rock - Entrance"
           inletid: 0x35
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Entrance Platform"
@@ -17,6 +20,7 @@ rooms:
               sprite: "@BombRefill1"
 
         - name: "Turtle Rock - Entrance Platform"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Lobby SSE"
@@ -24,6 +28,7 @@ rooms:
               - "Turtle Rock - Entrance"
 
         - name: "Turtle Rock - Spike Room"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Lobby SSW"

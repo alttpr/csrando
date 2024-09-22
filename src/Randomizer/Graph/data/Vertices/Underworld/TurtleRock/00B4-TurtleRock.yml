@@ -1,9 +1,12 @@
 rooms:
   - roomid: 0xB4
+    # 0x27 in slot 2 is the somaria platform
+    sheets: [null, null, 0x27, null]
     group: 15
     nodes:
       regions:
         - name: "Turtle Rock - Chasm Top"
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Chasm Bottom"
@@ -11,6 +14,7 @@ rooms:
               - "Turtle Rock - Boss Room"
 
         - name: "Turtle Rock - Chasm Bottom"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Switch Block Puzzle"

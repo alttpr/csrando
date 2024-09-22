@@ -111,6 +111,7 @@ rooms:
               position: { x: 0x0e, y: 0x30, z: 0x00 }
 
         - name: "Ganon's Tower - Beetle Pits Left"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - The Zoo - You"
@@ -125,6 +126,7 @@ rooms:
 
         # TODO: Do we want any logic to get back to the left side to kill enemies? Boots only
         - name: "Ganon's Tower - Beetle Pits Right"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Invisible Floor Maze"

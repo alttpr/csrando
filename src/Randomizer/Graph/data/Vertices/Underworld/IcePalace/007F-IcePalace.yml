@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Bari Pit left"
+          pit: true
           connections:
             Hookshot:
               - "Ice Palace - Bari Pit right"
@@ -85,6 +86,7 @@ rooms:
               - "Ice Palace - Bari Pit left"
 
         - name: "Ice Palace - Big Spikes"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Bari University"

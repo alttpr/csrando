@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Swamp Palace - West Wing Attic"
+          pit: true
           connections:
             fixed:
               - "Swamp Palace - West Wing"

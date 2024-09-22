@@ -19,7 +19,7 @@ maps:
           mobs:
             - name: "North of Outcasts - sprite.FastRedSpearGuard"
               position: { x: 0x17, y: 0x0e }
-              sprite: "FastRedTaros" # FIXME: this should be sprite 0x45 but dark world. what is that?
+              sprite: "FastRedTaros"
               state: [1, 2]
             - name: "North of Outcasts - Fairy 1"
               position: { x: 0x08, y: 0x10 }

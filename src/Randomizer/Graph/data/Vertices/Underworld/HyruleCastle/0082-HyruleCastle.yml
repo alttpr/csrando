@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Hyrule Castle - Basement Playpit"
+          pit: true
           connections:
             fixed:
               - "Hyrule Castle - Basement Lonely Blue Guard"
@@ -24,10 +25,10 @@ rooms:
                 - "RollerVD"
             - name: "Hyrule Castle - Basement Playpit - Blue Guard 2"
               position: { x: 0x10, y: 0x06, z: 0x01 }
-              sprite: "BlueSwordGuard03"
+              sprite: "BlueSwordGuard03Falling"
             - name: "Hyrule Castle - Basement Playpit - Blue Guard 3"
               position: { x: 0x15, y: 0x11, z: 0x01 }
-              sprite: "BlueSwordGuard03"
+              sprite: "BlueSwordGuard03Falling"
               deny:
                 - "RollerVU"
 

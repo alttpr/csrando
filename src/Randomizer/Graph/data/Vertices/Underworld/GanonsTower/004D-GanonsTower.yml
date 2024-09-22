@@ -17,6 +17,7 @@ rooms:
               - "Ganon's Tower - Moldorm - Kill Zone"
 
         - name: "Ganon's Tower - Moldorm - Kill Zone"
+          pit: true
           bosses:
             DefeatMoldorm:
               - name: "Ganon's Tower - Moldorm - Kill Zone - Moldorm"
@@ -54,6 +55,7 @@ rooms:
         - name: "Ganon's Tower - Moldorm"
 
         - name: "Ganon's Tower - Moldorm - Chest Platform"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Moldorm - Exit"

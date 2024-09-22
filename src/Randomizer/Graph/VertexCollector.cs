@@ -123,6 +123,7 @@ internal class VertexCollector
                     Name = region.Name,
                     World = world,
                     Map = map.MapMap,
+                    Sheets = map.Sheets,
                     InletId = region.InletId,
                     Shopkeeper = region.Shopkeeper,
                     ShopStyle = region.Shopstyle,
@@ -144,8 +145,10 @@ internal class VertexCollector
                         State = mob.State.ToArray(),
                         ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
+                        Position = mob.Position,
                         Deny = mob.Deny.ToArray(),
                         Allow = mob.Allow.ToArray(),
+                        MightFall = region.Pit,
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
@@ -267,8 +270,10 @@ internal class VertexCollector
                     Name = region.Name,
                     World = world,
                     RoomId = room.Roomid,
+                    RoomOAM = room.OAM,
                     Group = room.Group.GetValueOrDefault(0),
                     Dark = room.Dark,
+                    Sheets = room.Sheets,
                     ExtraLight = room.ExtraLight,
                     InletId = region.InletId,
                     Shopkeeper = region.Shopkeeper,
@@ -301,14 +306,17 @@ internal class VertexCollector
                         Name = mob.Name,
                         World = world,
                         RoomId = room.Roomid,
+                        RoomOAM = room.OAM,
                         Group = room.Group.GetValueOrDefault(0),
                         Sprite = Sprite.Get(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
                         State = mob.State.ToArray(),
                         ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
                         Trophy = world.GetItemOrNull(mob.Trophy),
+                        Position = mob.Position,
                         Deny = mob.Deny.ToArray(),
                         Allow = mob.Allow.ToArray(),
+                        MightFall = region.Pit,
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
@@ -386,6 +394,7 @@ internal class VertexCollector
                             Name = boss.Name,
                             World = world,
                             RoomId = room.Roomid,
+                            RoomOAM = room.OAM,
                             Group = room.Group.GetValueOrDefault(0),
                             Sprite = Sprite.Get(boss.Sprite),
                             Item = world.GetItemOrNull(boss.Item),

@@ -5,6 +5,7 @@ rooms:
       regions:
         - name: "Death Mountain Descent Cave Right"
           inletid: 0x2f
+          pit: true
           connections:
             fixed:
               - "Death Mountain Descent Cave Left"

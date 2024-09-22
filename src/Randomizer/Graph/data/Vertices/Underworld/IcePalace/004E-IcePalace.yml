@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - IPBJ - Top"
+          pit: true
           connections:
             PegOrange:
               - "Ice Palace - IPBJ - Top Before Pot"
@@ -11,6 +12,7 @@ rooms:
               - "Ice Palace - Conveyor"
 
         - name: "Ice Palace - IPBJ - Top Before Pot"
+          pit: true
           connections:
             PegOrange:
               - "Ice Palace - IPBJ - Top"
@@ -18,6 +20,7 @@ rooms:
               - "Ice Palace - IPBJ - Middle"
 
         - name: "Ice Palace - IPBJ - Middle"
+          pit: true
           connections:
             LiftPot:
               - "Ice Palace - IPBJ - Right"
@@ -38,6 +41,7 @@ rooms:
               sprite: "FireBarCW"
 
         - name: "Ice Palace - IPBJ - Right"
+          pit: true
           connections:
             LiftPot:
               - "Ice Palace - IPBJ - Middle"

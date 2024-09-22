@@ -49,6 +49,7 @@ rooms:
               sprite: "YomoMedusa"
 
         - name: "Ganon's Tower - Bari Corridor"
+          pit: true
           connections:
             KeyA2:
               - "Ganon's Tower - Firebar Falling Bridge"
@@ -85,6 +86,7 @@ rooms:
                 - "Bumper"
 
         - name: "Ganon's Tower - Beetle Island"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Invisible, E"

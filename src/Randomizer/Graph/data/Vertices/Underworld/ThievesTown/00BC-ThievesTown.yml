@@ -96,6 +96,7 @@ rooms:
               sprite: "@RupeeBlue"
 
         - name: "Thieves' Town - Toilet"
+          pit: true
           connections:
             fixed:
               - "Thieves' Town - Basement Block Totems"

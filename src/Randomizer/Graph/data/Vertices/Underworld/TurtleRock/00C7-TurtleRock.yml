@@ -16,6 +16,7 @@ rooms:
               sprite: "@ArrowRefill5"
 
         - name: "Turtle Rock - Torch Puzzle"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Lobby ENE"
@@ -30,6 +31,7 @@ rooms:
               sprite: "@MagicRefillFull"
 
         - name: "Turtle Rock - Torch Puzzle track"
+          pit: true
           connections:
             FireRod:
               - "Turtle Rock - Roller Room"

@@ -3,16 +3,35 @@ namespace Randomizer.Graph;
 using System.Diagnostics;
 
 // FIXME: we need a sprite class that does something.
-public record class Sprite(string Name, byte[]? Bytes = null)
+public record class Sprite(string Name, byte Id)
 {
-    public byte?[] Sheets = [null, null, null, null];
+    private static readonly Lazy<Dictionary<string, Sprite>> _sprites = new(() => LoadSprites().ToDictionary(k => k.Name));
+
+    public string DefeatName { get; init; } = Name;
+    public byte?[] Sheets { get; init; } = [null, null, null, null];
+    public YamlSpriteFlags Flags { get; init; }
+    public byte SubType { get; init; }
+    public string? FallingSpriteFor { get; init; }
+
     public static Sprite Get(string name)
+        => _sprites.Value.GetValueOrDefault(name)
+        ?? throw new ArgumentException($"No such sprite: {name}", nameof(name));
+    public static IEnumerable<Sprite> All() => _sprites.Value.Values;
+
+    private static IEnumerable<Sprite> LoadSprites()
     {
         var spriteData = YamlReader.LoadSprites();
-        byte[]? spriteBytes = null;
-        if (spriteData.TryGetValue(name, out var sprite))
-            spriteBytes = sprite?.Bytes;
-        return new(name, spriteBytes);
+        foreach (var (name, sprite) in spriteData)
+        {
+            yield return new(name, sprite.Id)
+            {
+                Sheets = sprite.Sheets,
+                Flags = sprite.Flags,
+                SubType = sprite.SubType,
+                DefeatName = sprite.AlternativeName ?? name,
+                FallingSpriteFor = sprite.FallingSpriteFor,
+            };
+        }
     }
 }
 
@@ -67,8 +86,11 @@ public sealed class Vertex : ICloneable
     public Item? Item { get; set; }
     public Item? Trophy { get; init; }
     public Sprite? Sprite { get; set; }
+    public bool MightFall { get; init; }
     public int? RoomId { get; init; }
+    public byte? RoomOAM { get; init; }
     public int? Map { get; init; }
+    public byte?[] Sheets { get; init; } = [null, null, null, null];
     public bool? MoonPearl { get; init; }
     public ItemSetName[] ItemSet { get; init; } = [];
     public long[]? Addresses { get; init; }

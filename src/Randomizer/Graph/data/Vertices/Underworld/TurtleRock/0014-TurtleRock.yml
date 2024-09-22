@@ -1,6 +1,7 @@
 rooms:
   - roomid: 0x14
     group: 15
+    oam: 0x01 # room has overlapping layers
     nodes:
       regions:
         - name: "Turtle Rock - Lava Tubes 1"

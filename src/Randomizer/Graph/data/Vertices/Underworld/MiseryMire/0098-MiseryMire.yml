@@ -5,6 +5,7 @@ rooms:
       regions:
         - name: "Misery Mire - Entrance"
           inletid: 0x27
+          pit: true
           connections:
             Hookshot:
               - "Misery Mire - Entrance Right"
@@ -78,6 +79,7 @@ rooms:
                 - "Bumper"
 
         - name: "Misery Mire - Entrance Right"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Mire 2"

@@ -1,5 +1,7 @@
 rooms:
   - roomid: 0x24
+    # 0x27 in slot 2 is the somaria platform
+    sheets: [null, null, 0x27, null]
     group: 15
     nodes:
       regions:
@@ -65,6 +67,7 @@ rooms:
               - "Turtle Rock - Big Chest Overlook"
 
         - name: "Turtle Rock - Big Chest Platform"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Medusa Roller"
@@ -86,6 +89,7 @@ rooms:
 
         - name: "Turtle Rock - Big Chest Entrance"
           inletid: 0x19
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Big Chest Platform"

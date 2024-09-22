@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Wizzrobes 1"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Lame Refill"
@@ -12,18 +13,19 @@ rooms:
           mobs:
             - name: "Ganon's Tower - Wizzrobes 1 - Wizzrobe TL"
               position: { x: 0x04, y: 0x07, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesOneTrophy"
             - name: "Ganon's Tower - Wizzrobes 1 - Wizzrobe TR"
               position: { x: 0x0b, y: 0x07, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesOneTrophy"
             - name: "Ganon's Tower - Wizzrobes 1 - Wizzrobe B"
               position: { x: 0x08, y: 0x0a, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesOneTrophy"
 
         - name: "Ganon's Tower - Laser Bridge"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Wizzrobes 1"
@@ -60,11 +62,11 @@ rooms:
           mobs:
             - name: "Ganon's Tower - Wizzrobes 2 - Wizzrobe TL"
               position: { x: 0x16, y: 0x05, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesTwoTrophy"
             - name: "Ganon's Tower - Wizzrobes 2 - Wizzrobe TR"
               position: { x: 0x19, y: 0x05, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesTwoTrophy"
             - name: "Ganon's Tower - Wizzrobes 2 - Spike Trap"
               position: { x: 0x17, y: 0x08, z: 0x00 }
@@ -72,9 +74,9 @@ rooms:
               trophy: "GanonsTowerWizzrobesTwoTrophy"
             - name: "Ganon's Tower - Wizzrobes 2 - Wizzrobe BL"
               position: { x: 0x15, y: 0x09, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesTwoTrophy"
             - name: "Ganon's Tower - Wizzrobes 2 - Wizzrobe BR"
               position: { x: 0x1a, y: 0x09, z: 0x00 }
-              sprite: "Wizzrobe"
+              sprite: "SkullWizzrobe"
               trophy: "GanonsTowerWizzrobesTwoTrophy"

@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Tower Of Hera - Beetle Gate"
+          pit: true
           connections:
             fixed:
               - "Tower Of Hera - Entrance"
@@ -39,11 +40,13 @@ rooms:
         # Players are expected to go through this room using pots only if necessary
         # when the EnemyShuffle is disabled.
         - name: "Tower Of Hera - Beetle Gate - Pot Bypass"
+          pit: true
           connections:
             LiftPot:
               - "Tower Of Hera - Beetle Trap"
 
         - name: "Tower Of Hera - Beetle Trap"
+          pit: true
           connections:
             fixed:
               - "Tower Of Hera - Beetle Gate"
@@ -61,6 +64,7 @@ rooms:
               sprite: "HardhatBeetle"
 
         - name: "Tower Of Hera - Maze"
+          pit: true
           connections:
             fixed:
               - "Tower Of Hera - Petting Zoo"

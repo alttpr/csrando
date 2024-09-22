@@ -360,7 +360,7 @@ public sealed class Rom : IDisposable
         {
             BinaryPrimitives.WriteUInt16LittleEndian(dataP, pointer);
             dataP = dataP[2..];
-    }
+        }
         Write(0x76CC0, p);
     }
 
@@ -1640,27 +1640,9 @@ public sealed class Rom : IDisposable
         if (spriteToWrite == null)
             return;
 
-        var spriteBytes = spriteToWrite.Bytes;
-        // FIXME: is this a data issue, or something that needs special handling?
-        if (spriteBytes == null)
-            return;
-
-        // TODO: some sprites have more than one byte, because they are alternates.
-        //       those might be location specific and/or a reason to split it into two sprites.
-        //       at the moment, this always uses the first of the bytes (rather than a random pick)
-        //       under the assumption that the location only has a single address (which should be
-        //       true for most locations that spawn sprites, such as prize packs or pots)
-        for (int i = 0; i < Math.Min(spriteBytes.Length, location.Addresses.Length); i++)
-        {
-            if (i >= location.Addresses.Length)
-                break;
-            long address = location.Addresses[i];
-            byte? itemByte = spriteBytes.ElementAtOrDefault(i);
-            if (itemByte == null)
-                continue;
-
-            Write((Address)address, [itemByte.Value]);
-        }
+        var spriteByte = spriteToWrite.Id;
+        long address = location.Addresses[0];
+        Write((Address)address, [spriteByte]);
     }
 
     public void WriteItem(Vertex location, Item? itemToWrite = null)
@@ -1860,6 +1842,73 @@ public sealed class Rom : IDisposable
         Write((SNES)0x068F76, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
         // SpritePrep_HardhatBeetle_health (sprite 0x26)
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
+    }
+
+    public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets)
+    {
+        // full room headers (roomheaders.asm)
+        // 32 bytes per entry, offset 0x10 for the 4 sprite sheet ids
+        // offset 3 (the old sprite sheet set id) is unused
+        for (int i = 0; i < spriteSheets.Length / 4; i++)
+            Write((SNES)(0xB58000 + (i * 32) + 0x10), [spriteSheets[(i * 4) + 0], spriteSheets[(i * 4) + 1], spriteSheets[(i * 4) + 2], spriteSheets[(i * 4) + 3]]);
+
+        // SNES table start _09D62E (RoomData_SpritePointers)
+        int dataStart = 0x9D62E + offsets.Length * 2;
+        Span<byte> data = stackalloc byte[2];
+        foreach (var (roomId, offset) in offsets.Indexed())
+        {
+            BinaryPrimitives.WriteUInt16LittleEndian(data, (ushort)(dataStart + offset));
+            Write((SNES)(0x9D62E + roomId * 2), data);
+        }
+        Write((SNES)(0x9D62E + offsets.Length * 2), table);
+    }
+    public void WriteOverworldEnemies(byte[] table, ushort[] offsets, List<ushort>[] statePointerOffsets, byte[] spriteSheets)
+    {
+        if (table.Length > 0x0B29)
+            throw new Exception("Trying to write too many enemy sprites to OW!");
+
+        // Pointer to pointer table
+        Span<byte> data = stackalloc byte[2];
+        int statePointerStart = 0x9C881; // Overworld_SpritePointers
+        // patch LDA.w operand to the correct offsets
+        foreach (var (state, pointerOffsets) in statePointerOffsets.Indexed())
+        {
+            var statePointerLDA = state switch
+            {
+                0 => 0x9C4EF, // Overworld_LoadSprites, rain state
+                1 => 0x9C503, // Overworld_LoadSprites.zelda_rescued
+                2 => 0x9C4F9, // Overworld_LoadSprites.aga_dead
+                _ => throw new ArgumentOutOfRangeException($"Expected a light world state (0, 1 or 2), got {state} instead.")
+            };
+
+            foreach (ushort offset in pointerOffsets)
+            {
+                BinaryPrimitives.WriteUInt16LittleEndian(data, (ushort)(statePointerStart + offset));
+                Write((SNES)(statePointerLDA + 1), data);
+
+                BinaryPrimitives.WriteUInt16LittleEndian(data, (ushort)(statePointerStart + offset + 1));
+                Write((SNES)(statePointerLDA + 6), data);
+            }
+        }
+
+        int dataStart = statePointerStart + offsets.Length * 2;
+        foreach (var (map, offset) in offsets.Indexed())
+        {
+            BinaryPrimitives.WriteUInt16LittleEndian(data, (ushort)(dataStart + offset));
+            Write((SNES)(statePointerStart + map * 2), data);
+        }
+        Write((SNES)dataStart, table);
+
+        // OW sheets 0x00FA41 (Sprite_LoadGraphicsProperties)
+        Write((SNES)0x00FA41, spriteSheets);
+    }
+    public void WriteSpriteSheetSets(byte[] spriteSheetSets)
+    {
+        if (spriteSheetSets.Length > 0xBF * 4)
+            throw new Exception($"Trying to write too many sprite sheet sets (got 0x{spriteSheetSets.Length / 4:X02} which exceeds 0xBF)");
+
+        Write((SNES)0x00DB97, spriteSheetSets);
+        // special OW 0x02E575 // zora/msp/hobo
     }
 
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>

@@ -7,6 +7,6 @@ rooms:
           mobs:
             - name: "Money Making Game Library - Shopkeeper"
               position: { x: 0x19, y: 0x1b, z: 0x00 }
-              sprite: "Salesman"
+              sprite: "ChestGameGuy"
               allow:
-                - "Salesman"
+                - "ChestGameGuy"

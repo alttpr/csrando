@@ -78,9 +78,9 @@ rooms:
           mobs:
             - name: "Ice Palace - H Room - Pull Switch"
               position: { x: 0x04, y: 0x15, z: 0x00 }
-              sprite: "PullSwitchGood"
+              sprite: "PullSwitchGoodTongue"
               allow:
-                - "PullSwitchGood"
+                - "PullSwitchGoodTongue"
               trophy: "IcePalaceHRoomSwitch"
 
             - name: "Ice Palace - P Room - Stalfos Knight 2"
@@ -105,7 +105,7 @@ rooms:
           mobs:
             - name: "Ice Palace - P Room - Pull Switch"
               position: { x: 0x13, y: 0x15, z: 0x00 }
-              sprite: "PullSwitchGood"
+              sprite: "PullSwitchGoodTongue"
               allow:
-                - "PullSwitchGood"
+                - "PullSwitchGoodTongue"
               trophy: "IcePalacePRoomSwitch"

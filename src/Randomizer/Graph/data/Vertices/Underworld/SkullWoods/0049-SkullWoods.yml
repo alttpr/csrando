@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Skull Woods - Bari Pits"
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Torch Room"
@@ -47,6 +48,7 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Skull Woods - Torch Room"
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Bari Pits"

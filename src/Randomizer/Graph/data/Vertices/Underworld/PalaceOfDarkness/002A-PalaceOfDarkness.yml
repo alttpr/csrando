@@ -6,6 +6,7 @@ rooms:
         # TODO: Verify peg state for transitions? You need to lift pot at least to do so.
         # TODO: Add PegasusBoots transition to bridge ledge
         - name: "Palace of Darkness - Arena Main"
+          pit: true
           connections:
             fixed:
               - "Palace of Darkness - Arena North"
@@ -68,6 +69,7 @@ rooms:
               sprite: "HardhatBeetle"
 
         - name: "Palace of Darkness - Arena North"
+          pit: true
           connections:
             fixed:
               - "Palace of Darkness - Arena Main"
@@ -87,6 +89,7 @@ rooms:
                 - "SpikeTrap"
 
         - name: "Palace of Darkness - The Arena - Bridge Ledge"
+          pit: true
           connections:
             fixed:
               - "Palace of Darkness - Arena Main"

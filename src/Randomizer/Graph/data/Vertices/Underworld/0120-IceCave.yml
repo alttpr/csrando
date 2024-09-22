@@ -4,6 +4,7 @@ rooms:
       regions:
         - name: "Ice Cave - West"
           inletid: 0x84
+          pit: true
           items:
             - name: "Ice Rod Cave Item"
               conditions: ["OpenChest"]
@@ -13,6 +14,7 @@ rooms:
 
         - name: "Ice Cave - East"
           inletid: 0x56
+          pit: true
           mobs:
             - name: "Ice Cave - Good Bee"
               position: { x: 0x17, y: 0x07, z: 0x00 }

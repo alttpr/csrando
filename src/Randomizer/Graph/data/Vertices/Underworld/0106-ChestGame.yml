@@ -13,6 +13,6 @@ rooms:
           mobs:
             - name: "Brewery Room - Shopkeeper"
               position: { x: 0x08, y: 0x1b, z: 0x00 }
-              sprite: "Salesman"
+              sprite: "ChestGameGuy"
               allow:
-                - "Salesman"
+                - "ChestGameGuy"

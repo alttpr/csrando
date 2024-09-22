@@ -1,9 +1,12 @@
 rooms:
   - roomid: 0xCE
+    # 0x27 in slot 2 is the somaria platform
+    sheets: [null, null, 0x27, null]
     group: 13
     nodes:
       regions:
         - name: "Ice Palace - Over Boss - Top"
+          pit: true
           connections:
             LiftPot:
               - "Ice Palace - Over Boss - Left After Pots"
@@ -47,18 +50,19 @@ rooms:
                 - "Bumper"
             - name: "Ice Palace - Over Boss - Top - Pull Switch (Good)"
               position: { x: 0x1c, y: 0x05, z: 0x00 }
-              sprite: "PullSwitchGood"
+              sprite: "PullSwitchGoodTongue"
               allow:
-                - "PullSwitchGood"
+                - "PullSwitchGoodTongue"
 
         - name: "Ice Palace - Over Boss - Left After Pots"
+          pit: true
           connections:
             Hammer:
               - "Ice Palace - Over Boss - Pit"
           mobs:
             - name: "Ice Palace - Over Boss - Top - Statue"
               position: { x: 0x14, y: 0x09, z: 0x00 }
-              sprite: "Statue"
+              sprite: "StatueAlternative"
               deny:
                 - "SparkCW"
                 - "SparkCCW"
@@ -77,11 +81,13 @@ rooms:
                 - "Bumper"
 
         - name: "Ice Palace - Over Boss - Pit"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Boss Room"
 
         - name: "Ice Palace - Over Boss - Right After Rock"
+          pit: true
           connections:
             Hammer:
               - "Ice Palace - Over Boss - Right After Pegs"
@@ -100,6 +106,7 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Ice Palace - Over Boss - Right After Pegs"
+          pit: true
           pots:
             - name: "Ice Palace - Over Boss - Top - Pot 3"
               position: { x: 0x36, y: 0x18, z: 0x00 }

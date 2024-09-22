@@ -23,6 +23,7 @@ rooms:
               itemset: ["escape"]
 
         - name: "Hyrule Castle - Basement Lonely Blue Guard"
+          pit: true
           connections:
             fixed:
               - "Hyrule Castle - Basement Playpit"
@@ -31,7 +32,7 @@ rooms:
           mobs:
             - name: "Hyrule Castle - Basement Statue - Blue Guard 2"
               position: { x: 0x0a, y: 0x19, z: 0x01 }
-              sprite: "BlueSwordGuard01"
+              sprite: "BlueSwordGuard01Falling"
 
         - name: "Hyrule Castle - Basement Lonely Blue Guard Overlook"
           connections:

@@ -43,6 +43,7 @@ rooms:
                 - "RollerHL"
 
         - name: "Skull Woods - Boss Drop"
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Boss Room"

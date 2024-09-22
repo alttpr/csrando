@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Torches 2"
+          pit: true
           connections:
             Lamp:
               - "Ganon's Tower - Mini Helmasaur Room"

@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Conveyor Falling Bridge"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Wizzrobes 2"

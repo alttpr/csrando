@@ -1,6 +1,7 @@
 rooms:
   - roomid: 0x59
     group: 11
+    oam: 0x01 # room has overlapping layers
     nodes:
       regions:
         - name: "Skull Woods - Bridge Room"

@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Tower Of Hera - Boss Room"
+          pit: true
           bosses:
             DefeatMoldorm:
               - name: "Tower Of Hera - Boss Room - Moldorm"

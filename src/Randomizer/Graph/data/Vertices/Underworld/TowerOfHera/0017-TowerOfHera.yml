@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Tower Of Hera - Bumper Room"
+          pit: true
           connections:
             fixed:
               - "Tower Of Hera - Fairy Refill"
