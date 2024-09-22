@@ -320,7 +320,7 @@ TutorialGuard: #TUTORIAL GUARD
 LightningLock: #LIGHTNING GATE
   id: 0x40
   flags: NoPlace
-  sheets: [null, null, null, 0x1D]
+  sheets: [null, null, null, 0x3F]
 BlueSwordGuard: #BLUE GUARD
   id: 0x41
   flags: Challenge
