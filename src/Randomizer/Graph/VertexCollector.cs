@@ -148,6 +148,7 @@ internal class VertexCollector
                         Position = mob.Position,
                         Deny = mob.Deny.ToArray(),
                         Allow = mob.Allow.ToArray(),
+                        MightFall = region.Pit,
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));
@@ -315,6 +316,7 @@ internal class VertexCollector
                         Position = mob.Position,
                         Deny = mob.Deny.ToArray(),
                         Allow = mob.Allow.ToArray(),
+                        MightFall = region.Pit,
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, mobVertex, fixedCondition));

@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Ice Clock"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Pottery Barn"

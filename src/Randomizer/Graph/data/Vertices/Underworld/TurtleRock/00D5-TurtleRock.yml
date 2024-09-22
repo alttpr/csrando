@@ -5,11 +5,13 @@ rooms:
       regions:
         - name: "Turtle Rock - Eye Bridge - Bomb Door"
           inletid: 0x18
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Eye Bridge"
 
         - name: "Turtle Rock - Eye Bridge"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Catwalk"

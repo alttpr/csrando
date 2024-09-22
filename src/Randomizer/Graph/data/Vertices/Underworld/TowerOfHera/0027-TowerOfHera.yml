@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Tower Of Hera - Petting Zoo - Ledge"
+          pit: true
           connections:
             fixed:
               - "Tower Of Hera - Petting Zoo"
@@ -22,6 +23,7 @@ rooms:
 
         # TODO: Split in smaller areas separated by the pots
         - name: "Tower Of Hera - Petting Zoo"
+          pit: true
           # TODO: Add bomb jump to ledge in the proper tech file
           connections:
             fixed:

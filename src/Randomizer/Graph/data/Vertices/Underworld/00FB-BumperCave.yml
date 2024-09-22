@@ -4,6 +4,7 @@ rooms:
       regions:
         - name: "Bumper Cave Bottom"
           inletid: 0x16
+          pit: true
           connections:
             fixed:
               - "Bumper Cave Top Stairs Ledge"

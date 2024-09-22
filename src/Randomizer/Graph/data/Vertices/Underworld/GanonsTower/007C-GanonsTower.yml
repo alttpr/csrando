@@ -30,6 +30,7 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Ganon's Tower - Firebar Falling Bridge"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Beetle Island"

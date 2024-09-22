@@ -6,6 +6,7 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Chasm Top"
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Chasm Bottom"
@@ -13,6 +14,7 @@ rooms:
               - "Turtle Rock - Boss Room"
 
         - name: "Turtle Rock - Chasm Bottom"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Switch Block Puzzle"

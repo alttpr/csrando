@@ -4,6 +4,7 @@ rooms:
       regions:
         - name: "Hookshot Cave"
           inletid: 0x3A
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Middle Right Pad"
@@ -17,6 +18,7 @@ rooms:
               sprite: "@Heart"
 
         - name: "Hookshot Cave - Top Left Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Top Right Pad"
@@ -30,6 +32,7 @@ rooms:
               sprite: "@MagicRefillSmall"
 
         - name: "Hookshot Cave - Top Right Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Middle Right Pad"
@@ -44,6 +47,7 @@ rooms:
               sprite: "@RupeeBlue"
 
         - name: "Hookshot Cave - Middle Left Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Top Left Pad"
@@ -71,6 +75,7 @@ rooms:
               sprite: "@RupeeGreen"
 
         - name: "Hookshot Cave - Middle Center North Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Middle Left Pad"
@@ -81,6 +86,7 @@ rooms:
               itemset: ["dw"]
 
         - name: "Hookshot Cave - Middle Center South Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Middle Left Pad"
@@ -107,6 +113,7 @@ rooms:
                 - "Bumper"
 
         - name: "Hookshot Cave - Middle Right Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave"
@@ -126,6 +133,7 @@ rooms:
 
         # South pad accessible with boots
         - name: "Hookshot Cave - Bottom Pad"
+          pit: true
           connections:
             Hookshot:
               - "Hookshot Cave - Middle Right Pad"

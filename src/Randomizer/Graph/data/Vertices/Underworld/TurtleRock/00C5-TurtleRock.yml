@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Catwalk"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Dark Maze Bottom"

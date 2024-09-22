@@ -6,6 +6,7 @@ rooms:
       regions:
         - name: "Misery Mire - Dark Weave"
           switch: true
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Air Lock - Right"
@@ -47,6 +48,7 @@ rooms:
                 - "Bumper"
 
         - name: "Misery Mire - Dark Weave - Spike Area"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Big Block"

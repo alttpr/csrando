@@ -4,11 +4,13 @@ rooms:
       regions:
         - name: "Spectacle Rock Cave Top"
           inletid: 0x23
+          pit: true
           connections:
             fixed:
               - "Spectacle Rock Cave Fairies"
 
         - name: "Spectacle Rock Cave Ledge"
+          pit: true
           connections:
             fixed:
               - "Spectacle Rock Cave Middle"

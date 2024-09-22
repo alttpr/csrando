@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Invisible Floor Maze"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Big Chest Room"

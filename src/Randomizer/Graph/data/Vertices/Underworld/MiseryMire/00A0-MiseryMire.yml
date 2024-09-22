@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Boss Antichamber Left"
+          pit: true
           connections:
             BigKeyD6:
               - "Misery Mire - Boss Room"
@@ -24,6 +25,7 @@ rooms:
                 - "Bumper"
 
         - name: "Misery Mire - Boss Antichamber Right"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Basement"

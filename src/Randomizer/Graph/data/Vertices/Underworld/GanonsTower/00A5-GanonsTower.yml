@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Wizzrobes 1"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Lame Refill"
@@ -24,6 +25,7 @@ rooms:
               trophy: "GanonsTowerWizzrobesOneTrophy"
 
         - name: "Ganon's Tower - Laser Bridge"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Wizzrobes 1"

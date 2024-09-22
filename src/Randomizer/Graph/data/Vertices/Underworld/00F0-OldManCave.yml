@@ -10,6 +10,7 @@ rooms:
               - "Old Man Cave Lost Space"
 
         - name: "Old Man Cave Lost Space"
+          pit: true
           connections:
             fixed:
               - "Old Man Maze"

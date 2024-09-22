@@ -45,6 +45,7 @@ rooms:
               trophy: "GanonsTowerTileRoomTrophy"
 
         - name: "Ganon's Tower - Long Torch Puzzle"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - The Zoo"

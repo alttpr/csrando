@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Cannonball Z"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Spike Alley"
@@ -22,6 +23,7 @@ rooms:
               sprite: "CannonBallShooterU"
 
         - name: "Ganon's Tower - Cannonball Z ledge"
+          pit: true
           connections:
             PegasusBoots:
               - "Ganon's Tower - Cannonball Z"

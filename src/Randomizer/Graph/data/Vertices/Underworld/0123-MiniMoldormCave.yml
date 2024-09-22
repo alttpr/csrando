@@ -4,6 +4,7 @@ rooms:
       regions:
         - name: "Mini Moldorm Cave Entrance"
           inletid: 0x6c
+          pit: true
           connections:
             "MiniMoldormCaveTrophy|4":
               - "Mini Moldorm Cave"

@@ -481,10 +481,17 @@ internal sealed class EnemyShuffler : IWorldModifier
         // Set up sprite sheets
         var sheetableSprites = allEnemies.Where(s => !s.Sheets.IsEmpty);
         // sprites that can be moved to any room as they don't have any sheet
-        // requirements
-        var placableSprites = allEnemies.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)).ToHashSet();
-        // TODO: falling sprites sometimes have additional sheet requirements (including a falling sprite)
-        //       those need to be selected for rooms that have pits, and might limit the rest of the sprites that can go there.
+        // requirements. ignoring subtype sprites since they are only variants.
+        var placableSprites = allEnemies.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace) && s.Sprite.SubType == 0x00).ToHashSet();
+        // falling sprites sometimes have additional sheet requirements (including a falling sprite)
+        // those need to be selected for rooms that have pits, and might limit the rest of the sprites that can go there.
+        var fallingSprites = new Dictionary<EnemySprite, EnemySprite>();
+        foreach (var fallingSprite in placableSprites.Where(s => !string.IsNullOrEmpty(s.Sprite.FallingSpriteFor)))
+        {
+            // this intentionally throws when no matching sprite is found. this is a data issue!
+            var nonFallingSprite = allEnemies.First(e => e.Sprite.Name == fallingSprite.Sprite.FallingSpriteFor);
+            fallingSprites[nonFallingSprite] = fallingSprite;
+        }
         placableSprites.RemoveWhere(e => !string.IsNullOrEmpty(e.Sprite.FallingSpriteFor));
         var challengeSprites = placableSprites.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)).ToHashSet();
 
@@ -561,6 +568,8 @@ internal sealed class EnemyShuffler : IWorldModifier
                     IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
                     if (enemy.Item != null)
                         spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
+                    if (enemy.MightFall)
+                        spriteSource = spriteSource.Select(e => fallingSprites.GetValueOrDefault(e, e));
                     var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && owSheets[owIdx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                     if (viableSprites.Length == 0)
                         throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}");
@@ -591,6 +600,8 @@ internal sealed class EnemyShuffler : IWorldModifier
                     IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
                     if (enemy.Item != null)
                         spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
+                    if (enemy.MightFall)
+                        spriteSource = spriteSource.Select(e => fallingSprites.GetValueOrDefault(e, e));
                     var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && !e.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly) && roomSheets[roomId].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                     if (viableSprites.Length == 0)
                         throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{roomId:x04}");

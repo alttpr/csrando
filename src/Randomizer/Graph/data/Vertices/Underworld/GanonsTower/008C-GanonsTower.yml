@@ -57,6 +57,7 @@ rooms:
               sprite: "FireSnake"
 
         - name: "Ganon's Tower - Bob's Room"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Invisible Floor Maze"

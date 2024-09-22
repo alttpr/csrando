@@ -6,6 +6,7 @@ rooms:
     nodes:
       regions:
         - name: "Turtle Rock - Lobby SSE"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Entrance Platform"
@@ -13,6 +14,7 @@ rooms:
               - "Turtle Rock - Lobby track"
 
         - name: "Turtle Rock - Lobby SSW"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Spike Room"
@@ -20,6 +22,7 @@ rooms:
               - "Turtle Rock - Lobby track"
 
         - name: "Turtle Rock - Lobby WSW"
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Lobby track"
@@ -29,6 +32,7 @@ rooms:
               sprite: "@Heart"
 
         - name: "Turtle Rock - Lobby WNW"
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Lobby track"
@@ -38,6 +42,7 @@ rooms:
               sprite: "@MagicRefillFull"
 
         - name: "Turtle Rock - Lobby NNW"
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Lobby track"
@@ -49,6 +54,7 @@ rooms:
               sprite: "Stalfos"
 
         - name: "Turtle Rock - Lobby NNE"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Tile Room"
@@ -60,6 +66,7 @@ rooms:
               sprite: "Stalfos"
 
         - name: "Turtle Rock - Lobby ENE"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Torch Puzzle"
@@ -67,6 +74,7 @@ rooms:
               - "Turtle Rock - Lobby track"
 
         - name: "Turtle Rock - Lobby ESE"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Torch Puzzle Overlook"
@@ -74,6 +82,7 @@ rooms:
               - "Turtle Rock - Lobby track"
 
         - name: "Turtle Rock - Lobby track"
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Lobby SSW"

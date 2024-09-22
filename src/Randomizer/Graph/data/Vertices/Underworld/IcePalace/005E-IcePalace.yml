@@ -37,6 +37,7 @@ rooms:
                 - "RollerVD"
 
         - name: "Ice Palace - Pit Trap"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Vanilla Ice"

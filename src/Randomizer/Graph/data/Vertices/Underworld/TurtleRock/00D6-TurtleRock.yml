@@ -7,6 +7,7 @@ rooms:
       regions:
         - name: "Turtle Rock - Entrance"
           inletid: 0x35
+          pit: true
           connections:
             CaneOfSomaria:
               - "Turtle Rock - Entrance Platform"
@@ -19,6 +20,7 @@ rooms:
               sprite: "@BombRefill1"
 
         - name: "Turtle Rock - Entrance Platform"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Lobby SSE"
@@ -26,6 +28,7 @@ rooms:
               - "Turtle Rock - Entrance"
 
         - name: "Turtle Rock - Spike Room"
+          pit: true
           connections:
             fixed:
               - "Turtle Rock - Lobby SSW"

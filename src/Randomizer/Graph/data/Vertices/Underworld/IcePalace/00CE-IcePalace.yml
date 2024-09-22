@@ -6,6 +6,7 @@ rooms:
     nodes:
       regions:
         - name: "Ice Palace - Over Boss - Top"
+          pit: true
           connections:
             LiftPot:
               - "Ice Palace - Over Boss - Left After Pots"
@@ -54,6 +55,7 @@ rooms:
                 - "PullSwitchGoodTongue"
 
         - name: "Ice Palace - Over Boss - Left After Pots"
+          pit: true
           connections:
             Hammer:
               - "Ice Palace - Over Boss - Pit"
@@ -79,11 +81,13 @@ rooms:
                 - "Bumper"
 
         - name: "Ice Palace - Over Boss - Pit"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Boss Room"
 
         - name: "Ice Palace - Over Boss - Right After Rock"
+          pit: true
           connections:
             Hammer:
               - "Ice Palace - Over Boss - Right After Pegs"
@@ -102,6 +106,7 @@ rooms:
               sprite: "BlueBari"
 
         - name: "Ice Palace - Over Boss - Right After Pegs"
+          pit: true
           pots:
             - name: "Ice Palace - Over Boss - Top - Pot 3"
               position: { x: 0x36, y: 0x18, z: 0x00 }

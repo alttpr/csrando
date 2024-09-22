@@ -4,6 +4,7 @@ rooms:
       regions:
         - name: "Ganon's Room"
           inletid: 0x7B
+          pit: true
 
           mobs:
             - name: "Ganon"

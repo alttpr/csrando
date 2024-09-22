@@ -56,12 +56,14 @@ rooms:
               sprite: "Medusa"
 
         - name: "Misery Mire - Falling Bridge South - Middle Door"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Falling Bridge South"
               - "Misery Mire - East Wing Middle"
 
         - name: "Misery Mire - Falling Bridge South - Bottom Door"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Falling Bridge South"
@@ -73,6 +75,7 @@ rooms:
               type: "event"
 
         - name: "Misery Mire - Falling Bridge South"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Falling Bridge South - Middle Door"
@@ -105,6 +108,7 @@ rooms:
                 - "Kodongo"
 
         - name: "Misery Mire - Falling Bridge North"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - East Wing Top Right"

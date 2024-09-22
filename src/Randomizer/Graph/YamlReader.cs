@@ -560,6 +560,9 @@ public partial class Region
     [YamlMember(Alias = "switch")]
     public bool? Switch { get; set; }
 
+    [YamlMember(Alias = "pit")]
+    public bool Pit { get; set; } = false;
+
     [YamlMember(Alias = "mobs")]
     public List<Entity> Mobs { get; set; } = new();
 

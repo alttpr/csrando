@@ -137,6 +137,7 @@ rooms:
               - "Ganon's Tower - Fairy Pit"
 
         - name: "Ganon's Tower - Fairy Pit"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Empty Torch Room"

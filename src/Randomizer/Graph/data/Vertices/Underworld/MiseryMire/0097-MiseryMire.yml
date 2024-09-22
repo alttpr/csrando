@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Misery Mire - Torch Puzzle"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Drop Hint"
@@ -19,12 +20,14 @@ rooms:
               sprite: "WizzrobeSpawner"
 
         - name: "Misery Mire - Torch Puzzle - Solved"
+          pit: true
           items:
             - name: "MiseryMireTorchPuzzleSolved"
               item: "MiseryMireTorchPuzzleSolved"
               type: "event"
 
         - name: "Misery Mire - Drop Hint"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Torch Puzzle"
@@ -32,6 +35,7 @@ rooms:
               - "Misery Mire - Drop Hole"
 
         - name: "Misery Mire - Drop Hole"
+          pit: true
           connections:
             fixed:
               - "Misery Mire - Drop Chest Room"

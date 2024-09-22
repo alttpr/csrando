@@ -20,6 +20,7 @@ rooms:
               - "Ice Palace - Block Drop - Left"
 
         - name: "Ice Palace - Block Drop - Left"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Big Chest Room - Right"
@@ -35,6 +36,7 @@ rooms:
                 - "Freezor"
 
         - name: "Ice Palace - Block Drop - Good Block"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Block Switch"
@@ -44,6 +46,7 @@ rooms:
               item: "IcePalaceBlockSwitchGoodBlock"
 
         - name: "Ice Palace - Block Drop - Right"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Pottery Barn"
@@ -55,6 +58,7 @@ rooms:
               - "Ice Palace - Fairy Drop"
 
         - name: "Ice Palace - Fairy Drop"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Block Drop - Right"

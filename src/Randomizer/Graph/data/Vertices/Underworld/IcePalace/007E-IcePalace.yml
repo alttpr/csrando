@@ -41,6 +41,7 @@ rooms:
               sprite: "FireBarCCW"
 
         - name: "Ice Palace - Freezor Room"
+          pit: true
           connections:
             fixed:
               - "Ice Palace - Lonely Firebar"

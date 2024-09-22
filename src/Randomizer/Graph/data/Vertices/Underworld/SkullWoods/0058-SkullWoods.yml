@@ -5,6 +5,7 @@ rooms:
       regions:
         - name: "Skull Woods - Main Entrance"
           inletid: 0x2A
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Hourglass Bottom"
@@ -20,6 +21,7 @@ rooms:
               sprite: "RedBari"
 
         - name: "Skull Woods - Big Chest Ledge"
+          pit: true
           connections:
             Hookshot:
               - "Skull Woods - Main Entrance"
@@ -39,6 +41,7 @@ rooms:
 
         - name: "Skull Woods - Hourglass Top"
           inletid: 0x76
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Hourglass Bottom"
@@ -87,6 +90,7 @@ rooms:
               sprite: "HardhatBeetle"
 
         - name: "Skull Woods - Hourglass Bottom"
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Main Entrance"
@@ -110,6 +114,7 @@ rooms:
                 - "RollerHL"
 
         - name: "Skull Woods - Lever Room"
+          pit: true
           connections:
             fixed:
               - "Skull Woods - Big Chest Ledge"

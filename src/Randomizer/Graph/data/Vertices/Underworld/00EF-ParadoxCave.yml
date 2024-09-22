@@ -4,12 +4,14 @@ rooms:
       regions:
         - name: "Paradox Cave - Middle"
           inletid: 0x1f
+          pit: true
           connections:
             fixed:
               - "Paradox Cave - Top"
               - "Paradox Cave - Bottom"
 
         - name: "Paradox Cave - Middle Ledge"
+          pit: true
           connections:
             fixed:
               - "Paradox Cave - Bottom"

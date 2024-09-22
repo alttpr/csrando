@@ -28,6 +28,7 @@ rooms:
               sprite: "BlueArcher"
 
         - name: "Agahnims Tower - Bridge"
+          pit: true
           connections:
             fixed:
               - "Agahnims Tower - Antichamber"

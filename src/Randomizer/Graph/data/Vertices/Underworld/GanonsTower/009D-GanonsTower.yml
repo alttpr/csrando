@@ -109,6 +109,7 @@ rooms:
               sprite: "HardhatBeetle"
 
         - name: "Ganon's Tower - Invisible, E"
+          pit: true
           connections:
             fixed:
               - "Ganon's Tower - Invisible Floor Maze"

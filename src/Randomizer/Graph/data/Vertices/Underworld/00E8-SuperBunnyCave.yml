@@ -9,6 +9,7 @@ rooms:
               - "Super Bunny Treasure"
 
         - name: "Super Bunny Refill"
+          pit: true
           connections:
             fixed:
               - "Super Bunny Entrance Top"
@@ -34,6 +35,7 @@ rooms:
               sprite: "HardhatBeetle"
 
         - name: "Super Bunny Hallway Top"
+          pit: true
           connections:
             fixed:
               - "Super Bunny Entrance Top"
@@ -52,6 +54,7 @@ rooms:
                 - "Bumper"
 
         - name: "Super Bunny Hallway Bottom"
+          pit: true
           connections:
             fixed:
               - "Super Bunny Entrance Bottom"

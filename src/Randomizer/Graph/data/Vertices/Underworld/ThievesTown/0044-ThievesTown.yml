@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Thieves' Town - Conveyor Bridge"
+          pit: true
           connections:
             fixed:
               - "Thieves' Town - Basement Block Totems"
@@ -48,6 +49,7 @@ rooms:
                 - "Bumper"
 
         - name: "Thieves' Town - Joke Room"
+          pit: true
           connections:
             ThievesTownJokeRoomTrophy|5:
               - "Thieves' Town - Conveyor Bridge"
@@ -74,6 +76,7 @@ rooms:
               trophy: "ThievesTownJokeRoomTrophy"
 
         - name: "Thieves' Town - Mole Room"
+          pit: true
           connections:
             Hammer:
               - "Thieves' Town - Mole Room Platform"
@@ -85,6 +88,7 @@ rooms:
               sprite: "FallingSquare"
 
         - name: "Thieves' Town - Mole Room Platform"
+          pit: true
           connections:
             Hammer:
               - "Thieves' Town - Mole Room"

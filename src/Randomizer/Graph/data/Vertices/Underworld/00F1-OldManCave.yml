@@ -5,6 +5,7 @@ rooms:
       regions:
         - name: "Old Man Maze"
           inletid: 0x07
+          pit: true
           connections:
             fixed:
               - "Old Man Cave Lost Space"

@@ -3,6 +3,7 @@ rooms:
     nodes:
       regions:
         - name: "Bumper Cave Top Stairs Ledge"
+          pit: true
           connections:
             fixed:
               - "Bumper Cave Bottom"
@@ -34,6 +35,7 @@ rooms:
 
         - name: "Bumper Cave Top Exit"
           inletid: 0x17
+          pit: true
           connections:
             Cape:
               - "Bumper Cave Top Refill"

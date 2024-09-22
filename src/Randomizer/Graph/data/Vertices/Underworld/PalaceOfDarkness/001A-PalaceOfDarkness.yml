@@ -4,6 +4,7 @@ rooms:
     nodes:
       regions:
         - name: "Palace of Darkness - Falling Bridge Ledge"
+          pit: true
           connections:
             LiftPot:
               - "Palace of Darkness - Falling Bridge"
@@ -11,6 +12,7 @@ rooms:
               - "Palace of Darkness - Arena North"
 
         - name: "Palace of Darkness - Falling Bridge"
+          pit: true
           connections:
             LiftPot:
               - "Palace of Darkness - Falling Bridge Ledge"
@@ -68,6 +70,7 @@ rooms:
               sprite: "FallingBridge"
 
         - name: "Palace of Darkness - Falling Bridge Top"
+          pit: true
           connections:
             fixed:
               - "Palace of Darkness - Compass Room"
