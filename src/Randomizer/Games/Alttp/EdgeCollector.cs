@@ -1,5 +1,6 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
 
+namespace Randomizer.Games.Alttp;
 /// <summary>
 /// Pull data files to create all edges for a given world configuration.
 /// </summary>

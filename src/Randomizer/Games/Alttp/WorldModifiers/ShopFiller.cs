@@ -1,7 +1,9 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>Fill initial shop state.</summary>
-internal sealed class ShopFiller : IWorldModifier
+internal sealed class ShopFiller : IAlttpWorldModifier
 {
     public void AdjustEdges(World world, PRNG prng)
     {

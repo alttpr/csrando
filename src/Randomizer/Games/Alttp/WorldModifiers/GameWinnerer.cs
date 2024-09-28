@@ -1,7 +1,9 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>Set Game win conditions.</summary>
-internal sealed class GameWinnerer : IWorldModifier
+internal sealed class GameWinnerer : IAlttpWorldModifier
 {
     public void AdjustEdges(World world, PRNG prng)
     {

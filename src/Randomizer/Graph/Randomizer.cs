@@ -1,6 +1,8 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
+using global::Randomizer.Games.Alttp;
+using global::Randomizer.Games.Alttp.WorldModifiers;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
@@ -14,8 +16,8 @@ public sealed class Randomizer
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    public Graph Graph { get; private set; }
-    public World[] Worlds { get; }
+    public Graph Graph { get; }
+    public IWorld[] Worlds { get; }
     public PRNG PRNG { get; }
 
     private readonly Inventory _startingItems = new();
@@ -42,7 +44,7 @@ public sealed class Randomizer
         _start = Graph.AddVertex(new Vertex
         {
             Name = "start",
-            World = new World(Graph),
+            World = new RootWorld(Graph),
             Type = VertexType.Meta,
         });
 
@@ -63,11 +65,12 @@ public sealed class Randomizer
             new DungeonPegStateCopier(),
         ];
 
-        Worlds = new World[randomizerConfigs.Length];
-        for (var i = 0; i < randomizerConfigs.Length; ++i)
+        Worlds = new IWorld[randomizerConfigs.Length];
+        for (int i = 0; i < randomizerConfigs.Length; ++i)
         {
             randomizerConfigs[i].SelectRandomValues(PRNG);
 
+            // TODO: this depends on chosen settings and should either be a game-specific world (single game) or a combined world (multi game)
             Worlds[i] = new World(i, randomizerConfigs[i], Graph);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
 
@@ -100,7 +103,7 @@ public sealed class Randomizer
     /// <summary>
     /// Get a graph searched based on the items in the inventory.
     /// </summary>
-    public Searcher GetSearcherForInventory(IEnumerable<Item> items, World? world = null)
+    public Searcher GetSearcherForInventory(IEnumerable<Item> items, IWorld? world = null)
     {
         return new(Graph, world?.GetLocation("start") ?? _start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
     }

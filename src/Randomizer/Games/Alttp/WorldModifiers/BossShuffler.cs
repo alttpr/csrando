@@ -1,9 +1,10 @@
-namespace Randomizer.Graph;
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Graph;
 
 /// <summary>Modify the edges of the graph to place bosses.</summary>
-internal sealed class BossShuffler : IWorldModifier
+internal sealed class BossShuffler : IAlttpWorldModifier
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 

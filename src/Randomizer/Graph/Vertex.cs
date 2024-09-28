@@ -1,39 +1,7 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
-
-// FIXME: we need a sprite class that does something.
-public record class Sprite(string Name, byte Id)
-{
-    private static readonly Lazy<Dictionary<string, Sprite>> _sprites = new(() => LoadSprites().ToDictionary(k => k.Name));
-
-    public string DefeatName { get; init; } = Name;
-    public byte?[] Sheets { get; init; } = [null, null, null, null];
-    public YamlSpriteFlags Flags { get; init; }
-    public byte SubType { get; init; }
-    public string? FallingSpriteFor { get; init; }
-
-    public static Sprite Get(string name)
-        => _sprites.Value.GetValueOrDefault(name)
-        ?? throw new ArgumentException($"No such sprite: {name}", nameof(name));
-    public static IEnumerable<Sprite> All() => _sprites.Value.Values;
-
-    private static IEnumerable<Sprite> LoadSprites()
-    {
-        var spriteData = YamlReader.LoadSprites();
-        foreach (var (name, sprite) in spriteData)
-        {
-            yield return new(name, sprite.Id)
-            {
-                Sheets = sprite.Sheets,
-                Flags = sprite.Flags,
-                SubType = sprite.SubType,
-                DefeatName = sprite.AlternativeName ?? name,
-                FallingSpriteFor = sprite.FallingSpriteFor,
-            };
-        }
-    }
-}
+using global::Randomizer.Games.Alttp;
 
 public enum VertexType
 {
@@ -78,7 +46,7 @@ public sealed class Vertex : ICloneable
     public required VertexType Type { get; init; }
     public VertexType? SubType { get; init; }
     public required string Name { get; set; }
-    public required World World { get; init; }
+    public required IWorld World { get; init; }
     public bool Dark { get; init; }
     public List<string> ExtraLight { get; init; } = [];
     public bool Switch { get; set; }

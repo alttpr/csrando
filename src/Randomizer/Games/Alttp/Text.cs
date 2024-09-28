@@ -1,7 +1,4 @@
-﻿namespace Randomizer.RomModifications;
-
-using Randomizer.Graph;
-
+﻿namespace Randomizer.Games.Alttp;
 /// <summary>
 /// Overwrite all the text in the main portion of the ROM
 /// from: 0xE0000 to: 0xE7355

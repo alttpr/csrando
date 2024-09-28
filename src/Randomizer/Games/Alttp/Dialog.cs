@@ -1,4 +1,6 @@
-﻿namespace Randomizer.RomModifications;
+﻿namespace Randomizer.Games.Alttp;
+
+using Randomizer.RomModifications;
 
 /// <summary>Dialog Conversion</summary>
 public sealed class Dialog

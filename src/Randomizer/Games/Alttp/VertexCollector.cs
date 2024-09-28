@@ -1,5 +1,6 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
 
+namespace Randomizer.Games.Alttp;
 /// <summary>Container for all the vertices.</summary>
 internal class VertexCollector
 {

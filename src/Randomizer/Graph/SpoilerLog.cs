@@ -84,7 +84,7 @@ public class SpoilerLog
         };
     }
 
-    private static string GetBossAt(World world, string locationName)
+    private static string GetBossAt(IWorld world, string locationName)
     {
         var location = world.GetLocation(locationName);
         if (location == null)

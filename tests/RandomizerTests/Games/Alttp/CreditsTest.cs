@@ -1,7 +1,7 @@
-﻿namespace RandomizerTests.RomModification;
+﻿namespace RandomizerTests.Games.Alttp;
 
 using System.Reflection;
-using Randomizer.RomModifications;
+using Randomizer.Games.Alttp;
 
 [TestClass]
 public sealed class CreditsTest
@@ -39,7 +39,7 @@ public sealed class CreditsTest
     [DynamicData(nameof(ConvertCreditsData), DynamicDataDisplayName = nameof(GetTestDisplayName), DynamicDataDisplayNameDeclaringType = typeof(CreditsTest))]
     public void TestConvertLargeCreditsTop(string input, (byte[] LargeTop, byte[] LargeBottom, byte[] Credits, byte[] AltCredits) expectedOutput)
     {
-        var actual = Credits.ConvertLargeCreditsTop(input);
+        byte[] actual = Credits.ConvertLargeCreditsTop(input);
         CollectionAssert.AreEqual(expectedOutput.LargeTop, actual);
     }
 
@@ -47,7 +47,7 @@ public sealed class CreditsTest
     [DynamicData(nameof(ConvertCreditsData), DynamicDataDisplayName = nameof(GetTestDisplayName), DynamicDataDisplayNameDeclaringType = typeof(CreditsTest))]
     public void TestConvertLargeCreditsBottom(string input, (byte[] LargeTop, byte[] LargeBottom, byte[] Credits, byte[] AltCredits) expectedOutput)
     {
-        var actual = Credits.ConvertLargeCreditsBottom(input);
+        byte[] actual = Credits.ConvertLargeCreditsBottom(input);
         CollectionAssert.AreEqual(expectedOutput.LargeBottom, actual);
     }
 
@@ -55,7 +55,7 @@ public sealed class CreditsTest
     [DynamicData(nameof(ConvertCreditsData), DynamicDataDisplayName = nameof(GetTestDisplayName), DynamicDataDisplayNameDeclaringType = typeof(CreditsTest))]
     public void TestConvertCredits(string input, (byte[] LargeTop, byte[] LargeBottom, byte[] Credits, byte[] AltCredits) expectedOutput)
     {
-        var actual = Credits.ConvertCredits(input);
+        byte[] actual = Credits.ConvertCredits(input);
         CollectionAssert.AreEqual(expectedOutput.Credits, actual);
     }
 
@@ -63,7 +63,7 @@ public sealed class CreditsTest
     [DynamicData(nameof(ConvertCreditsData), DynamicDataDisplayName = nameof(GetTestDisplayName), DynamicDataDisplayNameDeclaringType = typeof(CreditsTest))]
     public void TestConvertAltCredits(string input, (byte[] LargeTop, byte[] LargeBottom, byte[] Credits, byte[] AltCredits) expectedOutput)
     {
-        var actual = Credits.ConvertAltCredits(input);
+        byte[] actual = Credits.ConvertAltCredits(input);
         CollectionAssert.AreEqual(expectedOutput.AltCredits, actual);
     }
 

@@ -1,10 +1,10 @@
-namespace Randomizer.Graph;
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
-using System;
 using Microsoft.Extensions.Logging;
+using Randomizer.Graph;
 
 /// <summary>Modify Prizepacks based on configuration.</summary>
-internal sealed class PrizePackShuffler : IWorldModifier
+internal sealed class PrizePackShuffler : IAlttpWorldModifier
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 

@@ -1,7 +1,7 @@
-﻿namespace RandomizerTests.RomModification;
+﻿namespace RandomizerTests.Games.Alttp;
 
 using System.Reflection;
-using Randomizer.RomModifications;
+using Randomizer.Games.Alttp;
 
 [TestClass]
 public sealed class DialogTest

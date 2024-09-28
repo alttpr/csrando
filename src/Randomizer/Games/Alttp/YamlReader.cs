@@ -1,6 +1,7 @@
-﻿namespace Randomizer.Graph;
+﻿namespace Randomizer.Games.Alttp;
 
 using System.Collections.Concurrent;
+using Randomizer.Graph;
 using YamlDotNet.Serialization;
 
 public class YamlReader
@@ -11,7 +12,7 @@ public class YamlReader
 
         do
         {
-            string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Graph/data");
+            string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Games/Alttp/data");
             if (Directory.Exists(dataRoot))
                 return dataRoot;
 

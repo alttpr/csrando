@@ -1,4 +1,6 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>
 /// Updates the graph to remove small key usage from edges.
@@ -6,7 +8,7 @@ namespace Randomizer.Graph;
 /// The Graph.Doors and Graph.FixedKeys are caching the list of doors and fixed dungeon
 /// keys here.
 /// </summary>
-internal sealed class DoorReplacer : IWorldModifier
+internal sealed class DoorReplacer : IAlttpWorldModifier
 {
     public void AdjustEdges(World world, PRNG rng)
     {
@@ -75,7 +77,7 @@ internal sealed class DoorReplacer : IWorldModifier
 
             while (vertexQueue.Count != 0)
             {
-                Vertex v = vertexQueue.Dequeue();
+                var v = vertexQueue.Dequeue();
                 allVisited.Add(v);
 
                 foreach (var edge in v.Edges)
@@ -103,7 +105,7 @@ internal sealed class DoorReplacer : IWorldModifier
 
                 while (vertexQueue.Count != 0)
                 {
-                    Vertex v = vertexQueue.Dequeue();
+                    var v = vertexQueue.Dequeue();
                     visitedWithoutDoor.Add(v);
 
                     foreach (var edge in v.Edges)
@@ -149,7 +151,7 @@ internal sealed class DoorReplacer : IWorldModifier
 
             while (vertexQueue.Count != 0)
             {
-                Vertex v = vertexQueue.Dequeue();
+                var v = vertexQueue.Dequeue();
                 visitedWithoutDoor.Add(v);
 
                 foreach (var edge in v.Edges)

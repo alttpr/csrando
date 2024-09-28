@@ -1,7 +1,10 @@
-namespace Randomizer.Graph;
+namespace Randomizer.Games.Alttp;
+
+using Randomizer.Graph;
+using Graph = Graph.Graph;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World
+public sealed class World : IWorld
 {
     public int Id { get; }
     public Graph Graph { get; }
@@ -10,17 +13,6 @@ public sealed class World
     private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
     public (byte[] Underworld, byte[] Overworld, byte[] Sets) SpriteSheets { get; set; } = ([], [], []);
-
-    /// <summary>
-    /// Creates an internal-use world that acts as host for <see cref="Graph"/> nodes that do not belong to a player world.
-    /// </summary>
-    internal World(Graph graph)
-    {
-        Id = -1;
-        Graph = graph;
-        StartingItems = new();
-        Config = new();
-    }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>

@@ -1,13 +1,11 @@
-namespace Randomizer.Graph;
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
-using System.Collections.Frozen;
-using System.Collections.Immutable;
-using System.Diagnostics;
+using Randomizer.Graph;
 
 /// <summary>
 /// Modify the edges of the graph to deal with MoonPearl/Bunny state.
 /// </summary>
-internal sealed class BunnyGraphifier : IWorldModifier
+internal sealed class BunnyGraphifier : IAlttpWorldModifier
 {
     private static readonly Dictionary<string, string> ITEM_MAP = new()
     {

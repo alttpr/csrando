@@ -1,6 +1,6 @@
-﻿namespace RandomizerTests.Data;
+﻿namespace RandomizerTests.Games.Alttp.Data;
 
-using Randomizer.Graph;
+using Randomizer.Games.Alttp;
 
 [TestClass]
 public class YamlReaderTest

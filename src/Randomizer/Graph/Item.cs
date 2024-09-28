@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using global::Randomizer.Games.Alttp;
+
 public enum ItemType
 {
     Medallion,
@@ -14,7 +16,7 @@ public sealed class Item
 {
     public int Id { get; set; } = -1;
     public string Name { get; }
-    public World World { get; }
+    public IWorld World { get; }
     public ItemType Type { get; }
     public byte[]? Bytes { get; }
 
@@ -24,7 +26,7 @@ public sealed class Item
     ///
     /// <param name="name">Unique name of item</param>
     /// <param name="world">World this item is in</param>
-    public Item(string name, World world)
+    public Item(string name, IWorld world)
     {
         Name = name;
         World = world;

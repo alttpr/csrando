@@ -26,9 +26,9 @@ internal sealed class ItemPooler
     ];
 
     private readonly PRNG _prng;
-    private readonly Dictionary<World, HashSet<VertexType>> _itemLocationTypes;
+    private readonly Dictionary<IWorld, HashSet<VertexType>> _itemLocationTypes;
 
-    public ItemPooler(World[] worlds, PRNG prng)
+    public ItemPooler(IWorld[] worlds, PRNG prng)
     {
         _prng = prng;
         _itemLocationTypes = worlds.ToDictionary(k => k, v => new HashSet<VertexType>(ITEM_LOCATIONS));
@@ -36,7 +36,7 @@ internal sealed class ItemPooler
         SetLocations = BuildLocations(worlds);
     }
 
-    private SetLocations BuildLocations(World[] worlds)
+    private SetLocations BuildLocations(IWorld[] worlds)
     {
         var setLocations = new SetLocations();
         foreach (var vertex in worlds.SelectMany(world => world.GetLocations()))
@@ -56,7 +56,7 @@ internal sealed class ItemPooler
     public PooledItem[] Pool { get; }
 
     /// <summary>Get list of all items for <paramref name="world"/> in their weighted sets.</summary>
-    private List<PooledItem> GetPoolForWorld(World world)
+    private List<PooledItem> GetPoolForWorld(IWorld world)
     {
         List<PooledItem> worldSet =
         [
@@ -206,7 +206,7 @@ internal sealed class ItemPooler
     /// entry.
     /// </summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetMedallions(World world)
+    private PooledItem[] GetMedallions(IWorld world)
     {
         return
         [
@@ -217,7 +217,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Prizes for a world.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetPrizes(World world)
+    private PooledItem[] GetPrizes(IWorld world)
     {
         return
         [
@@ -236,7 +236,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Small keys for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetSmallKeys(World world)
+    private PooledItem[] GetSmallKeys(IWorld world)
     {
         PooledItem[] keys =
         [
@@ -262,7 +262,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Big keys for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetBigKeys(World world)
+    private PooledItem[] GetBigKeys(IWorld world)
     {
         PooledItem[] bigKeys =
         [
@@ -287,7 +287,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Maps for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetMaps(World world)
+    private PooledItem[] GetMaps(IWorld world)
     {
         int priority = world.Config.Accessibility == AccessibilityOption.Items ? 9999 : 9010;
         PooledItem[] maps =
@@ -314,7 +314,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Compasses for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetCompasses(World world)
+    private PooledItem[] GetCompasses(IWorld world)
     {
         int priority = world.Config.Accessibility == AccessibilityOption.Items ? 9999 : 9010;
         PooledItem[] compasses =
@@ -349,7 +349,7 @@ internal sealed class ItemPooler
     ];
     /// <summary>Get Bottles for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetBottles(World world)
+    private PooledItem[] GetBottles(IWorld world)
     {
         return
         [
@@ -364,7 +364,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Shop Items for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetShopItems(World world)
+    private PooledItem[] GetShopItems(IWorld world)
     {
         if (world.Config.RegionShopSupply != ShopSupplyOption.Shuffled)
             return [];

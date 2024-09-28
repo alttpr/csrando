@@ -1,11 +1,13 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>
 /// Duplicate regions in dungeons with switches to be able to explore both peg states.
 /// Dependent vertices such as pots and enemies stay the same, but are accessible from both version of the same region.
 /// Pseudo transitions PegBlue and PegOrange are replaced in data with fixed transition in the corresponding version.
 /// </summary>
-internal sealed class DungeonPegStateCopier : IWorldModifier
+internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
 {
     public void AdjustEdges(World world, PRNG prng)
     {

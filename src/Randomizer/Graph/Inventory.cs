@@ -13,7 +13,7 @@ public sealed class Inventory
 
     private readonly BitArray _bits = new(400);
     private readonly Dictionary<Item, int> _itemCount = new();
-    private readonly Dictionary<World, float> _health = new();
+    private readonly Dictionary<IWorld, float> _health = new();
 
     public Inventory(params Item[] items)
     {
@@ -165,7 +165,7 @@ public sealed class Inventory
     /// Get the health value available based on items in this world.
     /// </summary>
     /// <param name="world">World for which we care about count</param>
-    public float HeartCount(World world)
+    public float HeartCount(IWorld world)
     {
         return _health.GetValueOrDefault(world, 0);
     }

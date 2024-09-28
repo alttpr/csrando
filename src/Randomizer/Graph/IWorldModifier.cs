@@ -2,5 +2,5 @@
 
 internal interface IWorldModifier
 {
-    void AdjustEdges(World world, PRNG rng);
+    void AdjustEdges(IWorld world, PRNG rng);
 }

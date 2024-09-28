@@ -112,7 +112,7 @@ public class Searcher
         var newlyVisited = visited.Clone();
         newlyVisited.ExceptWith(collected);
 
-        World? world = null;
+        IWorld? world = null;
         foreach (var itemLocation in newlyVisited)
         {
             collected.Add(itemLocation);
@@ -320,7 +320,7 @@ public class Searcher
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
-    private static bool DropOffSearch(World world, Inventory inventory)
+    private static bool DropOffSearch(IWorld world, Inventory inventory)
     {
         var inventoryWithBombInTow = inventory.Clone();
         foreach (string item in _noBombFollowerItems)

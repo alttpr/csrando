@@ -1,6 +1,7 @@
-﻿namespace Randomizer.RomModifications;
+﻿namespace Randomizer.Games.Alttp;
 
 using System.Text.RegularExpressions;
+using Randomizer.RomModifications;
 using SceneLine = (string Type, int X, int Y, string Text);
 
 /// <summary>Class to handle Credits Sequence</summary>

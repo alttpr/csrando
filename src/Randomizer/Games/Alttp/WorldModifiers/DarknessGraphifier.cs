@@ -1,8 +1,10 @@
-namespace Randomizer.Graph;
+using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 /// <summary>
 /// update graph to understand dark rooms and how to get to them.
 /// </summary>
-internal sealed class DarknessGraphifier : IWorldModifier
+internal sealed class DarknessGraphifier : IAlttpWorldModifier
 {
     /// <summary>
     /// This will create new transition nodes between light rooms and dark

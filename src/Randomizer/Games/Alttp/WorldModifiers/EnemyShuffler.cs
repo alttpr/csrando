@@ -1,11 +1,12 @@
-namespace Randomizer.Graph;
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Graph;
 
 /// <summary>
 /// Modify the edges of the graph to shuffle entrances.
 /// </summary>
-internal sealed class EnemyShuffler : IWorldModifier
+internal sealed class EnemyShuffler : IAlttpWorldModifier
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
@@ -130,7 +131,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DefeatHelmasaur"),
                 };
                 world.Graph.AddVertex(defeatHelmasaur);
-                foreach (var item in bosses["Helmasaur"])
+                foreach (string item in bosses["Helmasaur"])
                 {
                     breakShell.Edges.Add(new Edge(breakShell, defeatHelmasaur, new ItemCondition(world.GetItem(item), 1)));
                 }
@@ -155,7 +156,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DarkDefeatHelmasaur"),
                 };
                 world.Graph.AddVertex(defeatHelmasaurDark);
-                foreach (var item in bosses["Helmasaur"])
+                foreach (string item in bosses["Helmasaur"])
                 {
                     breakShellDark.Edges.Add(new Edge(breakShellDark, defeatHelmasaurDark, new ItemCondition(world.GetItem(BunnyGraphifier.ToDarkItem(item) ?? item), 1)));
                 }
@@ -192,7 +193,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                 };
                 world.Graph.AddVertex(defeatArrghus);
                 // Arrghus defeat conditions are a subset of the ones for defeating a spawn, so we can ignore bombs
-                foreach (var item in bosses["Arrghus"])
+                foreach (string item in bosses["Arrghus"])
                 {
                     pullSpawn.Edges.Add(new Edge(pullSpawn, defeatArrghus, new ItemCondition(world.GetItem(item), 1)));
                 }
@@ -216,7 +217,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DarkDefeatArrghus"),
                 };
                 world.Graph.AddVertex(defeatArrghusDark);
-                foreach (var item in bosses["Arrghus"])
+                foreach (string item in bosses["Arrghus"])
                 {
                     pullSpawnDark.Edges.Add(new Edge(pullSpawnDark, defeatArrghusDark, new ItemCondition(world.GetItem(BunnyGraphifier.ToDarkItem(item) ?? item), 1)));
                 }
@@ -242,7 +243,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     World = world,
                 };
                 world.Graph.AddVertex(defeatShell);
-                foreach (var item in bosses["KholdstareShell"])
+                foreach (string item in bosses["KholdstareShell"])
                 {
                     enemyRoot.Edges.Add(new Edge(enemyRoot, defeatShell, new ItemCondition(world.GetItem(item), 1)));
                 }
@@ -255,7 +256,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DefeatKholdstare"),
                 };
                 world.Graph.AddVertex(defeatKholdstare);
-                foreach (var item in bosses["Kholdstare"])
+                foreach (string item in bosses["Kholdstare"])
                 {
                     defeatShell.Edges.Add(new Edge(defeatShell, defeatKholdstare, new ItemCondition(world.GetItem(item), 1)));
                 }
@@ -269,7 +270,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     World = world,
                 };
                 world.Graph.AddVertex(defeatShellDark);
-                foreach (var item in bosses["KholdstareShell"])
+                foreach (string item in bosses["KholdstareShell"])
                 {
                     enemyRoot.Edges.Add(new Edge(enemyRoot, defeatShellDark, new ItemCondition(world.GetItem(BunnyGraphifier.ToDarkItem(item) ?? item), 1)));
                 }
@@ -282,7 +283,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DarkDefeatKholdstare"),
                 };
                 world.Graph.AddVertex(defeatKholdstareDark);
-                foreach (var item in bosses["Kholdstare"])
+                foreach (string item in bosses["Kholdstare"])
                 {
                     defeatShellDark.Edges.Add(new Edge(defeatShellDark, defeatKholdstareDark, new ItemCondition(world.GetItem(BunnyGraphifier.ToDarkItem(item) ?? item), 1)));
                 }
@@ -327,7 +328,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DefeatTrinexx"),
                 };
                 world.Graph.AddVertex(defeatTrinexx);
-                foreach (var item in bosses["Trinexx"])
+                foreach (string item in bosses["Trinexx"])
                 {
                     defeatHeadIce.Edges.Add(new Edge(defeatHeadIce, defeatTrinexx, new ItemCondition(world.GetItem(item), 1)));
                 }
@@ -360,7 +361,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                     Item = world.GetItem("DarkDefeatTrinexx"),
                 };
                 world.Graph.AddVertex(defeatTrinexxDark);
-                foreach (var item in bosses["Trinexx"])
+                foreach (string item in bosses["Trinexx"])
                 {
                     defeatHeadIceDark.Edges.Add(new Edge(defeatHeadIceDark, defeatTrinexxDark, new ItemCondition(world.GetItem(BunnyGraphifier.ToDarkItem(item) ?? item), 1)));
                 }
@@ -381,7 +382,11 @@ internal sealed class EnemyShuffler : IWorldModifier
         public SheetSet() : this(new byte?[4]) { }
         public bool IsEmpty => _sheets.All(b => b == null);
         public bool IsFull => _sheets.All(b => b != null);
-        public bool CanMergeWith(SheetSet other) => CanMergeWith(other._sheets);
+        public bool CanMergeWith(SheetSet other)
+        {
+            return CanMergeWith(other._sheets);
+        }
+
         public bool CanMergeWith(byte?[]? otherSheets)
         {
             if (otherSheets == null)
@@ -418,7 +423,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         }
         public SheetSet Freeze(PRNG prng)
         {
-            var finalSet = new byte?[4];
+            byte?[] finalSet = new byte?[4];
             for (int i = 0; i < finalSet.Length; i++)
             {
                 byte? option = _sheets.ElementAtOrDefault(i) ?? null;
@@ -437,8 +442,16 @@ internal sealed class EnemyShuffler : IWorldModifier
             return _sheets?.Select(b => b.GetValueOrDefault()) ?? [];
         }
 
-        public override int GetHashCode() => 0; // force Equals to be used, since the contents change over time.
-        public override bool Equals(object? obj) => Equals(obj as SheetSet);
+        public override int GetHashCode()
+        {
+            return 0; // force Equals to be used, since the contents change over time.
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as SheetSet);
+        }
+
         public bool Equals(SheetSet? other)
         {
             if (other is null)
@@ -530,7 +543,7 @@ internal sealed class EnemyShuffler : IWorldModifier
         for (int roomId = 0; roomId < roomSheets.Length; roomId++)
         {
             var enemiesToPlace = enemyRooms[roomId].Where(e =>
-                    (world.Config.EnemyShuffle == EnemyShuffleOption.None || e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == true));
+                    world.Config.EnemyShuffle == EnemyShuffleOption.None || e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == true);
 
             foreach (var enemy in enemiesToPlace)
             {
@@ -552,7 +565,7 @@ internal sealed class EnemyShuffler : IWorldModifier
                 var enemiesToPlace = enemyOWs[mapId]
                     .Where(e =>
                         (e.State is null || e.State.Contains(state)) &&
-                        (e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false));
+                        e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
 
                 // trophy enemies first, they need to be there and we want variance.
                 // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
@@ -584,7 +597,7 @@ internal sealed class EnemyShuffler : IWorldModifier
             for (int roomId = 0; roomId < roomSheets.Length; roomId++)
             {
                 var enemiesToPlace = enemyRooms[roomId].Where(e =>
-                        (e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false));
+                        e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
 
                 // trophy enemies first, they need to be there and we want variance.
                 // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
@@ -657,8 +670,8 @@ internal sealed class EnemyShuffler : IWorldModifier
         }
 
         // freeze the remaining values to lock in slots that still have choices left.
-        SheetSet[] overworldSheets = owSheets.Select(s => s.Freeze(prng)).ToArray();
-        SheetSet[] underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
+        var overworldSheets = owSheets.Select(s => s.Freeze(prng)).ToArray();
+        var underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
 
         // build a list of unique sheet sets. overworld only (vanilla storage,) we write underworld directly to the room header (rando-specific.)
         var uniqueSheets = overworldSheets.Distinct().ToList();

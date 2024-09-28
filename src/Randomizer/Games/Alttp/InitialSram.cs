@@ -1,4 +1,4 @@
-﻿namespace Randomizer.RomModifications;
+﻿namespace Randomizer.Games.Alttp;
 
 using System.Numerics;
 using Randomizer.Graph;

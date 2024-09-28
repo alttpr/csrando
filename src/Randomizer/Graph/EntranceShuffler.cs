@@ -1,5 +1,6 @@
 namespace Randomizer.Graph;
 
+using global::Randomizer.Games.Alttp;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
@@ -12,7 +13,7 @@ internal sealed class EntranceShuffler : IWorldModifier
     /// <summary>
     /// Connect Entrances, Exits, Outlets, and rooms based on World settings.
     /// </summary>
-    public void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(IWorld world, PRNG prng)
     {
         string definitionName = world.Config.EntranceShuffle switch
         {
@@ -76,11 +77,11 @@ internal sealed class EntranceShuffler : IWorldModifier
 
                         connected.Add(overworlds[0]);
                         connected.Add(underworlds[0]);
-                        for (var i = 0; i < overworlds.Count; i++)
+                        for (int i = 0; i < overworlds.Count; i++)
                         {
                             var overworld = world.GetLocation(overworlds[i]);
                             var underworld = world.GetLocation(underworlds[i]);
-                            if (overworld.Type == VertexType.Entrance || overworld.Type == VertexType.Hole)
+                            if (overworld.Type is VertexType.Entrance or VertexType.Hole)
                             {
                                 world.Graph.AddDirected(overworld, underworld, fixedItem);
                                 logger?.LogInformation("Scoped '{From}' -> '{To}' ({Condition})", overworld.Name, underworld.Name, fixedItem.Name);
@@ -100,7 +101,7 @@ internal sealed class EntranceShuffler : IWorldModifier
     }
 
 
-    public static void Shuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, World world, ILogger? logger, List<string> connected)
+    public static void Shuffle(PRNG prng, IGrouping<string, ConnectionGroup> connectionGroups, IWorld world, ILogger? logger, List<string> connected)
     {
         var overworlds = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Overworld)));
         var underworlds = new Queue<List<List<string>>>(prng.Shuffle(connectionGroups.SelectMany(x => x.Underworld)));
@@ -156,11 +157,11 @@ internal sealed class EntranceShuffler : IWorldModifier
                     throw new Exception("Entrance sub-sub-count mismatch");
                 }
 
-                for (var i = 0; i < overworld.Count; i++)
+                for (int i = 0; i < overworld.Count; i++)
                 {
                     var ow = world.GetLocation(overworld[i]);
                     var uw = world.GetLocation(underworld[i]);
-                    if (ow.Type == VertexType.Entrance || ow.Type == VertexType.Hole)
+                    if (ow.Type is VertexType.Entrance or VertexType.Hole)
                     {
                         world.Graph.AddDirected(ow, uw, world.GetItem("fixed"));
                         logger?.LogInformation("Linked '{From}' -> '{To}' ({Condition})", ow.Name, uw.Name, world.GetItem("fixed").Name);
