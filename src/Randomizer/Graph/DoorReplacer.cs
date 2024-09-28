@@ -8,7 +8,7 @@ namespace Randomizer.Graph;
 /// </summary>
 internal sealed class DoorReplacer : IWorldModifier
 {
-    public static void AdjustEdges(World world, PRNG rng)
+    public void AdjustEdges(World world, PRNG rng)
     {
         var doors = world.Graph.Doors;
 

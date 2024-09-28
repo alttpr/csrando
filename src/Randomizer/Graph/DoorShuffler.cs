@@ -5,7 +5,7 @@ namespace Randomizer.Graph;
 /// </summary>
 internal sealed class DoorShuffler : IWorldModifier
 {
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         /// @todo implement
     }

@@ -44,7 +44,7 @@ internal sealed class BunnyGraphifier : IWorldModifier
     /// <summary>
     /// Add edges for new dark items required based on dark world and moon pearl.
     /// </summary>
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         var graph = world.Graph;
 

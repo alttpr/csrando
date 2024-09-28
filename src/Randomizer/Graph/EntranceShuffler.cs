@@ -12,7 +12,7 @@ internal sealed class EntranceShuffler : IWorldModifier
     /// <summary>
     /// Connect Entrances, Exits, Outlets, and rooms based on World settings.
     /// </summary>
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         string definitionName = world.Config.EntranceShuffle switch
         {

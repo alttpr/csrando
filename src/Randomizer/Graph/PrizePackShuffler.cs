@@ -31,7 +31,7 @@ internal sealed class PrizePackShuffler : IWorldModifier
     ];
 
     /// <summary>Pick items for each prize pack.</summary>
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         var prizepacks = world.GetLocationsOfType(VertexType.PrizePack);
 

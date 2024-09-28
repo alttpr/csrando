@@ -7,7 +7,7 @@ namespace Randomizer.Graph;
 /// </summary>
 internal sealed class DungeonPegStateCopier : IWorldModifier
 {
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         int nextGroup = 0;
         Dictionary<Vertex, int> vertexToGroup = new();

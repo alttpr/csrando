@@ -46,6 +46,23 @@ public sealed class Randomizer
             Type = VertexType.Meta,
         });
 
+        List<IWorldModifier> modifiers =
+        [
+            new GameWinnerer(),
+            new ShopFiller(),
+            new DoorShuffler(),
+            new EntranceShuffler(),
+            new DarknessGraphifier(),
+            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
+            // (and placing bosses in their respective rooms already)
+            new BossShuffler(),
+            new EnemyShuffler(),
+            new BunnyGraphifier(),
+            new PrizePackShuffler(),
+            new DoorReplacer(),
+            new DungeonPegStateCopier(),
+        ];
+
         Worlds = new World[randomizerConfigs.Length];
         for (var i = 0; i < randomizerConfigs.Length; ++i)
         {
@@ -54,19 +71,8 @@ public sealed class Randomizer
             Worlds[i] = new World(i, randomizerConfigs[i], Graph);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
 
-            GameWinnerer.AdjustEdges(Worlds[i], PRNG);
-            ShopFiller.AdjustEdges(Worlds[i], PRNG);
-            DoorShuffler.AdjustEdges(Worlds[i], PRNG);
-            EntranceShuffler.AdjustEdges(Worlds[i], PRNG);
-            DarknessGraphifier.AdjustEdges(Worlds[i], PRNG);
-            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
-            // (and placing bosses in their respective rooms already)
-            BossShuffler.AdjustEdges(Worlds[i], PRNG);
-            EnemyShuffler.AdjustEdges(Worlds[i], PRNG);
-            BunnyGraphifier.AdjustEdges(Worlds[i], PRNG);
-            PrizePackShuffler.AdjustEdges(Worlds[i], PRNG);
-            DoorReplacer.AdjustEdges(Worlds[i], PRNG);
-            DungeonPegStateCopier.AdjustEdges(Worlds[i], PRNG);
+            foreach (var modifier in modifiers)
+                modifier.AdjustEdges(Worlds[i], PRNG);
 
             Graph.AddDirected(_start, Worlds[i].GetLocation("start"), Worlds[i].GetItem("fixed"));
         }

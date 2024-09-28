@@ -3,7 +3,7 @@ namespace Randomizer.Graph;
 /// <summary>Set Game win conditions.</summary>
 internal sealed class GameWinnerer : IWorldModifier
 {
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         switch (world.Config.Goal)
         {

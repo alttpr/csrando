@@ -3,7 +3,7 @@ namespace Randomizer.Graph;
 /// <summary>Fill initial shop state.</summary>
 internal sealed class ShopFiller : IWorldModifier
 {
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         var shops = world.GetLocationsOfType(VertexType.Shop);
         var graph = world.Graph;

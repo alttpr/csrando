@@ -28,7 +28,7 @@ internal sealed class BossShuffler : IWorldModifier
     };
 
     /// <summary>Swap Entrances based on world settings.</summary>
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         var bossRooms = world.GetLocations()
             .Where(v => v.World == world

@@ -19,7 +19,7 @@ internal sealed class EnemyShuffler : IWorldModifier
     /// </summary>
     /// <param name="world">World to modify</param>
     /// <param name="prng">PRNG to use</param>
-    public static void AdjustEdges(World world, PRNG prng)
+    public void AdjustEdges(World world, PRNG prng)
     {
         var defeats = YamlReader.LoadEnemies();
 
