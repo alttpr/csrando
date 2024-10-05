@@ -125,10 +125,8 @@ public sealed class World : IWorld
         }
 
         // allow made up items
-        var item = new Item(name, this);
+        var item = Graph.RegisterItem(new Item(name, this));
         _allItems.Add(item.Name, item);
-        item.Id = Graph.AllItems.Count;
-        Graph.AllItems.Add(item);
 
         return item;
     }

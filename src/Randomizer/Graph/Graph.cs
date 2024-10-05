@@ -7,29 +7,29 @@ namespace Randomizer.Graph;
 /// </summary>
 public sealed class Graph
 {
-    private readonly HashSet<Vertex> _vertices = new();
+    private readonly HashSet<Vertex> _vertices = [];
     private Vertex[] _verticesById = [];
-    private readonly Dictionary<string, Vertex> _verticesByName = new();
-    public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = new();
-    public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys = new();
-    public Dictionary<Item /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys = new();
-    public HashSet<Item> AllItems { get; set; } = new();
+    private readonly Dictionary<string, Vertex> _verticesByName = [];
+    public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = [];
+    public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys { get; } = [];
+    public Dictionary<Item /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys { get; } = [];
 
-    public IEnumerable<Vertex> GetVertices()
+    /// <summary>
+    /// All known items, across all worlds and games. Use <see cref="RegisterItem"/> to allocate an item id usable with the <see cref="Inventory"/>.
+    /// </summary>
+    public HashSet<Item> AllItems { get; } = [];
+    /// <summary>Registers a new item that has no item id yet. Updates (and returns) the item with a graph-specific unique id.</summary>
+    public Item RegisterItem(Item item)
     {
-        return _vertices;
+        int newId = AllItems.Count;
+        if (AllItems.Add(item))
+            item.Id = newId;
+        return item;
     }
 
-    public Vertex GetVertex(string name)
-    {
-        return _verticesByName[name];
-    }
-
-    public Vertex GetVertex(int id)
-    {
-        return _verticesById[id];
-    }
-
+    public IEnumerable<Vertex> GetVertices() => _vertices;
+    public Vertex GetVertex(string name) => _verticesByName[name];
+    public Vertex GetVertex(int id) => _verticesById[id];
     public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
     public bool HasVertex(string name) => _verticesByName.ContainsKey(name);
 

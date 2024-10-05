@@ -37,7 +37,7 @@ public sealed class Inventory
     private static void CheckItemId(Item item)
     {
         if (item.Id < 0)
-            _logger.LogWarning("Item {Name} does not have an ID", item.Name);
+            _logger.LogWarning("Item {Name} does not have an ID. Make sure to call Graph.RegisterItem before using it.", item.Name);
     }
 
     public void AddItem(Item item, int count = 1)
