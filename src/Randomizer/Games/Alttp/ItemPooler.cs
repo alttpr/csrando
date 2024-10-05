@@ -1,10 +1,11 @@
-namespace Randomizer.Graph;
+﻿using Randomizer.Graph;
 
-using PooledItem = (ItemSetName Set, int Weight, Item Item);
+namespace Randomizer.Games.Alttp;
+
 
 /// <summary>Get the sets of items to place.</summary>
 /// <param name="worlds">worlds to get Item pools for</param>
-internal sealed class ItemPooler
+internal sealed class ItemPooler : IItemPooler
 {
     // these are item locations that will ALWAYS receive items, regardless of randomizer options.
     // TODO: this isn't true at the moment; things like ShopItem should probably only be here during Shop randomizer.
@@ -32,7 +33,7 @@ internal sealed class ItemPooler
     {
         _prng = prng;
         _itemLocationTypes = worlds.ToDictionary(k => k, v => new HashSet<VertexType>(ITEM_LOCATIONS));
-        Pool = [.. worlds.SelectMany(GetPoolForWorld)];
+        Pool = [.. worlds.OfType<World>().SelectMany(GetPoolForWorld)];
         SetLocations = BuildLocations(worlds);
     }
 
@@ -56,7 +57,7 @@ internal sealed class ItemPooler
     public PooledItem[] Pool { get; }
 
     /// <summary>Get list of all items for <paramref name="world"/> in their weighted sets.</summary>
-    private List<PooledItem> GetPoolForWorld(IWorld world)
+    private List<PooledItem> GetPoolForWorld(World world)
     {
         List<PooledItem> worldSet =
         [
@@ -236,7 +237,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Small keys for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetSmallKeys(IWorld world)
+    private PooledItem[] GetSmallKeys(World world)
     {
         PooledItem[] keys =
         [
@@ -262,7 +263,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Big keys for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetBigKeys(IWorld world)
+    private PooledItem[] GetBigKeys(World world)
     {
         PooledItem[] bigKeys =
         [
@@ -287,7 +288,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Maps for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetMaps(IWorld world)
+    private PooledItem[] GetMaps(World world)
     {
         int priority = world.Config.Accessibility == AccessibilityOption.Items ? 9999 : 9010;
         PooledItem[] maps =
@@ -314,7 +315,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Compasses for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetCompasses(IWorld world)
+    private PooledItem[] GetCompasses(World world)
     {
         int priority = world.Config.Accessibility == AccessibilityOption.Items ? 9999 : 9010;
         PooledItem[] compasses =
@@ -349,7 +350,7 @@ internal sealed class ItemPooler
     ];
     /// <summary>Get Bottles for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetBottles(IWorld world)
+    private PooledItem[] GetBottles(World world)
     {
         return
         [
@@ -364,7 +365,7 @@ internal sealed class ItemPooler
 
     /// <summary>Get Shop Items for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetShopItems(IWorld world)
+    private PooledItem[] GetShopItems(World world)
     {
         if (world.Config.RegionShopSupply != ShopSupplyOption.Shuffled)
             return [];
@@ -380,21 +381,5 @@ internal sealed class ItemPooler
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BlueShield")), 2),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedShield")), 1)
         ];
-    }
-}
-
-public sealed class SetLocations
-{
-    private readonly Dictionary<ItemSetName, List<Vertex>> _setLocations = new() { { ItemSetName.DefaultSet, new() } };
-    private static readonly List<Vertex> EmptyList = [];
-
-    public IReadOnlyList<Vertex> this[ItemSetName itemSet] => _setLocations.GetValueOrDefault(itemSet, EmptyList);
-    public void Add(Vertex vertex, params ItemSetName[] itemSets)
-    {
-        foreach (var itemSet in itemSets)
-        {
-            _setLocations.TryAdd(itemSet, []);
-            _setLocations[itemSet].Add(vertex);
-        }
     }
 }

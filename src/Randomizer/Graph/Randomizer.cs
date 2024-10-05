@@ -21,7 +21,7 @@ public sealed class Randomizer
 
     private readonly Inventory _startingItems = new();
     private readonly Vertex _start;
-    private readonly ItemPooler _itemPooler;
+    private readonly IItemPooler _itemPooler;
     public SpoilerLog? SpoilerLog;
 
     /// <summary>
@@ -62,7 +62,7 @@ public sealed class Randomizer
         }
 
         Graph.SetVertexIds();
-        _itemPooler = new ItemPooler(Worlds, PRNG);
+        _itemPooler = new RootItemPooler(Worlds, PRNG);
 
         _logger.LogInformation("Graph configuration took {TimeElapsed}", sw.Elapsed);
     }

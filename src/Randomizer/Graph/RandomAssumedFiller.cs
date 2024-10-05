@@ -2,9 +2,6 @@ namespace Randomizer.Graph;
 
 using Microsoft.Extensions.Logging;
 
-// NOTE: same as in ItemPooler, except we cannot reuse aliases this way
-using PooledItem = (ItemSetName Set, int Weight, Item Item);
-
 internal sealed class RandomAssumedFiller
 {
     private static readonly ILogger _logger = ClassLogger.Get();
@@ -95,7 +92,7 @@ internal sealed class RandomAssumedFiller
     /// Quickly place items in locations respecting placemenmt groups.
     /// </summary>
     /// <param name="fillItems">Items to be placed</param>
-    private void FastFillItemsInLocations(List<(ItemSetName Set, int Weight, Item Item)> fillItems)
+    private void FastFillItemsInLocations(List<PooledItem> fillItems)
     {
         _logger.LogInformation("Fast Filling {ItemCount} items", fillItems.Count);
         // assure smaller location groups are filled first
