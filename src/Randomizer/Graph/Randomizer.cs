@@ -2,7 +2,6 @@ namespace Randomizer.Graph;
 
 using System.Diagnostics;
 using global::Randomizer.Games.Alttp;
-using global::Randomizer.Games.Alttp.WorldModifiers;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
@@ -48,23 +47,6 @@ public sealed class Randomizer
             Type = VertexType.Meta,
         });
 
-        List<IWorldModifier> modifiers =
-        [
-            new GameWinnerer(),
-            new ShopFiller(),
-            new DoorShuffler(),
-            new EntranceShuffler(),
-            new DarknessGraphifier(),
-            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
-            // (and placing bosses in their respective rooms already)
-            new BossShuffler(),
-            new EnemyShuffler(),
-            new BunnyGraphifier(),
-            new PrizePackShuffler(),
-            new DoorReplacer(),
-            new DungeonPegStateCopier(),
-        ];
-
         Worlds = new IWorld[randomizerConfigs.Length];
         for (int i = 0; i < randomizerConfigs.Length; ++i)
         {
@@ -73,9 +55,8 @@ public sealed class Randomizer
             // TODO: this depends on chosen settings and should either be a game-specific world (single game) or a combined world (multi game)
             Worlds[i] = new World(i, randomizerConfigs[i], Graph);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
-
-            foreach (var modifier in modifiers)
-                modifier.AdjustEdges(Worlds[i], PRNG);
+            // TODO: this could probably go into the ctor if we had the PRNG available there.
+            Worlds[i].ApplyWorldModifications(PRNG);
 
             Graph.AddDirected(_start, Worlds[i].GetLocation("start"), Worlds[i].GetItem("fixed"));
         }

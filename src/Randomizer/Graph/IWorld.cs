@@ -22,6 +22,11 @@ public interface IWorld
     IEnumerable<Vertex> GetLocationsOfType(VertexType type);
     bool HasLocation(string locationName);
 
+    /// <summary>
+    /// Apply modifications to this world that affect randomization (such as entrance shuffle, enemy shuffle etc.)
+    /// </summary>
+    void ApplyWorldModifications(PRNG prng);
+
     WorldConfig Config { get; }
     Graph Graph { get; }
     int Id { get; }

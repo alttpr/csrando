@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Alttp;
 
+using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using Graph = Graph.Graph;
 
@@ -147,5 +148,27 @@ public sealed class World : IWorld
     public IEnumerable<Item> GetAllItems()
     {
         return _allItems.Values;
+    }
+    public void ApplyWorldModifications(PRNG prng)
+    {
+        List<IWorldModifier> modifiers =
+        [
+            new GameWinnerer(),
+            new ShopFiller(),
+            new DoorShuffler(),
+            new EntranceShuffler(),
+            new DarknessGraphifier(),
+            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
+            // (and placing bosses in their respective rooms already)
+            new BossShuffler(),
+            new EnemyShuffler(),
+            new BunnyGraphifier(),
+            new PrizePackShuffler(),
+            new DoorReplacer(),
+            new DungeonPegStateCopier(),
+        ];
+
+        foreach (var modifier in modifiers)
+            modifier.AdjustEdges(this, prng);
     }
 }

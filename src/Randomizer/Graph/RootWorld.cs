@@ -18,4 +18,5 @@ internal sealed class RootWorld(Graph graph) : IWorld
     IEnumerable<Vertex> IWorld.GetLocations() => throw _doNotUseThis;
     IEnumerable<Vertex> IWorld.GetLocationsOfType(VertexType type) => throw _doNotUseThis;
     bool IWorld.HasLocation(string locationName) => throw _doNotUseThis;
+    public void ApplyWorldModifications(PRNG prng) => throw _doNotUseThis;
 }
