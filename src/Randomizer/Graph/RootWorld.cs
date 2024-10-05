@@ -6,7 +6,7 @@ namespace Randomizer.Graph;
 internal sealed class RootWorld(Graph graph) : IWorld
 {
     private static readonly Exception _doNotUseThis = new NotSupportedException("This world is not for players.");
-    WorldConfig IWorld.Config => throw _doNotUseThis;
+    WorldConfig IWorld.WorldConfig => throw _doNotUseThis;
     Graph IWorld.Graph { get; } = graph;
     int IWorld.Id { get; } = -1;
     ushort IWorld.PlacedItemCount { get; set; }

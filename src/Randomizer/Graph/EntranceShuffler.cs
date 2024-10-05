@@ -15,7 +15,9 @@ internal sealed class EntranceShuffler : IWorldModifier
     /// </summary>
     public void AdjustEdges(IWorld world, PRNG prng)
     {
-        string definitionName = world.Config.EntranceShuffle switch
+        // FIXME: fetching the entrance config is world specific, but the logic is generic enough to work with the right files.
+        //        split this in a way that the world (or something world-related) returns the edge connections instead.
+        string definitionName = world.WorldConfig.Alttp!.EntranceShuffle switch
         {
             EntranceShuffleOption.Simple => "simple",
             EntranceShuffleOption.Restricted => "restricted",
@@ -23,15 +25,15 @@ internal sealed class EntranceShuffler : IWorldModifier
             EntranceShuffleOption.Crossed => "vanilla",
             EntranceShuffleOption.Insanity => "insanity",
             EntranceShuffleOption.None => "vanilla",
-            _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.Config.EntranceShuffle)
+            _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.WorldConfig.Alttp.EntranceShuffle)
         };
-        string definitionStateName = world.Config.State switch
+        string definitionStateName = world.WorldConfig.Alttp.State switch
         {
             StateOption.Standard => "normal",
             StateOption.Open => "normal",
             StateOption.Retro => "retro",
             StateOption.Inverted => "inverted",
-            _ => throw new ArgumentException("Unknown State option: " + world.Config.State)
+            _ => throw new ArgumentException("Unknown State option: " + world.WorldConfig.Alttp.State)
         } + "/" + definitionName;
 
         var definition = YamlReader.LoadEntrances(definitionName);
@@ -40,7 +42,7 @@ internal sealed class EntranceShuffler : IWorldModifier
             : new Entrances();
 
         // local logger, for things that only matters during entrance shuffle.
-        var logger = world.Config.EntranceShuffle != EntranceShuffleOption.None ? _logger : null;
+        var logger = world.WorldConfig.Alttp.EntranceShuffle != EntranceShuffleOption.None ? _logger : null;
 
         var fixedItem = world.GetItem("fixed");
 

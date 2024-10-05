@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using global::Randomizer.Games.Alttp;
+
 /// <summary>
 /// Generates a Spoiler log for the randomizer.
 /// </summary>
@@ -12,6 +14,8 @@ public class SpoilerLog
     {
         _graph = randomizer.Graph;
         var world = randomizer.Worlds[0];
+        // FIXME: this is currently game-specific
+        var config = world.WorldConfig.Alttp!;
 
         Spoiler = new Dictionary<string, Dictionary<string, string>>()
         {
@@ -20,7 +24,7 @@ public class SpoilerLog
         };
 
         int i = 0;
-        foreach (var item in world.Config.StartingEquipment)
+        foreach (var item in config.StartingEquipment)
         {
             Spoiler["Equipped"][$"Equipment Slot {++i}"] = item;
         }
@@ -33,7 +37,7 @@ public class SpoilerLog
             Spoiler[group][location.Name] = location.Item?.Name ?? "Nothing";
         }
 
-        if (world.Config.EnemyShuffle != EnemyShuffleOption.None)
+        if (config.EnemyShuffle != EnemyShuffleOption.None)
         {
             foreach (var enemy in world.GetLocationsOfType(VertexType.Mob))
             {
@@ -46,7 +50,7 @@ public class SpoilerLog
 
         // @todo implement shops
 
-        if (world.Config.BossShuffle != BossShuffleOption.None)
+        if (config.BossShuffle != BossShuffleOption.None)
         {
             Spoiler["Bosses"] = new Dictionary<string, string>()
             {
@@ -73,13 +77,13 @@ public class SpoilerLog
 
         Spoiler["meta"] = new Dictionary<string, string>()
         {
-            { "accessibility", world.Config.Accessibility.ToString() },
-            { "goal", world.Config.Goal.ToString() },
-            { "mode", world.Config.State.ToString() },
-            { "weapons", world.Config.Weapon.ToString() },
+            { "accessibility", config.Accessibility.ToString() },
+            { "goal", config.Goal.ToString() },
+            { "mode", config.State.ToString() },
+            { "weapons", config.Weapon.ToString() },
             { "world_id", world.Id.ToString() },
-            { "crystals_ganon", world.Config.CrystalsGanon.ToString() },
-            { "crystals_tower", world.Config.CrystalsTower.ToString() },
+            { "crystals_ganon", config.CrystalsGanon.ToString() },
+            { "crystals_tower", config.CrystalsTower.ToString() },
             { "size", "2" },
         };
     }

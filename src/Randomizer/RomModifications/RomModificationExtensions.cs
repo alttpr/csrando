@@ -86,9 +86,9 @@ internal static class RomModificationExtensions
         if (!vertex.Name.Contains(" - "))
         {
             if (vertex.MoonPearl == true)
-                return vertex.World.Config.State == StateOption.Inverted ? "Light World" : "Dark World";
+                return vertex.World.WorldConfig.Alttp!.State == StateOption.Inverted ? "Light World" : "Dark World";
             else
-                return vertex.World.Config.State == StateOption.Inverted ? "Dark World" : "Light World";
+                return vertex.World.WorldConfig.Alttp!.State == StateOption.Inverted ? "Dark World" : "Light World";
         }
         // TODO: this only works because of our naming convention "Region - Location"; preferably the region file has a match already.
         return vertex.Name.Split(" - ")[0];

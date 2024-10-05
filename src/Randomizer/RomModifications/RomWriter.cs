@@ -34,8 +34,8 @@ public static class RomWriter
         outputDirectory.Create();
         string outputFile = Path.Combine(
             outputDirectory.FullName,
-            // TODO: this "alttpr" prefix should probably customizable for other games
-            $"alttpr_{world.Config.Glitches}_{world.Config.State}_{world.Config.Goal}_{prng.Seed:x08}{worldSuffix}.sfc");
+            // TODO: this "alttpr" prefix should probably customizable for other games, or rather: be based on the config.
+            $"alttpr_{world.WorldConfig.Alttp!.Glitches}_{world.WorldConfig.Alttp.State}_{world.WorldConfig.Alttp.Goal}_{prng.Seed:x08}{worldSuffix}.sfc");
         rom.Save(outputFile);
     }
 }

@@ -1644,7 +1644,7 @@ public sealed class AlttpRom : GameRom
             return;
 
         byte music;
-        var config = location.World.Config;
+        var config = ((World)location.World).Config;
         if (config.RegionWildMaps)
             music = prng.GetRandomElement(_musicChoices);
         else

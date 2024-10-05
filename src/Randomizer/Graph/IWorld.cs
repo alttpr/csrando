@@ -28,7 +28,7 @@ public interface IWorld
     void ApplyWorldModifications(PRNG prng);
     IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, Item itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
 
-    WorldConfig Config { get; }
+    WorldConfig WorldConfig { get; }
     Graph Graph { get; }
     int Id { get; }
     ushort PlacedItemCount { get; set; }

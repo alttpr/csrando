@@ -10,7 +10,8 @@ public sealed class World : IWorld
     public int Id { get; }
     public Graph Graph { get; }
     public Inventory StartingItems { get; }
-    public WorldConfig Config { get; }
+    public WorldConfig WorldConfig { get; }
+    public AlttpConfig Config { get; }
     private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
     public (byte[] Underworld, byte[] Overworld, byte[] Sets) SpriteSheets { get; set; } = ([], [], []);
@@ -21,7 +22,8 @@ public sealed class World : IWorld
     public World(int id, WorldConfig randomizerConfig, Graph graph)
     {
         Id = id;
-        Config = randomizerConfig;
+        WorldConfig = randomizerConfig;
+        Config = randomizerConfig.Alttp ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda: A Link to the Past");
         Graph = graph;
 
         List<Item> items = [GetItem("fixed")];
@@ -36,7 +38,7 @@ public sealed class World : IWorld
             items.Add(GetItem($"ConfigWorldTech{tech}"));
         }
 
-        items.AddRange(randomizerConfig.StartingEquipment.Select(x => GetItem(x)));
+        items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
 
         foreach (var vertex in VertexCollector.LoadYmlData(this))

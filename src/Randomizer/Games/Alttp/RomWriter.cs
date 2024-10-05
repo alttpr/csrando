@@ -10,20 +10,21 @@ public static class RomWriter
     public static void Write(BaseRom baseRom, World world, PRNG prng)
     {
         // FIXME: this offset likely needs to come from above, we only know with a full game selection where the individual games go
-        var rom = new AlttpRom(baseRom, world.Config.Language, offset: 0);
+        var rom = new AlttpRom(baseRom, world.WorldConfig.Language, offset: 0);
 
-        var heartColor = world.Config.HeartColor; //option('heartcolor')
+        var config = world.Config;
+        var heartColor = config.HeartColor; //option('heartcolor')
         if (heartColor == HeartColorOption.Random)
             heartColor = prng.GetRandomElement(_heartColorOptions);
         rom.SetHeartColors(heartColor);
-        rom.SetHeartBeepSpeed(world.Config.HeartBeepSpeed); //option('heartbeep')
+        rom.SetHeartBeepSpeed(config.HeartBeepSpeed); //option('heartbeep')
 
-        rom.SetQuickSwap(world.Config.QuickSwap); //option('quickswap')
+        rom.SetQuickSwap(config.QuickSwap); //option('quickswap')
 
         WriteWorld(world, rom, prng);
 
-        rom.MuteMusic(world.Config.NoMusic); //option('no-music')
-        rom.SetMenuSpeed(world.Config.MenuSpeed); //option('menu-speed')
+        rom.MuteMusic(config.NoMusic); //option('no-music')
+        rom.SetMenuSpeed(config.MenuSpeed); //option('menu-speed')
 
         // TODO: patch in the sprite
         // TODO: tournament mode
@@ -50,9 +51,9 @@ public static class RomWriter
                 var itemToWrite = location.Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
-                rom.WriteCreditsText(config, location, itemToWrite);
+                rom.WriteCreditsText(world.WorldConfig, location, itemToWrite);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
-                rom.WriteHintText(config, location, itemToWrite);
+                rom.WriteHintText(world.WorldConfig, location, itemToWrite);
                 rom.WriteLocationSpecificData(location, itemToWrite);
             }
         }
@@ -325,14 +326,15 @@ public static class RomWriter
     private static void SetProgressionText(World world, AlttpRom rom, PRNG prng)
     {
         var config = world.Config;
-        var progressionHints = YamlReader.LoadHintsForProgression(config.Language);
+        string language = world.WorldConfig.Language;
+        var progressionHints = YamlReader.LoadHintsForProgression(language);
         var hints = new Dictionary<string, string>
         {
-            { "blind_by_the_light", prng.GetRandomElement(YamlReader.LoadRandomDialogForBlind(config.Language)) },
-            { "kakariko_tavern_fisherman", prng.GetRandomElement(YamlReader.LoadRandomDialogForTavernMan(config.Language)) },
-            { "ganon_fall_in", prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonFallIn(config.Language)) },
-            { "ganon_phase_3_alt", prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonPhase3NoGoal(config.Language)) },
-            { "end_triforce", "{NOBORDER}\n" + prng.GetRandomElement(YamlReader.LoadRandomDialogForTriforce(config.Language)) },
+            { "blind_by_the_light", prng.GetRandomElement(YamlReader.LoadRandomDialogForBlind(language)) },
+            { "kakariko_tavern_fisherman", prng.GetRandomElement(YamlReader.LoadRandomDialogForTavernMan(language)) },
+            { "ganon_fall_in", prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonFallIn(language)) },
+            { "ganon_phase_3_alt", prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonPhase3NoGoal(language)) },
+            { "end_triforce", "{NOBORDER}\n" + prng.GetRandomElement(YamlReader.LoadRandomDialogForTriforce(language)) },
             { "sahasrahla_bring_courage", progressionHints["GreenPendantLocation"] },
             { "bomb_shop", progressionHints["Crystal56Location"] },
         };
@@ -345,7 +347,7 @@ public static class RomWriter
         if (config.RevealBootsLocation)
         {
             var bootsLocation = locationByItem["PegasusBoots"].FirstOrDefault();
-            var bootsRevealHints = YamlReader.LoadHintsForBoots(world.Config.Language);
+            var bootsRevealHints = YamlReader.LoadHintsForBoots(language);
 
             if (bootsLocation is null)
                 uncleBootsText = bootsRevealHints["NoBoots"];
@@ -354,13 +356,13 @@ public static class RomWriter
             else if (config.StartingEquipment.Contains("PegasusBoots"))
                 uncleBootsText = bootsRevealHints["BootsStart"];
             else
-                uncleBootsText = bootsRevealHints["BootsLocation"].Replace("{BOOTS}", bootsLocation.GetRegion(config.Language));
+                uncleBootsText = bootsRevealHints["BootsLocation"].Replace("{BOOTS}", bootsLocation.GetRegion(language));
 
             hints.Add("sign_east_of_links_house", uncleBootsText);
         }
         else
         {
-            uncleBootsText = prng.GetRandomElement(YamlReader.LoadRandomDialogForUncle(config.Language));
+            uncleBootsText = prng.GetRandomElement(YamlReader.LoadRandomDialogForUncle(language));
         }
 
         hints.Add("uncle_leaving_text", uncleBootsText);
@@ -376,8 +378,8 @@ public static class RomWriter
         string silversLocationAlt = "the void";
         if (firstBow != null && secondBow != null)
         {
-            silversLocation = firstBow.GetRegion(config.Language);
-            silversLocationAlt = secondBow.GetRegion(config.Language);
+            silversLocation = firstBow.GetRegion(language);
+            silversLocationAlt = secondBow.GetRegion(language);
 
             if (silversLocation == "Ganon's Tower")
                 silversLocation = "My Tower";
@@ -390,7 +392,7 @@ public static class RomWriter
         }
         else if (silverArrowsUpgrade != null)
         {
-            silversLocation = silverArrowsUpgrade.GetRegion(config.Language);
+            silversLocation = silverArrowsUpgrade.GetRegion(language);
             if (silversLocation == "Ganon's Tower")
                 silversLocation = "My Tower";
 
@@ -400,7 +402,7 @@ public static class RomWriter
         }
         else
         {
-            silversHint = prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonPhase3NoSilvers(config.Language));
+            silversHint = prng.GetRandomElement(YamlReader.LoadRandomDialogForGanonPhase3NoSilvers(language));
             silversHintAlt = silversHint;
         }
 
@@ -449,9 +451,9 @@ public static class RomWriter
         var crystal5 = locationByItem["Crystal5"].FirstOrDefault();
         var crystal6 = locationByItem["Crystal6"].FirstOrDefault();
 
-        string greenPendantLocation = greenPendant?.GetRegion(config.Language) ?? "Wrecked Ship";
-        string crystal5Location = crystal5?.GetRegion(config.Language) ?? "Tourian";
-        string crystal6Location = crystal6?.GetRegion(config.Language) ?? "Norfair";
+        string greenPendantLocation = greenPendant?.GetRegion(language) ?? "Wrecked Ship";
+        string crystal5Location = crystal5?.GetRegion(language) ?? "Tourian";
+        string crystal6Location = crystal6?.GetRegion(language) ?? "Norfair";
 
         var replacements = new Dictionary<string, string>
         {
@@ -490,15 +492,16 @@ public static class RomWriter
             return;
         }
 
-        var tiles = prng.Shuffle([.. YamlReader.LoadHintLocations(config.Language)]);
+        string language = world.WorldConfig.Language;
+        var tiles = prng.Shuffle([.. YamlReader.LoadHintLocations(language)]);
         var hints = new Queue<(string Location, string[] Items)>();
         var locationByItem = world.GetLocationsOfType(VertexType.Item)
             .Where(v => v.Item != null)
             .ToLookup(v => v.Item!.Name);
-        var jokeHints = YamlReader.LoadJokeHints(config.Language);
-        var itemHints = YamlReader.LoadHintsForItems(config.Language);
-        var locationHints = YamlReader.LoadHintsForLocations(config.Language);
-        var locationTemplates = YamlReader.LoadHintTemplates(config.Language);
+        var jokeHints = YamlReader.LoadJokeHints(language);
+        var itemHints = YamlReader.LoadHintsForItems(language);
+        var locationHints = YamlReader.LoadHintsForLocations(language);
+        var locationTemplates = YamlReader.LoadHintTemplates(language);
 
         // keysanity: hint for GT big key
         if (config.RegionWildBigKeys)
@@ -517,7 +520,7 @@ public static class RomWriter
         }
 
         // add 5 location hints
-        var hintableLocations = prng.GetRandomElements(YamlReader.LoadHintableLocations(config.Language), 5);
+        var hintableLocations = prng.GetRandomElements(YamlReader.LoadHintableLocations(language), 5);
         foreach (var (location, subLocations) in hintableLocations)
         {
             // location is either an artificial location (group) that consists of many sub-locations;
@@ -590,15 +593,15 @@ public static class RomWriter
     }
     private static void SetCreditsText(World world, AlttpRom rom, PRNG prng)
     {
-        var config = world.Config;
-        rom.SetCredit("bridge", prng.GetRandomElement(YamlReader.LoadCreditsForDMBridge(config.Language)));
-        rom.SetCredit("castle", prng.GetRandomElement(YamlReader.LoadCreditsForHyruleCastle(config.Language)));
-        rom.SetCredit("kakariko", prng.GetRandomElement(YamlReader.LoadCreditsForKakariko(config.Language)));
-        rom.SetCredit("lumberjacks", prng.GetRandomElement(YamlReader.LoadCreditsForLumberjacks(config.Language)));
-        rom.SetCredit("sanctuary", prng.GetRandomElement(YamlReader.LoadCreditsForSanctuary(config.Language)));
-        rom.SetCredit("smithy", prng.GetRandomElement(YamlReader.LoadCreditsForSmithy(config.Language)));
-        rom.SetCredit("well", prng.GetRandomElement(YamlReader.LoadCreditsForFairyWell(config.Language)));
-        rom.SetCredit("woods", prng.GetRandomElement(YamlReader.LoadCreditsForLostWoods(config.Language)));
+        string language = world.WorldConfig.Language;
+        rom.SetCredit("bridge", prng.GetRandomElement(YamlReader.LoadCreditsForDMBridge(language)));
+        rom.SetCredit("castle", prng.GetRandomElement(YamlReader.LoadCreditsForHyruleCastle(language)));
+        rom.SetCredit("kakariko", prng.GetRandomElement(YamlReader.LoadCreditsForKakariko(language)));
+        rom.SetCredit("lumberjacks", prng.GetRandomElement(YamlReader.LoadCreditsForLumberjacks(language)));
+        rom.SetCredit("sanctuary", prng.GetRandomElement(YamlReader.LoadCreditsForSanctuary(language)));
+        rom.SetCredit("smithy", prng.GetRandomElement(YamlReader.LoadCreditsForSmithy(language)));
+        rom.SetCredit("well", prng.GetRandomElement(YamlReader.LoadCreditsForFairyWell(language)));
+        rom.SetCredit("woods", prng.GetRandomElement(YamlReader.LoadCreditsForLostWoods(language)));
     }
 
     /// <summary>

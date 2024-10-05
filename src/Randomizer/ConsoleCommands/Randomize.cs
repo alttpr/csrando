@@ -8,8 +8,9 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Randomizer.Games.Alttp;
 using Randomizer.Graph;
-using Randomizer.RomModifications;
+using RomWriter = Randomizer.RomModifications.RomWriter;
 
 /// <summary>Run randomizer as command.</summary>
 internal sealed class Randomize : Command
@@ -80,7 +81,7 @@ internal sealed class Randomize : Command
 
         // option specified as "random": allow any number
         if (result.Tokens.Any(t => "random".Equals(t.Value, StringComparison.OrdinalIgnoreCase)))
-            return WorldConfig.RandomCrystals;
+            return AlttpConfig.RandomCrystals;
 
         // anything else: the user specified at least one value; we'll use those as possible choices to randomize the count
         // those values are already pre-validated, so they are guaranteed to be integers (or the string "random")
@@ -193,18 +194,21 @@ internal sealed class Randomize : Command
         _logger.LogInformation("Using directly passed options to construct world.");
         var worldConfigs = Enumerable.Repeat(new WorldConfig
         {
-            Accessibility = context.ParseResult.GetValueForOption(_accessibility),
-            Goal = context.ParseResult.GetValueForOption(_goal),
-            State = context.ParseResult.GetValueForOption(_state),
-            Glitches = context.ParseResult.GetValueForOption(_glitches),
-            EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
-            BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
-            RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
-            CrystalsGanonChoices = context.ParseResult.GetValueForOption(_crystalsGanon) ?? WorldConfig.RandomCrystals,
-            CrystalsTowerChoices = context.ParseResult.GetValueForOption(_crystalsTower) ?? WorldConfig.RandomCrystals,
-            Weapon = context.ParseResult.GetValueForOption(_weapons),
-            Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
-            StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],
+            Alttp = new()
+            {
+                Accessibility = context.ParseResult.GetValueForOption(_accessibility),
+                Goal = context.ParseResult.GetValueForOption(_goal),
+                State = context.ParseResult.GetValueForOption(_state),
+                Glitches = context.ParseResult.GetValueForOption(_glitches),
+                EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
+                BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
+                RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
+                CrystalsGanonChoices = context.ParseResult.GetValueForOption(_crystalsGanon) ?? AlttpConfig.RandomCrystals,
+                CrystalsTowerChoices = context.ParseResult.GetValueForOption(_crystalsTower) ?? AlttpConfig.RandomCrystals,
+                Weapon = context.ParseResult.GetValueForOption(_weapons),
+                Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
+                StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],
+            }
         }, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
 
         return worldConfigs;
