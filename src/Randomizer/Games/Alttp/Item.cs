@@ -1,6 +1,6 @@
-namespace Randomizer.Graph;
+﻿namespace Randomizer.Games.Alttp;
 
-using global::Randomizer.Games.Alttp;
+using Randomizer.Graph;
 
 public enum ItemType
 {
@@ -12,7 +12,7 @@ public enum ItemType
     Compass,
 }
 
-public sealed class Item
+public sealed class Item : IItem
 {
     public int Id { get; set; } = -1;
     public string Name { get; }

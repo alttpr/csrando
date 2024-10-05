@@ -2,10 +2,10 @@ namespace Randomizer.Graph;
 
 public interface IWorld
 {
-    /// <summary>Get an <see cref="Item"/> that exists in this world, or create a meta-item for it.</summary>
-    Item GetItem(string name);
-    /// <summary>Get an <see cref="Item"/> if it exists, or <c>null</c> if no item with <paramref name="name"/> is known to this world.</summary>
-    Item? GetExistingItem(string name);
+    /// <summary>Get an <see cref="IItem"/> that exists in this world, or create a meta-item for it.</summary>
+    IItem GetItem(string name);
+    /// <summary>Get an <see cref="IItem"/> if it exists, or <c>null</c> if no item with <paramref name="name"/> is known to this world.</summary>
+    IItem? GetExistingItem(string name);
 
     /// <summary>
     /// Get a vertex by name in this world.
@@ -26,7 +26,7 @@ public interface IWorld
     /// Apply modifications to this world that affect randomization (such as entrance shuffle, enemy shuffle etc.)
     /// </summary>
     void ApplyWorldModifications(PRNG prng);
-    IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, Item itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
+    IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
 
     WorldConfig WorldConfig { get; }
     Graph Graph { get; }

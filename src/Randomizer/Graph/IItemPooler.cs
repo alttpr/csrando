@@ -1,4 +1,4 @@
-global using PooledItem = (Randomizer.Graph.ItemSetName Set, int Weight, Randomizer.Graph.Item Item);
+global using PooledItem = (Randomizer.Graph.ItemSetName Set, int Weight, Randomizer.Graph.IItem Item);
 
 namespace Randomizer.Graph;
 

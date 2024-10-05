@@ -45,10 +45,10 @@ public static class RomWriter
             if (alternateBowLocation != null)
                 alternateBowLocation.Item = world.GetItem("ProgressiveBowAlternate");
 
-            var nothing = world.GetItem("Nothing");
+            var nothing = (Item)world.GetItem("Nothing");
             foreach (var location in itemLocations)
             {
-                var itemToWrite = location.Item ?? nothing;
+                var itemToWrite = location.Item as Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
                 rom.WriteCreditsText(world.WorldConfig, location, itemToWrite);
@@ -912,10 +912,10 @@ public static class RomWriter
                     | overlordFlag
                     | enemy.Position.X));
                 outputBytes.Add(sprite.Id);
-                if (enemy.Item != null)
+                if (enemy.Item is Item enemyDrop)
                 {
                     // @todo update this when we can place any item
-                    outputBytes.Add((byte)(enemy.Item.Type == ItemType.BigKey ? 0xFD : 0xFE));
+                    outputBytes.Add((byte)(enemyDrop.Type == ItemType.BigKey ? 0xFD : 0xFE));
                     outputBytes.Add(0x00);
                     outputBytes.Add(0xE4);
                 }

@@ -143,7 +143,7 @@ public class Searcher
         return newItemsFound;
     }
 
-    public bool HasFound(Item item)
+    public bool HasFound(IItem item)
     {
         return _inventory.Has(item);
     }
@@ -243,7 +243,7 @@ public class Searcher
         return strongLocations.Count != 0 || foundItems;
     }
 
-    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, Item key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (inventory.GetCount(key) == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);

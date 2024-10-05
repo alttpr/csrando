@@ -160,7 +160,7 @@ internal sealed class ItemPooler : IItemPooler
                 break;
             case WeaponOption.Swordless:
                 var swordLess = worldSet.Where(p => p.Item.Name == "ProgressiveSword").ToArray();
-                worldSet.AddRange(swordLess.Select(s => (s.Set, s.Weight, world.GetItem("TwentyRupees2"))));
+                worldSet.AddRange(swordLess.Select(s => (s.Set, s.Weight, (IItem)world.GetItem("TwentyRupees2"))));
                 worldSet.RemoveAll(swordLess.Contains);
                 // TODO: v31 forces SilverArrowUpgrade in here when there are no silvers in the pool.
                 break;
@@ -172,7 +172,7 @@ internal sealed class ItemPooler : IItemPooler
         if (world.Config.Goal is GoalOption.TriforceHunt or GoalOption.Trifecta)
         {
             ushort triforcePiecesToPlace = Math.Max(world.Config.TriforcePieces, world.Config.GoalRequiredCount);
-            worldSet.AddRange(Enumerable.Repeat((ItemSetName.DefaultSet, 3, world.GetItem("TriforcePiece")), triforcePiecesToPlace));
+            worldSet.AddRange(Enumerable.Repeat((ItemSetName.DefaultSet, 3, (IItem)world.GetItem("TriforcePiece")), triforcePiecesToPlace));
         }
 
         if (

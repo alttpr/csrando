@@ -10,16 +10,16 @@ public sealed class Graph
     private readonly HashSet<Vertex> _vertices = [];
     private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = [];
-    public Dictionary<Item /* actualKey */, Dictionary<Item /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = [];
-    public Dictionary<Item /* actualKey */, HashSet<Vertex>> FixedKeys { get; } = [];
-    public Dictionary<Item /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys { get; } = [];
+    public Dictionary<IItem /* actualKey */, Dictionary<IItem /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = [];
+    public Dictionary<IItem /* actualKey */, HashSet<Vertex>> FixedKeys { get; } = [];
+    public Dictionary<IItem /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys { get; } = [];
 
     /// <summary>
     /// All known items, across all worlds and games. Use <see cref="RegisterItem"/> to allocate an item id usable with the <see cref="Inventory"/>.
     /// </summary>
-    public HashSet<Item> AllItems { get; } = [];
+    public HashSet<IItem> AllItems { get; } = [];
     /// <summary>Registers a new item that has no item id yet. Updates (and returns) the item with a graph-specific unique id.</summary>
-    public Item RegisterItem(Item item)
+    public TItem RegisterItem<TItem>(TItem item) where TItem : IItem
     {
         int newId = AllItems.Count;
         if (AllItems.Add(item))
@@ -58,7 +58,7 @@ public sealed class Graph
     /// <param name="to">target Vertex</param>
     /// <param name="item">Item required to traverse edge</param>
     /// <param name="itemCount">flow of Item to traverse</param>
-    public Edge AddDirected(Vertex from, Vertex to, Item item, int itemCount = 1)
+    public Edge AddDirected(Vertex from, Vertex to, IItem item, int itemCount = 1)
     {
         return AddDirected(from, to, new ItemCondition(item, itemCount));
     }

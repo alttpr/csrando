@@ -104,7 +104,7 @@ internal sealed class RandomAssumedFiller
         });
 
         ItemSetName? currentKey = null;
-        var searcher = _randomizer.GetSearcherForInventory(Enumerable.Empty<Item>());
+        var searcher = _randomizer.GetSearcherForInventory([]);
         var locations = new List<Vertex>();
         foreach (var (itemSet, _, item) in fillItems)
         {

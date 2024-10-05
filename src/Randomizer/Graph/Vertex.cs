@@ -51,8 +51,8 @@ public sealed class Vertex : ICloneable
     public List<string> ExtraLight { get; init; } = [];
     public bool Switch { get; set; }
     public int? Cost { get; set; }
-    public Item? Item { get; set; }
-    public Item? Trophy { get; init; }
+    public IItem? Item { get; set; }
+    public IItem? Trophy { get; init; }
     public Sprite? Sprite { get; set; }
     public bool MightFall { get; init; }
     public int? RoomId { get; init; }
@@ -74,7 +74,7 @@ public sealed class Vertex : ICloneable
     public string[]? Allow { get; init; }
     public string[]? Deny { get; init; }
     public int? Group { get; init; }
-    public Item? Key { get; init; }
+    public IItem? Key { get; init; }
 
     public List<Edge> Edges = new();
 

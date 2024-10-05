@@ -19,7 +19,7 @@ public sealed class Edge
 }
 
 [DebuggerDisplay("{Item.Name}:{Item.World.Id} >= {Count}")]
-public record ItemCondition(Item Item, int Count)
+public record ItemCondition(IItem Item, int Count)
 {
     public bool IsUnconditional { get; } = Item.Name == "fixed";
 }

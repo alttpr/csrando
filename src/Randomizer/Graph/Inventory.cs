@@ -12,10 +12,10 @@ public sealed class Inventory
     private static readonly ILogger _logger = ClassLogger.Get();
 
     private readonly BitArray _bits = new(400);
-    private readonly Dictionary<Item, int> _itemCount = new();
+    private readonly Dictionary<IItem, int> _itemCount = new();
     private readonly Dictionary<IWorld, float> _health = new();
 
-    public Inventory(params Item[] items)
+    public Inventory(params IItem[] items)
     {
         foreach (var item in items)
         {
@@ -34,13 +34,13 @@ public sealed class Inventory
     }
 
     [Conditional("DEBUG")]
-    private static void CheckItemId(Item item)
+    private static void CheckItemId(IItem item)
     {
         if (item.Id < 0)
             _logger.LogWarning("Item {Name} does not have an ID. Make sure to call Graph.RegisterItem before using it.", item.Name);
     }
 
-    public void AddItem(Item item, int count = 1)
+    public void AddItem(IItem item, int count = 1)
     {
         CheckItemId(item);
 
@@ -50,6 +50,7 @@ public sealed class Inventory
         }
         _bits.Set(item.Id, true);
 
+        // FIXME: this section is game specific and needs to go elsewhere.
         if (item.Name.StartsWith("HeartContainer"))
         {
             _health[item.World] = _health.GetValueOrDefault(item.World, 0) + 1;
@@ -69,7 +70,7 @@ public sealed class Inventory
         }
     }
 
-    public void RemoveItem(Item item, int count = 1)
+    public void RemoveItem(IItem item, int count = 1)
     {
         if (!_bits.Get(item.Id))
         {
@@ -92,7 +93,7 @@ public sealed class Inventory
     /// Determine how many of a particular item are in inventory.
     /// </summary>
     /// <param name="item">Item to check</param>
-    public int GetCount(Item item)
+    public int GetCount(IItem item)
     {
         if (item.Name.StartsWith("Bottle"))
         {
@@ -102,7 +103,7 @@ public sealed class Inventory
         return _itemCount.GetValueOrDefault(item, 0);
     }
 
-    public bool Has(Item item)
+    public bool Has(IItem item)
     {
         if (_bits != null)
         {
@@ -124,7 +125,7 @@ public sealed class Inventory
         return HasAtLeast(condition.Item, condition.Count);
     }
 
-    public bool HasAtLeast(Item item, int count)
+    public bool HasAtLeast(IItem item, int count)
     {
         if (count == 1)
         {
@@ -133,7 +134,7 @@ public sealed class Inventory
         return _itemCount.GetValueOrDefault(item, 0) >= count;
     }
 
-    internal IReadOnlyDictionary<Item, int> All()
+    internal IReadOnlyDictionary<IItem, int> All()
     {
         return _itemCount.AsReadOnly();
     }

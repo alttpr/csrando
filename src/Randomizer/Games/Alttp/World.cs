@@ -26,7 +26,7 @@ public sealed class World : IWorld
         Config = randomizerConfig.Alttp ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda: A Link to the Past");
         Graph = graph;
 
-        List<Item> items = [GetItem("fixed")];
+        List<IItem> items = [GetItem("fixed")];
         items.Add(GetItem($"ConfigWorldWeapon{Config.Weapon}"));
         items.Add(GetItem($"ConfigWorldState{Config.State}"));
         items.Add(GetItem($"ConfigWorldGlitches{Config.Glitches}"));
@@ -117,7 +117,7 @@ public sealed class World : IWorld
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
 
-    public Item GetItem(string name)
+    public IItem GetItem(string name)
     {
         if (_allItems.TryGetValue(name, out var matchingItem))
         {
@@ -131,14 +131,14 @@ public sealed class World : IWorld
         return item;
     }
 
-    public Item? GetItemOrNull(string? name)
+    public IItem? GetItemOrNull(string? name)
     {
         if (name != null)
             return GetItem(name);
         return null;
     }
 
-    public Item? GetExistingItem(string name)
+    public IItem? GetExistingItem(string name)
     {
         if (_allItems.TryGetValue(name, out var item))
             return item;
@@ -171,16 +171,17 @@ public sealed class World : IWorld
         foreach (var modifier in modifiers)
             modifier.AdjustEdges(this, prng);
     }
-    public IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, Item itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    public IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<Vertex>();
+        var item = (Item)itemToPlace;
 
         bool onlyReachable = Config.Accessibility != AccessibilityOption.None || !searcher.HasFound(GetItem("Triforce"));
         locations.AddRange(searcher.GetEmptyLocationsInSet(itemSet, setCounts, onlyReachable));
 
-        if (Config.Accessibility != AccessibilityOption.Locations && (itemToPlace.Type == ItemType.SmallKey || itemToPlace.Type == ItemType.BigKey))
+        if (Config.Accessibility != AccessibilityOption.Locations && (item.Type == ItemType.SmallKey || item.Type == ItemType.BigKey))
         {
-            if (Graph.KeyForKeys.TryGetValue(itemToPlace, out var keyForKeys))
+            if (Graph.KeyForKeys.TryGetValue(item, out var keyForKeys))
             {
                 var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searcher.HasVisited(v2)))).Select(v => v.Chest);
                 locations.AddRange(chests);

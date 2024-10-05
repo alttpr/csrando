@@ -1581,7 +1581,7 @@ public sealed class AlttpRom : GameRom
         if (location?.Addresses == null)
             return;
 
-        itemToWrite ??= location.Item;
+        itemToWrite ??= location.Item as Item;
         if (itemToWrite == null)
             return;
 
