@@ -8,34 +8,19 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Randomizer.Games.Alttp;
 using Randomizer.Graph;
-using RomWriter = Randomizer.RomModifications.RomWriter;
+using Randomizer.RomModifications;
 
 /// <summary>Run randomizer as command.</summary>
 internal sealed class Randomize : Command
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private readonly Option<GoalOption> _goal = new(["goal", "--goal"], () => GoalOption.Ganon, "set game goal");
-    private readonly Option<StateOption> _state = new(["state", "--state"], () => StateOption.Open, "set game state");
-    private readonly Option<WeaponOption> _weapons = new(["weapons", "--weapons"], () => WeaponOption.Randomized, "set weapons mode");
-    private readonly Option<GlitchesOption> _glitches = new(["glitches", "--glitches"], () => GlitchesOption.None, "set glitches");
-    private readonly Option<AccessibilityOption> _accessibility = new(["accessibility", "--accessibility"], "set item/location accessibility");
-    private readonly Option<BossShuffleOption> _bossShuffle = new(["bossshuffle", "--bossshuffle"], () => BossShuffleOption.None, "set boss shuffle mode");
-    private readonly Option<EntranceShuffleOption> _entranceShuffle = new(["entrance", "--entrance"], () => EntranceShuffleOption.None, "set entrance shuffle mode");
-    private readonly Option<ShopSupplyOption> _shopSupply = new(["shopsupply", "--shopsupply"], () => ShopSupplyOption.Normal, "set shop supply shuffle mode");
-    private static readonly string[] _crystalAmount = ["random", "0", "1", "2", "3", "4", "5", "6", "7"];
-    private static readonly string[] _defaultCrystals = ["7"];
-    private readonly Option<string[]> _crystalsGanon = new Option<string[]>(["crystals_ganon", "--crystals_ganon"], ParseCrystalCount, description: "set ganon crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
-    private readonly Option<string[]> _crystalsTower = new Option<string[]>(["crystals_tower", "--crystals_tower"], ParseCrystalCount, description: "set ganon tower crystal requirement") { AllowMultipleArgumentsPerToken = true }.FromAmong(_crystalAmount);
-    private readonly Option<List<TechOption>> _tech = new Option<List<TechOption>>(["tech", "--tech"], "set allowed techs").FromAmong(Enum.GetNames(typeof(TechOption)));
-    private readonly Option<List<string>> _startingItems = new(["items", "--items"], "set starting items (comma separated)");
     private readonly Option<int> _bulk = new(["bulk", "--bulk"], () => 1, "generate multiple ROMs");
     private readonly Option<int> _multiworld = new(["multiworld", "--multiworld"], () => 1, "multiworld player count");
     private readonly Option<int?> _seed = new(["seed", "--seed"], "set starting seed");
+    // NOTE: use assemblebaserom to generate a usable preset; the following two options are mainly for testing of external rom changes.
     private readonly Option<FileInfo> _baseRom = new Option<FileInfo>(["rom", "--rom"], "set base rom").ExistingOnly();
-    // TODO: we should probably have the base rom patch "built in" and not require a path.
     private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>(["bps", "--bps"], "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
     private readonly Option<DirectoryInfo> _outputDirectory = new(["outdir", "--outdir"], "output directory for generated games");
     private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>(["settings", "--settings"], "JSON serialized settings file").ExistingOnly();
@@ -44,21 +29,6 @@ internal sealed class Randomize : Command
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
     {
-        Add(_goal);
-        Add(_state);
-        Add(_weapons);
-        Add(_glitches);
-        Add(_accessibility);
-        Add(_bossShuffle);
-        Add(_entranceShuffle);
-        Add(_shopSupply);
-        Add(_crystalsGanon);
-        _crystalsGanon.SetDefaultValue(_defaultCrystals);
-        Add(_crystalsTower);
-        _crystalsTower.SetDefaultValue(_defaultCrystals);
-        Add(_tech);
-        Add(_startingItems);
-        _startingItems.AllowMultipleArgumentsPerToken = true;
         Add(_bulk);
         Add(_multiworld);
         Add(_seed);
@@ -73,34 +43,15 @@ internal sealed class Randomize : Command
         this.SetHandler(context => context.ExitCode = Handle(context));
     }
 
-    private static string[] ParseCrystalCount(ArgumentResult result)
-    {
-        // option not specified: default to 7
-        if (!result.Tokens.Any())
-            return ["7"];
-
-        // option specified as "random": allow any number
-        if (result.Tokens.Any(t => "random".Equals(t.Value, StringComparison.OrdinalIgnoreCase)))
-            return AlttpConfig.RandomCrystals;
-
-        // anything else: the user specified at least one value; we'll use those as possible choices to randomize the count
-        // those values are already pre-validated, so they are guaranteed to be integers (or the string "random")
-        return result.Tokens.Select(t => t.Value).ToArray();
-    }
-
     private void Validate(CommandResult result)
     {
-        List<string> errors = new();
+        List<string> errors = [];
 
         if (result.GetValueForOption(_multiworld) <= 0)
-        {
             errors.Add("Multiworld player count needs to be at least 1");
-        }
 
         if (result.GetValueForOption(_bulk) <= 0)
-        {
             errors.Add("Bulk count needs to be at least 1");
-        }
 
         result.ErrorMessage = string.Join('\n', errors);
     }
@@ -127,9 +78,7 @@ internal sealed class Randomize : Command
             );
             randomizer.Randomize();
             if (!randomizer.IsWinnable())
-            {
                 throw new Exception($"Game Unwinnable.");
-            }
 
             if (outputDirectory != null)
             {
@@ -191,26 +140,6 @@ internal sealed class Randomize : Command
             catch { }
         }
 
-        _logger.LogInformation("Using directly passed options to construct world.");
-        var worldConfigs = Enumerable.Repeat(new WorldConfig
-        {
-            Alttp = new()
-            {
-                Accessibility = context.ParseResult.GetValueForOption(_accessibility),
-                Goal = context.ParseResult.GetValueForOption(_goal),
-                State = context.ParseResult.GetValueForOption(_state),
-                Glitches = context.ParseResult.GetValueForOption(_glitches),
-                EntranceShuffle = context.ParseResult.GetValueForOption(_entranceShuffle),
-                BossShuffle = context.ParseResult.GetValueForOption(_bossShuffle),
-                RegionShopSupply = context.ParseResult.GetValueForOption(_shopSupply),
-                CrystalsGanonChoices = context.ParseResult.GetValueForOption(_crystalsGanon) ?? AlttpConfig.RandomCrystals,
-                CrystalsTowerChoices = context.ParseResult.GetValueForOption(_crystalsTower) ?? AlttpConfig.RandomCrystals,
-                Weapon = context.ParseResult.GetValueForOption(_weapons),
-                Techs = context.ParseResult.GetValueForOption(_tech) ?? [],
-                StartingEquipment = context.ParseResult.GetValueForOption(_startingItems)?.Select(s => s.Split(",")).SelectMany(s => s).ToList() ?? [],
-            }
-        }, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
-
-        return worldConfigs;
+        throw new InvalidOperationException("No usable settings file passed. Either use the --settings option or place a valid file at data/settings.json.");
     }
 }
