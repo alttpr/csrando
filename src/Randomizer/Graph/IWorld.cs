@@ -26,6 +26,7 @@ public interface IWorld
     /// Apply modifications to this world that affect randomization (such as entrance shuffle, enemy shuffle etc.)
     /// </summary>
     void ApplyWorldModifications(PRNG prng);
+    IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, Item itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
 
     WorldConfig Config { get; }
     Graph Graph { get; }

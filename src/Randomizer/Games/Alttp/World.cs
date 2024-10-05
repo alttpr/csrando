@@ -171,4 +171,22 @@ public sealed class World : IWorld
         foreach (var modifier in modifiers)
             modifier.AdjustEdges(this, prng);
     }
+    public IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, Item itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    {
+        var locations = new List<Vertex>();
+
+        bool onlyReachable = Config.Accessibility != AccessibilityOption.None || !searcher.HasFound(GetItem("Triforce"));
+        locations.AddRange(searcher.GetEmptyLocationsInSet(itemSet, setCounts, onlyReachable));
+
+        if (Config.Accessibility != AccessibilityOption.Locations && (itemToPlace.Type == ItemType.SmallKey || itemToPlace.Type == ItemType.BigKey))
+        {
+            if (Graph.KeyForKeys.TryGetValue(itemToPlace, out var keyForKeys))
+            {
+                var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searcher.HasVisited(v2)))).Select(v => v.Chest);
+                locations.AddRange(chests);
+            }
+        }
+
+        return locations;
+    }
 }

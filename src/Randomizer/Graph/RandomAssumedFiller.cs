@@ -66,18 +66,7 @@ internal sealed class RandomAssumedFiller
             var locations = new List<Vertex>();
             for (int i = 0; i < _randomizer.Worlds.Length; ++i)
             {
-                bool onlyReachable = _randomizer.Worlds[i].Config.Accessibility != AccessibilityOption.None
-                    || !searchers[i].HasFound(_randomizer.Worlds[i].GetItem("Triforce"));
-                locations.AddRange(searchers[i].GetEmptyLocationsInSet(itemSet, setCounts, onlyReachable));
-
-                if (_randomizer.Worlds[i].Config.Accessibility != AccessibilityOption.Locations && (item.Type == ItemType.SmallKey || item.Type == ItemType.BigKey))
-                {
-                    if (_randomizer.Graph.KeyForKeys.TryGetValue(item, out var keyForKeys))
-                    {
-                        var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searchers[i].HasVisited(v2)))).Select(v => v.Chest);
-                        locations.AddRange(chests);
-                    }
-                }
+                locations.AddRange(_randomizer.Worlds[i].GetEmptyLocationsInSet(searchers[i], item, itemSet, setCounts));
             }
 
             if (locations.Count == 0)
