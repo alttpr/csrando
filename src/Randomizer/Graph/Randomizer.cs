@@ -40,7 +40,7 @@ public sealed class Randomizer
         _logger.LogInformation("Using seed: {Seed}", PRNG.Seed);
 
         Graph = new Graph();
-        _start = Graph.AddVertex(new Vertex
+        _start = Graph.AddVertex(new RootVertex
         {
             Name = "start",
             World = new RootWorld(Graph),

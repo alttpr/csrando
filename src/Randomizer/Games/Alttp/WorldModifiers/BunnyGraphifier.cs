@@ -1,6 +1,6 @@
-namespace Randomizer.Games.Alttp.WorldModifiers;
-
 using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>
 /// Modify the edges of the graph to deal with MoonPearl/Bunny state.
@@ -68,7 +68,7 @@ internal sealed class BunnyGraphifier : IAlttpWorldModifier
             world.Graph.AddDirected(moonpearl, darkVertex, world.GetItem(lightItem));
         }
 
-        var darkNodes = world.Graph.GetVertices().Where(v => v.World == world && v.MoonPearl == true);
+        var darkNodes = world.Graph.GetVertices().OfType<Vertex>().Where(v => v.World == world && v.MoonPearl == true);
         var workQueue = new Queue<Vertex>(darkNodes);
         var marked = new HashSet<Vertex>();
 
@@ -77,10 +77,9 @@ internal sealed class BunnyGraphifier : IAlttpWorldModifier
             if (!marked.Add(node))
                 continue;
 
-
             foreach (var edge in node.Edges)
             {
-                var toNode = edge.To;
+                var toNode = (Vertex)edge.To;
                 if (toNode.MoonPearl != false)
                 {
                     workQueue.Enqueue(toNode);

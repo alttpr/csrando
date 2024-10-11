@@ -1,7 +1,7 @@
-namespace Randomizer.Games.Alttp.WorldModifiers;
-
 using Microsoft.Extensions.Logging;
 using Randomizer.Graph;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>
 /// Modify the edges of the graph to shuffle entrances.
@@ -84,14 +84,12 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                     continue;
                 if (!edge.Condition.IsUnconditional)
                     continue;
-                if (edge.To.Sprite == null)
+                if (edge.To is not Vertex { Sprite: Sprite sprite })
                     continue;
 
-                var item = world.GetExistingItem($"Defeat{edge.To.Sprite!.DefeatName}");
+                var item = world.GetExistingItem($"Defeat{sprite.DefeatName}");
                 if (item != null)
-                {
                     edge.Condition = new ItemCondition(item, 1);
-                }
             }
         }
     }

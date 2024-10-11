@@ -16,12 +16,12 @@ internal sealed class DarknessGraphifier : IAlttpWorldModifier
     public void AdjustEdges(World world, PRNG prng)
     {
         var graph = world.Graph;
-        var lightRooms = graph.GetVertices().Where(v => !v.Dark && v.World == world).ToList();
+        var lightRooms = graph.GetVertices().OfType<Vertex>().Where(v => !v.Dark && v.World == world).ToList();
         foreach (var lightRoom in lightRooms)
         {
-            foreach (var edge in lightRoom.Edges.Where(e => e.To.Dark))
+            foreach (var edge in lightRoom.Edges.Where(e => ((Vertex)e.To).Dark))
             {
-                var darkRoom = edge.To;
+                var darkRoom = (Vertex)edge.To;
                 var transition = new Vertex
                 {
                     Type = VertexType.Region,

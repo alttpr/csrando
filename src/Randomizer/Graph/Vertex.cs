@@ -1,7 +1,6 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
-using global::Randomizer.Games.Alttp;
 
 public enum VertexType
 {
@@ -40,43 +39,18 @@ public enum VertexType
 /// Vertex in Graph.
 /// </summary>
 [DebuggerDisplay("{Name} ({Type})")]
-public sealed class Vertex : ICloneable
+public abstract class Vertex : ICloneable
 {
     public int Id { get; set; }
     public required VertexType Type { get; init; }
-    public VertexType? SubType { get; init; }
     public required string Name { get; set; }
     public required IWorld World { get; init; }
-    public bool Dark { get; init; }
-    public List<string> ExtraLight { get; init; } = [];
-    public bool Switch { get; set; }
-    public int? Cost { get; set; }
     public IItem? Item { get; set; }
     public IItem? Trophy { get; init; }
-    public Sprite? Sprite { get; set; }
-    public bool MightFall { get; init; }
-    public int? RoomId { get; init; }
-    public byte? RoomOAM { get; init; }
-    public int? Map { get; init; }
-    public byte?[] Sheets { get; init; } = [null, null, null, null];
-    public bool? MoonPearl { get; init; }
     public ItemSetName[] ItemSet { get; init; } = [];
     public long[]? Addresses { get; init; }
-    public int? Offset { get; init; }
-    public Position? Position { get; init; }
-    public int[]? State { get; init; }
-    public int? EntranceId { get; init; }
-    public int? OutletId { get; init; }
-    public int? InletId { get; init; }
-    public int[]? EntranceIds { get; init; }
-    public int? ShopStyle { get; init; }
-    public int? Shopkeeper { get; init; }
-    public string[]? Allow { get; init; }
-    public string[]? Deny { get; init; }
-    public int? Group { get; init; }
-    public IItem? Key { get; init; }
 
-    public List<Edge> Edges = new();
+    public List<Edge> Edges = [];
 
     public override string ToString()
     {
@@ -87,4 +61,5 @@ public sealed class Vertex : ICloneable
     {
         return MemberwiseClone();
     }
+    public void TrackPlacedItem() => World.TrackPlacedItem(this);
 }

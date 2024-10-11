@@ -12,10 +12,10 @@ internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
     public void AdjustEdges(World world, PRNG prng)
     {
         int nextGroup = 0;
-        Dictionary<Vertex, int> vertexToGroup = new();
-        Dictionary<int, HashSet<Vertex>> groups = new();
+        Dictionary<Vertex, int> vertexToGroup = [];
+        Dictionary<int, HashSet<Vertex>> groups = [];
 
-        foreach (var vertex in world.Graph.GetVertices().Where(v => v.World == world && v.EntranceId != null))
+        foreach (var vertex in world.Graph.GetVertices().OfType<Vertex>().Where(v => v.World == world && v.EntranceId != null))
         {
             if (!vertexToGroup.ContainsKey(vertex))
             {
@@ -28,14 +28,15 @@ internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
 
                 while (nextVertices.TryDequeue(out var next))
                 {
-                    foreach (var edge in next.Edges)
+                    foreach (var (_, baseTo) in next.Edges)
                     {
-                        if (edge.To.OutletId != null)
+                        var to = (Vertex)baseTo;
+                        if (to.OutletId != null)
                             continue;
-                        if (edge.To.Map != null)
+                        if (to.Map != null)
                             continue;
 
-                        if (vertexToGroup.TryGetValue(edge.To, out int toGroup))
+                        if (vertexToGroup.TryGetValue(to, out int toGroup))
                         {
                             if (toGroup == currentGroup)
                                 continue;
@@ -50,9 +51,9 @@ internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
                         }
                         else
                         {
-                            vertexToGroup.Add(edge.To, currentGroup);
-                            groups[currentGroup].Add(edge.To);
-                            nextVertices.Enqueue(edge.To);
+                            vertexToGroup.Add(to, currentGroup);
+                            groups[currentGroup].Add(to);
+                            nextVertices.Enqueue(to);
                         }
                     }
                 }
@@ -68,8 +69,8 @@ internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
 
     static void TransformRegionWithPegs(World world, HashSet<Vertex> vertices)
     {
-        List<Vertex> orangeVertices = new();
-        List<Vertex> blueVertices = new();
+        List<Vertex> orangeVertices = [];
+        List<Vertex> blueVertices = [];
 
         foreach (var v in vertices)
         {
@@ -85,34 +86,35 @@ internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
 
         foreach (var v in blueVertices)
         {
-            List<Edge> newEdges = new();
-            foreach (var edge in v.Edges)
+            List<Edge> newEdges = [];
+            foreach (var (from, baseTo, condition) in v.Edges)
             {
-                if (edge.Condition.Item.Name == "PegOrange")
+                var to = (Vertex)baseTo;
+                if (condition.Item.Name == "PegOrange")
                     continue;
-                if (edge.To.OutletId != null)
+                if (to.OutletId != null)
                     continue;
-                if (edge.To.Map != null)
+                if (to.Map != null)
                     continue;
 
-                var edgeTo = edge.To;
-                var edgeCondition = edge.Condition;
-                if (edge.To.Type == VertexType.Region)
+                var edgeTo = to;
+                var edgeCondition = condition;
+                if (to.Type == VertexType.Region)
                 {
-                    edgeTo = world.GetLocation($"{edge.To.Name} (Blue)");
-                    if (edge.Condition.Item.Name == "PegBlue")
+                    edgeTo = (Vertex)world.GetLocation($"{to.Name} (Blue)");
+                    if (edgeCondition.Item.Name == "PegBlue")
                     {
                         edgeCondition = new ItemCondition(world.GetItem("fixed"), 1);
                     }
-                    if (edge.Condition.Item.Name.StartsWith("UnlockDoor:"))
+                    else if (edgeCondition.Item.Name.StartsWith("UnlockDoor:"))
                     {
                         var first = v;
                         var second = edgeTo;
-                        if (edge.From.Name.CompareTo(edge.To.Name) > 0)
+                        if (from.Name.CompareTo(to.Name) > 0)
                             (first, second) = (second, first);
 
                         world.Graph.Doors.SelectMany(e => e.Value)
-                            .Where(e => e.Key == edge.Condition.Item)
+                            .Where(e => e.Key == edgeCondition.Item)
                             .First().Value.Add((first, second));
                     }
                 }
@@ -128,7 +130,7 @@ internal sealed class DungeonPegStateCopier : IAlttpWorldModifier
 
         foreach (var v in orangeVertices)
         {
-            List<Edge> newEdges = new();
+            List<Edge> newEdges = [];
             foreach (var edge in v.Edges)
             {
                 if (edge.Condition.Item.Name == "PegBlue")

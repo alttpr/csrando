@@ -3,6 +3,8 @@ namespace Randomizer.Graph;
 using global::Randomizer.Games.Alttp;
 using Microsoft.Extensions.Logging;
 
+using AlttpVertex = Games.Alttp.Vertex;
+
 /// <summary>
 /// Modify the edges of the graph to shuffle entrances.
 /// </summary>
@@ -15,7 +17,7 @@ internal sealed class EntranceShuffler : IWorldModifier
     /// </summary>
     public void AdjustEdges(IWorld world, PRNG prng)
     {
-        // FIXME: fetching the entrance config is world specific, but the logic is generic enough to work with the right files.
+        // FIXME: fetching the entrance config is game specific, but the logic is generic enough to work with the right files.
         //        split this in a way that the world (or something world-related) returns the edge connections instead.
         string definitionName = world.WorldConfig.Alttp!.EntranceShuffle switch
         {
@@ -123,7 +125,8 @@ internal sealed class EntranceShuffler : IWorldModifier
 
             var ow_items = new Queue<List<string>>(prng.Shuffle(overworlds.Dequeue()));
             var uw_items = new Queue<List<string>>(prng.Shuffle(underworlds.Dequeue()));
-            var firstOverworld = world.GetLocation(ow_items.Peek()[0]);
+            // FIXME: this overworld handling is game specific for ALTTP
+            var firstOverworld = (AlttpVertex)world.GetLocation(ow_items.Peek()[0]);
             while (ow_items.Count != uw_items.Count)
             {
                 if (ow_items.Count < uw_items.Count)
@@ -133,7 +136,7 @@ internal sealed class EntranceShuffler : IWorldModifier
                     {
                         // TODO: this has potential to be a bug, if the data has overworld
                         // locations grouped that are both moon pearl and not moon pearl.
-                        if (world.GetLocation(entry[0]).MoonPearl != firstOverworld.MoonPearl)
+                        if (((AlttpVertex)world.GetLocation(entry[0])).MoonPearl != firstOverworld.MoonPearl)
                         {
                             overworlds.Enqueue(owCollection);
                             break;

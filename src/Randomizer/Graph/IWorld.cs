@@ -19,7 +19,7 @@ public interface IWorld
 
     /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
-    IEnumerable<Vertex> GetLocationsOfType(VertexType type);
+    IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(v => v.Type == type);
     bool HasLocation(string locationName);
 
     /// <summary>
@@ -27,6 +27,10 @@ public interface IWorld
     /// </summary>
     void ApplyWorldModifications(PRNG prng);
     IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
+    /// <summary>
+    /// Tracks the item for <paramref name="location"/> as placed. This might affect a game's ability to determine how many items were placed in total.
+    /// </summary>
+    void TrackPlacedItem(Vertex location);
 
     WorldConfig WorldConfig { get; }
     Graph Graph { get; }

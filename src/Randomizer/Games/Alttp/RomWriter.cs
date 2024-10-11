@@ -45,7 +45,7 @@ public static class RomWriter
                 alternateBowLocation.Item = world.GetItem("ProgressiveBowAlternate");
 
             var nothing = (Item)world.GetItem("Nothing");
-            foreach (var location in itemLocations)
+            foreach (var location in itemLocations.OfType<Vertex>())
             {
                 var itemToWrite = location.Item as Item ?? nothing;
 
@@ -339,6 +339,7 @@ public static class RomWriter
         };
         var locationByItem = world.GetLocationsOfType(VertexType.Item)
             .Where(v => v.Item != null)
+            .OfType<Vertex>()
             .ToLookup(v => v.Item!.Name);
 
         // the boots reveal works in non-standard as well; except it is only on the sign east of Link's house.
@@ -715,7 +716,7 @@ public static class RomWriter
     {
         var config = world.Config;
 
-        foreach (var prizePack in world.GetLocationsOfType(VertexType.PrizePack))
+        foreach (var prizePack in world.GetLocationsOfType(VertexType.PrizePack).OfType<Vertex>())
             rom.WriteSprite(prizePack);
 
         if (config.RomRupeeBow)
@@ -744,10 +745,11 @@ public static class RomWriter
     {
         var sourcesByTarget = world.Graph.GetVertices()
             .Where(v => v.World == world)
+            .OfType<Vertex>()
             .SelectMany(v => v.Edges.Select(e => (Target: e.To, Source: v)))
             .ToLookup(k => k.Target, v => v.Source);
 
-        var outletVertices = world.GetLocationsOfType(VertexType.Outlet).Where(v => v.OutletId.HasValue);
+        var outletVertices = world.GetLocationsOfType(VertexType.Outlet).OfType<Vertex>().Where(v => v.OutletId.HasValue);
         var outlets = new Dictionary<int, int>();
         foreach (var outletVertex in outletVertices)
         {
@@ -773,7 +775,7 @@ public static class RomWriter
             var entranceTransition = entranceVertex.Edges.Select(e => e.To).FirstOrDefault();
             if (entranceTransition == null)
                 throw new Exception($"No entrance connection for '{entranceVertex.Name}'");
-            var target = entranceTransition.Edges.Select(e => e.To).FirstOrDefault(e => (e?.InletId).HasValue);
+            var target = entranceTransition.Edges.Select(e => e.To as Vertex).FirstOrDefault(e => (e?.InletId).HasValue);
             if (target == null)
                 throw new Exception($"No entrance target for '{entranceVertex.Name}'");
 
@@ -786,7 +788,7 @@ public static class RomWriter
         {
             if (holeVertex.EntranceIds == null)
                 throw new Exception($"Hole '{holeVertex.Name}' has no entrance ids");
-            var target = holeVertex.Edges.Select(e => e.To).FirstOrDefault(e => (e?.InletId).HasValue);
+            var target = holeVertex.Edges.Select(e => e.To as Vertex).FirstOrDefault(e => (e?.InletId).HasValue);
             if (target == null)
                 throw new Exception($"No entrance target for '{holeVertex.Name}'");
 

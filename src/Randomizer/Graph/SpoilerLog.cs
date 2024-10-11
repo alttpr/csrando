@@ -2,6 +2,8 @@ namespace Randomizer.Graph;
 
 using global::Randomizer.Games.Alttp;
 
+using AlttpVertex = Games.Alttp.Vertex;
+
 /// <summary>
 /// Generates a Spoiler log for the randomizer.
 /// </summary>
@@ -39,7 +41,8 @@ public class SpoilerLog
 
         if (config.EnemyShuffle != EnemyShuffleOption.None)
         {
-            foreach (var enemy in world.GetLocationsOfType(VertexType.Mob))
+            // FIXME: this is currently game-specific
+            foreach (var enemy in world.GetLocationsOfType(VertexType.Mob).OfType<AlttpVertex>())
             {
                 var parts = enemy.Name.Split(" - ", 2);
                 var group = parts.Length > 1 ? parts[0] : "Enemies";

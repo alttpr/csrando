@@ -2,9 +2,7 @@ namespace Randomizer.Graph;
 
 using System.Diagnostics;
 
-/**
- * Edge in Graph.
- */
+/// <summary>Edge in Graph.</summary>
 [DebuggerDisplay("{Condition}: {From.Name} -> {To.Name}")]
 public sealed class Edge
 {
@@ -16,6 +14,9 @@ public sealed class Edge
     {
         (From, To, Condition) = (from, to, condition);
     }
+
+    public void Deconstruct(out Vertex from, out Vertex to) => (from, to) = (From, To);
+    public void Deconstruct(out Vertex from, out Vertex to, out ItemCondition condition) => (from, to, condition) = (From, To, Condition);
 }
 
 [DebuggerDisplay("{Item.Name}:{Item.World.Id} >= {Count}")]

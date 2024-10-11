@@ -1,4 +1,5 @@
 using Randomizer.Graph;
+using BaseVertex = Randomizer.Graph.Vertex;
 
 namespace Randomizer.Games.Alttp.WorldModifiers;
 
@@ -26,7 +27,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
 
             if (!doors.TryGetValue(edge.Condition.Item, out var doorsForKey))
             {
-                doorsForKey = new();
+                doorsForKey = [];
                 doors.Add(edge.Condition.Item, doorsForKey);
             }
 
@@ -56,7 +57,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
 
         foreach (var key in world.Graph.Doors.Where(k => k.Key.World == world))
         {
-            worldKeys.TryAdd(key.Key, new HashSet<Vertex>());
+            worldKeys.TryAdd(key.Key, []);
         }
 
         foreach (var e in worldKeys)
@@ -72,7 +73,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
 
         VertexHashSet allVisited = new(world.Graph);
         {
-            Queue<Vertex> vertexQueue = new();
+            Queue<BaseVertex> vertexQueue = new();
             vertexQueue.Enqueue(world.GetLocation("start"));
 
             while (vertexQueue.Count != 0)
@@ -98,7 +99,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
                 if (door.Key.World != world)
                     continue;
 
-                Queue<Vertex> vertexQueue = new();
+                Queue<BaseVertex> vertexQueue = new();
 
                 VertexHashSet visitedWithoutDoor = new(world.Graph);
                 vertexQueue.Enqueue(world.GetLocation("start"));
@@ -123,28 +124,27 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
                 }
 
                 visitedWithoutDoor.SymmetricExceptWith(allVisited);
-                var behindDoor = visitedWithoutDoor.ToList();
+                var behindDoor = visitedWithoutDoor.OfType<Vertex>().ToList();
                 // Find all the locations behind a door that have a single empty chest and no other item drop
                 // Those are "KeyForKey" chest targets and in "Accessibility.Items" mode are eligible to receive
                 // a key.
                 // TODO: Check behavior when we add pot and enemies as item targets
                 if (behindDoor.Count(v => v.Type == VertexType.Item && v.SubType == VertexType.Chest && v.Item == null) == 1 && !behindDoor.Any(v => v.Item != null))
                 {
-                    List<(Vertex Chest, List<Vertex> Regions)> keyForKeys;
-                    if (!world.Graph.KeyForKeys.TryGetValue(keyset.Key, out keyForKeys!))
+                    if (!world.Graph.KeyForKeys.TryGetValue(keyset.Key, out var keyForKeys))
                     {
-                        keyForKeys = new();
+                        keyForKeys = [];
                         world.Graph.KeyForKeys.Add(keyset.Key, keyForKeys);
                     }
                     var chest = behindDoor.Where(v => v.Type == VertexType.Item && v.SubType == VertexType.Chest && v.Item == null).First();
-                    keyForKeys.Add((chest, door.Value.SelectMany(v => new Vertex[] { v.A, v.B }).ToList()));
+                    keyForKeys.Add((chest, door.Value.SelectMany(v => new[] { v.A, v.B }).ToList()));
                 }
             }
         }
 
         foreach (var bigkey in world.GetAllItems().Where(i => i.Type == ItemType.BigKey))
         {
-            Queue<Vertex> vertexQueue = new();
+            Queue<BaseVertex> vertexQueue = new();
 
             VertexHashSet visitedWithoutDoor = new(world.Graph);
             vertexQueue.Enqueue(world.GetLocation("start"));
@@ -169,16 +169,14 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
             }
 
             visitedWithoutDoor.SymmetricExceptWith(allVisited);
-            var behindDoor = visitedWithoutDoor.ToList();
-
+            var behindDoor = visitedWithoutDoor.OfType<Vertex>().ToList();
             // Find all the locations behind a door that have a single empty chest and no other item drop
             // Those are "KeyForKey" chest targets and in "Accessibility.Items" mode are eligible to receive
             // a key.
             // TODO: Check behavior when we add pot and enemies as item targets
             if (behindDoor.Count(v => v.Type == VertexType.Item && v.SubType == VertexType.BigChest && v.Item == null) == 1 && behindDoor.Count(v => v.Item != null || v.Type == VertexType.Item) == 1)
             {
-                List<(Vertex Chest, List<Vertex> Regions)> keyForKeys;
-                if (!world.Graph.KeyForKeys.TryGetValue(bigkey, out keyForKeys!))
+                if (!world.Graph.KeyForKeys.TryGetValue(bigkey, out var keyForKeys))
                 {
                     keyForKeys = new();
                     world.Graph.KeyForKeys.Add(bigkey, keyForKeys);
@@ -189,7 +187,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
         }
     }
 
-    private static IItem ItemForDoorUnlock(World world, Vertex a, Vertex b)
+    private static IItem ItemForDoorUnlock(World world, BaseVertex a, BaseVertex b)
     {
         string name = $"UnlockDoor: {a.Name} / {b.Name}";
         return world.GetItem(name);

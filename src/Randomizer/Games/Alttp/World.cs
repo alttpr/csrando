@@ -3,6 +3,7 @@ namespace Randomizer.Games.Alttp;
 using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using Graph = Graph.Graph;
+using BaseVertex = Graph.Vertex;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : IWorld
@@ -55,7 +56,7 @@ public sealed class World : IWorld
     /// Get a vertex by name in this world.
     /// </summary>
     /// <param name="locationName">name to search for</param>
-    public Vertex GetLocation(string locationName)
+    public BaseVertex GetLocation(string locationName)
     {
         return Graph.GetVertex($"{locationName}:{Id}");
     }
@@ -67,10 +68,10 @@ public sealed class World : IWorld
 
     /// <summary>Get all vertices in this world.</summary>
     /// <returns></returns>
-    public IEnumerable<Vertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
+    public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
     /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
+    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
 
     public IItem GetItem(string name)
     {
@@ -126,9 +127,9 @@ public sealed class World : IWorld
         foreach (var modifier in modifiers)
             modifier.AdjustEdges(this, prng);
     }
-    public IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    public IEnumerable<BaseVertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
-        var locations = new List<Vertex>();
+        var locations = new List<BaseVertex>();
         var item = (Item)itemToPlace;
 
         bool onlyReachable = Config.Accessibility != AccessibilityOption.None || !searcher.HasFound(GetItem("Triforce"));
@@ -144,5 +145,10 @@ public sealed class World : IWorld
         }
 
         return locations;
+    }
+    public void TrackPlacedItem(BaseVertex location)
+    {
+        if (location is Vertex { SubType: var subType } && subType is not VertexType.Medallion and not VertexType.Refill and not VertexType.Prize)
+            location.World.PlacedItemCount++;
     }
 }

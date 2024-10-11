@@ -2,7 +2,6 @@
 
 namespace Randomizer.Games.Alttp;
 
-
 /// <summary>Get the sets of items to place.</summary>
 /// <param name="worlds">worlds to get Item pools for</param>
 internal sealed class ItemPooler : IItemPooler
@@ -40,7 +39,7 @@ internal sealed class ItemPooler : IItemPooler
     private SetLocations BuildLocations(IWorld[] worlds)
     {
         var setLocations = new SetLocations();
-        foreach (var vertex in worlds.SelectMany(world => world.GetLocations()))
+        foreach (var vertex in worlds.SelectMany(world => world.GetLocations()).OfType<Vertex>())
         {
             var itemType = vertex.SubType ?? vertex.Type;
             if (_itemLocationTypes[vertex.World].Contains(itemType))

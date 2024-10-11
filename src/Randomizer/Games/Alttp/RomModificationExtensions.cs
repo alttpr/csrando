@@ -1,7 +1,6 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Diagnostics.CodeAnalysis;
-using Randomizer.Graph;
 
 internal static class RomModificationExtensions
 {
