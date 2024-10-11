@@ -41,52 +41,7 @@ public sealed class World : IWorld
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
 
-        foreach (var vertex in VertexCollector.LoadYmlData(this))
-        {
-            Graph.AddVertex(vertex);
-        }
-
-        var edges = new EdgeCollector().GetForWorld(this);
-        foreach (var (condition, data) in edges)
-        {
-            foreach (var edgeData in data.Directed)
-            {
-                var from = GetLocation(edgeData[0]);
-                var to = GetLocation(edgeData[1]);
-                if (from is null || to is null)
-                {
-                    throw new Exception(
-                        "Name Connection Mismatch: " +
-                        $"({edgeData[0]}, {edgeData[1]}) => " +
-                        $"({from}, {to})");
-                }
-                Graph.AddDirected(from, to, condition);
-            }
-            foreach (var edgeData in data.Undirected)
-            {
-                var from = GetLocation(edgeData[0]);
-                var to = GetLocation(edgeData[1]);
-                if (from is null || to is null)
-                {
-                    throw new Exception(
-                        "Undirected Name Connection Mismatch: " +
-                        $"({edgeData[0]}, {edgeData[1]}) => " +
-                        $"({from}, {to})");
-                }
-                Graph.AddDirected(from, to, condition);
-                Graph.AddDirected(to, from, condition);
-            }
-        }
-
-        PruneConfigEdges();
-    }
-
-    private void PruneConfigEdges()
-    {
-        foreach (var v in GetLocations())
-        {
-            v.Edges = v.Edges.Where(e => !e.Condition.Item.Name.StartsWith("ConfigWorld") || StartingItems.Has(e.Condition.Item)).ToList();
-        }
+        DataLoader.Fill(this);
     }
 
     public Inventory ComputeStartingItems()

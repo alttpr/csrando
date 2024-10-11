@@ -8,7 +8,7 @@ using System.Diagnostics;
 [DebuggerDisplay("{Condition}: {From.Name} -> {To.Name}")]
 public sealed class Edge
 {
-    public Vertex From { get; set; }
+    public Vertex From { get; }
     public Vertex To { get; set; }
     public ItemCondition Condition { get; set; }
 

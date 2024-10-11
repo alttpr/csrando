@@ -1,10 +1,65 @@
 using Randomizer.Graph;
 
 namespace Randomizer.Games.Alttp;
-/// <summary>Container for all the vertices.</summary>
-internal class VertexCollector
+
+internal static class DataLoader
 {
-    internal static ItemCondition ConditionFrom(World world, string condition)
+    /// <summary>
+    /// Fills the passed <paramref name="world"/> with a graph describing its configuration.
+    /// </summary>
+    public static void Fill(World world)
+    {
+        var graph = world.Graph;
+
+        foreach (var vertex in LoadVertices(world))
+        {
+            graph.AddVertex(vertex);
+        }
+
+        var edges = LoadEdges(world);
+        foreach (var (condition, data) in edges)
+        {
+            foreach (var edgeData in data.Directed)
+            {
+                var from = world.GetLocation(edgeData[0]);
+                var to = world.GetLocation(edgeData[1]);
+                if (from is null || to is null)
+                {
+                    throw new Exception(
+                        "Name Connection Mismatch: " +
+                        $"({edgeData[0]}, {edgeData[1]}) => " +
+                        $"({from}, {to})");
+                }
+                graph.AddDirected(from, to, condition);
+            }
+            foreach (var edgeData in data.Undirected)
+            {
+                var from = world.GetLocation(edgeData[0]);
+                var to = world.GetLocation(edgeData[1]);
+                if (from is null || to is null)
+                {
+                    throw new Exception(
+                        "Undirected Name Connection Mismatch: " +
+                        $"({edgeData[0]}, {edgeData[1]}) => " +
+                        $"({from}, {to})");
+                }
+                graph.AddDirected(from, to, condition);
+                graph.AddDirected(to, from, condition);
+            }
+        }
+
+        PruneConfigEdges(world);
+    }
+
+    private static void PruneConfigEdges(World world)
+    {
+        foreach (var v in world.GetLocations())
+        {
+            v.Edges = v.Edges.Where(e => !e.Condition.Item.Name.StartsWith("ConfigWorld") || world.StartingItems.Has(e.Condition.Item)).ToList();
+        }
+    }
+
+    private static ItemCondition ConditionFrom(World world, string condition)
     {
         var conditionSplit = condition.Split("|");
         var itemCount = 1;
@@ -16,8 +71,9 @@ internal class VertexCollector
     }
 
     // NOTE: This does not account for door rando.
-    private static readonly HashSet<string> BUNNY_REVIVE = new()
-    {
+    // TODO: world should likely be data rather than code.
+    private static readonly HashSet<string> BUNNY_REVIVE =
+    [
         "Eastern Palace - Entrance",
         "Desert Palace - Main Room - Center",
         "Desert Palace - Right Entrance",
@@ -38,14 +94,14 @@ internal class VertexCollector
         "Turtle Rock - Laser Entrance",
         "Turtle Rock - Eye Bridge",
         "Ganon's Tower - Lobby",
-    };
+    ];
 
     /// <summary>
     /// Get all vertices for a world and map static items to that world. Also
     /// given the world config, we may invert the moonpearl requirements here.
     /// </summary>
     /// <param name="world">world to attach preset items to</param>
-    public static IEnumerable<Vertex> LoadYmlData(World world)
+    private static IEnumerable<Vertex> LoadVertices(World world)
     {
         var vertexData = YamlReader.LoadVertices();
         var structuredVertices = new Dictionary<string, Vertex>();
@@ -443,5 +499,62 @@ internal class VertexCollector
         }
 
         return structuredVertices.Values;
+    }
+
+    /// <summary>
+    /// Given a particular world (configuration), read all the edge data files
+    /// and create edges based on the world to connect the vertices.
+    /// </summary>
+    /// <param name="world">world to attach preset items to</param>
+    private static Dictionary<ItemCondition, DirectedUndirectedPair> LoadEdges(World world)
+    {
+        var edgeData = new Dictionary<string, DirectedUndirectedPair>();
+        YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("base"));
+
+        switch (world.Config.State)
+        {
+            case StateOption.Standard:
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
+                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                break;
+            case StateOption.Inverted:
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("inverted"));
+                // @todo move these once we have the nodes made
+                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edgeData["fixed"].Directed.Add(new() { "start", "Dark Sanctuary" });
+                break;
+            case StateOption.Open:
+            default:
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
+                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edgeData["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
+                break;
+        }
+
+        foreach (var tech in world.Config.Techs)
+        {
+            var fileName = tech switch
+            {
+                TechOption.DungeonBunnyRevival => "dungeon_bunny_revival",
+                _ => throw new Exception("Missing tech enum to file mapping for value: " + tech),
+            };
+            YamlReader.MergeEdges(edgeData, YamlReader.LoadEdgesFromTech(fileName));
+        }
+
+        var returnData = new Dictionary<ItemCondition, DirectedUndirectedPair>();
+        foreach (var (conditionString, edges) in edgeData)
+        {
+            var parts = conditionString.Split("|");
+            var item = world.GetItem(parts[0]);
+            var itemCountPair = new ItemCondition(item, parts.Length > 1 ? int.Parse(parts[1]) : 1);
+
+            returnData[itemCountPair] = new DirectedUndirectedPair
+            {
+                Directed = edges.Directed,
+                Undirected = edges.Undirected,
+            };
+        }
+
+        return returnData;
     }
 }
