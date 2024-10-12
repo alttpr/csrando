@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 public class VertexHashSet : ICollection<Vertex>
 {
@@ -54,6 +55,7 @@ public class VertexHashSet : ICollection<Vertex>
         _count = other._count;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(Vertex item)
     {
         if (_bitArray == null) AllocateBitArray();
@@ -70,6 +72,7 @@ public class VertexHashSet : ICollection<Vertex>
         _count = 0;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Contains(Vertex item)
     {
         return _bitArray != null && _bitArray[item.Id];
@@ -84,6 +87,7 @@ public class VertexHashSet : ICollection<Vertex>
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void IntersectWith(VertexHashSet other)
     {
         if (_bitArray == null || other._bitArray == null)
@@ -108,6 +112,7 @@ public class VertexHashSet : ICollection<Vertex>
         return previous;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void UnionWith(VertexHashSet other)
     {
         if (other._bitArray == null) return;
@@ -118,6 +123,7 @@ public class VertexHashSet : ICollection<Vertex>
         _count = -1;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ExceptWith(VertexHashSet other)
     {
         if (other._bitArray == null) return;
@@ -130,6 +136,7 @@ public class VertexHashSet : ICollection<Vertex>
         _count = -1;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SymmetricExceptWith(VertexHashSet other)
     {
         if (other._bitArray == null) return;

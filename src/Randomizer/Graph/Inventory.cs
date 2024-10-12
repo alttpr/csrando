@@ -2,6 +2,7 @@ namespace Randomizer.Graph;
 
 using System.Collections;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
@@ -103,6 +104,7 @@ public sealed class Inventory
         return _itemCount.GetValueOrDefault(item, 0);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Has(IItem item)
     {
         if (_bits != null)
@@ -116,6 +118,7 @@ public sealed class Inventory
         return _itemCount.ContainsKey(item);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Has(ItemCondition condition)
     {
         if (condition.IsUnconditional)
@@ -125,6 +128,7 @@ public sealed class Inventory
         return HasAtLeast(condition.Item, condition.Count);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool HasAtLeast(IItem item, int count)
     {
         if (count == 1)
