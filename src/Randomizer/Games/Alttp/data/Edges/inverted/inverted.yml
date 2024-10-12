@@ -2,7 +2,6 @@ PowerGlove:
   directed:
     - ["Skull Woods Alcove Portal Nook", "Lost Woods Alcove Portal"]
     - ["Swamplands Portal Nook", "Wetlands Portal Warp"]
-  undirected: []
 
 MagicMirror:
   directed:
@@ -30,4 +29,3 @@ MagicMirror:
     # - ["Turtle Rock Outside Bridge", "East Death Mountain Spiral Cave Balcony"]
     # - ["Turtle Rock Outside Bridge", "East Death Mountain Mimic Balcony"]
     # - ["East Dark Death Mountain Floating Island", "East Death Mountain Floating Island"]
-  undirected: []

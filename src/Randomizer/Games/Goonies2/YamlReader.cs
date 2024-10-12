@@ -129,14 +129,12 @@ public class YamlReader
             if (dest.TryGetValue(entry.Key, out var resultRair))
             {
                 resultRair.Directed.AddRange(entry.Value.Directed);
-                resultRair.Undirected.AddRange(entry.Value.Undirected);
             }
             else
             {
                 dest.Add(entry.Key, new()
                 {
                     Directed = entry.Value.Directed.ToList(),
-                    Undirected = entry.Value.Undirected.ToList(),
                 });
             }
         }
@@ -292,9 +290,6 @@ public enum YamlSpriteFlags
 
 public class DirectedUndirectedPair
 {
-
-    [YamlMember(Alias = "undirected")]
-    public List<List<string>> Undirected { get; set; } = new();
 
     [YamlMember(Alias = "directed")]
     public List<List<string>> Directed { get; set; } = new();

@@ -1,4 +1,3 @@
 fixed:
   directed:
     - ["Ganon's Room", "Ganon"]
-  undirected: []

@@ -2,13 +2,11 @@ AgahnimDefeated:
   directed:
     - ["Hyrule Castle - Outer Court", "Pyramid"]
     - ["Hyrule Castle - Courtyard", "Pyramid"]
-  undirected: []
 
 PowerGlove:
   directed:
     - ["Lost Woods Alcove Portal", "Skull Woods Alcove Portal Nook"]
     - ["Wetlands Portal Warp", "Swamplands Portal Nook"]
-  undirected: []
 
 MagicMirror:
   directed:
@@ -34,4 +32,3 @@ MagicMirror:
     - ["Turtle Rock Outside Bridge", "East Death Mountain Mimic Balcony"]
     - ["East Dark Death Mountain Floating Island", "East Death Mountain Floating Island"]
     - ["Bomb Shoppe", "Link's House"]
-  undirected: []

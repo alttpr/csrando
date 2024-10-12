@@ -32,20 +32,6 @@ internal static class DataLoader
                 }
                 graph.AddDirected(from, to, condition);
             }
-            foreach (var edgeData in data.Undirected)
-            {
-                var from = world.GetLocation(edgeData[0]);
-                var to = world.GetLocation(edgeData[1]);
-                if (from is null || to is null)
-                {
-                    throw new Exception(
-                        "Undirected Name Connection Mismatch: " +
-                        $"({edgeData[0]}, {edgeData[1]}) => " +
-                        $"({from}, {to})");
-                }
-                graph.AddDirected(from, to, condition);
-                graph.AddDirected(to, from, condition);
-            }
         }
 
         PruneConfigEdges(world);
@@ -551,7 +537,6 @@ internal static class DataLoader
             returnData[itemCountPair] = new DirectedUndirectedPair
             {
                 Directed = edges.Directed,
-                Undirected = edges.Undirected,
             };
         }
 

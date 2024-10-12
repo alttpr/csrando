@@ -2,4 +2,3 @@ PegasusBoots:
   directed:
     - ["South Shore Falls", "South Shore Falls Waters"]
     - ["Zora's Falls Pool", "Waterfall Fairy"]
-  undirected: []

@@ -3,63 +3,48 @@ L2Sword:
   directed:
     - ["Meta", "L1Sword"]
     - ["Meta", "MasterSword"]
-  undirected: []
 ProgressiveSword|2:
   directed:
     - ["Meta", "MasterSword"]
-  undirected: []
 MasterSword:
   directed:
     - ["Meta", "MasterSword"]
-  undirected: []
 L3Sword:
   directed:
     - ["Meta", "MasterSword"]
-  undirected: []
 L4Sword:
   directed:
     - ["Meta", "L3Sword"]
-  undirected: []
 ProgressiveGlove:
   directed:
     - ["Meta", "PowerGlove"]
-  undirected: []
 ProgressiveGlove|2:
   directed:
     - ["Meta", "TitansMitt"]
-  undirected: []
 TitansMitt:
   directed:
     - ["Meta", "PowerGlove"]
-  undirected: []
 ProgressiveShield|3:
   directed:
     - ["Meta", "MirrorShield"]
-  undirected: []
 ProgressiveBow:
   directed:
     - ["Meta", "BowAndArrows"]
-  undirected: []
 ProgressiveBow|2:
   directed:
     - ["Meta", "BowAndSilverArrows"]
-  undirected: []
 LogicalBottle:
   directed:
     - ["Meta", "BottleMagicBar1"]
-  undirected: []
 LogicalBottle|2:
   directed:
     - ["Meta", "BottleMagicBar2"]
-  undirected: []
 LogicalBottle|3:
   directed:
     - ["Meta", "BottleMagicBar3"]
-  undirected: []
 LogicalBottle|4:
   directed:
     - ["Meta", "BottleMagicBar4"]
-  undirected: []
 HalfMagic:
   directed:
     - ["Meta", "HalfMagicBar"]
@@ -67,4 +52,3 @@ HalfMagic:
     - ["BottleMagicBar2", "HalfMagicBar2"]
     - ["BottleMagicBar3", "HalfMagicBar3"]
     - ["BottleMagicBar4", "HalfMagicBar4"]
-  undirected: []
