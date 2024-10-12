@@ -18,8 +18,8 @@ The following example passes two worlds with individual configuration:
         "Language": "en",
         "Alttp": {
             "RomHardMode": 0,
-            "CrystalsGanonChoices": [0, 7],
-            "CrystalsTowerChoices": [3],
+            "CrystalsGanonChoices": ["0", "7"],
+            "CrystalsTowerChoices": ["3"],
             "Goal": "Ganon",
             "Accessibility": "Items",
             "State": "Open",
@@ -48,8 +48,8 @@ The following example passes two worlds with individual configuration:
         "Language": "de",
         "Alttp": {
             "RomHardMode": 1,
-            "CrystalsGanon": 3,
-            "CrystalsTower": 3,
+            "CrystalsGanon": "3",
+            "CrystalsTower": "3",
             "Goal": "Ganon",
             "Accessibility": "Items",
             "State": "Open",

@@ -52,8 +52,7 @@ public sealed class Randomizer
         {
             randomizerConfigs[i].SelectRandomValues(PRNG);
 
-            // TODO: this depends on chosen settings and should either be a game-specific world (single game) or a combined world (multi game)
-            Worlds[i] = new World(i, randomizerConfigs[i], Graph);
+            Worlds[i] = WorldFactory.CreateWorld(i, randomizerConfigs[i], Graph);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
             // TODO: this could probably go into the ctor if we had the PRNG available there.
             Worlds[i].ApplyWorldModifications(PRNG);

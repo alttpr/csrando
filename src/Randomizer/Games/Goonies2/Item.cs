@@ -1,18 +1,13 @@
-﻿namespace Randomizer.Games.Alttp;
+﻿namespace Randomizer.Games.Goonies2;
 
 using Randomizer.Graph;
 
-/// <summary>
-/// @todo what item type is the hammer?
-/// </summary>
 public enum ItemType
 {
-    Medallion,
     Meta,
     SmallKey,
-    BigKey,
-    Map,
     Compass,
+    Goonie,
 }
 
 public sealed class Item : IItem
@@ -22,6 +17,7 @@ public sealed class Item : IItem
     public IWorld World { get; }
     public ItemType Type { get; }
     public byte[]? Bytes { get; }
+    public byte[]? Gfx { get; }
 
     /// <summary>
     /// Create a new Item.
