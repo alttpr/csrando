@@ -162,15 +162,15 @@ public class VertexHashSet : ICollection<Vertex>
         return new Enumerator(this);
     }
 
-    private sealed class Enumerator(VertexHashSet vertices) : IEnumerator, IEnumerator<Vertex>
+    private struct Enumerator(VertexHashSet vertices) : IEnumerator, IEnumerator<Vertex>
     {
         private int _position = -1;
 
-        public Vertex Current => vertices.Graph.GetVertex(_position);
+        public readonly Vertex Current => vertices.Graph.GetVertex(_position);
 
-        object IEnumerator.Current => Current;
+        readonly object IEnumerator.Current => Current;
 
-        public void Dispose()
+        public readonly void Dispose()
         {
         }
 
