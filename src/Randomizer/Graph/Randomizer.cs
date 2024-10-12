@@ -52,10 +52,8 @@ public sealed class Randomizer
         {
             randomizerConfigs[i].SelectRandomValues(PRNG);
 
-            Worlds[i] = WorldFactory.CreateWorld(i, randomizerConfigs[i], Graph);
+            Worlds[i] = WorldFactory.CreateWorld(i, randomizerConfigs[i], Graph, PRNG);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
-            // TODO: this could probably go into the ctor if we had the PRNG available there.
-            Worlds[i].ApplyWorldModifications(PRNG);
 
             Graph.AddDirected(_start, Worlds[i].GetLocation("start"), Worlds[i].GetItem("fixed"));
         }

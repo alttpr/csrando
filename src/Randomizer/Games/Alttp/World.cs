@@ -20,7 +20,7 @@ public sealed class World : IWorld
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
-    public World(int id, WorldConfig randomizerConfig, Graph graph)
+    public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
     {
         Id = id;
         WorldConfig = randomizerConfig;
@@ -43,6 +43,26 @@ public sealed class World : IWorld
         StartingItems = new Inventory(items.ToArray());
 
         DataLoader.Fill(this);
+
+        List<IWorldModifier> modifiers =
+        [
+            new GameWinnerer(),
+            new ShopFiller(),
+            new DoorShuffler(),
+            new EntranceShuffler(),
+            new DarknessGraphifier(),
+            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
+            // (and placing bosses in their respective rooms already)
+            new BossShuffler(),
+            new EnemyShuffler(),
+            new BunnyGraphifier(),
+            new PrizePackShuffler(),
+            new DoorReplacer(),
+            new DungeonPegStateCopier(),
+        ];
+
+        foreach (var modifier in modifiers)
+            modifier.AdjustEdges(this, prng);
     }
 
     public Inventory ComputeStartingItems()
@@ -105,28 +125,7 @@ public sealed class World : IWorld
     {
         return _allItems.Values;
     }
-    public void ApplyWorldModifications(PRNG prng)
-    {
-        List<IWorldModifier> modifiers =
-        [
-            new GameWinnerer(),
-            new ShopFiller(),
-            new DoorShuffler(),
-            new EntranceShuffler(),
-            new DarknessGraphifier(),
-            // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
-            // (and placing bosses in their respective rooms already)
-            new BossShuffler(),
-            new EnemyShuffler(),
-            new BunnyGraphifier(),
-            new PrizePackShuffler(),
-            new DoorReplacer(),
-            new DungeonPegStateCopier(),
-        ];
 
-        foreach (var modifier in modifiers)
-            modifier.AdjustEdges(this, prng);
-    }
     public IEnumerable<BaseVertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();

@@ -18,7 +18,7 @@ public sealed class World : IWorld
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
-    public World(int id, WorldConfig randomizerConfig, Graph graph)
+    public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
     {
         Id = id;
         WorldConfig = randomizerConfig;
@@ -93,16 +93,6 @@ public sealed class World : IWorld
     public IEnumerable<Item> GetAllItems()
     {
         return _allItems.Values;
-    }
-    public void ApplyWorldModifications(PRNG prng)
-    {
-        List<IWorldModifier> modifiers =
-        [
-            new EntranceShuffler(),
-        ];
-
-        foreach (var modifier in modifiers)
-            modifier.AdjustEdges(this, prng);
     }
     public IEnumerable<BaseVertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {

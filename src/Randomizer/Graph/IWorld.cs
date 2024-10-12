@@ -22,10 +22,6 @@ public interface IWorld
     IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(v => v.Type == type);
     bool HasLocation(string locationName);
 
-    /// <summary>
-    /// Apply modifications to this world that affect randomization (such as entrance shuffle, enemy shuffle etc.)
-    /// </summary>
-    void ApplyWorldModifications(PRNG prng);
     IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
     /// <summary>
     /// Tracks the item for <paramref name="location"/> as placed. This might affect a game's ability to determine how many items were placed in total.
