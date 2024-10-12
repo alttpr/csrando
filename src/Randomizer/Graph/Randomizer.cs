@@ -50,8 +50,6 @@ public sealed class Randomizer
         Worlds = new IWorld[randomizerConfigs.Length];
         for (int i = 0; i < randomizerConfigs.Length; ++i)
         {
-            randomizerConfigs[i].SelectRandomValues(PRNG);
-
             Worlds[i] = WorldFactory.CreateWorld(i, randomizerConfigs[i], Graph, PRNG);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
 

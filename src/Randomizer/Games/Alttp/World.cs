@@ -12,7 +12,7 @@ public sealed class World : IWorld
     public Graph Graph { get; }
     public Inventory StartingItems { get; }
     public WorldConfig WorldConfig { get; }
-    public AlttpConfig Config { get; }
+    public Config Config { get; }
     private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
     public (byte[] Underworld, byte[] Overworld, byte[] Sets) SpriteSheets { get; set; } = ([], [], []);
@@ -26,6 +26,8 @@ public sealed class World : IWorld
         WorldConfig = randomizerConfig;
         Config = randomizerConfig.Alttp ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda: A Link to the Past");
         Graph = graph;
+
+        Config.SelectRandomValues(prng);
 
         List<IItem> items = [GetItem("fixed")];
         items.Add(GetItem($"ConfigWorldWeapon{Config.Weapon}"));

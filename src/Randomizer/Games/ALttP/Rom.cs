@@ -4,14 +4,14 @@ using System.Buffers.Binary;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
-public sealed class AlttpRom : GameRom
+public sealed class Rom : GameRom
 {
     private readonly Text _text;
     private readonly Credits _credits;
 
     internal InitialSram InitialSram { get; }
 
-    public AlttpRom(Rom rom, string language, int offset)
+    public Rom(RomModifications.Rom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
@@ -571,7 +571,7 @@ public sealed class AlttpRom : GameRom
         // 1 for TakeAny caves (can only get one item, not both), 3 for regular shops
         public int ObtainableInventorySize { get; }
         public Shop() => throw new NotImplementedException("This is not a proper shop, but a placeholder.");
-        public void WriteExtraData(AlttpRom rom) => throw new NotImplementedException();
+        public void WriteExtraData(Rom rom) => throw new NotImplementedException();
         public byte[] GetBytes(int sramOffset) => throw new NotImplementedException();
         public IEnumerable<ShopItem> GetInventory() => throw new NotImplementedException();
     }

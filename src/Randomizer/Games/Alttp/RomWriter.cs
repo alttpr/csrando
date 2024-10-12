@@ -9,7 +9,7 @@ public static class RomWriter
     public static void Write(BaseRom baseRom, World world, PRNG prng)
     {
         // FIXME: this offset likely needs to come from above, we only know with a full game selection where the individual games go
-        var rom = new AlttpRom(baseRom, world.WorldConfig.Language, offset: 0);
+        var rom = new Rom(baseRom, world.WorldConfig.Language, offset: 0);
 
         var config = world.Config;
         var heartColor = config.HeartColor; //option('heartcolor')
@@ -29,7 +29,7 @@ public static class RomWriter
         // TODO: tournament mode
     }
 
-    private static void WriteWorld(World world, AlttpRom rom, PRNG prng)
+    private static void WriteWorld(World world, Rom rom, PRNG prng)
     {
         var config = world.Config;
 
@@ -322,7 +322,7 @@ public static class RomWriter
         ]);
     }
 
-    private static void SetProgressionText(World world, AlttpRom rom, PRNG prng)
+    private static void SetProgressionText(World world, Rom rom, PRNG prng)
     {
         var config = world.Config;
         string language = world.WorldConfig.Language;
@@ -483,7 +483,7 @@ public static class RomWriter
         return text;
     }
 
-    private static void SetHintText(World world, AlttpRom rom, PRNG prng)
+    private static void SetHintText(World world, Rom rom, PRNG prng)
     {
         var config = world.Config;
         if (!config.EnableHints)
@@ -591,7 +591,7 @@ public static class RomWriter
             rom.SetText(tiles[i], text);
         }
     }
-    private static void SetCreditsText(World world, AlttpRom rom, PRNG prng)
+    private static void SetCreditsText(World world, Rom rom, PRNG prng)
     {
         string language = world.WorldConfig.Language;
         rom.SetCredit("bridge", prng.GetRandomElement(YamlReader.LoadCreditsForDMBridge(language)));
@@ -609,7 +609,7 @@ public static class RomWriter
     /// </summary>
     /// <param name="rom">Rom to write data to</param>
     /// <param name="world"></param>
-    private static void SetEscapeFills(World world, AlttpRom rom)
+    private static void SetEscapeFills(World world, Rom rom)
     {
         var config = world.Config;
 
@@ -712,7 +712,7 @@ public static class RomWriter
     /// </summary>
     /// <param name="rom">ROM to write data to</param>
     /// <param name="world"></param>
-    private static void WritePrizePacksToRom(World world, AlttpRom rom)
+    private static void WritePrizePacksToRom(World world, Rom rom)
     {
         var config = world.Config;
 
@@ -741,7 +741,7 @@ public static class RomWriter
         }
     }
 
-    private static void WriteEntrancesToRom(World world, AlttpRom rom)
+    private static void WriteEntrancesToRom(World world, Rom rom)
     {
         var sourcesByTarget = world.Graph.GetVertices()
             .Where(v => v.World == world)
@@ -806,7 +806,7 @@ public static class RomWriter
     /// <param name="world">world to pull config from</param>
     /// <param name="rom">rom to write data to</param>
     /// <param name="prng">prng to use for randomization</param>
-    private static void WriteEnemyDamageToRom(World world, AlttpRom rom, PRNG prng)
+    private static void WriteEnemyDamageToRom(World world, Rom rom, PRNG prng)
     {
         if (world.Config.EnemyDamage == EnemyDamageOption.Default)
             return;
@@ -845,7 +845,7 @@ public static class RomWriter
     /// <param name="world">world to pull config from</param>
     /// <param name="rom">rom to write data to</param>
     /// <param name="prng">prng to use for randomization</param>
-    private static void WriteEnemyHealthToRom(World world, AlttpRom rom, PRNG prng)
+    private static void WriteEnemyHealthToRom(World world, Rom rom, PRNG prng)
     {
         if (world.Config.EnemyHealth == EnemyHealthOption.Default)
             return;
@@ -882,7 +882,7 @@ public static class RomWriter
     /// </summary>
     /// <param name="world">world to pull config from</param>
     /// <param name="rom">rom to write data to</param>
-    private static void WriteEnemiesToRom(World world, AlttpRom rom)
+    private static void WriteEnemiesToRom(World world, Rom rom)
     {
         var enemies = world.GetLocationsOfType(VertexType.Mob);
         var enemyRooms = enemies.ToLookup(enemy => enemy.RoomId);

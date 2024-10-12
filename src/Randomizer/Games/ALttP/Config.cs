@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Randomizer.Graph;
 
-public class AlttpConfig
+public class Config
 {
     public static readonly string[] RandomCrystals = ["0", "1", "2", "3", "4", "5", "6", "7"];
 

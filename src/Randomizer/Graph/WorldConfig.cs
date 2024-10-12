@@ -1,6 +1,6 @@
 ﻿namespace Randomizer.Graph;
 
-using global::Randomizer.Games.Alttp;
+using AlttpConfig = global::Randomizer.Games.Alttp.Config;
 using Goonies2Config = global::Randomizer.Games.Goonies2.Config;
 
 public class WorldConfig
@@ -9,9 +9,4 @@ public class WorldConfig
     public string Language { get; init; } = "en";
     public AlttpConfig? Alttp { get; init; }
     public Goonies2Config? Goonies2 { get; init; }
-
-    public void SelectRandomValues(PRNG prng)
-    {
-        Alttp?.SelectRandomValues(prng);
-    }
 }
