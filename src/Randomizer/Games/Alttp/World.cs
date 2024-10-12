@@ -5,7 +5,11 @@ using Randomizer.Graph;
 using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;
 
-/// <summary>Model of a world in which a player would be playing.</summary>
+/// <summary>
+/// Model of a world in which a player would be playing.
+///
+/// Walk thru walls: 7E037F01
+/// </summary>
 public sealed class World : IWorld
 {
     public int Id { get; }

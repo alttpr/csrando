@@ -1,15 +1,12 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
-using global::Randomizer.Games.Alttp;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// This is the primary entry point for randomization. A new object is created
 /// with a config array dictating how the worlds should be created and prepping
 /// all graph infomation for those worlds.
-///
-/// Walk thru walls: 7E037F01
 /// </summary>
 public sealed class Randomizer
 {
