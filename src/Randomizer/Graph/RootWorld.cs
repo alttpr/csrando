@@ -19,6 +19,7 @@ internal sealed class RootWorld(Graph graph) : IWorld
     bool IWorld.HasLocation(string locationName) => throw _doNotUseThis;
     public IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts) => throw _doNotUseThis;
     public void TrackPlacedItem(Vertex location) => throw _doNotUseThis;
+    public bool IsWinnable(Vertex start, Inventory startingInventory) => false;
 }
 
 internal sealed class RootVertex : Vertex { }

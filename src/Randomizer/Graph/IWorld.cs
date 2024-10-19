@@ -27,6 +27,12 @@ public interface IWorld
     /// Tracks the item for <paramref name="location"/> as placed. This might affect a game's ability to determine how many items were placed in total.
     /// </summary>
     void TrackPlacedItem(Vertex location);
+    /// <summary>
+    /// Determines whether this world can be won when starting from <paramref name="start"/> with <paramref name="startingInventory"/>.
+    /// </summary>
+    /// <param name="start">Starting location of the player.</param>
+    /// <param name="startingInventory">Starting items the player has innate access to.</param>
+    bool IsWinnable(Vertex start, Inventory startingInventory);
 
     WorldConfig WorldConfig { get; }
     Graph Graph { get; }

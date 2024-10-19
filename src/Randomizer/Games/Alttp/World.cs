@@ -2,8 +2,8 @@ namespace Randomizer.Games.Alttp;
 
 using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
-using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;
+using Graph = Graph.Graph;
 
 /// <summary>
 /// Model of a world in which a player would be playing.
@@ -17,7 +17,7 @@ public sealed class World : IWorld
     public Inventory StartingItems { get; }
     public WorldConfig WorldConfig { get; }
     public Config Config { get; }
-    private readonly Dictionary<string, Item> _allItems = new();
+    private readonly Dictionary<string, Item> _allItems = [];
     public ushort PlacedItemCount { get; set; }
     public (byte[] Underworld, byte[] Overworld, byte[] Sets) SpriteSheets { get; set; } = ([], [], []);
 
@@ -155,5 +155,46 @@ public sealed class World : IWorld
     {
         if (location is Vertex { SubType: var subType } && subType is not VertexType.Medallion and not VertexType.Refill and not VertexType.Prize)
             location.World.PlacedItemCount++;
+    }
+    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
+    {
+        Searcher searcher = new(Graph, start, startingInventory);
+
+        if (!searcher.HasFound(GetItem("Triforce")))
+        {
+#if DEBUG
+            string[] interrestingItems =
+            [
+                "Crystal1", "Crystal2", "Crystal3", "Crystal4", "Crystal5", "Crystal6", "Crystal7",
+                "PendantOfCourage", "PendantOfWisdom", "PendantOfPower",
+                "AgahnimDefeated", "Agahnim2Defeated",
+            ];
+            foreach (string item in interrestingItems)
+            {
+                var worldItem = GetItem(item);
+                Console.WriteLine("World {0}: {1} {2}obtainable at {3}",
+                    Id,
+                    item,
+                    searcher.HasFound(worldItem) ? "" : "NOT ",
+                    Graph.GetVertices().FirstOrDefault(v => v.World == (World?)this && v.Item == worldItem)?.Name);
+            }
+            string[] interrestingLocations =
+            [
+                "Ganon's Tower - Bob's Torch", "Ganon's Tower - Pre-Moldorm Chest", "Ganon's Tower - Moldorm Chest"
+            ];
+            foreach (string location in interrestingLocations)
+            {
+                var locationVertex = GetLocation(location);
+                Console.WriteLine("World {0}: {1} {2}reachable at {3}",
+                    Id,
+                    locationVertex.Item?.Name ?? "location",
+                    searcher.HasVisited(locationVertex) ? "" : "NOT ",
+                    locationVertex.Name);
+            }
+#endif
+            return false;
+        }
+
+        return true;
     }
 }

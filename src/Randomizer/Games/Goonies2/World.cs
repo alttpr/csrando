@@ -107,4 +107,8 @@ public sealed class World : IWorld
     {
         location.World.PlacedItemCount++;
     }
+    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
+    {
+        throw new NotImplementedException("Veetorp doesn't know if anyone can win Goonies 2");
+    }
 }

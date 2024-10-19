@@ -82,50 +82,7 @@ public sealed class Randomizer
     }
 
     /// <summary>
-    /// Check if the worlds are winnable. This is done by creating a searcher.
+    /// Check if the worlds are winnable. This is mostly a sanity check, since items should never be placed in a way that makes the game unwinnable.
     /// </summary>
-    public bool IsWinnable()
-    {
-        Searcher searcher = new(Graph, _start, _startingItems);
-
-        foreach (var world in Worlds)
-        {
-            if (!searcher.HasFound(world.GetItem("Triforce")))
-            {
-#if DEBUG
-                string[] interrestingItems =
-                [
-                    "Crystal1", "Crystal2", "Crystal3", "Crystal4", "Crystal5", "Crystal6", "Crystal7",
-                    "PendantOfCourage", "PendantOfWisdom", "PendantOfPower",
-                    "AgahnimDefeated", "Agahnim2Defeated",
-                ];
-                foreach (string item in interrestingItems)
-                {
-                    var worldItem = world.GetItem(item);
-                    System.Console.WriteLine("World {0}: {1} {2}obtainable at {3}",
-                        world.Id,
-                        item,
-                        searcher.HasFound(worldItem) ? "" : "NOT ",
-                        Graph.GetVertices().FirstOrDefault(v => v.World == world && v.Item == worldItem)?.Name);
-                }
-                string[] interrestingLocations =
-                [
-                    "Ganon's Tower - Bob's Torch", "Ganon's Tower - Pre-Moldorm Chest", "Ganon's Tower - Moldorm Chest"
-                ];
-                foreach (string location in interrestingLocations)
-                {
-                    var locationVertex = world.GetLocation(location);
-                    System.Console.WriteLine("World {0}: {1} {2}reachable at {3}",
-                        world.Id,
-                        locationVertex.Item?.Name ?? "location",
-                        searcher.HasVisited(locationVertex) ? "" : "NOT ",
-                        locationVertex.Name);
-                }
-#endif
-                return false;
-            }
-        }
-
-        return true;
-    }
+    public bool IsWinnable() => Worlds.All(world => world.IsWinnable(_start, _startingItems));
 }
