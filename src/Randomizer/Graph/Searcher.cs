@@ -34,12 +34,16 @@ public class Searcher
         bool newItemsFound;
         do
         {
-            var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, _searchStarts);
-            _visited.UnionWith(newlyVisited);
-            _searchStarts.Clear();
-            _searchStarts.UnionWith(newSearchStarts);
+            do
+            {
+                var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, _searchStarts);
+                _visited.UnionWith(newlyVisited);
+                _searchStarts.Clear();
+                _searchStarts.UnionWith(newSearchStarts);
 
-            newItemsFound = CollectItems(inventory, _visited, _collected);
+                newItemsFound = CollectItems(inventory, _visited, _collected);
+            } while (newItemsFound);
+
             if (DoorSearch(inventory))
                 newItemsFound = true;
         } while (newItemsFound);
