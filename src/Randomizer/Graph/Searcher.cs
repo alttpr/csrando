@@ -26,8 +26,7 @@ public class Searcher
         _graph = graph;
         _visited = new(graph);
         _collected = new(graph);
-        _searchStarts = new(graph);
-        _searchStarts.Add(start);
+        _searchStarts = new(graph) { start };
         _inventory = inventory;
         _setLocations = setLocations ?? new();
 

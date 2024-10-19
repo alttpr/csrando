@@ -1,0 +1,150 @@
+Nothing:
+  byte: 0x00
+  gfx: 0x00
+DivingSuit:
+  byte: 0x01
+  gfx: 0x9b
+Transceiver:
+  byte: 0x02
+  gfx: 0x9d
+Glasses:
+  byte: 0x03
+  gfx: 0x96
+Yo-Yo:
+  byte: 0x04
+  gfx: null
+Ladder:
+  byte: 0x05
+  gfx: 0x9c
+Hammer:
+  byte: 0x06
+  gfx: 0x93
+Candle:
+  byte: 0x07
+  gfx: 0x98
+Helmet:
+  byte: 0x08
+  gfx: 0x99
+Raincoat:
+  byte: 0x09
+  gfx: 0x9a
+HyperShoes:
+  byte: 0x0a
+  gfx: 0x94
+JumpShoes:
+  byte: 0x0b
+  gfx: 0x9e
+Vest:
+  byte: 0x0c
+  gfx: 0x95
+KeysC0:
+  byte: 0xc0
+  gfx: 0xa0
+KeysC1:
+  byte: 0xc1
+  gfx: 0xa0
+KeysC2:
+  byte: 0xc2
+  gfx: 0xa0
+KeysC3:
+  byte: 0xc3
+  gfx: 0xa0
+BombsC4:
+  byte: 0xc4
+  gfx: 0xa1
+BombsC5:
+  byte: 0xc5
+  gfx: 0xa1
+BombsC6:
+  byte: 0xc6
+  gfx: 0xa1
+BombsC7:
+  byte: 0xc7
+  gfx: 0xa1
+FireboxC8:
+  byte: 0xc8
+  gfx: 0xa2
+FireboxC9:
+  byte: 0xc9
+  gfx: 0xa2
+FireboxCA:
+  byte: 0xca
+  gfx: 0xa2
+FireboxCB:
+  byte: 0xcb
+  gfx: 0xa2
+Boomerang:
+  byte: 0xcc
+  gfx: 0x97
+Slingshot:
+  byte: 0xcd
+  gfx: 0xdf
+DeviceF0:
+  byte: 0xf0
+  gfx: 0x9f
+DeviceF1:
+  byte: 0xf1
+  gfx: 0x9f
+DeviceF2:
+  byte: 0xf2
+  gfx: 0x9f
+DeviceF3:
+  byte: 0xf3
+  gfx: 0x9f
+DeviceF4:
+  byte: 0xf4
+  gfx: 0x9f
+DeviceF5:
+  byte: 0xf5
+  gfx: 0x9f
+GoonieE0:
+  byte: 0xe0
+  gfx: 0xa4
+GoonieE1:
+  byte: 0xe1
+  gfx: 0xa3
+GoonieE2:
+  byte: 0xe2
+  gfx: 0xa4
+GoonieE3:
+  byte: 0xe3
+  gfx: 0xa4
+GoonieE4:
+  byte: 0xe4
+  gfx: 0xa3
+GoonieE5:
+  byte: 0xe5
+  gfx: 0xa4
+Annie:
+  byte: 0xef
+  gfx: 0x07
+Hint1:
+  byte: 0x4c
+  gfx: null
+Hint2:
+  byte: 0x4e
+  gfx: null
+Hint3:
+  byte: 0x52
+  gfx: null
+Hint4:
+  byte: 0x54
+  gfx: null
+Hint5:
+  byte: 0x53
+  gfx: null
+Hint6:
+  byte: 0x50
+  gfx: null
+Hint7:
+  byte: 0x4f
+  gfx: null
+Hint8:
+  byte: 0x51
+  gfx: null
+Hint9:
+  byte: 0x4d
+  gfx: null
+Hint10:
+  byte: 0x55
+  gfx: null
