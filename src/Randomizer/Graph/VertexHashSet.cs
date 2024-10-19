@@ -176,13 +176,16 @@ public class VertexHashSet : ICollection<Vertex>
 
         public bool MoveNext()
         {
+            if (vertices._bitArray is not { } bitArray)
+                return false;
+
             for (; ; )
             {
                 _position++;
-                if (vertices._bitArray == null || _position == vertices._bitArray.Length) break;
-                if (vertices._bitArray[_position]) break;
+                if (_position == bitArray.Length) break;
+                if (bitArray[_position]) break;
             }
-            return vertices._bitArray != null && _position < vertices._bitArray!.Length;
+            return _position < bitArray.Length;
         }
 
         public void Reset()
