@@ -12,7 +12,6 @@ public sealed class Graph
     private readonly Dictionary<string, Vertex> _verticesByName = [];
     public Dictionary<IItem /* actualKey */, Dictionary<IItem /* doorSpecificUnlockItem */, HashSet<(Vertex A, Vertex B)>>> Doors { get; } = [];
     public Dictionary<IItem /* actualKey */, HashSet<Vertex>> FixedKeys { get; } = [];
-    public Dictionary<IItem /* actualKey */, List<(Vertex Chest, List<Vertex> Regions)>> KeyForKeys { get; } = [];
 
     /// <summary>
     /// All known items, across all worlds and games. Use <see cref="RegisterItem"/> to allocate an item id usable with the <see cref="Inventory"/>.

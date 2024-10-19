@@ -20,6 +20,8 @@ public sealed class World : IWorld
     private readonly Dictionary<string, Item> _allItems = [];
     public ushort PlacedItemCount { get; set; }
     public (byte[] Underworld, byte[] Overworld, byte[] Sets) SpriteSheets { get; set; } = ([], [], []);
+    public Dictionary<IItem /* actualKey */, List<(BaseVertex Chest, List<BaseVertex> Regions)>> KeyForKeys { get; } = [];
+
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -142,7 +144,7 @@ public sealed class World : IWorld
 
         if (Config.Accessibility != AccessibilityOption.Locations && (item.Type == ItemType.SmallKey || item.Type == ItemType.BigKey))
         {
-            if (Graph.KeyForKeys.TryGetValue(item, out var keyForKeys))
+            if (KeyForKeys.TryGetValue(item, out var keyForKeys))
             {
                 var chests = keyForKeys.Where(v => v.Chest.Item == null && (v.Regions.Count == 0 || v.Regions.Any(v2 => searcher.HasVisited(v2)))).Select(v => v.Chest);
                 locations.AddRange(chests);

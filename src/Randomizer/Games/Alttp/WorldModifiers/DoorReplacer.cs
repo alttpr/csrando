@@ -131,10 +131,10 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
                 // TODO: Check behavior when we add pot and enemies as item targets
                 if (behindDoor.Count(v => v.Type == VertexType.Item && v.SubType == VertexType.Chest && v.Item == null) == 1 && !behindDoor.Any(v => v.Item != null))
                 {
-                    if (!world.Graph.KeyForKeys.TryGetValue(keyset.Key, out var keyForKeys))
+                    if (!world.KeyForKeys.TryGetValue(keyset.Key, out var keyForKeys))
                     {
                         keyForKeys = [];
-                        world.Graph.KeyForKeys.Add(keyset.Key, keyForKeys);
+                        world.KeyForKeys.Add(keyset.Key, keyForKeys);
                     }
                     var chest = behindDoor.Where(v => v.Type == VertexType.Item && v.SubType == VertexType.Chest && v.Item == null).First();
                     keyForKeys.Add((chest, door.Value.SelectMany(v => new[] { v.A, v.B }).ToList()));
@@ -176,10 +176,10 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
             // TODO: Check behavior when we add pot and enemies as item targets
             if (behindDoor.Count(v => v.Type == VertexType.Item && v.SubType == VertexType.BigChest && v.Item == null) == 1 && behindDoor.Count(v => v.Item != null || v.Type == VertexType.Item) == 1)
             {
-                if (!world.Graph.KeyForKeys.TryGetValue(bigkey, out var keyForKeys))
+                if (!world.KeyForKeys.TryGetValue(bigkey, out var keyForKeys))
                 {
                     keyForKeys = new();
-                    world.Graph.KeyForKeys.Add(bigkey, keyForKeys);
+                    world.KeyForKeys.Add(bigkey, keyForKeys);
                 }
                 var chest = behindDoor.Where(v => v.Type == VertexType.Item && v.SubType == VertexType.BigChest && v.Item == null).First();
                 keyForKeys.Add((chest, []));
