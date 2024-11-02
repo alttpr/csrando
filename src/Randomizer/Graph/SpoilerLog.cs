@@ -16,14 +16,16 @@ public class SpoilerLog
     {
         _graph = randomizer.Graph;
         var world = randomizer.Worlds[0];
-        // FIXME: this is currently game-specific
-        var config = world.WorldConfig.Alttp!;
 
         Spoiler = new Dictionary<string, Dictionary<string, string>>()
         {
             { "Equipped", new() },
             { "Locations", new() }
         };
+
+        // FIXME: this is currently game-specific
+        if (world.WorldConfig.Alttp is not { } config)
+            return;
 
         int i = 0;
         foreach (var item in config.StartingEquipment)
