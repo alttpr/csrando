@@ -1,3 +1,42 @@
 regions:
   - name: "Back - Red Caves"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 0e"
+        - "Door 16"
+        - "Door 34"
+        - "Door 35"
+        - "Door 36"
+        - "Door 37"
+        - "Door 38"
+
+  - name: "Door 0e"
+    dark: true
+    connections:
+      fixed:
+        - "Back - Red Caves"
+  - name: "Door 16"
+    connections:
+      fixed:
+        - "Back - Red Caves"
+  - name: "Door 34"
+    connections:
+      fixed:
+        - "Back - Red Caves"
+  - name: "Door 35"
+    connections:
+      fixed:
+        - "Back - Red Caves"
+  - name: "Door 36"
+    dark: true
+    connections:
+      fixed:
+        - "Back - Red Caves"
+  - name: "Door 37"
+    connections:
+      fixed:
+        - "Back - Red Caves"
+  - name: "Door 38"
+    connections:
+      fixed:
+        - "Back - Red Caves"

@@ -1,3 +1,15 @@
 regions:
   - name: "Front - Gray Basement Right"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 2f"
+        - "Door 30"
+
+  - name: "Door 2f"
+    connections:
+      fixed:
+        - "Front - Gray Basement Right"
+  - name: "Door 30"
+    connections:
+      fixed:
+        - "Front - Gray Basement Right"

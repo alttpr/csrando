@@ -1,3 +1,71 @@
 regions:
   - name: "Front - Lava Pit"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 13"
+        - "Door 2a"
+        - "Door 31"
+        - "Door 48"
+
+  - name: "Door 13"
+    connections:
+      fixed:
+        - "Front - Lava Pit"
+        - "Room 2b"
+  - name: "Door 2a"
+    connections:
+      fixed:
+        - "Front - Lava Pit"
+        - "Room 68"
+  - name: "Door 31"
+    connections:
+      fixed:
+        - "Front - Lava Pit"
+        - "Room 75"
+  - name: "Door 48"
+    connections:
+      fixed:
+        - "Front - Lava Pit"
+        - "Room 7b"
+
+  - name: "Room 68" # Warp Zone
+    # FIXME: model events
+    #event:
+    #  - name: "Warp Zone"
+    connections:
+      fixed:
+        - "Front - Lava Pit"
+        - "Door 2a"
+        - "Door 43"
+        - "Room 69"
+  - name: "Room 69" # Alien
+    # FIXME: model events
+    #event:
+    #  - name: "Alien"
+    connections:
+      fixed:
+        - "Room 68"
+  - name: "Room 75" # Connector
+    connections:
+      fixed:
+        - "Door 31"
+      Hammer:
+        - "Room 75-76 Hole"
+  - name: "Room 75-76 Hole"
+    connections:
+      Ladder:
+        - "Room 76"
+  - name: "Room 76"
+    items:
+      - name: "Goonie 5"
+        item: "Goonie5"
+    connections:
+      Ladder:
+        - "Room 75"
+  - name: "Room 7b" # Konamiman
+    # FIXME: model events
+    #event:
+    #  - name: "Konamiman"
+    connections:
+      fixed:
+        - "Door 48"

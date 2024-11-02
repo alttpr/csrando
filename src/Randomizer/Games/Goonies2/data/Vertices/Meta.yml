@@ -1,5 +1,16 @@
-regions:
+meta:
   - name: "start"
     connections:
       fixed:
+        - "Meta"
         - "Front - Orange House Left"
+  - name: "Meta"
+    connections:
+      Candle:
+        - "Candle"
+      DivingSuit:
+        - "Diving Suit"
+  - name: "Candle"
+    items: ["CanSeeInTheDark"] # dark: true
+  - name: "Diving Suit"
+    items: ["CanDive"] # water: true

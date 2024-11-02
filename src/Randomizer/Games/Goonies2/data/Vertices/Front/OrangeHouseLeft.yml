@@ -5,6 +5,44 @@ regions:
         - "Front - Gray Basement Left"
         - "Door 00"
         - "Door 01"
-  # FIXME: where do those go?
+
   - name: "Door 00"
+    connections:
+      fixed:
+        - "Front - Orange House Left"
+        - "Room 00"
   - name: "Door 01"
+    connections:
+      fixed:
+        - "Front - Orange House Left"
+        - "Room 01"
+
+  - name: "Room 00"
+    items:
+      - name: "Item 00"
+        item: "Hammer"
+    connections:
+      fixed:
+        - "Door 00"
+  - name: "Room 01"
+    items:
+      - name: "Item 01"
+        item: "Keys 1"
+    connections:
+      fixed:
+        - "Door 01"
+        - "Room 02"
+  - name: "Room 02"
+    items:
+      - name: "Item 02"
+        item: "Hint 1"
+    connections:
+      fixed:
+        - "Room 01"
+      Ladder:
+        - "Room 6b"
+  - name: "Room 6b"
+    dark: true
+    connections:
+      Ladder:
+        - "Room 02"

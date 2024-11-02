@@ -1,3 +1,20 @@
 regions:
   - name: "Back - Orange Cabin"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 3e"
+        - "Door 3f"
+        - "Door 43"
+
+  - name: "Door 3e"
+    connections:
+      fixed:
+        - "Back - Orange Cabin"
+  - name: "Door 3f"
+    connections:
+      fixed:
+        - "Back - Orange Cabin"
+  - name: "Door 43"
+    connections:
+      fixed:
+        - "Back - Orange Cabin"

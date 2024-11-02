@@ -1,3 +1,64 @@
 regions:
   - name: "Front - Aquarium Left"
-    connections: {}
+    connections:
+      DivingSuit:
+        - "Door 1a"
+        - "Door 1b"
+        - "Door 1c"
+
+  - name: "Door 1a"
+    connections:
+      fixed:
+        - "Front - Aquarium Left"
+        - "Room 46"
+  - name: "Door 1b"
+    connections:
+      fixed:
+        - "Front - Aquarium Left"
+        - "Room 48"
+  - name: "Door 1c"
+    connections:
+      DivingSuit:
+        - "Front - Aquarium Left"
+        - "Room 49"
+
+  - name: "Room 46"
+    water: true
+    items:
+      - name: "Item 46"
+        item: "Device4"
+    connections:
+      fixed:
+        - "Door 1a"
+        - "Room 47"
+  - name: "Room 47"
+    water: true
+    items:
+      - name: "Item 47"
+        item: "Keys2"
+    connections:
+      fixed:
+        - "Door 3b"
+        - "Room 46"
+  - name: "Room 48"
+    water: true
+    items:
+      - name: "Hint 4" # yeah, PHP used "Hint 4" for this room.
+        item: "Hint9"
+    connections:
+      fixed:
+        - "Door 1b"
+  - name: "Room 49" # Connector
+    water: true
+    connections:
+      fixed:
+        - "Door 1c"
+        - "Room 4a"
+  - name: "Room 4a"
+    water: true
+    items:
+      - name: "Item 4a"
+        item: "JumpingShoes"
+    connections:
+      fixed:
+        - "Room 49"

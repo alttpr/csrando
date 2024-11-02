@@ -1,3 +1,21 @@
 regions:
   - name: "Back - Gray House Right"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 29"
+        - "Door 44"
+        - "Door 45"
+
+  - name: "Door 29"
+    connections:
+      fixed:
+        - "Back - Gray House Right"
+  - name: "Door 44"
+    connections:
+      fixed:
+        - "Back - Gray House Right"
+  - name: "Door 45"
+    dark: true
+    connections:
+      Hammer:
+        - "Back - Gray House Right"

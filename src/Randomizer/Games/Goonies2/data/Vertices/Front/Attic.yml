@@ -1,3 +1,25 @@
 regions:
   - name: "Front - Attic"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 23"
+        - "Door 2b"
+        - "Door 2c"
+        - "Door 2d"
+
+  - name: "Door 23"
+    connections:
+      fixed:
+        - "Front - Attic"
+  - name: "Door 2b"
+    connections:
+      fixed:
+        - "Front - Attic"
+  - name: "Door 2c"
+    connections:
+      fixed:
+        - "Front - Attic"
+  - name: "Door 2d"
+    connections:
+      fixed:
+        - "Front - Attic"

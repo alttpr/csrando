@@ -1,2 +1,116 @@
 regions:
   - name: "Back - Aquarium Left"
+    connections:
+      fixed:
+        - "Door 1d"
+        - "Door 3b"
+        - "Door 3c"
+      Bombs:
+        - "Door 47"
+
+  - name: "Door 1d"
+    connections:
+      fixed:
+        - "Back - Aquarium Left"
+        - "Room 4b"
+  - name: "Door 3b"
+    connections:
+      fixed:
+        - "Back - Aquarium Left"
+        - "Room 47"
+  - name: "Door 3c"
+    connections:
+      fixed:
+        - "Back - Aquarium Left"
+        - "Room 13"
+  - name: "Door 47"
+    connections:
+      fixed:
+        - "Back - Aquarium Left"
+        - "Room 7a"
+
+  - name: "Room 11" # Connector
+    water: true
+    connections:
+      fixed:
+        - "Door 0a"
+        - "Room 12"
+  - name: "Room 12"
+    dark: true
+    items:
+      - name: "Item e7"
+        item: "Glasses"
+    connections:
+      fixed:
+        - "Room 11"
+        - "Room 13"
+        - "Room 14"
+  - name: "Room 13" # Connector
+    water: true
+    connections:
+      fixed:
+        - "Door 3c"
+        - "Room 12"
+  - name: "Room 14"
+    dark: true
+    items:
+      - name: "Item 14"
+        item: "Boomerang"
+    connections:
+      fixed:
+        - "Room 12"
+        - "Room 15"
+  - name: "Room 15" # Eskimo
+    water: true
+    # FIXME: model events
+    #event:
+    #  - name: "Eskimo"
+    connections:
+      fixed:
+        - "Room 14"
+  - name: "Room 4b"
+    water: true
+    items:
+      - name: "Item 4b"
+        item: "Ladder"
+    connections:
+      fixed:
+        - "Door 1d"
+        - "Room 4c"
+        - "Room 4d"
+  - name: "Room 4c"
+    items:
+      - name: "Item 4c"
+        item: "BombBox4"
+    connections:
+      fixed:
+        - "Room 4b"
+        - "Room 44"
+  - name: "Room 4d" # Connector
+    connections:
+      fixed:
+        - "Room 4b"
+        - "Room 4c"
+      Hammer:
+        - "Room 4d-4e Hole"
+  - name: "Room 4d-4e Hole"
+    connections:
+      Ladder:
+        - "Room 4e"
+      Hammer:
+        - "Room 4d"
+  - name: "Room 4e" # Connector
+    items:
+      - name: "Goonie 3"
+        item: "Goonie3"
+    connections:
+      Ladder:
+        - "Room 4d-4e Hole"
+  - name: "Room 7a" # Frogman
+    water: true
+    # FIXME: model events
+    #event:
+    #  - name: "Frogman"
+    connections:
+      fixed:
+        - "Door 47"

@@ -1,3 +1,187 @@
 regions:
   - name: "Back - Green Caves"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 14"
+        - "Door 15"
+        - "Door 17"
+        - "Door 18"
+        - "Door 19"
+        - "Door 39"
+        - "Door 3a"
+
+  - name: "Door 14"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 31"
+  - name: "Door 15"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 37"
+  - name: "Door 17"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 3b"
+  - name: "Door 18"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 3d"
+  - name: "Door 19"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 42"
+  - name: "Door 39"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 27"
+  - name: "Door 3a"
+    connections:
+      fixed:
+        - "Back - Green Caves"
+        - "Room 3a"
+
+  - name: "Room 31" # Connector
+    connections:
+      fixed:
+        - "Door 14"
+        - "Room 32"
+        - "Room 34"
+  - name: "Room 32" # Connector
+    connections:
+      fixed:
+        - "Room 31"
+        - "Room 33"
+        - "Room 35"
+  - name: "Room 33"
+    items:
+      - name: "Hint 6" # yeah, PHP used "Hint 6" for this room.
+        item: "Hint5"
+    connections:
+      fixed:
+        - "Room 32"
+  - name: "Room 34"
+    items:
+      - name: "Hint 7" # yeah, PHP used "Hint 7" for this room.
+        item: "Hint6"
+    connections:
+      fixed:
+        - "Room 31"
+        - "Room 35"
+  - name: "Room 35" # Connector
+    connections:
+      fixed:
+        - "Room 32"
+        - "Room 34"
+      Glasses:
+        - "Room 36"
+  - name: "Room 36"
+    items:
+      - name: "Goonie 5"
+        item: "Goonie5"
+    connections:
+      fixed:
+        - "Room 35"
+  - name: "Room 37" # Connector
+    connections:
+      fixed:
+        - "Door 15"
+        - "Room 38"
+  - name: "Room 38" # Connector
+    # We specifically ignore the Room 38 -> Room 38 connection so we can walk the map.
+    connections:
+      fixed:
+        - "Room 37"
+      Hammer:
+        - "Room 39"
+  - name: "Room 39"
+    items:
+      - name: "Item 39"
+        item: "Keys4"
+    connections:
+      fixed:
+        - "Room 38"
+  - name: "Room 3a"
+    items:
+      - name: "Item ec"
+        item: "Raincoat"
+    connections:
+      fixed:
+        - "Door 3a"
+  - name: "Room 3b" # Connector
+    connections:
+      fixed:
+        - "Door 17"
+        - "Room 3c"
+  - name: "Room 3c"
+    items:
+      - name: "Item 3c"
+        item: "FireboxC8" # FIXME: is this "Fire Box 1"?
+    connections:
+      fixed:
+        - "Room 3b"
+  - name: "Room 3d" # Connector
+    connections:
+      fixed:
+        - "Door 18"
+        - "Room 3e"
+        - "Room 3f"
+  - name: "Room 3e"
+    items:
+      - name: "Hint 8" # yeah, PHP used "Hint 8" for this room.
+        item: "Hint7"
+    connections:
+      fixed:
+        - "Room 3d"
+        - "Room 40"
+  - name: "Room 3f" # Connector
+    connections:
+      fixed:
+        - "Room 3d"
+        - "Room 40"
+  - name: "Room 40" # Connector
+    connections:
+      fixed:
+        - "Room 3e"
+        - "Room 3f"
+      Hammer:
+        - "Room 41"
+  - name: "Room 41"
+    items:
+      - name: "Item e9"
+        item: "DivingSuit"
+    connections:
+      fixed:
+        - "Room 40"
+  - name: "Room 42" # Connector
+    connections:
+      fixed:
+        - "Door 19"
+        - "Room 43"
+        - "Room 45"
+  - name: "Room 43" # Connector
+    connections:
+      fixed:
+        - "Room 42"
+        - "Room 44"
+  - name: "Room 44"
+    items:
+      - name: "Hint 9" # yeah, PHP used "Hint 9" for this room.
+        item: "Hint8"
+    connections:
+      fixed:
+        - "Room 43"
+        - "Room 45"
+  - name: "Room 45"
+    items:
+      - name: "Item 45"
+        item: "BombBox3"
+    connections:
+      fixed:
+        - "Room 42"
+        - "Room 44"

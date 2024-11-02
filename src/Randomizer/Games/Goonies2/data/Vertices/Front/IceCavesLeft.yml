@@ -1,3 +1,17 @@
 regions:
   - name: "Front - Ice Caves Left"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 09"
+        - "Door 0a"
+
+  - name: "Door 09"
+    dark: true
+    connections:
+      fixed:
+        - "Front - Ice Caves Left"
+  - name: "Door 0a"
+    dark: true
+    connections:
+      fixed:
+        - "Front - Ice Caves Left"

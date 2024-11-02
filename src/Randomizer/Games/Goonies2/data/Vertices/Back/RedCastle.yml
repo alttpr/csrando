@@ -1,3 +1,26 @@
 regions:
   - name: "Back - Red Castle"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 20"
+        - "Door 27"
+        - "Door 40"
+        - "Door 4b"
+
+  - name: "Door 20"
+    dark: true
+    connections:
+      fixed:
+        - "Back - Red Castle"
+  - name: "Door 27"
+    connections:
+      fixed:
+        - "Back - Red Castle"
+  - name: "Door 40"
+    connections:
+      Glasses:
+        - "Back - Red Castle"
+  - name: "Door 4b"
+    connections:
+      fixed:
+        - "Back - Red Castle"

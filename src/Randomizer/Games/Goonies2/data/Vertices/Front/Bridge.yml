@@ -1,3 +1,13 @@
 regions:
   - name: "Front - Bridge"
-    connections: {}
+    connections:
+      fixed:
+        - "Front - Orange Caves Right"
+        - "Front - Purple Caves"
+      Bombs:
+        - "Door 26"
+
+  - name: "Door 26"
+    connections:
+      Bombs:
+        - "Front - Bridge"

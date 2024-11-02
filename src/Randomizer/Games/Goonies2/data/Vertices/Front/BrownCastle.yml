@@ -1,3 +1,21 @@
 regions:
   - name: "Front - Brown Castle"
-    connections: {}
+    connections:
+      fixed:
+        - "Front - Green Cabin"
+        - "Door 21"
+        - "Door 22"
+        - "Door 24"
+
+  - name: "Door 21"
+    connections:
+      fixed:
+        - "Front - Brown Castle"
+  - name: "Door 22"
+    connections:
+      fixed:
+        - "Front - Brown Castle"
+  - name: "Door 24"
+    connections:
+      fixed:
+        - "Front - Brown Castle"

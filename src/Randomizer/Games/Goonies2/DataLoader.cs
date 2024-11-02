@@ -10,13 +10,48 @@ internal static class DataLoader
 
         foreach (var vertex in LoadVertices(world))
             graph.AddVertex(vertex);
+
+        ModifyEdgeConditions(graph, world);
     }
 
     private static IEnumerable<Vertex> LoadVertices(World world)
     {
         var vertexData = YamlReader.LoadVertices();
         var structuredVertices = new Dictionary<string, Vertex>();
+        var fixedCondition = new ItemCondition(world.GetItem("fixed"), 1);
         var pendingConnections = new List<(Vertex Source, string Target, ItemCondition Condition)>();
+
+        foreach (var meta in vertexData.Meta)
+        {
+            var metaVertex = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = meta.Name,
+                World = world,
+            };
+            structuredVertices.Add(meta.Name, metaVertex);
+
+            foreach (var connection in meta.Connections)
+            {
+                foreach (var target in connection.Value)
+                {
+                    pendingConnections.Add((metaVertex, target, ConditionFrom(world, connection.Key)));
+                }
+            }
+
+            foreach (var (index, item) in meta.Items.Indexed())
+            {
+                var metaItemVertex = new Vertex
+                {
+                    Type = VertexType.Meta,
+                    Name = $"{meta.Name} - {index} - {item}",
+                    World = world,
+                    Item = world.GetItem(item),
+                };
+                structuredVertices.Add(metaItemVertex.Name, metaItemVertex);
+                metaVertex.Edges.Add(new Edge(metaVertex, metaItemVertex, fixedCondition));
+            }
+        }
 
         foreach (var region in vertexData.Regions)
         {
@@ -25,6 +60,8 @@ internal static class DataLoader
                 Type = VertexType.Region,
                 Name = region.Name,
                 World = world,
+                Dark = region.Dark,
+                Water = region.Water,
             };
             structuredVertices.Add(region.Name, regionVertex);
 
@@ -60,6 +97,52 @@ internal static class DataLoader
             source.Edges.Add(new Edge(source, structuredVertices[target], condition));
 
         return structuredVertices.Values;
+    }
+
+    private static void ModifyEdgeConditions(Graph graph, World world)
+    {
+        (Func<Vertex, bool> ModifyCondition, ItemCondition ItemCondition)[] edgeModifiers =
+        [
+            (v => v.Dark, new(world.GetItem("CanSeeInTheDark"), 1)),
+            (v => v.Water, new(world.GetItem("CanDive"), 1)),
+        ];
+
+        foreach (var (modifyCond, condition) in edgeModifiers)
+        {
+            var transitionRooms = graph.GetVertices().OfType<Vertex>().Where(v => !modifyCond(v) && v.World == world).ToList();
+            foreach (var transitionRoom in transitionRooms)
+            {
+                foreach (var originalEdge in transitionRoom.Edges.Where(e => modifyCond((Vertex)e.To)))
+                {
+                    var targetRoom = (Vertex)originalEdge.To;
+                    var transition = new Vertex
+                    {
+                        Type = VertexType.Region,
+                        Name = $"{targetRoom.Name} - Transition from {transitionRoom.Name}",
+                        World = world,
+                    };
+
+                    var edgesToModify = targetRoom.Edges.Where(e => e.To == transitionRoom);
+
+                    world.Graph.AddVertex(transition);
+                    originalEdge.To = transition;
+                    world.Graph.AddDirected(targetRoom, transition, world.GetItem("fixed"));
+                    world.Graph.AddDirected(transition, targetRoom, condition);
+
+                    if (edgesToModify.Count() > 1)
+                        throw new Exception("Uh oh, is the code really correct there?");
+
+                    foreach (var newEdge in edgesToModify)
+                    {
+                        newEdge.To = transition;
+                        var oldCondition = newEdge.Condition;
+                        newEdge.Condition = new ItemCondition(world.GetItem("fixed"), 1);
+
+                        transition.Edges.Add(new Edge(transition, transitionRoom, oldCondition));
+                    }
+                }
+            }
+        }
     }
 
     private static ItemCondition ConditionFrom(World world, string condition)

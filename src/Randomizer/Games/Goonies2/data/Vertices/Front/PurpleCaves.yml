@@ -1,3 +1,113 @@
 regions:
   - name: "Front - Purple Caves"
-    connections: {}
+    connections:
+      fixed:
+        - "Front - Bridge"
+        - "Door 06"
+        - "Door 11"
+        - "Door 12"
+        - "Door 49"
+      JumpShoes:
+        - "Door 10"
+
+  - name: "Door 06"
+    connections:
+      fixed:
+        - "Front - Purple Caves"
+        - "Room 0a"
+  - name: "Door 10"
+    connections:
+      fixed:
+        - "Front - Purple Caves"
+        - "Room 22"
+  - name: "Door 11"
+    connections:
+      fixed:
+        - "Front - Purple Caves"
+        - "Room 26"
+  - name: "Door 12"
+    connections:
+      fixed:
+        - "Front - Purple Caves"
+        - "Room 28"
+  - name: "Door 49"
+    connections:
+      fixed:
+        - "Front - Purple Caves"
+        - "Room 7c"
+
+  - name: "Room 0a" # Old Lady
+    # FIXME: model events
+    #event:
+    #  - name: "Old Lady"
+    connections:
+      fixed:
+        - "Door 06"
+  - name: "Room 22" # Connector
+    connections:
+      fixed:
+        - "Door 10"
+        - "Room 23"
+  - name: "Room 23" # Connector
+    connections:
+      fixed:
+        - "Room 22"
+        - "Room 25"
+      Glasses:
+        - "Room 24"
+  - name: "Room 24" # Warp Man
+    # FIXME: model events
+    #event:
+    #  - name: "Warp Man"
+    connections:
+      fixed:
+        - "Door 3e"
+        - "Room 23"
+  - name: "Room 25"
+    items:
+      - name: "Item 25"
+        item: "BombBox2"
+    connections:
+      fixed:
+        - "Room 23"
+  - name: "Room 26" # Connector
+    connections:
+      fixed:
+        - "Door 11"
+      Hammer:
+        - "Room 27"
+  - name: "Room 27" # Connector
+    connections:
+      fixed:
+        - "Door 39"
+        - "Room 26"
+  - name: "Room 28" # Connector
+    connections:
+      fixed:
+        - "Door 12"
+        - "Room 29"
+  - name: "Room 29"
+    dark: true
+    items:
+      - name: "Hint 5" # yeah, PHP used "Hint 5" for this room.
+        item: "Hint 4"
+    connections:
+      fixed:
+        - "Room 28"
+        - "Room 2a"
+  - name: "Room 2a"
+    dark: true
+    items:
+      - name: "Item 2a"
+        item: "Device3"
+    connections:
+      fixed:
+        - "Room 29"
+  - name: "Room 7c" # Konamiman
+    dark: true
+    # FIXME: model events
+    #event:
+    #  - name: "Konamiman"
+    connections:
+      fixed:
+        - "Door 49"

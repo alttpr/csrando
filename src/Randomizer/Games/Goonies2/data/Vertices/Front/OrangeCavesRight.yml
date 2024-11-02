@@ -1,3 +1,11 @@
 regions:
   - name: "Front - Orange Caves Right"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 0b"
+        - "Front - Bridge"
+
+  - name: "Door 0b"
+    connections:
+      fixed:
+        - "Front - Orange Caves Right"

@@ -1,3 +1,5 @@
 regions:
   - name: "Front - Orange House Right"
-    connections: {}
+    connections:
+      fixed:
+        - "Front - Gray Basement Right"

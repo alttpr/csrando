@@ -1,3 +1,76 @@
 regions:
   - name: "Back - Gray House Left"
-    connections: {}
+    connections:
+      fixed:
+        - "Back - Gray Basement Left"
+        - "Door 05"
+        - "Door 42"
+
+  - name: "Door 05"
+    connections:
+      fixed:
+        - "Back - Gray House Left"
+        - "Room 07"
+  - name: "Door 42"
+    connections:
+      fixed:
+        - "Back - Gray House Left"
+        - "Room 30"
+
+  - name: "Room 07"
+    items:
+      - name: "Item 07"
+        item: "BombBox1"
+    connections:
+      fixed:
+        - "Door 05"
+        - "Room 08"
+  - name: "Room 08" # Connector
+    connections:
+      fixed:
+        - "Room 07"
+      Hammer:
+        - "Room 09"
+  - name: "Room 09"
+    items:
+      - name: "Goonie 1"
+        item: "Goonie1"
+    connections:
+      fixed:
+        - "Room 08"
+  - name: "Room 2b" # Connector
+    connections:
+      fixed:
+        - "Door 13"
+        - "Room 2c"
+  - name: "Room 2c" # Connector
+    connections:
+      fixed:
+        - "Room 2b"
+        - "Room 2d"
+        - "Room 2f"
+      Ladder: # FIXME: PHP has both Hammer and Ladder, do we need both (and a meta-node in between)?
+        - "Room 2f"
+  - name: "Room 2d" # Connector
+    connections:
+      fixed:
+        - "Room 2c"
+        - "Room 2e"
+  - name: "Room 2e" # Old Lady
+    # FIXME: model events
+    #event:
+    #  - name: "Old Lady"
+    connections:
+      fixed:
+        - "Room 2d"
+  - name: "Room 2f" # Connector
+    connections:
+      fixed:
+        - "Door 30"
+      Ladder: # FIXME: PHP has both Hammer and Ladder, do we need both (and a meta-node in between)?
+        - "Room 2c"
+  - name: "Room 30" # Connector
+    connections:
+      fixed:
+        - "Door 42"
+        - "Room 2f"

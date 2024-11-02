@@ -63,6 +63,7 @@ public class YamlReader
     public static void MergeVertices(Vertices dest, Vertices source)
     {
         dest.Regions.AddRange(source.Regions);
+        dest.Meta.AddRange(source.Meta);
     }
 }
 
@@ -80,13 +81,41 @@ public partial class Region
 {
     [YamlMember(Alias = "name")]
     public required string Name { get; set; }
-
+    [YamlMember(Alias = "dark")]
+    public bool Dark { get; set; }
+    [YamlMember(Alias = "water")]
+    public bool Water { get; set; }
+    [YamlMember(Alias = "items")]
+    public List<ItemEntry> Items { get; set; } = [];
     [YamlMember(Alias = "connections")]
     public Dictionary<string, List<string>> Connections { get; set; } = [];
 }
-
+public partial class ItemEntry
+{
+    [YamlMember(Alias = "name")]
+    public required string Name { get; set; }
+    [YamlMember(Alias = "addresses")]
+    public List<long> Addresses { get; set; } = [];
+    [YamlMember(Alias = "item")]
+    public string? Item { get; set; }
+    [YamlMember(Alias = "itemset")]
+    public List<string> ItemSet { get; set; } = [];
+    [YamlMember(Alias = "conditions")]
+    public List<string> Conditions { get; set; } = [];
+}
+public partial class MetaNode
+{
+    [YamlMember(Alias = "name")]
+    public required string Name { get; set; }
+    [YamlMember(Alias = "items")]
+    public List<string> Items { get; set; } = [];
+    [YamlMember(Alias = "connections")]
+    public Dictionary<string, List<string>> Connections { get; set; } = [];
+}
 public class Vertices
 {
     [YamlMember(Alias = "regions")]
     public List<Region> Regions { get; set; } = [];
+    [YamlMember(Alias = "meta")]
+    public List<MetaNode> Meta { get; set; } = [];
 }

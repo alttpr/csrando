@@ -1,3 +1,15 @@
 regions:
   - name: "Back - Gray Basement Right"
-    connections: {}
+    connections:
+      fixed:
+        - "Door 3d"
+        - "Door 46"
+
+  - name: "Door 3d"
+    connections:
+      fixed:
+        - "Back - Gray Basement Right"
+  - name: "Door 46"
+    connections:
+      Hammer:
+        - "Back - Gray Basement Right"

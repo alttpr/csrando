@@ -1,3 +1,16 @@
 regions:
   - name: "Back - Gray Basement Left"
-    connections: {}
+    connections:
+      fixed:
+        - "Back - Gray House Left"
+        - "Door 07"
+        - "Door 33"
+
+  - name: "Door 07"
+    connections:
+      fixed:
+        - "Back - Gray Basement Left"
+  - name: "Door 33"
+    connections:
+      fixed:
+        - "Back - Gray Basement Left"

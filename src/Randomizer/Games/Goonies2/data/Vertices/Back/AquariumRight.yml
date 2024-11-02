@@ -1,3 +1,15 @@
 regions:
   - name: "Back - Aquarium Right"
-    connections: {}
+    connections:
+      DivingSuit:
+        - "Door 28"
+        - "Door 41"
+
+  - name: "Door 28"
+    connections:
+      DivingSuit:
+        - "Back - Aquarium Right"
+  - name: "Door 41"
+    connections:
+      DivingSuit:
+        - "Back - Aquarium Right"

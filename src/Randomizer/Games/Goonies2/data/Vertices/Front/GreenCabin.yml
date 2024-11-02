@@ -1,3 +1,22 @@
 regions:
   - name: "Front - Green Cabin"
-    connections: {}
+    connections:
+      fixed:
+        - "Front - Brown Castle"
+        - "Door 1f"
+        - "Door 25"
+      Bombs:
+        - "Door 4a"
+
+  - name: "Door 1f"
+    connections:
+      fixed:
+        - "Front - Green Cabin"
+  - name: "Door 25"
+    connections:
+      fixed:
+        - "Front - Green Cabin"
+  - name: "Door 4a"
+    connections:
+      Bombs:
+        - "Front - Green Cabin"
