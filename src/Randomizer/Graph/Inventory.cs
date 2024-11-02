@@ -93,9 +93,9 @@ public sealed class Inventory
     /// <param name="item">Item to check</param>
     public int GetCount(IItem item)
     {
-        if (item.Name.StartsWith("Bottle"))
+        if (item.LogicalItem is { } logicalItem)
         {
-            return _itemCount.GetValueOrDefault(item.World.GetItem("LogicalBottle"), 0);
+            return _itemCount.GetValueOrDefault(logicalItem, 0);
         }
 
         return _itemCount.GetValueOrDefault(item, 0);
