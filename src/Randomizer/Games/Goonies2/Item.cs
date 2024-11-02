@@ -16,8 +16,8 @@ public sealed class Item : IItem
     public string Name { get; }
     public IWorld World { get; }
     public ItemType Type { get; }
-    public byte[]? Bytes { get; }
-    public byte[]? Gfx { get; }
+    public byte? Byte { get; }
+    public byte? Gfx { get; }
     public float HealthValue { get; } = 0; // FIXME: is there health increase anywhere?
     public IItem? LogicalItem { get; } // FIXME: are there logic-relevant items that represent viable alternatives?
 
@@ -38,7 +38,8 @@ public sealed class Item : IItem
         if (!Enum.TryParse<ItemType>(typeString, out var itemType))
             itemType = ItemType.Meta;
         Type = itemType;
-        Bytes = yamlItem?.Bytes.ToArray();
+        Byte = yamlItem?.Byte;
+        Gfx = yamlItem?.Gfx;
     }
 
     public override string ToString() => $"{Name}:{World.Id}";

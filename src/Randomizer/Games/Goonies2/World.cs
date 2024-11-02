@@ -31,7 +31,7 @@ public sealed class World : IWorld
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
 
-        //DataLoader.Fill(this);
+        DataLoader.Fill(this);
     }
 
     public Inventory ComputeStartingItems()

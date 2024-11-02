@@ -1,0 +1,10 @@
+regions:
+  - name: "Front - Orange House Left"
+    connections:
+      fixed:
+        - "Front - Gray Basement Left"
+        - "Door 00"
+        - "Door 01"
+  # FIXME: where do those go?
+  - name: "Door 00"
+  - name: "Door 01"

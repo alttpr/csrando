@@ -1,0 +1,5 @@
+regions:
+  - name: "start"
+    connections:
+      fixed:
+        - "Front - Orange House Left"
