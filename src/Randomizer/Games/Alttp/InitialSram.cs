@@ -73,7 +73,7 @@ internal sealed class InitialSram
         byte startingArrowCapacity = 0;
         byte startingBombCapacity = 0;
         // starting heart containers
-        if (items.HeartCount(world) < 1)
+        if (items.Health(world) < 1)
         {
             _initialSramBytes[0x36C] = 0x18;
             _initialSramBytes[0x36D] = 0x18;

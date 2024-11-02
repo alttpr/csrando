@@ -51,15 +51,12 @@ public sealed class Inventory
         }
         _bits.Set(item.Id, true);
 
+        float healthValue = item.HealthValue;
+        if (healthValue > 0f)
+        {
+            _health[item.World] = _health.GetValueOrDefault(item.World, 0) + healthValue;
+        }
         // FIXME: this section is game specific and needs to go elsewhere.
-        if (item.Name.StartsWith("HeartContainer"))
-        {
-            _health[item.World] = _health.GetValueOrDefault(item.World, 0) + 1;
-        }
-        else if (item.Name.StartsWith("PieceOfHeart"))
-        {
-            _health[item.World] = _health.GetValueOrDefault(item.World, 0) + 0.25f;
-        }
         else if (item.Name.StartsWith("Bottle"))
         {
             AddItem(item.World.GetItem("LogicalBottle"));
@@ -170,7 +167,7 @@ public sealed class Inventory
     /// Get the health value available based on items in this world.
     /// </summary>
     /// <param name="world">World for which we care about count</param>
-    public float HeartCount(IWorld world)
+    public float Health(IWorld world)
     {
         return _health.GetValueOrDefault(world, 0);
     }

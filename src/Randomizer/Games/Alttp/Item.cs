@@ -22,6 +22,7 @@ public sealed class Item : IItem
     public IWorld World { get; }
     public ItemType Type { get; }
     public byte[]? Bytes { get; }
+    public float HealthValue { get; }
 
     /// <summary>
     /// Create a new Item.
@@ -41,6 +42,11 @@ public sealed class Item : IItem
             itemType = ItemType.Meta;
         Type = itemType;
         Bytes = yamlItem?.Bytes.ToArray();
+
+        if (Name.StartsWith("HeartContainer"))
+            HealthValue = 1f;
+        else if (Name.StartsWith("PieceOfHeart"))
+            HealthValue = 0.25f;
     }
 
     public override string ToString() => $"{Name}:{World.Id}";

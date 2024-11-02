@@ -18,6 +18,7 @@ public sealed class Item : IItem
     public ItemType Type { get; }
     public byte[]? Bytes { get; }
     public byte[]? Gfx { get; }
+    public float HealthValue { get; } = 0; // FIXME: is there health increase anywhere?
 
     /// <summary>
     /// Create a new Item.
