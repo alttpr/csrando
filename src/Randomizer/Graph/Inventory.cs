@@ -56,10 +56,10 @@ public sealed class Inventory
         {
             _health[item.World] = _health.GetValueOrDefault(item.World, 0) + healthValue;
         }
-        // FIXME: this section is game specific and needs to go elsewhere.
-        else if (item.Name.StartsWith("Bottle"))
+
+        if (item.LogicalItem is { } logicalItem)
         {
-            AddItem(item.World.GetItem("LogicalBottle"));
+            AddItem(logicalItem);
         }
 
         if (!_itemCount.TryAdd(item, count))

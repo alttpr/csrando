@@ -23,6 +23,7 @@ public sealed class Item : IItem
     public ItemType Type { get; }
     public byte[]? Bytes { get; }
     public float HealthValue { get; }
+    public IItem? LogicalItem { get; }
 
     /// <summary>
     /// Create a new Item.
@@ -47,6 +48,9 @@ public sealed class Item : IItem
             HealthValue = 1f;
         else if (Name.StartsWith("PieceOfHeart"))
             HealthValue = 0.25f;
+
+        if (Name.StartsWith("Bottle"))
+            LogicalItem = world.GetItem("LogicalBottle");
     }
 
     public override string ToString() => $"{Name}:{World.Id}";

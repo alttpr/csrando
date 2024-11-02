@@ -19,6 +19,7 @@ public sealed class Item : IItem
     public byte[]? Bytes { get; }
     public byte[]? Gfx { get; }
     public float HealthValue { get; } = 0; // FIXME: is there health increase anywhere?
+    public IItem? LogicalItem { get; } // FIXME: are there logic-relevant items that represent viable alternatives?
 
     /// <summary>
     /// Create a new Item.
