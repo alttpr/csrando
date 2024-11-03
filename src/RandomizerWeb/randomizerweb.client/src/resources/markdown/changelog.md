@@ -1,5 +1,16 @@
 # Randomizer Changes
 
+## 2024-11-03 - Version 0.1.11
+* Systems Changes
+  * Added the missing DPCM samples for the Z1 music engine. (Andypro)
+  * Fixed a bunch of inaccuracies in the NES music engine for Z1 and M1 (Andypro)
+  * Fixed a bug in the M1 port that could cause crashes in certain situations
+
+* Gameplay Changes
+  * Fixed corrupted graphics for the Wrecked Ship keycards.
+  * Fixed a graphical bug in Z1 where Link would appear on top of doors in dungeons.
+  * Fixed an issue with certain characters appearing incorrectly in the Z1/M1 item text overlays.
+
 ## 2024-08-08 - Version 0.1.10
 * Gameplay Changes
   * Fixed logic bug in SM where the logic didn't account for colored doors properly.
