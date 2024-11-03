@@ -11,8 +11,9 @@ internal sealed class RootItemPooler : IItemPooler
     {
         // TODO: get this from the worlds themselves, or some other way that doesn't hardcode every game's pooler here.
         var alttpPooler = new ItemPooler(worlds, prng);
+        var z1Pooler = new Games.Zelda1.ItemPooler(worlds, prng);
 
-        Pool = alttpPooler.Pool;
-        SetLocations = alttpPooler.SetLocations;
+        Pool = z1Pooler.Pool;
+        SetLocations = z1Pooler.SetLocations;
     }
 }

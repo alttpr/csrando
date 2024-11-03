@@ -1,0 +1,74 @@
+Nothing:
+  byte: 0x00
+Bombs:
+  byte: 0x00
+SwordL1:
+  byte: 0x01
+SwordL2:
+  byte: 0x02
+SwordL3:
+  byte: 0x03
+Bait:
+  byte: 0x04
+Recorder:
+  byte: 0x05
+BlueCandle:
+  byte: 0x06
+RedCandle:
+  byte: 0x07
+Arrows:
+  byte: 0x08
+SilverArrows:
+  byte: 0x09
+Bow:
+  byte: 0x0a
+MagicalKey:
+  byte: 0x0b
+Raft:
+  byte: 0x0c
+StepLadder:
+  byte: 0x0d
+Unused1:
+  byte: 0x0e
+Rupee5:
+  byte: 0x0f
+Rod:
+  byte: 0x10
+Book:
+  byte: 0x11
+BlueRing:
+  byte: 0x12
+RedRing:
+  byte: 0x13
+PowerBracelet:
+  byte: 0x14
+Letter:
+  byte: 0x15
+Compass:
+  byte: 0x16
+Map:
+  byte: 0x17
+Rupee:
+  byte: 0x18
+Key:
+  byte: 0x19
+HeartContainer:
+  byte: 0x1a
+Triforce:
+  byte: 0x1b
+MagicShield:
+  byte: 0x1c
+Boomerang:
+  byte: 0x1d
+MagicBoomerang:
+  byte: 0x1e
+BluePotion:
+  byte: 0x1f
+RedPotion:
+  byte: 0x20
+Clock:
+  byte: 0x21
+Heart:
+  byte: 0x22
+Fairy:
+  byte: 0x23
