@@ -7,13 +7,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using AlttpRandomizer = Randomizer.Games.Alttp.GameRandomizer;
 
 public abstract class LogicTestBase
 {
     protected abstract WorldConfig GetWorldConfig();
 
     // Tests are run in parallel in the same process, so we try to cache Randomizer instances as much as possible.
-    private static ConcurrentDictionary<WorldConfig[], Lazy<Randomizer>> _cachedRandomizers = new(new WorldConfigArrayComparer());
+    private static readonly ConcurrentDictionary<WorldConfig[], Lazy<GameRandomizer>> _cachedRandomizers = new(new WorldConfigArrayComparer());
 
     protected void RunLogicTest(WorldConfig[] config, string location, bool expected, IEnumerable<string> inventory)
     {
@@ -58,16 +59,15 @@ public abstract class LogicTestBase
         ], location, expected, inventory);
     }
 
-    protected Randomizer GetRandomizerForConfig(WorldConfig[] config)
+    protected GameRandomizer GetRandomizerForConfig(WorldConfig[] config)
     {
-        return _cachedRandomizers.GetOrAdd(config, config => new Lazy<Randomizer>(() =>
-                {
-                    return new Randomizer(config);
-                }, LazyThreadSafetyMode.ExecutionAndPublication)).Value;
+        return _cachedRandomizers.GetOrAdd(config, config
+            => new Lazy<GameRandomizer>(() => new AlttpRandomizer(config, new(seed: 42)),
+            LazyThreadSafetyMode.ExecutionAndPublication)).Value;
     }
 
     // This is crude, but easier than having a proper comparer on WorldConfig
-    private class WorldConfigArrayComparer : IEqualityComparer<WorldConfig[]>
+    private sealed class WorldConfigArrayComparer : IEqualityComparer<WorldConfig[]>
     {
         public bool Equals(WorldConfig[]? x, WorldConfig[]? y)
         {

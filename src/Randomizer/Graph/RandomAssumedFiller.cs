@@ -6,10 +6,10 @@ internal sealed class RandomAssumedFiller
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private readonly Randomizer _randomizer;
+    private readonly GameRandomizer _randomizer;
     private readonly PRNG _prng;
 
-    public RandomAssumedFiller(Randomizer randomizer, PRNG prng)
+    public RandomAssumedFiller(GameRandomizer randomizer, PRNG prng)
     {
         _randomizer = randomizer;
         _prng = prng;

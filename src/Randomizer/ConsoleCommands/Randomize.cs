@@ -65,14 +65,11 @@ internal sealed class Randomize : Command
         var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
         bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
 
-        if (baseRom == null && File.Exists(Config.BaseRomFile))
-            baseRom = new FileInfo(Config.BaseRomFile);
-
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
             var worldConfigs = GetWorldConfigs(context);
-            var randomizer = new Randomizer(
+            var randomizer = RandomizerFactory.Create(
                 worldConfigs,
                 context.ParseResult.GetValueForOption(_seed)
             );
@@ -82,8 +79,9 @@ internal sealed class Randomize : Command
 
             if (outputDirectory != null)
             {
-                if (baseRom != null && outputDirectory != null)
-                    RomWriter.Write(randomizer, baseRom, baseBPS, outputDirectory);
+                baseRom ??= randomizer.ProvideBaseRom();
+                if (baseRom != null)
+                    randomizer.Write(baseRom, baseBPS, outputDirectory);
                 else
                     _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
             }

@@ -1,6 +1,6 @@
 namespace Randomizer.Graph;
 
-using global::Randomizer.Games.Alttp;
+using Randomizer.Games.Alttp;
 using Microsoft.Extensions.Logging;
 
 using AlttpVertex = Games.Alttp.Vertex;
