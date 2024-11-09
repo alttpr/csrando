@@ -36,7 +36,7 @@ internal sealed class RandomAssumedFiller
                 flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
                     .Select(i => i.Item)
                     .ToList(),
-                _randomizer.Worlds[i].GetLocation("start")
+                _randomizer.Worlds[i].Start
                 );
         }
 
@@ -57,7 +57,7 @@ internal sealed class RandomAssumedFiller
                 flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
                     .Select(i => i.Item)
                     .ToList(),
-                item.World.GetLocation("start")
+                item.World.Start
                 );
 
             var locations = new List<Vertex>();

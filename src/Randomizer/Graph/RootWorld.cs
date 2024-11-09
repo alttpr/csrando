@@ -3,11 +3,24 @@ namespace Randomizer.Graph;
 /// <summary>
 /// This is an internal-use world that acts as host for <see cref="Graph"/> nodes that do not belong to a player world.
 /// </summary>
-internal sealed class RootWorld(Graph graph) : IWorld
+internal sealed class RootWorld : IWorld
 {
     private static readonly Exception _doNotUseThis = new NotSupportedException("This world is not for players.");
+
+    public RootWorld(Graph graph)
+    {
+        Graph = graph;
+        Start = Graph.AddVertex(new RootVertex
+        {
+            Name = "start",
+            World = this,
+            Type = VertexType.Meta,
+        });
+    }
+
     WorldConfig IWorld.WorldConfig => throw _doNotUseThis;
-    Graph IWorld.Graph { get; } = graph;
+    public Graph Graph { get; }
+    public Vertex Start { get; }
     int IWorld.Id { get; } = -1;
     ushort IWorld.PlacedItemCount { get; set; }
     Inventory IWorld.StartingItems => throw _doNotUseThis;

@@ -4,7 +4,7 @@ using Randomizer.Graph;
 
 internal static class DataLoader
 {
-    public static void Fill(World world)
+    public static Vertex Fill(World world)
     {
         var graph = world.Graph;
         var yamlReader = new YamlReader(world.Config);
@@ -52,6 +52,8 @@ internal static class DataLoader
         levelEntrance.Edges.Add(newEdge);
 
         world.YamlData = yamlReader.Data!;
+
+        return startingVertex;
     }
 
     private static void LoadVertices(World world, List<Dictionary<string, object>> vertices)

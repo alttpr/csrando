@@ -17,6 +17,7 @@ public sealed class World : IWorld
     public YamlReader.YamlData? YamlData { get; set; }
     private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
+    public BaseVertex Start { get; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -33,7 +34,7 @@ public sealed class World : IWorld
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
 
-        DataLoader.Fill(this);
+        Start = DataLoader.Fill(this);
     }
 
     public Inventory ComputeStartingItems()

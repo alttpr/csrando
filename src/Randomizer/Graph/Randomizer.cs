@@ -37,12 +37,8 @@ public sealed class Randomizer
         _logger.LogInformation("Using seed: {Seed}", PRNG.Seed);
 
         Graph = new Graph();
-        _start = Graph.AddVertex(new RootVertex
-        {
-            Name = "start",
-            World = new RootWorld(Graph),
-            Type = VertexType.Meta,
-        });
+        var rootWorld = new RootWorld(Graph);
+        _start = rootWorld.Start;
 
         Worlds = new IWorld[randomizerConfigs.Length];
         for (int i = 0; i < randomizerConfigs.Length; ++i)
@@ -50,7 +46,7 @@ public sealed class Randomizer
             Worlds[i] = WorldFactory.CreateWorld(i, randomizerConfigs[i], Graph, PRNG);
             _startingItems = _startingItems.Merge(Worlds[i].StartingItems);
 
-            Graph.AddDirected(_start, Worlds[i].GetLocation("start"), Worlds[i].GetItem("fixed"));
+            Graph.AddDirected(_start, Worlds[i].Start, Worlds[i].GetItem("fixed"));
         }
 
         Graph.SetVertexIds();

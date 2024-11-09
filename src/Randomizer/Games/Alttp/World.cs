@@ -14,6 +14,7 @@ public sealed class World : IWorld
 {
     public int Id { get; }
     public Graph Graph { get; }
+    public BaseVertex Start { get; }
     public Inventory StartingItems { get; }
     public WorldConfig WorldConfig { get; }
     public Config Config { get; }
@@ -50,7 +51,7 @@ public sealed class World : IWorld
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
 
-        DataLoader.Fill(this);
+        Start = DataLoader.Fill(this);
 
         List<IWorldModifier> modifiers =
         [

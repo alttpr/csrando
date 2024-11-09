@@ -1,10 +1,11 @@
 namespace Randomizer.Games.Goonies2;
+using BaseVertex = Randomizer.Graph.Vertex;
 
 using Randomizer.Graph;
 
 internal static class DataLoader
 {
-    public static void Fill(World world)
+    public static BaseVertex Fill(World world)
     {
         var graph = world.Graph;
 
@@ -12,6 +13,8 @@ internal static class DataLoader
             graph.AddVertex(vertex);
 
         ModifyEdgeConditions(graph, world);
+
+        return world.GetLocation("start");
     }
 
     private static IEnumerable<Vertex> LoadVertices(World world)

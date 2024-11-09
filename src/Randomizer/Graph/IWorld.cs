@@ -39,4 +39,6 @@ public interface IWorld
     int Id { get; }
     ushort PlacedItemCount { get; set; }
     Inventory StartingItems { get; }
+    /// <summary>The entry point for this world, where everything begins.</summary>
+    Vertex Start { get; }
 }

@@ -1,4 +1,5 @@
 using Randomizer.Graph;
+using BaseVertex = Randomizer.Graph.Vertex;
 
 namespace Randomizer.Games.Alttp;
 
@@ -7,7 +8,8 @@ internal static class DataLoader
     /// <summary>
     /// Fills the passed <paramref name="world"/> with a graph describing its configuration.
     /// </summary>
-    public static void Fill(World world)
+    /// <returns>The vertex where this world begins.</returns>
+    public static BaseVertex Fill(World world)
     {
         var graph = world.Graph;
 
@@ -35,6 +37,8 @@ internal static class DataLoader
         }
 
         PruneConfigEdges(world);
+
+        return world.GetLocation("start");
     }
 
     private static void PruneConfigEdges(World world)
