@@ -1,6 +1,11 @@
 **/bin/
 **/obj/
-/.vscode
+**/.vscode/
+**/.config/
+**/dist/
+**/node_modules/
+**/PublishProfiles/
+**/DB/
 .vs
 .cr
 *.sfc

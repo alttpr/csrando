@@ -1,6 +1,5 @@
 ﻿namespace Randomizer.RomModifications;
 
-using Randomizer.Games.Alttp;
 using Randomizer.Graph;
 
 public static class RomWriter
@@ -25,17 +24,20 @@ public static class RomWriter
             rom.ApplyBasePatch(baseBPS);
         }
 
-        // FIXME: this should be a list of game-specific rom writers, not a hardcoded call to Alttp
-        if (world is World alttpWorld)
+        if (world is Games.Alttp.World alttpWorld)
             Games.Alttp.RomWriter.Write(rom, alttpWorld, prng);
+        else if (world is Games.Zelda1.World zelda1World)
+            Games.Zelda1.RomWriter.Write(rom, zelda1World, prng);
 
         rom.UpdateChecksum();
 
         outputDirectory.Create();
         string outputFile = Path.Combine(
             outputDirectory.FullName,
-            // TODO: this "alttpr" prefix should probably customizable for other games, or rather: be based on the config.
-            $"alttpr_{world.WorldConfig.Alttp!.Glitches}_{world.WorldConfig.Alttp.State}_{world.WorldConfig.Alttp.Goal}_{prng.Seed:x08}{worldSuffix}.sfc");
+            world is Games.Alttp.World 
+                ? $"alttpr_{world.WorldConfig.Alttp.Glitches}_{world.WorldConfig.Alttp.State}_{world.WorldConfig.Alttp.Goal}_{prng.Seed:x08}{worldSuffix}.sfc"
+                : $"z1r_{world.WorldConfig.Zelda1.EntranceShuffle}_{prng.Seed:x08}{worldSuffix}.nes");
+
         rom.Save(outputFile);
     }
 }
