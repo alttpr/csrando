@@ -1,6 +1,7 @@
 namespace Randomizer.Graph;
 
 using System.Diagnostics;
+using YamlDotNet.Serialization;
 
 public enum VertexType
 {
@@ -42,9 +43,9 @@ public enum VertexType
 public abstract class Vertex : ICloneable
 {
     public int Id { get; set; }
-    public required VertexType Type { get; init; }
-    public required string Name { get; set; }
-    public required IWorld World { get; init; }
+    public VertexType Type { get; init; }
+    public string Name { get; set; }
+    public IWorld World { get; init; }
     public IItem? Item { get; set; }
     public IItem? Trophy { get; init; }
     public ItemSetName[] ItemSet { get; init; } = [];

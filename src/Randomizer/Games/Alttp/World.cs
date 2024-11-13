@@ -42,12 +42,18 @@ public sealed class World : IWorld
         items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
         items.Add(GetItem($"ConfigWorldTowerEntryRequired{Config.CrystalsTower}"));
         items.Add(GetItem($"ConfigWorldGanonVulnerableRequired{Config.CrystalsGanon}"));
-        foreach (var tech in Config.Techs)
+        if (Config.Techs != null)
         {
-            items.Add(GetItem($"ConfigWorldTech{tech}"));
+            foreach (var tech in Config.Techs)
+            {
+                items.Add(GetItem($"ConfigWorldTech{tech}"));
+            }
         }
 
-        items.AddRange(Config.StartingEquipment.Select(GetItem));
+        if (Config.StartingEquipment != null)
+        {
+            items.AddRange(Config.StartingEquipment.Select(GetItem));
+        }
         StartingItems = new Inventory(items.ToArray());
 
         DataLoader.Fill(this);

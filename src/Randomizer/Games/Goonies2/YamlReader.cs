@@ -2,6 +2,8 @@
 
 using YamlDotNet.Serialization;
 
+using Cfg = global::Randomizer.Config;
+
 public class YamlReader
 {
     private static Lazy<string> _dataRoot = new(() =>
@@ -31,7 +33,7 @@ public class YamlReader
     {
         string itemsYML = Path.Combine(DataRoot, ItemsPath);
 
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         using var reader = File.OpenText(itemsYML);
         var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
 
@@ -56,7 +58,7 @@ public class YamlReader
     {
         string verticesYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
         using var reader = File.OpenText(verticesYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         return deserializer.Deserialize<Vertices>(reader);
     }
     public static Vertices LoadVertices() => _cachedVertices.Value;

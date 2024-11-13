@@ -6,6 +6,8 @@ using System.Linq;
 using YamlDotNet.Serialization;
 using Randomizer.Graph;
 
+using Cfg = global::Randomizer.Config;
+
 public class YamlReader
 {
     public YamlReader(Config config)
@@ -285,7 +287,7 @@ public class YamlReader
     private List<T> LoadFiles<T>(string path)
     {
         var yamlData = new List<T>();
-        var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
+        var deserializer = new YamlDotNet.Serialization.StaticDeserializerBuilder(Cfg.StaticContext).Build();
 
         foreach (var fileName in Directory.GetFiles(path, "*.yml", SearchOption.AllDirectories))
         {
@@ -306,7 +308,7 @@ public class YamlReader
 
     private T LoadFile<T>(string path)
     {
-        var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
+        var deserializer = new YamlDotNet.Serialization.StaticDeserializerBuilder(Cfg.StaticContext).Build();
         try
         {
             var data = deserializer.Deserialize<T>(File.ReadAllText(path));
@@ -391,7 +393,7 @@ public class YamlReader
     {
         string itemsYML = Path.Combine(DataRoot, ItemsPath);
 
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         using var reader = File.OpenText(itemsYML);
         var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
 

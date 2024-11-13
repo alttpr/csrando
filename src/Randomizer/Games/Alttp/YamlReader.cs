@@ -1,8 +1,13 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Collections.Concurrent;
+using Randomizer.Games.Goonies2;
 using Randomizer.Graph;
 using YamlDotNet.Serialization;
+using YamlDotNet.Core;
+using YamlDotNet.Serialization.Callbacks;
+
+using Cfg = global::Randomizer.Config;
 
 public class YamlReader
 {
@@ -49,7 +54,7 @@ public class YamlReader
     {
         string bossesYML = Path.Combine(DataRoot, BossesPath);
         using var reader = File.OpenText(bossesYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         var result = deserializer.Deserialize<Dictionary<string, List<string>>>(reader);
         return result;
     });
@@ -57,7 +62,7 @@ public class YamlReader
     {
         string enemiesYML = Path.Combine(DataRoot, EnemiesPath);
         using var reader = File.OpenText(enemiesYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         var result = deserializer.Deserialize<Dictionary<string, List<string>>>(reader);
         return result;
     });
@@ -66,7 +71,9 @@ public class YamlReader
     {
         string itemsYML = Path.Combine(DataRoot, ItemsPath);
 
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext)
+            .WithEnforceNullability()
+            .Build();
         using var reader = File.OpenText(itemsYML);
         var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
 
@@ -76,7 +83,7 @@ public class YamlReader
     {
         string itemsYML = Path.Combine(DataRoot, "sprites.yml");
 
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         using var reader = File.OpenText(itemsYML);
         var result = deserializer.Deserialize<Dictionary<string, YamlSprite>>(reader);
 
@@ -86,14 +93,25 @@ public class YamlReader
     private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
     private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
-    public static Dictionary<string, YamlItem> LoadItems() => _cachedItems.Value;
+    public static Dictionary<string, YamlItem> LoadItems()
+    {
+        string itemsYML = Path.Combine(DataRoot, ItemsPath);
+
+        var deserializer = new YamlDotNet.Serialization.StaticDeserializerBuilder(Cfg.StaticContext).Build();
+        using var reader = File.OpenText(itemsYML);
+        var result = deserializer.Deserialize<Dictionary<string, YamlItem>>(reader);
+
+        return result;
+    }
+    
+        //_cachedItems.Value;
     public static Dictionary<string, YamlSprite> LoadSprites() => _cachedSprites.Value;
 
     public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromTech(string name) => _cachedTechEdges.GetOrAdd(name, name =>
     {
         string edgesYML = Path.Combine(DataRoot, "Edges/tech", name + ".yml"); ;
 
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         using var reader = File.OpenText(edgesYML);
         var result = deserializer.Deserialize<Dictionary<string, DirectedUndirectedPair>>(reader);
         return result;
@@ -101,7 +119,7 @@ public class YamlReader
 
     private static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromFile(string path)
     {
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         using var reader = File.OpenText(path);
         return deserializer.Deserialize<Dictionary<string, DirectedUndirectedPair>>(reader);
     }
@@ -143,7 +161,7 @@ public class YamlReader
     public static Entrances LoadEntrances(string name) => _cachedEntrances.GetOrAdd(name, name =>
     {
         string entrancesYML = Path.Combine(DataRoot, "Edges/entrances", name + ".yml");
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         using var reader = File.OpenText(entrancesYML);
         var result = deserializer.Deserialize<Entrances>(reader);
         return result;
@@ -155,7 +173,7 @@ public class YamlReader
     {
         string verticesYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
         using var reader = File.OpenText(verticesYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         return deserializer.Deserialize<Vertices>(reader);
     }
 
@@ -225,7 +243,7 @@ public class YamlReader
     {
         string keyedTextYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
         using var reader = File.OpenText(keyedTextYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         return deserializer.Deserialize<Dictionary<string, string>>(reader) ?? [];
     }
     private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyDictionary<string, string[]>> _keyedLocalizedListText = new();
@@ -234,7 +252,7 @@ public class YamlReader
     {
         string keyedTextYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
         using var reader = File.OpenText(keyedTextYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         return deserializer.Deserialize<Dictionary<string, string[]>>(reader) ?? [];
     }
     private static readonly ConcurrentDictionary<string /* language/type/file.yml */, IReadOnlyList<string>> _localizedText = new();
@@ -243,10 +261,11 @@ public class YamlReader
     {
         string textYML = Path.IsPathFullyQualified(path) ? path : Path.Combine(DataRoot, path);
         using var reader = File.OpenText(textYML);
-        var deserializer = new DeserializerBuilder().Build();
+        var deserializer = new StaticDeserializerBuilder(Cfg.StaticContext).Build();
         return deserializer.Deserialize<List<string>>(reader) ?? [];
     }
 }
+
 public class YamlItem
 {
     [YamlMember(Alias = "bytes")]
@@ -255,10 +274,11 @@ public class YamlItem
     public string Type { get; set; } = string.Empty;
 }
 
+
 public class YamlSprite
 {
     [YamlMember(Alias = "id")]
-    public required byte Id { get; set; }
+    public  byte Id { get; set; }
     [YamlMember(Alias = "flags")]
     public YamlSpriteFlags Flags { get; set; }
     [YamlMember(Alias = "subtype")]
@@ -271,7 +291,9 @@ public class YamlSprite
     [YamlMember(Alias = "falling")]
     public string? FallingSpriteFor { get; set; }
 }
+
 [Flags]
+
 public enum YamlSpriteFlags
 {
     /// <summary>Nothing special.</summary>
@@ -288,12 +310,14 @@ public enum YamlSpriteFlags
     NoDrop = 1 << 4,
 }
 
+
 public class DirectedUndirectedPair
 {
 
     [YamlMember(Alias = "directed")]
     public List<List<string>> Directed { get; set; } = new();
 }
+
 
 public class ConnectionGroup
 {
@@ -306,6 +330,7 @@ public class ConnectionGroup
     public List<List<List<string>>> Underworld { get; set; } = new();
 }
 
+
 public class Entrances
 {
     [YamlMember(Alias = "fixed")]
@@ -315,6 +340,7 @@ public class Entrances
     [YamlMember(Alias = "connections")]
     public List<ConnectionGroup> Connections { get; set; } = new();
 }
+
 
 public partial class Map
 {
@@ -328,8 +354,9 @@ public partial class Map
     public byte?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "nodes")]
-    public required MapNodes Nodes { get; set; }
+    public  MapNodes Nodes { get; set; }
 }
+
 
 public partial class MapNodes
 {
@@ -343,10 +370,11 @@ public partial class MapNodes
     public List<Prizepack> Prizepacks { get; set; } = new();
 }
 
+
 public class MetaEntry
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "items")]
     public List<string> Items { get; set; } = new();
@@ -355,16 +383,17 @@ public class MetaEntry
     public Dictionary<string, List<string>> Connections { get; set; } = new();
 }
 
+
 public class Prizepack
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "addresses")]
-    public required long[] Addresses { get; set; }
+    public  long[] Addresses { get; set; }
 
     [YamlMember(Alias = "sprite")]
-    public required string Sprite { get; set; }
+    public  string Sprite { get; set; }
 
     [YamlMember(Alias = "deny")]
     public List<string> Deny { get; set; } = [];
@@ -373,10 +402,11 @@ public class Prizepack
     public List<string> Allow { get; set; } = [];
 }
 
+
 public partial class Entrance
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "entranceid")]
     public int EntranceId { get; set; }
@@ -388,10 +418,11 @@ public partial class Entrance
     public List<string> Conditions { get; set; } = new();
 }
 
+
 public partial class Hole
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "entranceids")]
     public List<int> EntranceIds { get; set; } = new();
@@ -400,10 +431,11 @@ public partial class Hole
     public List<string> Conditions { get; set; } = new();
 }
 
+
 public partial class ItemEntry
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "addresses")]
     public List<long> Addresses { get; set; } = new();
@@ -421,10 +453,11 @@ public partial class ItemEntry
     public List<string> Conditions { get; set; } = new();
 }
 
+
 public partial class Warp
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "position")]
     public Position? Position { get; set; }
@@ -432,6 +465,7 @@ public partial class Warp
     [YamlMember(Alias = "connections")]
     public Dictionary<string, List<string>> Connections { get; set; } = new();
 }
+
 
 public partial class Room
 {
@@ -442,7 +476,7 @@ public partial class Room
     public byte OAM { get; set; } = 0x00;
 
     [YamlMember(Alias = "nodes")]
-    public required RoomNodes Nodes { get; set; }
+    public  RoomNodes Nodes { get; set; }
 
     [YamlMember(Alias = "group")]
     public int? Group { get; set; }
@@ -460,6 +494,7 @@ public partial class Room
     public object? Bosses { get; set; }
 }
 
+
 public partial class RoomNodes
 {
     [YamlMember(Alias = "regions")]
@@ -473,16 +508,17 @@ public partial class RoomNodes
 
 }
 
+
 public partial class InventoryEntry
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "type")]
     public VertexType Type { get; set; }
 
     [YamlMember(Alias = "item")]
-    public required string Item { get; set; }
+    public  string Item { get; set; }
 
     [YamlMember(Alias = "cost")]
     public int Cost { get; set; }
@@ -491,16 +527,17 @@ public partial class InventoryEntry
     public List<string> ItemSet { get; set; } = new();
 }
 
+
 public partial class Entity
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "position")]
-    public required Position Position { get; set; }
+    public  Position Position { get; set; }
 
     [YamlMember(Alias = "sprite")]
-    public required string Sprite { get; set; }
+    public  string Sprite { get; set; }
 
     [YamlMember(Alias = "state")]
     public List<int> State { get; set; } = new();
@@ -524,6 +561,7 @@ public partial class Entity
     public string? Trophy { get; set; }
 }
 
+
 public partial class Position
 {
     [YamlMember(Alias = "x")]
@@ -536,10 +574,11 @@ public partial class Position
     public int? Z { get; set; }
 }
 
+
 public partial class Region
 {
     [YamlMember(Alias = "name")]
-    public required string Name { get; set; }
+    public  string Name { get; set; }
 
     [YamlMember(Alias = "inletid")]
     public int? InletId { get; set; }
@@ -586,6 +625,7 @@ public partial class Region
     [YamlMember(Alias = "bosses")]
     public Dictionary<string, List<Entity>> Bosses { get; set; } = new();
 }
+
 
 public class Vertices
 {

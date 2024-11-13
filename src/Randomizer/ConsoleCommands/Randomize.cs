@@ -89,55 +89,55 @@ internal sealed class Randomize : Command
             }
             if (dumpSpoiler)
             {
-                Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
-                {
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                    WriteIndented = true
-                }));
+                Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, typeof(Dictionary<string, Dictionary<string, string>>), Config.JsonStaticContext));
             }
         }
         _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);
         return 0;
     }
 
-    private static readonly JsonSerializerOptions _options = new()
-    {
-        AllowTrailingCommas = true,
-        NumberHandling = JsonNumberHandling.AllowReadingFromString,
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() },
-    };
     private WorldConfig[] GetWorldConfigs(InvocationContext context)
     {
         var settingsFile = context.ParseResult.GetValueForOption(_settingsFile);
         if (settingsFile == null && File.Exists(Config.SettingsFile))
             settingsFile = new FileInfo(Config.SettingsFile);
+
+        Console.WriteLine("settingsFile: {0}", settingsFile);
+
         if (settingsFile != null && settingsFile.Exists)
         {
             using var settingsStream = settingsFile.OpenRead();
+            using var settingsReader = new StreamReader(settingsStream);
+            var settingsString = settingsReader.ReadToEnd();
             try
             {
                 // try to read an array first; one entry per world (for multiworld)
-                var configArray = JsonSerializer.Deserialize<WorldConfig[]>(settingsStream, _options);
+                var configArray = JsonSerializer.Deserialize(settingsString, typeof(WorldConfig[]), Config.JsonStaticContext) as WorldConfig[];
                 if (configArray != null)
                 {
                     _logger.LogInformation("Read {WorldConfigCount} worlds from passed config file.", configArray.Length);
                     return configArray;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: {0}", ex);
+            }
             try
             {
                 settingsStream.Seek(0, SeekOrigin.Begin);
                 // try to read a single config, duplicate for multiworld as necessary
-                var singleConfig = JsonSerializer.Deserialize<WorldConfig>(settingsStream, _options);
+                var singleConfig = JsonSerializer.Deserialize(settingsString, typeof(WorldConfig), Config.JsonStaticContext) as WorldConfig;
                 if (singleConfig != null)
                 {
                     _logger.LogInformation("Read single world from passed config file.");
                     return Enumerable.Repeat(singleConfig, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: {0}", ex);
+            }
         }
 
         throw new InvalidOperationException("No usable settings file passed. Either use the --settings option or place a valid file at data/settings.json.");

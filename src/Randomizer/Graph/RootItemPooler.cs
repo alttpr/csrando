@@ -13,7 +13,7 @@ internal sealed class RootItemPooler : IItemPooler
         var alttpPooler = new ItemPooler(worlds, prng);
         var z1Pooler = new Games.Zelda1.ItemPooler(worlds, prng);
 
-        Pool = z1Pooler.Pool;
-        SetLocations = z1Pooler.SetLocations;
+        Pool = alttpPooler.Pool;
+        SetLocations = alttpPooler.SetLocations;
     }
 }

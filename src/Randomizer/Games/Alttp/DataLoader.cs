@@ -2,6 +2,7 @@ using Randomizer.Graph;
 
 namespace Randomizer.Games.Alttp;
 
+
 internal static class DataLoader
 {
     /// <summary>
@@ -101,7 +102,7 @@ internal static class DataLoader
             if (world.Config.State == StateOption.Inverted)
                 result = !moonpearl;
 
-            if (world.Config.Techs.Contains(TechOption.DungeonBunnyRevival) && BUNNY_REVIVE.Contains(name))
+            if (world.Config.Techs != null && world.Config.Techs.Contains(TechOption.DungeonBunnyRevival) && BUNNY_REVIVE.Contains(name))
                 result = false;
 
             return result;
@@ -517,14 +518,17 @@ internal static class DataLoader
                 break;
         }
 
-        foreach (var tech in world.Config.Techs)
+        if (world.Config.Techs != null)
         {
-            var fileName = tech switch
+            foreach (var tech in world.Config.Techs)
             {
-                TechOption.DungeonBunnyRevival => "dungeon_bunny_revival",
-                _ => throw new Exception("Missing tech enum to file mapping for value: " + tech),
-            };
-            YamlReader.MergeEdges(edgeData, YamlReader.LoadEdgesFromTech(fileName));
+                var fileName = tech switch
+                {
+                    TechOption.DungeonBunnyRevival => "dungeon_bunny_revival",
+                    _ => throw new Exception("Missing tech enum to file mapping for value: " + tech),
+                };
+                YamlReader.MergeEdges(edgeData, YamlReader.LoadEdgesFromTech(fileName));
+            }
         }
 
         var returnData = new Dictionary<ItemCondition, DirectedUndirectedPair>();

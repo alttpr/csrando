@@ -28,9 +28,12 @@ public class SpoilerLog
             return;
 
         int i = 0;
-        foreach (var item in config.StartingEquipment)
+        if(config.StartingEquipment != null)
         {
-            Spoiler["Equipped"][$"Equipment Slot {++i}"] = item;
+            foreach (var item in config.StartingEquipment)
+            {
+                Spoiler["Equipped"][$"Equipment Slot {++i}"] = item;
+            }
         }
 
         foreach (var location in world.GetLocationsOfType(VertexType.Item))
