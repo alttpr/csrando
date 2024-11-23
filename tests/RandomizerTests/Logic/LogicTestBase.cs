@@ -53,9 +53,12 @@ public abstract class LogicTestBase
 
     public virtual void TestLogic(string location, bool expected, string[] inventory)
     {
+        var singleWorldConfig = GetWorldConfig();
+        // FIXME: we use the config as caching key (see GetRandomizerForConfig) but change its values as part of the randomization.
+        singleWorldConfig.Alttp?.SelectRandomValues(new(seed: 42));
         RunLogicTest(
         [
-            GetWorldConfig(),
+            singleWorldConfig,
         ], location, expected, inventory);
     }
 
