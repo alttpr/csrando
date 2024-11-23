@@ -96,7 +96,7 @@ public sealed class Rom : IDisposable
     {
         _rom.Seek(address.Value, SeekOrigin.Begin);
         var data = new byte[length];
-        _rom.Read(data);
+        _rom.ReadExactly(data);
         return data;
     }
 
