@@ -7,7 +7,7 @@ rooms:
           items:
             - name: "Sick Kid Item"
               conditions: ["LogicalBottle"]
-              addresses: [0x339CF]
+              addresses: [0x06B9CF]
               type: "npc"
               itemset: ["lw"]
           pots:

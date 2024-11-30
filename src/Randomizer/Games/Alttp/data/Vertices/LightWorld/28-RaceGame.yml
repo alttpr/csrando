@@ -13,7 +13,7 @@ maps:
               outletid: 0x10
           items:
             - name: "Maze Race"
-              addresses: [0x180142]
+              addresses: [0xB08142]
               type: "standing"
               itemset: ["lw"]
           mobs:

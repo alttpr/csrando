@@ -82,7 +82,7 @@ rooms:
             - name: "Misery Mire - Main Lobby Chest"
               type: "chest"
               conditions: ["LiftPot"]
-              addresses: [0xEA5E]
+              addresses: [0x01EA5E]
               itemset: ["mire"]
           pots:
             - name: "Misery Mire - Main Lobby - Pot 1"

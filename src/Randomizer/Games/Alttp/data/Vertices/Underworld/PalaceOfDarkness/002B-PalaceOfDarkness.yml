@@ -64,7 +64,7 @@ rooms:
               - "Palace of Darkness - Fairies"
           items:
             - name: "Palace of Darkness - Map Chest"
-              addresses: [0xea52]
+              addresses: [0x01EA52]
               type: "chest"
               itemset: ["pod"]
           pots:

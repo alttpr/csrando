@@ -11,7 +11,7 @@ rooms:
               - "Skull Woods - Pinball Room"
           items:
             - name: "Skull Woods - Compass Chest"
-              addresses: [0xE992]
+              addresses: [0x01E992]
               type: "chest"
               itemset: ["skull"]
           # TODO: Verify pots in room

@@ -9,7 +9,7 @@ rooms:
               - "Swamp Palace - Long Hall"
           items:
             - name: "Swamp Palace - Map Chest"
-              addresses: [0xE986]
+              addresses: [0x01E986]
               type: "chest"
               itemset: ["swamp"]
           mobs:

@@ -9,7 +9,7 @@ rooms:
               - "Ice Palace - Big Chest Room - Right"
           items:
             - name: "Ice Palace - Big Chest"
-              addresses: [0xE9AA]
+              addresses: [0x01E9AA]
               conditions: ["BigKeyD5"]
               type: "bigchest"
               itemset: ["ice"]

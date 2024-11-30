@@ -12,7 +12,7 @@ rooms:
               - "Desert Palace - Northeast Corner"
           items:
             - name: "Desert Palace - Map Chest"
-              addresses: [0xE9B6]
+              addresses: [0x01E9B6]
               conditions: ["LiftPot"]
               type: "chest"
               itemset: ["desert"]

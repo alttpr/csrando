@@ -22,7 +22,7 @@ maps:
             - name: "Misery Mire - Entry"
               type: "medallion"
               itemset: ["mm-medallion"]
-              addresses: [0x180022, 0x4FF2, 0x50D1, 0x51B0]
+              addresses: [0xB08022, 0x00CFF2, 0x00D0D1, 0x00D1B0]
           mobs:
             - name: "Mire - Raven 1"
               position: { x: 0x21, y: 0x1b }

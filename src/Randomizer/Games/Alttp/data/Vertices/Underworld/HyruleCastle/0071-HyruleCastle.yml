@@ -24,7 +24,7 @@ rooms:
               - "Hyrule Castle - Basement Trap"
           items:
             - name: "Hyrule Castle - Boomerang Chest"
-              addresses: [0xE974]
+              addresses: [0x01E974]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["escape"]

@@ -85,7 +85,7 @@ rooms:
               - "Palace of Darkness - Dark Maze"
           items:
             - name: "Palace of Darkness - Big Chest"
-              addresses: [0xea40]
+              addresses: [0x01EA40]
               conditions: ["BigKeyD1"]
               type: "bigchest"
               itemset: ["pod"]
@@ -99,7 +99,7 @@ rooms:
               - "Palace of Darkness - Harmless Hellway"
           items:
             - name: "Palace of Darkness - Compass Chest"
-              addresses: [0xea43]
+              addresses: [0x01EA43]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]
@@ -125,7 +125,7 @@ rooms:
               - "Palace of Darkness - Compass Room"
           items:
             - name: "Palace of Darkness - Harmless Hellway Chest"
-              addresses: [0xea46]
+              addresses: [0x01EA46]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]

@@ -50,7 +50,7 @@ rooms:
               - "Skull Woods - Gibdo Bridge Room"
           items:
             - name: "Skull Woods - Bridge Room Chest"
-              addresses: [0xE9FE]
+              addresses: [0x01E9FE]
               type: "chest"
               itemset: ["skull"]
 

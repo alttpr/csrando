@@ -73,7 +73,7 @@ rooms:
               - "Eastern Palace - East Wing - Gap Left"
           items:
             - name: "Eastern Palace - Map Chest"
-              addresses: [0xE9F5]
+              addresses: [0x01E9F5]
               type: "chest"
               itemset: ["eastern"]
 

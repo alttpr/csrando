@@ -46,11 +46,11 @@ rooms:
 
       items:
         - name: "Tower Of Hera - Boss Item"
-          addresses: [0x180152]
+          addresses: [0xB08152]
           type: "drop"
           itemset: ["hera"]
 
         - name: "Tower Of Hera - Prize"
-          addresses: [0x120A5, 0x53E78, 0x53E79, 0x18005A, 0x180071, 0xC706]
+          addresses: [0x02A0A5, 0x0ABE78, 0x0ABE79, 0xB0805A, 0xB08071, 0x01C706]
           type: "prize"
           itemset: ["prize"]

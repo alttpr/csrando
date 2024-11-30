@@ -81,19 +81,19 @@ rooms:
           items:
             - name: "Ganon's Tower - Compass Room - Top Left"
               type: "chest"
-              addresses: [0xEAE5]
+              addresses: [0x01EAE5]
               itemset: ["gt"]
             - name: "Ganon's Tower - Compass Room - Top Right"
               type: "chest"
-              addresses: [0xEAE8]
+              addresses: [0x01EAE8]
               itemset: ["gt"]
             - name: "Ganon's Tower - Compass Room - Bottom Left"
               type: "chest"
-              addresses: [0xEAEB]
+              addresses: [0x01EAEB]
               itemset: ["gt"]
             - name: "Ganon's Tower - Compass Room - Bottom Right"
               type: "chest"
-              addresses: [0xEAEE]
+              addresses: [0x01EAEE]
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Compass Room - Pot 3"

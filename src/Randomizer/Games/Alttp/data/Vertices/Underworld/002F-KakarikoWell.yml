@@ -12,22 +12,22 @@ rooms:
           items:
             - name: "Kakariko Well - Left"
               conditions: ["OpenChest"]
-              addresses: [0xEA91]
+              addresses: [0x01EA91]
               type: "chest"
               itemset: ["lw"]
             - name: "Kakariko Well - Middle"
               conditions: ["OpenChest"]
-              addresses: [0xEA94]
+              addresses: [0x01EA94]
               type: "chest"
               itemset: ["lw"]
             - name: "Kakariko Well - Right"
               conditions: ["OpenChest"]
-              addresses: [0xEA97]
+              addresses: [0x01EA97]
               type: "chest"
               itemset: ["lw"]
             - name: "Kakariko Well - Bottom"
               conditions: ["OpenChest"]
-              addresses: [0xEA9A]
+              addresses: [0x01EA9A]
               type: "chest"
               itemset: ["lw"]
           pots:
@@ -45,7 +45,7 @@ rooms:
           items:
             - name: "Kakariko Well - Top"
               conditions: ["OpenChest"]
-              addresses: [0xEA8E]
+              addresses: [0x01EA8E]
               type: "chest"
               itemset: ["lw"]
           pots:

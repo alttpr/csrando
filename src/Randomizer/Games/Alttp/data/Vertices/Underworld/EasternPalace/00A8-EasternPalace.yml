@@ -74,6 +74,6 @@ rooms:
               - "Eastern Palace - West Wing - Stalfos Ambush"
           items:
             - name: "Eastern Palace - Compass Chest"
-              addresses: [0xE977]
+              addresses: [0x01E977]
               type: "chest"
               itemset: ["eastern"]

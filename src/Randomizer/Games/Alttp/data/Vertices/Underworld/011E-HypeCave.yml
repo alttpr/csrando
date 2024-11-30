@@ -9,7 +9,7 @@ rooms:
               - "Hype Cave"
           items:
             - name: "Hype Cave - NPC Item"
-              addresses: [0x180011]
+              addresses: [0xB08011]
               type: "npc"
               itemset: ["dw"]
           mobs:
@@ -26,21 +26,21 @@ rooms:
           items:
             - name: "Hype Cave - Top"
               conditions: ["OpenChest"]
-              addresses: [0xEB1E]
+              addresses: [0x01EB1E]
               type: "chest"
               itemset: ["dw"]
             - name: "Hype Cave - Middle Right"
               conditions: ["OpenChest"]
-              addresses: [0xEB21]
+              addresses: [0x01EB21]
               type: "chest"
               itemset: ["dw"]
             - name: "Hype Cave - Middle Left"
               conditions: ["OpenChest"]
-              addresses: [0xEB24]
+              addresses: [0x01EB24]
               type: "chest"
               itemset: ["dw"]
             - name: "Hype Cave - Bottom"
               conditions: ["OpenChest"]
-              addresses: [0xEB27]
+              addresses: [0x01EB27]
               type: "chest"
               itemset: ["dw"]

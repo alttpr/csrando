@@ -132,11 +132,11 @@ rooms:
 
       items:
         - name: "Desert Palace - Boss Item"
-          addresses: [0x180151]
+          addresses: [0xB08151]
           type: "drop"
           itemset: ["desert"]
 
         - name: "Desert Palace - Prize"
-          addresses: [0x1209E, 0x53E7A, 0x53E7B, 0x180053, 0x180072, 0xC6FF]
+          addresses: [0x02A09E, 0x0ABE7A, 0x0ABE7B, 0xB08053, 0xB08072, 0x01C6FF]
           type: "prize"
           itemset: ["prize"]

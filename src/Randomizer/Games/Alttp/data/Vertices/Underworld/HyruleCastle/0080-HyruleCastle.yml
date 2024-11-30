@@ -35,7 +35,7 @@ rooms:
               - "Hyrule Castle - Basement Cells"
           items:
             - name: "Hyrule Castle - Zelda's Cell"
-              addresses: [0xEB09]
+              addresses: [0x01EB09]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["escape"]

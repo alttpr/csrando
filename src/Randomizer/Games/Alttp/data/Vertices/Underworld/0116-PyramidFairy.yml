@@ -7,17 +7,17 @@ rooms:
           items:
             - name: "Pyramid Fairy - Bottle"
               conditions: ["LogicalBottle"]
-              addresses: [0x3493B]
+              addresses: [0x06C93B]
               type: "refill"
               itemset: ["bottle"]
             - name: "Pyramid Fairy - Right"
               conditions: ["OpenChest"]
-              addresses: [0xE983]
+              addresses: [0x01E983]
               type: "chest"
               itemset: ["dw"]
             - name: "Pyramid Fairy - Left"
               conditions: ["OpenChest"]
-              addresses: [0xE980]
+              addresses: [0x01E980]
               type: "chest"
               itemset: ["dw"]
           mobs:

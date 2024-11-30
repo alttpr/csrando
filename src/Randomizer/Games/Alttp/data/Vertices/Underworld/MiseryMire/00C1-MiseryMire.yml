@@ -75,7 +75,7 @@ rooms:
           items:
             - name: "Misery Mire - Compass Chest"
               type: "chest"
-              addresses: [0xEA64]
+              addresses: [0x01EA64]
               itemset: ["mire"]
 
         - name: "Misery Mire - 4 Rails"

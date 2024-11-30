@@ -13,7 +13,7 @@ rooms:
               - "Ice Palace - P Room"
           items:
             - name: "Ice Palace - Map Chest"
-              addresses: [0xE9DD]
+              addresses: [0x01E9DD]
               type: "chest"
               itemset: ["ice"]
           mobs:

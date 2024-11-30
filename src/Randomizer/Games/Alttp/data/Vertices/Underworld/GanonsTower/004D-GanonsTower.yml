@@ -63,7 +63,7 @@ rooms:
           items:
             - name: "Ganon's Tower - Moldorm Chest"
               type: "chest"
-              addresses: [0xEB06]
+              addresses: [0x01EB06]
               itemset: ["gt"]
 
         - name: "Ganon's Tower - Moldorm - Exit"

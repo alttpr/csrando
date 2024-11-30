@@ -13,7 +13,7 @@ rooms:
           inletid: 0x02
           items:
             - name: "Sanctuary Chest"
-              addresses: [0xEA79]
+              addresses: [0x01EA79]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["escape"]

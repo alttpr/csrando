@@ -112,7 +112,7 @@ rooms:
               - "Thieves' Town - Cell 2"
           items:
             - name: "Thieves' Town - Blind's Cell"
-              addresses: [0xEA13]
+              addresses: [0x01EA13]
               type: "chest"
               itemset: ["thieves"]
           pots:

@@ -9,7 +9,7 @@ rooms:
               - "Thief Hideout"
           items:
             - name: "Lost Woods Hideout Item"
-              addresses: [0x180000]
+              addresses: [0xB08000]
               type: "standing"
               itemset: ["lw"]
           mobs:

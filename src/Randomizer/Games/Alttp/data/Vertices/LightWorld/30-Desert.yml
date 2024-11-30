@@ -120,7 +120,7 @@ maps:
               - "Desert Ledge - Rocks Right"
           items:
             - name: "Desert Ledge - Item"
-              addresses: [0x180143]
+              addresses: [0xB08143]
               type: "standing"
               itemset: ["lw"]
           entrances:
@@ -183,7 +183,7 @@ maps:
           items:
             - name: "Bombos Tablet"
               conditions: ["ActiveBookOfMudora"]
-              addresses: [0x180017]
+              addresses: [0xB08017]
               type: "drop"
               itemset: ["lw"]
           mobs:

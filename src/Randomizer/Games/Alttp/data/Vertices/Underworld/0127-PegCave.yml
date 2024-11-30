@@ -6,7 +6,7 @@ rooms:
           inletid: 0x83
           items:
             - name: "Hammer Pegs Item"
-              addresses: [0x180006]
+              addresses: [0xB08006]
               type: "standing"
               itemset: ["dw"]
           pots:

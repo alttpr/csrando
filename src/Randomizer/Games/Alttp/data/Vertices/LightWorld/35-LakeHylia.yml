@@ -189,7 +189,7 @@ maps:
               - "Lake Hylia"
           items:
             - name: "Lake Hylia Island Item"
-              addresses: [0x180144]
+              addresses: [0xB08144]
               type: "standing"
               itemset: ["lw"]
           mobs:

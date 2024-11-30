@@ -32,6 +32,6 @@ rooms:
           items:
             - name: "Chicken House Item"
               conditions: ["OpenChest"]
-              addresses: [0xE9E9]
+              addresses: [0x01E9E9]
               type: "chest"
               itemset: ["lw"]

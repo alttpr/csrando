@@ -7,7 +7,7 @@ rooms:
           items:
             - name: "Chest Game"
               conditions: ["OpenChest"]
-              addresses: [0xEDA8]
+              addresses: [0x01EDA8]
               type: "chest"
               itemset: ["dw"]
           mobs:

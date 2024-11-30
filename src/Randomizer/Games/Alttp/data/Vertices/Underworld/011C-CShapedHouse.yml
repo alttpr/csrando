@@ -7,6 +7,6 @@ rooms:
           items:
             - name: "C-Shaped House Item"
               conditions: ["OpenChest"]
-              addresses: [0xE9EF]
+              addresses: [0x01E9EF]
               type: "chest"
               itemset: ["dw"]

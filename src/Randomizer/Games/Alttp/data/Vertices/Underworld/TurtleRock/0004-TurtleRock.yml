@@ -40,7 +40,7 @@ rooms:
               - "Turtle Rock - Dark Maze Top"
           items:
             - name: "Turtle Rock - Crystaroller Room Chest"
-              addresses: [0xEA34]
+              addresses: [0x01EA34]
               # TODO: Check if we want to allow Byrna, it's a tight timing
               # Note: Hammer's range is too short to be on the pegs and go
               # down when hitting the switch

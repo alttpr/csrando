@@ -13,7 +13,7 @@ maps:
               outletid: 0x18
           items:
             - name: "Bumper Cave Item"
-              addresses: [0x180146]
+              addresses: [0xB08146]
               type: "standing"
               itemset: ["dw"]
           mobs:

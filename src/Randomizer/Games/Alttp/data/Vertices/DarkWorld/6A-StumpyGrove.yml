@@ -15,7 +15,7 @@ maps:
               - "Stumpy Grove Entrance Transition Nook"
           items:
             - name: "Stumpy"
-              addresses: [0x330C7]
+              addresses: [0x06B0C7]
               type: "npc"
               itemset: ["dw"]
           mobs:

@@ -24,27 +24,27 @@ rooms:
           items:
             - name: "Paradox Cave Lower - Far Left"
               conditions: ["OpenChest"]
-              addresses: [0xEB2A]
+              addresses: [0x01EB2A]
               type: "chest"
               itemset: ["lw"]
             - name: "Paradox Cave Lower - Left"
               conditions: ["OpenChest"]
-              addresses: [0xEB2D]
+              addresses: [0x01EB2D]
               type: "chest"
               itemset: ["lw"]
             - name: "Paradox Cave Lower - Right"
               conditions: ["OpenChest"]
-              addresses: [0xEB30]
+              addresses: [0x01EB30]
               type: "chest"
               itemset: ["lw"]
             - name: "Paradox Cave Lower - Far Right"
               conditions: ["OpenChest"]
-              addresses: [0xEB33]
+              addresses: [0x01EB33]
               type: "chest"
               itemset: ["lw"]
             - name: "Paradox Cave Lower - Middle"
               conditions: ["OpenChest"]
-              addresses: [0xEB36]
+              addresses: [0x01EB36]
               type: "chest"
               itemset: ["lw"]
           mobs:

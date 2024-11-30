@@ -74,7 +74,7 @@ maps:
               - "Pyramid"
           items:
             - name: "Pyramid Item"
-              addresses: [0x180147]
+              addresses: [0xB08147]
               type: "standing"
               itemset: ["dw"]
           mobs:

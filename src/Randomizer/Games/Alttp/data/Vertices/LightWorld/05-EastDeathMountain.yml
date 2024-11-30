@@ -155,7 +155,7 @@ maps:
         - name: "East Death Mountain Floating Island"
           items:
             - name: "Floating Island Item"
-              addresses: [0x180141]
+              addresses: [0xB08141]
               type: "standing"
               itemset: ["lw"]
           mobs:

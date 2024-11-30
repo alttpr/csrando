@@ -11,7 +11,7 @@ rooms:
               - "Desert Palace - Right Hallway"
           items:
             - name: "Desert Palace - Compass Chest"
-              addresses: [0xE9CB]
+              addresses: [0x01E9CB]
               type: "chest"
               itemset: ["desert"]
           mobs:

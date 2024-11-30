@@ -10,7 +10,7 @@ rooms:
           items:
             - name: "Potion Shop Item"
               conditions: ["MushroomReturned"]
-              addresses: [0x180014]
+              addresses: [0xB08014]
               type: "standing"
               itemset: ["lw"]
           inventory:

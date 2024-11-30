@@ -12,7 +12,7 @@ rooms:
           items:
             - name: "Sahasrahla's Hut - Sahasrahla"
               conditions: ["PendantOfCourage"]
-              addresses: [0x2F1FC]
+              addresses: [0x05F1FC]
               type: "npc"
               itemset: ["lw", "argh"]
           pots:
@@ -41,16 +41,16 @@ rooms:
           items:
             - name: "Sahasrahla's Hut - Left"
               conditions: ["OpenChest"]
-              addresses: [0xEA82]
+              addresses: [0x01EA82]
               type: "chest"
               itemset: ["lw"]
             - name: "Sahasrahla's Hut - Middle"
               conditions: ["OpenChest"]
-              addresses: [0xEA85]
+              addresses: [0x01EA85]
               type: "chest"
               itemset: ["lw"]
             - name: "Sahasrahla's Hut - Right"
               conditions: ["OpenChest"]
-              addresses: [0xEA88]
+              addresses: [0x01EA88]
               type: "chest"
               itemset: ["lw"]

@@ -13,7 +13,7 @@ rooms:
               - "Sewers - Dark Three Islands"
           items:
             - name: "Sewers - Dark Cross Chest"
-              addresses: [0xE96E]
+              addresses: [0x01E96E]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["escape"]

@@ -10,7 +10,7 @@ rooms:
               - "Swamp Palace - Waterfall Exit"
           items:
             - name: "Swamp Palace - Waterfall Room Chest"
-              addresses: [0xEAAF]
+              addresses: [0x01EAAF]
               type: "chest"
               itemset: ["swamp"]
           mobs:

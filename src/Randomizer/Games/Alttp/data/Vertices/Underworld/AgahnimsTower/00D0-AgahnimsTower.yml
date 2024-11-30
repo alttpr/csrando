@@ -26,7 +26,7 @@ rooms:
               - "Agahnims Tower - Dark Knife Guards"
           items:
             - name: "Agahnims Tower - Second Chest"
-              addresses: [0xEAB2]
+              addresses: [0x01EAB2]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["agahnim"]

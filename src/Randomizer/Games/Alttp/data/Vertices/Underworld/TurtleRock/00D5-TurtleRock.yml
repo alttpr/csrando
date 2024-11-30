@@ -19,22 +19,22 @@ rooms:
               - "Turtle Rock - Eye Bridge - Bomb Door"
           items:
             - name: "Turtle Rock - Eye Bridge - Bottom Left"
-              addresses: [0xEA31]
+              addresses: [0x01EA31]
               conditions: ["Cape", "CaneOfByrna", "MirrorShield"]
               type: "chest"
               itemset: ["turtlerock"]
             - name: "Turtle Rock - Eye Bridge - Bottom Right"
-              addresses: [0xEA2E]
+              addresses: [0x01EA2E]
               conditions: ["Cape", "CaneOfByrna", "MirrorShield"]
               type: "chest"
               itemset: ["turtlerock"]
             - name: "Turtle Rock - Eye Bridge - Top Left"
-              addresses: [0xEA2B]
+              addresses: [0x01EA2B]
               conditions: ["Cape", "CaneOfByrna", "MirrorShield"]
               type: "chest"
               itemset: ["turtlerock"]
             - name: "Turtle Rock - Eye Bridge - Top Right"
-              addresses: [0xEA28]
+              addresses: [0x01EA28]
               conditions: ["Cape", "CaneOfByrna", "MirrorShield"]
               type: "chest"
               itemset: ["turtlerock"]

@@ -50,7 +50,7 @@ rooms:
               - "Ice Palace - Big Chest Room - Left"
           items:
             - name: "Ice Palace - Freezor Chest"
-              addresses: [0xE995]
+              addresses: [0x01E995]
               conditions: ["IcePalaceFreezorRoomTrophy|2"]
               type: "chest"
               itemset: ["ice"]

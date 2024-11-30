@@ -142,11 +142,11 @@ rooms:
 
       items:
         - name: "Thieves' Town - Boss Item"
-          addresses: [0x180156]
+          addresses: [0xB08156]
           type: "drop"
           itemset: ["thieves"]
 
         - name: "Thieves' Town - Prize"
-          addresses: [0x120A6, 0x53E82, 0x53E83, 0x18005B, 0x180076, 0xC707]
+          addresses: [0x02A0A6, 0x0ABE82, 0x0ABE83, 0xB0805B, 0xB08076, 0x01C707]
           type: "prize"
           itemset: ["prize"]

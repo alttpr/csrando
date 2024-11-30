@@ -132,11 +132,11 @@ rooms:
 
       items:
         - name: "Ice Palace - Boss Item"
-          addresses: [0x180157]
+          addresses: [0xB08157]
           type: "drop"
           itemset: ["ice"]
 
         - name: "Ice Palace - Prize"
-          addresses: [0x120A4, 0x53E86, 0x53E87, 0x180059, 0x180078, 0xC705]
+          addresses: [0x02A0A4, 0x0ABE86, 0x0ABE87, 0xB08059, 0xB08078, 0x01C705]
           type: "prize"
           itemset: ["prize"]

@@ -149,11 +149,11 @@ rooms:
 
       items:
         - name: "Skull Woods - Boss Item"
-          addresses: [0x180155]
+          addresses: [0xB08155]
           type: "drop"
           itemset: ["skull"]
 
         - name: "Skull Woods - Prize"
-          addresses: [0x120A3, 0x53E7E, 0x53E7F, 0x180058, 0x180074, 0xC704]
+          addresses: [0x02A0A3, 0x0ABE7E, 0x0ABE7F, 0xB08058, 0xB08074, 0x01C704]
           type: "prize"
           itemset: ["prize"]

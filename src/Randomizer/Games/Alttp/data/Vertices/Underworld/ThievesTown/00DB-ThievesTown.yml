@@ -12,7 +12,7 @@ rooms:
           items:
             - name: "Thieves' Town - Map Chest"
               type: "chest"
-              addresses: [0xEA01]
+              addresses: [0x01EA01]
               itemset: ["thieves"]
           pots:
             - name: "Thieves' Town - Grand Room SW - Pot 1"
@@ -53,5 +53,5 @@ rooms:
           items:
             - name: "Thieves' Town - Big Key Chest"
               type: "chest"
-              addresses: [0xEA04]
+              addresses: [0x01EA04]
               itemset: ["thieves"]

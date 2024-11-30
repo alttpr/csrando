@@ -14,7 +14,7 @@ rooms:
           items:
             - name: "Tower Of Hera - Map Chest"
               type: "chest"
-              addresses: [0xE9AD]
+              addresses: [0x01E9AD]
               itemset: ["hera"]
           mobs:
             - name: "Tower Of Hera - Entrance - Mini Moldorm"

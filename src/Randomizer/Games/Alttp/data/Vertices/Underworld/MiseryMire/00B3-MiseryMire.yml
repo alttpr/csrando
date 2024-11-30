@@ -14,7 +14,7 @@ rooms:
             - name: "Misery Mire - Spike Chest"
               type: "chest"
               conditions: ["LiftPot"]
-              addresses: [0xE9DA]
+              addresses: [0x01E9DA]
               itemset: ["mire"]
           pots:
             - name: "Misery Mire - Spike Room - Left Pot"

@@ -7,7 +7,7 @@ rooms:
           items:
             - name: "Link's House - Chest"
               conditions: ["OpenChest"]
-              addresses: [0xE9BC]
+              addresses: [0x01E9BC]
               type: "chest"
               itemset: ["lw"]
           pots:

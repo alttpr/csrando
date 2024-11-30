@@ -13,7 +13,7 @@ rooms:
             - name: "Eastern Palace - Big Key Chest"
               type: "chest"
               conditions: ["LiftPot"]
-              addresses: [0xE9B9]
+              addresses: [0x01E9B9]
               itemset: ["eastern"]
 
           pots:

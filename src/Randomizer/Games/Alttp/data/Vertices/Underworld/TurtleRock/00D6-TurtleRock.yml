@@ -34,7 +34,7 @@ rooms:
               - "Turtle Rock - Lobby SSW"
           items:
             - name: "Turtle Rock - Compass Chest"
-              addresses: [0xEA22]
+              addresses: [0x01EA22]
               type: "chest"
               itemset: ["turtlerock"]
           mobs:

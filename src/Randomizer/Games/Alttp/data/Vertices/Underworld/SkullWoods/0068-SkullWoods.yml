@@ -10,7 +10,7 @@ rooms:
               - "Skull Woods - Hourglass Bottom"
           items:
             - name: "Skull Woods - Pinball Chest"
-              addresses: [0xE9C8]
+              addresses: [0x01E9C8]
               conditions: ["LiftPot"]
               type: "chest"
               itemset: ["skull"]

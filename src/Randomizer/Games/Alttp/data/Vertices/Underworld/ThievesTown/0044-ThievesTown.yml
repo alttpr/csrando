@@ -94,7 +94,7 @@ rooms:
               - "Thieves' Town - Mole Room"
           items:
             - name: "Thieves' Town - Big Chest"
-              addresses: [0xEA10]
+              addresses: [0x01EA10]
               conditions: ["BigKeyD4"]
               type: "bigchest"
               itemset: ["thieves"]

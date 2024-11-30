@@ -47,7 +47,7 @@ rooms:
               - "Turtle Rock - Pokey Ambush"
           items:
             - name: "Turtle Rock - Chain Chomps"
-              addresses: [0xEA16]
+              addresses: [0x01EA16]
               type: "chest"
               itemset: ["turtlerock"]
           mobs:

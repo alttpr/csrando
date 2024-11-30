@@ -7,7 +7,7 @@ rooms:
           items:
             - name: "Blacksmith Item"
               conditions: ["LostSmith"]
-              addresses: [0x18002A]
+              addresses: [0xB0802A]
               type: "npc"
               itemset: ["lw"]
             - name: "Smith Returned"

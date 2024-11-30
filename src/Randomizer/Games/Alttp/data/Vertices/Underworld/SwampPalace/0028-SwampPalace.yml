@@ -28,7 +28,7 @@ rooms:
               - "Swamp Palace - Long Hall"
           items:
             - name: "Swamp Palace - Entrance Chest"
-              addresses: [0xEA9D]
+              addresses: [0x01EA9D]
               conditions: ["SwampPalaceEntranceTrophy|5"]
               type: "chest"
               itemset: ["swamp"]

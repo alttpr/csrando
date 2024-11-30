@@ -12,11 +12,11 @@ rooms:
               - "Palace of Darkness - Falling Bridge Top"
           items:
             - name: "Palace of Darkness - Dark Maze - Top"
-              addresses: [0xea55]
+              addresses: [0x01EA55]
               type: "chest"
               itemset: ["pod"]
             - name: "Palace of Darkness - Dark Maze - Bottom"
-              addresses: [0xea58]
+              addresses: [0x01EA58]
               type: "chest"
               itemset: ["pod"]
           mobs:

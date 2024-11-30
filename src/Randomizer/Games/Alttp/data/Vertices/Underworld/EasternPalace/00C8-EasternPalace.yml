@@ -132,11 +132,11 @@ rooms:
 
       items:
         - name: "Eastern Palace - Boss Item"
-          addresses: [0x180150]
+          addresses: [0xB08150]
           type: "drop"
           itemset: ["eastern"]
 
         - name: "Eastern Palace - Prize"
-          addresses: [0x1209D, 0x53E76, 0x53E77, 0x180052, 0x180070, 0xC6FE]
+          addresses: [0x02A09D, 0x0ABE76, 0x0ABE77, 0xB08052, 0xB08070, 0x01C6FE]
           type: "prize"
           itemset: ["prize"]

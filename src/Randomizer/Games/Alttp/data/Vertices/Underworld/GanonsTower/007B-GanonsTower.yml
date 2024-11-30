@@ -11,19 +11,19 @@ rooms:
           items:
             - name: "Ganon's Tower - DMs Room - Top Left"
               type: "chest"
-              addresses: [0xEAB8]
+              addresses: [0x01EAB8]
               itemset: ["gt"]
             - name: "Ganon's Tower - DMs Room - Top Right"
               type: "chest"
-              addresses: [0xEABB]
+              addresses: [0x01EABB]
               itemset: ["gt"]
             - name: "Ganon's Tower - DMs Room - Bottom Left"
               type: "chest"
-              addresses: [0xEABE]
+              addresses: [0x01EABE]
               itemset: ["gt"]
             - name: "Ganon's Tower - DMs Room - Bottom Right"
               type: "chest"
-              addresses: [0xEAC1]
+              addresses: [0x01EAC1]
               itemset: ["gt"]
           mobs:
             - name: "Ganon's Tower - DMs Room - Yomo Medusa 1"

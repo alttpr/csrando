@@ -33,26 +33,26 @@ rooms:
           items:
             - name: "Mini Moldorm Cave - Far Left"
               conditions: ["OpenChest"]
-              addresses: [0xEB42]
+              addresses: [0x01EB42]
               type: "chest"
               itemset: ["lw"]
             - name: "Mini Moldorm Cave - Left"
               conditions: ["OpenChest"]
-              addresses: [0xEB45]
+              addresses: [0x01EB45]
               type: "chest"
               itemset: ["lw"]
             - name: "Mini Moldorm Cave - NPC"
-              addresses: [0x180010]
+              addresses: [0xB08010]
               type: "npc"
               itemset: ["lw"]
             - name: "Mini Moldorm Cave - Right"
               conditions: ["OpenChest"]
-              addresses: [0xEB48]
+              addresses: [0x01EB48]
               type: "chest"
               itemset: ["lw"]
             - name: "Mini Moldorm Cave - Far Right"
               conditions: ["OpenChest"]
-              addresses: [0xEB4B]
+              addresses: [0x01EB4B]
               type: "chest"
               itemset: ["lw"]
           mobs:

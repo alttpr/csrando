@@ -7,19 +7,19 @@ rooms:
           items:
             - name: "Ganon's Tower - Randomizer Room - Top Left"
               type: "chest"
-              addresses: [0xEAC4]
+              addresses: [0x01EAC4]
               itemset: ["gt"]
             - name: "Ganon's Tower - Randomizer Room - Top Right"
               type: "chest"
-              addresses: [0xEAC7]
+              addresses: [0x01EAC7]
               itemset: ["gt"]
             - name: "Ganon's Tower - Randomizer Room - Bottom Left"
               type: "chest"
-              addresses: [0xEACA]
+              addresses: [0x01EACA]
               itemset: ["gt"]
             - name: "Ganon's Tower - Randomizer Room - Bottom Right"
               type: "chest"
-              addresses: [0xEACD]
+              addresses: [0x01EACD]
               itemset: ["gt"]
           mobs:
             - name: "Ganon's Tower - Randomizer Room - Mini Moldorm"

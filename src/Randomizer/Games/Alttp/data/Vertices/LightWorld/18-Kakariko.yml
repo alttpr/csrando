@@ -57,7 +57,7 @@ maps:
               type: "event"
               itemset: ["lw", "event"]
             - name: "Bottle Merchant Item"
-              addresses: [0x2EB18]
+              addresses: [0x05EB18]
               type: "npc"
               itemset: ["lw"]
           mobs:

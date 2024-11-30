@@ -132,11 +132,11 @@ rooms:
 
       items:
         - name: "Swamp Palace - Boss Item"
-          addresses: [0x180154]
+          addresses: [0xB08154]
           type: "drop"
           itemset: ["swamp"]
 
         - name: "Swamp Palace - Prize"
-          addresses: [0x120A0, 0x53E88, 0x53E89, 0x180055, 0x180079, 0xC701]
+          addresses: [0x02A0A0, 0x0ABE88, 0x0ABE89, 0xB08055, 0xB08079, 0x01C701]
           type: "prize"
           itemset: ["prize"]

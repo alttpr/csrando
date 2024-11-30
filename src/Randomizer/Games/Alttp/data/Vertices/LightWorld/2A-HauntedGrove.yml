@@ -10,7 +10,7 @@ maps:
           items:
             - name: "Flute Spot"
               conditions: ["Shovel"]
-              addresses: [0x18014A]
+              addresses: [0xB0814A]
               type: "dig"
               itemset: ["lw"]
           mobs:

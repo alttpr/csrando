@@ -33,7 +33,7 @@ rooms:
               - "Swamp Palace - Big O Bottom"
           items:
             - name: "Swamp Palace - Compass Chest"
-              addresses: [0xEAA0]
+              addresses: [0x01EAA0]
               type: "chest"
               itemset: ["swamp"]
 

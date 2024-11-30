@@ -21,7 +21,7 @@ maps:
           items:
             - name: "Purple Chest Item"
               conditions: ["LostPurpleChest"]
-              addresses: [0x33D68]
+              addresses: [0x06BD68]
               type: "npc"
               itemset: ["lw"]
           mobs:

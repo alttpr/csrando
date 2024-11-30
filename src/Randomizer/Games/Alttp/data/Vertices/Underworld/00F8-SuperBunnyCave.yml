@@ -30,12 +30,12 @@ rooms:
           items:
             - name: "Superbunny Cave - Top"
               conditions: ["OpenChest"]
-              addresses: [0xEA7C]
+              addresses: [0x01EA7C]
               type: "chest"
               itemset: ["dw"]
             - name: "Superbunny Cave - Bottom"
               conditions: ["OpenChest"]
-              addresses: [0xEA7F]
+              addresses: [0x01EA7F]
               type: "chest"
               itemset: ["dw"]
           pots:

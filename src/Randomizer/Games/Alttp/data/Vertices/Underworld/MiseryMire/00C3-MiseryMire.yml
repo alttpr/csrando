@@ -12,7 +12,7 @@ rooms:
           items:
             - name: "Misery Mire - Map Chest"
               type: "chest"
-              addresses: [0xEA6A]
+              addresses: [0x01EA6A]
               itemset: ["mire"]
           mobs:
             - name: "Misery Mire - Falling Bridge - Medusa 1"
@@ -116,5 +116,5 @@ rooms:
             - name: "Misery Mire - Big Chest"
               type: "bigchest"
               conditions: ["BigKeyD6"]
-              addresses: [0xEA67]
+              addresses: [0x01EA67]
               itemset: ["mire"]

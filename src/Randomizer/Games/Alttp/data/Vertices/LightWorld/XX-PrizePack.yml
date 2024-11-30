@@ -3,192 +3,192 @@ maps:
     nodes:
       prizepacks:
         - name: "PrizePack01-00"
-          addresses: [0x037A78]
+          addresses: [0x06FA78]
           sprite: "Heart"
         - name: "PrizePack01-01"
-          addresses: [0x037A79]
+          addresses: [0x06FA79]
           sprite: "Heart"
         - name: "PrizePack01-02"
-          addresses: [0x037A7A]
+          addresses: [0x06FA7A]
           sprite: "Heart"
         - name: "PrizePack01-03"
-          addresses: [0x037A7B]
+          addresses: [0x06FA7B]
           sprite: "Heart"
         - name: "PrizePack01-04"
-          addresses: [0x037A7C]
+          addresses: [0x06FA7C]
           sprite: "RupeeGreen"
         - name: "PrizePack01-05"
-          addresses: [0x037A7D]
+          addresses: [0x06FA7D]
           sprite: "Heart"
         - name: "PrizePack01-06"
-          addresses: [0x037A7E]
+          addresses: [0x06FA7E]
           sprite: "Heart"
         - name: "PrizePack01-07"
-          addresses: [0x037A7F]
+          addresses: [0x06FA7F]
           sprite: "RupeeGreen"
 
         - name: "PrizePack02-00"
-          addresses: [0x037A80]
+          addresses: [0x06FA80]
           sprite: "RupeeBlue"
         - name: "PrizePack02-01"
-          addresses: [0x037A81]
+          addresses: [0x06FA81]
           sprite: "RupeeGreen"
         - name: "PrizePack02-02"
-          addresses: [0x037A82]
+          addresses: [0x06FA82]
           sprite: "RupeeBlue"
         - name: "PrizePack02-03"
-          addresses: [0x037A83]
+          addresses: [0x06FA83]
           sprite: "RupeeRed"
         - name: "PrizePack02-04"
-          addresses: [0x037A84]
+          addresses: [0x06FA84]
           sprite: "RupeeBlue"
         - name: "PrizePack02-05"
-          addresses: [0x037A85]
+          addresses: [0x06FA85]
           sprite: "RupeeGreen"
         - name: "PrizePack02-06"
-          addresses: [0x037A86]
+          addresses: [0x06FA86]
           sprite: "RupeeBlue"
         - name: "PrizePack02-07"
-          addresses: [0x037A87]
+          addresses: [0x06FA87]
           sprite: "RupeeBlue"
 
         - name: "PrizePack03-00"
-          addresses: [0x037A88]
+          addresses: [0x06FA88]
           sprite: "MagicRefillFull"
         - name: "PrizePack03-01"
-          addresses: [0x037A89]
+          addresses: [0x06FA89]
           sprite: "MagicRefillSmall"
         - name: "PrizePack03-02"
-          addresses: [0x037A8A]
+          addresses: [0x06FA8A]
           sprite: "MagicRefillSmall"
         - name: "PrizePack03-03"
-          addresses: [0x037A8B]
+          addresses: [0x06FA8B]
           sprite: "RupeeBlue"
         - name: "PrizePack03-04"
-          addresses: [0x037A8C]
+          addresses: [0x06FA8C]
           sprite: "MagicRefillFull"
         - name: "PrizePack03-05"
-          addresses: [0x037A8D]
+          addresses: [0x06FA8D]
           sprite: "MagicRefillSmall"
         - name: "PrizePack03-06"
-          addresses: [0x037A8E]
+          addresses: [0x06FA8E]
           sprite: "Heart"
         - name: "PrizePack03-07"
-          addresses: [0x037A8F]
+          addresses: [0x06FA8F]
           sprite: "MagicRefillSmall"
 
         - name: "PrizePack04-00"
-          addresses: [0x037A90]
+          addresses: [0x06FA90]
           sprite: "BombRefill1"
         - name: "PrizePack04-01"
-          addresses: [0x037A91]
+          addresses: [0x06FA91]
           sprite: "BombRefill1"
         - name: "PrizePack04-02"
-          addresses: [0x037A92]
+          addresses: [0x06FA92]
           sprite: "BombRefill1"
         - name: "PrizePack04-03"
-          addresses: [0x037A93]
+          addresses: [0x06FA93]
           sprite: "BombRefill4"
         - name: "PrizePack04-04"
-          addresses: [0x037A94]
+          addresses: [0x06FA94]
           sprite: "BombRefill1"
         - name: "PrizePack04-05"
-          addresses: [0x037A95]
+          addresses: [0x06FA95]
           sprite: "BombRefill1"
         - name: "PrizePack04-06"
-          addresses: [0x037A96]
+          addresses: [0x06FA96]
           sprite: "BombRefill8"
         - name: "PrizePack04-07"
-          addresses: [0x037A97]
+          addresses: [0x06FA97]
           sprite: "BombRefill1"
 
         - name: "PrizePack05-00"
-          addresses: [0x037A98]
+          addresses: [0x06FA98]
           sprite: "ArrowRefill5"
         - name: "PrizePack05-01"
-          addresses: [0x037A99]
+          addresses: [0x06FA99]
           sprite: "Heart"
         - name: "PrizePack05-02"
-          addresses: [0x037A9A]
+          addresses: [0x06FA9A]
           sprite: "ArrowRefill5"
         - name: "PrizePack05-03"
-          addresses: [0x037A9B]
+          addresses: [0x06FA9B]
           sprite: "ArrowRefill10"
         - name: "PrizePack05-04"
-          addresses: [0x037A9C]
+          addresses: [0x06FA9C]
           sprite: "ArrowRefill5"
         - name: "PrizePack05-05"
-          addresses: [0x037A9D]
+          addresses: [0x06FA9D]
           sprite: "Heart"
         - name: "PrizePack05-06"
-          addresses: [0x037A9E]
+          addresses: [0x06FA9E]
           sprite: "ArrowRefill5"
         - name: "PrizePack05-07"
-          addresses: [0x037A9F]
+          addresses: [0x06FA9F]
           sprite: "ArrowRefill10"
 
         - name: "PrizePack06-00"
-          addresses: [0x037AA0]
+          addresses: [0x06FAA0]
           sprite: "MagicRefillSmall"
         - name: "PrizePack06-01"
-          addresses: [0x037AA1]
+          addresses: [0x06FAA1]
           sprite: "RupeeGreen"
         - name: "PrizePack06-02"
-          addresses: [0x037AA2]
+          addresses: [0x06FAA2]
           sprite: "Heart"
         - name: "PrizePack06-03"
-          addresses: [0x037AA3]
+          addresses: [0x06FAA3]
           sprite: "ArrowRefill5"
         - name: "PrizePack06-04"
-          addresses: [0x037AA4]
+          addresses: [0x06FAA4]
           sprite: "MagicRefillSmall"
         - name: "PrizePack06-05"
-          addresses: [0x037AA5]
+          addresses: [0x06FAA5]
           sprite: "BombRefill1"
         - name: "PrizePack06-06"
-          addresses: [0x037AA6]
+          addresses: [0x06FAA6]
           sprite: "RupeeGreen"
         - name: "PrizePack06-07"
-          addresses: [0x037AA7]
+          addresses: [0x06FAA7]
           sprite: "Heart"
 
         - name: "PrizePack07-00"
-          addresses: [0x037AA8]
+          addresses: [0x06FAA8]
           sprite: "Heart"
         - name: "PrizePack07-01"
-          addresses: [0x037AA9]
+          addresses: [0x06FAA9]
           sprite: "Fairy"
         - name: "PrizePack07-02"
-          addresses: [0x037AAA]
+          addresses: [0x06FAAA]
           sprite: "MagicRefillFull"
         - name: "PrizePack07-03"
-          addresses: [0x037AAB]
+          addresses: [0x06FAAB]
           sprite: "RupeeRed"
         - name: "PrizePack07-04"
-          addresses: [0x037AAC]
+          addresses: [0x06FAAC]
           sprite: "BombRefill8"
         - name: "PrizePack07-05"
-          addresses: [0x037AAD]
+          addresses: [0x06FAAD]
           sprite: "Heart"
         - name: "PrizePack07-06"
-          addresses: [0x037AAE]
+          addresses: [0x06FAAE]
           sprite: "RupeeRed"
         - name: "PrizePack07-07"
-          addresses: [0x037AAF]
+          addresses: [0x06FAAF]
           sprite: "ArrowRefill10"
 
         - name: "PrizePackPull-00"
-          addresses: [0x0EFBD4]
+          addresses: [0x1DFBD4]
           sprite: "RupeeGreen"
         - name: "PrizePackPull-01"
-          addresses: [0x0EFBD5]
+          addresses: [0x1DFBD5]
           sprite: "RupeeBlue"
         - name: "PrizePackPull-02"
-          addresses: [0x0EFBD6]
+          addresses: [0x1DFBD6]
           sprite: "RupeeRed"
 
         - name: "PrizePackCrab-AllButLast"
-          addresses: [0x0329C8]
+          addresses: [0x06A9C8]
           sprite: "RupeeGreen"
           deny:
             # if any of those spawn, they cannot be collected and block the final drop
@@ -196,13 +196,13 @@ maps:
             - "BeeGood"
             - "Chicken"
         - name: "PrizePackCrab-Final"
-          addresses: [0x0329C4]
+          addresses: [0x06A9C4]
           sprite: "RupeeRed"
 
         - name: "PrizePackStun-00"
-          addresses: [0x037993]
+          addresses: [0x06F993]
           sprite: "RupeeGreen"
 
         - name: "PrizePackFish-00"
-          addresses: [0x0E82CC]
+          addresses: [0x1D82CC]
           sprite: "RupeeRed"

@@ -15,7 +15,7 @@ maps:
               - "Under the Bridge"
           items:
             - name: "Hobo"
-              addresses: [0x33E7D]
+              addresses: [0x06BE7D]
               type: "npc"
               itemset: ["lw"]
           mobs:

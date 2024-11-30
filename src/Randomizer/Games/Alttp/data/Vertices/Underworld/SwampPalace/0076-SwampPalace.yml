@@ -111,11 +111,11 @@ rooms:
               - "Swamp Palace - Flooded Room Top"
           items:
             - name: "Swamp Palace - Flooded Room - Left"
-              addresses: [0xEAA9]
+              addresses: [0x01EAA9]
               type: "chest"
               itemset: ["swamp"]
             - name: "Swamp Palace - Flooded Room - Right"
-              addresses: [0xEAAC]
+              addresses: [0x01EAAC]
               type: "chest"
               itemset: ["swamp"]
           pots:

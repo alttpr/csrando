@@ -25,7 +25,7 @@ maps:
             - name: "Turtle Rock - Entry"
               type: "medallion"
               itemset: ["tr-medallion"]
-              addresses: [0x180023, 0x5020, 0x50FF, 0x51DE]
+              addresses: [0xB08023, 0x00D020, 0x00D0FF, 0x00D1DE]
           mobs:
             - name: "Turtle Peak - Rupee Pull"
               position: { x: 0x16, y: 0x14 }

@@ -68,7 +68,7 @@ rooms:
           items:
             - name: "Misery Mire - Big Key Chest"
               type: "chest"
-              addresses: [0xEA6D]
+              addresses: [0x01EA6D]
               itemset: ["mire"]
 
         - name: "Misery Mire - Drop Chest Overlook"

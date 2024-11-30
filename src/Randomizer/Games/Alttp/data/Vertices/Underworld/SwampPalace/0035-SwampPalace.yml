@@ -60,7 +60,7 @@ rooms:
               - "Swamp Palace - West Wing Right Ledge - Right"
           items:
             - name: "Swamp Palace - Big Key Chest"
-              addresses: [0xEAA6]
+              addresses: [0x01EAA6]
               type: "chest"
               itemset: ["swamp"]
           pots:

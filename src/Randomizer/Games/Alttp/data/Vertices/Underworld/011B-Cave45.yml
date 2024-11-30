@@ -32,7 +32,7 @@ rooms:
               - "Cave 45 Right"
           items:
             - name: "Cave 45 Item"
-              addresses: [0x180003]
+              addresses: [0xB08003]
               type: "standing"
               itemset: ["lw"]
           mobs:

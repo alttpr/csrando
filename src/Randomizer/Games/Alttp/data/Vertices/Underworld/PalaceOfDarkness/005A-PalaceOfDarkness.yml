@@ -132,11 +132,11 @@ rooms:
 
       items:
         - name: "Palace of Darkness - Boss Item"
-          addresses: [0x180153]
+          addresses: [0xB08153]
           type: "drop"
           itemset: ["pod"]
 
         - name: "Palace of Darkness - Prize"
-          addresses: [0x120A1, 0x53E7C, 0x53E7D, 0x180056, 0x180073, 0xC702]
+          addresses: [0x02A0A1, 0x0ABE7C, 0x0ABE7D, 0xB08056, 0xB08073, 0x01C702]
           type: "prize"
           itemset: ["prize"]

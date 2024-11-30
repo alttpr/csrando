@@ -7,12 +7,12 @@ rooms:
           items:
             - name: "Mire Shed - Left"
               conditions: ["OpenChest"]
-              addresses: [0xEA73]
+              addresses: [0x01EA73]
               type: "chest"
               itemset: ["dw"]
             - name: "Mire Shed - Right"
               conditions: ["OpenChest"]
-              addresses: [0xEA76]
+              addresses: [0x01EA76]
               type: "chest"
               itemset: ["dw"]
           mobs:

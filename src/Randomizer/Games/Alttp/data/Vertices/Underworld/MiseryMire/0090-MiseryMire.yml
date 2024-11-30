@@ -132,11 +132,11 @@ rooms:
 
       items:
         - name: "Misery Mire - Boss Item"
-          addresses: [0x180158]
+          addresses: [0xB08158]
           type: "drop"
           itemset: ["mire"]
 
         - name: "Misery Mire - Prize"
-          addresses: [0x120A2, 0x53E84, 0x53E85, 0x180057, 0x180077, 0xC703]
+          addresses: [0x02A0A2, 0x0ABE84, 0x0ABE85, 0xB08057, 0xB08077, 0x01C703]
           type: "prize"
           itemset: ["prize"]

@@ -77,7 +77,7 @@ rooms:
               - "Turtle Rock - Big Chest Entrance"
           items:
             - name: "Turtle Rock - Big Chest"
-              addresses: [0xEA19]
+              addresses: [0x01EA19]
               conditions: ["BigKeyD7"]
               type: "bigchest"
               itemset: ["turtlerock"]

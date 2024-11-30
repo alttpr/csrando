@@ -19,7 +19,7 @@ rooms:
               - "Swamp Palace - West Lever"
           items:
             - name: "Swamp Palace - Big Chest"
-              addresses: [0xE989]
+              addresses: [0x01E989]
               conditions: ["BigKeyD2"]
               type: "bigchest"
               itemset: ["swamp"]

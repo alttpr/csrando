@@ -12,7 +12,7 @@ rooms:
               - "Ganon's Tower - Hope Room"
           items:
             - name: "Ganon's Tower - Bob's Torch"
-              addresses: [0x180161]
+              addresses: [0xB08161]
               conditions: ["PegasusBoots"]
               type: "bonk"
               itemset: ["gt"]
@@ -46,7 +46,7 @@ rooms:
             - name: "Ganon's Tower - Big Chest"
               type: "bigchest"
               conditions: ["BigKeyA2"]
-              addresses: [0xEAD6]
+              addresses: [0x01EAD6]
               itemset: ["gt"]
           mobs:
             - name: "Ganon's Tower - Hope Room - Fire Snake 1"
@@ -67,7 +67,7 @@ rooms:
             - name: "Ganon's Tower - Bob's Chest"
               type: "chest"
               conditions: ["LiftPot"]
-              addresses: [0xEADF]
+              addresses: [0x01EADF]
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Hope Room - Pot 3"
@@ -107,11 +107,11 @@ rooms:
           items:
             - name: "Ganon's Tower - Hope Room - Left"
               type: "chest"
-              addresses: [0xEAD9]
+              addresses: [0x01EAD9]
               itemset: ["gt"]
             - name: "Ganon's Tower - Hope Room - Right"
               type: "chest"
-              addresses: [0xEADC]
+              addresses: [0x01EADC]
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Hope Room - Pot 1"

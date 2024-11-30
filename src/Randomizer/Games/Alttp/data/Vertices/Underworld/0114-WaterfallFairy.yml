@@ -7,17 +7,17 @@ rooms:
           items:
             - name: "Waterfall Fairy - Bottle"
               conditions: ["LogicalBottle"]
-              addresses: [0x348FF]
+              addresses: [0x06C8FF]
               type: "refill"
               itemset: ["bottle"]
             - name: "Waterfall Fairy - Right"
               conditions: ["OpenChest"]
-              addresses: [0xE9D1]
+              addresses: [0x01E9D1]
               type: "chest"
               itemset: ["lw"]
             - name: "Waterfall Fairy - Left"
               conditions: ["OpenChest"]
-              addresses: [0xE9B0]
+              addresses: [0x01E9B0]
               type: "chest"
               itemset: ["lw"]
           mobs:

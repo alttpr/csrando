@@ -24,7 +24,7 @@ maps:
             # TODO: Is this the right condition?
             - name: "Digging Game - Item"
               conditions: ["LiftBush"]
-              addresses: [0x180148]
+              addresses: [0xB08148]
               type: "dig"
               itemset: ["dw"]
 

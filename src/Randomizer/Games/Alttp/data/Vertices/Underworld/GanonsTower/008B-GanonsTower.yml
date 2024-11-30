@@ -125,7 +125,7 @@ rooms:
           items:
             - name: "Ganon's Tower - Map Chest"
               type: "chest"
-              addresses: [0xEAD3]
+              addresses: [0x01EAD3]
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Map Room - Pot 2"

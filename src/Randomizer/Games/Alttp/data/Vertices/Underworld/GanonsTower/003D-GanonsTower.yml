@@ -48,11 +48,11 @@ rooms:
           items:
             - name: "Ganon's Tower - Mini Helmasaur Room - Left"
               type: "chest"
-              addresses: [0xEAFD]
+              addresses: [0x01EAFD]
               itemset: ["gt"]
             - name: "Ganon's Tower - Mini Helmasaur Room - Right"
               type: "chest"
-              addresses: [0xEB00]
+              addresses: [0x01EB00]
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Torches 2 - Pot 1"
@@ -101,7 +101,7 @@ rooms:
           items:
             - name: "Ganon's Tower - Pre-Moldorm Chest"
               type: "chest"
-              addresses: [0xEB03]
+              addresses: [0x01EB03]
               itemset: ["gt"]
           pots:
             - name: "Ganon's Tower - Torches 2 - Pot 3"

@@ -14,7 +14,7 @@ rooms:
           items:
             - name: "Thieves' Town - Compass Chest"
               type: "chest"
-              addresses: [0xEA07]
+              addresses: [0x01EA07]
               itemset: ["thieves"]
 
           pots:

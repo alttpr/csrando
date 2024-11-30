@@ -29,5 +29,5 @@ rooms:
           items:
             - name: "Misery Mire - Bridge Chest"
               type: "chest"
-              addresses: [0xEA61]
+              addresses: [0x01EA61]
               itemset: ["mire"]

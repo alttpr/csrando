@@ -32,7 +32,7 @@ rooms:
               - "Eastern Palace - Dark Popos"
           items:
             - name: "Eastern Palace - Big Chest"
-              addresses: [0xE97D]
+              addresses: [0x01E97D]
               conditions: ["BigKeyP1"]
               type: "bigchest"
               itemset: ["eastern"]

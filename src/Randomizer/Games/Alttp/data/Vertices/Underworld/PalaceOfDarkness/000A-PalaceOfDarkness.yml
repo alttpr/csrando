@@ -9,7 +9,7 @@ rooms:
               - "Palace of Darkness - Warp Room"
           items:
             - name: "Palace of Darkness - Stalfos Basement Chest"
-              addresses: [0xea49]
+              addresses: [0x01EA49]
               conditions: ["LiftPot"]
               type: "chest"
               itemset: ["pod"]

@@ -60,11 +60,11 @@ rooms:
               - "Palace of Darkness - Compass Room"
           items:
             - name: "Palace of Darkness - Dark Basement - Left"
-              addresses: [0xea4c]
+              addresses: [0x01EA4C]
               type: "chest"
               itemset: ["pod"]
             - name: "Palace of Darkness - Dark Basement - Right"
-              addresses: [0xea4f]
+              addresses: [0x01EA4F]
               type: "chest"
               itemset: ["pod"]
 

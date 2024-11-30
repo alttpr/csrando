@@ -12,7 +12,7 @@ maps:
           items:
             - name: "Catfish"
               conditions: ["LiftBush"]
-              addresses: [0xEE185]
+              addresses: [0x1DE185]
               type: "standing"
               itemset: ["dw"]
           mobs:

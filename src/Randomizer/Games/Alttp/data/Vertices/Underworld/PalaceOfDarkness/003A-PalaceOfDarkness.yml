@@ -43,7 +43,7 @@ rooms:
               - "Palace of Darkness - Basement Ledge"
           items:
             - name: "Palace of Darkness - Big Key Chest"
-              addresses: [0xea37]
+              addresses: [0x01EA37]
               conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]

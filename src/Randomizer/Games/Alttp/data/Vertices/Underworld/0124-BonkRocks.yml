@@ -7,6 +7,6 @@ rooms:
           items:
             - name: "Bonk Rocks Item"
               conditions: ["OpenChest"]
-              addresses: [0xEB3F]
+              addresses: [0x01EB3F]
               type: "chest"
               itemset: ["lw"]

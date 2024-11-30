@@ -11,7 +11,7 @@ maps:
               - "Zora's Domain Ledge"
           items:
             - name: "King Zora"
-              addresses: [0xEE1C3]
+              addresses: [0x1DE1C3]
               type: "standing"
               itemset: ["lw"]
           mobs:
@@ -135,7 +135,7 @@ maps:
               - "Zora's Domain"
           items:
             - name: "Zora's Domain Ledge Item"
-              addresses: [0x180149]
+              addresses: [0xB08149]
               type: "standing"
               itemset: ["lw"]
           mobs:

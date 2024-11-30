@@ -8,7 +8,7 @@ rooms:
           items:
             - name: "Ice Rod Cave Item"
               conditions: ["OpenChest"]
-              addresses: [0xEB4E]
+              addresses: [0x01EB4E]
               type: "chest"
               itemset: ["lw"]
 

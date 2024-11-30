@@ -27,7 +27,7 @@ rooms:
               - "Lumberjacks Cave"
           items:
             - name: "Lumberjack Tree"
-              addresses: [0x180001]
+              addresses: [0xB08001]
               type: "standing"
               itemset: ["lw"]
           mobs:

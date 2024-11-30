@@ -10,7 +10,7 @@ maps:
           items:
             - name: "Master Sword Pedestal"
               conditions: ["AllPendants"]
-              addresses: [0x289B0]
+              addresses: [0x0589B0]
               type: "pedestal"
               itemset: ["lw"]
           mobs:

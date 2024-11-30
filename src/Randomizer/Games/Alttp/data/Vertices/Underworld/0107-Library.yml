@@ -7,7 +7,7 @@ rooms:
           items:
             - name: "Library Item"
               conditions: ["PegasusBoots"]
-              addresses: [0x180012]
+              addresses: [0xB08012]
               type: "bonk"
               itemset: ["lw"]
           mobs:

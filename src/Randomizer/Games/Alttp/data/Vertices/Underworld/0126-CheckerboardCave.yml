@@ -6,7 +6,7 @@ rooms:
           inletid: 0x72
           items:
             - name: "Checkerboard Cave Item"
-              addresses: [0x180005]
+              addresses: [0xB08005]
               type: "standing"
               itemset: ["lw"]
           mobs:

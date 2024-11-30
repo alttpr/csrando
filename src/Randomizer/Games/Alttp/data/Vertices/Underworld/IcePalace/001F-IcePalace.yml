@@ -65,6 +65,6 @@ rooms:
               - "Ice Palace - Big Key View"
           items:
             - name: "Ice Palace - Big Key Chest"
-              addresses: [0xE9A4]
+              addresses: [0x01E9A4]
               type: "chest"
               itemset: ["ice"]

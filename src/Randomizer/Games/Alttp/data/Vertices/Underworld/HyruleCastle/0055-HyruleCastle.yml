@@ -10,7 +10,7 @@ rooms:
               - "Secret Passage Stairs"
           items:
             - name: "Link's Uncle"
-              addresses: [0x2DF45]
+              addresses: [0x05DF45]
               type: "npc"
               itemset: ["lw"]
           mobs:
@@ -26,7 +26,7 @@ rooms:
               - "Secret Passage Uncle"
           items:
             - name: "Secret Passage"
-              addresses: [0xE971]
+              addresses: [0x01E971]
               type: "chest"
               itemset: ["lw"]
           pots:

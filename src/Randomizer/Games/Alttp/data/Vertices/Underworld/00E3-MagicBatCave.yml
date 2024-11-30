@@ -22,7 +22,7 @@ rooms:
           items:
             - name: "Magic Bat Item"
               conditions: ["Powder"]
-              addresses: [0x180015]
+              addresses: [0xB08015]
               type: "npc"
               itemset: ["lw"]
           mobs:

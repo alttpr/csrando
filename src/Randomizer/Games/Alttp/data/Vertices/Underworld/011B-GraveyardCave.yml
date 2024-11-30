@@ -46,7 +46,7 @@ rooms:
               - "Graveyard Cave - Back"
           items:
             - name: "Graveyard Cave Item"
-              addresses: [0x180004]
+              addresses: [0xB08004]
               type: "standing"
               itemset: ["lw"]
           mobs:

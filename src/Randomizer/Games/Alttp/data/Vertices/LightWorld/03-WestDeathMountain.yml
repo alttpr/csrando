@@ -43,7 +43,7 @@ maps:
 
             - name: "Old Man"
               conditions: ["OldManFound"]
-              addresses: [0xF69FA]
+              addresses: [0x1EE9FA]
               type: "npc"
               itemset: ["lw"]
           mobs:
@@ -114,7 +114,7 @@ maps:
               - "West Death Mountain Summit"
           items:
             - name: "Spectacle Rock"
-              addresses: [0x180140]
+              addresses: [0xB08140]
               type: "standing"
               itemset: ["lw"]
           mobs:
@@ -137,7 +137,7 @@ maps:
           items:
             - name: "Ether Tablet"
               conditions: ["ActiveBookOfMudora"]
-              addresses: [0x180016]
+              addresses: [0xB08016]
               type: "drop"
               itemset: ["lw"]
           mobs:

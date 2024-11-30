@@ -17,7 +17,7 @@ rooms:
               - "Spectacle Rock Cave Fairies"
           items:
             - name: "Spectacle Rock Cave Item"
-              addresses: [0x180002]
+              addresses: [0xB08002]
               type: "standing"
               itemset: ["lw"]
           mobs:

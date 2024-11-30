@@ -11,7 +11,7 @@ rooms:
               - "Skull Woods - Main Entrance"
           items:
             - name: "Skull Woods - Pot Prison"
-              addresses: [0xE9A1]
+              addresses: [0x01E9A1]
               conditions: ["LiftPot"]
               type: "chest"
               itemset: ["skull"]
@@ -111,7 +111,7 @@ rooms:
               - "Skull Woods - Magic Refill"
           items:
             - name: "Skull Woods - Big Key Chest"
-              addresses: [0xE99E]
+              addresses: [0x01E99E]
               type: "chest"
               itemset: ["skull"]
           mobs:

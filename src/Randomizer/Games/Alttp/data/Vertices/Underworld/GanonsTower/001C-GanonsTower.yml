@@ -162,13 +162,13 @@ rooms:
           items:
             - name: "Ganon's Tower - Big Key Chest"
               type: "chest"
-              addresses: [0xEAF1]
+              addresses: [0x01EAF1]
               itemset: ["gt"]
             - name: "Ganon's Tower - Big Key Room - Left"
               type: "chest"
-              addresses: [0xEAF4]
+              addresses: [0x01EAF4]
               itemset: ["gt"]
             - name: "Ganon's Tower - Big Key Room - Right"
               type: "chest"
-              addresses: [0xEAF7]
+              addresses: [0x01EAF7]
               itemset: ["gt"]

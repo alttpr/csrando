@@ -9,7 +9,7 @@ rooms:
               - "Palace of Darkness - Left Cage"
           items:
             - name: "Palace of Darkness - Shooter Room Chest"
-              addresses: [0xea5b]
+              addresses: [0x01EA5B]
               conditions: ["LiftPot"]
               type: "chest"
               itemset: ["pod"]

@@ -132,6 +132,6 @@ maps:
               - "Lost Woods West Logs"
           items:
             - name: "Mushroom"
-              addresses: [0x180013]
+              addresses: [0xB08013]
               type: "standing"
               itemset: ["lw"]

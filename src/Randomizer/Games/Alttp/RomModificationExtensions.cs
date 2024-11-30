@@ -32,19 +32,19 @@ internal static class RomModificationExtensions
         _ => 0x0000,
     };
 
-    /// <summary>Returns the addresses where music is written to for a given <paramref name="vertex"/>.</summary>
+    /// <summary>Returns the SNES addresses where music is written to for a given <paramref name="vertex"/>.</summary>
     public static int[]? GetDungeonMusicAddresses(this Vertex? vertex) => vertex.GetDungeonFromBossRoom() switch
     {
-        Dungeon.EasternPalace => [0x1559A],
-        Dungeon.DesertPalace => [0x1559B, 0x1559C, 0x1559D, 0x1559E],
-        Dungeon.SwampPalace => [0x155B7],
-        Dungeon.PalaceOfDarkness => [0x155B8],
-        Dungeon.MiseryMire => [0x155B9],
-        Dungeon.SkullWoods => [0x155BA, 0x155BB, 0x155BC, 0x155BD, 0x15608, 0x15609, 0x1560A, 0x1560B],
-        Dungeon.IcePalace => [0x155BF],
-        Dungeon.TowerOfHera => [0x155C5, 0x1107A, 0x10B8C],
-        Dungeon.ThievesTown => [0x155C6],
-        Dungeon.TurtleRock => [0x155C7, 0x155A7, 0x155AA, 0x155AB],
+        Dungeon.EasternPalace => [0x2D59A],
+        Dungeon.DesertPalace => [0x2D59B, 0x2D59C, 0x2D59D, 0x2D59E],
+        Dungeon.SwampPalace => [0x2D5B7],
+        Dungeon.PalaceOfDarkness => [0x2D5B8],
+        Dungeon.MiseryMire => [0x2D5B9],
+        Dungeon.SkullWoods => [0x2D5BA, 0x2D5BB, 0x2D5BC, 0x2D5BD, 0x2D608, 0x2D609, 0x2D60A, 0x2D60B],
+        Dungeon.IcePalace => [0x2D5BF],
+        Dungeon.TowerOfHera => [0x2D5C5, 0x2907A, 0x28B8C],
+        Dungeon.ThievesTown => [0x2D5C6],
+        Dungeon.TurtleRock => [0x2D5C7, 0x2D5A7, 0x2D5AA, 0x2D5AB],
         _ => null,
     };
 
