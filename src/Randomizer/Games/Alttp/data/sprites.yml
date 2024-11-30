@@ -1041,7 +1041,7 @@ Stal:
   flags: Challenge
 Landmine:
   id: 0xD4
-  flags: Challenge
+  flags: OverworldOnly
 DiggingGameNPC: #DIG GAME GUY
   id: 0xD5
   flags: NoPlace
