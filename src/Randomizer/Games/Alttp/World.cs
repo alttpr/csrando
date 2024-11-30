@@ -20,7 +20,7 @@ public sealed class World : IWorld
     public Config Config { get; }
     private readonly Dictionary<string, Item> _allItems = [];
     public ushort PlacedItemCount { get; set; }
-    public (byte[] Underworld, byte[] Overworld, byte[] Sets) SpriteSheets { get; set; } = ([], [], []);
+    public (byte[] Underworld, byte[] Overworld, byte[] Special, byte[] Sets) SpriteSheets { get; set; } = ([], [], [], []);
     public Dictionary<IItem /* actualKey */, List<(BaseVertex Chest, List<BaseVertex> Regions)>> KeyForKeys { get; } = [];
 
 

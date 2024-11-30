@@ -513,7 +513,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
             return new SheetSet();
         }).ToArray();
         // this is 3 times light world (rain state, zelda rescued, aga down) plus 1 times dark world
-        var owSheets = Enumerable.Range(0, 4 * 0x40).Select(owIdx =>
+        // then +2 for the special overworld (master sword grove/hobo bridge and zoras domain)
+        var owSheets = Enumerable.Range(0, 4 * 0x40 + 2).Select(owIdx =>
         {
             var (mapId, _) = IndexToMapState(owIdx);
             if (mapVertices.TryGetValue(mapId, out var mapVertex) && mapVertex?.Sheets is not null)
@@ -669,13 +670,25 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
 
         // freeze the remaining values to lock in slots that still have choices left.
         var overworldSheets = owSheets.Select(s => s.Freeze(prng)).ToArray();
-        var underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
-
-        // build a list of unique sheet sets. overworld only (vanilla storage,) we write underworld directly to the room header (rando-specific.)
+        // build a list of unique sheet sets. overworld only (vanilla storage), we write underworld directly to the room header (rando-specific).
         var uniqueSheets = overworldSheets.Distinct().ToList();
+
+        // the last two are special overworld (master sword grove, hobo and zora's domain) which go in a different location.
+        var specialOverworldSheets = overworldSheets[^2..];
+        overworldSheets = overworldSheets[..^2];
+        var underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
 
         // grab indices for the map headers from that set.
         byte[] mapSheetBytes = overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
+        byte[] specialSheetBytes = specialOverworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
+        // FIXME: not sure about this layout, but it works writing grove to 0x02E577 and zora's domain to 0x02E579.
+        //        0x02E578 has no effect on either of them, and clobbering 0x02E577 still doesn't break hobo.
+        specialSheetBytes = [
+            specialSheetBytes[0], 0xFF, specialSheetBytes[1], 0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF,
+        ];
 
         // flatten at the end, since this is a contiguous table in ROM
         byte[] flatSheetSets = uniqueSheets.SelectMany(s => s.Flatten()).ToArray();
@@ -684,6 +697,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         world.SpriteSheets = (
             Underworld: roomSheetBytes4,
             Overworld: mapSheetBytes,
+            Special: specialSheetBytes,
             Sets: flatSheetSets
         );
 
@@ -691,10 +705,11 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         {
             int mapId = owIdx % 0x40;
             int state = owIdx / 0x40;
-            if (state == 3)
+            if (state >= 3)
             {
                 // this is considered dark world, up the map id and just pick a random state (we don't really switch sprites between pre-aga/post-aga there)
-                mapId += 0x40;
+                // we also abuse this to get the special maps at 0x80 and beyond
+                mapId += 0x40 * (state - 2);
                 state = 2;
             }
 

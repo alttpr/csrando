@@ -1793,10 +1793,12 @@ public sealed class Rom : GameRom
         }
         Write((SNES)(0x09D62E + offsets.Length * 2), table);
     }
-    public void WriteOverworldEnemies(byte[] table, ushort[] offsets, List<ushort>[] statePointerOffsets, byte[] spriteSheets)
+    public void WriteOverworldEnemies(byte[] table, ushort[] offsets, List<ushort>[] statePointerOffsets, byte[] spriteSheets, byte[] specialSpriteSheets)
     {
         if (table.Length > 0x0B29)
             throw new Exception("Trying to write too many enemy sprites to OW!");
+        if (specialSpriteSheets.Length > 0x04 * 4)
+            throw new Exception($"Trying to write too many special world sprite sheets (got 0x{specialSpriteSheets.Length:X02} which exceeds 0x10)");
 
         // Pointer to pointer table
         Span<byte> data = stackalloc byte[2];
@@ -1832,6 +1834,8 @@ public sealed class Rom : GameRom
 
         // OW sheets 0x00FA41 (Sprite_LoadGraphicsProperties)
         Write((SNES)0x00FA41, spriteSheets);
+        // special OW 0x02E575 // zora/msp/hobo
+        Write((SNES)0x02E575, specialSpriteSheets);
     }
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
@@ -1839,6 +1843,5 @@ public sealed class Rom : GameRom
             throw new Exception($"Trying to write too many sprite sheet sets (got 0x{spriteSheetSets.Length / 4:X02} which exceeds 0xBF)");
 
         Write((SNES)0x00DB97, spriteSheetSets);
-        // special OW 0x02E575 // zora/msp/hobo
     }
 }

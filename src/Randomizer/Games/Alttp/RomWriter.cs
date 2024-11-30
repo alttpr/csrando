@@ -979,7 +979,7 @@ public static class RomWriter
             }
         }
 
-        rom.WriteOverworldEnemies([.. outputBytes], [.. owOutputOffsets], owPointerOffsets, world.SpriteSheets.Overworld);
+        rom.WriteOverworldEnemies([.. outputBytes], [.. owOutputOffsets], owPointerOffsets, world.SpriteSheets.Overworld, world.SpriteSheets.Special);
         // write new sheet sets
         rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
     }
