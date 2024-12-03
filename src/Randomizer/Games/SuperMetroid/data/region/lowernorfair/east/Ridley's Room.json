@@ -1,0 +1,415 @@
+{
+  "$schema": "../../../schema/m3-room.schema.json",
+  "id": 142,
+  "name": "Ridley's Room",
+  "area": "Norfair",
+  "subarea": "Lower",
+  "subsubarea": "East",
+  "roomAddress": "0x7B32E",
+  "roomEnvironments": [{"heated": true}],
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Left Door",
+      "nodeType": "door",
+      "nodeSubType": "gray",
+      "nodeAddress": "0x00198b2",
+      "doorOrientation": "left",
+      "doorEnvironments": [{"physics": "air"}],
+      "locks": [
+        {
+          "name": "Ridley Room Left Gray Lock (to E-Tank)",
+          "lockType": "gameFlag",
+          "unlockStrats": [
+            {
+              "name": "Base",
+              "requires": [
+                "f_DefeatedRidley"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Right Door",
+      "nodeType": "door",
+      "nodeSubType": "gray",
+      "nodeAddress": "0x00198be",
+      "doorOrientation": "right",
+      "doorEnvironments": [{"physics": "air"}],
+      "useImplicitComeInNormally": false,
+      "useImplicitComeInWithMockball": false,
+      "useImplicitCarryGModeBackThrough": false,
+      "useImplicitCarryGModeMorphBackThrough": false,
+      "locks": [
+        {
+          "name": "Ridley Room Right Gray Lock (to Farming Room)",
+          "lockType": "gameFlag",
+          "unlockStrats": [
+            {
+              "name": "Base",
+              "requires": [
+                "f_DefeatedRidley"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Ridley",
+      "nodeType": "junction",
+      "nodeSubType": "junction",
+      "devNote": "FIXME: This node can be eliminated."
+    }
+  ],
+  "enemies": [
+    {
+      "id": "e1",
+      "groupName": "Ridley",
+      "enemyName": "Ridley",
+      "quantity": 1,
+      "homeNodes": [3],
+      "stopSpawn": ["f_DefeatedRidley"]
+    }
+  ],
+  "links": [
+    {
+      "from": 1,
+      "to": [
+        {"id": 1},
+        {"id": 3}
+      ]
+    },
+    {
+      "from": 2,
+      "to": [
+        {"id": 2},
+        {"id": 3}
+      ]
+    },
+    {
+      "from": 3,
+      "to": [
+        {"id": 1},
+        {"id": 2},
+        {"id": 3}
+      ]
+    }
+  ],
+  "strats": [
+    {
+      "id": 1,
+      "link": [1, 1],
+      "name": "Leave With Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 1,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 2,
+      "link": [1, 1],
+      "name": "G-Mode Regain Mobility",
+      "requires": [
+        {"not": "f_DefeatedRidley"},
+        "canRiskPermanentLossOfAccess",
+        {"enemyDamage": {"enemy": "Ridley", "type": "contact", "hits": 1}}
+      ],
+      "gModeRegainMobility": {},
+      "flashSuitChecked": true
+    },
+    {
+      "id": 3,
+      "link": [1, 3],
+      "name": "Base",
+      "requires": [
+        {"heatFrames": 50}
+      ]
+    },
+    {
+      "id": 4,
+      "link": [2, 2],
+      "name": "Leave With Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 1,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 20,
+      "link": [2, 2],
+      "name": "Land in Door Frame",
+      "entranceCondition": {
+        "comeInNormally": {}
+      },
+      "requires": [
+        "canPrepareForNextRoom",
+        "canInsaneJump",
+        {"heatFrames": 55},
+        {"doorUnlockedAtNode": 2}
+      ],
+      "unlocksDoors": [
+        {"types": ["super"], "requires": []},
+        {"types": ["missiles", "powerbomb"], "requires": ["never"]}
+      ]
+    },
+    {
+      "id": 21,
+      "link": [2, 2],
+      "name": "Door Stuck, Open Door",
+      "entranceCondition": {
+        "comeInWithDoorStuckSetup": {}
+      },
+      "requires": [
+        "canPrepareForNextRoom",
+        {"heatFrames": 55},
+        {"doorUnlockedAtNode": 2}
+      ],
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}]
+    },
+    {
+      "id": 14,
+      "link": [2, 2],
+      "name": "Prepared Return Without Falling",
+      "entranceCondition": {
+        "comeInNormally": {}
+      },
+      "requires": [
+        "canPrepareForNextRoom",
+        {"or": [
+          "SpaceJump",
+          "canWalljump"
+        ]},
+        {"heatFrames": 80},
+        {"doorUnlockedAtNode": 2}
+      ],
+      "unlocksDoors": [
+        {"types": ["super"], "requires": ["canTrickyJump"]},
+        {"types": ["missiles", "powerbomb"], "requires": ["never"]}
+      ]
+    },
+    {
+      "id": 5,
+      "link": [2, 2],
+      "name": "G-Mode Regain Mobility",
+      "requires": [
+        {"not": "f_DefeatedRidley"},
+        "canRiskPermanentLossOfAccess",
+        {"enemyDamage": {"enemy": "Ridley", "type": "contact", "hits": 1}}
+      ],
+      "gModeRegainMobility": {},
+      "flashSuitChecked": true
+    },
+    {
+      "id": 6,
+      "link": [2, 2],
+      "name": "Carry G-Mode Back Through",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "direct",
+          "morphed": false
+        }
+      },
+      "requires": [
+        {"or": [
+          "SpaceJump",
+          "canWalljump",
+          {"and": [
+            "canJumpIntoIBJ",
+            "canTrickyJump"
+          ]},
+          {"and": [
+            "canIBJ",
+            "f_DefeatedRidley"
+          ]},
+          {"and": [
+            "HiJump",
+            "canSpringBallJumpMidAir"
+          ]},
+          {"and": [
+            "HiJump",
+            "SpeedBooster",
+            "canTrickyJump",
+            {"or": [
+              "canInsaneJump",
+              "f_DefeatedRidley"
+            ]}
+          ]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": false
+        }
+      },
+      "bypassesDoorShell": true,
+      "flashSuitChecked": true
+    },
+    {
+      "id": 7,
+      "link": [2, 2],
+      "name": "Carry G-Mode Morph Back Through",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "direct",
+          "morphed": true
+        }
+      },
+      "requires": [
+        "canArtificialMorph"
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": true
+        }
+      },
+      "bypassesDoorShell": true,
+      "flashSuitChecked": true,
+      "devNote": "Artificial morph will allow Samus not to fall; real Morph is not sufficient."
+    },
+    {
+      "id": 8,
+      "link": [2, 3],
+      "entranceCondition": {
+        "comeInNormally": {}
+      },
+      "name": "Base",
+      "requires": [
+        {"heatFrames": 100}
+      ]
+    },
+    {
+      "id": 22,
+      "link": [2, 3],
+      "name": "Fall Into Room With Mockball",
+      "entranceCondition": {
+        "comeInWithMockball": {
+          "adjacentMinTiles": 0,
+          "remoteAndLandingMinTiles": [[0, 0]],
+          "speedBooster": "any"
+        }
+      },
+      "requires": [
+        {"heatFrames": 100}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 9,
+      "link": [3, 1],
+      "name": "Base",
+      "requires": [
+        {"heatFrames": 50}
+      ]
+    },
+    {
+      "id": 10,
+      "link": [3, 2],
+      "name": "Wall Jump",
+      "requires": [
+        "canWalljump",
+        {"heatFrames": 200}
+      ]
+    },
+    {
+      "id": 11,
+      "link": [3, 2],
+      "name": "Space Jump",
+      "requires": [
+        "SpaceJump",
+        {"heatFrames": 250}
+      ]
+    },
+    {
+      "id": 12,
+      "link": [3, 2],
+      "name": "IBJ",
+      "requires": [
+        "h_heatProof",
+        "canIBJ"
+      ]
+    },
+    {
+      "id": 18,
+      "link": [3, 2],
+      "name": "HiJump Spring Ball",
+      "requires": [
+        "HiJump",
+        "canSpringBallJumpMidAir",
+        {"heatFrames": 210}
+      ]
+    },
+    {
+      "id": 19,
+      "link": [3, 2],
+      "name": "Speedy HiJump",
+      "requires": [
+        "HiJump",
+        "SpeedBooster",
+        "canTrickyJump",
+        {"heatFrames": 320},
+        {"or": [
+          "canInsaneJump",
+          {"heatFrames": 300}
+        ]}
+      ],
+      "note": "Requires starting on one of the last three pixels and then performing a last frame jump to get enough height.",
+      "devNote": "This gives one leniency attempt without canInsaneJump."
+    },
+    {
+      "id": 16,
+      "link": [3, 3],
+      "name": "Heat Proof Ridley",
+      "requires": [
+        "h_heatProof",
+        {"enemyKill": {
+          "enemies": [["Ridley"]]
+        }}
+      ],
+      "setsFlags": ["f_DefeatedRidley"]
+    },
+    {
+      "id": 17,
+      "link": [3, 3],
+      "name": "Ridley without Heat Protection",
+      "requires": [
+        {"notable": "Ridley without Heat Protection"},
+        {"heatFrames": 0},
+        {"enemyKill": {
+          "enemies": [["Ridley"]]
+        }}
+      ],
+      "setsFlags": ["f_DefeatedRidley"],
+      "note": "Fight Ridley without immunity to heat damage.",
+      "devNote": ["Heat frames are accounted for as part of the enemyKill."]
+    },
+    {
+      "id": 13,
+      "link": [3, 3],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canHeatedCrystalFlash"
+      ],
+      "flashSuitChecked": true
+    }
+  ],
+  "nextStratId": 23,
+  "notables": [
+    {
+      "id": 1,
+      "name": "Ridley without Heat Protection",
+      "note": "Fight Ridley without immunity to heat damage."
+    }
+  ],
+  "nextNotableId": 2
+}

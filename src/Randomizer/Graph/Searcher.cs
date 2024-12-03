@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
-public class Searcher
+public class Searcher : ISearcher
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 

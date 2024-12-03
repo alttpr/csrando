@@ -22,7 +22,7 @@ public interface IWorld
     IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(v => v.Type == type);
     bool HasLocation(string locationName);
 
-    IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
+    IEnumerable<Vertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
     /// <summary>
     /// Tracks the item for <paramref name="location"/> as placed. This might affect a game's ability to determine how many items were placed in total.
     /// </summary>

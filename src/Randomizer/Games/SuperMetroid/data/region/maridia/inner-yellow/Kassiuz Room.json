@@ -1,0 +1,385 @@
+{
+  "$schema": "../../../schema/m3-room.schema.json",
+  "id": 217,
+  "name": "Kassiuz Room",
+  "area": "Maridia",
+  "subarea": "Inner",
+  "subsubarea": "Yellow",
+  "roomAddress": "0x7D387",
+  "roomEnvironments": [{"heated": false}],
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Bottom Left Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x001a5d0",
+      "doorOrientation": "left",
+      "doorEnvironments": [{"physics": "air"}]
+    },
+    {
+      "id": 2,
+      "name": "Top Right Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x001a5dc",
+      "doorOrientation": "right",
+      "doorEnvironments": [{"physics": "air"}]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "e1",
+      "groupName": "Kassiuz Room Choots",
+      "enemyName": "Choot",
+      "quantity": 3,
+      "homeNodes": [1, 2]
+    },
+    {
+      "id": "e2",
+      "groupName": "Kassiuz Room Puyos",
+      "enemyName": "Puyo",
+      "quantity": 4,
+      "homeNodes": [1, 2]
+    }
+  ],
+  "links": [
+    {
+      "from": 1,
+      "to": [
+        {"id": 1},
+        {"id": 2}
+      ]
+    },
+    {
+      "from": 2,
+      "to": [
+        {"id": 1},
+        {"id": 2}
+      ]
+    }
+  ],
+  "strats": [
+    {
+      "id": 1,
+      "link": [1, 1],
+      "name": "Leave with Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 3,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 2,
+      "link": [1, 1],
+      "name": "Leave With Runway - Frozen Puyo",
+      "requires": [
+        "h_canTrickyFrozenEnemyRunway"
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 4,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 3,
+      "link": [1, 1],
+      "name": "Puyo Farm",
+      "requires": [
+        {"resetRoom": {
+          "nodes": [1]
+        }},
+        {"or": [
+          "Spazer",
+          "Wave",
+          "Plasma",
+          "canUseGrapple",
+          "ScrewAttack"
+        ]},
+        {"partialRefill": {"type": "Energy", "limit": 200}},
+        {"partialRefill": {"type": "Missile", "limit": 12}},
+        {"partialRefill": {"type": "PowerBomb", "limit": 6}}
+      ]
+    },
+    {
+      "id": 4,
+      "link": [1, 1],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canCrystalFlash"
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 5,
+      "link": [1, 1],
+      "name": "G-Mode Setup - Get Hit By Puyo",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGModeSetup": {}
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 6,
+      "link": [1, 1],
+      "name": "G-Mode Regain Mobility",
+      "requires": [
+        {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}}
+      ],
+      "gModeRegainMobility": {},
+      "flashSuitChecked": true
+    },
+    {
+      "id": 7,
+      "link": [1, 2],
+      "name": "Base",
+      "requires": [
+        {"or": [
+          "canWalljump",
+          "h_canFly",
+          {"and": [
+            "HiJump",
+            {"or": [
+              "canSpringBallJumpMidAir",
+              "canUseFrozenEnemies"
+            ]}
+          ]},
+          "canTrickySpringBallJump"
+        ]}
+      ]
+    },
+    {
+      "id": 8,
+      "link": [1, 2],
+      "name": "Shinespark",
+      "entranceCondition": {
+        "comeInShinecharging": {
+          "length": 2,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        {"shinespark": {"frames": 58, "excessFrames": 6}}
+      ]
+    },
+    {
+      "id": 9,
+      "link": [1, 2],
+      "name": "Shinespark, Come in Shinecharged",
+      "entranceCondition": {
+        "comeInShinecharged": {}
+      },
+      "requires": [
+        {"shineChargeFrames": 20},
+        {"shinespark": {"frames": 58, "excessFrames": 6}}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 18,
+      "link": [1, 2],
+      "name": "Come in Shinecharging, Leave With Temporary Blue",
+      "entranceCondition": {
+        "comeInShinecharging": {
+          "length": 0,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        "HiJump",
+        "canTrickySpringBallJump",
+        "canPauseRemorphTemporaryBlue",
+        "canLongChainTemporaryBlue",
+        {"enemyDamage": {"enemy": "Choot", "hits": 1, "type": "contact"}}
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}],
+      "note": [
+        "Perform a sequence of three mid-air Spring Ball jumps, each immediately followed by an unmorph to avoid bonking the wall;",
+        "after each unmorph, use a pause-buffered remorph to continue chaining temporary blue."
+      ],
+      "devNote": [
+        "The Choot hit is possible to avoid, but it's not yet clear if this can be done reliably."
+      ]
+    },
+    {
+      "id": 16,
+      "link": [1, 2],
+      "name": "Use Flash Suit",
+      "requires": [
+        {"useFlashSuit": {}},
+        {"or": [
+          {"shinespark": {"frames": 48, "excessFrames": 12}},
+          {"and": [
+            "HiJump",
+            {"shinespark": {"frames": 30, "excessFrames": 10}}
+          ]}
+        ]}
+      ],
+      "flashSuitChecked": true,
+      "note": "With HiJump, climb to the first Choot platform, jump left and spark up right to save Energy."
+    },
+    {
+      "id": 17,
+      "link": [1, 2],
+      "name": "Use Flash Suit, Frozen Puyo Climb",
+      "requires": [
+        "canTrickyUseFrozenEnemies",
+        "canTrickyCarryFlashSuit",
+        {"or": [
+          "Wave",
+          "Spazer",
+          "Plasma"
+        ]},
+        {"useFlashSuit": {}},
+        {"shinespark": {"frames": 13, "excessFrames": 10}}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "To save a lot of Energy, climb the room with ice before shinesparking to the door.",
+        "To climb the room, stand on a frozen enemy, lure the Puyo from above and freeze it midair twice to progress."
+      ]
+    },
+    {
+      "id": 10,
+      "link": [1, 2],
+      "name": "Shinespark Deep Stuck X-Ray Climb",
+      "entranceCondition": {
+        "comeInShinecharged": {}
+      },
+      "requires": [
+        {"shineChargeFrames": 1},
+        "canShinesparkDeepStuck",
+        {"shinespark": {"frames": 1, "excessFrames": 1}},
+        "canXRayClimb",
+        "canBePatient",
+        "canOffScreenMovement"
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Climb up 2.5 screens.",
+        "Stop when about half of Samus (or less) is visible at the top of the screen.",
+        "Turn-around a couple times to move to the right, to get close to falling out.",
+        "Then perform a buffered spin-jump while turning around to the right, to make it onto the platform.",
+        "The Choot will be safely off-camera and will not hit Samus while passing through it."
+      ]
+    },
+    {
+      "id": 11,
+      "link": [1, 2],
+      "name": "G-Mode Deep Stuck X-Ray Climb",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "direct",
+          "morphed": false
+        }
+      },
+      "requires": [
+        "canXRayClimb",
+        "canBePatient",
+        "canOffScreenMovement"
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Climb up 2.5 screens.",
+        "Stop when about half of Samus (or less) is visible at the top of the screen.",
+        "Turn-around a couple times to move to the right, to get close to falling out.",
+        "Then perform a buffered spin-jump while turning around to the right, to make it onto the platform.",
+        "The Choot will be safely off-camera and will not hit Samus while passing through it."
+      ]
+    },
+    {
+      "id": 12,
+      "link": [1, 2],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        "h_canArtificialMorphIBJ",
+        {"or": [
+          "h_canArtificialMorphSpringBall",
+          {"and": [
+            "h_canArtificialMorphPowerBomb",
+            "h_canArtificialMorphPowerBomb"
+          ]},
+          {"and": [
+            "h_canArtificialMorphStaggeredIBJ",
+            "canBeVeryPatient"
+          ]}
+        ]}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "IBJ up the climb. This is a lot easier with PBs or Spring Ball to help kill the enemies.",
+        "With PBs, use one on entry to deal with the Puyos, then IBJ up the right side and use another to kill the middle Choot.",
+        "Otherwise, Kill the Puyos then the bottom Choot with Bombs, falling off when necessary, then climb the left side of the room."
+      ]
+    },
+    {
+      "id": 13,
+      "link": [2, 1],
+      "name": "Base",
+      "requires": []
+    },
+    {
+      "id": 19,
+      "link": [2, 1],
+      "name": "Cross-Room Blue Speed Jump, Leave With Temporary Blue",
+      "entranceCondition": {
+        "comeInGettingBlueSpeed": {
+          "length": 0,
+          "openEnd": 1,
+          "maxExtraRunSpeed": "$1.D"
+        }
+      },
+      "requires": [
+        "canSpeedball",
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}],
+      "note": [
+        "Use a short speedball to destroy the top Choot or go under it.",
+        "Then chain temporary blue into the next room."
+      ]
+    },
+    {
+      "id": 14,
+      "link": [2, 2],
+      "name": "Leave with Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 1,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 15,
+      "link": [2, 2],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canCrystalFlash"
+      ],
+      "flashSuitChecked": true
+    }
+  ],
+  "nextStratId": 20,
+  "notables": [],
+  "nextNotableId": 1
+}

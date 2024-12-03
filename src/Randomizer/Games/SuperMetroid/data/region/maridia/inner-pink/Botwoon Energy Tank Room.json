@@ -1,0 +1,1991 @@
+{
+  "$schema": "../../../schema/m3-room.schema.json",
+  "id": 186,
+  "name": "Botwoon Energy Tank Room",
+  "area": "Maridia",
+  "subarea": "Inner",
+  "subsubarea": "Pink",
+  "roomAddress": "0x7D7E4",
+  "roomEnvironments": [{"heated": false}],
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Left Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x001a84c",
+      "doorOrientation": "left",
+      "doorEnvironments": [{"physics": "water"}]
+    },
+    {
+      "id": 2,
+      "name": "Left Sand Pit",
+      "nodeType": "exit",
+      "nodeSubType": "sandpit",
+      "nodeAddress": "0x001a864",
+      "doorOrientation": "down"
+    },
+    {
+      "id": 3,
+      "name": "Right Sand Pit",
+      "nodeType": "exit",
+      "nodeSubType": "sandpit",
+      "nodeAddress": "0x001a858",
+      "doorOrientation": "down"
+    },
+    {
+      "id": 4,
+      "name": "Right Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x001a870",
+      "doorOrientation": "right",
+      "doorEnvironments": [{"physics": "water"}]
+    },
+    {
+      "id": 5,
+      "name": "Item",
+      "nodeType": "item",
+      "nodeSubType": "visible",
+      "nodeItem": "ETank",
+      "nodeAddress": "0x7C755"
+    },
+    {
+      "id": 6,
+      "name": "Junction Right of Morph Passage",
+      "nodeType": "junction",
+      "nodeSubType": "junction"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "A",
+      "name": "Speed Blocks",
+      "obstacleType": "inanimate"
+    },
+    {
+      "id": "B",
+      "name": "G-Mode Grab Item and Leave Before Exiting G-Mode",
+      "obstacleType": "abstract"
+    }
+  ],
+  "enemies": [
+    {
+      "id": "e1",
+      "groupName": "Botwoon E-Tank Left Puyos",
+      "enemyName": "Puyo",
+      "quantity": 4,
+      "homeNodes": [1]
+    },
+    {
+      "id": "e2",
+      "groupName": "Botwoon E-Tank Right Puyo",
+      "enemyName": "Puyo",
+      "quantity": 1,
+      "homeNodes": [3]
+    },
+    {
+      "id": "e3",
+      "groupName": "Botwoon E-Tank Zoas",
+      "enemyName": "Zoa",
+      "quantity": 5,
+      "homeNodes": [4]
+    }
+  ],
+  "links": [
+    {
+      "from": 1,
+      "to": [
+        {"id": 1},
+        {
+          "id": 2,
+          "devNote": "There's nothing difficult about getting here suitless, but it does run a heavy risk of leading the player into suitless Maridia situations."
+        },
+        {
+          "id": 3,
+          "devNote": "There's nothing difficult about getting here suitless, but it does run a heavy risk of leading the player into suitless Maridia situations."
+        },
+        {
+          "id": 4,
+          "devNote": "Direct link passing below. Passage above should go 1 -> 5 -> 4."
+        },
+        {"id": 5}
+      ]
+    },
+    {
+      "from": 2,
+      "to": [
+        {"id": 2}
+      ]
+    },
+    {
+      "from": 3,
+      "to": [
+        {"id": 3}
+      ]
+    },
+    {
+      "from": 4,
+      "to": [
+        {
+          "id": 1,
+          "devNote": "Direct link passing below. Passage above should go 4 -> 6 -> 5 -> 1."
+        },
+        {"id": 2},
+        {"id": 3},
+        {"id": 4},
+        {"id": 5},
+        {"id": 6}
+      ]
+    },
+    {
+      "from": 5,
+      "to": [
+        {"id": 1},
+        {"id": 4},
+        {"id": 6}
+      ]
+    },
+    {
+      "from": 6,
+      "to": [
+        {"id": 4},
+        {"id": 5},
+        {"id": 6}
+      ]
+    }
+  ],
+  "strats": [
+    {
+      "id": 1,
+      "link": [1, 1],
+      "name": "Leave with Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 3,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 2,
+      "link": [1, 1],
+      "name": "Puyo Farm",
+      "requires": [
+        {"resetRoom": {
+          "nodes": [1]
+        }},
+        {"or": [
+          "Spazer",
+          "Wave",
+          "Plasma",
+          "canUseGrapple",
+          {"and": [
+            "Gravity",
+            "ScrewAttack"
+          ]}
+        ]},
+        {"partialRefill": {"type": "Energy", "limit": 200}},
+        {"partialRefill": {"type": "Missile", "limit": 12}},
+        {"partialRefill": {"type": "PowerBomb", "limit": 6}}
+      ],
+      "resetsObstacles": ["A", "B"]
+    },
+    {
+      "id": 3,
+      "link": [1, 1],
+      "name": "Leave Shinecharged",
+      "requires": [
+        "Gravity",
+        {"canShineCharge": {"usedTiles": 35, "gentleUpTiles": 2, "openEnd": 1}},
+        {"shineChargeFrames": 60}
+      ],
+      "exitCondition": {
+        "leaveShinecharged": {}
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 4,
+      "link": [1, 1],
+      "name": "Leave Spinning",
+      "requires": [
+        "Gravity"
+      ],
+      "exitCondition": {
+        "leaveSpinning": {
+          "remoteRunway": {
+            "length": 35,
+            "openEnd": 1
+          },
+          "minExtraRunSpeed": "$1.2"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "link": [1, 1],
+      "name": "Leave Spinning (Across Room)",
+      "requires": [
+        "Gravity",
+        {"getBlueSpeed": {"usedTiles": 22, "openEnd": 1}}
+      ],
+      "exitCondition": {
+        "leaveSpinning": {
+          "remoteRunway": {
+            "length": 45,
+            "openEnd": 1
+          },
+          "blue": "yes"
+        }
+      },
+      "note": "Use Speed Booster to break the Speed blocks, and run from the right side of the room, using blue speed to run on top of the sand."
+    },
+    {
+      "id": 6,
+      "link": [1, 1],
+      "name": "Leave With Mockball",
+      "requires": [
+        "Gravity"
+      ],
+      "exitCondition": {
+        "leaveWithMockball": {
+          "remoteRunway": {
+            "length": 34,
+            "openEnd": 1
+          },
+          "landingRunway": {
+            "length": 3,
+            "openEnd": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "link": [1, 1],
+      "name": "Leave With Mockball (Across Room)",
+      "requires": [
+        "Gravity",
+        {"getBlueSpeed": {"usedTiles": 22, "openEnd": 1}}
+      ],
+      "exitCondition": {
+        "leaveWithMockball": {
+          "remoteRunway": {
+            "length": 45,
+            "openEnd": 1
+          },
+          "landingRunway": {
+            "length": 3,
+            "openEnd": 1
+          }
+        }
+      },
+      "note": "Use Speed Booster to break the Speed blocks, and run from the right side of the room, using blue speed to run on top of the sand."
+    },
+    {
+      "id": 8,
+      "link": [1, 1],
+      "name": "Leave With Spring Ball Bounce",
+      "requires": [
+        "Gravity"
+      ],
+      "exitCondition": {
+        "leaveWithSpringBallBounce": {
+          "remoteRunway": {
+            "length": 27,
+            "openEnd": 0
+          },
+          "landingRunway": {
+            "length": 3,
+            "openEnd": 1
+          },
+          "movementType": "uncontrolled"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "link": [1, 1],
+      "name": "Leave With Spring Ball Bounce (Across Room)",
+      "requires": [
+        "Gravity",
+        {"getBlueSpeed": {"usedTiles": 22, "openEnd": 1}}
+      ],
+      "exitCondition": {
+        "leaveWithSpringBallBounce": {
+          "remoteRunway": {
+            "length": 45,
+            "openEnd": 1
+          },
+          "landingRunway": {
+            "length": 3,
+            "openEnd": 1
+          },
+          "movementType": "uncontrolled"
+        }
+      },
+      "note": "Use Speed Booster to break the Speed blocks, and run from the right side of the room, using blue speed to run on top of the sand."
+    },
+    {
+      "id": 10,
+      "link": [1, 1],
+      "name": "Leave Space Jumping",
+      "requires": [
+        "Gravity"
+      ],
+      "exitCondition": {
+        "leaveSpaceJumping": {
+          "remoteRunway": {
+            "length": 35,
+            "openEnd": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 11,
+      "link": [1, 1],
+      "name": "Leave Space Jumping (Across Room)",
+      "requires": [
+        "Gravity",
+        {"getBlueSpeed": {"usedTiles": 22, "openEnd": 1}}
+      ],
+      "exitCondition": {
+        "leaveSpaceJumping": {
+          "remoteRunway": {
+            "length": 45,
+            "openEnd": 1
+          }
+        }
+      },
+      "note": "Use Speed Booster to break the Speed blocks, and run from the right side of the room, using blue speed to run on top of the sand."
+    },
+    {
+      "id": 12,
+      "link": [1, 1],
+      "name": "Leave With Temporary Blue",
+      "requires": [
+        "Gravity",
+        {"canShineCharge": {"usedTiles": 35, "gentleUpTiles": 2, "openEnd": 1}},
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      }
+    },
+    {
+      "id": 13,
+      "link": [1, 1],
+      "name": "G-Mode Setup - Get Hit By Puyo",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGModeSetup": {}
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 14,
+      "link": [1, 2],
+      "name": "Base",
+      "requires": []
+    },
+    {
+      "id": 15,
+      "link": [1, 2],
+      "name": "G-Mode",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": false
+        }
+      },
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": false
+        }
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 16,
+      "link": [1, 2],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          "h_canArtificialMorphBombs",
+          {"and": [
+            "h_canArtificialMorphPowerBomb",
+            "h_additionalBomb",
+            {"or": [
+              "canTrickyJump",
+              "h_canArtificialMorphSpringBall",
+              "Gravity",
+              "h_additionalBomb"
+            ]}
+          ]},
+          {"and": [
+            "Gravity",
+            {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}}
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 3}}
+          ]},
+          {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 7}}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": true
+        }
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 17,
+      "link": [1, 3],
+      "name": "Base",
+      "requires": [
+        "h_canNavigateUnderwater"
+      ]
+    },
+    {
+      "id": 18,
+      "link": [1, 3],
+      "name": "G-Mode",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": false
+        }
+      },
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": false
+        }
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 19,
+      "link": [1, 3],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          "h_canArtificialMorphSpringBall",
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphBombHorizontally"
+          ]}
+        ]},
+        {"or": [
+          {"and": [
+            "h_canArtificialMorphBombThings",
+            "h_additionalBomb"
+          ]},
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphSpringBall",
+            {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}}
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 3}}
+          ]},
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphPowerBomb",
+            {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 2}}
+          ]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": true
+        }
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 20,
+      "link": [1, 4],
+      "name": "Leave with Runway Through the Speed Blocks",
+      "requires": [
+        "Gravity",
+        "h_getBlueSpeedMaxRunway",
+        {"or": [
+          {"getBlueSpeed": {"usedTiles": 22, "gentleDownTiles": 4, "openEnd": 1}},
+          "h_canUseSpringBall",
+          "SpaceJump",
+          "h_canUseMorphBombs",
+          "canPlayInSand",
+          {"obstaclesCleared": ["A"]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 45,
+          "openEnd": 1
+        }
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}]
+    },
+    {
+      "id": 21,
+      "link": [1, 4],
+      "name": "Speed Blocks Already Broken Suitless",
+      "requires": [
+        "canSuitlessMaridia",
+        "HiJump",
+        {"or": [
+          "h_canUseSpringBall",
+          "canPlayInSand"
+        ]},
+        {"obstaclesCleared": ["A"]}
+      ],
+      "devNote": [
+        "Gravity can run across the sand with speed again.",
+        "FIXME: This is possible without HiJump by breaking spin before landing, then quickly jumping again. Useful in other places as well, like Aqueduct."
+      ]
+    },
+    {
+      "id": 22,
+      "link": [1, 4],
+      "name": "Base",
+      "requires": [
+        "Gravity",
+        "h_getBlueSpeedMaxRunway"
+      ],
+      "clearsObstacles": ["A"]
+    },
+    {
+      "id": 23,
+      "link": [1, 4],
+      "name": "Suitless Shinespark",
+      "entranceCondition": {
+        "comeInShinecharged": {}
+      },
+      "requires": [
+        {"shineChargeFrames": 60},
+        "canSuitlessMaridia",
+        "canHorizontalShinespark",
+        "canShinechargeMovement",
+        {"shinespark": {"frames": 159, "excessFrames": 43}}
+      ],
+      "clearsObstacles": ["A"],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 24,
+      "link": [1, 4],
+      "name": "Speedball (Come in Getting Blue Speed)",
+      "entranceCondition": {
+        "comeInGettingBlueSpeed": {
+          "length": 0,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        "canWaterShineCharge",
+        "canSpeedball",
+        "canTrickyJump"
+      ],
+      "note": ["Enter the room with blue speed, and jump into a speedball."]
+    },
+    {
+      "id": 25,
+      "link": [1, 4],
+      "name": "Speedball (Come in Blue Spinning)",
+      "entranceCondition": {
+        "comeInBlueSpinning": {
+          "unusableTiles": 0
+        }
+      },
+      "requires": [
+        "canSpeedball"
+      ],
+      "note": ["Enter the room in a spin jump with blue speed, and enter a speedball."]
+    },
+    {
+      "id": 26,
+      "link": [1, 4],
+      "name": "Speedball, Leave With Temporary Blue (Come in Getting Blue Speed)",
+      "entranceCondition": {
+        "comeInGettingBlueSpeed": {
+          "length": 0,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        "canWaterShineCharge",
+        "canSpeedball",
+        "canTrickyJump",
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}],
+      "note": [
+        "Enter the room with blue speed, and jump into a speedball.",
+        "Then chain temporary blue into the next room."
+      ]
+    },
+    {
+      "id": 27,
+      "link": [1, 4],
+      "name": "Speedball, Leave With Temporary Blue (Come in Blue Spinning)",
+      "entranceCondition": {
+        "comeInBlueSpinning": {
+          "unusableTiles": 0
+        }
+      },
+      "requires": [
+        "canSpeedball",
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}],
+      "note": [
+        "Enter the room in a spin jump with blue speed, and enter a speedball.",
+        "Then chain temporary blue into the next room."
+      ]
+    },
+    {
+      "id": 28,
+      "link": [1, 4],
+      "name": "Blue Spring Ball Bounce",
+      "entranceCondition": {
+        "comeInWithBlueSpringBallBounce": {
+          "movementType": "controlled"
+        }
+      },
+      "requires": [],
+      "note": ["Bounce through the Speed blocks."],
+      "devNote": [
+        "With a mid-air spring ball jump it would be possible to go through the morph tunnel.",
+        "This strat exists mainly as a way to avoid collecting the item."
+      ]
+    },
+    {
+      "id": 29,
+      "link": [1, 4],
+      "name": "Blue Spring Ball Bounce, Leave With Temporary Blue",
+      "entranceCondition": {
+        "comeInWithBlueSpringBallBounce": {
+          "movementType": "controlled"
+        }
+      },
+      "requires": [
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}],
+      "note": [
+        "Bounce through the Speed blocks.",
+        "Then unmorph and chain temporary blue into the next room."
+      ]
+    },
+    {
+      "id": 30,
+      "link": [1, 4],
+      "name": "G-Mode Overload PLMs",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": false
+        }
+      },
+      "requires": [
+        "canSuitlessMaridia"
+      ],
+      "flashSuitChecked": true,
+      "note": "Overload PLMs by touching the sand, then move through the speed blocks. Avoiding the sand pits is easier without Gravity or HiJump."
+    },
+    {
+      "id": 31,
+      "link": [1, 4],
+      "name": "Grapple Teleport Door Lock Skip",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[108, 12], [108, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true
+    },
+    {
+      "id": 32,
+      "link": [1, 4],
+      "name": "Carry Grapple Teleport (Top Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[108, 12]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[108, 12]]
+        }
+      }
+    },
+    {
+      "id": 33,
+      "link": [1, 4],
+      "name": "Carry Grapple Teleport (Bottom Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[108, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[108, 13]]
+        }
+      }
+    },
+    {
+      "id": 95,
+      "link": [1, 4],
+      "name": "Use Flash Suit",
+      "requires": [
+        {"useFlashSuit": {}},
+        {"or": [
+          {"and": [
+            "canPlayInSand",
+            {"shinespark": {"frames": 101, "excessFrames": 52}}
+          ]},
+          {"and": [
+            "Gravity",
+            {"shinespark": {"frames": 80, "excessFrames": 41}}
+          ]}
+        ]}
+      ],
+      "clearsObstacles": ["A"],
+      "note": "With low Energy it is recommended to spark high in order to not get hit by the Zoas in case Samus ends above their spawn."
+    },
+    {
+      "id": 34,
+      "link": [1, 5],
+      "name": "Base",
+      "requires": [
+        "Gravity",
+        {"or": [
+          "canMidAirMorph",
+          "h_canUseSpringBall",
+          {"and": [
+            "canIBJ",
+            "canBombHorizontally"
+          ]}
+        ]}
+      ],
+      "collectsItems": [5]
+    },
+    {
+      "id": 35,
+      "link": [1, 5],
+      "name": "Suitless Jump Assist",
+      "requires": [
+        "canSuitlessMaridia",
+        {"or": [
+          "canTrickySpringBallJump",
+          {"and": [
+            "HiJump",
+            "h_canUseSpringBall"
+          ]},
+          {"and": [
+            "HiJump",
+            "canMidAirMorph"
+          ]}
+        ]}
+      ],
+      "collectsItems": [5]
+    },
+    {
+      "id": 36,
+      "link": [1, 5],
+      "name": "Suitless Frozen Puyo",
+      "requires": [
+        "canSuitlessMaridia",
+        "Morph",
+        "canTrickyUseFrozenEnemies"
+      ],
+      "collectsItems": [5]
+    },
+    {
+      "id": 37,
+      "link": [1, 5],
+      "name": "Cross Room Jump Shinespark",
+      "entranceCondition": {
+        "comeInShinechargedJumping": {
+          "framesRequired": 22
+        }
+      },
+      "requires": [
+        "canMidAirMorph",
+        "canCrossRoomJumpIntoWater",
+        "canShinechargeMovement",
+        "canMidairShinespark",
+        {"shinespark": {"frames": 55}}
+      ],
+      "collectsItems": [5],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 38,
+      "link": [1, 5],
+      "name": "Cross Room Jump with Speedbooster",
+      "entranceCondition": {
+        "comeInRunning": {
+          "speedBooster": true,
+          "minTiles": 40
+        }
+      },
+      "requires": [
+        "canInsaneJump",
+        "canLateralMidAirMorph",
+        "canCrossRoomJumpIntoWater",
+        "canMomentumConservingMorph"
+      ],
+      "collectsItems": [5],
+      "note": [
+        "Needs near max horizontal speed coming from about 40 runway tiles in the adjacent room.",
+        "Jump after the transition.",
+        "Running a longer on the short runway is more difficult at maximum speed, but will increase the success of the jump.",
+        "A crisp momentum conserving morph can also make up for a jump that is buffered through the door."
+      ]
+    },
+    {
+      "id": 39,
+      "link": [1, 5],
+      "name": "Cross Room Jump with Speedbooster, Spring Ball",
+      "entranceCondition": {
+        "comeInJumping": {
+          "speedBooster": true,
+          "minTiles": 6.4375
+        }
+      },
+      "requires": [
+        "canLateralMidAirMorph",
+        "canDisableEquipment",
+        "canCrossRoomJumpIntoWater",
+        "canSpringBallBounce",
+        {"or": [
+          {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}},
+          "canInsaneJump",
+          {"and": [
+            "Plasma",
+            "canTrickyJump"
+          ]},
+          "h_pauseAbuseMinimalReserveRefill"
+        ]}
+      ],
+      "collectsItems": [5],
+      "note": [
+        "Needs a runway of 7 tiles with no open end in the adjacent room, to get enough height. This is a peak of height with speed booster, no hjb, while underwater.",
+        "Jump before the transition with SpeedBooster off and then SpeedBooster back on after reaching the ceiling and Morphing."
+      ]
+    },
+    {
+      "id": 96,
+      "link": [1, 5],
+      "name": "Use Flash Suit",
+      "requires": [
+        "Morph",
+        {"useFlashSuit": {}},
+        {"shinespark": {"frames": 5, "excessFrames": 2}}
+      ],
+      "collectsItems": [5]
+    },
+    {
+      "id": 40,
+      "link": [1, 5],
+      "name": "G-Mode Morph Direct",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "direct",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphIBJ",
+            "canDodgeWhileShooting"
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "Gravity",
+              "HiJump"
+            ]},
+            {"or": [
+              "canTrickyJump",
+              "h_canArtificialMorphPowerBomb"
+            ]}
+          ]}
+        ]}
+      ],
+      "clearsObstacles": ["B"],
+      "collectsItems": [5],
+      "flashSuitChecked": true,
+      "note": "Be careful not to touch or bomb the sand in order to grab the item before PLMs are overloaded."
+    },
+    {
+      "id": 41,
+      "link": [1, 5],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphIBJ"
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "Gravity",
+              "HiJump"
+            ]},
+            {"or": [
+              "canTrickyJump",
+              "h_canArtificialMorphPowerBomb"
+            ]}
+          ]}
+        ]}
+      ],
+      "collectsItems": [5],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 42,
+      "link": [1, 5],
+      "name": "Puyo Bomb-Grapple-Jump",
+      "requires": [
+        {"notable": "Puyo Bomb-Grapple-Jump"},
+        "canSuitlessMaridia",
+        "canBombGrappleJump",
+        "canCrouchJump"
+      ],
+      "collectsItems": [5],
+      "note": [
+        "Lure a Puyo close to the sand and use it to Bomb-Grapple-Jump up to the Morph Ball maze.",
+        "It helps to predict the jump pattern of the enemy."
+      ]
+    },
+    {
+      "id": 43,
+      "link": [1, 5],
+      "name": "Sand Grapple Boost",
+      "requires": [
+        {"notable": "Sand Grapple Boost"},
+        "h_canCrouchJumpDownGrab",
+        "canSandGrappleBoost",
+        "canInsaneJump",
+        "canMidAirMorph"
+      ],
+      "collectsItems": [5],
+      "note": [
+        "Lure a Puyo close to the sand to use for a Sand Grapple Boost.",
+        "As it is close to entering the sand, land on the sand and crouch.",
+        "Very quickly after crouching shoot the grapple and jump.",
+        "As soon as the Puyo is killed aim down to escape the sand.",
+        "If the timings don't work out just right, too much height is lost to the sand.",
+        "Crouching in sand is also a high softlock risk."
+      ]
+    },
+    {
+      "id": 44,
+      "link": [1, 5],
+      "name": "Sand Bomb Boost",
+      "requires": [
+        "canDownGrab",
+        "canSandBombBoost",
+        "canInsaneJump"
+      ],
+      "collectsItems": [5],
+      "note": [
+        "Stand on the edge of the sand and place a Bomb and wait briefly before entering the sand.",
+        "Let the Bomb explosion push Samus up for a few frames before simultaneously jumping and aiming down.",
+        "There is about a 2 frame window before too much height is lost to reach the nearby ledge.",
+        "Jumping too early can lead to a softlock but jumping too late usually exits the sand safely."
+      ]
+    },
+    {
+      "id": 45,
+      "link": [2, 2],
+      "name": "Leave Normally",
+      "exitCondition": {
+        "leaveNormally": {}
+      },
+      "requires": []
+    },
+    {
+      "id": 46,
+      "link": [3, 3],
+      "name": "Leave Normally",
+      "exitCondition": {
+        "leaveNormally": {}
+      },
+      "requires": []
+    },
+    {
+      "id": 47,
+      "link": [4, 1],
+      "name": "Speed Blocks Already Broken With Gravity",
+      "requires": [
+        "Gravity",
+        {"or": [
+          "canPlayInSand",
+          "SpaceJump",
+          "h_canUseSpringBall"
+        ]},
+        {"obstaclesCleared": ["A"]}
+      ]
+    },
+    {
+      "id": 48,
+      "link": [4, 1],
+      "name": "Speed Blocks Already Broken Suitless",
+      "requires": [
+        "canSuitlessMaridia",
+        "HiJump",
+        {"or": [
+          "h_canUseSpringBall",
+          "canPlayInSand"
+        ]},
+        {"obstaclesCleared": ["A"]}
+      ]
+    },
+    {
+      "id": 49,
+      "link": [4, 1],
+      "name": "Shinecharge",
+      "requires": [
+        "Gravity",
+        {"or": [
+          {"getBlueSpeed": {"usedTiles": 22, "gentleDownTiles": 4, "openEnd": 0}},
+          {"and": [
+            {"getBlueSpeed": {"usedTiles": 23, "gentleDownTiles": 4, "openEnd": 0}},
+            {"doorUnlockedAtNode": 4}
+          ]}
+        ]}
+      ],
+      "clearsObstacles": ["A"],
+      "unlocksDoors": [{"nodeId": 4, "types": ["ammo"], "requires": []}]
+    },
+    {
+      "id": 50,
+      "link": [4, 1],
+      "name": "Run Through",
+      "entranceCondition": {
+        "comeInGettingBlueSpeed": {
+          "length": 22,
+          "gentleDownTiles": 4,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        "Gravity"
+      ],
+      "clearsObstacles": ["A"]
+    },
+    {
+      "id": 51,
+      "link": [4, 1],
+      "name": "Shinespark",
+      "entranceCondition": {
+        "comeInShinecharged": {}
+      },
+      "requires": [
+        {"shineChargeFrames": 80},
+        "Gravity",
+        "canHorizontalShinespark",
+        {"shinespark": {"frames": 115, "excessFrames": 12}}
+      ],
+      "clearsObstacles": ["A"],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 52,
+      "link": [4, 1],
+      "name": "Suitless Shinespark",
+      "entranceCondition": {
+        "comeInShinecharged": {}
+      },
+      "requires": [
+        {"shineChargeFrames": 160},
+        "canSuitlessMaridia",
+        "canHorizontalShinespark",
+        "canShinechargeMovement",
+        {"shinespark": {"frames": 147, "excessFrames": 15}}
+      ],
+      "clearsObstacles": ["A"],
+      "flashSuitChecked": true,
+      "note": "Coming in with zero momentum, all it takes is one non-HiJump full height jump forward, then activate."
+    },
+    {
+      "id": 53,
+      "link": [4, 1],
+      "name": "Suitless Water Shinecharge, Blue Speed Run",
+      "entranceCondition": {
+        "comeInGettingBlueSpeed": {
+          "length": 6,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        "h_waterGetBlueSpeed"
+      ],
+      "clearsObstacles": ["A"],
+      "devNote": [
+        "This is just a rough estimate of the minimum number of tiles that this runway can represent.",
+        "It is designed for a skill level that won't be able to use canStutterWaterShineCharge."
+      ]
+    },
+    {
+      "id": 54,
+      "link": [4, 1],
+      "name": "Suitless Stutter Water Shinecharge",
+      "entranceCondition": {
+        "comeInRunning": {
+          "speedBooster": true,
+          "minTiles": 2
+        }
+      },
+      "requires": [
+        "h_stutterWaterGetBlueSpeed"
+      ],
+      "clearsObstacles": ["A"]
+    },
+    {
+      "id": 55,
+      "link": [4, 1],
+      "name": "Suitless Stutter Water Shinecharge, Leave With Temporary Blue",
+      "entranceCondition": {
+        "comeInRunning": {
+          "speedBooster": true,
+          "minTiles": 2
+        }
+      },
+      "requires": [
+        "canStutterWaterShineCharge",
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}]
+    },
+    {
+      "id": 56,
+      "link": [4, 1],
+      "name": "Speedball",
+      "entranceCondition": {
+        "comeInSpeedballing": {
+          "runway": {
+            "length": 6,
+            "openEnd": 1
+          }
+        }
+      },
+      "requires": [
+        "canSpeedball"
+      ],
+      "note": [
+        "This is just a rough estimate of the minimum number of tiles that this runway can represent."
+      ]
+    },
+    {
+      "id": 57,
+      "link": [4, 1],
+      "name": "Speedball, Leave With Temporary Blue",
+      "entranceCondition": {
+        "comeInSpeedballing": {
+          "runway": {
+            "length": 6,
+            "openEnd": 1
+          }
+        }
+      },
+      "requires": [
+        "canSpeedball",
+        "canChainTemporaryBlue"
+      ],
+      "note": [
+        "This is just a rough estimate of the minimum number of tiles that this runway can represent."
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}]
+    },
+    {
+      "id": 58,
+      "link": [4, 1],
+      "name": "Blue Spring Ball Bounce",
+      "entranceCondition": {
+        "comeInWithBlueSpringBallBounce": {
+          "movementType": "controlled"
+        }
+      },
+      "requires": [],
+      "note": ["Bounce through the Speed blocks."],
+      "devNote": [
+        "With a mid-air spring ball jump it would be possible to go through the morph tunnel.",
+        "This strat exists mainly as a way to avoid collecting the item."
+      ]
+    },
+    {
+      "id": 59,
+      "link": [4, 1],
+      "name": "Blue Spring Ball Bounce, Leave With Temporary Blue",
+      "entranceCondition": {
+        "comeInWithBlueSpringBallBounce": {
+          "movementType": "controlled"
+        }
+      },
+      "requires": [
+        "canChainTemporaryBlue"
+      ],
+      "exitCondition": {
+        "leaveWithTemporaryBlue": {}
+      },
+      "unlocksDoors": [{"types": ["ammo"], "requires": []}],
+      "note": [
+        "Bounce through the Speed blocks.",
+        "Then unmorph and chain temporary blue into the next room."
+      ]
+    },
+    {
+      "id": 60,
+      "link": [4, 1],
+      "name": "G-Mode Overload PLMs",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          "canTrickyJump",
+          {"and": [
+            "Gravity",
+            "SpaceJump"
+          ]}
+        ]}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Overload PLMs by touching the sand, then move through the speed blocks.",
+        "Shoot the Puyo while crouching to increase accuracy.",
+        "Avoiding the right pit is much easier without Gravity or HiJump.",
+        "Standing on the edge and spin jumping to the left is much easier than a running jump.",
+        "While on the left side of this platform, the Puyo to the left will start moving; carefully kill it."
+      ]
+    },
+    {
+      "id": 61,
+      "link": [4, 1],
+      "name": "Grapple Teleport",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[7, 2]]
+        }
+      },
+      "requires": []
+    },
+    {
+      "id": 62,
+      "link": [4, 1],
+      "name": "Grapple Teleport Door Lock Skip",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 12], [3, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true
+    },
+    {
+      "id": 63,
+      "link": [4, 1],
+      "name": "Carry Grapple Teleport (Top Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 12]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[3, 12]]
+        }
+      }
+    },
+    {
+      "id": 64,
+      "link": [4, 1],
+      "name": "Carry Grapple Teleport (Bottom Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[3, 13]]
+        }
+      }
+    },
+    {
+      "id": 97,
+      "link": [4, 1],
+      "name": "Use Flash Suit",
+      "requires": [
+        {"useFlashSuit": {}},
+        {"or": [
+          {"shinespark": {"frames": 120, "excessFrames": 20}},
+          {"and": [
+            "Gravity",
+            {"shinespark": {"frames": 94, "excessFrames": 15}}
+          ]},
+          {"and": [
+            "Gravity",
+            {"shinespark": {"frames": 94, "excessFrames": 53}},
+            {"or": [
+              {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}},
+              "h_pauseAbuseMinimalReserveRefill"
+            ]}
+          ]}
+        ]}
+      ],
+      "clearsObstacles": ["A"],
+      "note": "It is important not to crouch before sparking, as the ceiling blocks are weird and will prevent the spark.",
+      "devNote": [
+        "Suitless with a reserve could use pause abuse, however, Samus can just refill, spark across, and then go back and refill.",
+        "There are many ranges of Energy that could be used to spark through without a Puyo hit, but that is not considered, as Samus can just go back and refill."
+      ]
+    },
+    {
+      "id": 99,
+      "link": [4, 1],
+      "name": "Use Flash Suit, Low Energy or Tankless",
+      "requires": [
+        {"useFlashSuit": {}},
+        "canControlShinesparkEnd",
+        {"shinespark": {"frames": 120, "excessFrames": 20}}
+      ],
+      "clearsObstacles": ["A"],
+      "note": [
+        "Shinespark to the left with less than full Energy in order to prevent getting killed by a Puyo at the end of the spark.",
+        "Sparking while next to the speed blocks requires Samus to be suitless with between 78 and 93 Energy. (With Gravity, she can tank a hit and return to the farm.)",
+        "It is important not to crouch before sparking, as the ceiling blocks are weird and will prevent the spark.",
+        "Alternatively, with 99 Energy spark near the quicksand."
+      ]
+    },
+    {
+      "id": 65,
+      "link": [4, 2],
+      "name": "G-Mode",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": false
+        }
+      },
+      "requires": [
+        {"or": [
+          "canTrickyJump",
+          {"and": [
+            "Gravity",
+            "SpaceJump"
+          ]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": false
+        }
+      },
+      "flashSuitChecked": true,
+      "note": [
+        "Overload PLMs by touching the sand, then move through the speed blocks.",
+        "Shoot the Puyo while crouching to increase accuracy.",
+        "Avoiding the right pit is much easier without Gravity or HiJump.",
+        "Standing on the edge and spin jumping to the left is much easier than a running jump.",
+        "While on the left side of this platform, the Puyo to the left will start moving; carefully kill or dodge it."
+      ]
+    },
+    {
+      "id": 66,
+      "link": [4, 2],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "Gravity",
+              "HiJump"
+            ]}
+          ]},
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphIBJ"
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "canTrickyJump",
+              "h_canArtificialMorphBombThings"
+            ]}
+          ]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": true
+        }
+      },
+      "flashSuitChecked": true,
+      "note": [
+        "With Gravity, or Spring Ball and HiJump, it is easiest to go through the Morph maze at the top of the room and fall into the the sand.",
+        "Otherwise, the overload PLMs by touching the sand, or by bombing the speed blocks, to be able to go through to the left.",
+        "Killing the Zoas with Bombs or Power Bombs will prevent them from respawning, although it is possible but tricky to dodge them with just Spring Ball."
+      ]
+    },
+    {
+      "id": 67,
+      "link": [4, 3],
+      "name": "G-Mode",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": false
+        }
+      },
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": false
+        }
+      },
+      "flashSuitChecked": true,
+      "note": [
+        "Overload PLMs by touching the sand, then move through the speed blocks.",
+        "Shoot the Puyo while crouching to increase accuracy."
+      ]
+    },
+    {
+      "id": 68,
+      "link": [4, 3],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "Gravity",
+              "HiJump"
+            ]}
+          ]},
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphIBJ"
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "canTrickyJump",
+              "h_canArtificialMorphBombThings"
+            ]}
+          ]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithGMode": {
+          "morphed": true
+        }
+      },
+      "flashSuitChecked": true,
+      "note": [
+        "With Gravity, or Spring Ball and HiJump, it is easiest to go through the Morph maze at the top of the room and fall into the the sand.",
+        "Otherwise, the overload PLMs by touching the sand, or by bombing the speed blocks, to be able to go through to the left.",
+        "Killing the Zoas with Bombs or Power Bombs will prevent them from respawning, although it is possible but tricky to dodge them with just Spring Ball."
+      ]
+    },
+    {
+      "id": 69,
+      "link": [4, 4],
+      "name": "Leave with Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 23,
+          "gentleUpTiles": 4,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 70,
+      "link": [4, 4],
+      "name": "Stutter Water Shinecharge, Leave Shinesparking",
+      "entranceCondition": {
+        "comeInRunning": {
+          "speedBooster": true,
+          "minTiles": 2
+        }
+      },
+      "requires": [
+        "canStutterWaterShineCharge",
+        "canShinechargeMovementComplex",
+        {"or": [
+          {"shinespark": {"frames": 12}},
+          {"and": [
+            "canShinechargeMovementTricky",
+            {"shinespark": {"frames": 3}}
+          ]}
+        ]}
+      ],
+      "exitCondition": {
+        "leaveWithSpark": {}
+      },
+      "unlocksDoors": [
+        {"types": ["missiles", "super"], "requires": []},
+        {"types": ["powerbomb"], "requires": ["never"]}
+      ]
+    },
+    {
+      "id": 71,
+      "link": [4, 4],
+      "name": "Zoa Farm",
+      "requires": [
+        {"refill": ["Energy", "Missile", "Super"]}
+      ]
+    },
+    {
+      "id": 72,
+      "link": [4, 4],
+      "name": "G-Mode Setup - Get Hit By Zoa",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGModeSetup": {}
+      },
+      "flashSuitChecked": true,
+      "note": [
+        "Lure the Zoas. Jump so that they start moving horizontally while higher, use spin jumps to move horizontally faster while keeping them on screen."
+      ]
+    },
+    {
+      "id": 73,
+      "link": [4, 5],
+      "name": "G-Mode Morph Direct",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "direct",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphIBJ"
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "Gravity",
+              "HiJump"
+            ]}
+          ]}
+        ]}
+      ],
+      "clearsObstacles": ["B"],
+      "collectsItems": [5],
+      "flashSuitChecked": true,
+      "note": [
+        "Be careful not to touch or bomb the sand in order to grab the item before PLMs are overloaded.",
+        "With bombs, kill the Zoas and they will stop spawning."
+      ]
+    },
+    {
+      "id": 74,
+      "link": [4, 5],
+      "name": "G-Mode Morph",
+      "entranceCondition": {
+        "comeInWithGMode": {
+          "mode": "any",
+          "morphed": true
+        }
+      },
+      "requires": [
+        {"or": [
+          {"and": [
+            "Gravity",
+            "h_canArtificialMorphIBJ"
+          ]},
+          {"and": [
+            "h_canArtificialMorphSpringBall",
+            {"or": [
+              "Gravity",
+              "HiJump"
+            ]}
+          ]}
+        ]}
+      ],
+      "collectsItems": [5],
+      "flashSuitChecked": true,
+      "note": "With bombs, kill the Zoas and they will stop spawning."
+    },
+    {
+      "id": 75,
+      "link": [4, 6],
+      "name": "Base",
+      "requires": [
+        "Gravity"
+      ]
+    },
+    {
+      "id": 76,
+      "link": [4, 6],
+      "name": "Suitless Jump Assist",
+      "requires": [
+        "canSuitlessMaridia",
+        {"or": [
+          "canSpringBallJumpMidAir",
+          "HiJump"
+        ]}
+      ]
+    },
+    {
+      "id": 77,
+      "link": [4, 6],
+      "name": "Suitless Frozen Zoa",
+      "requires": [
+        "canSuitlessMaridia",
+        "canUseFrozenEnemies"
+      ]
+    },
+    {
+      "id": 78,
+      "link": [4, 6],
+      "name": "Suitless Water Shinecharge",
+      "entranceCondition": {
+        "comeInShinecharging": {
+          "length": 6,
+          "openEnd": 1
+        }
+      },
+      "requires": [
+        "Morph",
+        "canWaterShineCharge",
+        {"shinespark": {"frames": 8}}
+      ],
+      "note": "Shinespark diagonally over the zoa pit or run through the speed blocks and shinespark after turning around.",
+      "devNote": [
+        "This is just a rough estimate of the minimum number of tiles that this runway can represent.",
+        "It is designed for a skill level that won't be able to use canStutterWaterShineCharge."
+      ]
+    },
+    {
+      "id": 79,
+      "link": [4, 6],
+      "name": "Suitless Stutter Water Shinecharge",
+      "entranceCondition": {
+        "comeInRunning": {
+          "speedBooster": true,
+          "minTiles": 2
+        }
+      },
+      "requires": [
+        "Morph",
+        "canStutterWaterShineCharge",
+        {"shinespark": {"frames": 8}}
+      ],
+      "note": "Shinespark diagonally over the zoa pit or run through the speed blocks and shinespark after turning around."
+    },
+    {
+      "id": 80,
+      "link": [4, 6],
+      "name": "Cross Room Jump Shinespark",
+      "entranceCondition": {
+        "comeInShinechargedJumping": {
+          "framesRequired": 20
+        }
+      },
+      "requires": [
+        "Morph",
+        "canCrossRoomJumpIntoWater",
+        "canShinechargeMovement",
+        "canMidairShinespark",
+        {"shinespark": {"frames": 46, "excessFrames": 3}}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 81,
+      "link": [4, 6],
+      "name": "Speedy Jump",
+      "entranceCondition": {
+        "comeInRunning": {
+          "speedBooster": true,
+          "minTiles": 6.4375
+        }
+      },
+      "requires": [
+        "canCrossRoomJumpIntoWater"
+      ],
+      "note": [
+        "If using at least 8 tiles of runway, jump before going down the first slope.",
+        "If using 7 tiles of runway, Samus will get a higher jump; in this case, jump later, after going down the first slope"
+      ],
+      "devNote": [
+        "We don't require 'canTrickyDashJump' here, since any speed of at least $2.0 works;",
+        "a different jump timing is needed for run speed between $2.0 and $2.3 compared to higher speeds,",
+        "but there is a very large window in both cases, making it not difficult for the player to find a timing that works."
+      ]
+    },
+    {
+      "id": 82,
+      "link": [4, 6],
+      "name": "Cross Room Space Jump Airball",
+      "entranceCondition": {
+        "comeInSpaceJumping": {
+          "minTiles": 22,
+          "speedBooster": true
+        }
+      },
+      "requires": [
+        "canMomentumConservingMorph"
+      ],
+      "devNote": [
+        "With high enough speed this could be done without morphing, but it would be more difficult, and Morph is needed to get through the maze anyway."
+      ]
+    },
+    {
+      "id": 83,
+      "link": [4, 6],
+      "name": "Bomb Grapple Jump",
+      "requires": [
+        "canSuitlessMaridia",
+        "h_canCrouchJumpDownGrab",
+        "canBombGrappleJump"
+      ],
+      "note": "Use the respawning Zoas to double jump up to the Morph Ball maze."
+    },
+    {
+      "id": 84,
+      "link": [4, 6],
+      "name": "Sand Grapple Boost",
+      "requires": [
+        "h_canCrouchJumpDownGrab",
+        "canSandGrappleBoost",
+        "canInsaneJump"
+      ],
+      "note": [
+        "Use the respawning Zoas as a grapple target to get a sand boost in order to reach the ledge above.",
+        "Shoot Grapple just after landing on the sand.",
+        "Jump as soon as the Zoa is hit, and aim down to escape the sand.",
+        "Avoid getting hit by killing the extra Zoas since falling into the sand is a softlock."
+      ]
+    },
+    {
+      "id": 85,
+      "link": [4, 6],
+      "name": "Sand Bomb Boost",
+      "requires": [
+        "h_canCrouchJumpDownGrab",
+        "canSandBombBoost",
+        "canInsaneJump"
+      ],
+      "note": [
+        "Kill all of the enemies and leave drops uncollected so that the Zoas will not be in the way.",
+        "Stand on the edge of the sand and place a Bomb and wait briefly before entering the sand.",
+        "Let the Bomb explosion push Samus up for a few frames before simultaneously jumping and aiming down.",
+        "Then move left to land on the Morph tunnel ledge.",
+        "Jumping too early can lead to a softlock but jumping too late usually exits the sand safely."
+      ]
+    },
+    {
+      "id": 98,
+      "link": [4, 6],
+      "name": "Use Flash Suit",
+      "requires": [
+        {"useFlashSuit": {}},
+        {"shinespark": {"frames": 5, "excessFrames": 2}}
+      ]
+    },
+    {
+      "id": 86,
+      "link": [5, 1],
+      "name": "Base",
+      "requires": [
+        "Morph"
+      ],
+      "note": "If the Puyos are alive, lure the first to the right, then roll out of the hole, unmorph and fight them. Crouching while shooting may increase accuracy.",
+      "devNote": "FIXME This probably shouldnt be free if the Puyos are still alive."
+    },
+    {
+      "id": 87,
+      "link": [5, 1],
+      "name": "G-Mode Morph Exit Tunnel Before Leaving G-Mode",
+      "requires": [
+        {"obstaclesCleared": ["B"]}
+      ],
+      "note": "If the Puyos are alive, lure the first to the right, then roll out of the hole, unmorph and fight them. Crouching while shooting may increase accuracy.",
+      "devNote": "FIXME This probably shouldnt be free if the Puyos are still alive."
+    },
+    {
+      "id": 88,
+      "link": [5, 4],
+      "name": "G-Mode Morph Exit Tunnel Before Leaving G-Mode",
+      "requires": [
+        {"obstaclesCleared": ["B"]}
+      ]
+    },
+    {
+      "id": 89,
+      "link": [5, 6],
+      "name": "Base",
+      "requires": [
+        {"or": [
+          "h_canUseSpringBall",
+          {"and": [
+            "Gravity",
+            "h_canBombThings",
+            "h_additionalBomb",
+            "h_additionalBomb"
+          ]}
+        ]}
+      ]
+    },
+    {
+      "id": 90,
+      "link": [5, 6],
+      "name": "Suitless Bootless Mid-Air Morph",
+      "requires": [
+        "canSuitlessMaridia",
+        "canMidAirMorph",
+        "canDisableEquipment"
+      ],
+      "note": "Jump and mid-air morph. This is much easier with Gravity and HiJump turned off."
+    },
+    {
+      "id": 91,
+      "link": [6, 4],
+      "name": "Base",
+      "requires": []
+    },
+    {
+      "id": 92,
+      "link": [6, 5],
+      "name": "Base",
+      "requires": [
+        {"or": [
+          "h_canUseSpringBall",
+          {"and": [
+            "Gravity",
+            "h_canBombThings",
+            "h_additionalBomb",
+            "h_additionalBomb"
+          ]}
+        ]}
+      ],
+      "collectsItems": [5]
+    },
+    {
+      "id": 93,
+      "link": [6, 5],
+      "name": "Suitless Bootless Mid-Air Morph",
+      "requires": [
+        "canSuitlessMaridia",
+        "canMidAirMorph",
+        "canDisableEquipment"
+      ],
+      "collectsItems": [5],
+      "note": "Jump and mid-air morph. This is much easier with Gravity and HiJump turned off."
+    },
+    {
+      "id": 94,
+      "link": [6, 6],
+      "name": "Zoa Farm",
+      "requires": [
+        {"refill": ["Energy"]}
+      ]
+    }
+  ],
+  "nextStratId": 100,
+  "notables": [
+    {
+      "id": 1,
+      "name": "Puyo Bomb-Grapple-Jump",
+      "note": [
+        "Lure a Puyo close to the sand and use it to Bomb-Grapple-Jump up to the Morph Ball maze.",
+        "It helps to predict the jump pattern of the enemy."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Sand Grapple Boost",
+      "note": [
+        "Lure a Puyo close to the sand to use for a Sand Grapple Boost.",
+        "As it is close to entering the sand, land on the sand and crouch.",
+        "Very quickly after crouching shoot the grapple and jump.",
+        "As soon as the Puyo is killed aim down to escape the sand.",
+        "If the timings don't work out just right, too much height is lost to the sand.",
+        "Crouching in sand is also a high softlock risk."
+      ]
+    }
+  ],
+  "nextNotableId": 3
+}
