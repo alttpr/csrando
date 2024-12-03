@@ -2,6 +2,7 @@ namespace Randomizer.Graph;
 
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Randomizer.Games.SuperMetroid;
 using Randomizer.RomModifications;
 
 /// <summary>
@@ -76,9 +77,9 @@ public abstract class GameRandomizer
     /// <summary>
     /// Get a graph searched based on the items in the inventory.
     /// </summary>
-    public Searcher GetSearcherForInventory(IEnumerable<IItem> items, Vertex? start = null)
+    public ISearcher GetSearcherForInventory(IEnumerable<IItem> items, Vertex? start = null)
     {
-        return new(Graph, start ?? _start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
+        return new StatefulSearcher(Graph, (Games.SuperMetroid.Vertex?)start ?? (Games.SuperMetroid.Vertex)_start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
     }
 
     /// <summary>

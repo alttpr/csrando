@@ -1,6 +1,7 @@
 namespace Randomizer.Graph;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Games.SuperMetroid;
 
 internal sealed class RandomAssumedFiller
 {
@@ -29,7 +30,7 @@ internal sealed class RandomAssumedFiller
         var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
 
-        var searchers = new Searcher[_randomizer.Worlds.Length];
+        var searchers = new ISearcher[_randomizer.Worlds.Length];
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
         {
             searchers[i] = _randomizer.GetSearcherForInventory(
@@ -70,6 +71,28 @@ internal sealed class RandomAssumedFiller
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
             var location = _prng.GetRandomElement(locations);
+            var statefulSearcher = (StatefulSearcher)searchers[location.World.Id];
+            var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
+                    .Select(i => i.Item)
+                    .ToList();
+            var backtrackInventory = new Inventory(backtrackItems.ToArray());
+            bool backtrackCheck = false;
+            while (!backtrackCheck)                
+            {
+                backtrackCheck = statefulSearcher.BacktrackLocation((Randomizer.Games.SuperMetroid.Vertex)location, backtrackInventory, (Randomizer.Games.SuperMetroid.Vertex)location.World.Start, item);
+                if (!backtrackCheck)
+                {
+                    locations.Remove(location);
+                    if (locations.Count == 0)
+                    {
+                        throw new Exception($"No locations for `{item}` in set `{itemSet}`");
+                    }
+
+                    backtrackInventory = new Inventory(backtrackItems.ToArray());
+                    location = _prng.GetRandomElement(locations);
+                }
+            }
+
             _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
                 itemWeight,
@@ -103,7 +126,7 @@ internal sealed class RandomAssumedFiller
         });
 
         ItemSetName? currentKey = null;
-        var searcher = _randomizer.GetSearcherForInventory([]);
+        var searcher = _randomizer.GetSearcherForInventory([], _randomizer.Worlds[0].Start);
         var locations = new List<Vertex>();
         foreach (var (itemSet, _, item) in fillItems)
         {

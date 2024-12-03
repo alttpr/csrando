@@ -1,0 +1,1317 @@
+{
+  "$schema": "../../../schema/m3-room.schema.json",
+  "id": 137,
+  "name": "Red Kihunter Shaft",
+  "area": "Norfair",
+  "subarea": "Lower",
+  "subsubarea": "East",
+  "roomAddress": "0x7B585",
+  "roomEnvironments": [{"heated": true}],
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Top Left Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x00199f6",
+      "doorOrientation": "left",
+      "doorEnvironments": [{"physics": "air"}]
+    },
+    {
+      "id": 2,
+      "name": "Bottom Right Vertical Door",
+      "nodeType": "door",
+      "nodeSubType": "yellow",
+      "nodeAddress": "0x00199ea",
+      "doorOrientation": "down",
+      "doorEnvironments": [{"physics": "air"}]
+    },
+    {
+      "id": 3,
+      "name": "Middle Right Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x0019a0e",
+      "doorOrientation": "right",
+      "doorEnvironments": [{"physics": "air"}]
+    },
+    {
+      "id": 4,
+      "name": "Top Right Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x0019a02",
+      "doorOrientation": "right",
+      "doorEnvironments": [{"physics": "air"}]
+    },
+    {
+      "id": 5,
+      "name": "Top Junction Between Doors",
+      "nodeType": "junction",
+      "nodeSubType": "junction"
+    },
+    {
+      "id": 6,
+      "name": "Inside Morph Tunnel (Right of Left Bomb Blocks)",
+      "nodeType": "junction",
+      "nodeSubType": "junction",
+      "note": "The inner left portion of the morph tunnel, just to the right of the bomb blocks."
+    },
+    {
+      "id": 7,
+      "name": "Junction At Middle Right Door With Bottom KiHunter Cleared",
+      "nodeType": "junction",
+      "nodeSubType": "junction",
+      "note": "Outside the Save Room door with the bottom KiHunter either killed or able to be ignored."
+    }
+  ],
+  "enemies": [
+    {
+      "id": "e1",
+      "groupName": "Red Kihunter Shaft Bottom Kihunter",
+      "enemyName": "Kihunter (red)",
+      "quantity": 1,
+      "homeNodes": [3]
+    },
+    {
+      "id": "e2",
+      "groupName": "Red Kihunter Shaft Top Kihunters",
+      "enemyName": "Kihunter (red)",
+      "quantity": 2,
+      "betweenNodes": [3, 5]
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "A",
+      "name": "Pitfall Shot Blocks",
+      "obstacleType": "inanimate",
+      "note": "The two vertical shot blocks that can disrupt the runway when broken."
+    }
+  ],
+  "links": [
+    {
+      "from": 1,
+      "to": [
+        {"id": 1},
+        {"id": 4},
+        {"id": 5},
+        {"id": 7}
+      ]
+    },
+    {
+      "from": 2,
+      "to": [
+        {"id": 2},
+        {
+          "id": 6,
+          "devNote": "FIXME: Add Speedbooster strat."
+        }
+      ]
+    },
+    {
+      "from": 3,
+      "to": [
+        {"id": 1},
+        {"id": 3},
+        {"id": 5},
+        {"id": 6},
+        {"id": 7}
+      ]
+    },
+    {
+      "from": 4,
+      "to": [
+        {"id": 1},
+        {"id": 4},
+        {"id": 5},
+        {"id": 7}
+      ]
+    },
+    {
+      "from": 5,
+      "to": [
+        {"id": 1},
+        {"id": 4},
+        {"id": 7}
+      ]
+    },
+    {
+      "from": 6,
+      "to": [
+        {"id": 2},
+        {"id": 6},
+        {"id": 7}
+      ]
+    },
+    {
+      "from": 7,
+      "to": [
+        {"id": 3},
+        {"id": 5}
+      ]
+    }
+  ],
+  "strats": [
+    {
+      "id": 1,
+      "link": [1, 1],
+      "name": "Leave With Runway (Short Runway)",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 8,
+          "openEnd": 0
+        }
+      },
+      "devNote": "If coming from below, use the right path to leave the left part of the runway unbroken."
+    },
+    {
+      "id": 2,
+      "link": [1, 1],
+      "name": "Leave With Runway (Full Runway, Break Blocks Slowly)",
+      "requires": [
+        {"heatFrames": 25}
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 13,
+          "openEnd": 0
+        }
+      }
+    },
+    {
+      "id": 3,
+      "link": [1, 1],
+      "name": "Leave With Runway (Full Runway, Break Blocks With Missile)",
+      "requires": [
+        "canPrepareForNextRoom",
+        "canAutoCancelWeapon",
+        {"ammo": {"type": "Missile", "count": 1}}
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 13,
+          "openEnd": 0
+        }
+      },
+      "note": [
+        "Enter the room aiming diagonally down, with a missile set to auto-deselect.",
+        "Quickly fire the missile and a beam shot to break both shot blocks and open the full runway."
+      ]
+    },
+    {
+      "id": 4,
+      "link": [1, 1],
+      "name": "Leave With Runway (Full Runway, Break Blocks With Grapple)",
+      "requires": [
+        "canPrepareForNextRoom",
+        "canPreciseGrapple"
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 13,
+          "openEnd": 0
+        }
+      },
+      "note": "Enter the room aiming diagonally down and quickly use two grapple shots to break the shot blocks."
+    },
+    {
+      "id": 5,
+      "link": [1, 1],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canHeatedCrystalFlash"
+      ],
+      "clearsObstacles": ["A"],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 6,
+      "link": [1, 4],
+      "name": "Grapple Teleport",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[12, 12], [12, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true
+    },
+    {
+      "id": 7,
+      "link": [1, 4],
+      "name": "Carry Grapple Teleport (Top Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[12, 12]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[12, 12]]
+        }
+      }
+    },
+    {
+      "id": 8,
+      "link": [1, 4],
+      "name": "Carry Grapple Teleport (Bottom Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[12, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[12, 13]]
+        }
+      }
+    },
+    {
+      "id": 9,
+      "link": [1, 4],
+      "name": "Transition with Stored Fall Speed",
+      "entranceCondition": {
+        "comeInWithStoredFallSpeed": {
+          "fallSpeedInTiles": 1
+        }
+      },
+      "requires": [
+        "canDisableEquipment",
+        {"heatFrames": 90}
+      ],
+      "exitCondition": {
+        "leaveWithStoredFallSpeed": {
+          "fallSpeedInTiles": 1
+        }
+      },
+      "unlocksDoors": [
+        {"types": ["missiles", "super"], "requires": []},
+        {"types": ["powerbomb"], "requires": ["never"]}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 10,
+      "link": [1, 4],
+      "name": "Transition with Stored Fall Speed (more speed)",
+      "entranceCondition": {
+        "comeInWithStoredFallSpeed": {
+          "fallSpeedInTiles": 2
+        }
+      },
+      "requires": [
+        "canDisableEquipment",
+        {"heatFrames": 90}
+      ],
+      "exitCondition": {
+        "leaveWithStoredFallSpeed": {
+          "fallSpeedInTiles": 2
+        }
+      },
+      "unlocksDoors": [
+        {"types": ["missiles", "super"], "requires": []},
+        {"types": ["powerbomb"], "requires": ["never"]}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 11,
+      "link": [1, 5],
+      "name": "Base",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"heatFrames": 40}
+      ]
+    },
+    {
+      "id": 12,
+      "link": [1, 7],
+      "name": "Fast Descent",
+      "entranceCondition": {
+        "comeInRunning": {
+          "minTiles": 1,
+          "speedBooster": "any"
+        }
+      },
+      "requires": [
+        "canDodgeWhileShooting",
+        "canCarefulJump",
+        {"or": [
+          "canTrickyJump",
+          "canDownBack"
+        ]},
+        {"or": [
+          "Charge",
+          "Spazer",
+          "Plasma",
+          "Wave",
+          "canInsaneJump"
+        ]},
+        {"heatFrames": 540}
+      ],
+      "note": "By breaking the shot blocks and maneuvering through the room effeciently Samus will not have to spend much time waiting on KiHunters."
+    },
+    {
+      "id": 73,
+      "link": [1, 7],
+      "name": "Fast Descent, Slow Entry, Pause Abuse",
+      "entranceCondition": {
+        "comeInNormally": {}
+      },
+      "requires": [
+        "canDodgeWhileShooting",
+        "canCarefulJump",
+        {"heatFrames": 260},
+        "h_pauseAbuseMinimalReserveRefill",
+        {"heatFrames": 290}
+      ],
+      "note": "Entering from water or without a way to shoot both blocks simultaneously, pause abuse the first KiHunter and then stay ahead of the other two."
+    },
+    {
+      "id": 14,
+      "link": [2, 2],
+      "name": "Shinespark",
+      "entranceCondition": {
+        "comeInWithSpark": {},
+        "comesThroughToilet": "any"
+      },
+      "requires": [
+        {"shinespark": {"frames": 4, "excessFrames": 4}},
+        {"heatFrames": 120}
+      ],
+      "devNote": "This strat is not useful in-room, but can satisfy a strat in the room before with an exit shinespark."
+    },
+    {
+      "id": 15,
+      "link": [2, 2],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canHeatedCrystalFlash"
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 16,
+      "link": [2, 6],
+      "name": "Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUseMorphBombs",
+        {"heatFrames": 240}
+      ]
+    },
+    {
+      "id": 17,
+      "link": [2, 6],
+      "name": "Power Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUsePowerBombs",
+        {"heatFrames": 240}
+      ]
+    },
+    {
+      "id": 18,
+      "link": [2, 6],
+      "name": "Screw Attack",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "Morph",
+        "ScrewAttack",
+        {"heatFrames": 220}
+      ]
+    },
+    {
+      "id": 19,
+      "link": [3, 1],
+      "name": "Grapple Teleport",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[5, 3], [7, 2]]
+        }
+      },
+      "requires": [
+        {"heatFrames": 45}
+      ]
+    },
+    {
+      "id": 20,
+      "link": [3, 1],
+      "name": "Grapple Teleport Door Lock Skip",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 12], [3, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true
+    },
+    {
+      "id": 21,
+      "link": [3, 1],
+      "name": "Carry Grapple Teleport (Top Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 12]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[3, 12]]
+        }
+      }
+    },
+    {
+      "id": 22,
+      "link": [3, 1],
+      "name": "Carry Grapple Teleport (Bottom Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[3, 13]]
+        }
+      }
+    },
+    {
+      "id": 23,
+      "link": [3, 3],
+      "name": "Leave With Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 11,
+          "openEnd": 1,
+          "gentleDownTiles": 2,
+          "gentleUpTiles": 2
+        }
+      }
+    },
+    {
+      "id": 24,
+      "link": [3, 3],
+      "name": "Red Kihunter Farm",
+      "requires": [
+        "h_heatProof",
+        {"or": [
+          "ScrewAttack",
+          {"and": [
+            "Plasma",
+            "Wave",
+            "Ice"
+          ]}
+        ]},
+        {"resetRoom": {
+          "nodes": [1, 3, 4]
+        }},
+        {"partialRefill": {"type": "Energy", "limit": 200}},
+        {"partialRefill": {"type": "Missile", "limit": 10}},
+        {"partialRefill": {"type": "Super", "limit": 4}}
+      ],
+      "resetsObstacles": ["A"]
+    },
+    {
+      "id": 25,
+      "link": [3, 3],
+      "name": "Crystal Flash",
+      "requires": [
+        {"heatFrames": 20},
+        "h_canHeatedCrystalFlash",
+        {"heatFrames": 20}
+      ],
+      "flashSuitChecked": true,
+      "note": "Perform the Crystal Flash to the left, away from the door, to prevent the Kihunter from coming down."
+    },
+    {
+      "id": 26,
+      "link": [3, 3],
+      "name": "G-Mode Regain Mobility",
+      "requires": [
+        {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}}
+      ],
+      "gModeRegainMobility": {},
+      "flashSuitChecked": true
+    },
+    {
+      "id": 27,
+      "link": [3, 5],
+      "name": "Grapple Teleport Semi-Blind Movement",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[2, 18], [2, 19], [2, 29]]
+        }
+      },
+      "requires": [
+        {"notable": "Grapple Teleport Semi-Blind Movement"},
+        "canOffScreenMovement",
+        {"heatFrames": 330}
+      ],
+      "note": [
+        "The grapple teleport skips past the Kihunters.",
+        "With good semi-blind movement, this makes it possible to reach the top with minimal heat damage."
+      ]
+    },
+    {
+      "id": 28,
+      "link": [3, 6],
+      "name": "Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUseMorphBombs",
+        {"heatFrames": 410}
+      ]
+    },
+    {
+      "id": 29,
+      "link": [3, 6],
+      "name": "Power Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUsePowerBombs",
+        {"heatFrames": 250}
+      ]
+    },
+    {
+      "id": 30,
+      "link": [3, 7],
+      "name": "Slow Kihunter Kill",
+      "requires": [
+        "h_heatProof",
+        "Wave",
+        {"or": [
+          "Charge",
+          "Ice",
+          "Spazer"
+        ]}
+      ],
+      "note": "Only Wave can safely clear the Kihunter."
+    },
+    {
+      "id": 31,
+      "link": [3, 7],
+      "name": "Tank the Damage",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}},
+        {"heatFrames": 120}
+      ],
+      "note": "Wait for the KiHunter to drop down on its own."
+    },
+    {
+      "id": 32,
+      "link": [3, 7],
+      "name": "Ice Wave Spazer Kill",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "Wave",
+        "Ice",
+        "Spazer",
+        {"heatFrames": 420}
+      ]
+    },
+    {
+      "id": 33,
+      "link": [3, 7],
+      "name": "Wave Plasma Kill",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "Wave",
+        "Plasma",
+        {"heatFrames": 300}
+      ]
+    },
+    {
+      "id": 34,
+      "link": [3, 7],
+      "name": "Screw Kill",
+      "requires": [
+        "ScrewAttack",
+        {"heatFrames": 0}
+      ]
+    },
+    {
+      "id": 35,
+      "link": [3, 7],
+      "name": "KiHunter Dodge (Bottom)",
+      "requires": [
+        {"notable": "KiHunter Dodge"},
+        "h_canNavigateHeatRooms",
+        "canTrickyJump",
+        {"heatFrames": 100}
+      ],
+      "note": "The KiHunter can be baited by jumping into the door then walking left."
+    },
+    {
+      "id": 36,
+      "link": [3, 7],
+      "name": "Kihunter Manipulation from Middle Door (Bottom)",
+      "requires": [
+        {"notable": "Kihunter Manipulation from Middle Door"},
+        "h_canNavigateHeatRooms",
+        "canStopOnADime",
+        "canCarefulJump",
+        "Morph",
+        {"or": [
+          "HiJump",
+          "canWalljump"
+        ]},
+        {"heatFrames": 80}
+      ],
+      "note": [
+        "Manipulate the Three KiHunters to avoid all of them when entering the room from the Save room door.",
+        "Stop on a dime on entry for positioning, because it is precise.",
+        "Wait 1 second then Morph and roll left, past the swooping kihunter.",
+        "Quickly jump to the higher level and run into the left wall.",
+        "Wait there for half a second; it helps to jump into the wall.",
+        "The 2 KiHunters should be grouped above Samus and out of the way."
+      ]
+    },
+    {
+      "id": 37,
+      "link": [4, 1],
+      "name": "Transition with Stored Fall Speed",
+      "entranceCondition": {
+        "comeInWithStoredFallSpeed": {
+          "fallSpeedInTiles": 1
+        }
+      },
+      "requires": [
+        "canDisableEquipment",
+        {"heatFrames": 90}
+      ],
+      "exitCondition": {
+        "leaveWithStoredFallSpeed": {
+          "fallSpeedInTiles": 1
+        }
+      },
+      "unlocksDoors": [
+        {"types": ["missiles", "super"], "requires": []},
+        {"types": ["powerbomb"], "requires": ["never"]}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 38,
+      "link": [4, 1],
+      "name": "Transition with Stored Fall Speed (more speed)",
+      "entranceCondition": {
+        "comeInWithStoredFallSpeed": {
+          "fallSpeedInTiles": 2
+        }
+      },
+      "requires": [
+        "canDisableEquipment",
+        {"heatFrames": 90}
+      ],
+      "exitCondition": {
+        "leaveWithStoredFallSpeed": {
+          "fallSpeedInTiles": 2
+        }
+      },
+      "unlocksDoors": [
+        {"types": ["missiles", "super"], "requires": []},
+        {"types": ["powerbomb"], "requires": ["never"]}
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 39,
+      "link": [4, 1],
+      "name": "Grapple Teleport",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 12], [3, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true
+    },
+    {
+      "id": 40,
+      "link": [4, 1],
+      "name": "Carry Grapple Teleport (Top Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 12]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[3, 12]]
+        }
+      }
+    },
+    {
+      "id": 41,
+      "link": [4, 1],
+      "name": "Carry Grapple Teleport (Bottom Position)",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[3, 13]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[3, 13]]
+        }
+      }
+    },
+    {
+      "id": 42,
+      "link": [4, 4],
+      "name": "Leave With Runway (Short Runway)",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 7,
+          "openEnd": 0
+        }
+      },
+      "devNote": "If coming from below, use the left path to leave the left part of the runway unbroken."
+    },
+    {
+      "id": 43,
+      "link": [4, 4],
+      "name": "Leave With Runway (Full Runway, Break Blocks Slowly)",
+      "requires": [
+        {"heatFrames": 25}
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 13,
+          "openEnd": 0
+        }
+      }
+    },
+    {
+      "id": 44,
+      "link": [4, 4],
+      "name": "Leave With Runway (Full Runway, Break Blocks With Missile)",
+      "requires": [
+        "canPrepareForNextRoom",
+        "canAutoCancelWeapon",
+        {"ammo": {"type": "Missile", "count": 1}}
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 13,
+          "openEnd": 0
+        }
+      },
+      "note": [
+        "Enter the room aiming diagonally down, with a missile set to auto-deselect.",
+        "Quickly fire the missile and a beam shot to break both shot blocks and open the full runway."
+      ]
+    },
+    {
+      "id": 45,
+      "link": [4, 4],
+      "name": "Leave With Runway (Full Runway, Break Blocks With Grapple)",
+      "requires": [
+        "canPrepareForNextRoom",
+        "canPreciseGrapple"
+      ],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 13,
+          "openEnd": 0
+        }
+      },
+      "note": "Enter the room aiming diagonally down and quickly use two grapple shots to break the shot blocks."
+    },
+    {
+      "id": 46,
+      "link": [4, 4],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canHeatedCrystalFlash"
+      ],
+      "clearsObstacles": ["A"],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 47,
+      "link": [4, 5],
+      "name": "Base",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"heatFrames": 40}
+      ]
+    },
+    {
+      "id": 48,
+      "link": [4, 7],
+      "name": "Fast Descent",
+      "entranceCondition": {
+        "comeInRunning": {
+          "minTiles": 1,
+          "speedBooster": "any"
+        }
+      },
+      "requires": [
+        "canDodgeWhileShooting",
+        "canTrickyJump",
+        {"or": [
+          "Charge",
+          "Spazer",
+          "Plasma",
+          "Wave",
+          {"and": [
+            "canInsaneJump",
+            {"or": [
+              "canDownBack",
+              "Morph"
+            ]}
+          ]}
+        ]},
+        {"heatFrames": 540}
+      ],
+      "note": "By breaking the shot blocks and maneuvering through the room effeciently Samus will not have to spend much time waiting on KiHunters."
+    },
+    {
+      "id": 74,
+      "link": [4, 7],
+      "name": "Fast Descent, Slow Entry, Pause Abuse",
+      "entranceCondition": {
+        "comeInNormally": {}
+      },
+      "requires": [
+        "canDodgeWhileShooting",
+        "canTrickyJump",
+        {"heatFrames": 260},
+        "h_pauseAbuseMinimalReserveRefill",
+        {"heatFrames": 300}
+      ],
+      "note": "Entering from water or without a way to shoot both blocks simultaneously, pause abuse the first KiHunter and then stay ahead of the other two."
+    },
+    {
+      "id": 49,
+      "link": [5, 1],
+      "name": "Base",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"heatFrames": 40}
+      ]
+    },
+    {
+      "id": 50,
+      "link": [5, 4],
+      "name": "Base",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"heatFrames": 40}
+      ]
+    },
+    {
+      "id": 51,
+      "link": [5, 7],
+      "name": "Base",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"or": [
+          {"and": [
+            "ScrewAttack",
+            {"heatFrames": 510}
+          ]},
+          {"and": [
+            "Charge",
+            "Wave",
+            "Ice",
+            "Plasma",
+            {"heatFrames": 570}
+          ]}
+        ]}
+      ]
+    },
+    {
+      "id": 52,
+      "link": [5, 7],
+      "name": "Fast Descent",
+      "requires": [
+        "canDodgeWhileShooting",
+        "canTrickyJump",
+        {"or": [
+          "Spazer",
+          "Wave"
+        ]},
+        {"heatFrames": 500}
+      ],
+      "note": "By breaking the shot blocks and maneuvering through the room effeciently Samus will not have to spend much time waiting on KiHunters."
+    },
+    {
+      "id": 53,
+      "link": [5, 7],
+      "name": "Wait For KiHunters",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"heatFrames": 1160}
+      ]
+    },
+    {
+      "id": 54,
+      "link": [5, 7],
+      "name": "Jump the KiHunter",
+      "requires": [
+        "canInsaneJump",
+        "canDodgeWhileShooting",
+        "canPrepareForNextRoom",
+        {"or": [
+          "Charge",
+          "Spazer",
+          "Plasma",
+          "Wave"
+        ]},
+        "canDownBack",
+        {"heatFrames": 420}
+      ],
+      "note": [
+        "Very quickly move through the room to meet the bottom KiHunter in a position where it is possible to jump over it.",
+        "Down back through the shot blocks.  If coming through the right door, Morphing may be easier.",
+        "Jump over the KiHunter where it dips while moving left.",
+        "Additionally, build full run speed before jumping to land all the way next to the door."
+      ]
+    },
+    {
+      "id": 55,
+      "link": [5, 7],
+      "name": "Plasma Run Through Enemies",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "canHitbox",
+        "Plasma",
+        {"or": [
+          "canDownBack",
+          {"and": [
+            "canCarefulJump",
+            {"heatFrames": 50}
+          ]},
+          {"heatFrames": 130}
+        ]},
+        {"heatFrames": 410}
+      ],
+      "note": "Use Plasma to run through Kihunters instead of waiting."
+    },
+    {
+      "id": 56,
+      "link": [6, 2],
+      "name": "Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUseMorphBombs",
+        {"heatFrames": 270}
+      ]
+    },
+    {
+      "id": 57,
+      "link": [6, 2],
+      "name": "Power Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUsePowerBombs",
+        {"heatFrames": 270}
+      ],
+      "devNote": "FIXME This strat also unlocks node 2. Could add that in later?"
+    },
+    {
+      "id": 58,
+      "link": [6, 6],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canHeatedCrystalFlash"
+      ],
+      "flashSuitChecked": true,
+      "devNote": [
+        "FIXME: This breaks the bomb blocks, but we don't have a way to represent this.",
+        "Note that the blocks respawn too fast for this to be useful unless you have Spring Ball."
+      ]
+    },
+    {
+      "id": 59,
+      "link": [6, 7],
+      "name": "Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUseMorphBombs",
+        {"or": [
+          "ScrewAttack",
+          {"and": [
+            "canTrickyJump",
+            {"heatFrames": 90}
+          ]},
+          {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}}
+        ]},
+        {"heatFrames": 500}
+      ],
+      "flashSuitChecked": true,
+      "note": "Watch for the KiHunter to move right before jumping up to get a safe predicatable swoop."
+    },
+    {
+      "id": 60,
+      "link": [6, 7],
+      "name": "Power Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "Morph",
+        {"ammo": {"type": "PowerBomb", "count": 2}},
+        {"or": [
+          "ScrewAttack",
+          {"and": [
+            "canTrickyJump",
+            {"heatFrames": 90}
+          ]},
+          {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}}
+        ]},
+        {"heatFrames": 400}
+      ],
+      "flashSuitChecked": true,
+      "note": "Watch for the KiHunter to move right before jumping up to get a safe predicatable swoop."
+    },
+    {
+      "id": 61,
+      "link": [6, 7],
+      "name": "X-Ray Clip",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUsePowerBombs",
+        "canXRayStandUp",
+        "canPartialFloorClip",
+        "canCeilingClip",
+        {"or": [
+          "ScrewAttack",
+          {"and": [
+            "canTrickyJump",
+            {"heatFrames": 90}
+          ]},
+          {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}}
+        ]},
+        {"heatFrames": 520}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Use Xray to stand up. Jump to clip into the floor. Then another jump to clip through the ceiling block.",
+        "Watch for the KiHunter to move right before jumping up to get a safe predicatable swoop."
+      ],
+      "devNote": [
+        "This requires Power Bombs because it saves neither energy nor ammo using Bombs.",
+        "It's slower than Spring Ball mainly because X-Ray scope won't activate during the Power Bomb explosion."
+      ]
+    },
+    {
+      "id": 62,
+      "link": [6, 7],
+      "name": "Bomb Block X-Ray Climb",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUsePowerBombs",
+        "canXRayClimb",
+        "canCeilingClip",
+        {"or": [
+          "ScrewAttack",
+          {"and": [
+            "canTrickyJump",
+            {"heatFrames": 90}
+          ]},
+          {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}}
+        ]},
+        {"heatFrames": 810}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Wait for the bomb blocks to reappear.  Two crouches worth of height are needed before jumping through the rest of the blocks.",
+        "Watch for the KiHunter to move right before jumping up to get a safe predicatable swoop."
+      ],
+      "devNote": "This requires Power Bombs because it saves neither energy nor ammo using Bombs."
+    },
+    {
+      "id": 63,
+      "link": [6, 7],
+      "name": "Spring Power Bombs",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "h_canUsePowerBombs",
+        "h_canUseSpringBall",
+        {"or": [
+          "ScrewAttack",
+          {"and": [
+            "canTrickyJump",
+            {"heatFrames": 90}
+          ]},
+          {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 1}}
+        ]},
+        {"heatFrames": 350}
+      ],
+      "flashSuitChecked": true,
+      "note": "Watch for the KiHunter to move right before jumping up to get a safe predicatable swoop."
+    },
+    {
+      "id": 64,
+      "link": [7, 3],
+      "name": "Base",
+      "requires": [
+        {"heatFrames": 0}
+      ]
+    },
+    {
+      "id": 65,
+      "link": [7, 5],
+      "name": "Slow Kihunter Kill",
+      "requires": [
+        "h_heatProof",
+        "canBePatient",
+        {"enemyKill": {
+          "enemies": [["Kihunter (red)", "Kihunter (red)"]]
+        }}
+      ],
+      "devNote": "Charge, Spazer, Ice on their own is tedious."
+    },
+    {
+      "id": 66,
+      "link": [7, 5],
+      "name": "Tank the Damage",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"enemyDamage": {"enemy": "Kihunter (red)", "type": "contact", "hits": 2}},
+        {"heatFrames": 480}
+      ],
+      "note": "Most RNG patterns group the top 2 KiHunters allowing for 0 or 1 hits but sometimes 2 hits are required."
+    },
+    {
+      "id": 67,
+      "link": [7, 5],
+      "name": "Super Kill",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        {"enemyKill": {
+          "enemies": [["Kihunter (red)", "Kihunter (red)"]],
+          "explicitWeapons": ["Super"]
+        }},
+        {"heatFrames": 840}
+      ]
+    },
+    {
+      "id": 68,
+      "link": [7, 5],
+      "name": "Ice Wave Spazer Kill",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "Wave",
+        "Ice",
+        "Spazer",
+        {"heatFrames": 1160}
+      ]
+    },
+    {
+      "id": 69,
+      "link": [7, 5],
+      "name": "Wave Plasma Kill",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "Wave",
+        "Plasma",
+        {"heatFrames": 840}
+      ]
+    },
+    {
+      "id": 70,
+      "link": [7, 5],
+      "name": "Screw Kill",
+      "requires": [
+        "h_canNavigateHeatRooms",
+        "ScrewAttack",
+        {"heatFrames": 450}
+      ],
+      "note": "Be careful when Walljumping because Screw Attack does not provide protection at that time."
+    },
+    {
+      "id": 71,
+      "link": [7, 5],
+      "name": "KiHunter Dodge (Top)",
+      "requires": [
+        {"notable": "KiHunter Dodge"},
+        "h_canNavigateHeatRooms",
+        "canTrickyJump",
+        {"heatFrames": 710}
+      ],
+      "note": [
+        "The Middle KiHunter can be jumped past by waiting for the right timing, if it is in the way.",
+        "Wait for the top KiHunter to exit the corridor and wait just below so that it will bonk the wall when it attempts to swoop, then jump past.",
+        "It is possible the two KiHunters group up in the middle which may not be possible to pass without taking damage."
+      ]
+    },
+    {
+      "id": 72,
+      "link": [7, 5],
+      "name": "Kihunter Manipulation from Middle Door (Top)",
+      "requires": [
+        {"notable": "Kihunter Manipulation from Middle Door"},
+        "h_canNavigateHeatRooms",
+        "canStopOnADime",
+        "canTrickyDodgeEnemies",
+        {"or": [
+          "HiJump",
+          "canWalljump"
+        ]},
+        {"heatFrames": 490}
+      ],
+      "note": [
+        "Manipulate the Three KiHunters to avoid all of them when entering the room from the Save room door.",
+        "Stop on a dime on entry for positioning, because it is precise.",
+        "Wait 1 second then run or Morph and roll left, past the swooping kihunter.",
+        "Quickly jump to the higher level and run into the left wall.",
+        "Wait there for half a second; it helps to jump into the wall.",
+        "The 2 KiHunters should be grouped above Samus and out of the way."
+      ]
+    }
+  ],
+  "nextStratId": 75,
+  "notables": [
+    {
+      "id": 1,
+      "name": "KiHunter Dodge",
+      "note": [
+        "When coming from the Save room door, the first KiHunter can be baited by jumping into the door then walking left.",
+        "The second KiHunter can be jumped past by waiting for the right timing, if it is in the way.",
+        "Wait for the top KiHunter to exit the corridor and wait just below so that it will bonk the wall when it attempts to swoop, then jump past.",
+        "It is possible the second and third KiHunters group up in the middle which may not be possible to pass without taking damage."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Kihunter Manipulation from Middle Door",
+      "note": [
+        "Manipulate the Three KiHunters to avoid all of them when entering the room from the Save room door.",
+        "Stop on a dime on entry for positioning, because it is precise.",
+        "Wait 1 second then Morph and roll left, past the swooping kihunter.",
+        "Quickly jump to the higher level and run into the left wall.",
+        "Wait there for half a second; it helps to jump into the wall.",
+        "The 2 KiHunters should be grouped above Samus and out of the way."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Grapple Teleport Semi-Blind Movement",
+      "note": [
+        "The grapple teleport skips past the Kihunters.",
+        "With good semi-blind movement, this makes it possible to reach the top with minimal heat damage."
+      ]
+    }
+  ],
+  "nextNotableId": 4
+}
