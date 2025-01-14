@@ -48,6 +48,7 @@ public sealed class World : IWorld
             "canTurnaroundSpinJump",
             "canUseEnemies",
             "canTrivialUseFrozenEnemies",
+            "canUseFrozenEnemies",
             "canEscapeEnemyGrab",
             "canSpecialBeamAttack",
             "canMidAirMorph",
@@ -60,6 +61,10 @@ public sealed class World : IWorld
             "canCarefulJump",
             "canAwakenZebes",
             "canPseudoScrew",
+            "canNeutralDamageBoost",
+            "canIBJ",
+            "canBombAboveIBJ",
+            "canJumpIntoIBJ"
         ];
 
         RequirementHandler.Initialize(JsonData, this, allowedTechs);
