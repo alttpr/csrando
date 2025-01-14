@@ -60,7 +60,6 @@ public sealed class World : IWorld
             "canCarefulJump",
             "canAwakenZebes",
             "canPseudoScrew",
-            "canHellRun"
         ];
 
         RequirementHandler.Initialize(JsonData, this, allowedTechs);
