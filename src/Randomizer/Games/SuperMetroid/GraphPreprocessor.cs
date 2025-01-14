@@ -60,12 +60,6 @@ public class GraphPreprocessor
     {
         switch (req)
         {
-            case Requirement.Always:
-                return req;
-
-            case Requirement.Never:
-                return req;
-
             case Requirement.Single singleReq:
                 return singleReq switch
                 {
@@ -86,12 +80,6 @@ public class GraphPreprocessor
                     return new Requirement.Always();
                 return cleared;
 
-            case Requirement.Ammo ammo:
-                return ammo;
-
-            case Requirement.EnemyDamage dmg:
-                return dmg;
-
             case Requirement.And andReq:
                 return OptimizeAnd(andReq);
 
@@ -106,6 +94,9 @@ public class GraphPreprocessor
 
             case Requirement.UseFlashSuit useFlash:
                 return new Requirement.Never();
+
+            case Requirement.NoFlashSuit noFlash:
+                return new Requirement.Always();
 
         }
 
