@@ -215,7 +215,7 @@ public class RequirementHandler
                         }
                         else
                         {
-                            var newCost = bestSuccess.Cost! | subResult.Cost!;
+                            var newCost = subResult.Cost! | bestSuccess.Cost!;
                             bestSuccess = RequirementResult.Success(newCost.Value);
                         }
                     }
