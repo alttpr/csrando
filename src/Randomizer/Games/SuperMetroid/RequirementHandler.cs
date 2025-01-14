@@ -371,9 +371,17 @@ public class RequirementHandler
                 });
 
             case Requirement.HeatFrames heatFrames:
+                var hasVaria = inventory.Has(world.GetItem("Varia"));
+                var canHellrun = HelperTechs.ContainsKey("canHeatRun");
+
+                if(!hasVaria && !canHellrun)
+                {
+                    return RequirementResult.Fail("Varia");
+                }
+
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = inventory.Has(world.GetItem("Varia")) ? 0 : heatFrames.Frames / 4,
+                    Energy = hasVaria ? 0 : heatFrames.Frames / 4,
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
