@@ -574,6 +574,14 @@ public struct VisitedState
         if (cost.SuperMissiles > 0x8000) { cost.SuperMissiles = Math.Min(SuperMissiles, cost.SuperMissiles & 0x7FFF); };
         if (cost.PowerBombs > 0x8000) { cost.PowerBombs = Math.Min(PowerBombs, cost.PowerBombs & 0x7FFF); };
 
+        // Redistribute missile cost to super cost if we run out of missiles (at a rate of 3:1)
+        if (Missiles - cost.Missiles < 0)
+        {
+            var diff = Math.Abs(Missiles - cost.Missiles);
+            cost.Missiles = Missiles;
+            cost.SuperMissiles = (int)Math.Ceiling(diff / 3.0m);
+        }
+
         // Check if we have enough resources to apply the cost, and also handle refilling (negative numbers by checking against the max values in our inventory)
         if (Energy - cost.Energy < 0 || Missiles - cost.Missiles < 0 || SuperMissiles - cost.SuperMissiles < 0 || PowerBombs - cost.PowerBombs < 0)
         {
