@@ -85,12 +85,13 @@ public class StatefulSearcher : ISearcher
                 inventory.AddItem(vtx.World.GetItem(item));
                 if (target == null && !vtx.Name.Contains("Tourian") && !(item.StartsWith("f_") && inventory.Has(vtx.World.GetItem(item))))
                 {
-                    var backtrackSearcher = new StatefulSearcher(graph, vtx, inventory, null, start, itemState);
+                    var backtrackSearcher = new StatefulSearcher(graph, vtx, inventory.Clone(), null, start, itemState);
                     if (!backtrackSearcher.HasVisited(start))
                     {
                         //Console.WriteLine($"Backtracking failed to find a path from {vtx.Name} to {start.Name}");
                         inventory.RemoveItem(vtx.World.GetItem(item));
                         newItems.Remove((vtx, item));
+                        prevItems.Remove((vtx, item));
 
                         if (_unvisitedStates.TryGetValue(vtx, out var states))
                         {
@@ -264,7 +265,7 @@ public class StatefulSearcher : ISearcher
                 }            
             }
 
-            if(current.Type == VertexType.Item)
+            if (unlocked && current.Type == VertexType.Item)
             {
                 var currentInventory = inventory.All().Keys.Select(x => x.Name).ToHashSet();
                 if (_visitedItemLocations.TryGetValue(current, out var visitedItemState))
@@ -275,21 +276,20 @@ public class StatefulSearcher : ISearcher
                 {
                     _visitedItemLocations.Add(current, (state, currentInventory));
                 }
-            }
 
-
-            if (unlocked && current.Type == VertexType.Item && current.Item != null)
-            {
-                if (foundItems.TryGetValue((current, current.Item.Name), out var existingState))
+                if (current.Item != null)
                 {
-                    if (state.Dominates(existingState))
+                    if (foundItems.TryGetValue((current, current.Item.Name), out var existingState))
                     {
-                        foundItems[(current, current.Item.Name)] = state;
+                        if (state.Dominates(existingState))
+                        {
+                            foundItems[(current, current.Item.Name)] = state;
+                        }
                     }
-                }
-                else
-                {
-                    foundItems.Add((current, current.Item.Name), state);
+                    else
+                    {
+                        foundItems.Add((current, current.Item.Name), state);
+                    }
                 }
             }
  
