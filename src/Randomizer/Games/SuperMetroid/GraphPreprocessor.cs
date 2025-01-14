@@ -20,12 +20,12 @@ public class GraphPreprocessor
     private SmGraph _graph;
     private List<string> _allowedTechs;
 
-    public GraphPreprocessor(JsonReader reader, World world, List<string> allowedTechs)
+    public GraphPreprocessor(JsonReader reader, World world)
     {
         _reader = reader;
         _graph = new();
         _world = world;
-        _allowedTechs = allowedTechs;
+        _allowedTechs = world.AllowedTechs;
     }
 
     public void Preprocess()

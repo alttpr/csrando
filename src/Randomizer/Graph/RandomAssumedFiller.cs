@@ -1,7 +1,6 @@
 namespace Randomizer.Graph;
 
 using Microsoft.Extensions.Logging;
-using Randomizer.Games.SuperMetroid;
 
 internal sealed class RandomAssumedFiller
 {
@@ -34,6 +33,7 @@ internal sealed class RandomAssumedFiller
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
         {
             searchers[i] = _randomizer.GetSearcherForInventory(
+                _randomizer.Worlds[i],
                 flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
                     .Select(i => i.Item)
                     .ToList(),
@@ -55,6 +55,7 @@ internal sealed class RandomAssumedFiller
             flatItems.Remove(itemKey);
 
             searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
+                item.World,
                 flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
                     .Select(i => i.Item)
                     .ToList(),
@@ -71,25 +72,29 @@ internal sealed class RandomAssumedFiller
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
             var location = _prng.GetRandomElement(locations);
-            var statefulSearcher = (StatefulSearcher)searchers[location.World.Id];
-            var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
-                    .Select(i => i.Item)
-                    .ToList();
-            var backtrackInventory = new Inventory(backtrackItems.ToArray());
-            bool backtrackCheck = false;
-            while (!backtrackCheck)                
-            {
-                backtrackCheck = statefulSearcher.BacktrackLocation((Randomizer.Games.SuperMetroid.Vertex)location, backtrackInventory, (Randomizer.Games.SuperMetroid.Vertex)location.World.Start, item);
-                if (!backtrackCheck)
-                {
-                    locations.Remove(location);
-                    if (locations.Count == 0)
-                    {
-                        throw new Exception($"No valid locations for `{item}` in set `{itemSet}`");
-                    }
 
-                    backtrackInventory = new Inventory(backtrackItems.ToArray());
-                    location = _prng.GetRandomElement(locations);
+            if (location.World is Games.SuperMetroid.World)
+            {
+                var statefulSearcher = (Games.SuperMetroid.StatefulSearcher)searchers[location.World.Id];
+                var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
+                        .Select(i => i.Item)
+                        .ToList();
+                var backtrackInventory = new Inventory(backtrackItems.ToArray());
+                bool backtrackCheck = false;
+                while (!backtrackCheck)
+                {
+                    backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, item);
+                    if (!backtrackCheck)
+                    {
+                        locations.Remove(location);
+                        if (locations.Count == 0)
+                        {
+                            throw new Exception($"No valid locations for `{item}` in set `{itemSet}`");
+                        }
+
+                        backtrackInventory = new Inventory(backtrackItems.ToArray());
+                        location = _prng.GetRandomElement(locations);
+                    }
                 }
             }
 
@@ -126,7 +131,7 @@ internal sealed class RandomAssumedFiller
         });
 
         ItemSetName? currentKey = null;
-        var searcher = _randomizer.GetSearcherForInventory([], _randomizer.Worlds[0].Start);
+        var searcher = _randomizer.GetSearcherForInventory(_randomizer.Worlds[0], [], _randomizer.Worlds[0].Start);
         var locations = new List<Vertex>();
         foreach (var (itemSet, _, item) in fillItems)
         {

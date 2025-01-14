@@ -102,9 +102,9 @@ public class RequirementHandler
     private static Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
     private static Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
 
-    public static void Initialize(JsonReader reader, World world, List<string> allowedTechs)
+    public static void Initialize(JsonReader reader, World world)
     {
-        var preprocessor = new GraphPreprocessor(reader, world, allowedTechs);
+        var preprocessor = new GraphPreprocessor(reader, world);
 
         foreach (var helper in reader.Helpers.HelperCategories.SelectMany(h => h.Helpers))
         {
@@ -113,8 +113,8 @@ public class RequirementHandler
 
         foreach(var tech in reader.Techs.TechCategories.SelectMany(t => t.Techs))
         {
-            AddTech(tech, allowedTechs, preprocessor);
-            AddTech(tech, allowedTechs, preprocessor, true);
+            AddTech(tech, world.AllowedTechs, preprocessor);
+            AddTech(tech, world.AllowedTechs, preprocessor, true);
         }
 
         foreach(var enemy in reader.Enemies.SelectMany(e => e.Enemies))

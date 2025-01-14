@@ -18,9 +18,10 @@ public sealed class World : IWorld
     public Config Config { get; }
     public PRNG Prng { get; }
     public JsonReader JsonData { get; set; }
-    private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
     public BaseVertex Start { get; }
+    private readonly Dictionary<string, Item> _allItems = new();
+    public List<string> AllowedTechs { get; init; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -35,55 +36,26 @@ public sealed class World : IWorld
 
         List<IItem> items = [GetItem("fixed")];
         items.AddRange(Config.StartingEquipment.Select(GetItem));
-
         StartingItems = new Inventory(items.ToArray());
 
         JsonData = new JsonReader(Config);
         JsonData.Load();
 
-        List<string> allowedTechs = [
-            "canStopOnADime",
-            "canTrivialMidAirMorph",
-            "canUseGrapple",
-            "canTurnaroundSpinJump",
-            "canUseEnemies",
-            "canTrivialUseFrozenEnemies",
-            "canUseFrozenEnemies",
-            "canEscapeEnemyGrab",
-            "canSpecialBeamAttack",
-            "canMidAirMorph",
-            "canWalljump",
-            "canUseFrozenEnemies",
-            "canShinespark",
-            "canBePatient",
-            "canDownGrab",
-            "canCrouchJump",
-            "canCarefulJump",
-            "canAwakenZebes",
-            "canPseudoScrew",
-            "canNeutralDamageBoost",
-            "canIBJ",
-            "canBombAboveIBJ",
-            "canJumpIntoIBJ",
-        ];
+        AllowedTechs = Config.LogicTechs[Config.Logic].Concat(Config.CustomTech).ToList();
 
-        RequirementHandler.Initialize(JsonData, this, allowedTechs);
+        RequirementHandler.Initialize(JsonData, this);
 
-        // Turn the JSON data into an "optimized" graph with just vertices and edges
-        var preprocessor = new GraphPreprocessor(JsonData, this, allowedTechs);
+        var preprocessor = new GraphPreprocessor(JsonData, this);
         preprocessor.Preprocess();
 
-        //var searcher = new StatefulSearcher(Graph, (Vertex)GetLocation("Crateria - Landing Site - Ship"), StartingItems);
         Start = GetLocation("Crateria - Landing Site - Ship");
     }
 
     public Inventory ComputeStartingItems()
     {
         var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(GetItem)]);
-        //var searcher = new Searcher(Graph, GetLocation("DefaultItems"), inventory);
         return inventory;
     }
-
 
     /// <summary>
     /// Get a vertex by name in this world.
@@ -158,5 +130,10 @@ public sealed class World : IWorld
         locations.AddRange(searcher.GetEmptyLocationsInSet(itemSet, setCounts));
 
         return locations;
+    }
+
+    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    {
+        return new StatefulSearcher(graph, (Vertex)(start ?? Start), inventory, setLocations);
     }
 }

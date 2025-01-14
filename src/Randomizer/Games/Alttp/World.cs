@@ -200,4 +200,9 @@ public sealed class World : IWorld
 
         return true;
     }
+
+    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    {
+        return new Searcher(graph, start ?? Start, inventory, setLocations);
+    }
 }

@@ -117,4 +117,10 @@ public sealed class World : IWorld
         var winSearcher = new Searcher(Graph, start, startingInventory);
         return winSearcher.HasFound(GetItem("Triforce"));
     }
+
+    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    {
+        return new Searcher(graph, start ?? Start, inventory, setLocations);
+    }
+
 }

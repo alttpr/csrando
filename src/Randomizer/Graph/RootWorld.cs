@@ -33,6 +33,7 @@ internal sealed class RootWorld : IWorld
     public IEnumerable<Vertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts) => throw _doNotUseThis;
     public void TrackPlacedItem(Vertex location) => throw _doNotUseThis;
     public bool IsWinnable(Vertex start, Inventory startingInventory) => false;
+    public ISearcher GetSearcherForWorld(Graph graph, Vertex? start, Inventory inventory, SetLocations? setLocations = null) => throw _doNotUseThis;
 }
 
 internal sealed class RootVertex : Vertex { }
