@@ -85,7 +85,7 @@ internal sealed class RandomAssumedFiller
                     locations.Remove(location);
                     if (locations.Count == 0)
                     {
-                        throw new Exception($"No locations for `{item}` in set `{itemSet}`");
+                        throw new Exception($"No valid locations for `{item}` in set `{itemSet}`");
                     }
 
                     backtrackInventory = new Inventory(backtrackItems.ToArray());

@@ -64,7 +64,7 @@ public sealed class World : IWorld
             "canNeutralDamageBoost",
             "canIBJ",
             "canBombAboveIBJ",
-            "canJumpIntoIBJ"
+            "canJumpIntoIBJ",
         ];
 
         RequirementHandler.Initialize(JsonData, this, allowedTechs);

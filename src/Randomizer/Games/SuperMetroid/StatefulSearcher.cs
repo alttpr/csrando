@@ -3,6 +3,7 @@
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Hashing;
 using System.Linq;
@@ -37,10 +38,10 @@ public class StatefulSearcher : ISearcher
         });
 
         inventory = oldInventory.Clone();
-        _visitedStates = new();
-        _visitedVertices = new();
-        _unvisitedStates = new();
-        _visitedItemLocations = new();
+        _visitedStates = new(1024);
+        _visitedVertices = new(1024);
+        _unvisitedStates = new(1024);
+        _visitedItemLocations = new(128);
         _graph = graph;
 
         var foundItems = new Dictionary<(Vertex, string), VisitedState>();
@@ -99,16 +100,15 @@ public class StatefulSearcher : ISearcher
                         else
                         {
                             _unvisitedStates[vtx] = (new HashSet<string> { "Backtrack" }, [itemState with {
-                                Energy = itemState.Energy + newEnergy,
-                                Missiles = itemState.Missiles + newMissiles,
-                                SuperMissiles = itemState.SuperMissiles + newSupers,
-                                PowerBombs = itemState.PowerBombs + newPowerBombs
-                            }]);
+                            Energy = itemState.Energy + newEnergy,
+                            Missiles = itemState.Missiles + newMissiles,
+                            SuperMissiles = itemState.SuperMissiles + newSupers,
+                            PowerBombs = itemState.PowerBombs + newPowerBombs
+                        }]);
                         }
                     }
                 }
             }
-
 
             // Add new items to all unvisited states
             _unvisitedStates = _unvisitedStates.ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2.Select(s => s with

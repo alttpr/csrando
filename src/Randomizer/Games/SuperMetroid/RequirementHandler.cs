@@ -100,6 +100,7 @@ public class RequirementHandler
 {
     private static Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
     private static Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
+    private static Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
 
     public static void Initialize(JsonReader reader, World world, List<string> allowedTechs)
     {
@@ -119,6 +120,10 @@ public class RequirementHandler
         foreach(var enemy in reader.Enemies.SelectMany(e => e.Enemies))
         {
             Enemies[enemy.Name] = enemy;
+            foreach (var attack in enemy.Attacks)
+            {
+                EnemyDamage[(enemy.Name, attack.Name)] = attack;
+            }
         }
     }
 
@@ -362,15 +367,9 @@ public class RequirementHandler
                 });
 
             case Requirement.EnemyDamage enemyDamage:
-                if (!Enemies.TryGetValue(enemyDamage.Enemy, out var enemy))
+                if (!EnemyDamage.TryGetValue((enemyDamage.Enemy, enemyDamage.Type), out var attack))
                 {
-                    return RequirementResult.Fail("never");
-                }
-                
-                var attack = enemy.Attacks.Where(a => a.Name == enemyDamage.Type).FirstOrDefault();
-                if (attack == null)
-                {
-                    return RequirementResult.Fail("never");
+                    return RequirementResult.Fail();
                 }
 
                 var attackDamage = attack.BaseDamage * enemyDamage.Hits;
@@ -580,6 +579,10 @@ public class RequirementHandler
                 return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= 25 ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster")); 
 
             case Requirement.GetBlueSpeed blueSpeed:
+                if(blueSpeed.UsedTiles < 30)
+                {
+                    return RequirementResult.Fail();
+                }
                 return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail("SpeedBooster");
 
             case Requirement.Tech tech:
