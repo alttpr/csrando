@@ -579,7 +579,7 @@ public struct VisitedState
         {
             var diff = Math.Abs(Missiles - cost.Missiles);
             cost.Missiles = Missiles;
-            cost.SuperMissiles = (int)Math.Ceiling(diff / 3.0m);
+            cost.SuperMissiles += (int)Math.Ceiling(diff / 3.0m);
         }
 
         // Check if we have enough resources to apply the cost, and also handle refilling (negative numbers by checking against the max values in our inventory)
