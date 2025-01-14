@@ -242,6 +242,11 @@ public class StatefulSearcher : ISearcher
             if (unlockState != null)
             {
                 state = unlockState.Value;
+                if(current.Node!.NodeType == "door")
+                {
+                    state = state.WithDoorUnlocked(current.NodeId);
+                }
+
                 unlocked = true;
                 foreach(var yieldItem in yields)
                 {
@@ -374,7 +379,7 @@ public class StatefulSearcher : ISearcher
 
                 if(toVtx.RoomId != current.RoomId)
                 {
-                    bestState = bestState with { ObstacleBitFlags = 0 };
+                    bestState = bestState with { ObstacleBitFlags = 0, DoorUnlockedFlags = 0 };
                 }
 
                 EnqueueState(toVtx, bestState);
@@ -551,6 +556,7 @@ public struct VisitedState
     public int SuperMissiles;
     public int PowerBombs;
     public int ObstacleBitFlags;
+    public int DoorUnlockedFlags;
 
     public bool Dominates(VisitedState other)
     {
@@ -580,9 +586,16 @@ public struct VisitedState
             Missiles = cost.Missiles < 0 ? Math.Min(Missiles - cost.Missiles, inventory.GetCount(world.GetItem("Missile")) * 5) : Missiles - cost.Missiles,
             SuperMissiles = cost.SuperMissiles < 0 ? Math.Min(SuperMissiles - cost.SuperMissiles, inventory.GetCount(world.GetItem("Super")) * 5) : SuperMissiles - cost.SuperMissiles,
             PowerBombs = cost.PowerBombs < 0 ? Math.Min(PowerBombs - cost.PowerBombs, inventory.GetCount(world.GetItem("PowerBomb")) * 5) : PowerBombs - cost.PowerBombs,
-            ObstacleBitFlags = ObstacleBitFlags
+            ObstacleBitFlags = ObstacleBitFlags,
+            DoorUnlockedFlags = DoorUnlockedFlags
         };
     }
+
+    public VisitedState WithDoorUnlocked(int node)
+        => this with { DoorUnlockedFlags = DoorUnlockedFlags | (1 << node) };
+
+    public bool HasDoorUnlocked(int node)
+        => (DoorUnlockedFlags & (1 << node)) != 0;
 
     /// <summary>
     /// Return a new state with the specified obstacles "cleared" (bits set).

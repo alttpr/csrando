@@ -113,6 +113,7 @@ public class RequirementHandler
         foreach(var tech in reader.Techs.TechCategories.SelectMany(t => t.Techs))
         {
             AddTech(tech, allowedTechs, preprocessor);
+            AddTech(tech, allowedTechs, preprocessor, true);
         }
 
         foreach(var enemy in reader.Enemies.SelectMany(e => e.Enemies))
@@ -121,18 +122,19 @@ public class RequirementHandler
         }
     }
 
-    private static void AddTech(Tech tech, List<string> allowedTechs, GraphPreprocessor preprocessor)
+    private static void AddTech(Tech tech, List<string> allowedTechs, GraphPreprocessor preprocessor, bool techOnly = false)
     {
         if (allowedTechs.Contains(tech.Name))
         {
-            HelperTechs[tech.Name] = preprocessor.OptimizeRequirement(new Requirement.And([tech.TechRequires, tech.OtherRequires]));
+            HelperTechs[techOnly ? $"t_{tech.Name}" : tech.Name] = preprocessor.OptimizeRequirement(
+                techOnly ? tech.TechRequires : new Requirement.And([tech.TechRequires, tech.OtherRequires]));
         }
 
         if (tech.ExtensionTechs != null)
         {
             foreach (var ext in tech.ExtensionTechs)
             {
-                AddTech(ext, allowedTechs, preprocessor);
+                AddTech(ext, allowedTechs, preprocessor, techOnly);
             }
         }
     }
@@ -578,6 +580,30 @@ public class RequirementHandler
                 return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= 25 ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster")); 
 
             case Requirement.GetBlueSpeed blueSpeed:
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail("SpeedBooster");
+
+            case Requirement.Tech tech:
+                if (HelperTechs.TryGetValue($"t_{tech.TechRequirement}", out var techRequirement))
+                {
+                    return HandleRequirement(techRequirement, state, inventory, world);
+                }
+                else
+                {
+                    return RequirementResult.Fail();
+                }
+
+            case Requirement.Notable notable:
+                return RequirementResult.Success(RequirementCost.ZeroCost);
+
+            case Requirement.DoorUnlockedAtNode doorUnlockedAtNode:
+                return state.HasDoorUnlocked(doorUnlockedAtNode.Node) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
+
+            case Requirement.SpeedBall speedBall:
+                if(speedBall.Length < 30)
+                {
+                    return RequirementResult.Fail();
+                }
+
                 return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail("SpeedBooster");
 
             default:
