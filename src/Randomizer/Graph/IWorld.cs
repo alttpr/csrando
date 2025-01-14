@@ -34,6 +34,16 @@ public interface IWorld
     /// <param name="startingInventory">Starting items the player has innate access to.</param>
     bool IsWinnable(Vertex start, Inventory startingInventory);
 
+    /// <summary>
+    /// Get a searcher for this specific world.
+    /// </summary>
+    /// <param name="graph"></param>
+    /// <param name="start"></param>
+    /// <param name="inventory"></param>
+    /// <param name="setLocations"></param>
+    /// <returns></returns>
+    ISearcher GetSearcherForWorld(Graph graph, Vertex? start, Inventory inventory, SetLocations? setLocations = null);
+
     WorldConfig WorldConfig { get; }
     Graph Graph { get; }
     int Id { get; }

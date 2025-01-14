@@ -31,7 +31,7 @@ public abstract class LogicTestBase
             Assert.Fail($"Location \"{location}\" doesn't exist in the graph");
         }
 
-        var searcher = randomizer.GetSearcherForInventory(inventory.Select(world.GetItem));
+        var searcher = randomizer.GetSearcherForInventory(world, inventory.Select(world.GetItem));
         Assert.AreEqual(expected, searcher.GetVisited().Any(v => v.Name == location));
     }
 

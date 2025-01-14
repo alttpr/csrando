@@ -112,4 +112,8 @@ public sealed class World : IWorld
     {
         throw new NotImplementedException("Veetorp doesn't know if anyone can win Goonies 2");
     }
+    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    {
+        return new Searcher(graph, start ?? Start, inventory, setLocations);
+    }
 }
