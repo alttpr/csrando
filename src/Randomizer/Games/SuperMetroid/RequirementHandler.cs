@@ -341,6 +341,24 @@ public class RequirementHandler
                     PowerBombs = 0
                 });
 
+            case Requirement.ElectricityHits electricityHits:
+                var electricityDamage = electricityHits.Hits * 30;
+                if (inventory.Has(world.GetItem("Varia")))
+                {
+                    electricityDamage /= 2;
+                }
+                else if (inventory.Has(world.GetItem("Gravity")))
+                {
+                    electricityDamage /= 4;
+                }
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = electricityDamage,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
             case Requirement.EnemyDamage enemyDamage:
                 if (!Enemies.TryGetValue(enemyDamage.Enemy, out var enemy))
                 {
@@ -397,8 +415,65 @@ public class RequirementHandler
                     PowerBombs = 0
                 });
 
+            case Requirement.SamusEaterFrames samusEaterFrames:
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = inventory.Has(world.GetItem("Gravity")) ? samusEaterFrames.Frames / 40 : inventory.Has(world.GetItem("Varia")) ? samusEaterFrames.Frames / 20 : samusEaterFrames.Frames / 10,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
+            case Requirement.MetroidFrames metroidFrames:
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = inventory.Has(world.GetItem("Gravity")) ? metroidFrames.Frames : inventory.Has(world.GetItem("Varia")) ? metroidFrames.Frames / 2 : metroidFrames.Frames / 4,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
             // TODO: Implement this
             case Requirement.ResourceAtMost resourceAtMost:
+                return RequirementResult.Success(RequirementCost.ZeroCost);
+
+            case Requirement.ResourceAvailable resourceAvailable:
+                var failedResource = RequirementResult.Fail();
+                bool failed = false;
+                foreach (var resource in resourceAvailable.Available)
+                {
+                    var (hasResource, resourceName) = resource.Type switch
+                    {
+                        // TODO: fix reserve 
+                        "ReserveEnergy" => (false, "ReserveTank"),
+                        "Energy" => (state.Energy >= resource.Count, "ETank"),
+                        "RegularEnergy" => (state.Energy >= resource.Count, "ETank"),
+                        "Missile" => (state.Missiles >= resource.Count, "Missile"),
+                        "Super" => (state.SuperMissiles >= resource.Count, "Super"),
+                        "PowerBomb" => (state.PowerBombs >= resource.Count, "PowerBomb"),
+                        _ => (false, "")
+                    };
+
+                    if(!hasResource)
+                    {
+                        failed = true;
+                        if (resourceName != "")
+                        {
+                            failedResource.MergeFail(RequirementResult.Fail(resourceName));
+                        }
+                    }
+                }
+
+                if(failed)
+                {
+                    return failedResource;
+                } 
+                else
+                {
+                    return RequirementResult.Success(RequirementCost.ZeroCost);
+                }
+
+            case Requirement.CycleFrames cycleFrames:
                 return RequirementResult.Success(RequirementCost.ZeroCost);
 
             case Requirement.LavaFrames lavaFrames:
@@ -419,19 +494,88 @@ public class RequirementHandler
                     PowerBombs = 0
                 });
 
+            case Requirement.GravitylessAcidFrames gravitylessAcidFrames:
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = inventory.Has(world.GetItem("Varia")) ? gravitylessAcidFrames.Frames : gravitylessAcidFrames.Frames * 2,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
+            case Requirement.GravitylessHeatFrames gravitylessHeatFrames:
+                var hasVariaG = inventory.Has(world.GetItem("Varia"));
+                var canHellrunG = HelperTechs.ContainsKey("canHeatRun");
+
+                if (!hasVariaG && !canHellrunG)
+                {
+                    return RequirementResult.Fail("Varia");
+                }
+
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = hasVariaG ? 0 : gravitylessHeatFrames.Frames / 4,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
+            case Requirement.GravitylessLavaFrames gravitylessLavaFrames:
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = inventory.Has(world.GetItem("Varia")) ? 0 : gravitylessLavaFrames.Frames / 4,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
+            case Requirement.DraygonElectricityFrames draygonElectricityFrames:
+                return RequirementResult.Success(new RequirementCost
+                {
+                    Energy = inventory.Has(world.GetItem("Gravity")) ? draygonElectricityFrames.Frames / 4 : inventory.Has(world.GetItem("Varia")) ? draygonElectricityFrames.Frames / 2 : draygonElectricityFrames.Frames,
+                    Missiles = 0,
+                    SuperMissiles = 0,
+                    PowerBombs = 0
+                });
+
+            case Requirement.Shinespark shinespark:
+                if (inventory.Has(world.GetItem("SpeedBooster")))
+                {
+                    var requiredEnergy = shinespark.Frames - shinespark.ExcessFrames;
+                    if(state.Energy - requiredEnergy <= 29)
+                    {
+                        return RequirementResult.Fail("ETank");
+                    }
+
+                    return RequirementResult.Success(new RequirementCost
+                    {
+                        Energy = shinespark.Frames,
+                        Missiles = 0,
+                        SuperMissiles = 0,
+                        PowerBombs = 0
+                    });
+                }
+                else
+                {
+                    return RequirementResult.Fail("SpeedBooster");
+                }
+
             case Requirement.ResourceCapacity capacity:
                 var failedCapacity = RequirementResult.Fail();
-                bool failed = false;
+                bool failedCap = false;
                 foreach (var c in capacity.Capacity)
                 {
                     if (!inventory.HasAtLeast(world.GetItem(c.Type), c.Count))
                     {
                         failedCapacity.MergeFail(RequirementResult.Fail(c.Type));
-                        failed = true;
+                        failedCap = true;
                     }
                 }
 
-                return failed ? failedCapacity : RequirementResult.Success(RequirementCost.ZeroCost);
+                return failedCap ? failedCapacity : RequirementResult.Success(RequirementCost.ZeroCost);
+
+            case Requirement.CanShineCharge canShineCharge:
+                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= 25 ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster")); 
 
             case Requirement.GetBlueSpeed blueSpeed:
                 return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail("SpeedBooster");
