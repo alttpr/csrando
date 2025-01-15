@@ -1,4 +1,6 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
+
+using Randomizer.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ public abstract record Requirement
     public record Always : Requirement;
     public record Never : Requirement;
     public record Single(string Req) : Requirement;
+    public record SingleItem(IItem Item) : Requirement;
     public record And(Requirement[] Reqs) : Requirement;
     public record Not(Requirement Req) : Requirement;
     public record Or(Requirement[] Reqs) : Requirement;

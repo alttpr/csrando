@@ -152,7 +152,7 @@ public class RequirementHandler
                 return RequirementResult.Success(RequirementCost.ZeroCost);
 
             case Requirement.Never:
-                return RequirementResult.Fail("Never");
+                return RequirementResult.Fail();
 
             case Requirement.Single single:
                 if(HelperTechs.TryGetValue(single.Req, out var helper))
@@ -165,6 +165,26 @@ public class RequirementHandler
                         return RequirementResult.Success(RequirementCost.ZeroCost);
                     else
                         return RequirementResult.Fail(single.Req);
+                }
+
+            case Requirement.SingleItem singleItem:
+                if (inventory.Has(singleItem.Item))
+                {
+                    return RequirementResult.Success(RequirementCost.ZeroCost);
+                }
+                else
+                {
+                    if (HelperTechs.TryGetValue(singleItem.Item.Name, out var singleItemHelper))
+                    {
+                        return HandleRequirement(singleItemHelper, state, inventory, world);
+                    }
+                    else
+                    {
+                        if (inventory.Has(world.GetItem(singleItem.Item.Name)))
+                            return RequirementResult.Success(RequirementCost.ZeroCost);
+                        else
+                            return RequirementResult.Fail(singleItem.Item.Name);
+                    }
                 }
 
             case Requirement.And and:

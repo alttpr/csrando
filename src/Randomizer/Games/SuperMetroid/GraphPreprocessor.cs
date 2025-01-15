@@ -67,7 +67,7 @@ public class GraphPreprocessor
                     Requirement.Single s when s.Req.Contains("XMode") => new Requirement.Never(),
                     Requirement.Single s when s.Req.Contains("CrystalFlash") => new Requirement.Never(),
                     Requirement.Single s when s.Req.StartsWith("can") && !_allowedTechs.Contains(s.Req) => new Requirement.Never(),
-                    _ => singleReq
+                    _ => new Requirement.SingleItem(_world.GetItem(singleReq.Req))
                 };
 
             case Requirement.ObstaclesNotCleared onClear:
