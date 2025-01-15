@@ -383,7 +383,7 @@ public class RequirementHandler
 
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = attackDamage,
+                    Energy = (int)(attackDamage * world.Config.LogicSkillConfigs[world.Config.Logic].EnemyDamageMultiplier),
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -400,7 +400,7 @@ public class RequirementHandler
 
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = hasVaria ? 0 : heatFrames.Frames / 4,
+                    Energy = hasVaria ? 0 :(int)((heatFrames.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -410,7 +410,7 @@ public class RequirementHandler
             case Requirement.HeatFramesWithEnergyDrops heatFramesWithEnergyDrops:
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = (inventory.Has(world.GetItem("Varia")) ? 0 : heatFramesWithEnergyDrops.Frames / 4),
+                    Energy = inventory.Has(world.GetItem("Varia")) ? 0 : (int)((heatFramesWithEnergyDrops.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -515,7 +515,7 @@ public class RequirementHandler
 
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = hasVariaG ? 0 : gravitylessHeatFrames.Frames / 4,
+                    Energy = hasVariaG ? 0 : (int)((gravitylessHeatFrames.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -524,7 +524,7 @@ public class RequirementHandler
             case Requirement.GravitylessLavaFrames gravitylessLavaFrames:
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = inventory.Has(world.GetItem("Varia")) ? 0 : gravitylessLavaFrames.Frames / 4,
+                    Energy = inventory.Has(world.GetItem("Varia")) ? 0 : (int)((gravitylessLavaFrames.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -576,10 +576,10 @@ public class RequirementHandler
                 return failedCap ? failedCapacity : RequirementResult.Success(RequirementCost.ZeroCost);
 
             case Requirement.CanShineCharge canShineCharge:
-                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= 25 ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster")); 
+                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster")); 
 
             case Requirement.GetBlueSpeed blueSpeed:
-                if(blueSpeed.UsedTiles < 30)
+                if(blueSpeed.UsedTiles < world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles)
                 {
                     return RequirementResult.Fail();
                 }
@@ -602,7 +602,7 @@ public class RequirementHandler
                 return state.HasDoorUnlocked(doorUnlockedAtNode.Node) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
 
             case Requirement.SpeedBall speedBall:
-                if(speedBall.Length < 30)
+                if(speedBall.Length < world.Config.LogicSkillConfigs[world.Config.Logic].SpeedballTiles)
                 {
                     return RequirementResult.Fail();
                 }
