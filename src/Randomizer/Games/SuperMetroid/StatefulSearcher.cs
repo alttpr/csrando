@@ -168,6 +168,11 @@ public class StatefulSearcher : ISearcher
 
     private void AddUnvisited(Vertex vertex, VisitedState state, HashSet<string> missingItems)
     {
+        if(missingItems.Count == 0)
+        {
+            return;
+        }
+
         //Console.WriteLine($"Adding unvisited state {state} to {vertex.Name} with missing items: {string.Join(",",missingItems)}");
         if (_unvisitedStates.TryGetValue(vertex, out var states))
         {
