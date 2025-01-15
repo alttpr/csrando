@@ -80,7 +80,7 @@ public class Config
             "canCameraManip",
         ];
 
-    private static SkillConfig BasicSkillConfig = new()
+    public static SkillConfig BasicSkillConfig = new()
     {
         ShinechargeTiles = 33,
         HeatedShinechargeTiles = 33,
@@ -89,7 +89,7 @@ public class Config
         HeatDamageMultiplier = 4.0m,
         EnemyDamageMultiplier = 1.5m,
     };
-    private static SkillConfig MediumSkillConfig = new()
+    public static SkillConfig MediumSkillConfig = new()
     {
         ShinechargeTiles = 25,
         HeatedShinechargeTiles = 29,
@@ -98,7 +98,7 @@ public class Config
         HeatDamageMultiplier = 2.5m,
         EnemyDamageMultiplier = 1.2m,
     };
-    private static SkillConfig HardSkillConfig = new()
+    public static SkillConfig HardSkillConfig = new()
     {
         ShinechargeTiles = 20,
         HeatedShinechargeTiles = 24,
@@ -110,7 +110,7 @@ public class Config
 
     private static readonly string[] RandomBosses = ["0", "1", "2", "3", "4"];
 
-    public static Dictionary<Logic, string[]> LogicTechs = new()
+    public Dictionary<Logic, string[]> LogicTechs = new()
     {
         [Logic.Basic] = 
             [
@@ -133,7 +133,7 @@ public class Config
         [Logic.Custom] = [],
     };
 
-    public static Dictionary<Logic, SkillConfig> LogicSkillConfigs = new()
+    public Dictionary<Logic, SkillConfig> LogicSkillConfigs = new()
     {
         [Logic.Basic] = BasicSkillConfig,
         [Logic.Medium] = MediumSkillConfig,
