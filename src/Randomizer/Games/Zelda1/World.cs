@@ -9,6 +9,7 @@ public sealed class World : IWorld
 {
 
     public int Id { get; }
+    public string GameId { get; } = "z1";
     public Graph Graph { get; }
     public Inventory StartingItems { get; }
     public WorldConfig WorldConfig { get; }
@@ -50,12 +51,12 @@ public sealed class World : IWorld
     /// <param name="locationName">name to search for</param>
     public BaseVertex GetLocation(string locationName)
     {
-        return Graph.GetVertex($"{locationName}:{Id}");
+        return Graph.GetVertex($"{locationName}:{GameId}:{Id}");
     }
 
     public bool HasLocation(string locationName)
     {
-        return Graph.HasVertex($"{locationName}:{Id}");
+        return Graph.HasVertex($"{locationName}:{GameId}:{Id}");
     }
 
     /// <summary>Get all vertices in this world.</summary>

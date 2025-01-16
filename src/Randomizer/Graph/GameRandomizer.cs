@@ -79,7 +79,7 @@ public abstract class GameRandomizer
     /// </summary>
     public ISearcher GetSearcherForInventory(IWorld world, IEnumerable<IItem> items, Vertex? start = null)
     {
-        return world.GetSearcherForWorld(Graph, (Games.SuperMetroid.Vertex?)start ?? (Games.SuperMetroid.Vertex)_start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
+        return world.GetSearcherForWorld(Graph, start ?? _start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
     }
 
     /// <summary>

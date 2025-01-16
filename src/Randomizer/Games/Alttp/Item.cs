@@ -53,5 +53,5 @@ public sealed class Item : IItem
             LogicalItem = world.GetItem("LogicalBottle");
     }
 
-    public override string ToString() => $"{Name}:{World.Id}";
+    public override string ToString() => $"{Name}:{World.GameId}:{World.Id}";
 }

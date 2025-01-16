@@ -1,21 +1,35 @@
-namespace Randomizer.Games.Goonies2;
+namespace Randomizer.Games.Combo;
 
 using Randomizer.Graph;
 using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;
 
+using AlttpWorld = Randomizer.Games.Alttp.World;
+using SMWorld = Randomizer.Games.SuperMetroid.World;
+using Z1World = Randomizer.Games.Zelda1.World;
+using M1World = Randomizer.Games.Metroid.World;
+
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : IWorld
 {
+
     public int Id { get; }
-    public string GameId { get; } = "g2";
+    public string GameId { get; } = "combo";
     public Graph Graph { get; }
-    public BaseVertex Start { get; }
     public Inventory StartingItems { get; }
     public WorldConfig WorldConfig { get; }
     public Config Config { get; }
-    private readonly Dictionary<string, Item> _allItems = new();
+    public PRNG Prng { get; }
     public ushort PlacedItemCount { get; set; }
+    private readonly Dictionary<string, Item> _allItems = new();
+    public BaseVertex Start { get; }
+
+    public WorldConfig GameConfig { get; init; }
+
+    public AlttpWorld? AlttpWorld { get;  init; }
+    public SMWorld? SMWorld { get; init; }
+    public Z1World? Z1World { get; init; }
+    public M1World? M1World { get; init; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -24,22 +38,61 @@ public sealed class World : IWorld
     {
         Id = id;
         WorldConfig = randomizerConfig;
-        Config = randomizerConfig.Goonies2 ?? throw new ArgumentException("This world requires valid settings for The Goonies II: The Fratellis' Last Stand");
+        Config = randomizerConfig.Combo ?? throw new ArgumentException("This world requires valid settings for Combo");
+        GameConfig = Config.Games ?? throw new ArgumentException("This world requires valid settings for Games");
         Graph = graph;
+        Prng = prng;
+        Start = graph.AddVertex(new Vertex()
+        {
+            Name = "start",
+            Type = VertexType.Meta,
+            World = this,            
+        });
 
-        List<IItem> items = [GetItem("fixed")];
-        items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
+        if (Config.Games.Alttp != null)
+        {
+            AlttpWorld = new AlttpWorld(id, Config.Games, graph, prng);
+            // Connect our starting location to the ALttP world
+            graph.AddDirected(Start, AlttpWorld.Start, GetItem("fixed"));
 
-        items.AddRange(Config.StartingEquipment.Select(GetItem));
-        StartingItems = new Inventory(items.ToArray());
+        }
+        if (Config.Games.SuperMetroid != null)
+        {
+            SMWorld = new SMWorld(id, Config.Games, graph, prng);
+        }
+        if (Config.Games.Zelda1 != null)
+        {
+            Z1World = new Z1World(id, Config.Games, graph, prng);
+        }
+        if (Config.Games.Metroid != null)
+        {
+            M1World = new M1World(id, Config.Games, graph, prng);
+        }
 
-        Start = DataLoader.Fill(this);
+        StartingItems = new Inventory([GetItem("fixed")]);
+
     }
 
     public Inventory ComputeStartingItems()
     {
-        var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(GetItem)]);
-        var searcher = new Searcher(Graph, GetLocation("DefaultItems"), inventory);
+        var inventory = new Inventory([GetItem("fixed")]);
+        if(AlttpWorld != null)
+        {
+            inventory.Merge(AlttpWorld.ComputeStartingItems());
+        } 
+        if(SMWorld != null)
+        {
+            inventory.Merge(SMWorld.ComputeStartingItems());
+        }
+        if (Z1World != null)
+        {
+            inventory.Merge(Z1World.ComputeStartingItems());
+        }
+        if (M1World != null)
+        {
+            inventory.Merge(M1World.ComputeStartingItems());
+        }
+
         return inventory;
     }
 
@@ -49,12 +102,12 @@ public sealed class World : IWorld
     /// <param name="locationName">name to search for</param>
     public BaseVertex GetLocation(string locationName)
     {
-        return Graph.GetVertex($"{locationName}:{GameId}:{Id}");
+        return Graph.GetVertex($"{locationName}:{Id}");
     }
 
     public bool HasLocation(string locationName)
     {
-        return Graph.HasVertex($"{locationName}:{GameId}:{Id}");
+        return Graph.HasVertex($"{locationName}:{Id}");
     }
 
     /// <summary>Get all vertices in this world.</summary>
@@ -96,6 +149,7 @@ public sealed class World : IWorld
     {
         return _allItems.Values;
     }
+    
     public IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();
@@ -109,12 +163,16 @@ public sealed class World : IWorld
     {
         location.World.PlacedItemCount++;
     }
+    
     public bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
-        throw new NotImplementedException("Veetorp doesn't know if anyone can win Goonies 2");
+        var winSearcher = new Searcher(Graph, start, startingInventory);
+        return winSearcher.HasFound(GetItem("Triforce"));
     }
+
     public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
-        return new Searcher(graph, start ?? Start, inventory, setLocations);
+        return new ComboSearcher(graph, (Vertex)(start ?? Start), inventory, setLocations);
     }
+
 }

@@ -54,7 +54,7 @@ public abstract class Vertex : ICloneable
 
     public override string ToString()
     {
-        return $"{Name}:{World.Id}";
+        return $"{Name}:{World.GameId}:{World.Id}";
     }
 
     public object Clone()
