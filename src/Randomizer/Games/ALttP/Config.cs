@@ -46,7 +46,7 @@ public class Config
 
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
-    public StateOption State { get; init; } = StateOption.Standard;
+    public StateOption State { get; init; } = StateOption.Open;
 
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 

@@ -1,11 +1,10 @@
-﻿namespace Randomizer.Games.Zelda1;
+﻿namespace Randomizer.Games.Combo;
 
 using Randomizer.Graph;
 
 public enum ItemType
 {
     Meta,
-    SmallKey,
 }
 
 public sealed class Item : IItem
@@ -28,14 +27,8 @@ public sealed class Item : IItem
     {
         Name = name;
         World = world;
-
-        var yamlItems = YamlReader.LoadItems();
-        var yamlItem = yamlItems.GetValueOrDefault(name);
-        string typeString = yamlItem?.Type ?? "Meta";
-        if (!Enum.TryParse<ItemType>(typeString, out var itemType))
-            itemType = ItemType.Meta;
-        Type = itemType;
-        Byte = yamlItem?.Byte;
+        Type = ItemType.Meta;
+        Byte = null;
     }
 
     public override string ToString() => $"{Name}:{World.GameId}:{World.Id}";

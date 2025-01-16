@@ -47,6 +47,7 @@ public interface IWorld
     WorldConfig WorldConfig { get; }
     Graph Graph { get; }
     int Id { get; }
+    string GameId { get; }
     ushort PlacedItemCount { get; set; }
     Inventory StartingItems { get; }
     /// <summary>The entry point for this world, where everything begins.</summary>

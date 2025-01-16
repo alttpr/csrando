@@ -5,6 +5,7 @@ using Goonies2Config = global::Randomizer.Games.Goonies2.Config;
 using Zelda1Config = global::Randomizer.Games.Zelda1.Config;
 using MetroidConfig = global::Randomizer.Games.Metroid.Config;
 using SuperMetroidConfig = global::Randomizer.Games.SuperMetroid.Config;
+using ComboConfig = global::Randomizer.Games.Combo.Config;
 
 public class WorldConfig
 {
@@ -15,4 +16,5 @@ public class WorldConfig
     public Zelda1Config? Zelda1 { get; init; }
     public MetroidConfig? Metroid { get; init; }
     public SuperMetroidConfig? SuperMetroid { get; init; }
+    public ComboConfig? Combo { get; init; }
 }

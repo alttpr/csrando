@@ -5,6 +5,7 @@ using Goonies2 = Games.Goonies2.GameRandomizer;
 using Zelda1 = Games.Zelda1.GameRandomizer;
 using Metroid = Games.Metroid.GameRandomizer;
 using SuperMetroid = Games.SuperMetroid.GameRandomizer;
+using Combo = Games.Combo.GameRandomizer;
 
 /// <summary>
 /// Get the world one needs for randomization based on the config provided.
@@ -24,6 +25,7 @@ public class RandomizerFactory
             [ { Zelda1: { } } ] => new Zelda1(configs, prng),
             [ { Metroid: { } }] => new Metroid(configs, prng),
             [ { SuperMetroid: { } }] => new SuperMetroid(configs, prng),
+            [ { Combo: { } }] => new Combo(configs, prng),
 
             _ => throw new Exception("Unknown game"),
         };

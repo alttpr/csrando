@@ -22,6 +22,7 @@ internal sealed class RootWorld : IWorld
     public Graph Graph { get; }
     public Vertex Start { get; }
     int IWorld.Id { get; } = -1;
+    string IWorld.GameId => "root";
     ushort IWorld.PlacedItemCount { get; set; }
     Inventory IWorld.StartingItems => throw _doNotUseThis;
 
