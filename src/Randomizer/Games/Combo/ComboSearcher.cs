@@ -27,7 +27,7 @@ public class ComboSearcher : ISearcher
         _graph = graph;
         _inventory = inventory;
 
-        int prevInventoryCount;
+        Inventory prevInventory;
 
         if (_world.AlttpWorld != null)
         {
@@ -51,27 +51,27 @@ public class ComboSearcher : ISearcher
 
         do
         {
-            prevInventoryCount = inventory.All().Count();
+            prevInventory = inventory.Clone();
             if(_alttpSearcher != null)
             {
-                _alttpSearcher.ResumeSearch([]);
+                _alttpSearcher.ResumeSearch([], prevInventory);
             }
 
             if (_z1Searcher != null)
             {
-                _z1Searcher.ResumeSearch([]);
+                _z1Searcher.ResumeSearch([], prevInventory);
             }
 
             if (_m1Searcher != null)
             {
-                _m1Searcher.ResumeSearch([]);
+                _m1Searcher.ResumeSearch([], prevInventory);
             }
 
             if (_smSearcher != null)
             {
-                _smSearcher.ResumeSearch([]);
+                _smSearcher.ResumeSearch([], prevInventory);
             }
-        } while(prevInventoryCount != inventory.All().Count());
+        } while(prevInventory.All().Count() != inventory.All().Count());
 
     }
 
@@ -92,7 +92,7 @@ public class ComboSearcher : ISearcher
         };
     }
 
-    public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt)
+    public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt, Inventory prevInventory)
     {
         throw new NotImplementedException();
     }

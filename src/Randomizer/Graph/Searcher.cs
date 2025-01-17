@@ -48,7 +48,7 @@ public class Searcher : ISearcher
         } while (newItemsFound);
     }
 
-    public void ResumeSearch(IEnumerable<Vertex> startAt)
+    public void ResumeSearch(IEnumerable<Vertex> startAt, Inventory prevInventory)
     {
         foreach (var vertex in startAt)
         {
