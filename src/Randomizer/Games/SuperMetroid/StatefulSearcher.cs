@@ -21,12 +21,21 @@ public class StatefulSearcher : ISearcher
     private Dictionary<Vertex, (VisitedState, HashSet<string>)> _visitedItemLocations;
     private HashSet<Vertex> _visitedVertices;
     private HashSet<IItem> _foundItems;
+    private Inventory _inventory;
+    private Dictionary<(Vertex, IItem), VisitedState> _prevItems;
+    private Vertex? _target;
+    private Vertex _start;
+    private List<(Vertex, VisitedState)> _startStates;
+    private SetLocations? _setLocations;
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
     public StatefulSearcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null, Vertex? target = null, VisitedState? visitedState = null)
     {
-        var oldInventory = inventory.Clone();
+        _inventory = inventory;
+        _target = target;
+        _start = start;
+        _setLocations = setLocations;
 
         var startState = (start, visitedState ?? new VisitedState
         {
@@ -37,36 +46,45 @@ public class StatefulSearcher : ISearcher
             ObstacleBitFlags = 0
         });
 
-        inventory = oldInventory.Clone();
+        _prevItems = new Dictionary<(Vertex, IItem), VisitedState>();
         _visitedStates = new(1024);
         _visitedVertices = new(1024);
         _unvisitedStates = new(1024);
         _visitedItemLocations = new(128);
         _graph = graph;
+        _startStates = new();
 
-        var foundItems = new Dictionary<(Vertex, string), VisitedState>();
-        var prevItems = new Dictionary<(Vertex, string), VisitedState>();
-        var newItems = new Dictionary<(Vertex, string), VisitedState>();
-
-        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
         List<(Vertex, VisitedState)> startStates = [startState];
+        Search(startStates);
+
+    }
+
+    public void Search(List<(Vertex, VisitedState)> initialStates)
+    { 
+        var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
+        var newItems = new Dictionary<(Vertex, IItem), VisitedState>();
         int z = 0;
+
+        foreach(var (vertex, state) in initialStates)
+        {
+            _startStates.Add((vertex, state));
+        }
 
         do
         {
             z++;
-            foundItems = InternalSearch(startStates, inventory, target);
+            foundItems = InternalSearch(_startStates, _inventory, _target);
             //newItems = new(foundItems);
             
-            newItems = foundItems.Where(x => !prevItems.ContainsKey(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+            newItems = foundItems.Where(x => !_prevItems.ContainsKey(x.Key)).ToDictionary(x => x.Key, x => x.Value);
             foreach(var foundItem in foundItems)
             {
-                if (!prevItems.ContainsKey(foundItem.Key))
+                if (!_prevItems.ContainsKey(foundItem.Key))
                 {
-                    prevItems.Add(foundItem.Key, foundItem.Value);
+                    _prevItems.Add(foundItem.Key, foundItem.Value);
                 } else
                 {
-                    prevItems[foundItem.Key] = foundItem.Value;
+                    _prevItems[foundItem.Key] = foundItem.Value;
                 }
             }
 
@@ -75,23 +93,23 @@ public class StatefulSearcher : ISearcher
             //prevItems.UnionWith(foundItems);
             _visitedVertices.UnionWith(_visitedStates.Select(x => x.Key));
 
-            int newEnergy = (newItems.Count(x => x.Key.Item2 == "ETank") * 100);
-            int newMissiles = (newItems.Count(x => x.Key.Item2 == "Missile") * 5);
-            int newSupers = (newItems.Count(x => x.Key.Item2 == "Super") * 5);
-            int newPowerBombs = (newItems.Count(x => x.Key.Item2 == "PowerBomb") * 5);
+            int newEnergy = (newItems.Count(x => x.Key.Item2.Name == "ETank") * 100);
+            int newMissiles = (newItems.Count(x => x.Key.Item2.Name == "Missile") * 5);
+            int newSupers = (newItems.Count(x => x.Key.Item2.Name == "Super") * 5);
+            int newPowerBombs = (newItems.Count(x => x.Key.Item2.Name == "PowerBomb") * 5);
 
             foreach (var ((vtx, item), itemState) in newItems)
             {
-                inventory.AddItem(vtx.World.GetItem(item));
-                if (target == null && !vtx.Name.Contains("Tourian") && !(item.StartsWith("f_") && inventory.Has(vtx.World.GetItem(item))))
+                _inventory.AddItem(item);
+                if (_target == null && !vtx.Name.Contains("Tourian") && !(item.Name.StartsWith("f_") && _inventory.Has(item)))
                 {
-                    var backtrackSearcher = new StatefulSearcher(graph, vtx, inventory.Clone(), null, start, itemState);
-                    if (!backtrackSearcher.HasVisited(start))
+                    var backtrackSearcher = new StatefulSearcher(_graph, vtx, _inventory.Clone(), null, _start, itemState);
+                    if (!backtrackSearcher.HasVisited(_start))
                     {
                         //Console.WriteLine($"Backtracking failed to find a path from {vtx.Name} to {start.Name}");
-                        inventory.RemoveItem(vtx.World.GetItem(item));
+                        _inventory.RemoveItem(item);
                         newItems.Remove((vtx, item));
-                        prevItems.Remove((vtx, item));
+                        _prevItems.Remove((vtx, item));
 
                         if (_unvisitedStates.TryGetValue(vtx, out var states))
                         {
@@ -121,8 +139,8 @@ public class StatefulSearcher : ISearcher
             }).ToList()));
 
 
-            startStates.Clear();
-            var checkItems = newItems.Select(x => x.Key.Item2).ToHashSet();
+            _startStates.Clear();
+            var checkItems = newItems.Select(x => x.Key.Item2.Name).ToHashSet();
             checkItems.Add("Backtrack");
             foreach (var (vertex, states) in _unvisitedStates)
             {
@@ -130,13 +148,13 @@ public class StatefulSearcher : ISearcher
                 {
                     foreach (var state in states.Item2)
                     {
-                        startStates.Add((vertex, state));
+                        _startStates.Add((vertex, state));
                     }
                 }
             }
 
             // Update all visited states with new energy/ammo where the visited states is not in the start states
-            var startStateKeys = startStates
+            var startStateKeys = _startStates
                 .Select(s => s.Item1)
                 .ToHashSet();
 
@@ -158,12 +176,12 @@ public class StatefulSearcher : ISearcher
             //Console.WriteLine($"-- Found {newItems.Count} new items, {foundItems.Count} total items, {startStates.Count} new start states, {z} passes --");
         } while (newItems.Count > 0);
 
-        if (target == null)
+        if (_target == null)
         {
             //Console.WriteLine($"StatefulSearcher took {stopWatch.ElapsedMilliseconds}ms to complete, doing {z} passes");
         }
 
-        _foundItems = new HashSet<IItem>(prevItems.Select(x => x.Key.Item2).Select(x => start.World.GetItem(x)));
+        _foundItems = new HashSet<IItem>(_prevItems.Select(x => x.Key.Item2));
     }
 
     private void AddUnvisited(Vertex vertex, VisitedState state, HashSet<string> missingItems)
@@ -198,9 +216,9 @@ public class StatefulSearcher : ISearcher
         }
     }
 
-    private Dictionary<(Vertex, string), VisitedState> InternalSearch(List<(Vertex, VisitedState)> starts, Inventory inventory, Vertex? target = null)
+    private Dictionary<(Vertex, IItem), VisitedState> InternalSearch(List<(Vertex, VisitedState)> starts, Inventory inventory, Vertex? target = null)
     {
-        var foundItems = new Dictionary<(Vertex, string), VisitedState>();
+        var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
         _queue = new Queue<(Vertex vertex, VisitedState state)>();
         _inQueue = new Dictionary<Vertex, List<VisitedState>>();
 
@@ -284,16 +302,16 @@ public class StatefulSearcher : ISearcher
 
                 if (current.Item != null)
                 {
-                    if (foundItems.TryGetValue((current, current.Item.Name), out var existingState))
+                    if (foundItems.TryGetValue((current, current.Item), out var existingState))
                     {
                         if (state.Dominates(existingState))
                         {
-                            foundItems[(current, current.Item.Name)] = state;
+                            foundItems[(current, current.Item)] = state;
                         }
                     }
                     else
                     {
-                        foundItems.Add((current, current.Item.Name), state);
+                        foundItems.Add((current, current.Item), state);
                     }
                 }
             }
@@ -358,16 +376,17 @@ public class StatefulSearcher : ISearcher
                     {
                         foreach(var flag in strat.SetsFlags)
                         {
-                            if (foundItems.TryGetValue((current, flag), out var existingState))
+                            var flagItem = current.World.GetItem(flag);
+                            if (foundItems.TryGetValue((current, flagItem), out var existingState))
                             {
                                 if (stratState.Dominates(existingState))
                                 {
-                                    foundItems[(current, flag)] = stratState;
+                                    foundItems[(current, flagItem)] = stratState;
                                 }
                             }
                             else
                             {
-                                foundItems.Add((current, flag), stratState);
+                                foundItems.Add((current, flagItem), stratState);
                             }
                         }
                     }
@@ -428,9 +447,9 @@ public class StatefulSearcher : ISearcher
         return (v, s);
     }
 
-    private (VisitedState?, Dictionary<(Vertex, string), VisitedState>) UnlockNode(Inventory inventory, Vertex current, VisitedState lockState, Node currentNode)
+    private (VisitedState?, Dictionary<(Vertex, IItem), VisitedState>) UnlockNode(Inventory inventory, Vertex current, VisitedState lockState, Node currentNode)
     {
-        var yields = new Dictionary<(Vertex, string), VisitedState>();
+        var yields = new Dictionary<(Vertex, IItem), VisitedState>();
 
         if (currentNode.Locks != null)
         {
@@ -498,7 +517,7 @@ public class StatefulSearcher : ISearcher
                 lockState = bestState;
                 foreach (var yield in lck.Yields ?? [])
                 {
-                    yields.Add((current, yield), lockState);
+                    yields.Add((current, current.World.GetItem(yield)), lockState);
                 }
             }
         }
@@ -508,11 +527,27 @@ public class StatefulSearcher : ISearcher
 
     IEnumerable<Randomizer.Graph.Vertex> ISearcher.GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets, bool onlyReachable)
     {
-        return _visitedVertices.Where(v => 
-            v.Node != null &&
-            v.Type == VertexType.Item &&
-            v.Item == null
-        );
+        var emptyLocations = _setLocations[itemSet].Where((vertex) =>
+        {
+            return (!onlyReachable || _visitedVertices.Contains(vertex)) && vertex.Item == null;
+        }).OrderBy(v => v.Name).ToList();
+
+        itemSets ??= new();
+        foreach (var (setName, setCount) in itemSets)
+        {
+            if (setName.World == null)
+                continue;
+
+            var setLocations = _setLocations[setName].Where(static (location) => location.Item == null);
+            if (setLocations.Count() < setCount)
+                throw new Exception($"Not enough set locations available: {setName}");
+            // if a set has the same number of items to place as set locations
+            // left, remove it from this return.
+            if (itemSet != setName && setLocations.Count() == setCount)
+                emptyLocations.RemoveAll(setLocations.Contains);
+        }
+
+        return emptyLocations.ToArray();
     }
 
     IEnumerable<Randomizer.Graph.Vertex> ISearcher.GetVisited()
@@ -551,6 +586,22 @@ public class StatefulSearcher : ISearcher
         }
 
         return true;
+    }
+
+    public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt)
+    {
+        var inventoryItems = _inventory.All().Keys.Select(x => x.Name).ToHashSet();
+        foreach (var (vertex, states) in _unvisitedStates)
+        {
+            if (states.Item1.Overlaps(inventoryItems))
+            {
+                foreach (var state in states.Item2)
+                {
+                    _startStates.Add((vertex, state));
+                }
+            }
+        }
+        Search([]);
     }
 }
 

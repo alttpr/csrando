@@ -48,6 +48,32 @@ public class Searcher : ISearcher
         } while (newItemsFound);
     }
 
+    public void ResumeSearch(IEnumerable<Vertex> startAt)
+    {
+        foreach (var vertex in startAt)
+        {
+            if (!_visited.Contains(vertex))
+                _searchStarts.Add(vertex);
+        }
+
+        bool newItemsFound;
+        do
+        {
+            do
+            {
+                var (newlyVisited, newSearchStarts) = InternalSearch(_inventory, _visited, _searchStarts);
+                _visited.UnionWith(newlyVisited);
+                _searchStarts.Clear();
+                _searchStarts.UnionWith(newSearchStarts);
+
+                newItemsFound = CollectItems(_inventory, _visited, _collected);
+            } while (newItemsFound);
+
+            if (DoorSearch(_inventory))
+                newItemsFound = true;
+        } while (newItemsFound);
+    }
+
     /// <summary>
     /// Spend keys from inventory for simple cases.
     /// Case 1: If you have all randomized keys in a set, you should be able to eventually

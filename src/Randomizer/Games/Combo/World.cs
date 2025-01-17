@@ -46,30 +46,31 @@ public sealed class World : IWorld
         {
             Name = "start",
             Type = VertexType.Meta,
-            World = this,            
+            World = this,
         });
+
+        StartingItems = new Inventory([GetItem("fixed")]);
 
         if (Config.Games.Alttp != null)
         {
             AlttpWorld = new AlttpWorld(id, Config.Games, graph, prng);
-            // Connect our starting location to the ALttP world
-            graph.AddDirected(Start, AlttpWorld.Start, GetItem("fixed"));
-
+            StartingItems = StartingItems.Merge(AlttpWorld.StartingItems);
         }
         if (Config.Games.SuperMetroid != null)
         {
             SMWorld = new SMWorld(id, Config.Games, graph, prng);
+            StartingItems = StartingItems.Merge(SMWorld.StartingItems);
         }
         if (Config.Games.Zelda1 != null)
         {
             Z1World = new Z1World(id, Config.Games, graph, prng);
+            StartingItems = StartingItems.Merge(Z1World.StartingItems);
         }
         if (Config.Games.Metroid != null)
         {
             M1World = new M1World(id, Config.Games, graph, prng);
+            StartingItems = StartingItems.Merge(M1World.StartingItems);
         }
-
-        StartingItems = new Inventory([GetItem("fixed")]);
 
     }
 
@@ -166,8 +167,18 @@ public sealed class World : IWorld
     
     public bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
-        var winSearcher = new Searcher(Graph, start, startingInventory);
-        return winSearcher.HasFound(GetItem("Triforce"));
+        var searcher = GetSearcherForWorld(Graph, Start, startingInventory);
+        if (AlttpWorld != null && !searcher.HasFound(AlttpWorld.GetItem("Triforce")))
+        {
+            return false;
+        }
+
+        if (Z1World != null && !searcher.HasFound(Z1World.GetItem("Zelda")))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
