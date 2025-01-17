@@ -1,6 +1,7 @@
 namespace Randomizer.Graph;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Games.SuperMetroid;
 
 internal sealed class RandomAssumedFiller
 {
@@ -55,11 +56,11 @@ internal sealed class RandomAssumedFiller
             flatItems.Remove(itemKey);
 
             searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
-                item.World,
+                _randomizer.Worlds[item.World.Id],
                 flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
                     .Select(i => i.Item)
                     .ToList(),
-                item.World.Start
+                _randomizer.Worlds[item.World.Id].Start
                 );
 
             var locations = new List<Vertex>();
@@ -71,18 +72,23 @@ internal sealed class RandomAssumedFiller
             if (locations.Count == 0)
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
+            bool backtrackCheck = false;
             var location = _prng.GetRandomElement(locations);
-
-            if (location.World is Games.SuperMetroid.World)
+            while (!backtrackCheck)
             {
-                var statefulSearcher = (Games.SuperMetroid.StatefulSearcher)searchers[location.World.Id];
-                var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
-                        .Select(i => i.Item)
-                        .ToList();
-                var backtrackInventory = new Inventory(backtrackItems.ToArray());
-                bool backtrackCheck = false;
-                while (!backtrackCheck)
+                if (location.World is Games.SuperMetroid.World)
                 {
+                    var statefulSearcher = searchers[location.World.Id] switch
+                    {
+                        Games.SuperMetroid.StatefulSearcher s => s,
+                        Games.Combo.ComboSearcher c => c.SMSearcher,
+                        _ => throw new Exception("Invalid searcher type")
+                    };
+
+                    var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
+                            .Select(i => i.Item)
+                            .ToList();
+                    var backtrackInventory = new Inventory(backtrackItems.ToArray());
                     backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, item);
                     if (!backtrackCheck)
                     {
@@ -91,10 +97,12 @@ internal sealed class RandomAssumedFiller
                         {
                             throw new Exception($"No valid locations for `{item}` in set `{itemSet}`");
                         }
-
-                        backtrackInventory = new Inventory(backtrackItems.ToArray());
                         location = _prng.GetRandomElement(locations);
+                        continue;
                     }
+                } else
+                {
+                    backtrackCheck = true;
                 }
             }
 
