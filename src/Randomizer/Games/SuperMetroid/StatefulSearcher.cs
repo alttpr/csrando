@@ -597,6 +597,15 @@ public class StatefulSearcher : ISearcher
         var newSupers = (_inventory.GetCount(_start.World.GetItem("Super")) - prevInventory.GetCount(_start.World.GetItem("Super"))) * 5;
         var newPowerBombs = (_inventory.GetCount(_start.World.GetItem("PowerBomb")) - prevInventory.GetCount(_start.World.GetItem("PowerBomb"))) * 5;
 
+        // Add new items to all unvisited states
+        _unvisitedStates = _unvisitedStates.ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2.Select(s => s with
+        {
+            Energy = s.Energy + newEnergy,
+            Missiles = s.Missiles + newMissiles,
+            SuperMissiles = s.SuperMissiles + newSupers,
+            PowerBombs = s.PowerBombs + newPowerBombs
+        }).ToList()));
+
 
         foreach (var (vertex, states) in _unvisitedStates)
         {
@@ -604,20 +613,30 @@ public class StatefulSearcher : ISearcher
             {
                 foreach (var state in states.Item2)
                 {
-                    var modifiedState = state with
-                    {
-                        Energy = state.Energy + newEnergy,
-                        Missiles = state.Missiles + newMissiles,
-                        SuperMissiles = state.SuperMissiles + newSupers,
-                        PowerBombs = state.PowerBombs + newPowerBombs,
-                    };
-
-                    _startStates.Add((vertex, modifiedState));
-                    _visitedStates.Remove(vertex);
-                    _visitedVertices.Remove(vertex);
+                    _startStates.Add((vertex, state));
                 }
             }
         }
+
+        // Update all visited states with new energy/ammo where the visited states is not in the start states
+        var startStateKeys = _startStates
+            .Select(s => s.Item1)
+            .ToHashSet();
+
+        _visitedStates = _visitedStates
+            .Where(kvp => !startStateKeys.Contains(kvp.Key))
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value
+                    .Select(s => s with
+                    {
+                        Energy = s.Energy + newEnergy,
+                        Missiles = s.Missiles + newMissiles,
+                        SuperMissiles = s.SuperMissiles + newSupers,
+                        PowerBombs = s.PowerBombs + newPowerBombs
+                    })
+                    .ToList()
+            );
 
         if(_startStates.Count > 0)
         {
