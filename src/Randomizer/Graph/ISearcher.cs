@@ -8,7 +8,7 @@ public interface ISearcher
     IEnumerable<Vertex> GetVisited();
     bool HasFound(IItem item);
     bool HasVisited(Vertex vertex);
-    void ResumeSearch(IEnumerable<Vertex> startAt);
+    void ResumeSearch(IEnumerable<Vertex> startAt, Inventory prevInventory);
 
 
 }

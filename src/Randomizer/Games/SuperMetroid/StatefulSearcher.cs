@@ -18,7 +18,7 @@ public class StatefulSearcher : ISearcher
     private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates;
     private Queue<(Vertex vertex, VisitedState state)> _queue;
     private Dictionary<Vertex, List<VisitedState>> _inQueue;
-    private Dictionary<Vertex, (VisitedState, HashSet<string>)> _visitedItemLocations;
+    private Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
     private HashSet<Vertex> _visitedVertices;
     private HashSet<IItem> _foundItems;
     private Inventory _inventory;
@@ -290,14 +290,13 @@ public class StatefulSearcher : ISearcher
 
             if (unlocked && current.Type == VertexType.Item)
             {
-                var currentInventory = inventory.All().Keys.Select(x => x.Name).ToHashSet();
                 if (_visitedItemLocations.TryGetValue(current, out var visitedItemState))
                 {
-                    _visitedItemLocations[current] = (state, visitedItemState.Item2.Union(currentInventory).ToHashSet());
+                    _visitedItemLocations[current] = (state, visitedItemState.Item2.Merge(inventory));
                 }
                 else
                 {
-                    _visitedItemLocations.Add(current, (state, currentInventory));
+                    _visitedItemLocations.Add(current, (state, inventory.Clone()));
                 }
 
                 if (current.Item != null)
@@ -569,9 +568,10 @@ public class StatefulSearcher : ISearcher
     {
         var (startState, startFlags) = _visitedItemLocations[vertex];
         
-        foreach(var flag in startFlags)
+        foreach(var flag in startFlags.All())
         {
-            inventory.AddItem(vertex.World.GetItem(flag));
+            if(!inventory.Has(flag.Key))
+                inventory.AddItem(flag.Key);
         }
 
         while(inventory.Has(itemToPlace))
@@ -588,20 +588,41 @@ public class StatefulSearcher : ISearcher
         return true;
     }
 
-    public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt)
+    public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt, Inventory prevInventory)
     {
-        var inventoryItems = _inventory.All().Keys.Select(x => x.Name).ToHashSet();
+        var diffItems = _inventory.All().Except(prevInventory.All()).Where(x => x.Key.World == _start.World).Select(x => x.Key.Name).ToHashSet();
+
+        var newEnergy = (_inventory.GetCount(_start.World.GetItem("ETank")) - prevInventory.GetCount(_start.World.GetItem("ETank"))) * 100;
+        var newMissiles = (_inventory.GetCount(_start.World.GetItem("Missile")) - prevInventory.GetCount(_start.World.GetItem("Missile"))) * 5;
+        var newSupers = (_inventory.GetCount(_start.World.GetItem("Super")) - prevInventory.GetCount(_start.World.GetItem("Super"))) * 5;
+        var newPowerBombs = (_inventory.GetCount(_start.World.GetItem("PowerBomb")) - prevInventory.GetCount(_start.World.GetItem("PowerBomb"))) * 5;
+
+
         foreach (var (vertex, states) in _unvisitedStates)
         {
-            if (states.Item1.Overlaps(inventoryItems))
+            if (states.Item1.Overlaps(diffItems))
             {
                 foreach (var state in states.Item2)
                 {
-                    _startStates.Add((vertex, state));
+                    var modifiedState = state with
+                    {
+                        Energy = state.Energy + newEnergy,
+                        Missiles = state.Missiles + newMissiles,
+                        SuperMissiles = state.SuperMissiles + newSupers,
+                        PowerBombs = state.PowerBombs + newPowerBombs,
+                    };
+
+                    _startStates.Add((vertex, modifiedState));
+                    _visitedStates.Remove(vertex);
+                    _visitedVertices.Remove(vertex);
                 }
             }
         }
-        Search([]);
+
+        if(_startStates.Count > 0)
+        {
+            Search([]);
+        }
     }
 }
 
