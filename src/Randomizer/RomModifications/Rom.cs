@@ -72,6 +72,7 @@ public sealed class Rom : IDisposable
     {
         try
         {
+            _rom.Flush();
             File.Copy(_tempRom, outputLocation, overwrite: true);
             return true;
         }
