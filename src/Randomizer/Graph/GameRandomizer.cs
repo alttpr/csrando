@@ -100,7 +100,7 @@ public abstract class GameRandomizer
 
         WriteWorldToRom(world, rom, prng);
 
-        rom.UpdateChecksum();
+        //rom.UpdateChecksum();
 
         outputDirectory.Create();
         string outputFile = Path.Combine(outputDirectory.FullName, CreateFileName(world, prng, worldSuffix));

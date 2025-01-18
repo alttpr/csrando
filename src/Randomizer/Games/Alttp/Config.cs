@@ -139,7 +139,7 @@ public class Config
     public bool HudItemCounter { get; init; } = false;
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
     public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
-    public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
+    public HeartColorOption HeartColor { get; init; } = HeartColorOption.Blue;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
     public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;
     public GanonAgahnimRngOption GanonAgahnimRNG { get; init; } = GanonAgahnimRngOption.Table;

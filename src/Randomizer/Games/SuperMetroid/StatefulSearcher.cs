@@ -618,6 +618,21 @@ public class StatefulSearcher : ISearcher
             }
         }
 
+        foreach(Vertex start in startAt)
+        {
+            if (!_visitedVertices.Contains(start))
+            {
+                _startStates.Add((start, new VisitedState
+                {
+                    Energy = 99 + _inventory.GetCount(start.World.GetItem("ETank")) * 100,
+                    Missiles = _inventory.GetCount(start.World.GetItem("Missile")) * 5,
+                    SuperMissiles = _inventory.GetCount(start.World.GetItem("Super")) * 5,
+                    PowerBombs = _inventory.GetCount(start.World.GetItem("PowerBomb")) * 5,
+                    ObstacleBitFlags = 0
+                }));
+            }
+        }
+
         // Update all visited states with new energy/ammo where the visited states is not in the start states
         var startStateKeys = _startStates
             .Select(s => s.Item1)
