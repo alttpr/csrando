@@ -48,7 +48,7 @@ public abstract class Vertex : ICloneable
     public IItem? Item { get; set; }
     public IItem? Trophy { get; init; }
     public ItemSetName[] ItemSet { get; init; } = [];
-    public long[]? Addresses { get; init; }
+    public long[]? Addresses { get; set; }
 
     public List<Edge> Edges = [];
 

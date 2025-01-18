@@ -72,6 +72,7 @@ public sealed class Rom : IDisposable
     {
         try
         {
+            _rom.Flush();
             File.Copy(_tempRom, outputLocation, overwrite: true);
             return true;
         }
@@ -120,3 +121,5 @@ public readonly struct SNES
     public static int ToPC(int address) => (address & 0x7F0000) >> 1 | address & 0x7FFF;
     public static int FromPC(int address, bool fastRom = true) => ((address << 1) & 0x7F0000) | (address & 0x7FFF) | (fastRom ? 0x808000 : 0x8000);
 }
+
+

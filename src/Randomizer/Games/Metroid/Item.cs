@@ -13,7 +13,7 @@ public sealed class Item : IItem
     public string Name { get; }
     public IWorld World { get; }
     public ItemType Type { get; }
-    public byte[]? Bytes { get; }
+    public byte[]? Bytes { get; set; }
     public float HealthValue { get; } = 0; // FIXME: is there health increase anywhere?
     public IItem? LogicalItem { get; } // FIXME: are there logic-relevant items that represent viable alternatives?
 

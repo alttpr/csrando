@@ -7,6 +7,8 @@ public interface IItem
     IWorld World { get; }
     /// <summary>The permanent health value this item grants the player. Use <c>0</c> (zero) to indicate this item does not add health.</summary>
     float HealthValue { get; }
+    byte[]? Bytes { get; set; }
+
     /// <summary>
     /// A twin item for logic purposes when multiple distinct items represent the same logical condition; if there is one.
     /// Return <c>null</c> to indicate the item itself is the logical item (or no logical implications are attached to it).

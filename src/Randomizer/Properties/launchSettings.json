@@ -2,7 +2,7 @@
   "profiles": {
     "Randomizer": {
       "commandName": "Project",
-      "commandLineArgs": "randomize"
+      "commandLineArgs": "randomize seed=267762658 rom=out\\merged.sfc bps=out\\quad.bps outdir=out\\"
     }
   }
 }

@@ -21,7 +21,7 @@ public sealed class Item : IItem
     public string Name { get; }
     public IWorld World { get; }
     public ItemType Type { get; }
-    public byte[]? Bytes { get; }
+    public byte[]? Bytes { get; set; }
     public float HealthValue { get; }
     public IItem? LogicalItem { get; }
 
