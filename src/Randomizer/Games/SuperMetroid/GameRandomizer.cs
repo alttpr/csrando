@@ -12,7 +12,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
 
     public override void AppendSpoiler(SpoilerLog spoilerLog) { } // FIXME: implement a spoiler log
 
-    protected override void WriteWorldToRom(IWorld world, Rom rom, PRNG prng)
+    protected override void WriteWorldToRom(IWorld world, RomModifications.Rom rom, PRNG prng)
     {
         if (world is not World smWorld)
             throw new ArgumentException("Passed world is not for Super Metroid.", nameof(world));

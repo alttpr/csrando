@@ -10,5 +10,6 @@ public static class RomWriter
         var rom = new Rom(baseRom, offset);
 
         rom.WriteItems(world);
+        rom.WritePatchData(world);
     }
 }

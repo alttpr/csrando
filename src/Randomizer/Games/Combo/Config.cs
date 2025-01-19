@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 public class Config
 {
     public WorldConfig? Games { get; init; }
+    public string InitialGame { get; init; } = "";
     public bool Race { get; init; }
     public int Seed { get; init; }
 }

@@ -30,4 +30,12 @@ public class Rom : GameRom
             Write((Address)location.Addresses[0], location.Item!.Bytes);
         }
     }
+
+    public void WritePatchData(World world)
+    {
+        foreach(var (address, data) in world.PatchData ?? [])
+        {
+            Write((Address)address, data);
+        }
+    }
 }

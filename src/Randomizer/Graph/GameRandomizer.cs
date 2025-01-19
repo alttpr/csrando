@@ -2,7 +2,6 @@ namespace Randomizer.Graph;
 
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using Randomizer.Games.SuperMetroid;
 using Randomizer.RomModifications;
 
 /// <summary>

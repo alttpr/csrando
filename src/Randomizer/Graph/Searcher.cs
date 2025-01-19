@@ -14,6 +14,7 @@ public class Searcher : ISearcher
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
+    private readonly VertexHashSet _otherWorldLocations;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -29,6 +30,7 @@ public class Searcher : ISearcher
         _searchStarts = new(graph) { start };
         _inventory = inventory;
         _setLocations = setLocations ?? new();
+        _otherWorldLocations = new(graph);
 
         bool newItemsFound;
         do
@@ -135,7 +137,7 @@ public class Searcher : ISearcher
         }
     }
 
-    private static bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
+    private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
         var newlyVisited = visited.Clone();
@@ -200,7 +202,7 @@ public class Searcher : ISearcher
     /// <returns>
     /// Returns the list of new reachable nodes and nodes with remaining accessible regions.
     /// </returns>
-    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
+    private SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
         SpendObviousKeys(collected, visited);
 
@@ -224,6 +226,12 @@ public class Searcher : ISearcher
 
             foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
             {
+                if(edge.To.World != vertex.World)
+                {
+                    _otherWorldLocations.Add(edge.To);                    
+                    continue;
+                }
+
                 if (!edge.Condition.IsUnconditional)
                 {
                     if (!collected.Has(edge.Condition))
@@ -272,7 +280,7 @@ public class Searcher : ISearcher
         return strongLocations.Count != 0 || foundItems;
     }
 
-    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (inventory.GetCount(key) == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
@@ -349,7 +357,7 @@ public class Searcher : ISearcher
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
-    private static bool DropOffSearch(IWorld world, Inventory inventory)
+    private bool DropOffSearch(IWorld world, Inventory inventory)
     {
         var inventoryWithBombInTow = inventory.Clone();
         foreach (string item in _noBombFollowerItems)
@@ -393,4 +401,6 @@ public class Searcher : ISearcher
 
         return emptyLocations.ToArray();
     }
+
+    public IEnumerable<Vertex> GetOtherWorld() => _otherWorldLocations;
 }

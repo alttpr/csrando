@@ -27,6 +27,7 @@ public class StatefulSearcher : ISearcher
     private Vertex _start;
     private List<(Vertex, VisitedState)> _startStates;
     private SetLocations? _setLocations;
+    private List<Randomizer.Graph.Vertex> _otherWorldLocations;
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
@@ -36,6 +37,7 @@ public class StatefulSearcher : ISearcher
         _target = target;
         _start = start;
         _setLocations = setLocations;
+        _otherWorldLocations = new();
 
         var startState = (start, visitedState ?? new VisitedState
         {
@@ -317,6 +319,19 @@ public class StatefulSearcher : ISearcher
  
             foreach (var edge in current.Edges)
             {
+                if(edge.To.World != current.World)
+                {
+                    // TODO: Maybe this should be a bit more sophisticated, but for now it makes sense to skip backtracking when we change worlds
+                    if (target != null)
+                    {
+                        _visitedStates[target] = [state];
+                        return [];
+                    }
+
+                    _otherWorldLocations.Add(edge.To);
+                    continue;
+                }
+
                 //Console.WriteLine($"Checking edge {current.Name} -> {edge.To.Name}");
                 // Can't traverse doors if we couldn't unlock the node
                 if (!unlocked && ((Vertex)edge.To).RoomId != current.RoomId)
@@ -658,6 +673,8 @@ public class StatefulSearcher : ISearcher
             Search([]);
         }
     }
+
+    public IEnumerable<Randomizer.Graph.Vertex> GetOtherWorld() => _otherWorldLocations;
 }
 
 public struct VisitedState

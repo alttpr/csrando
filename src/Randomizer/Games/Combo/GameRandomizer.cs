@@ -2,7 +2,6 @@ namespace Randomizer.Games.Combo;
 
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using static Randomizer.Games.Metroid.YamlReader;
 using BaseGameRandomizer = Graph.GameRandomizer;
 
 public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) : BaseGameRandomizer(randomizerConfigs, prng)
@@ -47,8 +46,36 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
         if (comboWorld.M1World != null)
             Metroid.RomWriter.Write(rom, comboWorld.M1World, prng);
 
-        // Set ALTTP as startup ROM
-        rom.Write(0x7FFFE0, [2]);
+        if (comboWorld.SMWorld != null)
+            SuperMetroid.RomWriter.Write(rom, comboWorld.SMWorld, prng);
+
+        WriteGameFlags(comboWorld, rom);
+        WriteSeed(comboWorld, rom);
+    }
+
+    private void WriteSeed(World world, RomModifications.Rom rom)
+    {
+        rom.Write(0x7ffff0, BitConverter.GetBytes(world.Prng.Seed));
+    }
+
+    private void WriteGameFlags(World world, RomModifications.Rom rom)
+    {
+        byte startingGame = world.Config.InitialGame switch
+        {
+            "sm" => 0x00,
+            "alttp" => 0x01,
+            "z1" => 0x02,
+            "m1" => 0x03,
+            "" => (byte)(world.SMWorld != null ? 0x00 : world.AlttpWorld != null ? 0x01 : world.Z1World != null ? 0x02 : world.M1World != null ? 0x03 : 0x00),
+            _ => throw new ArgumentException("Invalid initial game", nameof(world.Config.InitialGame))
+        };
+
+        rom.Write(0x7fffe0, [startingGame]);
+        rom.Write(0x7fffe2, [(byte)(world.SMWorld == null ? 0x00 : 0x01)]);
+        rom.Write(0x7fffe4, [(byte)(world.AlttpWorld == null ? 0x00 : 0x01)]);
+        rom.Write(0x7fffe6, [(byte)(world.Z1World == null ? 0x00 : 0x01)]);
+        rom.Write(0x7fffe8, [(byte)(world.M1World == null ? 0x00 : 0x01)]);
+
     }
 
     private void WriteItemsToRom(World world, RomModifications.Rom rom)

@@ -6,6 +6,7 @@ public interface ISearcher
 {
     IEnumerable<Vertex> GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool onlyReachable = true);
     IEnumerable<Vertex> GetVisited();
+    IEnumerable<Vertex> GetOtherWorld();
     bool HasFound(IItem item);
     bool HasVisited(Vertex vertex);
     void ResumeSearch(IEnumerable<Vertex> startAt, Inventory prevInventory);

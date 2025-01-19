@@ -144,6 +144,7 @@ public class Config
     public Logic Logic { get; init; } = Logic.Basic;
     public string[] CustomTech { get; init; } = [];
     public Keycards Keycards { get; init; } = Keycards.None;
+    public bool FastG4 { get; init; } = false;
 
 
     public string[] BossChoices { get; set; } = RandomBosses;
@@ -173,8 +174,8 @@ public enum Logic
 public enum Keycards
 {
     None,
-    Regular,
-    Bosses,
+    //Regular,
+    //Bosses,
     All
 }
 
