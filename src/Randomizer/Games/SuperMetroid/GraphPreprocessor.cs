@@ -6,6 +6,7 @@ using Randomizer.Graph;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ public class GraphPreprocessor
 
     public void Preprocess()
     {
+        PatchKeycards();
         BuildGraph();
         BuildRunways();
         PruneGraph();
@@ -41,6 +43,58 @@ public class GraphPreprocessor
             {
                 vtx.Edges.Add(edge);
             }
+        }
+    }
+
+    private void PatchKeycards()
+    {
+        if (_world.Config.Keycards == Keycards.All)
+        {
+            PatchKeyCard(_reader, "Crateria", "Landing Site", "Top Left Door", "CrateriaL1");
+            PatchKeyCard(_reader, "Crateria", "Landing Site", "Top Right Door", "CrateriaL1");
+
+            PatchKeyCard(_reader, "Crateria", "Crateria Kihunter Room", "Right Door", "CrateriaL2");
+
+            PatchKeyCard(_reader, "Crateria", "Green Pirates Shaft", "Bottom Right Door", "CrateriaBoss");
+            PatchKeyCard(_reader, "Crateria", "Flyway", "Right Door", "CrateriaBoss");
+
+            PatchKeyCard(_reader, "Brinstar", "Construction Zone", "Right Door", "BrinstarL1");
+
+            PatchKeyCard(_reader, "Brinstar", "Green Brinstar Main Shaft", "Below Power Bomb Blocks - Bottom Left Door", "BrinstarL2");
+            PatchKeyCard(_reader, "Brinstar", "Pink Brinstar Hopper Room", "Top Right Door", "BrinstarL2");
+            PatchKeyCard(_reader, "Brinstar", "Spore Spawn Farming Room", "Right Door", "BrinstarL2");
+
+            PatchKeyCard(_reader, "Brinstar", "Spore Spawn Kihunter Room", "Top Right Door", "BrinstarBoss");
+            PatchKeyCard(_reader, "Brinstar", "Kraid Eye Door Room", "Right Door", "BrinstarBoss");
+
+            PatchKeyCard(_reader, "Norfair", "Business Center", "Top Left Door", "NorfairL1");
+            PatchKeyCard(_reader, "Norfair", "Crocomire Speedway", "Top of the Shaft Left Door", "NorfairL1");
+
+            PatchKeyCard(_reader, "Norfair", "Cathedral", "Right Door", "NorfairL2");
+            PatchKeyCard(_reader, "Norfair", "Upper Norfair Farming Room", "Top Right Door", "NorfairL2");
+            PatchKeyCard(_reader, "Norfair", "Purple Shaft", "Top Door", "NorfairL2");
+            PatchKeyCard(_reader, "Norfair", "Single Chamber", "Left Shaft - Top Left Door", "NorfairL2");
+
+            PatchKeyCard(_reader, "Norfair", "Crocomire Speedway", "Bottom Door", "NorfairBoss");
+
+            PatchKeyCard(_reader, "Norfair", "The Worst Room In The Game", "Top Right Door", "LowerNorfairL1");
+            PatchKeyCard(_reader, "Norfair", "Single Chamber", "Far Right Door", "LowerNorfairL1");
+
+            PatchKeyCard(_reader, "Norfair", "Lower Norfair Farming Room", "Left Door", "LowerNorfairBoss");
+
+            PatchKeyCard(_reader, "Maridia", "Mt. Everest", "Top Right Door", "MaridiaL1");
+            PatchKeyCard(_reader, "Maridia", "Aqueduct", "Middle Left Door", "MaridiaL1");
+
+            PatchKeyCard(_reader, "Maridia", "Botwoon Hallway", "Right Door", "MaridiaL2");
+            PatchKeyCard(_reader, "Maridia", "Halfie Climb Room", "Bottom Left Door", "MaridiaL2");
+
+            PatchKeyCard(_reader, "Maridia", "The Precious Room", "Bottom Left Door", "MaridiaBoss");
+
+            PatchKeyCard(_reader, "Crateria", "West Ocean", "Upper Right Section - Bottom Right Door", "WreckedShipL1");
+            PatchKeyCard(_reader, "Crateria", "Homing Geemer Room", "Right Door", "WreckedShipL1");
+            PatchKeyCard(_reader, "Wrecked Ship", "Gravity Suit Room", "Right Door", "WreckedShipL1");
+
+            PatchKeyCard(_reader, "Wrecked Ship", "Basement", "Right Door", "WreckedShipBoss");
         }
     }
 
@@ -272,6 +326,7 @@ public class GraphPreprocessor
                 "green" => new Requirement.Single("h_canOpenGreenDoors"),
                 "yellow" => new Requirement.Single("h_canOpenYellowDoors"),
                 "eye" => new Requirement.Single("h_canOpenEyeDoors"),
+                string kc when kc.StartsWith("keycard:") => new Requirement.Single(kc.Split(":")[1].Trim()),
                 _ => null
             };
         }
@@ -319,6 +374,30 @@ public class GraphPreprocessor
                 _graph.AddDirected(fromStratVtx, targetStratVtx, [newFromStrat]);
             }
         }
+    }
+
+    public Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
+    {
+        if (node.Name == nameToPatch)
+        {
+            return node with
+            {
+                NodeSubType = $"keycard: {keycardName}",
+            };
+        }
+        else
+        {
+            return node;
+        }
+    }
+
+    public void PatchKeyCard(JsonReader reader, string areaName, string roomName, string doorName, string keyCardName)
+    {
+        var room = reader.Rooms.First(x => x.Name == roomName && x.Area == areaName);
+        var newNodes = room.Nodes.Select(x => PatchNodeWithKey(x, doorName, keyCardName));
+        var newRoom = room with { Nodes = newNodes.ToArray() };
+        reader.Rooms.Remove(room);
+        reader.Rooms.Add(newRoom);
     }
 }
 
