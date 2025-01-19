@@ -69,6 +69,35 @@ internal sealed class ItemPooler : IItemPooler
 
         ];
 
+        // Add SM keycards to the pool if enabled
+        if (world.Config.Keycards == Keycards.All)
+        {
+            worldSet.AddRange(
+            [
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("CrateriaL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("CrateriaL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("CrateriaBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("BrinstarL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("BrinstarL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("BrinstarBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("NorfairL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("NorfairL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("NorfairBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("WreckedShipL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("WreckedShipBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("MaridiaL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("MaridiaL2")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("MaridiaBoss")),
+
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("LowerNorfairL1")),
+                new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("LowerNorfairBoss")),
+            ]);
+        }
+
         return worldSet;
     }
 }
