@@ -133,7 +133,7 @@ public sealed class World : IWorld
     public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World.Id == this.Id);
     /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
+    public IEnumerable<BaseVertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
 
     public IItem GetItem(string name)
     {
