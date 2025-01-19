@@ -49,6 +49,8 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
         if (comboWorld.SMWorld != null)
             SuperMetroid.RomWriter.Write(rom, comboWorld.SMWorld, prng);
 
+        PortalWriter.WritePortals(rom, comboWorld);
+
         WriteGameFlags(comboWorld, rom);
         WriteSeed(comboWorld, rom);
     }
@@ -75,7 +77,6 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
         rom.Write(0x7fffe4, [(byte)(world.AlttpWorld == null ? 0x00 : 0x01)]);
         rom.Write(0x7fffe6, [(byte)(world.Z1World == null ? 0x00 : 0x01)]);
         rom.Write(0x7fffe8, [(byte)(world.M1World == null ? 0x00 : 0x01)]);
-
     }
 
     private void WriteItemsToRom(World world, RomModifications.Rom rom)
