@@ -28,25 +28,30 @@ public class ComboSearcher : ISearcher
         _inventory = inventory;
 
         Inventory prevInventory;
+        HashSet<Randomizer.Graph.Vertex> otherWorldVertices = new();
 
         if (_world.AlttpWorld != null)
         {
             _alttpSearcher = _world.AlttpWorld.GetSearcherForWorld(graph, _world.AlttpWorld.Start, inventory, setLocations);
+            otherWorldVertices.UnionWith(_alttpSearcher.GetOtherWorld().ToHashSet());
         }
 
         if (_world.Z1World != null)
         {
             _z1Searcher = _world.Z1World.GetSearcherForWorld(graph, _world.Z1World.Start, inventory, setLocations);
+            otherWorldVertices.UnionWith(_z1Searcher.GetOtherWorld().ToHashSet());
         }
 
         if (_world.M1World != null)
         {
             _m1Searcher = _world.M1World.GetSearcherForWorld(graph, _world.M1World.Start, inventory, setLocations);
+            otherWorldVertices.UnionWith(_m1Searcher.GetOtherWorld().ToHashSet());
         }
 
         if (_world.SMWorld!= null)
         {
             _smSearcher = _world.SMWorld.GetSearcherForWorld(graph, _world.SMWorld.Start, inventory, setLocations);
+            otherWorldVertices.UnionWith(_smSearcher.GetOtherWorld().ToHashSet());
         }
 
         do
@@ -54,22 +59,30 @@ public class ComboSearcher : ISearcher
             prevInventory = inventory.Clone();
             if(_alttpSearcher != null)
             {
-                _alttpSearcher.ResumeSearch([], prevInventory);
+                var starts = otherWorldVertices.Where(v => v.World == _world.AlttpWorld).ToList();
+                _alttpSearcher.ResumeSearch(starts, prevInventory);
+                otherWorldVertices.UnionWith(_alttpSearcher.GetOtherWorld().ToHashSet());
             }
 
             if (_z1Searcher != null)
             {
-                _z1Searcher.ResumeSearch([], prevInventory);
+                var starts = otherWorldVertices.Where(v => v.World == _world.Z1World).ToList();
+                _z1Searcher.ResumeSearch(starts, prevInventory);
+                otherWorldVertices.UnionWith(_z1Searcher.GetOtherWorld().ToHashSet());
             }
 
             if (_m1Searcher != null)
             {
-                _m1Searcher.ResumeSearch([], prevInventory);
+                var starts = otherWorldVertices.Where(v => v.World == _world.M1World).ToList();
+                _m1Searcher.ResumeSearch(starts, prevInventory);
+                otherWorldVertices.UnionWith(_m1Searcher.GetOtherWorld().ToHashSet());
             }
 
             if (_smSearcher != null)
             {
-                _smSearcher.ResumeSearch([], prevInventory);
+                var starts = otherWorldVertices.Where(v => v.World == _world.SMWorld).ToList();
+                _smSearcher.ResumeSearch(starts, prevInventory);
+                otherWorldVertices.UnionWith(_smSearcher.GetOtherWorld().ToHashSet());
             }
         } while(prevInventory.All().Count() != inventory.All().Count());
 
@@ -117,6 +130,18 @@ public class ComboSearcher : ISearcher
             .. _smSearcher?.GetVisited() ?? [],
             .. _m1Searcher?.GetVisited() ?? [],
             .. _z1Searcher?.GetVisited() ?? [],
+        ];
+        return locations;
+    }
+
+    IEnumerable<Randomizer.Graph.Vertex> ISearcher.GetOtherWorld()
+    {
+        List<Randomizer.Graph.Vertex> locations =
+        [
+            .. _alttpSearcher?.GetOtherWorld() ?? [],
+            .. _smSearcher?.GetOtherWorld() ?? [],
+            .. _m1Searcher?.GetOtherWorld() ?? [],
+            .. _z1Searcher?.GetOtherWorld() ?? [],
         ];
         return locations;
     }

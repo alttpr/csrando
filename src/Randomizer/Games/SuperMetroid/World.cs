@@ -38,6 +38,7 @@ public sealed class World : IWorld
         List<IItem> items = [GetItem("fixed")];
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
+        StartingItems.AddItem(GetItem("f_ZebesAwake"));
 
         JsonData = new JsonReader(Config);
         JsonData.Load();
@@ -49,7 +50,7 @@ public sealed class World : IWorld
         var preprocessor = new GraphPreprocessor(JsonData, this);
         preprocessor.Preprocess();
 
-        Start = GetLocation("Crateria - Landing Site - Ship");
+        Start = GetLocation("Crateria - Landing Site - Bottom Left Door");
     }
 
     public Inventory ComputeStartingItems()

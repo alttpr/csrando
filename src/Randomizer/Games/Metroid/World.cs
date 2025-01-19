@@ -16,6 +16,7 @@ public sealed class World : IWorld
     public Config Config { get; }
     public PRNG Prng { get; }
     public YamlReader.YamlData? YamlData { get; set; }
+    public Dictionary<int, byte[]>? PatchData { get; set; }
     private readonly Dictionary<string, Item> _allItems = new();
     public ushort PlacedItemCount { get; set; }
     public BaseVertex Start { get; }

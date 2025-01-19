@@ -12,6 +12,10 @@ internal static class DataLoader
         // Load the yaml data from files into memory
         yamlReader.LoadData();
 
+
+        // TODO: The data-part of this should probably be moved to the combo-specific code at some point, but for now we'll do it here
+        world.PatchData = yamlReader.BuildPortalRooms(world);
+
         // Build the graph from the yaml data, this will parse the data and create vertices and edges according to the
         // current world data configuration
         yamlReader.BuildGraph();

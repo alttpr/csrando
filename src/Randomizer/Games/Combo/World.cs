@@ -72,6 +72,23 @@ public sealed class World : IWorld
             StartingItems = StartingItems.Merge(M1World.StartingItems);
         }
 
+        if(Config.Games.SuperMetroid != null && Config.Games.Alttp != null)
+        {
+            // Add cross-game portals if both these games are enabled
+
+            // Add norfair map to death moutain portal
+            Graph.AddDirected(SMWorld!.GetLocation("Norfair - Business Center - Middle Left Door"), AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetLocation("Norfair - Business Center - Middle Left Door"), AlttpWorld!.GetItem("fixed"));
+
+            // Add maridia missile refill to dark world shopping mall
+            Graph.AddDirected(SMWorld!.GetLocation("Maridia - Halfie Climb Room - Bottom Right Door"), AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetLocation("Maridia - Halfie Climb Room - Bottom Right Door"), AlttpWorld!.GetItem("fixed"));
+
+            // Add lower norfair refill to mire area
+            Graph.AddDirected(SMWorld!.GetLocation("Norfair - Screw Attack Room - Middle Right Door"), AlttpWorld!.GetLocation("Mire"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("Mire"), SMWorld!.GetLocation("Norfair - Screw Attack Room - Middle Right Door"), AlttpWorld!.GetItem("fixed"));
+        }
+
     }
 
     public Inventory ComputeStartingItems()
@@ -174,6 +191,16 @@ public sealed class World : IWorld
         }
 
         if (Z1World != null && !searcher.HasFound(Z1World.GetItem("Zelda")))
+        {
+            return false;
+        }
+
+        if (SMWorld != null && !searcher.HasFound(SMWorld.GetItem("f_DefeatedMotherBrain")))
+        {
+            return false;
+        }
+
+        if (M1World != null && !searcher.HasFound(M1World.GetItem("DefeatedSilverTwo")))
         {
             return false;
         }
