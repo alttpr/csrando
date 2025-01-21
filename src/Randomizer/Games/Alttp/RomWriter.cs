@@ -899,7 +899,7 @@ public static class RomWriter
             }
             outputOffsets[i] = (ushort)outputBytes.Count;
             // reconfigure OAM allocation to work with overlapping layers
-            // TODO: room 0x86 is empty (so we don't have a data file,) but it has the flag set in vanilla
+            // TODO: room 0x86 is empty (so we don't have a data file), but it has the flag set in vanilla
             byte roomOAM = enemyRooms[i].Select(r => r.RoomOAM.GetValueOrDefault()).Concat([(byte)0x00]).Max();
             outputBytes.Add(roomOAM);
             foreach (var enemy in enemyRooms[i])

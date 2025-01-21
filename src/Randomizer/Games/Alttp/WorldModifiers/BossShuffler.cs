@@ -1,7 +1,8 @@
-namespace Randomizer.Games.Alttp.WorldModifiers;
-
 using Microsoft.Extensions.Logging;
 using Randomizer.Graph;
+using BaseVertex = Randomizer.Graph.Vertex;
+
+namespace Randomizer.Games.Alttp.WorldModifiers;
 
 /// <summary>Modify the edges of the graph to place bosses.</summary>
 internal sealed class BossShuffler : IAlttpWorldModifier
@@ -50,14 +51,16 @@ internal sealed class BossShuffler : IAlttpWorldModifier
         }
 
         // most restrictive first
-        var bossLocations = bossRooms.OrderBy(v => v.Edges.Count(e => e.Condition.Item.Name.StartsWith("Defeat")));
+        // TODO: if we make bosses more explicit, this (plus the uses of Allow that follow)
+        //       needs to be changed as well (see DataLoader where Region.Bosses is used)
+        var bossLocations = bossRooms.OfType<Vertex>().OrderBy(v => v.Allow!.Length);
 
         List<string> placeBosses;
         switch (world.Config.BossShuffle)
         {
             case BossShuffleOption.Random:
-                placeBosses = new()
-                {
+                placeBosses =
+                [
                     "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
@@ -68,17 +71,19 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                     "DefeatKholdstare",
                     "DefeatVitreous",
                     "DefeatTrinexx",
-                };
+                ];
                 foreach (var location in bossLocations)
                 {
-                    var bosses = placeBosses.Intersect(location.Edges.Select(e => e.Condition.Item.Name));
+                    IEnumerable<string> bosses = placeBosses;
+                    if (location is Vertex { Allow: string[] acceptableBosses })
+                        bosses = bosses.Intersect(acceptableBosses);
                     string boss = prng.Shuffle(bosses).First();
                     PlaceBossItemInLocation(boss, location, world);
                 }
                 break;
             case BossShuffleOption.Full: // 1 copy of each, +3 other copies
-                placeBosses = new()
-                {
+                placeBosses =
+                [
                     "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
@@ -89,20 +94,22 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                     "DefeatKholdstare",
                     "DefeatVitreous",
                     "DefeatTrinexx",
-                };
+                ];
                 placeBosses.AddRange(prng.Shuffle(placeBosses).Take(3));
 
                 foreach (var location in bossLocations)
                 {
-                    var bosses = placeBosses.Intersect(location.Edges.Select(e => e.Condition.Item.Name));
+                    IEnumerable<string> bosses = placeBosses;
+                    if (location is Vertex { Allow: string[] acceptableBosses })
+                        bosses = bosses.Intersect(acceptableBosses);
                     string boss = prng.Shuffle(bosses).First();
                     placeBosses.Remove(boss);
                     PlaceBossItemInLocation(boss, location, world);
                 }
                 break;
             case BossShuffleOption.Simple: // 1:1
-                placeBosses = new()
-                {
+                placeBosses =
+                [
                     "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
@@ -116,11 +123,13 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                     "DefeatArmosKnight",
                     "DefeatLanmolas",
                     "DefeatMoldorm",
-                };
+                ];
 
                 foreach (var location in bossLocations)
                 {
-                    var bosses = placeBosses.Intersect(location.Edges.Select(e => e.Condition.Item.Name));
+                    IEnumerable<string> bosses = placeBosses;
+                    if (location is Vertex { Allow: string[] acceptableBosses })
+                        bosses = bosses.Intersect(acceptableBosses);
                     string boss = prng.Shuffle(bosses).First();
                     placeBosses.Remove(boss);
                     PlaceBossItemInLocation(boss, location, world);
@@ -142,28 +151,54 @@ internal sealed class BossShuffler : IAlttpWorldModifier
     /// <param name="location">Location name</param>
     /// <param name="world">World</param>
     /// <exception cref="Exception">If can't place boss in location</exception>
-    private static void PlaceBossItemInLocation(string bossItem, Vertex from, World world)
+    private static void PlaceBossItemInLocation(string bossItem, BaseVertex from, World world)
     {
-        if (from is null)
+        if (from is null || from is not Vertex alttpVertex)
             throw new Exception("Can't place boss.");
 
         var worldBossItem = world.GetItem(bossItem);
+        var bossVertex = (Vertex)world.Graph.AddVertex(new Vertex
+        {
+            Name = $"{from.Name} - Boss",
+            Type = VertexType.Boss,
+            World = world,
+            RoomOffset = alttpVertex.RoomOffset,
+            RoomId = alttpVertex.RoomId,
+            RoomOAM = alttpVertex.RoomOAM,
+            // TODO: do we need more in here?
+        });
+        world.Graph.AddDirected(from, bossVertex, worldBossItem);
+
         var bossEdge = from.Edges.Find(e => e.Condition.Item.Name == BOSS_SHUFFLER_ITEM_CONDITION);
         if (bossEdge is null)
             throw new Exception($"Can't place boss in {from.Name}, missing the boss connection with condition {BOSS_SHUFFLER_ITEM_CONDITION}.");
 
-        from.Edges.RemoveAll(isDifferentBoss);
+        // attach Mob-type vertices to the boss, so the rom writer can place them.
+        var bossSprites = YamlReader.LoadBossSprites();
+        var fixedCondition = new ItemCondition(world.GetItem("fixed"), 1);
+        foreach (var bossSprite in bossSprites[bossItem])
+        {
+            var spriteVertex = world.Graph.AddVertex(new Vertex
+            {
+                Name = $"{bossVertex.Name} - {bossSprite.Name}",
+                Type = VertexType.Mob,
+                World = world,
+                // TODO: which of those do we actually need? and does this break things if we have multiple ones with the same values?
+                Position = bossVertex.RoomOffset + bossSprite.Position,
+                Addresses = bossVertex.Addresses,
+                Group = bossVertex.Group,
+                Item = bossVertex.Item,
+                ItemSet = bossVertex.ItemSet,
+                Offset = bossVertex.Offset,
+                RoomId = bossVertex.RoomId,
+                RoomOAM = bossVertex.RoomOAM,
+                Sheets = bossVertex.Sheets,
+                Sprite = Sprite.Get(bossSprite.Sprite),
+            });
+            world.Graph.AddDirected(bossVertex, spriteVertex, fixedCondition);
+        }
+
         bossEdge.Condition = new ItemCondition(worldBossItem, 1);
         _logger.LogInformation("[BS] Placing {Boss} in '{Location}'", bossItem.Replace("Defeat", ""), from.Name);
-
-        bool isDifferentBoss(Edge edge)
-        {
-            if (edge.Condition.IsUnconditional)
-                return false;
-            if (edge.Condition.Item.Name == bossItem)
-                return false;
-
-            return edge.Condition.Item.Name.StartsWith("Defeat");
-        }
     }
 }

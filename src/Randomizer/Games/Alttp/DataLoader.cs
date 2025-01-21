@@ -326,6 +326,9 @@ internal static class DataLoader
                     Shopkeeper = region.Shopkeeper,
                     ShopStyle = region.Shopstyle,
                     Switch = region.Switch ?? false,
+                    // TODO: should allowed bosses be more explicit in boss rooms?
+                    Allow = region.Bosses?.ToArray(),
+                    RoomOffset = region.Offset,
                 };
                 structuredVertices.Add(region.Name, regionVertex);
 
@@ -429,31 +432,6 @@ internal static class DataLoader
                     };
                     structuredVertices.Add(pot.Name, potVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
-                }
-
-                foreach (var bosses in region.Bosses)
-                {
-                    foreach (var boss in bosses.Value)
-                    {
-                        var bossVertex = new Vertex
-                        {
-                            Type = VertexType.Boss,
-                            Name = boss.Name,
-                            World = world,
-                            RoomId = room.Roomid,
-                            RoomOAM = room.OAM,
-                            Group = room.Group.GetValueOrDefault(0),
-                            Sprite = Sprite.Get(boss.Sprite),
-                            Item = world.GetItemOrNull(boss.Item),
-                            State = boss.State.ToArray(),
-                            ItemSet = boss.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
-                            Trophy = world.GetItemOrNull(boss.Trophy),
-                            Deny = boss.Deny.ToArray(),
-                            Allow = boss.Allow.ToArray(),
-                        };
-                        structuredVertices.Add(boss.Name, bossVertex);
-                        regionVertex.Edges.Add(new Edge(regionVertex, bossVertex, new ItemCondition(world.GetItem(bosses.Key), 1)));
-                    }
                 }
 
                 foreach (var connection in region.Connections)
