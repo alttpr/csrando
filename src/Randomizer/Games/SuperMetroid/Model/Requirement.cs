@@ -29,8 +29,8 @@ public abstract record Requirement
     public record PartialRefill(string Resources, int Limit) : Requirement;
     public record EnemyKill(
         string[][] Enemies,
-        string[]? ExplicitWeapons = null,
-        string[]? ExcludedWeapons = null,
+        HashSet<string>? ExplicitWeapons = null,
+        HashSet<string>? ExcludedWeapons = null,
         string[]? FarmableAmmo = null
     ) : Requirement;
     public record AcidFrames(int Frames) : Requirement;
@@ -151,8 +151,8 @@ public class RequirementConverter : JsonConverter<Requirement>
                 "partialRefill" => new Requirement.PartialRefill(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("limit").GetInt32()),
                 "enemyKill" => new Requirement.EnemyKill(
                     property.Value.GetProperty("enemies").EnumerateArray().Select(e => e.EnumerateArray().Select(ee => ee.GetString()!).ToArray()).ToArray(),
-                    property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? explicitWeapons.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!,
-                    property.Value.TryGetProperty("excludedWeapons", out var excludedWeapons) ? excludedWeapons.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!,
+                    property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? explicitWeapons.EnumerateArray().Select(e => e.GetString()!).ToHashSet() : null!,
+                    property.Value.TryGetProperty("excludedWeapons", out var excludedWeapons) ? excludedWeapons.EnumerateArray().Select(e => e.GetString()!).ToHashSet() : null!,
                     property.Value.TryGetProperty("farmableAmmo", out var farmableAmmo) ? farmableAmmo.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!),
                 "acidFrames" => new Requirement.AcidFrames(property.Value.GetInt32()),
                 "gravitylessAcidFrames" => new Requirement.GravitylessAcidFrames(property.Value.GetInt32()),

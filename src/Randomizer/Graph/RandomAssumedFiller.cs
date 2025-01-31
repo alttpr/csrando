@@ -1,7 +1,10 @@
 namespace Randomizer.Graph;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Games.Combo;
 using Randomizer.Games.SuperMetroid;
+using Randomizer.Games.SuperMetroid.Model;
+using static Randomizer.Games.Metroid.YamlReader;
 
 internal sealed class RandomAssumedFiller
 {
@@ -29,6 +32,36 @@ internal sealed class RandomAssumedFiller
         // fix placement groups
         var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
+
+        //TODO: Mega hack, remove asap
+        for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+        {
+            var world = _randomizer.Worlds[i];
+            if (world != null)
+            {
+                var smWorld = world switch
+                {
+                    Games.SuperMetroid.World sm => sm,
+                    Games.Combo.World c => c.SMWorld,
+                    _ => null
+                };
+
+                if (smWorld != null)
+                {
+                    SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
+
+                    // If we didn't fill morph, then fill it
+                    if (flatItems.Any(f => f.Item.Name == "Morph"))
+                    {
+                        var flatMorph = flatItems.First(i => i.Item == smWorld.GetItem("Morph"));
+                        SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
+                        flatItems.Remove(flatMorph);
+                    }
+                }
+            }
+        }
+
+        flatItemsArray = flatItems.ToArray();
 
         var searchers = new ISearcher[_randomizer.Worlds.Length];
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
@@ -122,6 +155,94 @@ internal sealed class RandomAssumedFiller
 
         FastFillItemsInLocations(flatItems);
     }
+
+    private void SmartFrontFill(IWorld world, Inventory inventory, List<(ItemSetName, int, IItem)> flatItems, int count)
+    {
+        int bestLocationCount = 0;
+        while(bestLocationCount < count)
+        {
+            var filteredFlatItems = flatItems.Where(f => f.Item3.World.GameId == world.GameId).ToList();
+            var bestLocations = GetBestLocationsForItems(world, filteredFlatItems, inventory);
+            if (bestLocations.Count() == 0)
+            {
+                throw new Exception("No valid location for any item");
+            }
+
+            var bestLocation = bestLocations.OrderByDescending(x => x.newLocationCount).First();
+            var (itemSet, itemWeight, item) = bestLocation.Item1;
+            bestLocation.location.Item = item;
+            bestLocation.location.TrackPlacedItem();
+            flatItems.Remove(bestLocation.Item1);
+            _logger.LogInformation("(0%) [SFF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+                item,
+                bestLocation.location,
+                itemSet,
+                bestLocation.newLocationCount
+            );
+
+            bestLocationCount = bestLocation.newLocationCount;
+        }
+    }
+
+    private IEnumerable<((ItemSetName, int, IItem), Vertex location, int newLocationCount)> GetBestLocationsForItems(IWorld world, List<(ItemSetName, int, IItem)> flatItems, Inventory inventory)
+    {
+        var placementCandidates = new List<((ItemSetName, int, IItem), Vertex location, int newLocationCount)>();
+        foreach(var itemKey in flatItems)
+        {
+            var (itemSet, itemWeight, item) = itemKey;
+            var location = GetBestLocationForItem(world, item, inventory);
+            if (location.HasValue)
+            {
+                placementCandidates.Add((itemKey, location.Value.location, location.Value.newLocationCount));
+            }
+        }
+
+        return placementCandidates;
+    }
+
+    private (Vertex location, int newLocationCount)? GetBestLocationForItem(IWorld world, IItem item, Inventory inventory)
+    {
+        var searcher = _randomizer.GetSearcherForInventory(world, inventory.All().Select(x => x.Key), world.Start);
+        var locations = searcher.GetEmptyLocationsInSet(ItemSetName.DefaultSet, null, true).ToList();
+        if (locations.Count == 0)
+        {
+            return null;
+        }
+        var locationCandidates = _prng.Shuffle(locations).ToList();
+        var locationCandidateResults = new List<(Vertex Location, int newLocations)>();
+        
+        while (locationCandidates.Count > 0)
+        {
+            var locationCandidate = locationCandidates.First();
+            locationCandidates.Remove(locationCandidate);
+
+            // Test backtracking
+            var backtrackInventory = inventory.Clone();
+            var statefulSearcher = (StatefulSearcher)searcher;
+            var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)locationCandidate, backtrackInventory, (Games.SuperMetroid.Vertex)locationCandidate.World.Start, item);
+
+            if (!backtrackCheck)
+            {
+                continue;
+            }
+
+            // Verify that placing this item opens up at least one new location
+            locationCandidate.Item = item;
+            var newSearcher = _randomizer.GetSearcherForInventory(world, inventory.All().Select(x => x.Key), world.Start);
+            var newLocations = newSearcher.GetEmptyLocationsInSet(ItemSetName.DefaultSet, null, true).ToList();
+            locationCandidate.Item = null;
+            locationCandidateResults.Add((locationCandidate, newLocations.Count));
+        }
+        
+        if (locationCandidateResults.Count == 0)
+        {
+            return null;
+        }
+        
+        return locationCandidateResults.OrderBy(x => x.newLocations).First();
+    }
+
+
 
     /// <summary>
     /// Quickly place items in locations respecting placemenmt groups.

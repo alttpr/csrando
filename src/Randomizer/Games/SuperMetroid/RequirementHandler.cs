@@ -144,7 +144,7 @@ public class RequirementHandler
         }
     }
 
-    public static RequirementResult HandleRequirement(Requirement req, VisitedState state, Inventory inventory, World world)
+    public static RequirementResult HandleRequirement(Requirement req, VisitedState state, Inventory inventory, World world, HashSet<Weapon> weapons)
     {
         switch (req)
         {
@@ -157,7 +157,7 @@ public class RequirementHandler
             case Requirement.Single single:
                 if(HelperTechs.TryGetValue(single.Req, out var helper))
                 {
-                    return HandleRequirement(helper, state, inventory, world);
+                    return HandleRequirement(helper, state, inventory, world, weapons);
                 }
                 else
                 {
@@ -176,7 +176,7 @@ public class RequirementHandler
                 {
                     if (HelperTechs.TryGetValue(singleItem.Item.Name, out var singleItemHelper))
                     {
-                        return HandleRequirement(singleItemHelper, state, inventory, world);
+                        return HandleRequirement(singleItemHelper, state, inventory, world, weapons);
                     }
                     else
                     {
@@ -195,7 +195,7 @@ public class RequirementHandler
 
                 foreach (var subReq in and.Reqs)
                 {
-                    var subResult = HandleRequirement(subReq, state, inventory, world);
+                    var subResult = HandleRequirement(subReq, state, inventory, world, weapons);
 
                     if (!subResult.Met)
                     {
@@ -226,7 +226,7 @@ public class RequirementHandler
 
                 foreach (var subReq in or.Reqs)
                 {
-                    var subResult = HandleRequirement(subReq, state, inventory, world);
+                    var subResult = HandleRequirement(subReq, state, inventory, world, weapons);
                     if (subResult.Met)
                     {
                         if (bestSuccess == null)
@@ -257,7 +257,7 @@ public class RequirementHandler
                 }
 
             case Requirement.Not not:
-                return HandleRequirement(not.Req, state, inventory, world) == null ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
+                return HandleRequirement(not.Req, state, inventory, world, weapons) == null ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
 
             case Requirement.ObstaclesNotCleared obstaclesNotCleared:
                 return (state.ObstacleBitFlags & ObstacleMaskFromArray(obstaclesNotCleared.Obstacles)) == 0 ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
@@ -307,8 +307,93 @@ public class RequirementHandler
                     PowerBombs = refill.Resources.Contains("PowerBomb") ? -99999 : 0
                 });
 
+/*
+ *           "enemyKill": {
+            "type": "object",
+            "title": "Enemy Kill",
+            "description": "Describes the need to be able to kill a set of enemies. By default, allows all non-situational weapons (provided they can damage the enemies)",
+            "required": ["enemies"],
+            "additionalProperties": false,
+            "properties": {
+              "enemies": {
+                "type": "array",
+                "title": "Enemy Groups",
+                "description": "An array of enemy groups that must be killed. All enemies in each group can be hit by the same attack from an area of effect weapon.",
+                "items": {
+                  "type": "array",
+                  "title": "Enemy Group",
+                  "description": "A single group of enemies that can be hit by the same attack from an area of effect weapon.",
+                  "items": {
+                    "type": "string",
+                    "title": "Enemy Name",
+                    "description": "The name of an enemy, as found in the enemies file or the boss file."
+                  }
+                }
+              },*/
+
             case Requirement.EnemyKill enemyKill:
+                var candidateWeapons = new List<Weapon>();
+                foreach (var weapon in weapons)
+                {
+
+                    if (enemyKill.ExcludedWeapons != null && enemyKill.ExcludedWeapons.Contains(weapon.Name))
+                    {
+                        continue;
+                    }
+
+                    if (enemyKill.ExplicitWeapons != null && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
+                    {
+                        continue;
+                    }
+
+                    candidateWeapons.Add(weapon);
+                }
+
+                // If no weapons pass initial criteria, fail quickly
+                if (candidateWeapons.Count == 0)
+                {
+                    return RequirementResult.Fail(new[]
+                    {
+                        "Missile", "Super", "PowerBomb", "Charge", "Ice",
+                        "Spazer", "WaveBeam", "Plasma", "ScrewAttack", "Bombs"
+                    });
+                }
+
+
+                // For each enemy group, check if at least one weapon can hurt them
+                foreach (var enemyGroup in enemyKill.Enemies)
+                {
+                    var enemyType = enemyGroup.First();
+                    var enemyCount = enemyGroup.Count();
+
+                    var enemy = Enemies[enemyType];
+                    // Possibly use a cached HashSet if performance is an issue
+                    var invulSet = new HashSet<string>(enemy.Invul);
+
+                    bool canKillEnemy = false;
+                    foreach (var w in candidateWeapons)
+                    {
+                        if (!invulSet.Contains(w.Name))
+                        {
+                            canKillEnemy = true;
+                            break;
+                        }
+                    }
+
+                    if (!canKillEnemy)
+                    {
+                        // If we can't kill an enemy of this type, fail immediately
+                        return RequirementResult.Fail(new[]
+                        {
+                            "Missile", "Super", "PowerBomb", "Charge", "Ice",
+                            "Spazer", "WaveBeam", "Plasma", "ScrewAttack", "Bombs"
+                        });
+                    }
+                }
+
+                // If we get here, we can kill at least one enemy in each group
                 return RequirementResult.Success(RequirementCost.ZeroCost);
+
 
             case Requirement.HibashiHits hibashiHits:
                 var hibashiDamage = hibashiHits.Hits * 30;
@@ -608,7 +693,7 @@ public class RequirementHandler
             case Requirement.Tech tech:
                 if (HelperTechs.TryGetValue($"t_{tech.TechRequirement}", out var techRequirement))
                 {
-                    return HandleRequirement(techRequirement, state, inventory, world);
+                    return HandleRequirement(techRequirement, state, inventory, world, weapons);
                 }
                 else
                 {

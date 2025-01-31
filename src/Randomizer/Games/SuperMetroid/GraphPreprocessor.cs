@@ -14,6 +14,17 @@ using System.Xml.Linq;
 using YamlDotNet.RepresentationModel;
 using ExitCondition = Model.ExitCondition;
 
+public class DoorPlmData
+{
+    public int RoomAddress { get; set; }
+    public int DoorAddress { get; set; }
+    public int RoomId { get; set; }
+    public int NodeId { get; set; }
+    public int XPosition { get; set; }
+    public int YPosition { get; set; }
+    public List<RoomPLM>? PLMs { get; set; }
+}
+
 public class GraphPreprocessor
 {
     private JsonReader _reader;
@@ -36,7 +47,7 @@ public class GraphPreprocessor
         BuildRunways();
         PruneGraph();
 
-        foreach(var vtx in _graph.Vertices)
+        foreach (var vtx in _graph.Vertices)
         {
             _world.Graph.AddVertex(vtx);
             foreach(var edge in _graph.GetEdges(vtx))
@@ -44,6 +55,76 @@ public class GraphPreprocessor
                 vtx.Edges.Add(edge);
             }
         }
+
+        //// Find all doors that are not blue
+        //var doors = _graph.Vertices.OfType<SuperMetroid.Vertex>().Where(v => v.Node!.NodeType == "door" && v.Node!.NodeSubType != "elevator");
+        //var doorData = DoorReader.ReadDoorData();
+
+        //var roomNodePlmMap = new List<DoorPlmData>();
+
+        //// For each door, find the door shell PLM
+        //foreach (var door in doors)
+        //{
+        //    var otherDoor = door.Edges.Where(e => ((Vertex)e.To).RoomId != ((Vertex)e.From).RoomId).FirstOrDefault()?.To as SuperMetroid.Vertex;
+        //    if (otherDoor != null)
+        //    {
+        //        var doorNodeAddress = int.Parse(otherDoor?.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber);
+        //        if (doorNodeAddress > 0)
+        //        {
+        //            var doorHeader = doorData.FirstOrDefault(d => d.ptr == doorNodeAddress);
+        //            if (doorHeader != null)
+        //            {
+        //                DoorPlmData doorPlmData = new()
+        //                {
+        //                    RoomAddress = doorHeader.room,
+        //                    DoorAddress = doorHeader.ptr,
+        //                    RoomId = door.RoomId,
+        //                    NodeId = door.NodeId,
+        //                    XPosition = doorHeader.x_low,
+        //                    YPosition = doorHeader.y_low,
+        //                    PLMs = null
+        //                };
+
+        //                var doorPLMs = _reader.RoomPLMs.Where(r => r.Room == doorHeader.room && r.XPosition == doorHeader.x_low && r.YPosition == doorHeader.y_low);
+        //                if (doorPLMs != null)
+        //                {
+        //                    Console.WriteLine($"Door: {door.Name}, PLM: {doorPLMs}");
+        //                    doorPlmData.PLMs = doorPLMs.ToList();
+        //                }
+
+        //                roomNodePlmMap.Add(doorPlmData);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine($"Could not find door header for {door.Name}");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"Could not find door address for {door.Name}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine($"Could not find other door for {door.Name}");
+        //    }
+        //}
+
+        //// Write the plm map to a file as serialized json
+        //var plmMapJson = System.Text.Json.JsonSerializer.Serialize(roomNodePlmMap);
+        //System.IO.File.WriteAllText(JsonReader.DataRoot + "\\plm_door_map.json", plmMapJson);
+
+
+        //// Find a door PLM for a given door
+        //var door = _graph.Vertices.OfType<SuperMetroid.Vertex>().Where(v => v.Node!.NodeSubType == "red").First();
+        //var otherDoor = door.Edges.Where(e => ((Vertex)e.To).RoomId != ((Vertex)e.From).RoomId).First().To as SuperMetroid.Vertex;
+
+        //var doorNodeAddress = int.Parse(otherDoor.Node.NodeAddress.Substring(2), System.Globalization.NumberStyles.HexNumber);
+        //var doorData = DoorReader.ReadDoorData();
+        //var doorHeader = doorData.First(d => d.ptr == doorNodeAddress);
+
+        //var doorPLM = _reader.RoomPLMs.First(r => r.Room == doorHeader.room && r.XPosition == doorHeader.x_low && r.YPosition == doorHeader.y_low);
+
     }
 
     private void PatchKeycards()
@@ -251,6 +332,15 @@ public class GraphPreprocessor
         {
             foreach (var node in room.Nodes)
             {
+                if (node.Locks?.SelectMany(l => l.UnlockStrats ?? [])?.Any() == true)
+                {
+                    foreach (var strat in node.Locks.SelectMany(l => l.UnlockStrats ?? []))
+                    {
+                        strat.Requires = OptimizeRequirement(strat.Requires);
+                    }
+                }
+
+
                 var vertex = new Vertex()
                 {
                     Name = $"{room.Area} - {room.Name} - {node.Name}",
@@ -258,8 +348,10 @@ public class GraphPreprocessor
                     World = _world,
                     RoomId = room.Id,
                     NodeId = node.Id,
-                    Node = node with { Locks = node.Locks == null ? null : node.Locks.Select(l => l with { UnlockStrats = l.UnlockStrats.Select(s => s with { Requires = OptimizeRequirement(s.Requires) }).ToArray() } ).ToArray() },
+                    Addresses = node.NodeAddress != null ? [long.Parse(node.NodeAddress.Substring(2), System.Globalization.NumberStyles.HexNumber)] : null,
+                    Node = node
                 };
+
                 _graph.AddVertex(vertex);
             }
 
@@ -280,8 +372,13 @@ public class GraphPreprocessor
                     
                     if (linkStrats.Any())
                     {
-                        var optimizedStrats = linkStrats.Select(s => s with { Requires = OptimizeRequirement(s.Requires) }).Where(s => s.Requires is not Requirement.Never);
-                        _graph.AddDirected(fromVtx, toVtx, optimizedStrats);
+                        //var optimizedStrats = linkStrats.Select(s => s with { Requires = OptimizeRequirement(s.Requires) }).Where(s => s.Requires is not Requirement.Never);
+                        foreach (var strat in linkStrats)
+                        {
+                            strat.Requires = OptimizeRequirement(strat.Requires);
+                        }
+
+                        _graph.AddDirected(fromVtx, toVtx, linkStrats);
                     } 
                 }
             }
@@ -333,8 +430,16 @@ public class GraphPreprocessor
 
         if ((fromNode.NodeType == "door" || fromNode.NodeType == "exit") && (fromNode.UseImplicitLeaveNormally == null || fromNode.UseImplicitLeaveNormally == true))
         {
-            // Create implicit leave normally strat if one doesn't exist already
-            var strat = new Strat([fromNode.Id, fromNode.Id], "Leave Normally", null, null, null, new Requirement.Always(), new ExitCondition.LeaveNormally(), null, null, null, null, null, null, null, null, null);
+            // Create implicit leave normally strat if one doesn't exist already            
+            var strat = new Strat
+            {
+                Name = "Leave Normally",
+                Link = [fromNode.Id, fromNode.Id],
+                Requires = new Requirement.Always(),
+                ExitCondition = new ExitCondition.LeaveNormally(),
+            };
+
+
             fromStrats.Add(strat);
         }
 
@@ -343,7 +448,13 @@ public class GraphPreprocessor
             // Create implicit come in normally strat if one doesn't exist already
             if (!toStrats.Any(s => s.EntranceCondition is EntranceCondition.ComeInNormally))
             {
-                var strat = new Strat([toNode.Id, toNode.Id], "Come In Normally", null, null, new EntranceCondition.ComeInNormally(), new Requirement.Always(), null, null, null, null, null, null, null, null, null, null);
+                var strat = new Strat
+                {
+                    Name = "Come In Normally",
+                    Link = [toNode.Id, toNode.Id],
+                    Requires = new Requirement.Always(),
+                    EntranceCondition = new EntranceCondition.ComeInNormally(),
+                };
                 toStrats.Add(strat);
             }
         }
@@ -366,7 +477,8 @@ public class GraphPreprocessor
             foreach (var targetStrat in targetStrats)
             {
                 // Inject the door unlock requirement into the fromStrat
-                var newFromStrat = unlockReq == null ? strat with { Requires = OptimizeRequirement(strat.Requires) } : strat with { Requires = OptimizeRequirement(new Requirement.And([strat.Requires, unlockReq]))};
+                var newFromStrat = (Strat)strat.Clone();
+                newFromStrat.Requires = unlockReq == null ? OptimizeRequirement(strat.Requires) : OptimizeRequirement(new Requirement.And([strat.Requires, unlockReq]));
 
                 var fromStratVtx = _graph.Vertices.First(v => v.RoomId == fromVtx.RoomId && v.Node!.Id == strat.Link![0]);
                 var targetStratVtx = _graph.Vertices.First(v => v.RoomId == toVtx.RoomId && v.Node!.Id == targetStrat.Link![0]);
@@ -380,24 +492,17 @@ public class GraphPreprocessor
     {
         if (node.Name == nameToPatch)
         {
-            return node with
-            {
-                NodeSubType = $"keycard: {keycardName}",
-            };
+            node.NodeSubType = $"keycard: {keycardName}";
         }
-        else
-        {
-            return node;
-        }
+
+        return node;
     }
 
     public void PatchKeyCard(JsonReader reader, string areaName, string roomName, string doorName, string keyCardName)
     {
         var room = reader.Rooms.First(x => x.Name == roomName && x.Area == areaName);
         var newNodes = room.Nodes.Select(x => PatchNodeWithKey(x, doorName, keyCardName));
-        var newRoom = room with { Nodes = newNodes.ToArray() };
-        reader.Rooms.Remove(room);
-        reader.Rooms.Add(newRoom);
+        room.Nodes = newNodes.ToArray();
     }
 }
 

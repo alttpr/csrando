@@ -59,7 +59,7 @@ edges:
       Missile|10:
           - ["Meta", "Defeat Kraid"]
       
-      Missile|20:
+      Missile|15:
           - ["Meta", "Defeat Ridley"]    
           - ["Meta", "Defeat Mother Brain"]
 

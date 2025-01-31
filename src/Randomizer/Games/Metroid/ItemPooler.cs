@@ -39,10 +39,10 @@ internal sealed class ItemPooler : IItemPooler
     {
         List<PooledItem> worldSet =
         [
-            new PooledItem(ItemSetName.DefaultSet, 1, world.GetItem("Morph")),
-            new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("IceBeam")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Morph")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("IceBeam")),
 
-            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Bombs")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Bombs")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Varia")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("HiJump")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("LongBeam")),

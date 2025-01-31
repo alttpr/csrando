@@ -28,6 +28,7 @@ public class StatefulSearcher : ISearcher
     private List<(Vertex, VisitedState)> _startStates;
     private SetLocations? _setLocations;
     private List<Randomizer.Graph.Vertex> _otherWorldLocations;
+    private HashSet<Weapon> _currentWeapons;
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
@@ -223,8 +224,11 @@ public class StatefulSearcher : ISearcher
         var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
         _queue = new Queue<(Vertex vertex, VisitedState state)>();
         _inQueue = new Dictionary<Vertex, List<VisitedState>>();
+        _currentWeapons = ((World)_start.World).JsonData.Weapons.Weapons
+            .Where(w => RequirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met)
+            .ToHashSet();
 
-        foreach(var start in starts)
+        foreach (var start in starts)
         {
             EnqueueState(start.Item1, start.Item2);
         }
@@ -260,8 +264,31 @@ public class StatefulSearcher : ISearcher
             }
 
             //Console.WriteLine($"Visiting {current.Name} with state {state}");
+            
+            var currentNode = current.Node;
+            if (currentNode == null)
+            {
+                // This is some kind of meta node, just resolve edges without any strats
+                foreach (var edge in current.Edges)
+                {
+                    if (edge.To.World != current.World)
+                    {
+                        if (target != null)
+                        {
+                            _visitedStates[target] = [state];
+                            return [];
+                        }
 
-            var currentNode = current.Node!;
+                        _otherWorldLocations.Add(edge.To);
+                        continue;
+                    }
+
+                    var toVtx = (Vertex)edge.To;
+                    EnqueueState(toVtx, state);
+                }
+                continue;
+            }
+
 
             bool unlocked = false;
             var (unlockState, yields) = UnlockNode(inventory, current, state, currentNode);
@@ -339,11 +366,18 @@ public class StatefulSearcher : ISearcher
                     continue;
                 }
 
+                if(edge is not SuperMetroid.Edge)
+                {
+                    // This is a regular base edge, so no strats to consider, just enqueue the next vertex
+                    EnqueueState((Vertex)edge.To, state);
+                    continue;
+                }
+
                 var stratStates = new List<(Strat, VisitedState)>();
                 foreach (var strat in ((Edge)edge).Strats ?? [])
                 {
                     //Console.WriteLine($"Checking strat {strat.Name} at {current.Name} with state {state}");
-                    var result = RequirementHandler.HandleRequirement(strat.Requires, state, inventory, (World)current.World);
+                    var result = RequirementHandler.HandleRequirement(strat.Requires, state, inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
                         //Console.WriteLine($"Failed to handle strat {strat.Name} at {current.Name} with state {state}");
@@ -472,7 +506,7 @@ public class StatefulSearcher : ISearcher
                 // Check if this lock requires a specific item or flag to be locked, and if we don't fullfill the lock requirements, skip it
                 if (lck.Lock != null)
                 {
-                    var lockResult = RequirementHandler.HandleRequirement(lck.Lock, lockState, inventory, (World)current.World);
+                    var lockResult = RequirementHandler.HandleRequirement(lck.Lock, lockState, inventory, (World)current.World, _currentWeapons);
                     if (!lockResult.Met)
                     {
                         AddUnvisited(current, lockState, lockResult.Missing ?? []);
@@ -485,7 +519,7 @@ public class StatefulSearcher : ISearcher
 
                 foreach (var unlockStrat in lck.UnlockStrats)
                 {
-                    var result = RequirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World);
+                    var result = RequirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
                         AddUnvisited(current, lockState, result.Missing ?? []);
@@ -543,7 +577,7 @@ public class StatefulSearcher : ISearcher
     {
         var emptyLocations = _setLocations[itemSet].Where((vertex) =>
         {
-            return (!onlyReachable || _visitedVertices.Contains(vertex)) && vertex.Item == null;
+            return (!onlyReachable || (_visitedVertices.Contains(vertex) && _visitedItemLocations.ContainsKey((Vertex)vertex))) && vertex.Item == null;
         }).OrderBy(v => v.Name).ToList();
 
         itemSets ??= new();

@@ -6,14 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Games\SuperMetroid\maps\**" />
+    <EmbeddedResource Remove="Games\SuperMetroid\maps\**" />
+    <None Remove="Games\SuperMetroid\maps\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="BpsNet" Version="1.0.0" />
     <PackageReference Include="MathNet.Numerics" Version="6.0.0-beta2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.4" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Games\SuperMetroid\data\" />
   </ItemGroup>
 </Project>

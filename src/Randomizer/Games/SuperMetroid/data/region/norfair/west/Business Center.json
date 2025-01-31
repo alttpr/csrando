@@ -21,7 +21,7 @@
       "id": 2,
       "name": "Middle Left Door",
       "nodeType": "door",
-      "nodeSubType": "yellow",
+      "nodeSubType": "blue",
       "nodeAddress": "0x0019306",
       "doorOrientation": "left",
       "doorEnvironments": [{"physics": "air"}]

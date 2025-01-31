@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Combo;
 
+using Randomizer.Games.Alttp;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Graph.GameRandomizer;
@@ -110,6 +111,24 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
 
                     var pcAddress = (Address)((SNES)address);
                     rom.Write((Address)(pcAddress.Value + 0x400000), [itemByte.Value]);
+                }
+            }
+            else if(location.World is SuperMetroid.World)
+            {
+                int plmBytes = (int)itemBytes[0] + ((int)itemBytes[1] << 8);
+                int offset = ((SuperMetroid.Vertex)location).Node!.NodeSubType switch
+                {
+                    "chozo" => plmBytes >= 0xEFE0 ? 0x04 : 0x54,
+                    "hidden" => plmBytes >= 0xEFE0 ? 0x08 : 0xA8,
+                    _ => 0
+                };
+
+                plmBytes += offset;
+                rom.Write((Address)location.Addresses[0], [(byte)(plmBytes & 0xFF), (byte)((plmBytes >> 8) & 0xFF)]);
+
+                if (plmBytes >= 0xEFE0)
+                {
+                    rom.Write((Address)(location.Addresses[0] + 5), [itemBytes[2]]);
                 }
             }
             else
