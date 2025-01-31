@@ -56,16 +56,16 @@ internal sealed class ItemPooler : IItemPooler
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ETank")), 10),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ReserveTank")), 4),
 
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Missile")), 28),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Super")), 9),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("PowerBomb")), 4),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Missile")), 30),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Super")), 10),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("PowerBomb")), 5),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("ETank")), 4),
             new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("XRayScope")),
 
-            new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("Morph")),
-            new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("ScrewAttack")),
-            new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("Bombs")),
-            new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("SpeedBooster")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Morph")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("ScrewAttack")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Bombs")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("SpeedBooster")),
 
         ];
 

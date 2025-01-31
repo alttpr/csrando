@@ -101,7 +101,7 @@
       "id": 6,
       "name": "Bottom Right Door (On the Left Shaft)",
       "nodeType": "door",
-      "nodeSubType": "red",
+      "nodeSubType": "blue",
       "nodeAddress": "0x0018976",
       "doorOrientation": "right",
       "doorEnvironments": [{"physics": "air"}],

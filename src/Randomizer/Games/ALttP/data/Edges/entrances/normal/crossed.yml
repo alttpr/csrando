@@ -1,0 +1,9 @@
+# This setting uses the highest number of entrance type groupings. This
+# restricts how thoroughly different entrances are randomized with the intention
+# of keeping things simple.
+fixed:
+  - ["Link's House - In", "Link's House - Bedroom"]
+  - ["Link's House - Bedroom - Exit", "Link's House - Out"]
+
+connections: []    
+

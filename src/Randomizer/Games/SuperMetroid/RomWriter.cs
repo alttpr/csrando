@@ -9,8 +9,10 @@ public static class RomWriter
     {
         var rom = new Rom(baseRom, offset);
         rom.WriteItems(world);
+        rom.WriteEventFlags(world);
         rom.WriteBossesNeeded(world);
         rom.WriteKeycardFlag(world);
         rom.WritePlms(world);
+        rom.WriteMap(world);
     }
 }

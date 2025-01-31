@@ -1419,6 +1419,11 @@ public sealed class Rom : GameRom
     public void SetSaveAndQuitFromBossRoom(bool enable = false)
         => Write((SNES)0xB08042, [(byte)(enable ? 0x01 : 0x00)]);
 
+    /// <summary>Enable/Disable the swamp floodgate state being persistent</summary>
+    /// <param name="enable">switch on or off</param>
+    public void SetPersistentFloodGate(bool enable = false)
+        => Write((SNES)0xB0803D, [(byte)(enable ? 0x01 : 0x00)]);
+
     /// <summary>Enable/Disable the ROM Hack that drains the Swamp on transition</summary>
     /// <param name="enable">switch on or off</param>
     public void SetSwampWaterLevel(bool enable = true)
@@ -1680,6 +1685,9 @@ public sealed class Rom : GameRom
 
     public void WriteLocationSpecificData(Vertex location, Item? item)
     {
+        if(item == null)
+            return;
+
         switch (location?.Name)
         {
             case "Tower Of Hera - Basement Cage":

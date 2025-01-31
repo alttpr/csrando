@@ -195,8 +195,8 @@ public static class RomWriter
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
         rom.SetCompassCountTotals();
-        rom.SetFreeItemTextMode(); //rom.freeItemText
-        rom.SetFreeItemMenu(); //rom.freeItemMenu
+        rom.SetFreeItemTextMode(false, config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses, config.RegionWildKeys); //rom.freeItemText
+        rom.SetFreeItemMenu(config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses); //rom.freeItemMenu
         rom.SetDiggingGameRng((byte)prng.GetRandomInt(1..30));
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
@@ -205,10 +205,12 @@ public static class RomWriter
         WriteEntrancesToRom(world, rom);
         WriteEnemyDamageToRom(world, rom, prng);
         WriteEnemyHealthToRom(world, rom, prng);
-        WriteEnemiesToRom(world, rom);
+        //WriteEnemiesToRom(world, rom);
 
         rom.SetPyramidFairyChests(true); //region.swordsInPool
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
+
+        rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
 
         rom.SetGameState(config.State);
         rom.SetSwordlessMode(config.Weapon == WeaponOption.Swordless);

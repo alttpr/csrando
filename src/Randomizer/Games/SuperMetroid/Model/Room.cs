@@ -9,65 +9,67 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-public record Room(
-    int Id,
-    string Name,
-    string Area,
-    string SubArea,
-    string? SubSubArea,
-    bool Playable,
-    Note? Note,
-    Note? DevNote,
-    string? RoomAddress,
-    RoomEnvironment[]? RoomEnvironments,
-    Node[] Nodes,
-    Link[] Links,
-    Strat[] Strats,
-    Obstacle[]? Obstacles,
-    RoomEnemy[]? Enemies,
-    ReusableNotable[]? ReusableRoomwideNotable
-);
+public class Room
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public required string Area { get; set; }
+    public required string SubArea { get; set; }
+    public string? SubSubArea { get; set; }
+    public bool Playable { get; set; }
+    public Note? Note { get; set; }
+    public Note? DevNote { get; set; }
+    public string? RoomAddress { get; set; }
+    public RoomEnvironment[]? RoomEnvironments { get; set; }
+    public required Node[] Nodes { get; set; }
+    public required Link[] Links { get; set; }
+    public required Strat[] Strats { get; set; }
+    public Obstacle[]? Obstacles { get; set; }
+    public RoomEnemy[]? Enemies { get; set; }
+    public ReusableNotable[]? ReusableRoomwideNotable { get; set; }
+}
 
 public record ReusableNotable(string Name, Note? Note, Note? DevNote);
 
 
-public record Node
-(
-    int Id,
-    string Name,
-    string NodeType,
-    string NodeSubType,
-    string? NodeItem,
-    string? NodeAddress,
-    DoorEnvironment[]? DoorEnvironments,
-    bool? UseImplicitDoorUnlocks,
-    bool? UseImplicitLeaveNormally,
-    bool? UseImplicitComeInNormally,
-    bool? UseImplicitComeInWithMockball,
-    Requirement? InteractionRequires,
-    int? SpawnAt,
-    NodeLock[]? Locks,
-    TwinDoorAddress[]? TwinDoorAddresses,
-    string[]? Utilities,
-    ViewableNode[]? ViewableNodes,
-    string[]? Yields,
-    Note? Note,
-    Note? DevNote
-);
+public class Node
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public required string NodeType { get; set; }
+    public required string NodeSubType { get; set; }
+    public string? NodeItem { get; set; }
+    public string? NodeAddress { get; set; }
+    public DoorEnvironment[]? DoorEnvironments { get; set; }
+    public string? DoorOrientation { get; set; }
+    public bool? UseImplicitDoorUnlocks { get; set; }
+    public bool? UseImplicitLeaveNormally { get; set; }
+    public bool? UseImplicitComeInNormally { get; set; }
+    public bool? UseImplicitComeInWithMockball { get; set; }
+    public Requirement? InteractionRequires { get; set; }
+    public int? SpawnAt { get; set; }
+    public NodeLock[]? Locks { get; set; }
+    public TwinDoorAddress[]? TwinDoorAddresses { get; set; }
+    public string[]? Utilities { get; set; }
+    public ViewableNode[]? ViewableNodes { get; set; }
+    public string[]? Yields { get; set; }
+    public Note? Note { get; set; }
+    public Note? DevNote { get; set; }
+}
 
 public record TwinDoorAddress(string RoomAddress, string DoorAddress);
 public record ViewableNode(int Id, Strat[] Strats);
 
-public record NodeLock
-(
-    string LockType,
-    Requirement? Lock,
-    string Name,
-    Strat[] UnlockStrats,
-    Note? Note,
-    Note? DevNote,
-    string[]? Yields
-);
+public class NodeLock
+{
+    public required string LockType { get; set; }
+    public Requirement? Lock { get; set; }
+    public required string Name { get; set; }
+    public Strat[]? UnlockStrats { get; set; }
+    public Note? Note { get; set; }
+    public Note? DevNote { get; set; }
+    public string[]? Yields { get; set; }
+}
 
 public record Link
 (
@@ -142,30 +144,34 @@ public record Runway
     int? SteepDownTiles
 );
 
-public record Strat
-(
-    int[]? Link,
-    string Name,
-    bool? Notable,
-    string? ReusableRoomwideNotable,
-    EntranceCondition? EntranceCondition,
-    Requirement Requires,
-    ExitCondition? ExitCondition,
-    object? GModeRegainMobility,
-    bool? BypassesDoorShell,
-    UnlockDoorItem[]? UnlockDoors,
-    string[]? ClearsObstacles,
-    string[]? ResetsObstacles,
-    string[]? SetsFlags,
-    StratFailure[]? Failures,
-    Note? Note,
-    Note? DevNote
-)
+public class Strat : ICloneable
 {
+    public int[]? Link { get; set; }
+    public required string Name { get; set; }
+    public bool? Notable { get; set; }
+    public string? ReusableRoomwideNotable { get; set; }
+    public EntranceCondition? EntranceCondition { get; set; }
+    public required Requirement Requires { get; set; }
+    public ExitCondition? ExitCondition { get; set; }
+    public object? GModeRegainMobility { get; set; }
+    public bool? BypassesDoorShell { get; set; }
+    public UnlockDoorItem[]? UnlockDoors { get; set; }
+    public string[]? ClearsObstacles { get; set; }
+    public string[]? ResetsObstacles { get; set; }
+    public string[]? SetsFlags { get; set; }
+    public StratFailure[]? Failures { get; set; }
+    public Note? Note { get; set; }
+    public Note? DevNote { get; set; }
+
     public override string ToString()
     {
         // Return a format string with the strat name and links
-        return $"{Name} ({string.Join(", ", Link!)})";
+        return $"{Name} ({(Link != null ? string.Join(", ", Link) : "")})";
+    }
+
+    public object Clone()
+    {
+        return this.MemberwiseClone();
     }
 }
 

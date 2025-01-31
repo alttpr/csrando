@@ -26,7 +26,7 @@ maps:
               outletid: 0x57
             - name: "C House"
               entranceid: 0x53
-              outletid: 0x92
+              outletid: 0x93
           mobs:
             - name: "Village of Outcasts - Moblin 1"
               position: { x: 0x13, y: 0x06 }

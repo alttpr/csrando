@@ -23,6 +23,7 @@ public sealed class World : IWorld
     public BaseVertex Start { get; }
     private readonly Dictionary<string, Item> _allItems = new();
     public List<string> AllowedTechs { get; init; }
+    public Map? Map { get; set; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -39,6 +40,7 @@ public sealed class World : IWorld
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
         StartingItems.AddItem(GetItem("f_ZebesAwake"));
+        StartingItems.AddItem(GetItem("f_TourianOpen"));
 
         JsonData = new JsonReader(Config);
         JsonData.Load();
@@ -46,6 +48,9 @@ public sealed class World : IWorld
         AllowedTechs = Config.LogicTechs[Config.Logic].Concat(Config.CustomTech).ToList();
 
         RequirementHandler.Initialize(JsonData, this);
+
+        var mapRandomizer = new MapRandomizer(JsonData, this, prng);
+        mapRandomizer.Randomize();
 
         var preprocessor = new GraphPreprocessor(JsonData, this);
         preprocessor.Preprocess();

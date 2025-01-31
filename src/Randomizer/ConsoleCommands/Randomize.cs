@@ -69,29 +69,42 @@ internal sealed class Randomize : Command
         for (int i = 0; i < bulk; i++)
         {
             var worldConfigs = GetWorldConfigs(context);
-            var randomizer = RandomizerFactory.Create(
-                worldConfigs,
-                context.ParseResult.GetValueForOption(_seed)
-            );
-            randomizer.Randomize();
-            if (!randomizer.IsWinnable())
-                throw new Exception($"Game Unwinnable.");
-
-            if (outputDirectory != null)
+            bool generated = false;
+            while (!generated)
             {
-                baseRom ??= randomizer.ProvideBaseRom();
-                if (baseRom != null)
-                    randomizer.Write(baseRom, baseBPS, outputDirectory);
-                else
-                    _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
-            }
-            if (dumpSpoiler)
-            {
-                Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
+                try
                 {
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                    WriteIndented = true
-                }));
+                    var randomizer = RandomizerFactory.Create(
+                        worldConfigs,
+                        context.ParseResult.GetValueForOption(_seed)
+                    );
+
+                    randomizer.Randomize();
+                    if (!randomizer.IsWinnable())
+                        throw new Exception($"Game Unwinnable.");
+
+                    if (outputDirectory != null)
+                    {
+                        baseRom ??= randomizer.ProvideBaseRom();
+                        if (baseRom != null)
+                            randomizer.Write(baseRom, baseBPS, outputDirectory);
+                        else
+                            _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
+                    }
+                    if (dumpSpoiler)
+                    {
+                        Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
+                        {
+                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                            WriteIndented = true
+                        }));
+                    }
+                    generated = true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to generate ROM.");
+                }
             }
         }
         _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);

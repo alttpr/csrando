@@ -1,5 +1,6 @@
 ﻿namespace Randomizer.Games.Combo;
 
+using MathNet.Numerics.Distributions;
 using Randomizer.RomModifications;
 using System;
 using System.Collections.Generic;
@@ -16,20 +17,20 @@ internal class PortalWriter
         [("sm", "alttp")] =
             [
             //   door    game    dest    args
-                [0x8976, 0x0001, 0x0200, 0x0000],
-                [0x9306, 0x0001, 0x0201, 0x0000],
-                [0xa8f4, 0x0001, 0x0202, 0x0040],
-                [0xae00, 0x0001, 0x0203, 0x0040]
+                [0xae0c, 0x0001, 0x0200, 0x0000],
+                [0xaf0c, 0x0001, 0x0201, 0x0000],
+                [0xaf8c, 0x0001, 0x0202, 0x0040],
+                [0xb00c, 0x0001, 0x0203, 0x0040]
             ],
         [("sm", "z1")] = [],
         [("sm", "m1")] = [],
         [("alttp", "sm")] =
             [
             //   room    owscrl  game    dest    args
-                [0x0122, 0x0035, 0x0000, 0x8bce, 0x0000],
-                [0x00e5, 0x0003, 0x0000, 0x97c2, 0x0000],
-                [0x010e, 0x0077, 0x0000, 0xa894, 0x0000],
-                [0x0115, 0x0070, 0x0000, 0xae0c, 0x0000]
+                [0x0122, 0x0035, 0x0000, 0xae00, 0x0000],
+                [0x00e5, 0x0003, 0x0000, 0xaf00, 0x0000],
+                [0x010e, 0x0077, 0x0000, 0xaf80, 0x0000],
+                [0x0115, 0x0070, 0x0000, 0xb000, 0x0000]
             ],
         [("alttp", "m1")] =
             [
@@ -73,6 +74,7 @@ internal class PortalWriter
             if (world.Config.Games.Alttp != null)
             {
                 address = WritePortals(rom, address, _portalData[("sm", "alttp")]);
+                //address = WriteDynamicsPortals(rom, address, world, ("sm", "alttp"));
             }
 
             if (world.Config.Games.Zelda1 != null)
@@ -93,6 +95,7 @@ internal class PortalWriter
             if (world.Config.Games.SuperMetroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("alttp", "sm")]);
+                //address = WriteDynamicsPortals(rom, address, world, ("alttp", "sm"));
             }
             if (world.Config.Games.Zelda1 != null)
             {
@@ -155,6 +158,88 @@ internal class PortalWriter
             {
                 rom.Write(address, BitConverter.GetBytes(portalValue));
                 address += 2;
+            }
+        }
+
+        return address;
+    }
+
+    //TODO: This is broken, we need to fix it later
+    private static int WriteDynamicsPortals(RomModifications.Rom rom, int address, World world, (string from, string to) gamePair)
+    {
+        if(gamePair.from == "sm" && gamePair.to == "alttp")
+        {
+            int index = 0;
+            foreach ((var portalFrom, var portalTo) in world.Portals)
+            {
+                SuperMetroid.Vertex smPortal;
+                Randomizer.Graph.Vertex otherPortal;
+
+                if (portalFrom.World.GameId == "sm")
+                {
+                    smPortal = (SuperMetroid.Vertex)portalFrom;
+                    otherPortal = portalTo;
+                }
+                else
+                {
+                    continue;
+                }
+
+                //   door    game    dest    args
+                //uint doorPtrIn = uint.Parse(smPortal.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
+                //var otherDoor = (SuperMetroid.Vertex)smPortal.Edges.First(x => ((SuperMetroid.Vertex)x.From).RoomId != ((SuperMetroid.Vertex)x.To).RoomId).To;
+                //uint doorPtrOut = uint.Parse(otherDoor.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
+
+                long doorPtr = portalFrom.Addresses![0];
+
+                //var orginalData = _portalData[gamePair][index];
+                //var newData = new uint[] { (uint)(doorPtr & 0xFFFF), 1, orginalData[2], orginalData[3] };
+
+
+
+                //foreach (var portalValue in newData)
+                //{
+                //    rom.Write(address, BitConverter.GetBytes(portalValue));
+                //    address += 2;
+                //}
+
+                index++;
+            }
+        }
+        else if(gamePair.from == "alttp" &&  gamePair.to == "sm")
+        {
+            int index = 0;
+            foreach ((var portalFrom, var portalTo) in world.Portals)
+            {
+                SuperMetroid.Vertex smPortal;
+                Randomizer.Graph.Vertex otherPortal;
+
+                if (portalFrom.World.GameId == "sm")
+                {
+                    smPortal = (SuperMetroid.Vertex)portalFrom;
+                    otherPortal = portalTo;
+                }
+                else
+                {
+                    smPortal = (SuperMetroid.Vertex)portalTo;
+                    otherPortal = portalFrom;
+                }
+
+                // door    game dest    args
+                uint doorPtrIn = uint.Parse(smPortal.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
+                var otherDoor = (SuperMetroid.Vertex)smPortal.Edges.First(x => ((SuperMetroid.Vertex)x.From).RoomId != ((SuperMetroid.Vertex)x.To).RoomId).To;
+                uint doorPtrOut = uint.Parse(otherDoor.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
+
+                var orginalData = _portalData[gamePair][index];
+                var newData = new uint[] { orginalData[0], orginalData[1], orginalData[2], doorPtrOut & 0xFFFF, orginalData[4] };
+
+                foreach (var portalValue in newData)
+                {
+                    rom.Write(address, BitConverter.GetBytes(portalValue));
+                    address += 2;
+                }
+
+                index++;
             }
         }
 

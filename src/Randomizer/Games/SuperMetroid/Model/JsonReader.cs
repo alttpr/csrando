@@ -47,7 +47,13 @@ public class JsonReader
     public TechCollection Techs { get; set; } = new TechCollection([]);
     public HelperCollection Helpers { get; set; } = new HelperCollection([]);
     public List<EnemyCollection> Enemies { get; set; } = new();
+    public WeaponCollection Weapons { get; set; } = new WeaponCollection([]);
     public List<BossScenarioCollection> BossScenarios { get; set; } = new();
+    public List<RoomGeometry> RoomGeometries { get; set; } = new();
+    public MapRoomData MapRoomData { get; set; } = new() { Rooms = new() };
+    public List<RoomHeader> RoomHeaders { get; set; } = new();
+    public List<RoomPLM> RoomPLMs { get; set; } = new();
+    public List<DoorPLMMap> DoorPLMMaps { get; set; } = new();
 
     private Dictionary<string, Dictionary<string, object>> vertices = new();
     private Dictionary<Requirement, DirectedUndirectedPair> edges = new();
@@ -202,6 +208,12 @@ public class JsonReader
         Helpers = LoadFile<HelperCollection>(Path.Combine(path, "helpers.json")) ?? new HelperCollection([]);
         Enemies = LoadFiles<EnemyCollection>(Path.Combine(path, "enemies")).Where(x => x.Enemies != null).ToList();
         BossScenarios = LoadFiles<BossScenarioCollection>(Path.Combine(path, "enemies")).Where(x => x.Scenarios != null).ToList();
+        Weapons = LoadFile<WeaponCollection>(Path.Combine(path, "weapons/main.json")) ?? new WeaponCollection([]);
+        RoomGeometries = LoadFile<List<RoomGeometry>>(Path.Combine(path, "room_geometry.json")) ?? new List<RoomGeometry>();
+        MapRoomData = LoadFile<MapRoomData>(Path.Combine(path, "map_tiles.json")) ?? new MapRoomData { Rooms = new() };
+        RoomHeaders = LoadFile<List<RoomHeader>>(Path.Combine(path, "room_headers.json")) ?? new List<RoomHeader>();
+        RoomPLMs = LoadFile<List<RoomPLM>>(Path.Combine(path, "plm_data.json")) ?? new List<RoomPLM>();
+        DoorPLMMaps = LoadFile<List<DoorPLMMap>>(Path.Combine(path, "plm_door_map.json")) ?? new List<DoorPLMMap>();
 
         RoomById = Rooms.ToDictionary(r => r.Id);
         NodeById = Rooms

@@ -19,13 +19,7 @@ internal sealed class ItemPooler : IItemPooler
     private SetLocations BuildLocations(IWorld[] worlds)
     {
         var setLocations = new SetLocations();
-        //foreach (var vertex in worlds.SelectMany(world => world.GetLocations()).OfType<Vertex>())
-        //{
-        //    if (vertex.Type == VertexType.Item)
-        //    {
-        //        setLocations.Add(vertex, [ItemSetName.DefaultSet, .. vertex.ItemSet]);
-        //    }
-        //}
+
         foreach(var world in worlds.OfType<World>())
         {
             if(world.AlttpWorld != null)
@@ -95,6 +89,15 @@ internal sealed class ItemPooler : IItemPooler
         pool.AddRange(world.SMWorld == null ? [] : new SuperMetroid.ItemPooler([world.SMWorld], _prng).Pool);
         pool.AddRange(world.Z1World == null ? [] : new Zelda1.ItemPooler([world.Z1World], _prng).Pool);
         pool.AddRange(world.M1World == null ? [] : new Metroid.ItemPooler([world.M1World], _prng).Pool);
+
+        // Patch item pool for quad
+        if(world.AlttpWorld != null)
+        {
+            pool.RemoveAll(p => p.Item.Name == "ProgressiveBow");
+            pool.Add((ItemSetName.DefaultSet, 3, world.AlttpWorld.GetItem("Bow")));
+            pool.Add((ItemSetName.DefaultSet, 3, world.AlttpWorld.GetItem("SilverArrowUpgrade")));
+        }
+
         return pool;
     }
 }

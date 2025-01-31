@@ -8,6 +8,8 @@ using AlttpWorld = Randomizer.Games.Alttp.World;
 using SMWorld = Randomizer.Games.SuperMetroid.World;
 using Z1World = Randomizer.Games.Zelda1.World;
 using M1World = Randomizer.Games.Metroid.World;
+using Randomizer.Games.SuperMetroid.Model;
+using Randomizer.RomModifications;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : IWorld
@@ -30,6 +32,8 @@ public sealed class World : IWorld
     public SMWorld? SMWorld { get; init; }
     public Z1World? Z1World { get; init; }
     public M1World? M1World { get; init; }
+
+    public List<(BaseVertex, BaseVertex)> Portals { get; } = new();
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -72,23 +76,124 @@ public sealed class World : IWorld
             StartingItems = StartingItems.Merge(M1World.StartingItems);
         }
 
-        if(Config.Games.SuperMetroid != null && Config.Games.Alttp != null)
+        if(Config.Games.Alttp != null && Config.Games.Zelda1 != null)
         {
-            // Add cross-game portals if both these games are enabled
-
-            // Add norfair map to death moutain portal
-            Graph.AddDirected(SMWorld!.GetLocation("Norfair - Business Center - Middle Left Door"), AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetLocation("Norfair - Business Center - Middle Left Door"), AlttpWorld!.GetItem("fixed"));
-
-            // Add maridia missile refill to dark world shopping mall
-            Graph.AddDirected(SMWorld!.GetLocation("Maridia - Halfie Climb Room - Bottom Right Door"), AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetLocation("Maridia - Halfie Climb Room - Bottom Right Door"), AlttpWorld!.GetItem("fixed"));
-
-            // Add lower norfair refill to mire area
-            Graph.AddDirected(SMWorld!.GetLocation("Norfair - Screw Attack Room - Middle Right Door"), AlttpWorld!.GetLocation("Mire"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("Mire"), SMWorld!.GetLocation("Norfair - Screw Attack Room - Middle Right Door"), AlttpWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("start"), Z1World!.Start, AlttpWorld!.GetItem("fixed"));
         }
 
+        if (Config.Games.Alttp != null && Config.Games.Metroid != null)
+        {
+            Graph.AddDirected(AlttpWorld!.GetLocation("start"), M1World!.Start, AlttpWorld!.GetItem("fixed"));
+        }
+
+        if (Config.Games.SuperMetroid != null && Config.Games.Alttp != null)
+        {
+            // Create the portal entrances for the cross-game portals in the four rooms we need to connect for SM
+            var crateriaMapStationPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Crateria - Crateria Map Room - Portal - In",
+                Type = VertexType.Entrance,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83AE00).Value],                
+            });
+
+            var crateriaMapStationPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Crateria - Crateria Map Room - Portal - Out",
+                Type = VertexType.Outlet,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83AE0A).Value]
+            });
+
+            var crateriaMapStation = (SuperMetroid.Vertex)SMWorld!.GetLocation("Crateria - Crateria Map Room - Left Door");
+            Graph.AddDirected(crateriaMapStationPortalIn, crateriaMapStation, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(crateriaMapStation, crateriaMapStationPortalOut, SMWorld!.GetItem("fixed"));
+
+            Graph.AddDirected(crateriaMapStationPortalOut, AlttpWorld!.GetLocation("start"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("start"), crateriaMapStationPortalIn, AlttpWorld!.GetItem("fixed"));
+
+            //Portals.Add((crateriaMapStationPortalOut, AlttpWorld!.GetLocation("start")));
+            //Portals.Add((AlttpWorld!.GetLocation("start"), crateriaMapStationPortalIn));
+
+            var norfairMapPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Norfair - Norfair Map Room - Portal - In",
+                Type = VertexType.Entrance,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83AF00).Value]
+            });
+
+            var norfairMapPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Norfair - Norfair Map Room - Portal - Out",
+                Type = VertexType.Outlet,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83AF0A).Value]
+            });
+
+            var norfairMap = (SuperMetroid.Vertex)SMWorld!.GetLocation("Norfair - Norfair Map Room - Right Door");
+            Graph.AddDirected(norfairMapPortalIn, norfairMap, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(norfairMap, norfairMapPortalOut, SMWorld!.GetItem("fixed"));
+
+            Graph.AddDirected(norfairMapPortalOut, AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("West Death Mountain"), norfairMapPortalIn, AlttpWorld!.GetItem("fixed"));
+
+            //Portals.Add((norfairMapPortalOut, AlttpWorld!.GetLocation("West Death Mountain")));
+            //Portals.Add((AlttpWorld!.GetLocation("West Death Mountain"), norfairMapPortalIn));
+
+            var maridiaMissileRefillPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Maridia - Maridia Missile Refill Room - Portal - In",
+                Type = VertexType.Entrance,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83AF80).Value]
+            });
+
+            var maridiaMissileRefillPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Maridia - Maridia Missile Refill Room - Portal - Out",
+                Type = VertexType.Outlet,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83AF8A).Value]
+            });
+
+            var maridiaMissileRefill = (SuperMetroid.Vertex)SMWorld!.GetLocation("Maridia - Maridia Missile Refill Room - Left Door");
+            Graph.AddDirected(maridiaMissileRefillPortalIn, maridiaMissileRefill, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(maridiaMissileRefill, maridiaMissileRefillPortalOut, SMWorld!.GetItem("fixed"));
+
+            Graph.AddDirected(maridiaMissileRefillPortalOut, AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("Dark Shopping Mall"), maridiaMissileRefillPortalIn, AlttpWorld!.GetItem("fixed"));
+
+            //Portals.Add((maridiaMissileRefillPortalOut, AlttpWorld!.GetLocation("Dark Shopping Mall")));
+            //Portals.Add((AlttpWorld!.GetLocation("Dark Shopping Mall"), maridiaMissileRefillPortalIn));
+
+
+            var lowerNorfairRefillPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Norfair - Golden Torizo Energy Recharge - Portal - In",
+                Type = VertexType.Entrance,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83B000).Value]
+            });
+
+            var lowerNorfairRefillPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
+            {
+                Name = "Norfair - Golden Torizo Energy Recharge - Portal - Out",
+                Type = VertexType.Outlet,
+                World = SMWorld!,
+                Addresses = [((SNES)0x83B00A).Value]
+            });
+
+            var lowerNorfairRefill = (SuperMetroid.Vertex)SMWorld!.GetLocation("Norfair - Golden Torizo Energy Recharge - Left Door");
+            Graph.AddDirected(lowerNorfairRefillPortalIn, lowerNorfairRefill, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(lowerNorfairRefill, lowerNorfairRefillPortalOut, SMWorld!.GetItem("fixed"));
+
+            Graph.AddDirected(lowerNorfairRefillPortalOut, AlttpWorld!.GetLocation("Mire"), SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(AlttpWorld!.GetLocation("Mire"), lowerNorfairRefillPortalIn, AlttpWorld!.GetItem("fixed"));
+
+            //Portals.Add((lowerNorfairRefillPortalOut, AlttpWorld!.GetLocation("Mire")));
+            //Portals.Add((AlttpWorld!.GetLocation("Mire"), lowerNorfairRefillPortalIn));
+        }
     }
 
     public Inventory ComputeStartingItems()
@@ -184,6 +289,7 @@ public sealed class World : IWorld
     
     public bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
+        
         var searcher = GetSearcherForWorld(Graph, Start, startingInventory);
         if (AlttpWorld != null && !searcher.HasFound(AlttpWorld.GetItem("Triforce")))
         {
