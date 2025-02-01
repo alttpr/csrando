@@ -29,7 +29,7 @@ public class YamlReader
 
     private const string ItemsPath = "items.yml";
     private const string VerticesPath = "Vertices";
-    private const string BossesPath = "bosses.yml";
+    private const string BossesPath = "Enemizer/bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
 
     private static readonly Lazy<Vertices> _cachedVertices = new(() =>
