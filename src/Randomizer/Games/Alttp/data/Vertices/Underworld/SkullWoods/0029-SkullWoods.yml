@@ -27,9 +27,6 @@ rooms:
               - name: "Skull Woods - Boss Room - Armos Overlord"
                 position: { x: 0x17, y: 0x18, z: 0x00 }
                 sprite: "ArmosCoordinator"
-              - name: "Skull Woods - Boss Room - Armos Knight's Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatLanmolas:
               - name: "Skull Woods - Boss Room - Lanmolas 1"
                 position: { x: 0x16, y: 0x17, z: 0x00 }
@@ -40,23 +37,14 @@ rooms:
               - name: "Skull Woods - Boss Room - Lanmolas 3"
                 position: { x: 0x17, y: 0x19, z: 0x00 }
                 sprite: "Lanmolas"
-              - name: "Skull Woods - Boss Room - Lanmolas Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatMoldorm:
               - name: "Skull Woods - Boss Room - Moldorm"
                 position: { x: 0x12, y: 0x1e, z: 0x00 }
                 sprite: "Moldorm"
-              - name: "Skull Woods - Boss Room - Moldorm Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatHelmasaur:
               - name: "Skull Woods - Boss Room - Helmasaur King"
                 position: { x: 0x17, y: 0x16, z: 0x00 }
                 sprite: "Helmasaur"
-              - name: "Skull Woods - Boss Room - Helmasaur King Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatArrghus:
               - name: "Skull Woods - Boss Room - Arrghus"
                 position: { x: 0x17, y: 0x17, z: 0x00 }
@@ -100,23 +88,14 @@ rooms:
               - name: "Skull Woods - Boss Room - Arrghi 13"
                 position: { x: 0x17, y: 0x17, z: 0x00 }
                 sprite: "ArrghusSpawn"
-              - name: "Skull Woods - Boss Room - Arrghus Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatMothula:
               - name: "Skull Woods - Boss Room - Mothula"
                 position: { x: 0x18, y: 0x16, z: 0x00 }
                 sprite: "Mothula"
-              - name: "Skull Woods - Boss Room - Mothula Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatBlind:
               - name: "Skull Woods - Boss Room - Blind"
                 position: { x: 0x19, y: 0x15, z: 0x00 }
                 sprite: "Blind"
-              - name: "Skull Woods - Boss Room - Blind Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatKholdstare:
               - name: "Skull Woods - Boss Room - Kholdstare's Shell"
                 position: { x: 0x17, y: 0x15, z: 0x00 }
@@ -127,20 +106,18 @@ rooms:
               - name: "Skull Woods - Boss Room - Kholdstare"
                 position: { x: 0x17, y: 0x15, z: 0x00 }
                 sprite: "Kholdstare"
-              - name: "Skull Woods - Boss Room - Kholdstare Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
             DefeatVitreous:
               - name: "Skull Woods - Boss Room - Vitreous"
                 position: { x: 0x17, y: 0x15, z: 0x00 }
                 sprite: "Vitreous"
-              - name: "Skull Woods - Boss Room - Vitreous Moving Floor"
-                position: { x: 0x07, y: 0x16, z: 0x00 }
-                sprite: "MovingFloor"
           connections:
             # required for Boss Shuffle to work
             bossKillShufflerOverwrite:
               - "Skull Woods - Boss"
+          mobs:
+            - name: "Skull Woods - Boss Room - Moving Floor"
+              position: { x: 0x07, y: 0x16, z: 0x00 }
+              sprite: "MovingFloor"
         - name: "Skull Woods - Boss"
           connections:
             fixed:
