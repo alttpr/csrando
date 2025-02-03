@@ -228,6 +228,12 @@ public class Rom : GameRom
 
                 Write((Address)door.from.exit_ptr, DoorReader.GetDoorBytes(originalDoorData));
 
+                if (door.from.exit_ptr == 0x1A798) {
+                    // Pants Room right door
+                    // Also write the same data to the East Pants Room right door
+                    Write((Address)0x1A7BC, DoorReader.GetDoorBytes(originalDoorData));
+                }
+
                 if (door.bidirectional == true)
                 {
                     originalDoorData = doorData.Where(d => d.ptr == door.from.entrance_ptr).First();
@@ -307,7 +313,171 @@ public class Rom : GameRom
             WriteMiniMapData(world);
             WriteDoorCaps(world);
 
+            WriteEscapeRoomModifications(world);
+            WriteMiscMapPatches(world);
+            WriteMusicOverrides(world);
+            WriteBuffedDrops(world);
+            WriteQuickBigBoy(world);
+
         }
+    }
+
+    private void WriteBuffedDrops(World world)
+    {
+        /*
+         * ; Adjust drop rates of respawning enemies and Kagos:
+        ; - Double PB drop rates of respawning enemies (Gamet, Zeb, Geega, Zebbo, Zoa, Covern)
+        ; - Double Super drop rate of Geega, Zeb, and Kagos.
+        ; - At the expense of nothing, small energy, and missiles drop rates
+        ; - Shift some drop rate into large energy to compensate for loss of some small 
+        ;                  __________________________ ; 0: Small health
+        ;                 |     _____________________ ; 1: Big health
+        ;                 |    |     ________________ ; 2: Missiles
+        ;                 |    |    |     ___________ ; 3: Nothing
+        ;                 |    |    |    |     ______ ; 4: Super missiles
+        ;                 |    |    |    |    |     _ ; 5: Power bombs
+        ;                 |    |    |    |    |    |
+        org $B4F25A : db $3C, $3C, $32, $05, $3C, $14  ; Gamet (enemy $F213)
+        org $B4F248 : db $14, $41, $1E, $00, $78, $14  ; Zeb (enemy $F193)   
+        org $B4F24E : db $14, $41, $1E, $00, $78, $14  ; Geega (enemy $F253)
+        org $B4F254 : db $00, $8C, $05, $00, $64, $0A  ; Zebbo (enemy $F1D3)
+        org $B4F260 : db $00, $64, $3C, $05, $46, $14  ; Zoa (enemy $DA7F)
+        org $B4F266 : db $32, $5F, $32, $00, $14, $28  ; Covern (enemy $E77F)
+        org $B4F26C : db $23, $5F, $3C, $05, $28, $14  ; Kago (enemy $E7FF)
+
+        ; Make Power Bomb drop give 2 Power Bombs:
+        org $86F0D9
+            LDA #$0002
+        */
+
+        Write((SNES)0xB4F25A, [0x3C, 0x3C, 0x32, 0x05, 0x3C, 0x14]);
+        Write((SNES)0xB4F248, [0x14, 0x41, 0x1E, 0x00, 0x78, 0x14]);
+        Write((SNES)0xB4F24E, [0x14, 0x41, 0x1E, 0x00, 0x78, 0x14]);
+        Write((SNES)0xB4F254, [0x00, 0x8C, 0x05, 0x00, 0x64, 0x0A]);
+        Write((SNES)0xB4F260, [0x00, 0x64, 0x3C, 0x05, 0x46, 0x14]);
+        Write((SNES)0xB4F266, [0x32, 0x5F, 0x32, 0x00, 0x14, 0x28]);
+        Write((SNES)0xB4F26C, [0x23, 0x5F, 0x3C, 0x05, 0x28, 0x14]);
+
+        Write((SNES)0x86F0D9, [0xA9, 0x02]);
+    }
+
+    private void WriteQuickBigBoy(World world)
+    {
+        /*
+        ;;;
+        ; Shorten Big Boy cutscene:
+        ;;;
+
+        ; Delay before Big Boy attacks Dead Sidehopper
+        org $A9F031
+            LDA #$002C          ; replaces: LDA #$01D0
+
+        ; Hop initial velocities (make the first hop bigger, to effective skip a hop)
+        org $A9D951
+            dw $FE00, $FE00, $FC00, $FE00
+            dw $0120, $0250, $0300, $01C0
+
+        ; Delay between Dead Sidehopper hops
+        org $A9D916
+            LDA #$0001          ; replaces: LDA #$0040
+
+        ; X position that Big Boy rushes toward
+        org $A9F049
+            LDA #$01B0          ; replaces: LDA #$0248
+
+        ; Big Boy realizing what he did
+        org $A9F2A8
+            LDA #$0020           ; replaces: LDA #$0078
+
+        ; Big Boy rising from Samus
+        org $A9F2BA 
+            LDA #$0030           ; replaces: LDA #$00C0
+
+        ; Big Boy backing off
+        org $A9F2E6
+            LDA #$0016          ; replaces: LDA #$0058
+
+        ; Big Boy going left guiltily
+        org $A9F31E 
+            LDA #$0016          ; replaces: LDA #$0058 
+
+        ; Big Boy going right guiltily
+        org $A9F34A
+            LDA #$0016          ; replaces: LDA #$0100  
+        */
+
+        Write((SNES)0xA9F031, [0x2C]);
+        Write((SNES)0xA9D951, [0x00, 0xFE, 0x00, 0xFE, 0x00, 0xFC, 0x00, 0xFE, 0x20, 0x01, 0x50, 0x02, 0x00, 0x03, 0xC0, 0x01]);
+        Write((SNES)0xA9D916, [0xA9, 0x01, 0x00]);
+        Write((SNES)0xA9F049, [0xA9, 0xB0, 0x01]);
+        Write((SNES)0xA9F2A8, [0xA9, 0x20, 0x00]);
+        Write((SNES)0xA9F2BA, [0xA9, 0x30, 0x00]);
+        Write((SNES)0xA9F2E6, [0xA9, 0x16, 0x00]);
+        Write((SNES)0xA9F31E, [0xA9, 0x16, 0x00]);
+        Write((SNES)0xA9F34A, [0xA9, 0x16, 0x00]);
+
+    }
+
+    private void WriteMusicOverrides(World world)
+    {
+        // Write Tourian 1 song into MB room
+        Write((SNES)0x8FDD72, [0x1E, 0x05]);
+        Write((SNES)0x8FDD8C, [0x1E, 0x05]);
+
+        // Write Super Metrroid song 2 into big boy room
+        Write((SNES)0x8FDCC7, [0x45, 0x06]);
+        Write((SNES)0x8FDCE1, [0x45, 0x06]);
+    }
+
+    private void WriteMiscMapPatches(World world)
+    {
+        // In Kraid's room, no longer restrict Samus X position to left screen:
+        Write((SNES)0xA7C9EE, [0x60]); // RTS
+
+        // In Shaktool room, skip setting screens to red scroll (so that it won't glitch out when entering from the right):
+        Write((SNES)0x84B8DC, [0x60]); // RTS
+
+        // Restore acid in Tourian Escape Room 4:
+        Write((SNES)0x8FDF03, [0xC9, 0x53]); // Vanilla setup ASM pointer (to undo effect of `no_explosions_before_escape` patch)
+        Write((SNES)0x8FC95B, [0x60]); // RTS (return early from setup ASM to skip setting up shaking)
+
+        // Remove fake gray door that gets drawn in Phantoon's Room:
+        Write((SNES)0xA7D4E5, [0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA]);
+
+        // In Crocomire's initialization, skip setting the leftmost screens to red scroll. Even in the vanilla game there
+        // is no purpose to this, as they are already red. But it important to skip here in the rando, because when entering
+        // from the left door with Crocomire still alive, these scrolls are set to blue by the door ASM, and if they
+        // were overridden with red it would break the graphics.
+        Write((SNES)0xA48A92, [0xEA, 0xEA, 0xEA, 0xEA]); // NOP:NOP:NOP:NOP
+
+        // Release Spore Spawn camera so it won't be glitched when entering from the right:
+        Write((SNES)0xA5EADA, [0xEA, 0xEA, 0xEA]); // NOP:NOP:NOP
+
+        // Likewise release Kraid camera so it won't be as glitched when entering from the right:
+        Write((SNES)0xA7A9F4, [0xEA, 0xEA, 0xEA, 0xEA]); // NOP:NOP:NOP:NOP
+
+        // Adjust the door cap location for the Green Brinstar Main Shaft door to itself left-to-right:
+        // In vanilla it spawns a screen to the left of where it "should". We keep it wrong, to retain
+        // the behavior of the door appearing immediately closed, but move the spawn location to be in an
+        // out-of-the-way off-camera location, in the top-right of the room.
+        Write((SNES)0x838CF2, [0x21, 0x06]);
+    }
+
+
+    // Modifies tourian escape rooms to be more map-rando friendly
+    private void WriteEscapeRoomModifications(World world)
+    {
+        Write((SNES)0x8FC91F, [0x60]); // Disable Escape Room 1 Setup ASM
+        Write((SNES)0x8FC933, [0x60]); // Disable Escape Room 2 Setup ASM
+        Write((SNES)0x8FC946, [0x60]); // Disable Escape Room 3 Setup ASM
+        Write((SNES)0x8FC953, [0x60]); // Disable Escape Room 4 Setup ASM
+
+        Write((SNES)0x8FE5A0, [0x60]); // Disable Escape Room 1 & 3 Main ASM   
+        Write((SNES)0x8FE57C, [0x60]); // Disable Escape Room 2 Main ASM
+        Write((SNES)0x8FE5A4, [0x60]); // Disable Escape Room 4 Main ASM
+
+        // Remove the wall from the right side of escape room 1
+        Write((SNES)0x8FC881, [0x00, 0x00]);
     }
 
     private int ClampSamusPosition(World world, int asmPtr)
@@ -440,6 +610,18 @@ public class Rom : GameRom
             // Write to the new "map area" index what area this room belongs to on the map
             var roomHeader = world.JsonData.RoomHeaders.First(r => (r.Address & 0xFFFF) == (roomGeometry.rom_address & 0xFFFF));
             Write((SNES)(0x8FFD00 + (roomHeader.RoomArea * 128) + roomHeader.RoomIndex), [(byte)mapArea]);
+
+            if (roomGeometry.name == "Pants Room")
+            {
+                // Also update east pants room
+                Write((SNES)(0x8FFD00 + (roomHeader.RoomArea * 128) + 0x25), [(byte)mapArea]);
+            }
+
+            if(roomGeometry.name == "West Ocean")
+            {
+                // Also update homing geemer room
+                Write((SNES)(0x8FFD00 + (roomHeader.RoomArea * 128) + 0x11), [(byte)mapArea]);
+            }
         }
     }
 

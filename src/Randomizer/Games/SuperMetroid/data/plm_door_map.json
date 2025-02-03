@@ -441,6 +441,27 @@
   },
   {
     "RoomAddress": 39641,
+    "DoorAddress": 101614,
+    "RoomId": 44,
+    "NodeId": 7,
+    "XPosition": 14,
+    "YPosition": 118,
+    "PLMs": [
+      {
+        "room": "0x9AD9",
+        "state": "0x9AE6",
+        "address": "0x8F848E",
+        "plm_index": "0B",
+        "plm_id": "0xC842",
+        "x_position": "0E",
+        "y_position": "76",
+        "main_plm_variable": "0x9024",
+        "DoorType": 51266
+      }
+    ]
+  },
+  {
+    "RoomAddress": 39641,
     "DoorAddress": 102166,
     "RoomId": 44,
     "NodeId": 8,

@@ -211,6 +211,7 @@ public static class RomWriter
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
+        rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);
 
         rom.SetGameState(config.State);
         rom.SetSwordlessMode(config.Weapon == WeaponOption.Swordless);

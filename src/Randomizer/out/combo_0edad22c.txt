@@ -1,0 +1,966 @@
+info: Randomizer.ConsoleCommands.Randomize[0] Read 1 worlds from passed config file.
+info: Randomizer.Graph.GameRandomizer[0] Using seed: 249221676
+info: Randomizer.Graph.EntranceShuffler[0] Scoped 'Spectacle Rock Cave Top - In' -> 'Old Man Maze' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Scoped 'Old Man Maze - Exit' -> 'Spectacle Rock Cave Top - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Scoped 'Dark Floating Island - In' -> 'Bumper Cave Bottom' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Scoped 'Bumper Cave Bottom - Exit' -> 'Dark Floating Island - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'High Stakes Chest Game - In' -> 'Hyrule Castle - West' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - West - Exit' -> 'High Stakes Chest Game - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods Second Section East - In' -> 'Hyrule Castle - Lobby' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - Lobby - Exit' -> 'Skull Woods Second Section East - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Palace of Darkness Door - In' -> 'Super Bunny Entrance Bottom' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Super Bunny Entrance Bottom - Exit' -> 'Palace of Darkness Door - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sick Kid's House - In' -> 'Money Making Game Library' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Money Making Game Library - Exit' -> 'Sick Kid's House - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Sanctuary - In' -> 'Bomb Shoppe Lobby' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bomb Shoppe Lobby - Exit' -> 'Dark Sanctuary - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Village Bush House - In' -> 'Paradox Cave - Middle' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Paradox Cave - Middle - Exit' -> 'Kakariko Village Bush House - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Cave - West - In' -> 'Skull Woods - Statue Puzzle' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods - Statue Puzzle - Exit' -> 'Ice Cave - West - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Outcasts Orchard Shop - In' -> 'Graveyard Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Graveyard Cave - Exit' -> 'Outcasts Orchard Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mire - In' -> 'Arrow Game' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Arrow Game - Exit' -> 'Mire - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Death Mountain Foot Descent Ledge - In' -> 'Ice Cave - East' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Cave - East - Exit' -> 'Death Mountain Foot Descent Ledge - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Cave Thief Hideout - In' -> 'Fortune Teller Dark' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fortune Teller Dark - Exit' -> 'Ice Cave Thief Hideout - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Tower Of Hera - Entrance - In' -> 'Village Of Outcasts Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Village Of Outcasts Shop - Exit' -> 'Tower Of Hera - Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Wetlands Big Fairy - In' -> 'Mire Shed' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mire Shed - Exit' -> 'Wetlands Big Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Library - In' -> 'Paradox Cave - Top' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Paradox Cave - Top - Exit' -> 'Library - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock Outside Bridge East - In' -> 'Turtle Rock - Big Chest Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock - Big Chest Entrance - Exit' -> 'Turtle Rock Outside Bridge East - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Witch's Hut - In' -> 'Library - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Library - Entrance - Exit' -> 'Witch's Hut - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Swamp Palace - In' -> 'Bumper Cave Top Exit' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bumper Cave Top Exit - Exit' -> 'Swamp Palace - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods Back - In' -> 'Hype Cave Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hype Cave Entrance - Exit' -> 'Skull Woods Back - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Brewery - In' -> 'Spectacle Rock Cave Middle' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spectacle Rock Cave Middle - Exit' -> 'Brewery - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Graveyard Cave - In' -> 'Fairy Refill' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Refill - Exit' -> 'Graveyard Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'West of Bomb Shoppe Fairy Pond - In' -> 'Skull Woods - Bumper Buddy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods - Bumper Buddy - Exit' -> 'West of Bomb Shoppe Fairy Pond - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Floodgate - In' -> 'Peg Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Peg Cave - Exit' -> 'Floodgate - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Snitch House - In' -> 'Desert Palace - East' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - East - Exit' -> 'East Snitch House - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - East Entrance - In' -> 'Dark Sanctuary' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Sanctuary - Exit' -> 'Hyrule Castle - East Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Brothers House Right - In' -> 'Money Making Game' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Money Making Game - Exit' -> 'Brothers House Right - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hype Cave - In' -> 'Tavern Front' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Tavern Front - Exit' -> 'Hype Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Tavern Front - In' -> 'Super Bunny Exit' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Super Bunny Exit - Exit' -> 'Tavern Front - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Blacksmith House - In' -> 'Watto Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Watto Cave - Exit' -> 'Blacksmith House - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock Outside Bridge West - In' -> 'Spiral Cave Top' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spiral Cave Top - Exit' -> 'Turtle Rock Outside Bridge West - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Checkerboard Cave - In' -> 'Ganon's Tower - Lobby' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ganon's Tower - Lobby - Exit' -> 'Checkerboard Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sahasrahla's Hut - In' -> 'Hint Giver Cave - Birdo' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hint Giver Cave - Birdo - Exit' -> 'Sahasrahla's Hut - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Shop - In' -> 'Brothers House Left' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Brothers House Left - Exit' -> 'Kakariko Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Old Man Maze - In' -> 'Sahasrahla's Room' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sahasrahla's Room - Exit' -> 'Old Man Maze - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Money Making Game Library - In' -> 'Turtle Rock - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock - Entrance - Exit' -> 'Money Making Game Library - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Blind's Hideout Upstairs - In' -> 'Dark Death Mountain Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Death Mountain Shop - Exit' -> 'Blind's Hideout Upstairs - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Paradox Cave - Middle - In' -> 'Ice Cave - West' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Cave - West - Exit' -> 'Paradox Cave - Middle - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - Agahnim's Tower Entrance - In' -> 'Dark Northeast Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Northeast Shop - Exit' -> 'Hyrule Castle - Agahnim's Tower Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Dark Death Mountain Summit Bunny - In' -> 'Blind's Hideout Upstairs' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Blind's Hideout Upstairs - Exit' -> 'East Dark Death Mountain Summit Bunny - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spiral Cave Exit - In' -> 'Chest Game Room' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Chest Game Room - Exit' -> 'Spiral Cave Exit - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Village Bomb Hut - In' -> 'Broccoli House' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Broccoli House - Exit' -> 'Kakariko Village Bomb Hut - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'West Woods Fairy Pond - In' -> 'Lumberjack Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lumberjack Shop - Exit' -> 'West Woods Fairy Pond - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - West Entrance - In' -> 'Bush House' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bush House - Exit' -> 'Hyrule Castle - West Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Death Mountain Foot Cave Entrance - In' -> 'Old Man Cave Ledge' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Old Man Cave Ledge - Exit' -> 'Death Mountain Foot Cave Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Big Fairy - In' -> 'Checkerboard Cave - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Checkerboard Cave - Entrance - Exit' -> 'Desert Big Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Lake Hylia Shop - In' -> 'Bomb Hut' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bomb Hut - Exit' -> 'Dark Lake Hylia Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Cave - East - In' -> 'West Woods Fairy Pond' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'West Woods Fairy Pond - Exit' -> 'Ice Cave - East - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sanctuary Bonk Rocks - In' -> 'C-Shaped House C' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'C-Shaped House C - Exit' -> 'Sanctuary Bonk Rocks - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'West Death Mountain Big Fairy - In' -> 'Death Mountain Big Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Death Mountain Big Fairy - Exit' -> 'West Death Mountain Big Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Ascension Cave - Pits Right - In' -> 'Brewery Room' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Brewery Room - Exit' -> 'Fairy Ascension Cave - Pits Right - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Dark Death Mountain Running Man Bunny - In' -> 'Tavern Back' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Tavern Back - Exit' -> 'East Dark Death Mountain Running Man Bunny - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spectacle Rock Cave Exit - In' -> 'Blacksmith House' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Blacksmith House - Exit' -> 'Spectacle Rock Cave Exit - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Brothers House Left - In' -> 'Kakariko Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Shop - Exit' -> 'Brothers House Left - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dev Cave - In' -> 'Hookshot Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hookshot Cave - Exit' -> 'Dev Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Chicken Hut - In' -> 'Dark Lake Hylia Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Lake Hylia Shop - Exit' -> 'Chicken Hut - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mire Watto - In' -> 'Death Mountain Descent Cave Left' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Death Mountain Descent Cave Left - Exit' -> 'Mire Watto - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods Second Section West - In' -> 'Grandma's House Left' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Grandma's House Left - Exit' -> 'Skull Woods Second Section West - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Peg Cave - In' -> 'Waterfall Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Waterfall Fairy - Exit' -> 'Peg Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'C House - In' -> 'Eastern Palace - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Eastern Palace - Entrance - Exit' -> 'C House - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mini Moldorm Cave - In' -> 'Lake Hylia Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lake Hylia Shop - Exit' -> 'Mini Moldorm Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bonzai Cave - In' -> 'Tower Of Hera - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Tower Of Hera - Entrance - Exit' -> 'Bonzai Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lake Hylia Shop - In' -> 'Wetlands Big Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Wetlands Big Fairy - Exit' -> 'Lake Hylia Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spectacle Rock Cave Middle - In' -> 'Fairy Ascension Cave - Pits Right' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Ascension Cave - Pits Right - Exit' -> 'Spectacle Rock Cave Middle - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Grandma's House Right - In' -> 'Pyramid Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Pyramid Fairy - Exit' -> 'Grandma's House Right - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ganon's Tower - In' -> 'Hookshot Cave Corner' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hookshot Cave Corner - Exit' -> 'Ganon's Tower - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Village of Outcasts Storefront - In' -> 'Spectacle Rock Cave Exit' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spectacle Rock Cave Exit - Exit' -> 'Village of Outcasts Storefront - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - West - In' -> 'Sick Kid's House' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sick Kid's House - Exit' -> 'Desert Palace - West - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - Main Entrance - In' -> 'Shopping Mall Big Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Shopping Mall Big Fairy - Exit' -> 'Hyrule Castle - Main Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Cave 45 - In' -> 'Pond of Happiness' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Pond of Happiness - Exit' -> 'Cave 45 - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Death Mountain Descent - In' -> 'Death Mountain Descent Cave Right' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Death Mountain Descent Cave Right - Exit' -> 'Death Mountain Descent - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Dark Death Mountain Summit Rock - In' -> 'Dev Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dev Cave - Exit' -> 'East Dark Death Mountain Summit Rock - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Pond of Happiness - In' -> 'Floodgate' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Floodgate - Exit' -> 'Pond of Happiness - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Arrow Game - In' -> 'Misery Mire - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Misery Mire - Entrance - Exit' -> 'Arrow Game - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - Lobby - In' -> 'Desert Big Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Big Fairy - Exit' -> 'Desert Palace - Lobby - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Shopping Mall Big Fairy - In' -> 'East Snitch House' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Snitch House - Exit' -> 'Dark Shopping Mall Big Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Waterfall of Wishing - In' -> 'Grandma's House Right' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Grandma's House Right - Exit' -> 'Waterfall of Wishing - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Tavern Back - In' -> 'Desert Palace - Beemos 2' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - Beemos 2 - Exit' -> 'Tavern Back - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Ascension Cave - Bottom - In' -> 'Chicken Hut' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Chicken Hut - Exit' -> 'Fairy Ascension Cave - Bottom - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Chest Game - In' -> 'Mini Moldorm Cave Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mini Moldorm Cave Entrance - Exit' -> 'Chest Game - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Eastern Ruins Fairy Cave - In' -> 'Mimic Cave Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mimic Cave Entrance - Exit' -> 'Eastern Ruins Fairy Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mire Shed - In' -> 'Desert Palace - West' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - West - Exit' -> 'Mire Shed - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bumper Cave Ledge Top - In' -> 'Desert Palace - Main Room - Center' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - Main Room - Center - Exit' -> 'Bumper Cave Ledge Top - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark Lake Hylia River Bend Fairy - In' -> 'Turtle Rock - Eye Bridge - Bomb Door' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock - Eye Bridge - Bomb Door - Exit' -> 'Dark Lake Hylia River Bend Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Paradox Cave - Bottom Entrance - In' -> 'Spike Cave Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spike Cave Entrance - Exit' -> 'Paradox Cave - Bottom Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'King's Tomb - In' -> 'Skull Woods - Main Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods - Main Entrance - Exit' -> 'King's Tomb - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Dark Death Mountain Shop - In' -> 'Spectacle Rock Cave Top' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spectacle Rock Cave Top - Exit' -> 'East Dark Death Mountain Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - East - In' -> 'Outcasts Orchard Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Outcasts Orchard Shop - Exit' -> 'Desert Palace - East - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bomb Shoppe - Shoppe - In' -> 'Cave 45 Right' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Cave 45 Right - Exit' -> 'Bomb Shoppe - Shoppe - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Thief Hideout - In' -> 'Fairy Pond Cave Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Pond Cave Entrance - Exit' -> 'Desert Thief Hideout - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods First Section - In' -> 'Ice Cave Thief Hideout' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Cave Thief Hideout - Exit' -> 'Skull Woods First Section - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bumper Cave Entrance Bottom - In' -> 'Fairy Ascension Cave - Bottom' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Ascension Cave - Bottom - Exit' -> 'Bumper Cave Entrance Bottom - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Paradox Cave - Top - In' -> 'King's Tomb' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'King's Tomb - Exit' -> 'Paradox Cave - Top - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'South of Ruins Big Fairy - In' -> 'Hyrule Castle - East' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Hyrule Castle - East - Exit' -> 'South of Ruins Big Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Palace - Back - In' -> 'Ice Palace - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Palace - Entrance - Exit' -> 'Desert Palace - Back - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Thieves Town - In' -> 'Desert Thief Hideout' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Desert Thief Hideout - Exit' -> 'Thieves Town - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'North of Outcasts Psychic - In' -> 'Skull Woods - Bridge Room' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods - Bridge Room - Exit' -> 'North of Outcasts Psychic - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Fairy Pond Cave Entrance - In' -> 'Thieves' Town - Grand Room SW' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Thieves' Town - Grand Room SW - Exit' -> 'Fairy Pond Cave Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Pyramid Fairy - In' -> 'Palace of Darkness - Lobby' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Palace of Darkness - Lobby - Exit' -> 'Pyramid Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ice Palace - In' -> 'Eastern Ruins Fairy Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Eastern Ruins Fairy Cave - Exit' -> 'Ice Palace - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'East Dark World Portal Cave - In' -> 'South of POD Big Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'South of POD Big Fairy - Exit' -> 'East Dark World Portal Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spiral Cave Top - In' -> 'Turtle Rock - Laser Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock - Laser Entrance - Exit' -> 'Spiral Cave Top - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock Outside Rest Area - In' -> 'Bonk Rocks' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Bonk Rocks - Exit' -> 'Turtle Rock Outside Rest Area - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lumberjack Shop - In' -> 'Agahnims Tower - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Agahnims Tower - Entrance - Exit' -> 'Lumberjack Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Mimic Cave Entrance - In' -> 'Spiral Cave Exit' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spiral Cave Exit - Exit' -> 'Mimic Cave Entrance - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'West Snitch House - In' -> 'Brothers House Right' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Brothers House Right - Exit' -> 'West Snitch House - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Eastern Palace - In' -> 'South of Ruins Big Fairy' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'South of Ruins Big Fairy - Exit' -> 'Eastern Palace - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Grandma's House Left - In' -> 'Swamp Palace - Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Swamp Palace - Entrance - Exit' -> 'Grandma's House Left - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Dark World Northeast Shop - In' -> 'Paradox Cave - Bottom Entrance' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Paradox Cave - Bottom Entrance - Exit' -> 'Dark World Northeast Shop - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Turtle Rock - In' -> 'West Snitch House' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'West Snitch House - Exit' -> 'Turtle Rock - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Spike Cave - In' -> 'Potion Shop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Potion Shop - Exit' -> 'Spike Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods First Section West - Hole' -> 'Skull Woods - Pinball Room' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods Back - Hole' -> 'Skull Woods - Hourglass Top' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods First Section North - Hole' -> 'Skull Woods - Firebar Pits' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Skull Woods First Section East - Hole' -> 'Skull Woods - Dumb Switches Top' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Thief Hideout - Hole' -> 'Magic Bat Entry' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Thief Hideout - In' -> 'Magic Bat Left' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Magic Bat Left - Exit' -> 'Thief Hideout - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Magic Bat - Hole' -> 'Ganon's Room' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Magic Bat - In' -> 'Ganon's Drop' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Ganon's Drop - Exit' -> 'Magic Bat - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Drop Great Fairy - Hole' -> 'Drop Great Fairy Antechamber' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Drop Great Fairy - In' -> 'Drop Great Fairy Exit' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Drop Great Fairy Exit - Exit' -> 'Drop Great Fairy - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lumberjacks Tree - Hole' -> 'Thief Hideout - Ledge' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lumberjacks Cave - In' -> 'Thief Hideout' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Thief Hideout - Exit' -> 'Lumberjacks Cave - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Secret Passage Uncle - Hole' -> 'Lumberjacks Cave Fairies' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Secret Passage Stairs - In' -> 'Lumberjacks Cave' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Lumberjacks Cave - Exit' -> 'Secret Passage Stairs - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Pyramid - Hole' -> 'Sewers - Block Puzzle' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Pyramid Ganon Fail - In' -> 'Sanctuary Hall' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sanctuary Hall - Exit' -> 'Pyramid Ganon Fail - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Well - Hole' -> 'Kakariko Well' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Well - In' -> 'Kakariko Well - Water' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Kakariko Well - Exit' -> 'Kakariko Well - Out' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sewers - Block Puzzle - Hole' -> 'Secret Passage Uncle' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Sanctuary Hall - In' -> 'Secret Passage Stairs' (fixed)
+info: Randomizer.Graph.EntranceShuffler[0] Linked 'Secret Passage Stairs - Exit' -> 'Sanctuary Hall - Out' (fixed)
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Moldorm in 'Tower Of Hera - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Lanmolas in 'Desert Palace - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing ArmosKnight in 'Eastern Palace - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Kholdstare in 'Ice Palace - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Vitreous in 'Misery Mire - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Helmasaur in 'Palace of Darkness - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Arrghus in 'Swamp Palace - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Blind in 'Thieves' Town - Boss Room - Blind Active'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Trinexx in 'Turtle Rock - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Mothula in 'Skull Woods - Boss Room'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack07-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack07-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack07-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillFull' in 'PrizePack07-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack07-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack07-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack07-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillFull' in 'PrizePack07-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack06-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePack06-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack06-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack03-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack03-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack03-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack03-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack03-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack03-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack03-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack03-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill10' in 'PrizePack01-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack01-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack01-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack01-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill10' in 'PrizePack01-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack01-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack01-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack01-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack04-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack04-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill10' in 'PrizePack02-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePack02-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack02-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill8' in 'PrizePack02-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePack02-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillFull' in 'PrizePack02-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Fairy' in 'PrizePack02-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack02-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack05-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill8' in 'PrizePack05-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack05-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack05-03'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill4' in 'PrizePack05-04'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack05-05'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack05-06'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack05-07'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePackCrab-AllButLast'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Fairy' in 'PrizePackPull-01'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePackPull-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill4' in 'PrizePackCrab-Final'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill4' in 'PrizePackPull-02'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill4' in 'PrizePackStun-00'
+info: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePackFish-00'
+Connecting Crateria Kihunter Room:Right Door to Terminator Room:Left Door
+Connecting Climb:Bottom Right Door to Blue Brinstar Elevator Room:Left Door
+Connecting Crateria Kihunter Room:Bottom Door to Crab Maze:Top Door
+Connecting Forgotten Highway Elbow:Bottom Door to Climb:Top Door
+Connecting Red Tower:Top Right Door to Gauntlet Energy Tank Room:Left Door
+Connecting Below Spazer:Top Right Door to Red Tower:Bottom Left Door
+Connecting Forgotten Highway Elevator:Elevator to Caterpillar Room:Elevator
+Connecting Beta Power Bomb Room:Right Door to Red Tower:Top Left Door
+Connecting Below Spazer:Bottom Right Door to Crateria Map Room:Left Door
+Connecting Blue Brinstar Elevator Room:Elevator to Morph Ball Room:Elevator
+Connecting Frog Savestation:Right Door to Construction Zone:Bottom Left Door
+Connecting Construction Zone:Right Door to Bat Room:Left Door
+Connecting Tourian Recharge Room:Right Door to Caterpillar Room:Middle Left Door
+Connecting Landing Site:Bottom Right Door to Blue Brinstar Energy Tank Room:Bottom Left Door
+Connecting Pre-Map Flyway:Right Door to Blue Brinstar Boulder Room:Left Door
+Connecting Green Brinstar Main Shaft:Below Power Bomb Blocks - Top Right Door to Green Brinstar Main Shaft:Right Etecoon Shaft - Top Left Door
+Connecting Early Supers Room:Right Door to Green Brinstar Main Shaft:Below Power Bomb Blocks - Bottom Left Door
+Connecting Brinstar Map Room:Right Door to Green Pirates Shaft:Bottom Left Door
+Connecting West Ocean:Upper Right Section - Top Right Door to Etecoon Energy Tank Room:Top Left Door
+Connecting West Ocean:Upper Right Section - Bottom Right Door to Etecoon Energy Tank Room:Bottom Left Door
+Connecting Etecoon Super Room:Right Door to Red Brinstar Fireflea Room:Left Door
+Connecting Red Tower:Bottom Right Door to Green Hill Zone:Top Left Door
+Connecting Green Hill Zone:Bottom Right Door to Landing Site:Top Left Door
+Connecting Noob Bridge:Right Door to Parlor and Alcatraz:Bottom Left Horizontal Door
+Connecting Red Brinstar Fireflea Room:Right Door to Spore Spawn Kihunter Room:Left Door
+Connecting Spore Spawn Room:Top Right Door to Dachora Room:Bottom Left Door
+Connecting Final Missile Bombway:Right Door to Big Pink:Left Side - Top Middle Door (Main Entrance)
+Connecting Big Pink:Right Side - Top Door to The Moat:Left Door
+Connecting Big Pink:Right Side - Bottom Middle Door (Behind the Super Block) to Construction Zone:Top Left Door
+Connecting Big Pink:Right Side - Bottom Door to Frog Savestation:Left Door
+Connecting Pink Brinstar Power Bomb Room:Top Right Door to Green Brinstar Main Shaft:Above Power Bomb Blocks - Middle Left Door
+Connecting Pink Brinstar Power Bomb Room:Bottom Right Door to Green Brinstar Main Shaft:Above Power Bomb Blocks - Bottom Left Door
+Connecting Lower Norfair Elevator Save Room:Right Door to Spore Spawn Farming Room:Left Door
+Connecting Statues Hallway:Right Door to Warehouse Entrance:Left Door
+Connecting Warehouse Entrance:Elevator to Green Brinstar Main Shaft:Elevator
+Connecting Etecoon Save Room:Right Door to Warehouse Zeela Room:Top Left Door
+Connecting Warehouse Kihunter Room:Left Vertical Door to Spore Spawn Kihunter Room:Top Right Door
+Connecting Bowling Alley Path:Right Door to Upper Tourian Save Room:Left Door
+Connecting Kraid Eye Door Room:Bottom Right Door to Golden Torizo Energy Recharge:Left Door
+Connecting Etecoon Energy Tank Room:Bottom Right Door to Kraid Room:Left Door
+Connecting West Glass Tube Tunnel:Right Door to Homing Geemer Room:Left Door
+Connecting Glass Tunnel:Bottom Right Door to Hellway:Left Door
+Connecting Parlor and Alcatraz:Bottom Left Vertical Door to Glass Tunnel:Top Door
+Connecting Main Street:Morph Passage Doorway to Caterpillar Room:Top Left Door
+Connecting Main Street:Middle Right Door to Caterpillar Room:Bottom Left Door
+Connecting Landing Site:Top Right Door to Fish Tank:Bottom Left Door
+Connecting Forgotten Highway Kago Room:Bottom Door to Fish Tank:Top Left Door
+Connecting Pit Room:Right Door to Mt. Everest:Top Left Door
+Connecting Crab Shaft:Right Door to Glass Tunnel Save Room:Left Door
+Connecting Crab Tunnel:Right Door to Crateria Super Room:Bottom Left Door
+Connecting Alpha Power Bomb Room:Right Door to Red Fish Room:Top Left Door
+Connecting Space Jump Room:Right Door to Pseudo Plasma Spark Room:Left Door
+Connecting Climb:Top Right Door to Aqueduct:Middle Left Door
+Connecting Norfair Map Room:Right Door to Aqueduct:Bottom Left Door
+Connecting Toilet Bowl:Bottom Doorway to Red Brinstar Elevator Room:Top Door
+Connecting Botwoon Hallway:Bottom Left Door to Mt. Everest:Top Door
+Connecting Botwoon Energy Tank Room:Right Door to Mt. Everest:Left Morph Passage Doorway
+Connecting Green Brinstar Main Shaft Save Room:Right Door to Halfie Climb Room:Bottom Left Door
+Connecting Halfie Climb Room:Top Right Door to Pre-Map Flyway:Left Door
+Connecting Hellway:Right Door to Speed Booster Room:Left Door
+Connecting Colosseum:Bottom Right Door to Kraid Recharge Station:Left Door
+Connecting Kraid Eye Door Room:Top Right Door to Draygon Save Room:Left Door
+Connecting Draygon Save Room:Right Door to Parlor and Alcatraz:Top Left Door
+Connecting Gauntlet Energy Tank Room:Right Door to The Precious Room:Top Left Door
+Connecting Billy Mays Room:Right Door to The Precious Room:Bottom Left Door
+Connecting Draygon's Room:Right Door to West Ocean:Lower Section - Bottom Left Door
+Connecting Plasma Spark Room:Middle Right Door to Crateria Power Bomb Room:Left Door
+Connecting Plasma Spark Room:Bottom Right Door to Bowling Alley Path:Left Door
+Connecting Plasma Spark Room:Left Vertical Door to Crab Shaft:Top Door
+Connecting Bubble Mountain Save Room:Right Door to Oasis:Left Door
+Connecting Big Pink:Right Side - Top Middle Door to West Sand Hall:Left Door
+Connecting West Ocean:Middle Right Door (By Zeb Farm) to West Sand Hall Tunnel:Left Door
+Connecting West Sand Hall Tunnel:Right Door to West Glass Tube Tunnel:Left Door
+Connecting West Ocean:Lower Section - Bottom Right Door to Post Crocomire Save Room:Left Door
+Connecting Botwoon Energy Tank Room:Left Sand Pit to Below Botwoon Energy Tank:Left Sand Entrance
+Connecting Botwoon Energy Tank Room:Right Sand Pit to Below Botwoon Energy Tank:Left Sand Entrance
+Connecting West Aqueduct Quicksand Room:Bottom Sand Exit to Botwoon Quicksand Room:Top Left Sand Entrance
+Connecting Aqueduct:Right Sand Pit to West Aqueduct Quicksand Room:Top Sand Entrance
+Connecting Botwoon Quicksand Room:Bottom Right Sand Exit to East Aqueduct Quicksand Room:Top Sand Entrance
+Connecting East Sand Hole:Bottom Right Sand Exit to Botwoon Quicksand Room:Top Left Sand Entrance
+Connecting Aqueduct:Left Sand Pit to East Sand Hole:Top Sand Entrance
+Connecting Botwoon Quicksand Room:Bottom Left Sand Exit to West Sand Hole:Top Sand Entrance
+Connecting Climb:Middle Right Door to East Sand Hall:Left Door
+Connecting West Sand Hole:Bottom Left Sand Exit to East Sand Hall:Top Sand Entrance
+Connecting Crateria Save Room:Right Door to Bug Sand Hole:Left Door
+Connecting Plasma Beach Quicksand Room:Bottom Sand Exit to West Sand Hall:Top Sand Entrance
+Connecting Bug Sand Hole:Bottom Sand Exit to Plasma Beach Quicksand Room:Top Sand Entrance
+Connecting East Sand Hall:Right Door to Butterfly Room:Left Door
+Connecting East Aqueduct Quicksand Room:Bottom Sand Exit to Butterfly Room:Top Sand Entrance
+Connecting Watering Hole:Right Door to Maridia Elevator Room:Bottom Left Door
+Connecting Maridia Elevator Room:Right Door to Lower Mushrooms:Left Door
+Connecting Statues Room:Elevator to Maridia Elevator Room:Elevator
+Connecting West Cactus Alley Room:Top Right Door to Red Kihunter Shaft Save Room:Left Door
+Connecting Pink Brinstar Hopper Room:Right Door to Kassiuz Room:Bottom Left Door
+Connecting Kassiuz Room:Top Right Door to Glass Tunnel:Left Doorway
+Connecting Botwoon's Room:Right Door to Plasma Tutorial Room:Left Door
+Connecting Plasma Tutorial Room:Right Door to Morph Ball Room:Left Door
+Connecting Post Crocomire Power Bomb Room:Right Door to Pants Room:West Leg Left Door
+Failed to find room for door MapDoorPair { exit_ptr = 108428, entrance_ptr = 108452 } -> MapDoorPair { exit_ptr = 108452, entrance_ptr = 108428 }
+Connecting Pants Room:East Leg Right Door to Thread The Needle Room:Left Door
+Connecting Warehouse Entrance:Right Door to Spring Ball Room:Left Door
+Connecting Caterpillar Room:Top Right Door (Through Morph Tunnel) to Crab Hole:Top Left Doorway
+Connecting Main Hall:Right Door to Red Tower:Middle Left Door (Behind Power Bomb Blocks)
+Connecting Bug Sand Hole:Right Door to Fast Pillars Setup Room:Bottom Left Door
+Connecting Fast Pillars Setup Room:Top Right Door to Phantoon's Room:Left Door
+Connecting Glass Tunnel:Top Right Doorway to Pillar Room:Left Door
+Connecting Pillar Room:Right Door to Statues Room:Left Door
+Connecting Fish Tank:Bottom Right Door to The Worst Room In The Game:Top Left Door
+Connecting The Worst Room In The Game:Top Right Door to Climb:Bottom Left Door
+Connecting Halfie Climb Room:Bottom Right Door to Amphitheatre:Left Door
+Connecting Nutella Refill:Right Door to Red Kihunter Shaft:Top Left Door
+Connecting Red Kihunter Shaft:Top Right Door to Crab Shaft:Left Door
+Connecting Red Kihunter Shaft:Middle Right Door to Crab Tunnel:Left Door
+Connecting Red Kihunter Shaft:Bottom Right Vertical Door to Oasis:Top Door
+Connecting Mt. Everest:Top Right Door to Forgotten Highway Save Room:Left Door
+Connecting Red Fish Room:Bottom Door to Wasteland:Top Right Door
+Connecting Metal Pirates Room:Right Door to Colosseum:Left Door
+Connecting Green Pirates Shaft:Middle Right Door to Plowerhouse Room:Left Door
+Connecting Green Pirates Shaft:Top Right Door to Lower Norfair Farming Room:Left Door
+Connecting Green Hill Zone:Top Right Door to Ridley's Room:Left Door
+Connecting Ridley's Room:Right Door to Draygon's Room:Left Door
+Connecting Wrecked Ship Map Room:Right Door to Fast Pillars Setup Room:Top Left Door
+Connecting Gauntlet Entrance:Right Door to Lower Norfair Fireflea Room:Top Left Door
+Connecting Waterway Energy Tank Room:Right Door to Lower Norfair Fireflea Room:Bottom Left Door
+Connecting Lower Norfair Fireflea Room:Top Right Door to Statues Hallway:Left Door
+Connecting Mt. Everest:Bottom Left Door to Lower Norfair Escape Power Bomb Room:Top Door
+Connecting Northwest Maridia Bug Room:Right Door to Three Musketeers' Room:Top Left Door
+Connecting Acid Statue Room:Top Right Door to Noob Bridge:Left Door
+Connecting Acid Statue Room:Bottom Right Door to Flyway:Left Door
+Connecting Amphitheatre:Right Door to Golden Torizo's Room:Left Door
+Connecting Golden Torizo's Room:Right Door to Landing Site:Bottom Left Door
+Connecting Colosseum:Top Right Door to Screw Attack Room:Bottom Left Door
+Connecting Screw Attack Room:Top Right Door to Botwoon Energy Tank Room:Left Door
+Connecting Screw Attack Room:Middle Right Door to Below Botwoon Energy Tank:Left Door
+Connecting Terminator Room:Right Door to Crocomire Save Room:Left Door
+Connecting Green Pirates Shaft:Bottom Right Door to Fast Ripper Room:Left Door
+Connecting Fast Ripper Room:Right Door to Early Supers Room:Left Door
+Connecting Crab Hole:Top Right Doorway to Business Center:Top Left Door
+Connecting Crab Hole:Bottom Right Door to Business Center:Middle Left Door
+Connecting Business Center:Top Right Door to Shaktool Room:Left Door
+Connecting Red Brinstar Elevator Room:Elevator to Business Center:Elevator
+Connecting First Missile Room:Right Door to Blue Brinstar Energy Tank Room:Top Left Door
+Connecting Morph Ball Room:Right Door to Hi Jump Energy Tank Room:Left Door
+Connecting Cathedral Entrance:Right Door to Lower Norfair Spring Ball Maze Room:Left Door
+Connecting West Ocean:Lower Section - Top Right Door to Rising Tide:Left Door
+Connecting East Ocean:Right Door to Frog Speedway:Left Door
+Connecting Oasis:Right Door to Upper Norfair Farming Room:Top Left Door
+Connecting Purple Shaft:Bottom Right Door to Spore Spawn Super Room:Top Left Door
+Connecting Etecoon Energy Tank Room:Top Right Door to Crateria Tube:Left Doorway
+Connecting Crateria Tube:Right Doorway to Ice Beam Room:Left Door
+Connecting Main Street:Bottom Right Door to Bubble Mountain:Left Side - Top Door
+Connecting Bubble Mountain:Top Right Door to Green Brinstar Fireflea Room:Left Door
+Connecting Bubble Mountain:Bottom Door to Aqueduct:Top Door
+Connecting Aqueduct Save Room:Right Door to Bubble Mountain:Left Side - Bottom Middle Door
+Connecting Botwoon Hallway:Right Door to Green Bubbles Missile Room:Left Door
+Connecting Norfair Reserve Tank Room:Right Door to Crab Maze:Left Door
+Connecting The Moat:Right Door to Bat Cave:Bottom Left Door
+Connecting Lower Mushrooms:Right Door to Speed Booster Hall:Left Door
+Connecting Speed Booster Hall:Right Door to Northwest Maridia Bug Room:Left Door
+Connecting Bat Cave:Top Right Door to Wrecked Ship Save Room:Left Door
+Connecting Baby Kraid Room:Right Door to Single Chamber:Left Shaft - Top Left Door
+Connecting Single Chamber:Far Right Door to The Worst Room In The Game:Bottom Left Door
+Connecting Single Chamber:Left Shaft - Middle Right Door to Botwoon's Room:Left Door
+Connecting Single Chamber:Left Shaft - Bottom Right Door to Cathedral Entrance:Left Door
+Connecting X-Ray Scope Room:Right Door to Double Chamber:Top Left Door
+Connecting Three Musketeers' Room:Right Door to Double Chamber:Bottom Left Door
+Connecting Double Chamber:Right Door to East Ocean:Left Door
+Connecting Green Brinstar Elevator Room:Right Door to Purple Farming Room:Left Door
+Connecting Hi Jump Energy Tank Room:Right Door to Ice Beam Gate Room:Top Left Door
+Connecting Ice Beam Gate Room:Right Door to Brinstar Pre-Map Room:Left Door
+Connecting Business Center:Middle Right Door to Ice Beam Acid Room:Left Door
+Connecting Ice Beam Snake Room:Middle Right Door to Kraid Eye Door Room:Left Door
+Connecting Blue Brinstar Boulder Room:Right Door to Hopper Energy Tank Room:Left Door
+Connecting Purple Shaft:Top Right Door to Ice Beam Tutorial Room:Left Door
+Connecting Ice Beam Tutorial Room:Right Door to Bomb Torizo Room:Left Door
+Connecting Crumble Shaft:Top Right Door to Below Spazer:Left Door
+Connecting Crumble Shaft:Bottom Right Door to Halfie Climb Room:Top Left Door
+Connecting Plasma Spark Room:Top Right Door to Green Brinstar Beetom Room:Left Door
+Connecting Green Brinstar Beetom Room:Right Door to Crateria Super Room:Top Left Door
+Connecting Green Brinstar Main Shaft:Above Power Bomb Blocks - Top Right Door to Spiky Acid Snakes Tunnel:Left Door
+Connecting Spiky Acid Snakes Tunnel:Right Door to Metal Pirates Room:Left Door
+Connecting Brinstar Pre-Map Room:Right Door to Kronic Boost Room:Top Left Door
+Connecting Spore Spawn Farming Room:Right Door to Kronic Boost Room:Middle Left Door
+Connecting Frog Speedway:Right Door to Kronic Boost Room:Bottom Left Door
+Connecting Kronic Boost Room:Top Right Door to Wasteland:Bottom Left Door
+Connecting Magdollite Tunnel:Right Door to Bubble Mountain:Left Side - Bottom Door
+Connecting Butterfly Room:Right Door to Lava Dive Room:Left Door
+Connecting Lava Dive Room:Right Door to Crateria Kihunter Room:Left Door
+Connecting Bat Room:Right Door to Volcano Room:Top Left Door
+Connecting Green Brinstar Main Shaft:Above Power Bomb Blocks - Bottom Right Door to Spiky Platforms Tunnel:Left Door
+Connecting Spiky Platforms Tunnel:Right Door to West Cactus Alley Room:Bottom Left Door
+Connecting Red Pirate Shaft:Top Right Door to Mama Turtle Room:Left Door
+Connecting Acid Snakes Tunnel:Right Door to Bubble Mountain:Left Side - Top Middle Door
+Connecting Main Street:Bottom Door to Acid Snakes Tunnel:Top Door
+Connecting Boyon Gate Hall:Bottom Right Door to Crocomire Speedway:Far Left Door
+Connecting Crocomire Speedway:Top Right Door to Kraid Save Room:Left Door
+Connecting Crocomire Speedway:Bottom Door to Forgotten Highway Elevator:Top Door
+Connecting Mickey Mouse Room:Top Right Door to Crocomire Escape:Left Door
+Connecting Crocomire Escape:Right Door to Big Pink:Left Side - Bottom Door
+Connecting Bubble Mountain:Middle Right Door to Crocomire's Room:Left Door
+Connecting Green Brinstar Fireflea Room:Right Door to Post Crocomire Farming Room:Top Left Door
+Connecting Post Crocomire Farming Room:Bottom Right Door to Dachora Room:Top Left Door
+Connecting Post Crocomire Farming Room:Bottom Left Door to Crocomire's Room:Top Door
+Connecting Dachora Energy Refill:Right Door to Big Pink:Left Side - Top Door
+Connecting Kraid Room:Right Door to Post Crocomire Shaft:Top Left Door
+Connecting Post Crocomire Shaft:Bottom Right Door to Plasma Room:Top Left Door
+Connecting Post Crocomire Shaft:Bottom Door to Fish Tank:Top Right Door
+Connecting Plowerhouse Room:Right Door to Post Crocomire Missile Room:Left Door
+Connecting Upper Norfair Farming Room:Top Right Door to Post Crocomire Jump Room:Left Door
+Connecting Pseudo Plasma Spark Room:Bottom Door to Post Crocomire Jump Room:Right Vertical Door
+Connecting Grapple Beam Room:Top Right Door to Warehouse Zeela Room:Bottom Left Door
+Connecting Grapple Beam Room:Bottom Right Door to Pink Brinstar Hopper Room:Left Door
+Connecting Boyon Gate Hall:Top Right Door to Grapple Tutorial Room 1:Left Door
+Connecting Grapple Tutorial Room 1:Right Door to Cathedral:Left Door
+Connecting Ice Beam Snake Room:Top Right Door to Grapple Tutorial Room 2:Left Door
+Connecting Grapple Tutorial Room 2:Right Door to Spazer Room:Left Door
+Connecting Parlor and Alcatraz:Top Right Door to Grapple Tutorial Room 3:Left Door
+Connecting Single Chamber:Left Shaft - Top Right Door to Caterpillar Save Room:Left Door
+Connecting Green Bubbles Missile Room:Right Door to Varia Suit Room:Left Door
+Connecting Grapple Tutorial Room 3:Right Door to Lower Norfair Elevator:Left Door
+Connecting Lower Norfair Elevator:Right Door to Green Brinstar Main Shaft:Right Etecoon Shaft - Bottom Left Door
+Connecting Lower Norfair Elevator:Elevator to Main Hall:Elevator
+Connecting Hi Jump Boots Room:Right Door to Baby Kraid Room:Left Door
+Connecting Aqueduct:Right Door to Wrecked Ship Entrance:Left Door
+Connecting Wrecked Ship Entrance:Right Door to Wave Beam Room:Left Door
+Connecting East Cactus Alley Room:Right Door to Wrecked Ship Main Shaft:Top Left Door
+Connecting Wrecked Ship Main Shaft:Top Right Door to Brinstar Reserve Tank Room:Left Door
+Connecting Wrecked Ship Main Shaft:Middle Right Door to Acid Snakes Tunnel:Left Door
+Connecting Wrecked Ship Main Shaft:Bottom Right Door to Magdollite Tunnel:Left Door
+Connecting Wrecked Ship Main Shaft:Bottom Door to Post Crocomire Shaft:Top Door
+Connecting Mt. Everest:Bottom Right Door to Wrecked Ship Main Shaft:Top Door
+Connecting Attic:Right Door to Nutella Refill:Left Door
+Connecting Attic:Bottom Door to Toilet Bowl:Top Doorway
+Connecting Lower Norfair Spring Ball Maze Room:Bottom Horizontal Door to Basement:Left Door
+Connecting Basement:Right Door to Ice Beam Gate Room:Bottom Left Door
+Connecting Lower Norfair Spring Ball Maze Room:Right Vertical Door to Basement:Top Door
+Connecting Ridley Tank Room:Right Door to Volcano Room:Bottom Left Door
+Connecting Forgotten Highway Elbow:Right Door to Maridia Health Refill Room:Left Door
+Connecting Big Pink Save Room:Right Door to Business Center:Bottom Left Door
+Connecting Ice Beam Acid Room:Right Door to Bowling Alley:Top Left Door
+Connecting Business Center:Bottom Right Door to Bowling Alley:Middle Left Door
+Connecting Post Crocomire Farming Room:Top Right Door to Bowling Alley:Bottom Left Door
+Connecting Warehouse Kihunter Room:Bottom Right Door to Gravity Suit Room:Left Door
+Connecting Gravity Suit Room:Right Door to East Cactus Alley Room:Left Door
+Connecting Parlor and Alcatraz:Alcatraz Door to Wrecked Ship East Super Room:Left Door
+Connecting Caterpillar Room:Bottom Right Door to Sponge Bath:Left Door
+Connecting Sponge Bath:Right Door to Crab Hole:Bottom Left Door
+Connecting Green Brinstar Missile Refill:Right Door to Spiky Death Room:Left Door
+Connecting Spiky Death Room:Right Door to Ice Beam Gate Room:Middle Left Door
+Connecting Dachora Room:Right Door to Electric Death Room:Top Left Door
+Connecting Lower Tourian Save Room:Right Door to Electric Death Room:Bottom Left Door
+Connecting Electric Death Room:Right Door to Final Missile Bombway:Left Door
+Connecting Wrecked Ship Energy Tank Room:Right Door to Gauntlet Entrance:Left Door
+Connecting Main Street:Top Right Door to Maridia Map Room:Left Door
+Connecting Shaktool Room:Right Door to Tourian First Room:Left Door
+Connecting Tourian First Room:Right Door to Spore Spawn Super Room:Bottom Left Door
+Connecting Green Brinstar Elevator Room:Elevator to Tourian First Room:Elevator
+Connecting Rising Tide:Right Door to Maridia Missile Refill Room:Left Door
+Connecting The Final Missile:Right Door to Metroid Room 1:Left Door
+Connecting Metroid Room 1:Right Door to Wrecked Ship Main Shaft:Bottom Left Door
+Connecting Metroid Room 2:Top Right Door to Big Pink:Left Side - Middle Doorway (Behind the Power Bomb Blocks)
+Connecting Metroid Room 2:Bottom Right Door to Big Pink:Left Side - Bottom Middle Door (Blocked by Crumble Blocks)
+Connecting Homing Geemer Room:Right Door to Metroid Room 3:Left Door
+Connecting Metroid Room 3:Right Door to Forgotten Highway Kago Room:Top Left Door
+Connecting Flyway:Right Door to Metroid Room 4:Top Left Door
+Connecting Metroid Room 4:Bottom Door to Warehouse Zeela Room:Right Vertical Door
+Connecting Crocomire Speedway:Bottom Right Door to Blue Hopper Room:Left Door
+Connecting Red Pirate Shaft:Bottom Door to Blue Hopper Room:Top Right Door
+Connecting Parlor and Alcatraz:Bottom Right Door (On the Left Shaft) to Dust Torizo Room:Left Door
+Connecting Dust Torizo Room:Right Door to Main Hall:Left Door
+Connecting Cathedral:Right Door to Big Boy Room:Left Doorway
+Connecting Big Boy Room:Right Door to Crocomire Speedway:Top of the Shaft Left Door
+Connecting Warehouse Kihunter Room:Top Right Door to Seaweed Room:Left Door
+Connecting Seaweed Room:Top Right Doorway to Lower Norfair Escape Power Bomb Room:Left Door
+Connecting Seaweed Room:Bottom Right Door to Assembly Line:Left Door
+Connecting Lower Norfair Farming Room:Right Door to Tourian Eye Door Room:Left Door
+Connecting Tourian Eye Door Room:Right Door to Green Brinstar Main Shaft:Above Power Bomb Blocks - Top Left Door
+Connecting Fast Pillars Setup Room:Bottom Right Door to Rinka Shaft:Top Left Door
+Connecting Sloaters Refill:Right Door to Rinka Shaft:Middle Left Door
+Connecting West Sand Hall:Right Door to Rinka Shaft:Bottom Left Door
+Connecting Warehouse Energy Tank Room:Right Door to Pit Room:Left Door
+Connecting Ice Beam Snake Room:Bottom Right Door to Mother Brain Room:Left Blast Door
+Connecting Mother Brain Room:Right Door to Parlor and Alcatraz:Middle Left Door
+Connecting Tourian Escape Room 1:Right Doorway to Upper Norfair Farming Room:Bottom Left Door
+Connecting Tourian Escape Room 1:Bottom Door to Purple Shaft:Top Door
+Connecting Tourian Escape Room 2:Right Door to Mickey Mouse Room:Bottom Left Door
+Connecting Spore Spawn Room:Bottom Door to Tourian Escape Room 2:Top Door
+Connecting Thread The Needle Room:Right Door to Tourian Escape Room 3:Left Door
+Connecting Tourian Escape Room 3:Right Door to Attic:Left Door
+Connecting Wrecked Ship West Super Room:Right Door to Tourian Escape Room 4:Left Door
+Connecting Tourian Escape Room 4:Right Door to Boyon Gate Hall:Bottom Left Door
+info: Randomizer.Graph.GameRandomizer[0] Graph configuration took 00:00:04.5752933
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Morph:sm:0` in `Link's Uncle:alttp:0` (*:32)
+info: Randomizer.Graph.RandomAssumedFiller[0] (0%) [0] Placing `Crystal1:alttp:0` in `Turtle Rock - Prize:alttp:0` (prize:alttp:0:10)
+info: Randomizer.Graph.RandomAssumedFiller[0] (1%) [0] Placing `PendantOfCourage:alttp:0` in `Misery Mire - Prize:alttp:0` (prize:alttp:0:9)
+info: Randomizer.Graph.RandomAssumedFiller[0] (1%) [0] Placing `Crystal3:alttp:0` in `Thieves' Town - Prize:alttp:0` (prize:alttp:0:8)
+info: Randomizer.Graph.RandomAssumedFiller[0] (2%) [0] Placing `Crystal4:alttp:0` in `Swamp Palace - Prize:alttp:0` (prize:alttp:0:7)
+info: Randomizer.Graph.RandomAssumedFiller[0] (2%) [0] Placing `TurtleRockEntryQuake:alttp:0` in `Turtle Rock - Entry:alttp:0` (tr-medallion:alttp:0:1)
+info: Randomizer.Graph.RandomAssumedFiller[0] (3%) [0] Placing `PendantOfWisdom:alttp:0` in `Tower Of Hera - Prize:alttp:0` (prize:alttp:0:6)
+info: Randomizer.Graph.RandomAssumedFiller[0] (3%) [0] Placing `FairyBottleWithFairy:alttp:0` in `Pyramid Fairy - Bottle:alttp:0` (bottle:alttp:0:2)
+info: Randomizer.Graph.RandomAssumedFiller[0] (4%) [0] Placing `Crystal7:alttp:0` in `Eastern Palace - Prize:alttp:0` (prize:alttp:0:5)
+info: Randomizer.Graph.RandomAssumedFiller[0] (5%) [0] Placing `Crystal5:alttp:0` in `Ice Palace - Prize:alttp:0` (prize:alttp:0:3)
+info: Randomizer.Graph.RandomAssumedFiller[0] (5%) [0] Placing `FairyBottleWithBee:alttp:0` in `Waterfall Fairy - Bottle:alttp:0` (bottle:alttp:0:1)
+info: Randomizer.Graph.RandomAssumedFiller[0] (6%) [0] Placing `PendantOfPower:alttp:0` in `Desert Palace - Prize:alttp:0` (prize:alttp:0:3)
+info: Randomizer.Graph.RandomAssumedFiller[0] (6%) [0] Placing `Crystal6:alttp:0` in `Skull Woods - Prize:alttp:0` (prize:alttp:0:1)
+info: Randomizer.Graph.RandomAssumedFiller[0] (7%) [0] Placing `MireEntryQuake:alttp:0` in `Misery Mire - Entry:alttp:0` (mm-medallion:alttp:0:1)
+info: Randomizer.Graph.RandomAssumedFiller[0] (7%) [0] Placing `Crystal2:alttp:0` in `Palace of Darkness - Prize:alttp:0` (prize:alttp:0:1)
+info: Randomizer.Graph.RandomAssumedFiller[0] (8%) [2] Placing `NorfairL1:sm:0` in `Misery Mire - Big Key Chest:alttp:0` (*:308)
+info: Randomizer.Graph.RandomAssumedFiller[0] (9%) [2] Placing `NorfairL2:sm:0` in `Kakariko Well - Left:alttp:0` (*:305)
+info: Randomizer.Graph.RandomAssumedFiller[0] (9%) [2] Placing `NorfairBoss:sm:0` in `Sunken Treasure:alttp:0` (*:308)
+info: Randomizer.Graph.RandomAssumedFiller[0] (10%) [2] Placing `MaridiaL2:sm:0` in `Brinstar - Alpha Power Bomb Room - Hidden Left Item:sm:0` (*:305)
+info: Randomizer.Graph.RandomAssumedFiller[0] (10%) [2] Placing `WreckedShipL1:sm:0` in `Norfair - Crocomire Escape - Item:sm:0` (*:306)
+info: Randomizer.Graph.RandomAssumedFiller[0] (11%) [2] Placing `CrateriaL2:sm:0` in `Purple Chest Item:alttp:0` (*:304)
+info: Randomizer.Graph.RandomAssumedFiller[0] (11%) [2] Placing `BrinstarL2:sm:0` in `Pyramid Fairy - Left:alttp:0` (*:304)
+info: Randomizer.Graph.RandomAssumedFiller[0] (12%) [2] Placing `BrinstarBoss:sm:0` in `Ganon's Tower - Randomizer Room - Bottom Right:alttp:0` (*:303)
+info: Randomizer.Graph.RandomAssumedFiller[0] (13%) [2] Placing `CrateriaBoss:sm:0` in `Desert Palace - Big Chest:alttp:0` (*:302)
+info: Randomizer.Graph.RandomAssumedFiller[0] (13%) [2] Placing `LowerNorfairBoss:sm:0` in `Blind's Hideout - Right:alttp:0` (*:299)
+info: Randomizer.Graph.RandomAssumedFiller[0] (14%) [2] Placing `MaridiaBoss:sm:0` in `Palace of Darkness - Dark Maze - Bottom:alttp:0` (*:298)
+info: Randomizer.Graph.RandomAssumedFiller[0] (14%) [2] Placing `LowerNorfairL1:sm:0` in `Norfair - Cathedral - Hidden Item:sm:0` (*:299)
+info: Randomizer.Graph.RandomAssumedFiller[0] (15%) [2] Placing `BrinstarL1:sm:0` in `Maridia - Mama Turtle Room - Hidden Right Item:sm:0` (*:297)
+info: Randomizer.Graph.RandomAssumedFiller[0] (15%) [2] Placing `CrateriaL1:sm:0` in `Spectacle Rock:alttp:0` (*:297)
+info: Randomizer.Graph.RandomAssumedFiller[0] (16%) [2] Placing `WreckedShipBoss:sm:0` in `Ganon's Tower - Randomizer Room - Bottom Left:alttp:0` (*:296)
+info: Randomizer.Graph.RandomAssumedFiller[0] (17%) [2] Placing `MaridiaL1:sm:0` in `Stumpy:alttp:0` (*:295)
+info: Randomizer.Graph.RandomAssumedFiller[0] (17%) [3] Placing `Super:sm:0` in `Brinstar - Varia Suit Room - Item:sm:0` (*:294)
+info: Randomizer.Graph.RandomAssumedFiller[0] (18%) [3] Placing `BigKeyD5:alttp:0` in `Lost Woods Hideout Item:alttp:0` (*:276)
+info: Randomizer.Graph.RandomAssumedFiller[0] (18%) [3] Placing `MapP3:alttp:0` in `Lumberjack Tree:alttp:0` (*:292)
+info: Randomizer.Graph.RandomAssumedFiller[0] (19%) [3] Placing `KeyD7:alttp:0` in `Ganon's Tower - Randomizer Room - Top Left:alttp:0` (*:289)
+info: Randomizer.Graph.RandomAssumedFiller[0] (19%) [3] Placing `PowerBomb:sm:0` in `Ganon's Tower - Mini Helmasaur Room - Left:alttp:0` (*:290)
+info: Randomizer.Graph.RandomAssumedFiller[0] (20%) [3] Placing `Varia:sm:0` in `Thieves' Town - Big Chest:alttp:0` (*:289)
+info: Randomizer.Graph.RandomAssumedFiller[0] (21%) [3] Placing `Ether:alttp:0` in `Sewers - Secret Room - Left:alttp:0` (*:288)
+info: Randomizer.Graph.RandomAssumedFiller[0] (21%) [3] Placing `Missile:sm:0` in `Brinstar - Spore Spawn Super Room - Item:sm:0` (*:287)
+info: Randomizer.Graph.RandomAssumedFiller[0] (22%) [3] Placing `Mushroom:alttp:0` in `Wrecked Ship - Bowling Alley - Bottom Chozo Item:sm:0` (*:284)
+info: Randomizer.Graph.RandomAssumedFiller[0] (22%) [3] Placing `PowerBomb:sm:0` in `Ganon's Tower - DMs Room - Top Right:alttp:0` (*:285)
+info: Randomizer.Graph.RandomAssumedFiller[0] (23%) [3] Placing `KeyA2:alttp:0` in `Misery Mire - Spike Chest:alttp:0` (*:275)
+info: Randomizer.Graph.RandomAssumedFiller[0] (23%) [3] Placing `SpaceJump:sm:0` in `Palace of Darkness - The Arena - Ledge:alttp:0` (*:283)
+info: Randomizer.Graph.RandomAssumedFiller[0] (24%) [3] Placing `IceRod:alttp:0` in `Norfair - Crocomire's Room - Item:sm:0` (*:281)
+info: Randomizer.Graph.RandomAssumedFiller[0] (25%) [3] Placing `MapA2:alttp:0` in `Ice Palace - Boss Item:alttp:0` (*:281)
+info: Randomizer.Graph.RandomAssumedFiller[0] (25%) [3] Placing `MoonPearl:alttp:0` in `Ganon's Tower - Tile Room Chest:alttp:0` (*:181)
+info: Randomizer.Graph.RandomAssumedFiller[0] (26%) [3] Placing `ReserveTank:sm:0` in `Kakariko Well - Right:alttp:0` (*:279)
+info: Randomizer.Graph.RandomAssumedFiller[0] (26%) [3] Placing `ETank:sm:0` in `Misery Mire - Boss Item:alttp:0` (*:278)
+info: Randomizer.Graph.RandomAssumedFiller[0] (27%) [3] Placing `CompassD5:alttp:0` in `Hyrule Castle - Boomerang Chest:alttp:0` (*:277)
+info: Randomizer.Graph.RandomAssumedFiller[0] (27%) [3] Placing `CaneOfSomaria:alttp:0` in `Swamp Palace - Entrance Chest:alttp:0` (*:182)
+info: Randomizer.Graph.RandomAssumedFiller[0] (28%) [3] Placing `KeyH2:alttp:0` in `Wrecked Ship - Wrecked Ship West Super Room - Item:sm:0` (*:274)
+info: Randomizer.Graph.RandomAssumedFiller[0] (28%) [3] Placing `KeyD3:alttp:0` in `Brinstar - Warehouse Energy Tank Room - Hidden Ceiling Item:sm:0` (*:259)
+info: Randomizer.Graph.RandomAssumedFiller[0] (29%) [3] Placing `BigKeyP1:alttp:0` in `Palace of Darkness - Boss Item:alttp:0` (*:271)
+info: Randomizer.Graph.RandomAssumedFiller[0] (30%) [3] Placing `ProgressiveShield:alttp:0` in `Brinstar - Etecoon Energy Tank Room - Top Item:sm:0` (*:272)
+info: Randomizer.Graph.RandomAssumedFiller[0] (30%) [3] Placing `MapD7:alttp:0` in `Turtle Rock - Roller Room - Left:alttp:0` (*:271)
+info: Randomizer.Graph.RandomAssumedFiller[0] (31%) [3] Placing `Plasma:sm:0` in `Ice Palace - Compass Chest:alttp:0` (*:270)
+info: Randomizer.Graph.RandomAssumedFiller[0] (31%) [3] Placing `MapD5:alttp:0` in `Blind's Hideout - Far Right:alttp:0` (*:269)
+info: Randomizer.Graph.RandomAssumedFiller[0] (32%) [3] Placing `KeyD1:alttp:0` in `Skull Woods - Pinball Chest:alttp:0` (*:259)
+info: Randomizer.Graph.RandomAssumedFiller[0] (32%) [3] Placing `KeyD6:alttp:0` in `Norfair - Golden Torizo's Room - Hidden Right Item:sm:0` (*:265)
+info: Randomizer.Graph.RandomAssumedFiller[0] (33%) [3] Placing `Bow:alttp:0` in `Wrecked Ship - Wrecked Ship Energy Tank Room - Item:sm:0` (*:260)
+info: Randomizer.Graph.RandomAssumedFiller[0] (34%) [3] Placing `BottleWithGreenPotion:alttp:0` in `Turtle Rock - Eye Bridge - Bottom Left:alttp:0` (*:264)
+info: Randomizer.Graph.RandomAssumedFiller[0] (34%) [3] Placing `ETank:sm:0` in `Palace of Darkness - Dark Maze - Top:alttp:0` (*:264)
+info: Randomizer.Graph.RandomAssumedFiller[0] (35%) [3] Placing `ETank:sm:0` in `Brinstar - Green Brinstar Main Shaft - Right Etecoon Shaft - Item:sm:0` (*:263)
+info: Randomizer.Graph.RandomAssumedFiller[0] (35%) [3] Placing `KeyD3:alttp:0` in `Floodgate Chest:alttp:0` (*:247)
+info: Randomizer.Graph.RandomAssumedFiller[0] (36%) [3] Placing `KeyD1:alttp:0` in `Kakariko Tavern Item:alttp:0` (*:254)
+info: Randomizer.Graph.RandomAssumedFiller[0] (36%) [3] Placing `MapD6:alttp:0` in `Ganon's Tower - Compass Room - Top Left:alttp:0` (*:260)
+info: Randomizer.Graph.RandomAssumedFiller[0] (37%) [3] Placing `ETank:sm:0` in `Superbunny Cave - Bottom:alttp:0` (*:259)
+info: Randomizer.Graph.RandomAssumedFiller[0] (38%) [3] Placing `BigKeyD6:alttp:0` in `Ice Rod Cave Item:alttp:0` (*:255)
+info: Randomizer.Graph.RandomAssumedFiller[0] (38%) [3] Placing `Super:sm:0` in `Wrecked Ship - Bowling Alley - Top Right Item:sm:0` (*:256)
+info: Randomizer.Graph.RandomAssumedFiller[0] (39%) [3] Placing `CompassD2:alttp:0` in `Swamp Palace - Big Key Chest:alttp:0` (*:256)
+info: Randomizer.Graph.RandomAssumedFiller[0] (39%) [3] Placing `Shovel:alttp:0` in `Brinstar - Morph Ball Room - Right Item:sm:0` (*:254)
+info: Randomizer.Graph.RandomAssumedFiller[0] (40%) [3] Placing `KeyD6:alttp:0` in `Waterfall Fairy - Right:alttp:0` (*:252)
+info: Randomizer.Graph.RandomAssumedFiller[0] (40%) [3] Placing `MapD3:alttp:0` in `Hype Cave - NPC Item:alttp:0` (*:253)
+info: Randomizer.Graph.RandomAssumedFiller[0] (41%) [3] Placing `BigKeyD4:alttp:0` in `Aginah's Cave - Chest:alttp:0` (*:249)
+info: Randomizer.Graph.RandomAssumedFiller[0] (42%) [3] Placing `Charge:sm:0` in `Agahnims Tower - Second Chest:alttp:0` (*:251)
+info: Randomizer.Graph.RandomAssumedFiller[0] (42%) [3] Placing `Missile:sm:0` in `Skull Woods - Boss Item:alttp:0` (*:250)
+info: Randomizer.Graph.RandomAssumedFiller[0] (43%) [3] Placing `OcarinaInactive:alttp:0` in `Brinstar - Hopper Energy Tank Room - Item:sm:0` (*:249)
+info: Randomizer.Graph.RandomAssumedFiller[0] (43%) [3] Placing `KeyA1:alttp:0` in `Eastern Palace - Cannonball Chest:alttp:0` (*:233)
+info: Randomizer.Graph.RandomAssumedFiller[0] (44%) [3] Placing `KeyD1:alttp:0` in `Palace of Darkness - The Arena - Bridge Ledge Chest:alttp:0` (*:240)
+info: Randomizer.Graph.RandomAssumedFiller[0] (44%) [3] Placing `Quake:alttp:0` in `Tower Of Hera - Big Key Chest:alttp:0` (*:246)
+info: Randomizer.Graph.RandomAssumedFiller[0] (45%) [3] Placing `ETank:sm:0` in `Maridia - Aqueduct - Top Right Left Item:sm:0` (*:245)
+info: Randomizer.Graph.RandomAssumedFiller[0] (46%) [3] Placing `KeyD4:alttp:0` in `Wrecked Ship - Gravity Suit Room - Item:sm:0` (*:242)
+info: Randomizer.Graph.RandomAssumedFiller[0] (46%) [3] Placing `Missile:sm:0` in `Brewery Item:alttp:0` (*:243)
+info: Randomizer.Graph.RandomAssumedFiller[0] (47%) [3] Placing `Missile:sm:0` in `Turtle Rock - Chain Chomps:alttp:0` (*:242)
+info: Randomizer.Graph.RandomAssumedFiller[0] (47%) [3] Placing `Gravity:sm:0` in `Potion Shop Item:alttp:0` (*:239)
+info: Randomizer.Graph.RandomAssumedFiller[0] (48%) [3] Placing `HalfMagic:alttp:0` in `Desert Palace - Compass Chest:alttp:0` (*:240)
+info: Randomizer.Graph.RandomAssumedFiller[0] (48%) [3] Placing `MapH2:alttp:0` in `Brinstar - Morph Ball Room - Left Item:sm:0` (*:239)
+info: Randomizer.Graph.RandomAssumedFiller[0] (49%) [3] Placing `KeyD7:alttp:0` in `Misery Mire - Bridge Chest:alttp:0` (*:236)
+info: Randomizer.Graph.RandomAssumedFiller[0] (50%) [3] Placing `Super:sm:0` in `Mini Moldorm Cave - Far Left:alttp:0` (*:235)
+info: Randomizer.Graph.RandomAssumedFiller[0] (50%) [3] Placing `KeyD7:alttp:0` in `Misery Mire - Map Chest:alttp:0` (*:234)
+info: Randomizer.Graph.RandomAssumedFiller[0] (51%) [3] Placing `CompassP3:alttp:0` in `Turtle Rock - Eye Bridge - Top Right:alttp:0` (*:235)
+info: Randomizer.Graph.RandomAssumedFiller[0] (51%) [3] Placing `ETank:sm:0` in `Brinstar - Brinstar Reserve Tank Room - Chozo Item:sm:0` (*:234)
+info: Randomizer.Graph.RandomAssumedFiller[0] (52%) [3] Placing `KeyD1:alttp:0` in `Master Sword Pedestal:alttp:0` (*:226)
+info: Randomizer.Graph.RandomAssumedFiller[0] (52%) [3] Placing `Hammer:alttp:0` in `Hammer Pegs Item:alttp:0` (*:197)
+info: Randomizer.Graph.RandomAssumedFiller[0] (53%) [3] Placing `PowerBomb:sm:0` in `Ganon's Tower - Compass Room - Bottom Left:alttp:0` (*:231)
+info: Randomizer.Graph.RandomAssumedFiller[0] (53%) [3] Placing `FireRod:alttp:0` in `Thieves' Town - Attic Chest:alttp:0` (*:209)
+info: Randomizer.Graph.RandomAssumedFiller[0] (54%) [3] Placing `CompassA2:alttp:0` in `Chicken House Item:alttp:0` (*:229)
+info: Randomizer.Graph.RandomAssumedFiller[0] (55%) [3] Placing `SpringBall:sm:0` in `Desert Palace - Map Chest:alttp:0` (*:228)
+info: Randomizer.Graph.RandomAssumedFiller[0] (55%) [3] Placing `MapP1:alttp:0` in `Turtle Rock - Roller Room - Right:alttp:0` (*:227)
+info: Randomizer.Graph.RandomAssumedFiller[0] (56%) [3] Placing `CaneOfByrna:alttp:0` in `Brinstar - Big Pink - Bottom Chozo Item:sm:0` (*:226)
+info: Randomizer.Graph.RandomAssumedFiller[0] (56%) [3] Placing `Super:sm:0` in `Ganon's Tower - Mini Helmasaur Room - Right:alttp:0` (*:225)
+info: Randomizer.Graph.RandomAssumedFiller[0] (57%) [3] Placing `CompassD3:alttp:0` in `Norfair - Hi Jump Energy Tank Room - Top Right Item:sm:0` (*:224)
+info: Randomizer.Graph.RandomAssumedFiller[0] (57%) [3] Placing `Super:sm:0` in `Brinstar - Blue Brinstar Energy Tank Room - Hidden Ceiling Item:sm:0` (*:223)
+info: Randomizer.Graph.RandomAssumedFiller[0] (58%) [3] Placing `ProgressiveShield:alttp:0` in `Ganon's Tower - DMs Room - Bottom Right:alttp:0` (*:222)
+info: Randomizer.Graph.RandomAssumedFiller[0] (59%) [3] Placing `KeyA2:alttp:0` in `Mini Moldorm Cave - NPC:alttp:0` (*:220)
+info: Randomizer.Graph.RandomAssumedFiller[0] (59%) [3] Placing `KeyD5:alttp:0` in `Norfair - Lower Norfair Escape Power Bomb Room - Item:sm:0` (*:220)
+info: Randomizer.Graph.RandomAssumedFiller[0] (60%) [3] Placing `BigKeyP3:alttp:0` in `Pyramid Item:alttp:0` (*:209)
+info: Randomizer.Graph.RandomAssumedFiller[0] (60%) [3] Placing `ReserveTank:sm:0` in `Brinstar - Brinstar Reserve Tank Room - Right Hidden Item:sm:0` (*:218)
+info: Randomizer.Graph.RandomAssumedFiller[0] (61%) [3] Placing `KeyD3:alttp:0` in `Ganon's Tower - Compass Room - Top Right:alttp:0` (*:204)
+info: Randomizer.Graph.RandomAssumedFiller[0] (61%) [3] Placing `KeyP3:alttp:0` in `Brinstar - Brinstar Reserve Tank Room - Middle Visible Item:sm:0` (*:216)
+info: Randomizer.Graph.RandomAssumedFiller[0] (62%) [3] Placing `KeyP2:alttp:0` in `Ice Palace - Freezor Chest:alttp:0` (*:206)
+info: Randomizer.Graph.RandomAssumedFiller[0] (63%) [3] Placing `BigKeyA2:alttp:0` in `Ganon's Tower - Hope Room - Left:alttp:0` (*:211)
+info: Randomizer.Graph.RandomAssumedFiller[0] (63%) [3] Placing `PowerBomb:sm:0` in `Palace of Darkness - Stalfos Basement Chest:alttp:0` (*:212)
+info: Randomizer.Graph.RandomAssumedFiller[0] (64%) [3] Placing `BigKeyD2:alttp:0` in `Turtle Rock - Eye Bridge - Bottom Right:alttp:0` (*:211)
+info: Randomizer.Graph.RandomAssumedFiller[0] (64%) [3] Placing `ProgressiveGlove:alttp:0` in `Mushroom:alttp:0` (*:206)
+info: Randomizer.Graph.RandomAssumedFiller[0] (65%) [3] Placing `MapD4:alttp:0` in `Cave 45 Item:alttp:0` (*:210)
+info: Randomizer.Graph.RandomAssumedFiller[0] (65%) [3] Placing `Hookshot:alttp:0` in `Thieves' Town - Big Key Chest:alttp:0` (*:195)
+info: Randomizer.Graph.RandomAssumedFiller[0] (66%) [3] Placing `Missile:sm:0` in `Eastern Palace - Compass Chest:alttp:0` (*:208)
+info: Randomizer.Graph.RandomAssumedFiller[0] (67%) [3] Placing `Flippers:alttp:0` in `Brinstar - Green Hill Zone - Item (Through the Pipe):sm:0` (*:132)
+info: Randomizer.Graph.RandomAssumedFiller[0] (67%) [3] Placing `MapD1:alttp:0` in `Norfair - Wasteland - Item:sm:0` (*:206)
+info: Randomizer.Graph.RandomAssumedFiller[0] (68%) [3] Placing `KeyD1:alttp:0` in `Paradox Cave Lower - Left:alttp:0` (*:198)
+info: Randomizer.Graph.RandomAssumedFiller[0] (68%) [3] Placing `Bombos:alttp:0` in `Turtle Rock - Compass Chest:alttp:0` (*:204)
+info: Randomizer.Graph.RandomAssumedFiller[0] (69%) [3] Placing `HiJump:sm:0` in `Hookshot Cave - Bottom Chest:alttp:0` (*:171)
+info: Randomizer.Graph.RandomAssumedFiller[0] (69%) [3] Placing `CompassD1:alttp:0` in `Tower Of Hera - Boss Item:alttp:0` (*:202)
+info: Randomizer.Graph.RandomAssumedFiller[0] (70%) [3] Placing `CompassD4:alttp:0` in `Tower Of Hera - Map Chest:alttp:0` (*:201)
+info: Randomizer.Graph.RandomAssumedFiller[0] (71%) [3] Placing `MapD2:alttp:0` in `Skull Woods - Big Key Chest:alttp:0` (*:200)
+info: Randomizer.Graph.RandomAssumedFiller[0] (71%) [3] Placing `ETank:sm:0` in `King Zora:alttp:0` (*:199)
+info: Randomizer.Graph.RandomAssumedFiller[0] (72%) [3] Placing `CompassD7:alttp:0` in `Norfair - Post Crocomire Jump Room - Item:sm:0` (*:198)
+info: Randomizer.Graph.RandomAssumedFiller[0] (72%) [3] Placing `Ice:sm:0` in `Paradox Cave Lower - Middle:alttp:0` (*:197)
+info: Randomizer.Graph.RandomAssumedFiller[0] (73%) [3] Placing `MagicMirror:alttp:0` in `Crateria - Pit Room - Item:sm:0` (*:85)
+info: Randomizer.Graph.RandomAssumedFiller[0] (73%) [3] Placing `BigKeyP2:alttp:0` in `Ganon's Tower - DMs Room - Top Left:alttp:0` (*:187)
+info: Randomizer.Graph.RandomAssumedFiller[0] (74%) [3] Placing `ETank:sm:0` in `Tower Of Hera - Basement Cage:alttp:0` (*:79)
+info: Randomizer.Graph.RandomAssumedFiller[0] (75%) [3] Placing `PowerBomb:sm:0` in `Norfair - Norfair Reserve Tank Room - Chozo Ball Item:sm:0` (*:193)
+info: Randomizer.Graph.RandomAssumedFiller[0] (75%) [3] Placing `KeyA2:alttp:0` in `Maridia - Main Street - Speed Blocked Item:sm:0` (*:191)
+info: Randomizer.Graph.RandomAssumedFiller[0] (76%) [3] Placing `BookOfMudora:alttp:0` in `Palace of Darkness - Map Chest:alttp:0` (*:189)
+info: Randomizer.Graph.RandomAssumedFiller[0] (76%) [3] Placing `KeyD1:alttp:0` in `Sahasrahla's Hut - Sahasrahla:alttp:0` (*:183)
+info: Randomizer.Graph.RandomAssumedFiller[0] (77%) [3] Placing `KeyD5:alttp:0` in `Mini Moldorm Cave - Far Right:alttp:0` (*:189)
+info: Randomizer.Graph.RandomAssumedFiller[0] (77%) [3] Placing `BugCatchingNet:alttp:0` in `Ganon's Tower - Firesnake Room:alttp:0` (*:188)
+info: Randomizer.Graph.RandomAssumedFiller[0] (78%) [3] Placing `Lamp:alttp:0` in `Hype Cave - Middle Right:alttp:0` (*:170)
+info: Randomizer.Graph.RandomAssumedFiller[0] (78%) [3] Placing `Missile:sm:0` in `Sahasrahla's Hut - Left:alttp:0` (*:186)
+info: Randomizer.Graph.RandomAssumedFiller[0] (79%) [3] Placing `Spazer:sm:0` in `Wrecked Ship - Wrecked Ship Main Shaft - Item:sm:0` (*:185)
+info: Randomizer.Graph.RandomAssumedFiller[0] (80%) [3] Placing `KeyD7:alttp:0` in `Hookshot Cave - Middle South Chest:alttp:0` (*:182)
+info: Randomizer.Graph.RandomAssumedFiller[0] (80%) [3] Placing `KeyA2:alttp:0` in `Swamp Palace - Boss Item:alttp:0` (*:164)
+info: Randomizer.Graph.RandomAssumedFiller[0] (81%) [3] Placing `ProgressiveGlove:alttp:0` in `Desert Palace - Boss Item:alttp:0` (*:178)
+info: Randomizer.Graph.RandomAssumedFiller[0] (81%) [3] Placing `SilverArrowUpgrade:alttp:0` in `Norfair - Post Crocomire Missile Room - Item:sm:0` (*:181)
+info: Randomizer.Graph.RandomAssumedFiller[0] (82%) [3] Placing `BigKeyD1:alttp:0` in `Sewers - Secret Room - Middle:alttp:0` (*:177)
+info: Randomizer.Graph.RandomAssumedFiller[0] (82%) [3] Placing `PowerBomb:sm:0` in `Sahasrahla's Hut - Middle:alttp:0` (*:62)
+info: Randomizer.Graph.RandomAssumedFiller[0] (83%) [3] Placing `CompassD6:alttp:0` in `Maridia - Mama Turtle Room - Top Item:sm:0` (*:72)
+info: Randomizer.Graph.RandomAssumedFiller[0] (84%) [3] Placing `Wave:sm:0` in `Zora's Domain Ledge Item:alttp:0` (*:71)
+info: Randomizer.Graph.RandomAssumedFiller[0] (84%) [3] Placing `CompassP1:alttp:0` in `Norfair - Speed Booster Room - Item:sm:0` (*:70)
+info: Randomizer.Graph.RandomAssumedFiller[0] (85%) [3] Placing `ETank:sm:0` in `Crateria - The Final Missile - Item:sm:0` (*:68)
+info: Randomizer.Graph.RandomAssumedFiller[0] (85%) [3] Placing `BigKeyD3:alttp:0` in `Norfair - Hi Jump Energy Tank Room - Top Left Item:sm:0` (*:68)
+info: Randomizer.Graph.RandomAssumedFiller[0] (86%) [3] Placing `ETank:sm:0` in `Crateria - The Moat - Item:sm:0` (*:66)
+info: Randomizer.Graph.RandomAssumedFiller[0] (86%) [3] Placing `ReserveTank:sm:0` in `Secret Passage:alttp:0` (*:66)
+info: Randomizer.Graph.RandomAssumedFiller[0] (87%) [3] Placing `KeyA1:alttp:0` in `Paradox Cave Lower - Far Left:alttp:0` (*:65)
+info: Randomizer.Graph.RandomAssumedFiller[0] (88%) [3] Placing `Grapple:sm:0` in `Maridia - The Precious Room - Top Right Hidden Item:sm:0` (*:63)
+info: Randomizer.Graph.RandomAssumedFiller[0] (88%) [3] Placing `ProgressiveSword:alttp:0` in `Brinstar - Beta Power Bomb Room - Item:sm:0` (*:63)
+info: Randomizer.Graph.RandomAssumedFiller[0] (89%) [3] Placing `ProgressiveSword:alttp:0` in `Mimic Cave:alttp:0` (*:61)
+info: Randomizer.Graph.RandomAssumedFiller[0] (89%) [3] Placing `Missile:sm:0` in `Kakariko Well - Top:alttp:0` (*:61)
+info: Randomizer.Graph.RandomAssumedFiller[0] (90%) [3] Placing `Missile:sm:0` in `Norfair - Lower Norfair Fireflea Room - Firefleas Item:sm:0` (*:60)
+info: Randomizer.Graph.RandomAssumedFiller[0] (90%) [3] Placing `MapP2:alttp:0` in `Brinstar - Spazer Room - Item:sm:0` (*:59)
+info: Randomizer.Graph.RandomAssumedFiller[0] (91%) [3] Placing `KeyD2:alttp:0` in `Crateria - Crateria Super Room - Item:sm:0` (*:56)
+info: Randomizer.Graph.RandomAssumedFiller[0] (92%) [3] Placing `KeyD6:alttp:0` in `Magic Bat Item:alttp:0` (*:55)
+info: Randomizer.Graph.RandomAssumedFiller[0] (92%) [3] Placing `PegasusBoots:alttp:0` in `Norfair - Bubble Mountain - Bottom Right Item:sm:0` (*:54)
+info: Randomizer.Graph.RandomAssumedFiller[0] (93%) [3] Placing `ReserveTank:sm:0` in `Brinstar - Pink Brinstar Power Bomb Room - Item:sm:0` (*:54)
+info: Randomizer.Graph.RandomAssumedFiller[0] (93%) [3] Placing `Powder:alttp:0` in `Brinstar - Big Pink - Top Item (Above Hopper Pit):sm:0` (*:54)
+info: Randomizer.Graph.RandomAssumedFiller[0] (94%) [3] Placing `CompassP2:alttp:0` in `Paradox Cave Upper - Right:alttp:0` (*:53)
+info: Randomizer.Graph.RandomAssumedFiller[0] (94%) [3] Placing `ProgressiveShield:alttp:0` in `Paradox Cave Upper - Left:alttp:0` (*:52)
+info: Randomizer.Graph.RandomAssumedFiller[0] (95%) [3] Placing `Missile:sm:0` in `Hobo:alttp:0` (*:50)
+info: Randomizer.Graph.RandomAssumedFiller[0] (96%) [3] Placing `Missile:sm:0` in `Crateria - West Ocean - Top Hidden Item (Above Trippers):sm:0` (*:50)
+info: Randomizer.Graph.RandomAssumedFiller[0] (96%) [3] Placing `Cape:alttp:0` in `Brinstar - First Missile Room - Item:sm:0` (*:49)
+info: Randomizer.Graph.RandomAssumedFiller[0] (97%) [3] Placing `BigKeyD7:alttp:0` in `Skull Woods - Bridge Room Chest:alttp:0` (*:48)
+info: Randomizer.Graph.RandomAssumedFiller[0] (97%) [3] Placing `Super:sm:0` in `Library Item:alttp:0` (*:40)
+info: Randomizer.Graph.RandomAssumedFiller[0] (98%) [3] Placing `Missile:sm:0` in `Kakariko Well - Middle:alttp:0` (*:45)
+info: Randomizer.Graph.RandomAssumedFiller[0] (98%) [4] Placing `SpeedBooster:sm:0` in `Flute Spot:alttp:0` (*:42)
+info: Randomizer.Graph.RandomAssumedFiller[0] (99%) [4] Placing `ScrewAttack:sm:0` in `Norfair - Ridley Tank Room - Hidden Item:sm:0` (*:35)
+info: Randomizer.Graph.RandomAssumedFiller[0] (100%) [4] Placing `Bombs:sm:0` in `Pyramid Fairy - Right:alttp:0` (*:43)
+info: Randomizer.Graph.RandomAssumedFiller[0] Fast Filling 171 items
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Ice Palace - Big Chest:alttp:0` (*:153)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Swamp Palace - Compass Chest:alttp:0` (*:152)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PowerBomb:sm:0` in `Brinstar - Warehouse Kihunter Room - Hidden Item:sm:0` (*:151)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Paradox Cave Lower - Far Right:alttp:0` (*:150)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Norfair - Golden Torizo's Room - Top Left Item:sm:0` (*:149)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Brinstar - X-Ray Scope Room - Item:sm:0` (*:148)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Norfair - Mickey Mouse Room - Item:sm:0` (*:147)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Palace of Darkness - Shooter Room Chest:alttp:0` (*:146)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Maze Race:alttp:0` (*:145)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Hyrule Castle - Zelda's Cell:alttp:0` (*:144)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `XRayScope:sm:0` in `Misery Mire - Big Chest:alttp:0` (*:143)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Crateria - Bomb Torizo Room - Item:sm:0` (*:142)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Sick Kid Item:alttp:0` (*:141)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Blind's Hideout - Left:alttp:0` (*:140)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Spectacle Rock Cave Item:alttp:0` (*:139)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Ganon's Tower - Map Chest:alttp:0` (*:138)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Palace of Darkness - Compass Chest:alttp:0` (*:137)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Desert Ledge - Item:alttp:0` (*:136)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Thieves' Town - Blind's Cell:alttp:0` (*:135)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Brinstar - Waterway Energy Tank Room - Item:sm:0` (*:134)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Crateria - Crateria Power Bomb Room - Item:sm:0` (*:133)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Brinstar - Big Pink - Middle Item:sm:0` (*:132)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `HeartContainer:alttp:0` in `Ganon's Tower - Big Key Room - Left:alttp:0` (*:131)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Brinstar - Billy Mays Room - Pedestal Item:sm:0` (*:130)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Spiral Cave Item:alttp:0` (*:129)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Tower Of Hera - Big Chest:alttp:0` (*:128)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ProgressiveSword:alttp:0` in `Maridia - Botwoon Energy Tank Room - Item:sm:0` (*:127)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Ganon's Tower - Big Chest:alttp:0` (*:126)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Catfish:alttp:0` (*:125)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Norfair - Hi Jump Boots Room - Item:sm:0` (*:124)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Eastern Palace - Big Chest:alttp:0` (*:123)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Hookshot Cave - Top Chest:alttp:0` (*:122)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ETank:sm:0` in `Waterfall Fairy - Left:alttp:0` (*:121)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `RedBoomerang:alttp:0` in `Eastern Palace - Boss Item:alttp:0` (*:120)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BottleWithBee:alttp:0` in `Eastern Palace - Big Key Chest:alttp:0` (*:119)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Ganon's Tower - DMs Room - Bottom Left:alttp:0` (*:118)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Turtle Rock - Boss Item:alttp:0` (*:117)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Old Man:alttp:0` (*:116)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Thieves' Town - Map Chest:alttp:0` (*:115)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Skull Woods - Pot Prison:alttp:0` (*:114)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Brinstar - Early Supers Room - Lower Item:sm:0` (*:113)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Bottle:alttp:0` in `Maridia - Watering Hole - Right Item:sm:0` (*:112)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Blacksmith Item:alttp:0` (*:111)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PowerBomb:sm:0` in `Swamp Palace - Flooded Room - Right:alttp:0` (*:110)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Norfair - Three Musketeers' Room - Hidden Item:sm:0` (*:109)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Brinstar - Billy Mays Room - Hidden Item:sm:0` (*:108)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Crateria - Green Pirates Shaft - Left Item:sm:0` (*:107)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PowerBomb:sm:0` in `Maridia - Watering Hole - Left Item:sm:0` (*:106)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ETank:sm:0` in `Skull Woods - Map Chest:alttp:0` (*:105)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PowerBomb:sm:0` in `Turtle Rock - Eye Bridge - Top Left:alttp:0` (*:104)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Swamp Palace - Flooded Room - Left:alttp:0` (*:103)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Brinstar - Alpha Power Bomb Room - Chozo Item:sm:0` (*:102)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ETank:sm:0` in `Desert Palace - Big Key Chest:alttp:0` (*:101)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Maridia - Main Street - Morph Tunnel Item:sm:0` (*:100)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Swamp Palace - Big Chest:alttp:0` (*:99)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Bumper Cave Item:alttp:0` (*:98)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Misery Mire - Compass Chest:alttp:0` (*:97)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ETank:sm:0` in `Mire Shed - Right:alttp:0` (*:96)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ProgressiveArmor:alttp:0` in `Turtle Rock - Big Chest:alttp:0` (*:95)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Hookshot Cave - Middle North Chest:alttp:0` (*:94)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Ganon's Tower - Moldorm Chest:alttp:0` (*:93)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Norfair - Post Crocomire Power Bomb Room - Item:sm:0` (*:92)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Skull Woods - Big Chest:alttp:0` (*:91)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Ice Palace - Iced T Room:alttp:0` (*:90)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Thieves' Town - Boss Item:alttp:0` (*:89)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `C-Shaped House Item:alttp:0` (*:88)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Ganon's Tower - Randomizer Room - Top Right:alttp:0` (*:87)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Swamp Palace - Waterfall Room Chest:alttp:0` (*:86)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Norfair - Norfair Reserve Tank Room - Hidden Platform Item:sm:0` (*:85)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Ganon's Tower - Bob's Chest:alttp:0` (*:84)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Crateria - Gauntlet Energy Tank Room - Item:sm:0` (*:83)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Hype Cave - Middle Left:alttp:0` (*:82)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Mini Moldorm Cave - Right:alttp:0` (*:81)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ProgressiveArmor:alttp:0` in `Brinstar - Etecoon Super Room - Item:sm:0` (*:80)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BottleWithGoldBee:alttp:0` in `Maridia - West Sand Hole - Top Left - Right Item:sm:0` (*:79)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Lake Hylia Island Item:alttp:0` (*:78)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Brinstar - Blue Brinstar Energy Tank Room - Right Item:sm:0` (*:77)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Sanctuary Chest:alttp:0` (*:76)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Bombos Tablet:alttp:0` (*:75)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Crateria - Terminator Room - Item:sm:0` (*:74)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Turtle Rock - Crystaroller Room Chest:alttp:0` (*:73)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PowerBomb:sm:0` in `Digging Game - Item:alttp:0` (*:72)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Crateria - West Ocean - Bottom Left Underwater Item:sm:0` (*:71)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Super:sm:0` in `Misery Mire - Main Lobby Chest:alttp:0` (*:70)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Maridia - East Sand Hole - Top Left Item:sm:0` (*:69)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Spike Cave:alttp:0` (*:68)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `BossHeartContainer:alttp:0` in `Blind's Hideout - Top:alttp:0` (*:67)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ProgressiveSword:alttp:0` in `Norfair - Grapple Beam Room - Item:sm:0` (*:66)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Ganon's Tower - Hope Room - Right:alttp:0` (*:65)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Ganon's Tower - Bob's Torch:alttp:0` (*:64)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Norfair - Green Bubbles Missile Room - Item:sm:0` (*:63)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Missile:sm:0` in `Brinstar - Early Supers Room - Top Left Item:sm:0` (*:62)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Boomerang:alttp:0` in `Hyrule Castle - Map Chest:alttp:0` (*:61)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `PieceOfHeart:alttp:0` in `Floating Island Item:alttp:0` (*:60)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Graveyard Cave Item:alttp:0` (*:59)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Crateria - Green Pirates Shaft - Right Item:sm:0` (*:58)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiftyRupees:alttp:0` in `Wrecked Ship - Wrecked Ship East Super Room - Item (Behind the Bomb Wall):sm:0` (*:57)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Chest Game:alttp:0` (*:56)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Bottle Merchant Item:alttp:0` (*:55)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `Arrow:alttp:0` in `Hype Cave - Top:alttp:0` (*:54)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiveRupees:alttp:0` in `Kakariko Well - Bottom:alttp:0` (*:53)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Bonk Rocks Item:alttp:0` (*:52)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Palace of Darkness - Big Chest:alttp:0` (*:51)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiftyRupees:alttp:0` in `Norfair - Wave Beam Room - Item:sm:0` (*:50)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Superbunny Cave - Top:alttp:0` (*:49)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Palace of Darkness - Harmless Hellway Chest:alttp:0` (*:48)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Mire Shed - Left:alttp:0` (*:47)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Norfair - Crumble Shaft - Hidden Item:sm:0` (*:46)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Maridia - Plasma Room - Item:sm:0` (*:45)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `OneRupee:alttp:0` in `Crateria - West Ocean - Left Morph Maze Item:sm:0` (*:44)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiftyRupees:alttp:0` in `Ganon's Tower - Pre-Moldorm Chest:alttp:0` (*:43)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeHundredRupees:alttp:0` in `Thieves' Town - Ambush Chest:alttp:0` (*:42)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Paradox Cave Lower - Right:alttp:0` (*:41)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Turtle Rock - Big Key Chest:alttp:0` (*:40)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Ganon's Tower - Big Key Room - Right:alttp:0` (*:39)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Ice Palace - Big Key Chest:alttp:0` (*:38)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiftyRupees:alttp:0` in `Thieves' Town - Compass Chest:alttp:0` (*:37)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Wrecked Ship - Assembly Line - Item:sm:0` (*:36)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiveRupees:alttp:0` in `Eastern Palace - Map Chest:alttp:0` (*:35)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Ganon's Tower - Compass Room - Bottom Right:alttp:0` (*:34)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Skull Woods - Compass Chest:alttp:0` (*:33)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Swamp Palace - Map Chest:alttp:0` (*:32)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Maridia - East Sand Hole - Right Item:sm:0` (*:31)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `King's Tomb Chest:alttp:0` (*:30)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `OneRupee:alttp:0` in `Link's House - Chest:alttp:0` (*:29)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Blind's Hideout - Far Left:alttp:0` (*:28)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Norfair - Ice Beam Room - Item:sm:0` (*:27)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Norfair - Speed Booster Hall - Hidden Item:sm:0` (*:26)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeHundredRupees:alttp:0` in `Sewers - Dark Cross Chest:alttp:0` (*:25)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `OneHundredRupees:alttp:0` in `Norfair - Lower Norfair Spring Ball Maze Room - Item:sm:0` (*:24)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Ice Palace - Map Chest:alttp:0` (*:23)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Hype Cave - Bottom:alttp:0` (*:22)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Norfair - Screw Attack Room - Item:sm:0` (*:21)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Sahasrahla's Hut - Right:alttp:0` (*:20)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Maridia - West Sand Hole - Top Left - Left Item:sm:0` (*:19)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Maridia - Aqueduct - Top Right Right Item:sm:0` (*:18)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Ice Palace - Spike Room:alttp:0` (*:17)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Maridia - Pseudo Plasma Spark Room - Hidden Item:sm:0` (*:16)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeHundredRupees:alttp:0` in `Palace of Darkness - Dark Basement - Left:alttp:0` (*:15)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeHundredRupees:alttp:0` in `Ether Tablet:alttp:0` (*:14)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Agahnims Tower - First Chest:alttp:0` (*:13)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Mini Moldorm Cave - Left:alttp:0` (*:12)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Swamp Palace - West Chest:alttp:0` (*:11)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Maridia - Space Jump Room - Item:sm:0` (*:10)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Norfair - Double Chamber - Item:sm:0` (*:9)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Desert Palace - Torch:alttp:0` (*:8)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `FiveRupees:alttp:0` in `Sewers - Secret Room - Right:alttp:0` (*:7)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Checkerboard Cave Item:alttp:0` (*:6)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Tower Of Hera - Compass Chest:alttp:0` (*:5)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TenArrows:alttp:0` in `Palace of Darkness - Big Key Chest:alttp:0` (*:4)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Ganon's Tower - Big Key Chest:alttp:0` (*:3)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `ThreeBombs:alttp:0` in `Palace of Darkness - Dark Basement - Right:alttp:0` (*:2)
+info: Randomizer.Graph.RandomAssumedFiller[0] [FF] Placing: `TwentyRupees:alttp:0` in `Maridia - Spring Ball Room - Item:sm:0` (*:1)
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `FiftyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `ThreeHundredRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `ThreeBombs:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `FiftyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `FiveRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `ThreeBombs:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `FiftyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `ThreeBombs:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `ThreeBombs:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `ThreeBombs:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TwentyRupees:alttp:0` `*`
+warn: Randomizer.Graph.RandomAssumedFiller[0] No Location: `TenArrows:alttp:0` `*`

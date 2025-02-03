@@ -33,12 +33,21 @@ public class MapRandomizer
 
         var connections = CreateConnections(map);
 
+        (string,string)[] keepDoors = [
+            ("Bomb Torizo Room", "Left Door"),
+        ];
+
 
         // Patch out all colored and gray doors
         foreach (var room in _reader.Rooms)
         {
             foreach (var node in room.Nodes)
             {
+                if(keepDoors.Contains((room.Name, node.Name)))
+                {
+                    continue;
+                }
+
                 if (node.NodeType == "door" && node.NodeSubType != "blue" && node.NodeSubType != "elevator")
                 {
                     node.NodeSubType = "blue";
