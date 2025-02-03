@@ -122,6 +122,7 @@ public enum DoorTypePlm : ushort
     RedDoorRight = 0xC890,
     RedDoorUp = 0xC896,
     RedDoorDown = 0xC89C,
+    EscapeWall = 0xC8CA,
     Nothing = 0xB62F
 }
 

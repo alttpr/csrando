@@ -43,6 +43,12 @@ public class GraphPreprocessor
     public void Preprocess()
     {
         PatchKeycards();
+
+        // Patch morph PLM
+        var morphRoom = _reader.Rooms.First(r => r.Name == "Morph Ball Room");
+        var morphNode = morphRoom.Nodes.First(n => n.Name == "Right Item");
+        morphNode.NodeAddress = "0x786EC";
+
         BuildGraph();
         BuildRunways();
         PruneGraph();

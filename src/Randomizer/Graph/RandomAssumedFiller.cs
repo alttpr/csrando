@@ -33,31 +33,49 @@ internal sealed class RandomAssumedFiller
         var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
 
-        //TODO: Mega hack, remove asap
-        for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+
+        // Do special things for SM in combo
+        if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
         {
-            var world = _randomizer.Worlds[i];
-            if (world != null)
+            if(comboWorld.Config.InitialGame == "sm")
             {
-                var smWorld = world switch
+                for (int i = 0; i < _randomizer.Worlds.Length; ++i)
                 {
-                    Games.SuperMetroid.World sm => sm,
-                    Games.Combo.World c => c.SMWorld,
-                    _ => null
-                };
-
-                if (smWorld != null)
-                {
-                    SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
-
-                    // If we didn't fill morph, then fill it
-                    if (flatItems.Any(f => f.Item.Name == "Morph"))
+                    var world = _randomizer.Worlds[i];
+                    if (world != null)
                     {
-                        var flatMorph = flatItems.First(i => i.Item == smWorld.GetItem("Morph"));
-                        SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
-                        flatItems.Remove(flatMorph);
+                        var smWorld = world switch
+                        {
+                            Games.SuperMetroid.World sm => sm,
+                            Games.Combo.World c => c.SMWorld,
+                            _ => null
+                        };
+
+                        if (smWorld != null)
+                        {
+                            SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
+
+                            // If we didn't fill morph, then fill it
+                            if (flatItems.Any(f => f.Item.Name == "Morph"))
+                            {
+                                var flatMorph = flatItems.First(i => i.Item == smWorld.GetItem("Morph"));
+                                SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
+                                flatItems.Remove(flatMorph);
+                            }
+                        }
                     }
                 }
+            }
+            else
+            {
+                string[] frontFillItemNames = ["Morph"];
+                foreach (var frontFillItemName in frontFillItemNames)
+                {
+                    var flatItemToPlace = flatItems.FirstOrDefault(i => i.Item.Name == frontFillItemName);
+                    FrontFillCrossWorld(_randomizer.Worlds[0], _randomizer.Worlds[0].StartingItems, _randomizer.Graph, flatItemToPlace);
+                    flatItems.Remove(flatItemToPlace);
+                }
+
             }
         }
 
@@ -155,6 +173,49 @@ internal sealed class RandomAssumedFiller
 
         FastFillItemsInLocations(flatItems);
     }
+
+    // Finds a location available with only the starting items and fills it, without checking if it's a good candidate
+    private void FrontFillCrossWorld(IWorld world, Inventory startingItems, Graph graph, (ItemSetName, int, IItem) flatItem)
+    {
+        var searcher = _randomizer.GetSearcherForInventory(world, startingItems.All().Select(x => x.Key), world.Start);
+        var locations = searcher.GetEmptyLocationsInSet(flatItem.Item1, null, true).ToList();
+        if (locations.Count == 0)
+        {
+            throw new Exception("No valid location for any item");
+        }
+
+        while(locations.Count > 0)
+        {
+            var location = _prng.GetRandomElement(locations);
+
+            // Backtrack check if the location is in SM
+            if(location.World.GameId == "sm")
+            {
+                // Test backtracking
+                var backtrackInventory = startingItems.Clone();
+                var statefulSearcher = (StatefulSearcher)searcher;
+                var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, flatItem.Item3);
+
+                if(!backtrackCheck)
+                {
+                    locations.Remove(location);
+                    continue;
+                }
+            }
+
+            location.Item = flatItem.Item3;
+            location.TrackPlacedItem();
+            _logger.LogInformation("[FF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+                flatItem.Item3,
+                location,
+                flatItem.Item1,
+                locations.Count
+            );
+            break;
+        }
+
+    }
+
 
     private void SmartFrontFill(IWorld world, Inventory inventory, List<(ItemSetName, int, IItem)> flatItems, int count)
     {
