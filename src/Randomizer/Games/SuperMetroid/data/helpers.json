@@ -7,21 +7,15 @@
       "helpers": [
         {
           "name": "h_heatProof",
-          "requires": [ 
-            {"or": [
-              "Varia",
-              "Gravity"
-            ]}
+          "requires": [
+            "Varia"
           ],
           "devNote": "In the original game either suit provides full immunity, but many randomizers reduce Gravity's resistance."
         },
         {
           "name": "h_heatResistant",
-          "requires": [ 
-            {"or": [
-              "Varia",
-              "Gravity"
-            ]}
+          "requires": [
+            "Varia"
           ],
           "devNote": [
             "Half to full heat reduction.",
@@ -70,7 +64,7 @@
         },
         {
           "name": "h_ShaktoolVanillaFlag",
-          "requires": [],
+          "requires": ["never"],
           "devNote": [
             "In Vanilla, the flag 'f_ShaktoolDoneDigging' is set when on the right side of the room, regardless of which door Samus entered through.",
             "For the behavior where the flag is set by crossing to opposite side of the room, set this to 'never'.",
@@ -88,17 +82,17 @@
         },
         {
           "name": "h_ShaktoolCameraFix",
-          "requires": [ "never" ],
+          "requires": [ ],
           "devNote": "In Vanilla, the camera is messed up when entering from the right. Fixing the camera changes the room behavior by allowing the snails to move."
         },
         {
           "name": "h_KraidCameraFix",
-          "requires": [ "never" ],
+          "requires": [ ],
           "devNote": "In Vanilla, the camera is fixed to the bottom left tile if Kraid is alive. When entering from the right, Samus will spawn in the middle of the room, likely dropping into the thorns."
         },
         {
           "name": "h_CrocomireCameraFix",
-          "requires": [ "never" ],
+          "requires": [ ],
           "devNote": "In Vanilla, the camera is messed up when entering from the left with Crocomire alive."
         },
         {
