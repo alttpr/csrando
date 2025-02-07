@@ -110,11 +110,11 @@ public class Rom : GameRom
                     new ushort[] { 0x948C, KeycardDoors.Left,       0x062E, KeycardEvents.CrateriaLevel2,        KeycardPlaque.Level2,   0x042F, 0x8222 },  // Crateria - Before Moat - Door to moat (overwrite PB door)
                     new ushort[] { 0x99BD, KeycardDoors.Left,       0x660E, KeycardEvents.CrateriaBoss,          KeycardPlaque.Boss,     0x640F, 0x8470 },  // Crateria - Before G4 - Door to G4
                     new ushort[] { 0x9879, KeycardDoors.Left,       0x062E, KeycardEvents.CrateriaBoss,          KeycardPlaque.Boss,     0x042F, 0x8420 },  // Crateria - Before BT - Door to Bomb Torizo
-                
+
                     // Brinstar
                     new ushort[] { 0x9F11, KeycardDoors.Left,       0x060E, KeycardEvents.BrinstarLevel1,        KeycardPlaque.Level1,   0x040F, 0x8784 },  // Brinstar - Blue Brinstar - Door to ceiling e-tank room
-                    new ushort[] { 0x9AD9, KeycardDoors.Right,      0xA601, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0xA400, 0x0000 },  // Brinstar - Green Brinstar - Door to etecoon area                
-                    new ushort[] { 0x9D9C, KeycardDoors.Down,       0x0336, KeycardEvents.BrinstarBoss,          KeycardPlaque.Boss,     0x0234, 0x863A },  // Brinstar - Pink Brinstar - Door to spore spawn                
+                    new ushort[] { 0x9AD9, KeycardDoors.Right,      0xA601, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0xA400, 0x0000 },  // Brinstar - Green Brinstar - Door to etecoon area
+                    new ushort[] { 0x9D9C, KeycardDoors.Down,       0x0336, KeycardEvents.BrinstarBoss,          KeycardPlaque.Boss,     0x0234, 0x863A },  // Brinstar - Pink Brinstar - Door to spore spawn
                     new ushort[] { 0xA130, KeycardDoors.Left,       0x161E, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0x141F, 0x881C },  // Brinstar - Pink Brinstar - Door to wave gate e-tank
                     new ushort[] { 0xA0A4, KeycardDoors.Left,       0x062E, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0x042F, 0x0000 },  // Brinstar - Pink Brinstar - Door to spore spawn super
                     new ushort[] { 0xA56B, KeycardDoors.Left,       0x161E, KeycardEvents.BrinstarBoss,          KeycardPlaque.Boss,     0x141F, 0x8A1A },  // Brinstar - Before Kraid - Door to Kraid
@@ -125,7 +125,7 @@ public class Rom : GameRom
                     new ushort[] { 0xAF72, KeycardDoors.Left,       0x061E, KeycardEvents.NorfairLevel2,         KeycardPlaque.Level2,   0x041F, 0x0000 },  // Norfair - After frog speedway - Door to Bubble Mountain
                     new ushort[] { 0xAEDF, KeycardDoors.Down,       0x0206, KeycardEvents.NorfairLevel2,         KeycardPlaque.Level2,   0x0204, 0x0000 },  // Norfair - Below bubble mountain - Door to Bubble Mountain
                     new ushort[] { 0xAD5E, KeycardDoors.Right,      0x0601, KeycardEvents.NorfairLevel2,         KeycardPlaque.Level2,   0x0400, 0x0000 },  // Norfair - LN Escape - Door to Bubble Mountain
-                
+
                     new ushort[] { 0xA923, KeycardDoors.Up,         0x2DC6, KeycardEvents.NorfairBoss,           KeycardPlaque.Boss,     0x2EC4, 0x8B96 },  // Norfair - Pre-Crocomire - Door to Crocomire
                     // Lower Norfair
                     new ushort[] { 0xB4AD, KeycardDoors.Left,       0x160E, KeycardEvents.LowerNorfairLevel1,    KeycardPlaque.Level1,   0x140F, 0x0000 },  // Lower Norfair - WRITG - Door to Amphitheatre
@@ -143,7 +143,7 @@ public class Rom : GameRom
                     new ushort[] { 0x968F, KeycardDoors.Left,       0x060E, KeycardEvents.WreckedShipLevel1,     KeycardPlaque.Level1,   0x040F, 0x0000 },  // Wrecked Ship - Outside Wrecked Ship West - Door to Bowling Alley
                     new ushort[] { 0xCE40, KeycardDoors.Left,       0x060E, KeycardEvents.WreckedShipLevel1,     KeycardPlaque.Level1,   0x040F, 0x0000 },  // Wrecked Ship - Gravity Suit - Door to Bowling Alley
                     new ushort[] { 0xCC6F, KeycardDoors.Left,       0x064E, KeycardEvents.WreckedShipBoss,       KeycardPlaque.Boss,     0x044F, 0xC29D },  // Wrecked Ship - Pre-Phantoon - Door to Phantoon
-                
+
                 };
             ushort doorId = 0x0000;
             foreach (var door in doorList)
@@ -228,7 +228,8 @@ public class Rom : GameRom
 
                 Write((Address)door.from.exit_ptr, DoorReader.GetDoorBytes(originalDoorData));
 
-                if (door.from.exit_ptr == 0x1A798) {
+                if (door.from.exit_ptr == 0x1A798)
+                {
                     // Pants Room right door
                     // Also write the same data to the East Pants Room right door
                     Write((Address)0x1A7BC, DoorReader.GetDoorBytes(originalDoorData));
@@ -329,7 +330,7 @@ public class Rom : GameRom
         ; - Double PB drop rates of respawning enemies (Gamet, Zeb, Geega, Zebbo, Zoa, Covern)
         ; - Double Super drop rate of Geega, Zeb, and Kagos.
         ; - At the expense of nothing, small energy, and missiles drop rates
-        ; - Shift some drop rate into large energy to compensate for loss of some small 
+        ; - Shift some drop rate into large energy to compensate for loss of some small
         ;                  __________________________ ; 0: Small health
         ;                 |     _____________________ ; 1: Big health
         ;                 |    |     ________________ ; 2: Missiles
@@ -338,7 +339,7 @@ public class Rom : GameRom
         ;                 |    |    |    |    |     _ ; 5: Power bombs
         ;                 |    |    |    |    |    |
         org $B4F25A : db $3C, $3C, $32, $05, $3C, $14  ; Gamet (enemy $F213)
-        org $B4F248 : db $14, $41, $1E, $00, $78, $14  ; Zeb (enemy $F193)   
+        org $B4F248 : db $14, $41, $1E, $00, $78, $14  ; Zeb (enemy $F193)
         org $B4F24E : db $14, $41, $1E, $00, $78, $14  ; Geega (enemy $F253)
         org $B4F254 : db $00, $8C, $05, $00, $64, $0A  ; Zebbo (enemy $F1D3)
         org $B4F260 : db $00, $64, $3C, $05, $46, $14  ; Zoa (enemy $DA7F)
@@ -390,7 +391,7 @@ public class Rom : GameRom
             LDA #$0020           ; replaces: LDA #$0078
 
         ; Big Boy rising from Samus
-        org $A9F2BA 
+        org $A9F2BA
             LDA #$0030           ; replaces: LDA #$00C0
 
         ; Big Boy backing off
@@ -398,12 +399,12 @@ public class Rom : GameRom
             LDA #$0016          ; replaces: LDA #$0058
 
         ; Big Boy going left guiltily
-        org $A9F31E 
-            LDA #$0016          ; replaces: LDA #$0058 
+        org $A9F31E
+            LDA #$0016          ; replaces: LDA #$0058
 
         ; Big Boy going right guiltily
         org $A9F34A
-            LDA #$0016          ; replaces: LDA #$0100  
+            LDA #$0016          ; replaces: LDA #$0100
         */
 
         Write((SNES)0xA9F031, [0x2C]);
@@ -472,7 +473,7 @@ public class Rom : GameRom
         Write((SNES)0x8FC946, [0x60]); // Disable Escape Room 3 Setup ASM
         Write((SNES)0x8FC953, [0x60]); // Disable Escape Room 4 Setup ASM
 
-        Write((SNES)0x8FE5A0, [0x60]); // Disable Escape Room 1 & 3 Main ASM   
+        Write((SNES)0x8FE5A0, [0x60]); // Disable Escape Room 1 & 3 Main ASM
         Write((SNES)0x8FE57C, [0x60]); // Disable Escape Room 2 Main ASM
         Write((SNES)0x8FE5A4, [0x60]); // Disable Escape Room 4 Main ASM
 
@@ -617,7 +618,7 @@ public class Rom : GameRom
                 Write((SNES)(0x8FFD00 + (roomHeader.RoomArea * 128) + 0x25), [(byte)mapArea]);
             }
 
-            if(roomGeometry.name == "West Ocean")
+            if (roomGeometry.name == "West Ocean")
             {
                 // Also update homing geemer room
                 Write((SNES)(0x8FFD00 + (roomHeader.RoomArea * 128) + 0x11), [(byte)mapArea]);
@@ -660,7 +661,7 @@ public class Rom : GameRom
         {
             var room = world.JsonData.Rooms.First(r => r.Id == door.RoomId);
             var doorPlms = world.JsonData.DoorPLMMaps.FirstOrDefault(p => p.RoomId == door.RoomId && p.NodeId == door.Node.Id);
-            
+
             var plmToWrite = door.Node.NodeSubType switch
             {
                 "blue" => DoorTypePlm.Nothing,
@@ -699,14 +700,14 @@ public class Rom : GameRom
                 "eye" => DoorTypePlm.Nothing,
                 _ => throw new Exception("Invalid door type")
             };
-            
-            if(doorPlms != null && doorPlms.PLMs != null && doorPlms.PLMs.Count() > 0)
+
+            if (doorPlms != null && doorPlms.PLMs != null && doorPlms.PLMs.Count() > 0)
             {
                 int doorsWritten = 0;
-                foreach(var plm in doorPlms.PLMs)
+                foreach (var plm in doorPlms.PLMs)
                 {
                     // Don't overwrite existing grey doors with new ones
-                    if(plm.DoorType.IsGrey() && plmToWrite.IsGrey())
+                    if (plm.DoorType.IsGrey() && plmToWrite.IsGrey())
                     {
                         continue;
                     }
@@ -716,7 +717,8 @@ public class Rom : GameRom
                         if (plmToWrite == DoorTypePlm.Nothing)
                         {
                             Write((SNES)(plm.Address + (plm.PlmIndex * 6)), [.. BitConverter.GetBytes((ushort)plmToWrite), 0xFF, 0xFF, 0xFF, 0xFF]);
-                        } else
+                        }
+                        else
                         {
                             Write((SNES)(plm.Address + (plm.PlmIndex * 6)), [.. BitConverter.GetBytes((ushort)plmToWrite), (byte)doorPlms.XPosition, (byte)doorPlms.YPosition, .. BitConverter.GetBytes((ushort)doorIndex)]);
                             doorsWritten++;
@@ -724,12 +726,12 @@ public class Rom : GameRom
                     }
                 }
 
-                if(doorsWritten > 0)
+                if (doorsWritten > 0)
                 {
                     doorIndex++;
                 }
             }
-            else if(doorPlms != null && plmToWrite != DoorTypePlm.Unknown && plmToWrite != DoorTypePlm.Nothing)
+            else if (doorPlms != null && plmToWrite != DoorTypePlm.Unknown && plmToWrite != DoorTypePlm.Nothing)
             {
                 Write((SNES)(0x8F0000 + _plmTableOffset), [.. BitConverter.GetBytes((ushort)(doorPlms.RoomAddress & 0xFFFF)), .. BitConverter.GetBytes((ushort)plmToWrite), (byte)doorPlms.XPosition, (byte)doorPlms.YPosition, .. BitConverter.GetBytes((ushort)doorIndex)]);
                 _plmTableOffset += 0x08;
@@ -755,7 +757,7 @@ public class Rom : GameRom
 
             var plmArgument = KeycardEvents.MotherBrainDoor;
 
-            Write((SNES)(0x8F0000 + _plmTableOffset), [.. BitConverter.GetBytes((ushort)(doorPlmData.RoomAddress & 0xFFFF)) ,.. BitConverter.GetBytes((ushort)plmToWrite), (byte)doorPlmData.XPosition, (byte)doorPlmData.YPosition, .. BitConverter.GetBytes((ushort)plmArgument)]);
+            Write((SNES)(0x8F0000 + _plmTableOffset), [.. BitConverter.GetBytes((ushort)(doorPlmData.RoomAddress & 0xFFFF)), .. BitConverter.GetBytes((ushort)plmToWrite), (byte)doorPlmData.XPosition, (byte)doorPlmData.YPosition, .. BitConverter.GetBytes((ushort)plmArgument)]);
             _plmTableOffset += 0x08;
         }
 

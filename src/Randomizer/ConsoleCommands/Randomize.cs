@@ -72,8 +72,8 @@ internal sealed class Randomize : Command
             bool generated = false;
             while (!generated)
             {
-                try
-                {
+                //try
+                //{
                     var randomizer = RandomizerFactory.Create(
                         worldConfigs,
                         context.ParseResult.GetValueForOption(_seed)
@@ -100,11 +100,11 @@ internal sealed class Randomize : Command
                         }));
                     }
                     generated = true;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to generate ROM.");
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    _logger.LogError(ex, "Failed to generate ROM.");
+                //}
             }
         }
         _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);

@@ -108,6 +108,7 @@ public sealed class World : IWorld
             var crateriaMapStation = (SuperMetroid.Vertex)SMWorld!.GetLocation("Crateria - Crateria Map Room - Left Door");
             Graph.AddDirected(crateriaMapStationPortalIn, crateriaMapStation, SMWorld!.GetItem("fixed"));
             Graph.AddDirected(crateriaMapStation, crateriaMapStationPortalOut, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(crateriaMapStationPortalOut, crateriaMapStationPortalIn, SMWorld!.GetItem("fixed"));
 
             Graph.AddDirected(crateriaMapStationPortalOut, AlttpWorld!.GetLocation("start"), SMWorld!.GetItem("fixed"));
             Graph.AddDirected(AlttpWorld!.GetLocation("start"), crateriaMapStationPortalIn, AlttpWorld!.GetItem("fixed"));
@@ -134,6 +135,7 @@ public sealed class World : IWorld
             var norfairMap = (SuperMetroid.Vertex)SMWorld!.GetLocation("Norfair - Norfair Map Room - Right Door");
             Graph.AddDirected(norfairMapPortalIn, norfairMap, SMWorld!.GetItem("fixed"));
             Graph.AddDirected(norfairMap, norfairMapPortalOut, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(norfairMapPortalOut, norfairMapPortalIn, SMWorld!.GetItem("fixed"));
 
             Graph.AddDirected(norfairMapPortalOut, AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetItem("fixed"));
             Graph.AddDirected(AlttpWorld!.GetLocation("West Death Mountain"), norfairMapPortalIn, AlttpWorld!.GetItem("fixed"));
@@ -160,6 +162,7 @@ public sealed class World : IWorld
             var maridiaMissileRefill = (SuperMetroid.Vertex)SMWorld!.GetLocation("Maridia - Maridia Missile Refill Room - Left Door");
             Graph.AddDirected(maridiaMissileRefillPortalIn, maridiaMissileRefill, SMWorld!.GetItem("fixed"));
             Graph.AddDirected(maridiaMissileRefill, maridiaMissileRefillPortalOut, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(maridiaMissileRefillPortalOut, maridiaMissileRefillPortalIn, GetItem("fixed"));
 
             Graph.AddDirected(maridiaMissileRefillPortalOut, AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetItem("fixed"));
             Graph.AddDirected(AlttpWorld!.GetLocation("Dark Shopping Mall"), maridiaMissileRefillPortalIn, AlttpWorld!.GetItem("fixed"));
@@ -187,6 +190,7 @@ public sealed class World : IWorld
             var lowerNorfairRefill = (SuperMetroid.Vertex)SMWorld!.GetLocation("Norfair - Golden Torizo Energy Recharge - Left Door");
             Graph.AddDirected(lowerNorfairRefillPortalIn, lowerNorfairRefill, SMWorld!.GetItem("fixed"));
             Graph.AddDirected(lowerNorfairRefill, lowerNorfairRefillPortalOut, SMWorld!.GetItem("fixed"));
+            Graph.AddDirected(lowerNorfairRefillPortalOut, lowerNorfairRefillPortalIn, SMWorld!.GetItem("fixed"));
 
             Graph.AddDirected(lowerNorfairRefillPortalOut, AlttpWorld!.GetLocation("Mire"), SMWorld!.GetItem("fixed"));
             Graph.AddDirected(AlttpWorld!.GetLocation("Mire"), lowerNorfairRefillPortalIn, AlttpWorld!.GetItem("fixed"));
