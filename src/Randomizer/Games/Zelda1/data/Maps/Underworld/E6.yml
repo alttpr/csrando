@@ -16,3 +16,4 @@ boss_sfx: 0x00
 room_item: 0x03
 item_pos: 0x00
 behaviour: 0x00
+level_nine_check: true
