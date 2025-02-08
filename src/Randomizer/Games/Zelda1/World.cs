@@ -116,7 +116,7 @@ public sealed class World : IWorld
     public bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new Searcher(Graph, start, startingInventory);
-        return winSearcher.HasFound(GetItem("Triforce"));
+        return winSearcher.HasVisited(GetLocation("Zelda"));
     }
 
     public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)

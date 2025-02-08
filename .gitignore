@@ -3,6 +3,7 @@
 **/.vscode/
 **/.config/
 **/dist/
+**/out/
 **/node_modules/
 **/PublishProfiles/
 **/DB/
