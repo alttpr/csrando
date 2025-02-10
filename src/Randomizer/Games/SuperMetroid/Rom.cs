@@ -438,10 +438,6 @@ public class Rom : GameRom
         // In Shaktool room, skip setting screens to red scroll (so that it won't glitch out when entering from the right):
         Write((SNES)0x84B8DC, [0x60]); // RTS
 
-        // Restore acid in Tourian Escape Room 4:
-        Write((SNES)0x8FDF03, [0xC9, 0x53]); // Vanilla setup ASM pointer (to undo effect of `no_explosions_before_escape` patch)
-        Write((SNES)0x8FC95B, [0x60]); // RTS (return early from setup ASM to skip setting up shaking)
-
         // Remove fake gray door that gets drawn in Phantoon's Room:
         Write((SNES)0xA7D4E5, [0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA]);
 
