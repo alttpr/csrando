@@ -1,5 +1,6 @@
 ﻿namespace Randomizer.Games.Alttp;
 
+using System.Buffers.Binary;
 using Randomizer.Graph;
 using BaseRom = RomModifications.Rom;
 
@@ -924,7 +925,52 @@ public static class RomWriter
             outputBytes.Add(0xFF);
         }
 
-        rom.WriteUnderworldEnemies([.. outputBytes], outputOffsets, world.SpriteSheets.Underworld);
+        var priorityLayerChanges = new Dictionary<int, byte[]>();
+        var blksetChanges = new Dictionary<int, byte>();
+        var bossData = YamlReader.LoadBossSprites();
+        foreach (var boss in world.GetLocationsOfType(VertexType.Boss))
+        {
+            int roomId = boss.RoomId!.Value;
+            // FIXME: abusing the allow list to remember the boss item is probably a bad idea...
+            string bossItem = boss.Allow!.Single();
+            var bossSprites = bossData[bossItem];
+            var layer2Requirements = bossSprites
+                .Where(s => s.PriorityLayer.HasValue)
+                .SelectMany(s => makePriorityLayerValue(s, boss))
+                .ToArray();
+            priorityLayerChanges[roomId] = layer2Requirements;
+            var blksetRequirements = bossSprites
+                .Where(s => s.Blkset.HasValue)
+                .Select(s => s.Blkset!.Value)
+                .Distinct()
+                .ToArray();
+            if (blksetRequirements is [byte blkset, ..])
+            {
+                blksetChanges[roomId] = blkset;
+#if DEBUG
+                if (blksetRequirements.Length > 1)
+                    throw new Exception($"Found {blksetRequirements.Length} different BLKSET changes for {bossItem} ({string.Join(", ", blksetRequirements)}), only one is supported.");
+#endif
+            }
+        }
+        rom.WriteUnderworldRoomsPriorityLayer(priorityLayerChanges);
+        static byte[] makePriorityLayerValue(YamlBossSprite sprite, Vertex boss)
+        {
+            var position = boss.RoomOffset + sprite.Position;
+            // this is a map16 position (so the actual location is *16)...
+            position *= 16;
+            // ...but objects are laid out differently, on an 8-based grid.
+            position /= 8;
+            // FIXME: khold needs an additional offset, he's not quite in the center of the shell
+            ushort objectId = sprite.PriorityLayer!.Value;
+            return [
+                (byte)(((position.X << 2) & 0xFC) | (objectId & 0x3)),
+                (byte)(((position.Y << 2) & 0xFC) | ((objectId >> 2) & 0x3)),
+                (byte)(0xF8 | ((objectId >> 4) & 0xF)),
+            ];
+        }
+
+        rom.WriteUnderworldEnemies([.. outputBytes], outputOffsets, world.SpriteSheets.Underworld, blksetChanges);
 
         // Overworld
         List<ushort>[] owPointerOffsets = [[], [], []];

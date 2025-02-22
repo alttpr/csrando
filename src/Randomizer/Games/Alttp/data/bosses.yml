@@ -97,6 +97,7 @@ DefeatKholdstare:
     sprite: "KholdstareShell"
     # kholdstare's shell on the priority upper layer
     priority_layer: 0x215
+    blkset: 0x0B
   - name: "Falling Ice"
     position: { x: 0x07, y: 0x05, z: 0x00 }
     sprite: "FallingIce"
@@ -113,6 +114,7 @@ DefeatTrinexx:
     sprite: "Trinexx"
     # trinexx' shell on the priority upper layer
     priority_layer: 0x272
+    blkset: 0x0D
   - name: "Trinexx (Fire Head)"
     position: { x: 0x07, y: 0x05, z: 0x00 }
     sprite: "TrinexxHeadFire"

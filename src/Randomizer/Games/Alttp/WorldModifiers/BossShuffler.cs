@@ -165,6 +165,8 @@ internal sealed class BossShuffler : IAlttpWorldModifier
             RoomOffset = alttpVertex.RoomOffset,
             RoomId = alttpVertex.RoomId,
             RoomOAM = alttpVertex.RoomOAM,
+            // FIXME: abusing the allow list to remember the boss item is probably a bad idea...
+            Allow = [bossItem],
             // TODO: do we need more in here?
         });
         world.Graph.AddDirected(from, bossVertex, worldBossItem);

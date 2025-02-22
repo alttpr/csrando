@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Randomizer.Graph;
 using YamlDotNet.Serialization;
 
@@ -310,6 +311,8 @@ public class YamlBossSprite
     // extra data for the priority upper layer (sometimes called layer 3, or background layer 2)
     [YamlMember(Alias = "priority_layer")]
     public ushort? PriorityLayer { get; set; }
+    [YamlMember(Alias = "blkset")]
+    public byte? Blkset { get; set; }
 }
 
 public class DirectedUndirectedPair
@@ -559,6 +562,8 @@ public partial class Position
     [YamlMember(Alias = "z")]
     public int? Z { get; set; }
 
+    [return: NotNullIfNotNull(nameof(left))]
+    [return: NotNullIfNotNull(nameof(right))]
     public static Position? operator +(Position? left, Position? right)
     {
         if (left is null && right is null)
@@ -569,6 +574,32 @@ public partial class Position
             X = (left?.X).GetValueOrDefault() + (right?.X).GetValueOrDefault(),
             Y = (left?.Y).GetValueOrDefault() + (right?.Y).GetValueOrDefault(),
             Z = (left?.Z).GetValueOrDefault() + (right?.Z).GetValueOrDefault(),
+        };
+    }
+    [return: NotNullIfNotNull(nameof(self))]
+    public static Position? operator *(Position? self, int mult)
+    {
+        if (self is null)
+            return null;
+
+        return new Position
+        {
+            X = self.X * mult,
+            Y = self.Y * mult,
+            Z = self.Z * mult,
+        };
+}
+    [return: NotNullIfNotNull(nameof(self))]
+    public static Position? operator /(Position? self, int div)
+    {
+        if (self is null)
+            return null;
+
+        return new Position
+        {
+            X = self.X / div,
+            Y = self.Y / div,
+            Z = self.Z / div,
         };
     }
 }
