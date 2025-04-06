@@ -14,5 +14,5 @@ nodes:
   
 edges:
   undirected:
-      Morph:
+      UseBombs:
           - ["Left", "Right"]

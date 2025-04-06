@@ -27,6 +27,7 @@ scoped:
       - [["Skull Woods Second Section West - In", "Skull Woods Second Section West - Out"]]
       - [["Turtle Rock Outside Bridge East - In", "Turtle Rock Outside Bridge East - Out"]]
       - [["Dark Floating Island - In", "Dark Floating Island - Out"]]
+      - [["Bumper Cave Ledge Top - In", "Bumper Cave Ledge Top - Out"]]
     underworld:
       - [["Skull Woods - Bumper Buddy", "Skull Woods - Bumper Buddy - Exit"]]
       - [["Skull Woods - Statue Puzzle", "Skull Woods - Statue Puzzle - Exit"]]
@@ -147,7 +148,6 @@ connections:
       - [["Bomb Shoppe - Shoppe - In", "Bomb Shoppe - Shoppe - Out"]]
       - [["West Death Mountain Big Fairy - In", "West Death Mountain Big Fairy - Out"]]
       - [["Bumper Cave Entrance Bottom - In", "Bumper Cave Entrance Bottom - Out"]]
-      - [["Bumper Cave Ledge Top - In", "Bumper Cave Ledge Top - Out"]]
       - [["Death Mountain Descent - In", "Death Mountain Descent - Out"]]
       - [["Death Mountain Foot Descent Ledge - In", "Death Mountain Foot Descent Ledge - Out"]]
       - [["Eastern Palace - In", "Eastern Palace - Out"]]
