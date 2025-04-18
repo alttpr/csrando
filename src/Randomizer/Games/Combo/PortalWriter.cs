@@ -59,7 +59,7 @@ internal class PortalWriter
 
     };
 
-    public static void WritePortals(RomModifications.Rom rom, World world)
+    public static void WritePortals(IRom rom, World world)
     {
         // sm = 0x300000
         // alttp (in) = 0x550000
@@ -145,9 +145,9 @@ internal class PortalWriter
         }
     }
 
-    private static int WritePortals(RomModifications.Rom rom, int address, uint[][] portalData)
+    private static int WritePortals(IRom rom, int address, uint[][] portalData)
     {
-        if(portalData.Length == 0)
+        if (portalData.Length == 0)
         {
             return address;
         }
@@ -167,7 +167,7 @@ internal class PortalWriter
     //TODO: This is broken, we need to fix it later
     private static int WriteDynamicsPortals(RomModifications.Rom rom, int address, World world, (string from, string to) gamePair)
     {
-        if(gamePair.from == "sm" && gamePair.to == "alttp")
+        if (gamePair.from == "sm" && gamePair.to == "alttp")
         {
             int index = 0;
             foreach ((var portalFrom, var portalTo) in world.Portals)
@@ -206,7 +206,7 @@ internal class PortalWriter
                 index++;
             }
         }
-        else if(gamePair.from == "alttp" &&  gamePair.to == "sm")
+        else if (gamePair.from == "alttp" && gamePair.to == "sm")
         {
             int index = 0;
             foreach ((var portalFrom, var portalTo) in world.Portals)

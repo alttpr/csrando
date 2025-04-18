@@ -2,12 +2,13 @@
 
 using System.Buffers.Binary;
 using Randomizer.Graph;
+using Randomizer.RomModifications;
 using BaseRom = RomModifications.Rom;
 
 public static class RomWriter
 {
     private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
-    public static void Write(BaseRom baseRom, World world, PRNG prng, int offset = 0)
+    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
     {
         // FIXME: this offset likely needs to come from above, we only know with a full game selection where the individual games go
         var rom = new Rom(baseRom, world.WorldConfig.Language, offset);

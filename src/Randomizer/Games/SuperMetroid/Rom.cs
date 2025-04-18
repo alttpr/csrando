@@ -25,7 +25,7 @@ public class Rom : GameRom
 {
     private int _plmTableOffset;
 
-    public Rom(RomModifications.Rom rom, int offset) : base(rom, offset)
+    public Rom(IRom rom, int offset) : base(rom, offset)
     {
         _plmTableOffset = 0xf800;
     }

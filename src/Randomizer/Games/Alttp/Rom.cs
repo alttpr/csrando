@@ -13,7 +13,7 @@ public sealed class Rom : GameRom
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(RomModifications.Rom rom, string language, int offset)
+    public Rom(IRom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
@@ -1694,7 +1694,7 @@ public sealed class Rom : GameRom
 
     public void WriteLocationSpecificData(Vertex location, Item? item)
     {
-        if(item == null)
+        if (item == null)
             return;
 
         switch (location?.Name)
@@ -1858,6 +1858,7 @@ public sealed class Rom : GameRom
         // special OW 0x02E575 // zora/msp/hobo
         Write((SNES)0x02E575, specialSpriteSheets);
     }
+
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)

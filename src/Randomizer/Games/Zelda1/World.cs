@@ -98,7 +98,7 @@ public sealed class World : IWorld
     {
         return _allItems.Values;
     }
-    
+
     public IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();
@@ -112,11 +112,11 @@ public sealed class World : IWorld
     {
         location.World.PlacedItemCount++;
     }
-    
+
     public bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new Searcher(Graph, start, startingInventory);
-        return winSearcher.HasVisited(GetLocation("Zelda"));
+        return winSearcher.HasFound(GetItem("Zelda"));
     }
 
     public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)

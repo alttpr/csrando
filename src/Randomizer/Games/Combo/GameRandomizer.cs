@@ -5,7 +5,8 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Graph.GameRandomizer;
 
-public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) : BaseGameRandomizer(randomizerConfigs, prng)
+public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory)
+    : BaseGameRandomizer(randomizerConfigs, prng, romFactory)
 {
     private const int RomSize = 8 * 1024 * 1024;
 
@@ -15,29 +16,16 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
 
     public override void AppendSpoiler(SpoilerLog spoilerLog) { } // FIXME: implement a spoiler log
 
-    protected override RomModifications.Rom CreateRom(FileInfo baseRom, FileInfo? baseBPS)
-    {
-        var rom = new RomModifications.Rom(baseRom.FullName);
-        // TODO: check hash? do we need that?
-
-        // assume we either have a vanilla rom and a BPS, or an already pre-patched base rom.
-        if (baseBPS != null)
-        {
-            rom.Resize(RomSize);
-            rom.ApplyBasePatch(baseBPS);
-        }
-
-        return rom;
-    }
-
-    protected override void WriteWorldToRom(IWorld world, RomModifications.Rom rom, PRNG prng)
+    protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
         var comboWorld = world as World;
-        if(comboWorld == null)
+        if (comboWorld == null)
             throw new ArgumentException("Passed world is not for the Combo Randomizer.", nameof(world));
 
+        // Use the concrete instance for combo-specific methods
         WriteItemsToRom(comboWorld, rom);
 
+        // Pass the original IRom (could be Rom or LoggedRom) to individual game writers
         if (comboWorld.AlttpWorld != null)
             Alttp.RomWriter.Write(rom, comboWorld.AlttpWorld, prng, 0x400000);
 
@@ -45,23 +33,23 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
             Zelda1.RomWriter.Write(rom, comboWorld.Z1World, prng);
 
         if (comboWorld.M1World != null)
-            Metroid.RomWriter.Write(rom, comboWorld.M1World, prng);
+            Metroid.RomWriter.Write(rom, comboWorld.M1World, prng); // Assuming Metroid.RomWriter also takes IRom
 
         if (comboWorld.SMWorld != null)
             SuperMetroid.RomWriter.Write(rom, comboWorld.SMWorld, prng);
 
+        // Use the concrete instance for combo-specific methods
         PortalWriter.WritePortals(rom, comboWorld);
-
         WriteGameFlags(comboWorld, rom);
         WriteSeed(comboWorld, rom);
     }
 
-    private void WriteSeed(World world, RomModifications.Rom rom)
+    private void WriteSeed(World world, IRom rom)
     {
         rom.Write(0x7ffff0, BitConverter.GetBytes(world.Prng.Seed));
     }
 
-    private void WriteGameFlags(World world, RomModifications.Rom rom)
+    private void WriteGameFlags(World world, IRom rom)
     {
         byte startingGame = world.Config.InitialGame switch
         {
@@ -80,7 +68,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
         rom.Write(0x7fffe8, [(byte)(world.M1World == null ? 0x00 : 0x01)]);
     }
 
-    private void WriteItemsToRom(World world, RomModifications.Rom rom)
+    private void WriteItemsToRom(World world, IRom rom)
     {
         // Replace all the item bytes to write with the combo specific item bytes depending on target game and write it to the rom
         var itemLocations = world.GetLocationsOfType(VertexType.Item).Where(x => x.Item != null);
@@ -113,8 +101,11 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
                     rom.Write((Address)(pcAddress.Value + 0x400000), [itemByte.Value]);
                 }
             }
-            else if(location.World is SuperMetroid.World)
+            else if (location.World is SuperMetroid.World)
             {
+                // Added null check for Addresses
+                if (location.Addresses == null) continue;
+
                 int plmBytes = (int)itemBytes[0] + ((int)itemBytes[1] << 8);
                 int offset = ((SuperMetroid.Vertex)location).Node!.NodeSubType switch
                 {

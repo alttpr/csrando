@@ -16,6 +16,7 @@ public abstract class GameRandomizer
     public Graph Graph { get; }
     public IWorld[] Worlds { get; }
     public PRNG PRNG { get; }
+    protected IRomFactory RomFactory { get; }
 
     private readonly Inventory _startingItems = new();
     private readonly Vertex _start;
@@ -31,10 +32,12 @@ public abstract class GameRandomizer
     ///
     /// <param name="randomizerConfigs">All the configuration for the each world generation</param>
     /// <param name="seed">Seeded again, eh?</param>
-    protected GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
+    /// <param name="romFactory">The factory to use for creating IRom instances.</param>
+    protected GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory)
     {
         var sw = Stopwatch.StartNew();
         PRNG = prng;
+        RomFactory = romFactory;
         _logger.LogInformation("Using seed: {Seed}", PRNG.Seed);
 
         Graph = new Graph();
@@ -52,7 +55,6 @@ public abstract class GameRandomizer
 
         Graph.SetVertexIds();
         _itemPooler = CreateItemPooler(Worlds, PRNG);
-
         _logger.LogInformation("Graph configuration took {TimeElapsed}", sw.Elapsed);
     }
 
@@ -84,32 +86,58 @@ public abstract class GameRandomizer
     /// <summary>
     /// Check if the worlds are winnable. This is mostly a sanity check, since items should never be placed in a way that makes the game unwinnable.
     /// </summary>
-    public bool IsWinnable() => Worlds.All(world => world.IsWinnable(_start, _startingItems));
+    public bool IsWinnable() => Worlds.All(world => world.IsWinnable(world.Start, _startingItems));
 
-    public void Write(FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
+    public IRom? Write(FileInfo? baseRom, FileInfo? baseBPS, DirectoryInfo? outputDirectory)
     {
+        IRom? lastRom = null;
         foreach (var (i, world) in Worlds.Indexed())
-            WriteForWorld(world, baseRom, baseBPS, outputDirectory, PRNG, Worlds.Length > 1 ? $"_W{i + 1}" : null);
+            lastRom = WriteForWorld(world, baseRom, baseBPS, outputDirectory, PRNG, Worlds.Length > 1 ? $"_W{i + 1}" : null);
+
+        return lastRom;
     }
 
-    private void WriteForWorld(IWorld world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
+    private IRom? WriteForWorld(IWorld world, FileInfo? baseRom, FileInfo? baseBPS, DirectoryInfo? outputDirectory, PRNG prng, string? worldSuffix = null)
     {
-        // TODO: baseRom and baseBPS would likely have to be game-specific, so they might be candidates for moving into the derived classes as well.
-        using var rom = CreateRom(baseRom, baseBPS);
+        // baseRom might be null if the factory doesn't need it (e.g., LoggedRomFactory)
+        // We still need to handle the case where ProvideBaseRom might return null.
+        var actualBaseRom = baseRom ?? ProvideBaseRom();
+
+        // CreateRom now uses the factory
+        using var rom = CreateRom(actualBaseRom, baseBPS);
 
         WriteWorldToRom(world, rom, prng);
 
-        //rom.UpdateChecksum();
+        // rom.UpdateChecksum(); // Checksum update might not be applicable to all IRom types (like LoggedRom)
+
+        if (outputDirectory == null)
+        {
+            return rom;
+        }
 
         outputDirectory.Create();
         string outputFile = Path.Combine(outputDirectory.FullName, CreateFileName(world, prng, worldSuffix));
-        rom.Save(outputFile);
+
+        if (!rom.Save(outputFile))
+        {
+            _logger.LogError("Failed to save ROM/Patch to {OutputFile}", outputFile);
+        }
+        else
+        {
+            _logger.LogInformation("Saved ROM/Patch to {OutputFile}", outputFile);
+        }
+
+        return rom;
     }
 
     protected virtual string CreateFileName(IWorld world, PRNG prng, string? worldSuffix) => $"{GetType().Name}_{prng.Seed:x08}.rom";
-    protected abstract void WriteWorldToRom(IWorld world, Rom rom, PRNG prng);
-    // NOTE: this ignores the BPS and assumes baseRom is ready for use. if this isn't the case, override and adjust per game.
-    protected virtual Rom CreateRom(FileInfo baseRom, FileInfo? baseBPS) => new(baseRom.FullName);
+    protected abstract void WriteWorldToRom(IWorld world, IRom rom, PRNG prng);
+
+    protected virtual IRom CreateRom(FileInfo? baseRom, FileInfo? baseBPS)
+    {
+        return RomFactory.CreateRom(baseRom, baseBPS);
+    }
+
     /// <summary>Returns (or produces) a usable base rom path for this randomizer. <c>null</c> if the base rom must be provided by the caller.</summary>
     public virtual FileInfo? ProvideBaseRom() => null;
     public abstract void AppendSpoiler(SpoilerLog spoilerLog);
