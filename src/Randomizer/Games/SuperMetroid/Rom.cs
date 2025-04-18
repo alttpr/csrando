@@ -563,8 +563,8 @@ public class Rom : GameRom
 
     private int WriteExtraDoorAsm(World world, int doorPtr, int asmPtr, byte[] asm)
     {
-        var doorData = DoorReader.ReadDoorData();
-        ushort originalDoorAsmPtr = doorData.Where(x => (x.ptr & 0xFFFF) == doorPtr).First().asm;
+        byte[] originalDoorData = Read((SNES)(0x830000 + doorPtr + 10), 2);
+        ushort originalDoorAsmPtr = BitConverter.ToUInt16(originalDoorData);
 
         byte[] writeAsm = [.. asm, .. (byte[])(originalDoorAsmPtr >= 0x8000 ? [0x4C, .. BitConverter.GetBytes(originalDoorAsmPtr)] : [0x60])];
 

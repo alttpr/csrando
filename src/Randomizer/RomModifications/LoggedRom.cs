@@ -147,12 +147,74 @@ namespace Randomizer.RomModifications
 
 
         /// <summary>
-        /// Reading from a LoggedRom is not supported as it only tracks writes.
+        /// Reads data from the logged writes. Simulates the state after all writes
+        /// have been applied.
         /// </summary>
-        /// <exception cref="NotSupportedException">Always thrown.</exception>
+        /// <param name="address">The starting address to read from.</param>
+        /// <param name="length">The number of bytes to read.</param>
+        /// <returns>A byte array containing the data read from the logged writes.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if length is negative.</exception>
+        /// <exception cref="KeyNotFoundException">
+        /// Thrown if any part of the requested address range [address, address + length)
+        /// has not been written to by any logged write operation. Reading from LoggedRom
+        /// requires the entire requested range to have been previously written.
+        /// </exception>
         public byte[] Read(Address address, int length)
         {
-            throw new NotSupportedException("Reading from a LoggedRom is not supported.");
+            if (length < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), "Length cannot be negative.");
+            }
+            if (length == 0)
+            {
+                return Array.Empty<byte>();
+            }
+
+            byte[] result = new byte[length];
+            int readStart = address.Value;
+
+            int currentResultIndex = 0;
+            while (currentResultIndex < length)
+            {
+                int targetAddress = readStart + currentResultIndex;
+
+                // Find the block that contains targetAddress.
+                // Since writes are merged and overlaps resolved, there will be at most one such block.
+                // We look for the block with the largest key <= targetAddress.
+                var candidate = _writes.LastOrDefault(kvp => kvp.Key <= targetAddress);
+
+                // Check if the candidate block actually covers the targetAddress
+                if (candidate.Value == null || // No block starts at or before targetAddress
+                    candidate.Key + candidate.Value.Length <= targetAddress) // Block ends before or at targetAddress
+                {
+                    // If no block covers the *start* of the remaining read segment, the read fails.
+                    throw new KeyNotFoundException($"Logged write data not found for address 0x{targetAddress:X}. Reading from LoggedRom requires the entire requested range [0x{readStart:X}-0x{readStart + length:X}) to have been previously written.");
+                }
+
+                // The candidate block covers targetAddress.
+                int blockStart = candidate.Key;
+                byte[] blockData = candidate.Value;
+
+                // Calculate offset *within the source block data* where our targetAddress lies
+                int sourceOffset = targetAddress - blockStart;
+
+                // Calculate how many bytes we can copy *from this block*, starting from sourceOffset
+                int bytesAvailableInBlock = blockData.Length - sourceOffset;
+
+                // Calculate how many bytes we still *need* for the result array
+                int bytesNeededForResult = length - currentResultIndex;
+
+                // Determine how many bytes to copy in this step (the minimum of the two)
+                int bytesToCopy = Math.Min(bytesAvailableInBlock, bytesNeededForResult);
+
+                // Copy the data chunk from the blockData into the result array
+                Buffer.BlockCopy(blockData, sourceOffset, result, currentResultIndex, bytesToCopy);
+
+                // Advance the index for the result buffer
+                currentResultIndex += bytesToCopy;
+            }
+
+            return result;
         }
 
         /// <summary>
