@@ -73,25 +73,16 @@ public static class ApiServer
                 foreach (var world in randomizer.Worlds)
                 {
                     // Try to get the GameId property using reflection since not all world implementations have it
-                    string? worldGameId = world.GetType().GetProperty("GameId")?.GetValue(world) as string ??
-                                          world.WorldConfig.GetType().GetProperties()
-                                          .FirstOrDefault(p => p.GetValue(world.WorldConfig) != null)?.Name.ToLower();
-
                     foreach (var loc in world.GetLocationsOfType(Randomizer.Graph.VertexType.Item))
                     {
                         if (loc.Item != null)
                         {
-                            // Get the item's world GameId
-                            string? itemWorldGameId = loc.Item.World.GetType().GetProperty("GameId")?.GetValue(loc.Item.World) as string ??
-                                                    loc.Item.World.WorldConfig.GetType().GetProperties()
-                                                    .FirstOrDefault(p => p.GetValue(loc.Item.World.WorldConfig) != null)?.Name.ToLower();
-
-                            locationItemMap[$"{loc.Name}:{world.Id}"] = new
+                            locationItemMap[$"{loc.Name}"] = new
                             {
-                                Item = loc.Item.Name[..loc.Item.Name.IndexOf(':')],
-                                LocationGameId = worldGameId,
+                                Item = loc.Item.Name,
+                                LocationGameId = loc.World.GameId,
                                 LocationWorldId = world.Id,
-                                ItemGameId = itemWorldGameId,
+                                ItemGameId = loc.Item.World.GameId,
                                 ItemWorldId = loc.Item.World.Id
                             };
                         }

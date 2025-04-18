@@ -145,7 +145,7 @@ public class Config
     public string[] CustomTech { get; init; } = [];
     public Keycards Keycards { get; init; } = Keycards.None;
     public bool FastG4 { get; init; } = false;
-
+    public MapRandomizerSetting MapRandomizer { get; init; } = MapRandomizerSetting.None;
 
     public string[] BossChoices { get; set; } = RandomBosses;
 
@@ -177,6 +177,12 @@ public enum Keycards
     //Regular,
     //Bosses,
     All
+}
+
+public enum MapRandomizerSetting
+{
+    None,
+    Standard
 }
 
 public class SkillConfig

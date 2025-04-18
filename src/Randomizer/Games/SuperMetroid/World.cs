@@ -49,8 +49,11 @@ public sealed class World : IWorld
 
         RequirementHandler.Initialize(JsonData, this);
 
-        var mapRandomizer = new MapRandomizer(JsonData, this, prng);
-        mapRandomizer.Randomize();
+        if (Config.MapRandomizer == MapRandomizerSetting.Standard)
+        {
+            var mapRandomizer = new MapRandomizer(JsonData, this, prng);
+            mapRandomizer.Randomize();
+        }
 
         var preprocessor = new GraphPreprocessor(JsonData, this);
         preprocessor.Preprocess();
