@@ -16,6 +16,10 @@ fixed:
   - ["Old Man Home - Exit", "Old Man Home - Out"]
   - ["Old Man Home Circle - In", "Old Man Home Circle"]
   - ["Old Man Home Circle - Exit", "Old Man Home Circle - Out"]
+  - ["Aginah's Cave - In", "Aginah's Cave"]
+  - ["Aginah's Cave - Exit", "Aginah's Cave - Out"]
+  - ["Hint Giver Cave - In", "Hint Giver Cave - Glove"]
+  - ["Hint Giver Cave - Glove - Exit", "Hint Giver Cave - Out"]
 
 scoped:
   - group: old_man_return

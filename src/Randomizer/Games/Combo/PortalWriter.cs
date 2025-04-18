@@ -156,7 +156,7 @@ internal class PortalWriter
         {
             foreach (var portalValue in portal)
             {
-                rom.Write(address, BitConverter.GetBytes(portalValue));
+                rom.Write(address, BitConverter.GetBytes((UInt16)portalValue));
                 address += 2;
             }
         }
