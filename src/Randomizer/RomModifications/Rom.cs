@@ -3,7 +3,7 @@
 using System.Buffers.Binary;
 using BpsNet;
 
-public sealed class Rom : IDisposable
+public sealed class Rom : IRom, IDisposable
 {
     private readonly string _tempRom;
     private readonly FileStream _rom;
@@ -82,7 +82,7 @@ public sealed class Rom : IDisposable
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
-    internal void Write(Address address, in ReadOnlySpan<byte> data)
+    public void Write(Address address, in ReadOnlySpan<byte> data)
     {
         _rom.Seek(address.Value, SeekOrigin.Begin);
         _rom.Write(data);
@@ -93,7 +93,7 @@ public sealed class Rom : IDisposable
     /// </summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="length">Number of bytes to read.</param>
-    internal byte[] Read(Address address, int length)
+    public byte[] Read(Address address, int length)
     {
         _rom.Seek(address.Value, SeekOrigin.Begin);
         var data = new byte[length];
@@ -121,5 +121,3 @@ public readonly struct SNES
     public static int ToPC(int address) => (address & 0x7F0000) >> 1 | address & 0x7FFF;
     public static int FromPC(int address, bool fastRom = true) => ((address << 1) & 0x7F0000) | (address & 0x7FFF) | (fastRom ? 0x808000 : 0x8000);
 }
-
-

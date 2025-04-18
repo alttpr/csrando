@@ -2,7 +2,7 @@
   "profiles": {
     "Randomizer": {
       "commandName": "Project",
-      "commandLineArgs": "randomize rom=out\\merged.sfc bps=out\\quad.bps outdir=out\\"
+      "commandLineArgs": "randomize bps=out\\quad.bps api-mode"
     }
   }
 }

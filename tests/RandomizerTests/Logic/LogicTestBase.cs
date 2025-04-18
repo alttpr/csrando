@@ -1,6 +1,7 @@
 ﻿namespace RandomizerTests.Logic;
 
 using Randomizer.Graph;
+using Randomizer.RomModifications;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -65,7 +66,7 @@ public abstract class LogicTestBase
     protected GameRandomizer GetRandomizerForConfig(WorldConfig[] config)
     {
         return _cachedRandomizers.GetOrAdd(config, config
-            => new Lazy<GameRandomizer>(() => new AlttpRandomizer(config, new(seed: 42)),
+            => new Lazy<GameRandomizer>(() => new AlttpRandomizer(config, new(seed: 42), new FileRomFactory()),
             LazyThreadSafetyMode.ExecutionAndPublication)).Value;
     }
 

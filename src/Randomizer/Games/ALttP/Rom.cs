@@ -11,7 +11,7 @@ public sealed class Rom : GameRom
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(RomModifications.Rom rom, string language, int offset)
+    public Rom(IRom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
@@ -1685,7 +1685,7 @@ public sealed class Rom : GameRom
 
     public void WriteLocationSpecificData(Vertex location, Item? item)
     {
-        if(item == null)
+        if (item == null)
             return;
 
         switch (location?.Name)
@@ -1801,6 +1801,7 @@ public sealed class Rom : GameRom
         }
         Write((SNES)(0x09D62E + offsets.Length * 2), table);
     }
+
     public void WriteOverworldEnemies(byte[] table, ushort[] offsets, List<ushort>[] statePointerOffsets, byte[] spriteSheets)
     {
         if (table.Length > 0x0B29)
@@ -1841,6 +1842,7 @@ public sealed class Rom : GameRom
         // OW sheets 0x00FA41 (Sprite_LoadGraphicsProperties)
         Write((SNES)0x00FA41, spriteSheets);
     }
+
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)

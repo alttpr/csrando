@@ -2,9 +2,10 @@ namespace Randomizer.Games.Goonies2;
 
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using BaseGameRandomizer = Graph.GameRandomizer;
+using BaseGameRandomizer = Randomizer.Graph.GameRandomizer; // Corrected using alias
 
-public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) : BaseGameRandomizer(randomizerConfigs, prng)
+public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory) // Add romFactory
+    : BaseGameRandomizer(randomizerConfigs, prng, romFactory) // Pass romFactory to base
 {
     protected override IItemPooler CreateItemPooler(IWorld[] worlds, PRNG prng)
     {
@@ -15,8 +16,9 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
 
     public override void AppendSpoiler(SpoilerLog spoilerLog) { } // FIXME: implement a spoiler log
 
-    protected override void WriteWorldToRom(IWorld world, Rom rom, PRNG prng)
+    protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
+        // This needs implementation and handling for IRom types
         throw new NotImplementedException();
     }
 }

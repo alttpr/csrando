@@ -1,11 +1,12 @@
 namespace Randomizer.Games.Zelda1;
 
 using Randomizer.Graph;
+using Randomizer.RomModifications;
 using BaseRom = RomModifications.Rom;
 
 public static class RomWriter
 {
-    public static void Write(BaseRom baseRom, World world, PRNG prng, int offset = 0)
+    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
     {
         var rom = new Rom(baseRom, offset);
         var data = world.YamlData!;
