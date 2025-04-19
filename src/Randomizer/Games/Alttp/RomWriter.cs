@@ -530,7 +530,7 @@ public static class RomWriter
             // location is either an artificial location (group) that consists of many sub-locations;
             // or, when no sub-locations exist, the key is a specific single location
             var locationsToCheck = (subLocations ?? []).DefaultIfEmpty(location);
-            string[] items = [.. locationsToCheck.Select(l => world.GetLocation(l)?.Item?.Name).Where(i => !string.IsNullOrWhiteSpace(i))];
+            string[] items = [.. locationsToCheck.Select(l => world.GetLocation(l)?.Item?.Name).Where(i => !string.IsNullOrWhiteSpace(i))!];
 
             // no usable items? leave the spot empty for a joke hint later.
             if (items.Length > 0)
