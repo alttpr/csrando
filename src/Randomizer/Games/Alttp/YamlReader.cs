@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Randomizer.Graph;
 using YamlDotNet.Serialization;
 
@@ -29,7 +30,7 @@ public class YamlReader
 
     private const string ItemsPath = "items.yml";
     private const string VerticesPath = "Vertices";
-    private const string BossesPath = "bosses.yml";
+    private const string BossesPath = "Enemizer/bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
 
     private static readonly Lazy<Vertices> _cachedVertices = new(() =>
@@ -82,12 +83,23 @@ public class YamlReader
 
         return result;
     });
+    private static readonly Lazy<Dictionary<string, YamlBossSprite[]>> _cachedBossSprites = new(() =>
+    {
+        string itemsYML = Path.Combine(DataRoot, "bosses.yml");
+
+        var deserializer = new DeserializerBuilder().Build();
+        using var reader = File.OpenText(itemsYML);
+        var result = deserializer.Deserialize<Dictionary<string, YamlBossSprite[]>>(reader);
+
+        return result;
+    });
 
     private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedEdges = new();
     private static readonly ConcurrentDictionary<string, Dictionary<string, DirectedUndirectedPair>> _cachedTechEdges = new();
 
     public static Dictionary<string, YamlItem> LoadItems() => _cachedItems.Value;
     public static Dictionary<string, YamlSprite> LoadSprites() => _cachedSprites.Value;
+    public static Dictionary<string, YamlBossSprite[]> LoadBossSprites() => _cachedBossSprites.Value;
 
     public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromTech(string name) => _cachedTechEdges.GetOrAdd(name, name =>
     {
@@ -286,6 +298,21 @@ public enum YamlSpriteFlags
     Challenge = 1 << 3,
     /// <summary>This sprite shouldn't hold item drops that might affect progression.</summary>
     NoDrop = 1 << 4,
+}
+
+public class YamlBossSprite
+{
+    [YamlMember(Alias = "name")]
+    public required string Name { get; set; }
+    [YamlMember(Alias = "position")]
+    public required Position Position { get; set; }
+    [YamlMember(Alias = "sprite")]
+    public required string Sprite { get; set; }
+    // extra data for the priority upper layer (sometimes called layer 3, or background layer 2)
+    [YamlMember(Alias = "priority_layer")]
+    public ushort? PriorityLayer { get; set; }
+    [YamlMember(Alias = "blkset")]
+    public byte? Blkset { get; set; }
 }
 
 public class DirectedUndirectedPair
@@ -534,6 +561,47 @@ public partial class Position
 
     [YamlMember(Alias = "z")]
     public int? Z { get; set; }
+
+    [return: NotNullIfNotNull(nameof(left))]
+    [return: NotNullIfNotNull(nameof(right))]
+    public static Position? operator +(Position? left, Position? right)
+    {
+        if (left is null && right is null)
+            return null;
+
+        return new Position
+        {
+            X = (left?.X).GetValueOrDefault() + (right?.X).GetValueOrDefault(),
+            Y = (left?.Y).GetValueOrDefault() + (right?.Y).GetValueOrDefault(),
+            Z = (left?.Z).GetValueOrDefault() + (right?.Z).GetValueOrDefault(),
+        };
+    }
+    [return: NotNullIfNotNull(nameof(self))]
+    public static Position? operator *(Position? self, int mult)
+    {
+        if (self is null)
+            return null;
+
+        return new Position
+        {
+            X = self.X * mult,
+            Y = self.Y * mult,
+            Z = self.Z * mult,
+        };
+}
+    [return: NotNullIfNotNull(nameof(self))]
+    public static Position? operator /(Position? self, int div)
+    {
+        if (self is null)
+            return null;
+
+        return new Position
+        {
+            X = self.X / div,
+            Y = self.Y / div,
+            Z = self.Z / div,
+        };
+    }
 }
 
 public partial class Region
@@ -584,7 +652,9 @@ public partial class Region
     public Dictionary<string, List<string>> Connections { get; set; } = new();
 
     [YamlMember(Alias = "bosses")]
-    public Dictionary<string, List<Entity>> Bosses { get; set; } = new();
+    public List<string> Bosses { get; set; } = new();
+    [YamlMember(Alias = "offset")]
+    public Position? Offset { get; set; }
 }
 
 public class Vertices

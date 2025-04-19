@@ -1,43 +1,123 @@
-Helmasaur:
-  - L1Sword
-  - Hammer
-  - BowAndArrows
-  - UseBomb
-  - BowAndSilverArrows
-Arrghus:
-  - L1Sword
-  - Hammer
-  - BowAndArrows
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-ArrghusSpawn:
-  - L1Sword
-  - Hammer
-  - UseBomb
-  - BowAndSilverArrows
-  - FireRod
-  - IceRod
-Kholdstare:
-  - L1Sword
-  - Hammer
-  - FireRod
-KholdstareShell:
-  - FireRod
-  - ActiveBombos
-Trinexx:
-  - L1Sword
-  - Hammer
-TrinexxHeadFire:
-  - L1Sword
-  - Hammer
-  - IceRod
-TrinexxHeadIce:
-  - L1Sword
-  - Hammer
-  - FireRod
-Ganon:
-  - L2Sword
-  - Hammer
-GanonInvisible:
-  - BowAndSilverArrows
+# All boss data is positioned to the top/left quadrant,
+# and shifted to the right offset during boss shuffle.
+DefeatArmosKnight:
+  - name: "Armos Knight 1"
+    position: { x: 0x04, y: 0x05, z: 0x00 }
+    sprite: "ArmosKnight"
+  - name: "Armos Knight 2"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "ArmosKnight"
+  - name: "Armos Knight 3"
+    position: { x: 0x0A, y: 0x05, z: 0x00 }
+    sprite: "ArmosKnight"
+  - name: "Armos Knight 4"
+    position: { x: 0x0A, y: 0x08, z: 0x00 }
+    sprite: "ArmosKnight"
+  - name: "Armos Knight 5"
+    position: { x: 0x07, y: 0x08, z: 0x00 }
+    sprite: "ArmosKnight"
+  - name: "Armos Knight 6"
+    position: { x: 0x04, y: 0x08, z: 0x00 }
+    sprite: "ArmosKnight"
+  - name: "Armos Overlord"
+    position: { x: 0x07, y: 0x08, z: 0x00 }
+    sprite: "ArmosCoordinator"
+DefeatLanmolas:
+  - name: "Lanmolas 1"
+    position: { x: 0x06, y: 0x07, z: 0x00 }
+    sprite: "Lanmolas"
+  - name: "Lanmolas 2"
+    position: { x: 0x09, y: 0x07, z: 0x00 }
+    sprite: "Lanmolas"
+  - name: "Lanmolas 3"
+    position: { x: 0x07, y: 0x09, z: 0x00 }
+    sprite: "Lanmolas"
+DefeatMoldorm:
+  - name: "Moldorm"
+    position: { x: 0x07, y: 0x06, z: 0x00 }
+    sprite: "Moldorm"
+DefeatHelmasaur:
+  - name: "Helmasaur King"
+    position: { x: 0x07, y: 0x06, z: 0x00 }
+    sprite: "Helmasaur"
+DefeatArrghus:
+  - name: "Arrghus"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "Arrghus"
+  - name: "Arrghi 1"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 2"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 3"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 4"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 5"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 6"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 7"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 8"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 9"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 10"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 11"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 12"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+  - name: "Arrghi 13"
+    position: { x: 0x07, y: 0x07, z: 0x00 }
+    sprite: "ArrghusSpawn"
+DefeatMothula:
+  - name: "Mothula"
+    position: { x: 0x08, y: 0x06, z: 0x00 }
+    sprite: "Mothula"
+DefeatBlind:
+  - name: "Blind"
+    position: { x: 0x09, y: 0x05, z: 0x00 }
+    sprite: "Blind"
+DefeatKholdstare:
+  - name: "Kholdstare's Shell"
+    position: { x: 0x06, y: 0x04, z: 0x00 }
+    sprite: "KholdstareShell"
+    # kholdstare's shell on the priority upper layer
+    priority_layer: 0x215
+    blkset: 0x0B
+  - name: "Falling Ice"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "FallingIce"
+  - name: "Kholdstare"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "Kholdstare"
+DefeatVitreous:
+  - name: "Vitreous"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "Vitreous"
+DefeatTrinexx:
+  - name: "Trinexx"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "Trinexx"
+    # trinexx' shell on the priority upper layer
+    priority_layer: 0x272
+    blkset: 0x0D
+  - name: "Trinexx (Fire Head)"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "TrinexxHeadFire"
+  - name: "Trinexx (Ice Head)"
+    position: { x: 0x07, y: 0x05, z: 0x00 }
+    sprite: "TrinexxHeadIce"

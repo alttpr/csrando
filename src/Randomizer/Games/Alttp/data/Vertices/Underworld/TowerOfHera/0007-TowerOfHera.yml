@@ -5,33 +5,13 @@ rooms:
       regions:
         - name: "Tower Of Hera - Boss Room"
           pit: true
+          offset: { x: 0x09, y: 0x09, z: 0x00 }
           bosses:
-            DefeatMoldorm:
-              - name: "Tower Of Hera - Boss Room - Moldorm"
-                position: { x: 0x12, y: 0x0e, z: 0x00 }
-                sprite: "Moldorm"
-            DefeatHelmasaur:
-              - name: "Tower Of Hera - Boss Room - Helmasaur King"
-                position: { x: 0x17, y: 0x16, z: 0x00 }
-                sprite: "Helmasaur"
-            DefeatMothula:
-              - name: "Tower Of Hera - Boss Room - Mothula"
-                position: { x: 0x18, y: 0x16, z: 0x00 }
-                sprite: "Mothula"
-            DefeatKholdstare:
-              - name: "Tower Of Hera - Boss Room - Kholdstare's Shell"
-                position: { x: 0x17, y: 0x05, z: 0x00 }
-                sprite: "KholdstareShell"
-              - name: "Tower Of Hera - Boss Room - Falling Ice"
-                position: { x: 0x17, y: 0x05, z: 0x00 }
-                sprite: "FallingIce"
-              - name: "Tower Of Hera - Boss Room - Kholdstare"
-                position: { x: 0x17, y: 0x05, z: 0x00 }
-                sprite: "Kholdstare"
-            DefeatVitreous:
-              - name: "Tower Of Hera - Boss Room - Vitreous"
-                position: { x: 0x07, y: 0x15, z: 0x00 }
-                sprite: "Vitreous"
+            - DefeatMoldorm
+            - DefeatHelmasaur
+            - DefeatMothula
+            - DefeatKholdstare
+            - DefeatVitreous
           connections:
             # required for Boss Shuffle to work
             bossKillShufflerOverwrite:

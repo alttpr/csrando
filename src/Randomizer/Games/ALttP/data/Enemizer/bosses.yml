@@ -1,0 +1,43 @@
+Helmasaur:
+  - L1Sword
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+Arrghus:
+  - L1Sword
+  - Hammer
+  - BowAndArrows
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+ArrghusSpawn:
+  - L1Sword
+  - Hammer
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - IceRod
+Kholdstare:
+  - L1Sword
+  - Hammer
+  - FireRod
+KholdstareShell:
+  - FireRod
+  - ActiveBombos
+Trinexx:
+  - L1Sword
+  - Hammer
+TrinexxHeadFire:
+  - L1Sword
+  - Hammer
+  - IceRod
+TrinexxHeadIce:
+  - L1Sword
+  - Hammer
+  - FireRod
+Ganon:
+  - L2Sword
+  - Hammer
+GanonInvisible:
+  - BowAndSilverArrows

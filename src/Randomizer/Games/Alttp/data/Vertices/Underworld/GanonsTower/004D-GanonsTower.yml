@@ -18,33 +18,13 @@ rooms:
 
         - name: "Ganon's Tower - Moldorm - Kill Zone"
           pit: true
+          offset: { x: 0x07, y: 0x07, z: 0x00 }
           bosses:
-            DefeatMoldorm:
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Moldorm"
-                position: { x: 0x12, y: 0x0e, z: 0x00 }
-                sprite: "Moldorm"
-            DefeatHelmasaur:
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Helmasaur King"
-                position: { x: 0x17, y: 0x16, z: 0x00 }
-                sprite: "Helmasaur"
-            DefeatMothula:
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Mothula"
-                position: { x: 0x18, y: 0x16, z: 0x00 }
-                sprite: "Mothula"
-            DefeatKholdstare:
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Kholdstare's Shell"
-                position: { x: 0x17, y: 0x05, z: 0x00 }
-                sprite: "KholdstareShell"
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Falling Ice"
-                position: { x: 0x17, y: 0x05, z: 0x00 }
-                sprite: "FallingIce"
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Kholdstare"
-                position: { x: 0x17, y: 0x05, z: 0x00 }
-                sprite: "Kholdstare"
-            DefeatVitreous:
-              - name: "Ganon's Tower - Moldorm - Kill Zone - Vitreous"
-                position: { x: 0x07, y: 0x15, z: 0x00 }
-                sprite: "Vitreous"
+            - DefeatMoldorm
+            - DefeatHelmasaur
+            - DefeatMothula
+            - DefeatKholdstare
+            - DefeatVitreous
 
           connections:
             fixed:

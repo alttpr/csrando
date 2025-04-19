@@ -485,6 +485,12 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         var mapVertices = regionVertices.Where(v => v.Map.HasValue).GroupBy(v => v.Map).Select(v => (Key: v.Key!.Value, Value: v.First())).ToDictionary(k => k.Key, v => v.Value);
         var enemyVertices = world.GetLocationsOfType(VertexType.Mob);
 
+        // remove the maiden if blind isn't in thieves town.
+        var thievesTownBoss = world.GetLocation("Thieves' Town - Boss Room - Blind Active");
+        var blindBossEdge = thievesTownBoss.Edges.FirstOrDefault(e => e.Condition.Item?.Name == "DefeatBlind");
+        if (blindBossEdge == null)
+            enemyVertices = enemyVertices.Where(v => v.Sprite?.Name != "BlindMaiden");
+
         var enemyRooms = enemyVertices.ToLookup(enemy => enemy.RoomId);
         var enemyOWs = enemyVertices.ToLookup(enemy => enemy.Map);
 
@@ -673,7 +679,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         // build a list of unique sheet sets. overworld only (vanilla storage), we write underworld directly to the room header (rando-specific).
         var uniqueSheets = overworldSheets.Distinct().ToList();
 
-        // the last two are special overworld (master sword grove, hobo and zora's domain) which go in a different location.
+        // the last two are special overworld (master sword grove/hobo bridge and zoras domain) which go in a different location.
         var specialOverworldSheets = overworldSheets[^2..];
         overworldSheets = overworldSheets[..^2];
         var underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
@@ -681,7 +687,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         // grab indices for the map headers from that set.
         byte[] mapSheetBytes = overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
         byte[] specialSheetBytes = specialOverworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
-        // FIXME: not sure about this layout, but it works writing grove to 0x02E577 and zora's domain to 0x02E579.
+        // FIXME: not sure about this layout, but it works writing grove to 0x02E577 and zoras domain to 0x02E579.
         //        0x02E578 has no effect on either of them, and clobbering 0x02E577 still doesn't break hobo.
         specialSheetBytes = [
             specialSheetBytes[0], 0xFF, specialSheetBytes[1], 0xFF,

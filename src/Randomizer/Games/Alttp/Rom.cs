@@ -1775,13 +1775,17 @@ public sealed class Rom : GameRom
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
     }
 
-    public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets)
+    public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets, Dictionary<int, byte> blksetChanges)
     {
         // full room headers (roomheaders.asm)
         // 32 bytes per entry, offset 0x10 for the 4 sprite sheet ids
         // offset 3 (the old sprite sheet set id) is unused
         for (int i = 0; i < spriteSheets.Length / 4; i++)
+        {
             Write((SNES)(0xB58000 + (i * 32) + 0x10), [spriteSheets[(i * 4) + 0], spriteSheets[(i * 4) + 1], spriteSheets[(i * 4) + 2], spriteSheets[(i * 4) + 3]]);
+            if (blksetChanges.TryGetValue(i, out byte blkset))
+                Write((SNES)(0xB58000 + (i * 32) + 0x2), [blkset]);
+        }
 
         // SNES table start _09D62E (RoomData_SpritePointers)
         int dataStart = 0x09D62E + offsets.Length * 2;
@@ -1844,4 +1848,95 @@ public sealed class Rom : GameRom
 
         Write((SNES)0x00DB97, spriteSheetSets);
     }
+
+    // TODO: this is currently limited to changing the priority layer (sometimes called layer 3; also background layer 2 to confuse everyone) of the room tile data.
+    //       it might be more useful to rewrite the full rooms at some point, and possibly even relocate them to rando space.
+    public void WriteUnderworldRoomsPriorityLayer(Dictionary<int, byte[]> priorityLayerChanges)
+    {
+        // RoomData_ObjectDataPointers
+        var roomDataTiles = (SNES)0x1F8000;
+        // RoomData_DoorDataPointers
+        var roomDataDoors = (SNES)0x1F83C0;
+        // space used by door rando to store modified rooms that don't fit anywhere else (0x8000)
+        var freeRoomSpace = (SNES)0x378000;
+
+        Span<byte> data = stackalloc byte[4];
+        var unusedData = new List<(int Start, int Length)>();
+        var newData = new List<(int RoomId, byte[] Data, int DoorStart)>();
+
+        foreach (var (roomId, priorityLayer) in priorityLayerChanges)
+        {
+            var roomDataPointer = Read(roomDataTiles + (3 * roomId), length: 3 + 1);
+            roomDataPointer[3] = 0x00; // 3-byte value only, discard the last byte
+            int roomDataStart = FromFastRom((int)BinaryPrimitives.ReadUInt32LittleEndian(roomDataPointer));
+            // TODO: the largest room to worry about is $0007 at the moment, but this might change later.
+            var roomData = Read((SNES)roomDataStart, length: 0x140);
+            int layer2Start = 2;
+            // skip floor layout/upper layer
+            while (layer2Start + 1 < roomData.Length && !(roomData[layer2Start + 0] == 0xFF && roomData[layer2Start + 1] == 0xFF))
+                layer2Start += 3;
+            layer2Start += 2;
+
+            int layer2End = layer2Start;
+            // skip lower layer (layer 2)
+            while (layer2End + 1 < roomData.Length && !(roomData[layer2End + 0] == 0xFF && roomData[layer2End + 1] == 0xFF))
+                layer2End += 3;
+            layer2End += 2;
+
+            int doorStart = layer2End;
+            // skip upper priority layer (layer 3)
+            while (doorStart + 1 < roomData.Length && !(roomData[doorStart + 0] == 0xF0 && roomData[doorStart + 1] == 0xFF))
+                doorStart += 3;
+            doorStart += 2;
+
+            int dataEnd = doorStart;
+            // skip door data
+            while (dataEnd + 1 < roomData.Length && !(roomData[dataEnd + 0] == 0xFF && roomData[dataEnd + 1] == 0xFF))
+                dataEnd += 2;
+            dataEnd += 2;
+
+            byte[] newRoomData = [.. roomData[..layer2End], .. priorityLayer, .. roomData[(doorStart - 2)..dataEnd]];
+            if (newRoomData.Length <= dataEnd)
+            {
+                // we got enough space; write back to the old location
+                Write((SNES)roomDataStart, newRoomData);
+                // patch the door data start; it is right after the room data
+                BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart + doorStart));
+                Write(roomDataDoors + (3 * roomId), data[..3]);
+            }
+            else
+            {
+                // we need more space now (additional layer2 data), queue up for later
+                unusedData.Add((roomDataStart, dataEnd));
+                newData.Add((roomId, newRoomData, doorStart));
+            }
+        }
+
+        foreach (var (roomId, newRoomData, doorStart) in newData.OrderByDescending(d => d.Data.Length))
+        {
+            var unusedSpot = unusedData.Where(d => d.Length >= newRoomData.Length).OrderBy(d => d.Length).FirstOrDefault();
+            int roomDataStart;
+            if (unusedSpot.Length >= newRoomData.Length)
+            {
+                // we moved a larger room elsewhere; reuse the space
+                roomDataStart = unusedSpot.Start;
+                unusedData.Remove(unusedSpot);
+            }
+            else
+            {
+                roomDataStart = freeRoomSpace.Value;
+                freeRoomSpace += newRoomData.Length;
+            }
+
+            Write((SNES)roomDataStart, newRoomData);
+            // patch the room/tile data start
+            BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart));
+            Write(roomDataTiles + (3 * roomId), data[..3]);
+            // patch the door data start; it is right after the room data
+            BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart + doorStart));
+            Write(roomDataDoors + (3 * roomId), data[..3]);
+        }
+    }
+    private static int FromFastRom(int fastRomAddress) => fastRomAddress & 0x007F_FFFF;
+    private static int ToFastRom(int slowRomAddress) => slowRomAddress | 0x0080_0000;
 }

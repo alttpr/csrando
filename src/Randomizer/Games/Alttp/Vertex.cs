@@ -29,4 +29,5 @@ public sealed class Vertex : BaseVertex
     public string[]? Allow { get; init; }
     public string[]? Deny { get; init; }
     public int? Group { get; init; }
+    public Position? RoomOffset { get; set; }
 }
