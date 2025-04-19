@@ -196,8 +196,8 @@ public static class RomWriter
         rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
         rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
         rom.SetCompassCountTotals();
-        rom.SetFreeItemTextMode(); //rom.freeItemText
-        rom.SetFreeItemMenu(); //rom.freeItemMenu
+        rom.SetFreeItemTextMode(freeCrystals: false, config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses, config.RegionWildKeys); //rom.freeItemText
+        rom.SetFreeItemMenu(config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses); //rom.freeItemMenu
         rom.SetDiggingGameRng((byte)prng.GetRandomInt(1..30));
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
