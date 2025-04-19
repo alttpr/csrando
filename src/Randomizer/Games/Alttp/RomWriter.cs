@@ -208,6 +208,9 @@ public static class RomWriter
         WriteEnemyHealthToRom(world, rom, prng);
         WriteEnemiesToRom(world, rom);
 
+        rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
+        rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);
+
         rom.SetPyramidFairyChests(true); //region.swordsInPool
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
 
