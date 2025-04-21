@@ -715,40 +715,14 @@ public sealed class Rom : GameRom
     public void SetChancePrizes(byte[]? prizes = null)
     {
         prizes ??= [
+#pragma warning disable format
             // high stakes game
-            0x47,
-            0x34,
-            0x46,
-            0x34,
-            0x46,
-            0x46,
-            0x34,
-            0x47,
-            0x46,
-            0x47,
-            0x34,
-            0x46,
-            0x47,
-            0x34,
-            0x46,
-            0x47,
+            0x47, 0x34, 0x46, 0x34, 0x46, 0x46, 0x34, 0x47,
+            0x46, 0x47, 0x34, 0x46, 0x47, 0x34, 0x46, 0x47,
             // low stakes game
-            0x34,
-            0x47,
-            0x41,
-            0x47,
-            0x41,
-            0x41,
-            0x47,
-            0x34,
-            0x41,
-            0x34,
-            0x47,
-            0x41,
-            0x34,
-            0x47,
-            0x41,
-            0x34,
+            0x34, 0x47, 0x41, 0x47, 0x41, 0x41, 0x47, 0x34,
+            0x41, 0x34, 0x47, 0x41, 0x34, 0x47, 0x41, 0x34,
+#pragma warning restore format
         ];
 
         Write((SNES)0x01EED5, prizes); // 32 bytes
@@ -921,7 +895,7 @@ public sealed class Rom : GameRom
         Write((SNES)0x07A943, [0xF0]); // ; Dark to light world mirror
         Write((SNES)0x07A96D, [0xD0]); // ; residual portal?
         Write((SNES)0x08D40C, [0xD0]); // ; morph poof
-        SetFixFakeWorld(enable); // ; ER"s Fix fake worlds fix. Currently needed for inverted
+        SetFixFakeWorld(enable); // ; ER's Fix fake worlds fix. Currently needed for inverted
 
         // remove diggable light world portals
         Write((SNES)0x1BC428, [0x00]);

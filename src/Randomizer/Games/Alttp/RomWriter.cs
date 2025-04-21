@@ -13,18 +13,18 @@ public static class RomWriter
         var rom = new Rom(baseRom, world.WorldConfig.Language, offset: 0);
 
         var config = world.Config;
-        var heartColor = config.HeartColor; //option('heartcolor')
+        var heartColor = config.HeartColor;
         if (heartColor == HeartColorOption.Random)
             heartColor = prng.GetRandomElement(_heartColorOptions);
         rom.SetHeartColors(heartColor);
-        rom.SetHeartBeepSpeed(config.HeartBeepSpeed); //option('heartbeep')
+        rom.SetHeartBeepSpeed(config.HeartBeepSpeed);
 
-        rom.SetQuickSwap(config.QuickSwap); //option('quickswap')
+        rom.SetQuickSwap(config.QuickSwap);
 
         WriteWorld(world, rom, prng);
 
-        rom.MuteMusic(config.NoMusic); //option('no-music')
-        rom.SetMenuSpeed(config.MenuSpeed); //option('menu-speed')
+        rom.MuteMusic(config.NoMusic);
+        rom.SetMenuSpeed(config.MenuSpeed);
 
         // TODO: patch in the sprite
         // TODO: tournament mode
@@ -61,8 +61,8 @@ public static class RomWriter
         if (config.State == StateOption.Standard)
             SetEscapeFills(world, rom);
 
-        rom.SetGoalRequiredCount(config.GoalRequiredCount); //item.Goal.Required
-        rom.SetGoalIcon(config.GoalIcon); //item.Goal.Icon
+        rom.SetGoalRequiredCount(config.GoalRequiredCount);
+        rom.SetGoalIcon(config.GoalIcon);
 
         // Set item functionality settings
         rom.SetCaneOfByrnaSpikeCaveUsage();
@@ -71,32 +71,32 @@ public static class RomWriter
         rom.SetCaneOfByrnaMagicPerCycle();
 
         rom.SetCapeRegularMagicUsage(
-            config.CapeMagicUsageNormal, //rom.CapeMagicUsage.Normal
-            config.CapeMagicUsageHalf, //rom.CapeMagicUsage.Half
-            config.CapeMagicUsageQuarter //rom.CapeMagicUsage.Quarter
+            config.CapeMagicUsageNormal,
+            config.CapeMagicUsageHalf,
+            config.CapeMagicUsageQuarter
         );
-        rom.SetCaneOfByrnaInvulnerability(config.CaneOfByrnaInvulnerability); //rom.CaneOfByrnaInvulnerability
-        rom.SetPowderedSpriteFairyPrize(config.PowderedSpriteFairyPrize); //rom.PowderedSpriteFairyPrize
+        rom.SetCaneOfByrnaInvulnerability(config.CaneOfByrnaInvulnerability);
+        rom.SetPowderedSpriteFairyPrize(config.PowderedSpriteFairyPrize);
         rom.SetBottleFills(
-            config.BottleFillHealth, //rom.BottleFill.Health
-            config.BottleFillMagic //rom.BottleFill.Magic
+            config.BottleFillHealth,
+            config.BottleFillMagic
         );
-        rom.SetCatchableFairies(config.CatchableFairies); //rom.CatchableFairies
-        rom.SetCatchableBees(config.CatchableBees); //rom.CatchableBees
-        rom.SetStunItems(config.StunItemsHookshot, config.StunItemsBoomerang); //rom.StunItems
-        rom.SetSilversOnlyAtGanon(config.SilversOnlyAtGanon); //rom.SilversOnlyAtGanon
+        rom.SetCatchableFairies(config.CatchableFairies);
+        rom.SetCatchableBees(config.CatchableBees);
+        rom.SetStunItems(config.StunItemsHookshot, config.StunItemsBoomerang);
+        rom.SetSilversOnlyAtGanon(config.SilversOnlyAtGanon);
 
         rom.SetRupoorValue(0); //item.value.Rupoor
 
-        rom.SetGanonAgahnimRng(config.GanonAgahnimRNG); //rom.GanonAgRNG
+        rom.SetGanonAgahnimRng(config.GanonAgahnimRNG);
 
         rom.SetTowerCrystalRequirement(int.Parse(config.CrystalsTower));
         rom.SetGanonCrystalRequirement(int.Parse(config.CrystalsGanon));
 
         // testing features
-        rom.SetGenericKeys(config.GenericKeys); //rom.genericKeys
+        rom.SetGenericKeys(config.GenericKeys);
         //rom.SetupCustomShops(getShops());
-        rom.SetRupeeArrow(config.RomRupeeBow); //rom.rupeeBow
+        rom.SetRupeeArrow(config.RomRupeeBow);
         rom.SetWishingWellChests(true);
         rom.SetWishingWellUpgrade(false);
         rom.SetHyliaFairyShop(true);
@@ -193,11 +193,11 @@ public static class RomWriter
         SetHintText(world, rom, prng);
         SetCreditsText(world, rom, prng);
 
-        rom.SetMapMode(config.MapOnPickup); //rom.mapOnPickup
-        rom.SetCompassMode(config.CompassCounter); //rom.dungeonCount
+        rom.SetMapMode(config.MapOnPickup);
+        rom.SetCompassMode(config.CompassCounter);
         rom.SetCompassCountTotals();
-        rom.SetFreeItemTextMode(freeCrystals: false, config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses, config.RegionWildKeys); //rom.freeItemText
-        rom.SetFreeItemMenu(config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses); //rom.freeItemMenu
+        rom.SetFreeItemTextMode(freeCrystals: false, config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses, config.RegionWildKeys);
+        rom.SetFreeItemMenu(config.RegionWildKeys, config.RegionWildBigKeys, config.RegionWildMaps, config.RegionWildCompasses);
         rom.SetDiggingGameRng((byte)prng.GetRandomInt(1..30));
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
@@ -306,9 +306,9 @@ public static class RomWriter
 
         rom.SetMysteryMasking(false); //spoilers == "mystery"
 
-        rom.SetPseudoBoots(config.PseudoBoots); //pseudoboots
+        rom.SetPseudoBoots(config.PseudoBoots);
 
-        rom.EnableFastRom(config.FastRom); //fastrom
+        rom.EnableFastRom(config.FastRom);
 
         rom.WriteCredits();
         rom.WriteText();
