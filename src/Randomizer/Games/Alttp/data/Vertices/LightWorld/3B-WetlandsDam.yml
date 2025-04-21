@@ -14,7 +14,7 @@ maps:
           entrances:
             - name: "Floodgate"
               entranceid: 0x4D
-              outletid: 0x93
+              outletid: 0x92
 
           items:
             - name: "Sunken Treasure"
