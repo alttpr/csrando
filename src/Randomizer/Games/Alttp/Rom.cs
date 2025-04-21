@@ -935,8 +935,7 @@ public sealed class Rom : GameRom
         Write((SNES)(0x1BBB73 + 0x16), [0x5E]);
 
         // fix trock doors for reverse entrances
-        Write((SNES)0x1FED31, [0x0E]); // preopen bombable exit
-        Write((SNES)0x1FEE41, [0x0E]); // preopen bombable exit
+        PreOpenBombableWalls();
 
         // Dark Death Mountain Healer Fairy => Old Man Cave (East)
         Write((SNES)(0x1BBB73 + 0x6F), [0x07]);
@@ -1285,6 +1284,14 @@ public sealed class Rom : GameRom
                        or "dark_sanctuary"
                        or "dark_sanctuary_yes";
         }
+    }
+
+    /// <summary>Pre-opens bombable walls that would otherwise trap the player (and be a problem without bombs).</summary>
+    public void PreOpenBombableWalls()
+    {
+        // turtle rock, laser bridge and balcony
+        Write((SNES)0x1FED30 + 1, [0x0E]); // RoomDataDoors_0023 +1
+        Write((SNES)0x1FEE40 + 1, [0x0E]); // RoomDataDoors_00D5 +1
     }
 
     /// <summary>Enable maps to show crystals on overworld map</summary>

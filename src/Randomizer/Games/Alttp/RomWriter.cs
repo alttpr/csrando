@@ -210,6 +210,8 @@ public static class RomWriter
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
         rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);
+        if (config.EntranceShuffle != EntranceShuffleOption.None)
+            rom.PreOpenBombableWalls();
 
         rom.SetPyramidFairyChests(true); //region.swordsInPool
         rom.SetSmithyQuickItemGive(true); //region.swordsInPool
