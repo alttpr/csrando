@@ -92,6 +92,7 @@ public static class RomWriter
 
         rom.SetTowerCrystalRequirement(int.Parse(config.CrystalsTower));
         rom.SetGanonCrystalRequirement(int.Parse(config.CrystalsGanon));
+        rom.SetMoldormEyeCount(config.MoldormEyeCount, config.Molderp);
 
         // testing features
         rom.SetGenericKeys(config.GenericKeys);

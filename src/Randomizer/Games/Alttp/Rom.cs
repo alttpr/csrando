@@ -6,6 +6,8 @@ using Randomizer.RomModifications;
 
 public sealed class Rom : GameRom
 {
+    private const byte NOP = 0xEA;
+
     private readonly Text _text;
     private readonly Credits _credits;
 
@@ -1455,6 +1457,27 @@ public sealed class Rom : GameRom
     /// <summary>Set the Ganon Crystal Requirement</summary>
     public void SetGanonCrystalRequirement(int crystals = 7)
         => Write((SNES)0xB081A6, [(byte)Math.Max(Math.Min(crystals, 7), 0)]);
+
+    /// <summary>Set the number of Moldorm's eyes (minimum 0, maximum 8 eyes) and make it derpy by increasing the gap</summary>
+    public void SetMoldormEyeCount(int moldormEyeCount = 2, int moldormDerpAmount = 2)
+    {
+        if (moldormEyeCount == 0)
+        {
+            // special case: no eyes means we can just skip the drawing routine.
+            Write((SNES)0x1DD889, [NOP, NOP, NOP]); // JSR SpriteDraw_Moldorm_Eyeballs
+        }
+        else
+        {
+            // the eye count is a loop variable, which goes from [0..8)
+            // it always runs at least once; subtract one to get the right number of eyes.
+            int eyeCount = Math.Clamp(moldormEyeCount - 1, 0, 7);
+            Write((SNES)0x1DDBB3, [(byte)eyeCount]);
+            // eye distance, which makes Moldorm more derpy.
+            // 0 is boring (same as 1 eye), anything beyond 8 just wraps back around.
+            int derpAmount = Math.Clamp(moldormDerpAmount, 1, 8);
+            Write((SNES)0x1DDC06, [(byte)derpAmount]);
+        }
+    }
 
     /// <summary>Set starting with Pseudo Boots.</summary>
     public void SetPseudoBoots(bool enable = false)

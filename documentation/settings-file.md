@@ -48,6 +48,8 @@ The following example passes two worlds with individual configuration:
         "Language": "de",
         "Alttp": {
             "RomHardMode": 1,
+            "MoldormEyeCountChoices": [1, 2, 8],
+            "MolderpChoices": [ 1, 5, 8 ],
             "CrystalsGanon": "3",
             "CrystalsTower": "3",
             "Goal": "Ganon",

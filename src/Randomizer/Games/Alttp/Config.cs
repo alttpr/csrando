@@ -6,6 +6,8 @@ using Randomizer.Graph;
 public class Config
 {
     public static readonly string[] RandomCrystals = ["0", "1", "2", "3", "4", "5", "6", "7"];
+    public static readonly int DefaultMoldormEyeCount = 2;
+    public static readonly int DefaultMolderp = 2;
 
     // TODO: Align this with current website which broke it down to multiple settings.
     // See https://github.com/sporchia/alttp_vt_randomizer/pull/951
@@ -15,6 +17,31 @@ public class Config
     // A single-element array acts as specific count to use.
     public string[] CrystalsGanonChoices { get; set; } = RandomCrystals;
     public string[] CrystalsTowerChoices { get; set; } = RandomCrystals;
+    private int[] _moldormEyeCountChoices = [DefaultMoldormEyeCount];
+    public int[] MoldormEyeCountChoices
+    {
+        get => _moldormEyeCountChoices;
+        set
+        {
+            var choices = value.Where(i => i is >= 0 and <= 8).ToList();
+            if (choices.Count == 0)
+                choices.Add(DefaultMoldormEyeCount);
+            _moldormEyeCountChoices = [.. choices];
+        }
+    }
+    private int[] _molderpChoices = [DefaultMolderp];
+    public int[] MolderpChoices
+    {
+        get => _molderpChoices;
+        set
+        {
+            var choices = value.Where(i => i is >= 1 and <= 8).ToList();
+            if (choices.Count == 0)
+                choices.Add(DefaultMolderp);
+            _molderpChoices = [.. choices];
+        }
+    }
+
 
     private string? _crystalsGanon;
     public string CrystalsGanon
@@ -29,15 +56,28 @@ public class Config
         set => _crystalsTower = value;
     }
 
+    private int? _moldormEyeCount;
+    public int MoldormEyeCount
+    {
+        get => _moldormEyeCount.GetValueOrDefault(DefaultMoldormEyeCount);
+        init => _moldormEyeCount = value;
+    }
+    private int? _molderp;
+    public int Molderp
+    {
+        get => _molderp.GetValueOrDefault(DefaultMolderp);
+        init => _molderp = value;
+    }
+
     public void SelectRandomValues(PRNG prng)
     {
         if (Goal == GoalOption.Dungeons)
             _crystalsGanon = "Dungeons";
 
-        if (_crystalsGanon is null)
-            _crystalsGanon = prng.GetRandomElement(CrystalsGanonChoices);
-        if (_crystalsTower is null)
-            _crystalsTower = prng.GetRandomElement(CrystalsTowerChoices);
+        _crystalsGanon ??= prng.GetRandomElement(CrystalsGanonChoices);
+        _crystalsTower ??= prng.GetRandomElement(CrystalsTowerChoices);
+        _moldormEyeCount ??= prng.GetRandomElement(MoldormEyeCountChoices);
+        _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
     public ushort TriforcePieces { get; set; } = 50;
