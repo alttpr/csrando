@@ -22,4 +22,6 @@ internal static class ClassLogger
 
         return _loggerFactory.CreateLogger(caller);
     }
+
+    public static void Shutdown() => _loggerFactory.Dispose();
 }
