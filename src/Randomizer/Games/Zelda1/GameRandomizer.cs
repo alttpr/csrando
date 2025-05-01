@@ -12,7 +12,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
 
     public override void AppendSpoiler(SpoilerLog spoilerLog) { } // FIXME: implement a spoiler log
 
-    protected override void WriteWorldToRom(IWorld world, Rom rom, PRNG prng)
+    protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
         if (world is not World z1World)
             throw new ArgumentException("Passed world is not for The Legend of Zelda.", nameof(world));

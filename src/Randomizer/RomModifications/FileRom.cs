@@ -3,12 +3,12 @@
 using System.Buffers.Binary;
 using BpsNet;
 
-public sealed class Rom : IDisposable
+public sealed class FileRom : IRom
 {
     private readonly string _tempRom;
     private readonly FileStream _rom;
 
-    public Rom(string baseRomPath)
+    public FileRom(string baseRomPath)
     {
         if (!File.Exists(baseRomPath))
             throw new FileNotFoundException("Could not load base ROM file.", baseRomPath);
@@ -51,7 +51,7 @@ public sealed class Rom : IDisposable
             {
                 // this skips checksum/inverse in LoROM; HiROM has those at 0xFFDC - 0xFFDF
                 // during calculation, they assume 0x0000 and 0xFFFF (which is the initial 0x1FE sum)
-                if (j + i >= 0x7FDC && j + i < 0x7FE0)
+                if (j + i is >= 0x7FDC and < 0x7FE0)
                     continue;
                 sum += block[j];
             }
@@ -82,7 +82,7 @@ public sealed class Rom : IDisposable
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
-    internal void Write(Address address, in ReadOnlySpan<byte> data)
+    public void Write(Address address, in ReadOnlySpan<byte> data)
     {
         _rom.Seek(address.Value, SeekOrigin.Begin);
         _rom.Write(data);
@@ -93,7 +93,7 @@ public sealed class Rom : IDisposable
     /// </summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="length">Number of bytes to read.</param>
-    internal byte[] Read(Address address, int length)
+    public byte[] Read(Address address, int length)
     {
         _rom.Seek(address.Value, SeekOrigin.Begin);
         var data = new byte[length];
@@ -105,21 +105,4 @@ public sealed class Rom : IDisposable
     {
         _rom.Dispose();
     }
-}
-
-public readonly struct Address
-{
-    public int Value { get; init; }
-    public static implicit operator Address(int value) => new() { Value = value };
-}
-public readonly struct SNES
-{
-    public int Value { get; init; }
-    public static explicit operator SNES(int value) => new() { Value = value };
-    public static implicit operator Address(SNES value) => new() { Value = ToPC(value.Value) };
-
-    public static SNES operator +(SNES self, int other) => new() { Value = self.Value + other };
-
-    public static int ToPC(int address) => (address & 0x7F0000) >> 1 | address & 0x7FFF;
-    public static int FromPC(int address, bool fastRom = true) => ((address << 1) & 0x7F0000) | (address & 0x7FFF) | (fastRom ? 0x808000 : 0x8000);
 }

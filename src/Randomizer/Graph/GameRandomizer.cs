@@ -86,30 +86,25 @@ public abstract class GameRandomizer
     /// </summary>
     public bool IsWinnable() => Worlds.All(world => world.IsWinnable(_start, _startingItems));
 
-    public void Write(FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
+    public void Write(IRomBroker broker)
     {
         foreach (var (i, world) in Worlds.Indexed())
-            WriteForWorld(world, baseRom, baseBPS, outputDirectory, PRNG, Worlds.Length > 1 ? $"_W{i + 1}" : null);
+            WriteForWorld(world, broker, PRNG, Worlds.Length > 1 ? $"_W{i + 1}" : null);
     }
 
-    private void WriteForWorld(IWorld world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
+    private void WriteForWorld(IWorld world, IRomBroker broker, PRNG prng, string? worldSuffix = null)
     {
-        // TODO: baseRom and baseBPS would likely have to be game-specific, so they might be candidates for moving into the derived classes as well.
-        using var rom = CreateRom(baseRom, baseBPS);
+        using var rom = broker.CreateRom(this);
 
         WriteWorldToRom(world, rom, prng);
 
         rom.UpdateChecksum();
-
-        outputDirectory.Create();
-        string outputFile = Path.Combine(outputDirectory.FullName, CreateFileName(world, prng, worldSuffix));
-        rom.Save(outputFile);
+        broker.SaveRom(rom, CreateFileName(world, prng, worldSuffix));
     }
 
     protected virtual string CreateFileName(IWorld world, PRNG prng, string? worldSuffix) => $"{GetType().Name}_{prng.Seed:x08}.rom";
-    protected abstract void WriteWorldToRom(IWorld world, Rom rom, PRNG prng);
-    // NOTE: this ignores the BPS and assumes baseRom is ready for use. if this isn't the case, override and adjust per game.
-    protected virtual Rom CreateRom(FileInfo baseRom, FileInfo? baseBPS) => new(baseRom.FullName);
+    protected abstract void WriteWorldToRom(IWorld world, IRom rom, PRNG prng);
+    public virtual void ApplyPatch(IRom baseRom, FileInfo baseBPS) => baseRom.ApplyBasePatch(baseBPS);
     /// <summary>Returns (or produces) a usable base rom path for this randomizer. <c>null</c> if the base rom must be provided by the caller.</summary>
     public virtual FileInfo? ProvideBaseRom() => null;
     public abstract void AppendSpoiler(SpoilerLog spoilerLog);
