@@ -13,7 +13,7 @@ public sealed class Rom : GameRom
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(RomModifications.Rom rom, string language, int offset)
+    public Rom(RomModifications.IRom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
