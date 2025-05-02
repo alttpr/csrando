@@ -2,7 +2,7 @@
   "profiles": {
     "Randomizer": {
       "commandName": "Project",
-      "commandLineArgs": "randomize bps=out\\quad.bps api-mode"
+      "commandLineArgs": "randomize seed=129710358"
     }
   }
 }

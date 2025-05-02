@@ -15,6 +15,7 @@ public class Searcher : ISearcher
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
     private readonly VertexHashSet _otherWorldLocations;
+    private readonly IWorld? _world;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -22,8 +23,9 @@ public class Searcher : ISearcher
     /// <param name="graph">The graph to search</param>
     /// <param name="start">The starting point to search from</param>
     /// <param name="inventory">The current inventory to use while searching</param>
-    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null)
+    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null, IWorld? world = null)
     {
+        _world = world;
         _graph = graph;
         _visited = new(graph);
         _collected = new(graph);
@@ -45,8 +47,11 @@ public class Searcher : ISearcher
                 newItemsFound = CollectItems(inventory, _visited, _collected);
             } while (newItemsFound);
 
-            if (DoorSearch(inventory))
-                newItemsFound = true;
+            if (_world == null || _world is Games.Alttp.World)
+            {
+                if (DoorSearch(inventory))
+                    newItemsFound = true;
+            }
         } while (newItemsFound);
     }
 
@@ -204,7 +209,10 @@ public class Searcher : ISearcher
     /// </returns>
     private SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
-        SpendObviousKeys(collected, visited);
+        if (_world == null || _world is Games.Alttp.World)
+        {
+            SpendObviousKeys(collected, visited);
+        }
 
         var newlyVisited = new VertexHashSet(visited.Graph);
         var newSearchStarts = new VertexHashSet(visited.Graph);
