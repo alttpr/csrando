@@ -32,10 +32,7 @@ scoped:
       - [["Old Man Maze", "Old Man Maze - Exit"]]
 
 connections:
-  - group: old_man_return
-    overworld: []
-    underworld: []
-    
+
   # Single-Entrance Dungeons
   # All entrances are grouped and randomized with each other. This includes the
   # final section of Skull Woods (leading to the boss) but does not include any
@@ -180,7 +177,6 @@ connections:
       - [["Spectacle Rock Cave Top", "Spectacle Rock Cave Top - Exit"]]
       - [["Spectacle Rock Cave Middle", "Spectacle Rock Cave Middle - Exit"]]
       - [["Spectacle Rock Cave Exit", "Spectacle Rock Cave Exit - Exit"]]
-      - [["Old Man Maze", "Old Man Maze - Exit"]]
       # east
       - [["Fairy Ascension Cave - Pits Right", "Fairy Ascension Cave - Pits Right - Exit"]]
       - [["Mimic Cave Entrance", "Mimic Cave Entrance - Exit"]]
@@ -245,7 +241,6 @@ connections:
       - [["West Woods Fairy Pond - In", "West Woods Fairy Pond - Out"]]
       - [["South of Ruins Big Fairy - In", "South of Ruins Big Fairy - Out"]]
       - [["Eastern Ruins Fairy Cave - In", "Eastern Ruins Fairy Cave - Out"]]
-      - [["Aginah's Cave - In", "Aginah's Cave - Out"]]
       - [["Checkerboard Cave - In", "Checkerboard Cave - Out"]]
       - [["Cave 45 - In", "Cave 45 - Out"]]
       - [["Wetlands Big Fairy - In", "Wetlands Big Fairy - Out"]]
@@ -282,7 +277,6 @@ connections:
       - [["Hype Cave - In", "Hype Cave - Out"]]
       - [["Dark Lake Hylia Shop - In", "Dark Lake Hylia Shop - Out"]]
       - [["Dark Shopping Mall Big Fairy - In", "Dark Shopping Mall Big Fairy - Out"]]
-      - [["Hint Giver Cave - In", "Hint Giver Cave - Out"]]
       - [["Dev Cave - In", "Dev Cave - Out"]]
     underworld:
       - [["Money Making Game", "Money Making Game - Exit"]]
@@ -308,7 +302,6 @@ connections:
       - [["West Woods Fairy Pond", "West Woods Fairy Pond - Exit"]]
       - [["South of Ruins Big Fairy", "South of Ruins Big Fairy - Exit"]]
       - [["Eastern Ruins Fairy Cave", "Eastern Ruins Fairy Cave - Exit"]]
-      - [["Aginah's Cave", "Aginah's Cave - Exit"]]
       - [["Checkerboard Cave - Entrance", "Checkerboard Cave - Entrance - Exit"]]
       - [["Cave 45 Right", "Cave 45 Right - Exit"]]
       - [["Wetlands Big Fairy", "Wetlands Big Fairy - Exit"]]
@@ -344,7 +337,6 @@ connections:
       - [["Hype Cave Entrance", "Hype Cave Entrance - Exit"]]
       - [["Dark Lake Hylia Shop", "Dark Lake Hylia Shop - Exit"]]
       - [["Shopping Mall Big Fairy", "Shopping Mall Big Fairy - Exit"]]
-      - [["Hint Giver Cave - Glove", "Hint Giver Cave - Glove - Exit"]]
       - [["Dev Cave", "Dev Cave - Exit"]]
 
   # Multi-Entrance Caves All entrances are grouped and randomized with each other.
