@@ -123,7 +123,8 @@ public static class ApiServer
         app.Run();
     }
 
-    public record RandomizeRequest(int? Seed, bool IncludeSpoiler, WorldConfig[]? Configs); public record RandomizeResponse(
+    public record RandomizeRequest(int? Seed, bool IncludeSpoiler, WorldConfig[]? Configs); 
+    public record RandomizeResponse(
         string Seed,
         string? BpsPatch,
         string IpsPatch,
