@@ -1,5 +1,6 @@
 ﻿namespace RandomizerTests.Logic;
 
+using Randomizer.Games;
 using Randomizer.Graph;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

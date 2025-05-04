@@ -1,7 +1,7 @@
 ﻿namespace RandomizerTests.Logic.Standard.NoGlitches;
 
+using Randomizer.Games;
 using Randomizer.Games.Alttp;
-using Randomizer.Graph;
 
 public abstract class StandardNoGlitchesLogicTests : LogicTestBase
 {

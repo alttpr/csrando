@@ -1,7 +1,7 @@
 namespace RandomizerTests.Logic.Open.MajorGlitches;
 
+using Randomizer.Games;
 using Randomizer.Games.Alttp;
-using Randomizer.Graph;
 
 [Ignore("Skipped until logic is implemented")]
 public abstract class OpenMajorGlitchesLogicTests : LogicTestBase

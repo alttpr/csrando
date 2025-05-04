@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Buffers.Binary;
+using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
