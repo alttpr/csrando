@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Goonies2;
 
+using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Graph.GameRandomizer;

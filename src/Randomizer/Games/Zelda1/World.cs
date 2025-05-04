@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Zelda1;
 
+using Randomizer.Games;
 using Randomizer.Graph;
 using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;

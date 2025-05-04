@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using Randomizer.Games;
+
 public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConfig worldConfig) : IWorld
     where TItem : IItem
 {

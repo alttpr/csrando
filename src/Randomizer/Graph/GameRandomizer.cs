@@ -2,6 +2,7 @@ namespace Randomizer.Graph;
 
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Randomizer.Games;
 using Randomizer.RomModifications;
 
 /// <summary>

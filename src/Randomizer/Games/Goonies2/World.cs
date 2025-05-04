@@ -1,8 +1,9 @@
 namespace Randomizer.Games.Goonies2;
 
+using Randomizer.Games;
 using Randomizer.Graph;
-using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;
+using Graph = Graph.Graph;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : World<Item>

@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using Randomizer.Games;
+
 public interface IWorld
 {
     /// <summary>Get an <see cref="IItem"/> that exists in this world, or create a meta-item for it.</summary>
