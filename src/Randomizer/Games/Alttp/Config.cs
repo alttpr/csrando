@@ -1,23 +1,32 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Collections.Generic;
+using Randomizer.Games.Metadata;
 using Randomizer.Graph;
 
+[TargetGame(Game.Zelda3)]
 public class Config
 {
     public static readonly string[] RandomCrystals = ["0", "1", "2", "3", "4", "5", "6", "7"];
-    public static readonly int DefaultMoldormEyeCount = 2;
-    public static readonly int DefaultMolderp = 2;
+    public const int DefaultMoldormEyeCount = 2;
+    public const int DefaultMolderp = 2;
 
     // TODO: Align this with current website which broke it down to multiple settings.
     // See https://github.com/sporchia/alttp_vt_randomizer/pull/951
+    [Ignore("This should really just be a boolean")]
     public int RomHardMode { get; init; } = 0;
 
     // Use an array of allowed random values for randomizing the number of crystals.
     // A single-element array acts as specific count to use.
+    [RandomizedOptionsFor(nameof(CrystalsGanon))]
+    [Values("0", "1", "2", "3", "4", "5", "6", "7", "Dungeons")]
     public string[] CrystalsGanonChoices { get; set; } = RandomCrystals;
+    [RandomizedOptionsFor(nameof(CrystalsTower))]
+    [Values("0", "1", "2", "3", "4", "5", "6", "7")]
     public string[] CrystalsTowerChoices { get; set; } = RandomCrystals;
     private int[] _moldormEyeCountChoices = [DefaultMoldormEyeCount];
+    [RandomizedOptionsFor(nameof(MoldormEyeCount))]
+    [ValueRange(0, 8)]
     public int[] MoldormEyeCountChoices
     {
         get => _moldormEyeCountChoices;
@@ -30,6 +39,8 @@ public class Config
         }
     }
     private int[] _molderpChoices = [DefaultMolderp];
+    [RandomizedOptionsFor(nameof(Molderp))]
+    [ValueRange(1, 8)]
     public int[] MolderpChoices
     {
         get => _molderpChoices;
@@ -44,12 +55,14 @@ public class Config
 
 
     private string? _crystalsGanon;
+    [Values("0", "1", "2", "3", "4", "5", "6", "7", "Dungeons", Default = "7")]
     public string CrystalsGanon
     {
         get => _crystalsGanon ?? "7";
         set => _crystalsGanon = value;
     }
     private string? _crystalsTower;
+    [Values("0", "1", "2", "3", "4", "5", "6", "7", Default = "7")]
     public string CrystalsTower
     {
         get => _crystalsTower ?? "7";
@@ -57,12 +70,14 @@ public class Config
     }
 
     private int? _moldormEyeCount;
+    [ValueRange(0, 8, Default = DefaultMoldormEyeCount)]
     public int MoldormEyeCount
     {
         get => _moldormEyeCount.GetValueOrDefault(DefaultMoldormEyeCount);
         init => _moldormEyeCount = value;
     }
     private int? _molderp;
+    [ValueRange(1, 8, Default = DefaultMolderp)]
     public int Molderp
     {
         get => _molderp.GetValueOrDefault(DefaultMolderp);
@@ -80,6 +95,7 @@ public class Config
         _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
+    [ValueRange(1, 150, Default = 50)]
     public ushort TriforcePieces { get; set; } = 50;
 
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
@@ -90,7 +106,7 @@ public class Config
 
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
-    public List<TechOption> Techs { get; init; } = new();
+    public List<TechOption> Techs { get; init; } = [];
 
     public WeaponOption Weapon { get; init; } = WeaponOption.Randomized;
 
@@ -105,6 +121,7 @@ public class Config
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
     // TODO: Make it a bool? Do we have more planned there?
+    [Ignore("No shop randomization yet")]
     public ShopSupplyOption RegionShopSupply { get; init; } = ShopSupplyOption.Normal;
     public bool RegionWildKeys { get; init; } = false;
     public bool RegionWildBigKeys { get; init; } = false;
@@ -113,22 +130,31 @@ public class Config
     public bool RomRupeeBow { get; init; } = false;
 
     // TODO: Add configuration for custom prize packs
+    [Ignore("No custom prize packs yet")]
     public bool CustomPrizePacks { get; init; } = false;
 
-    public List<string> StartingEquipment { get; init; } = new();
+    [Ignore("Starting inventory is too advenced to be represented with simple attributes")]
+    public List<string> StartingEquipment { get; init; } = [];
 
     public bool MapOnPickup { get; init; } = false;
     public bool EscapeAssist { get; init; } = false;
     public bool PseudoBoots { get; init; } = false;
+    [Ignore("Is there even a reason to turn this off?")]
     public bool FastRom { get; init; } = true;
     public bool QuickSwap { get; init; } = false;
     public bool NoMusic { get; init; } = false;
+    [Advanced("Directly provides a ROM value")]
     public byte CapeMagicUsageNormal { get; init; } = 0x04;
+    [Advanced("Directly provides a ROM value")]
     public byte CapeMagicUsageHalf { get; init; } = 0x08;
+    [Advanced("Directly provides a ROM value")]
     public byte CapeMagicUsageQuarter { get; init; } = 0x10;
     public bool CaneOfByrnaInvulnerability { get; init; } = true;
+    [Advanced("Directly provides a ROM value")]
     public byte PowderedSpriteFairyPrize { get; init; } = 0xE3;
+    [Advanced("Directly provides a ROM value")]
     public byte BottleFillHealth { get; init; } = 0xA0;
+    [Advanced("Directly provides a ROM value")]
     public byte BottleFillMagic { get; init; } = 0x80;
     public bool CatchableFairies { get; init; } = true;
     public bool CatchableBees { get; init; } = true;
@@ -137,7 +163,9 @@ public class Config
     public bool SilversOnlyAtGanon { get; init; } = false;
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
+    [Ignore("Nobody cares about the goal icon")]
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
+    [ValueRange(1, 150, Default = 30)]
     public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
