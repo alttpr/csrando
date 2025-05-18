@@ -19,5 +19,3 @@ edges:
           - ["Left door", "Bottom"]
       HiJump:
           - ["Bottom", "Left door"]
-      IceBeam:
-          - ["Bottom", "Left door"]
