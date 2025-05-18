@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Alttp;
 
+using Randomizer.Games;
 using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using BaseVertex = Graph.Vertex;

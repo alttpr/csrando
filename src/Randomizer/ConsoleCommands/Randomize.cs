@@ -8,7 +8,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Randomizer.Graph; // WorldConfig is likely here
+using Randomizer.Games;
+using Randomizer.Graph;
 using Randomizer.RomModifications;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,76 +82,50 @@ internal sealed class Randomize : Command
             var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
             bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
 
-            // Instantiate the FileRomFactory for CLI usage
-            var romFactory = new FileRomFactory();
-
-            var sw = Stopwatch.StartNew();
-            for (int i = 0; i < bulk; i++)
-            {
-                var worldConfigs = GetWorldConfigs(context);
-                var randomizer = RandomizerFactory.Create(
-                    worldConfigs,
-                    context.ParseResult.GetValueForOption(_seed),
-                    romFactory // Pass the factory instance
-                );
-
-                randomizer.Randomize();
-                if (!randomizer.IsWinnable())
-                    throw new Exception($"Game Unwinnable.");
-
-                if (outputDirectory != null)
-                {
-                    // Use the provided baseRom/baseBPS first, then try ProvideBaseRom
-                    var actualBaseRom = baseRom ?? randomizer.ProvideBaseRom();
-                    if (actualBaseRom != null)
-                        randomizer.Write(actualBaseRom, baseBPS, outputDirectory);
-                    else
-                        _logger.LogError("Writing a ROM requires a base ROM. Provide one via --rom or ensure ProvideBaseRom() returns a valid path.");
-                }
-                if (dumpSpoiler)
-                {
-                    Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
-                    {
-                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                        WriteIndented = true
-                    }));
-                }
-            }
-            _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);
-            return 0;
-        }
-    }
-
-    // Placeholder for request/response models - Define these properly
-    private record RandomizeRequest(int? Seed, bool IncludeSpoiler /* Add other options like settings */);
-    // Updated PatchData type to string for Base64 representation
-    private record RandomizeResponse(string Seed, object? SpoilerLog, string PatchData);
-
-    // Placeholder for getting default configs - Adapt GetWorldConfigs or create new logic
-    private WorldConfig[] GetDefaultWorldConfigs()
-    {
-        // This needs to load/create default WorldConfig(s)
-        // Potentially load from embedded resource or a default file path
-        _logger.LogWarning("Using placeholder default world configs for API mode.");
-        // Example: Load from default settings file if available
-        var defaultSettingsPath = Path.Combine(AppContext.BaseDirectory, "data", "settings.json");
-        if (File.Exists(defaultSettingsPath))
+        var sw = Stopwatch.StartNew();
+        for (int i = 0; i < bulk; i++)
         {
-            using var settingsStream = File.OpenRead(defaultSettingsPath);
-            try
+            var worldConfigs = GetWorldConfigs(context);
+            var randomizer = RandomizerFactory.Create(
+                worldConfigs,
+                context.ParseResult.GetValueForOption(_seed)
+            );
+            randomizer.Randomize();
+            if (!randomizer.IsWinnable())
+                throw new Exception("Game Unwinnable.");
+
+            if (outputDirectory != null)
             {
-                var singleConfig = JsonSerializer.Deserialize<WorldConfig>(settingsStream, _options);
-                if (singleConfig != null) return [singleConfig];
+                baseRom ??= randomizer.ProvideBaseRom();
+                if (baseRom == null)
+                {
+                    _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
+                    continue;
+                }
+
+                var fileRomBroker = new FileRomBroker(baseRom, baseBPS, outputDirectory);
+                randomizer.Write(fileRomBroker);
             }
-            catch (Exception ex)
+            if (dumpSpoiler)
             {
-                _logger.LogError(ex, "Failed to load default settings file for API.");
+                Console.WriteLine("{0}", JsonSerializer.Serialize(randomizer.SpoilerLog!.Spoiler, new JsonSerializerOptions
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    WriteIndented = true
+                }));
             }
         }
-        // Fallback to a very basic default if file loading fails
-        return [new WorldConfig()]; // Assuming WorldConfig() is accessible
+        _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);
+        return 0;
     }
 
+    private static readonly JsonSerializerOptions _options = new()
+    {
+        AllowTrailingCommas = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() },
+    };
     private WorldConfig[] GetWorldConfigs(InvocationContext context)
     {
         var settingsFile = context.ParseResult.GetValueForOption(_settingsFile);
@@ -186,12 +161,4 @@ internal sealed class Randomize : Command
 
         throw new InvalidOperationException("No usable settings file passed. Either use the --settings option or place a valid file at data/settings.json.");
     }
-
-    private static readonly JsonSerializerOptions _options = new()
-    {
-        AllowTrailingCommas = true,
-        NumberHandling = JsonNumberHandling.AllowReadingFromString,
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() },
-    };
 }

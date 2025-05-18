@@ -1,6 +1,5 @@
 ﻿namespace Randomizer.Games.Alttp;
 
-using System.Buffers.Binary;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseRom = RomModifications.Rom;
@@ -208,7 +207,7 @@ public static class RomWriter
         WriteEntrancesToRom(world, rom);
         WriteEnemyDamageToRom(world, rom, prng);
         WriteEnemyHealthToRom(world, rom, prng);
-        //WriteEnemiesToRom(world, rom);
+        WriteEnemiesToRom(world, rom);
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
         rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);

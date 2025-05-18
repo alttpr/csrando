@@ -1,7 +1,7 @@
 namespace RandomizerTests.Games.Alttp;
 
+using Randomizer.Games;
 using Randomizer.Games.Alttp;
-using Randomizer.Graph;
 
 [TestClass]
 public sealed class WorldTest

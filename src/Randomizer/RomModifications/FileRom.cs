@@ -3,12 +3,12 @@
 using System.Buffers.Binary;
 using BpsNet;
 
-public sealed class Rom : IRom, IDisposable
+public sealed class FileRom : IRom
 {
     private readonly string _tempRom;
     private readonly FileStream _rom;
 
-    public Rom(string baseRomPath)
+    public FileRom(string baseRomPath)
     {
         if (!File.Exists(baseRomPath))
             throw new FileNotFoundException("Could not load base ROM file.", baseRomPath);
@@ -51,7 +51,7 @@ public sealed class Rom : IRom, IDisposable
             {
                 // this skips checksum/inverse in LoROM; HiROM has those at 0xFFDC - 0xFFDF
                 // during calculation, they assume 0x0000 and 0xFFFF (which is the initial 0x1FE sum)
-                if (j + i >= 0x7FDC && j + i < 0x7FE0)
+                if (j + i is >= 0x7FDC and < 0x7FE0)
                     continue;
                 sum += block[j];
             }
@@ -105,21 +105,4 @@ public sealed class Rom : IRom, IDisposable
     {
         _rom.Dispose();
     }
-}
-
-public readonly struct Address
-{
-    public int Value { get; init; }
-    public static implicit operator Address(int value) => new() { Value = value };
-}
-public readonly struct SNES
-{
-    public int Value { get; init; }
-    public static explicit operator SNES(int value) => new() { Value = value };
-    public static implicit operator Address(SNES value) => new() { Value = ToPC(value.Value) };
-
-    public static SNES operator +(SNES self, int other) => new() { Value = self.Value + other };
-
-    public static int ToPC(int address) => (address & 0x7F0000) >> 1 | address & 0x7FFF;
-    public static int FromPC(int address, bool fastRom = true) => ((address << 1) & 0x7F0000) | (address & 0x7FFF) | (fastRom ? 0x808000 : 0x8000);
 }

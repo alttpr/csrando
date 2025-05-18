@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Buffers.Binary;
+using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
@@ -13,7 +14,7 @@ public sealed class Rom : GameRom
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(IRom rom, string language, int offset)
+    public Rom(RomModifications.IRom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
