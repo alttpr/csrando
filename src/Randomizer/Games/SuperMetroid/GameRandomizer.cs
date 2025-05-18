@@ -7,8 +7,8 @@ using BaseGameRandomizer = Randomizer.Graph.GameRandomizer;
 public sealed class GameRandomizer : BaseGameRandomizer // Changed to inherit explicitly
 {
     // Added traditional constructor
-    public GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory)
-        : base(randomizerConfigs, prng, romFactory)
+    public GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
+        : base(randomizerConfigs, prng)
     {
     }
 
@@ -23,7 +23,6 @@ public sealed class GameRandomizer : BaseGameRandomizer // Changed to inherit ex
         if (world is not World smWorld)
             throw new ArgumentException("Passed world is not for Super Metroid.", nameof(world));
 
-        // Pass the received IRom directly to the writer.
         RomWriter.Write(rom, smWorld, prng);
     }
     protected override string CreateFileName(IWorld world, PRNG prng, string? worldSuffix)

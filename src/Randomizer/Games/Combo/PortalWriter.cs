@@ -165,7 +165,7 @@ internal class PortalWriter
     }
 
     //TODO: This is broken, we need to fix it later
-    private static int WriteDynamicsPortals(RomModifications.Rom rom, int address, World world, (string from, string to) gamePair)
+    private static int WriteDynamicsPortals(IRom rom, int address, World world, (string from, string to) gamePair)
     {
         if (gamePair.from == "sm" && gamePair.to == "alttp")
         {

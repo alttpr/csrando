@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using BaseGameRandomizer = Graph.GameRandomizer;
 
-public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory)
-    : BaseGameRandomizer(randomizerConfigs, prng, romFactory)
+public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
+    : BaseGameRandomizer(randomizerConfigs, prng)
 {
     private const int RomSize = 8 * 1024 * 1024;
 

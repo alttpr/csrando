@@ -5,8 +5,8 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Randomizer.Graph.GameRandomizer; // Corrected using alias
 
-public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory) // Add romFactory
-    : BaseGameRandomizer(randomizerConfigs, prng, romFactory) // Pass romFactory to base
+public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
+    : BaseGameRandomizer(randomizerConfigs, prng)
 {
     protected override IItemPooler CreateItemPooler(IWorld[] worlds, PRNG prng)
     {

@@ -11,10 +11,6 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http; // Added for Results
 
 /// <summary>Run randomizer as command.</summary>
 internal sealed class Randomize : Command
@@ -30,7 +26,6 @@ internal sealed class Randomize : Command
     private readonly Option<DirectoryInfo> _outputDirectory = new(["outdir", "--outdir"], "output directory for generated games");
     private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>(["settings", "--settings"], "JSON serialized settings file").ExistingOnly();
     private readonly Option<bool> _dumpSpoiler = new(["spoiler", "--spoiler"], "dump spoiler log");
-    private readonly Option<bool> _apiMode = new(["api-mode", "--api-mode"], () => false, "run as an API server"); // New option
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -43,7 +38,6 @@ internal sealed class Randomize : Command
         Add(_outputDirectory);
         Add(_settingsFile);
         Add(_dumpSpoiler);
-        Add(_apiMode); // Add the new option
 
         AddValidator(Validate);
 
@@ -66,21 +60,11 @@ internal sealed class Randomize : Command
     /// <summary>Execute the console command.</summary>
     public int Handle(InvocationContext context)
     {
-        if (context.ParseResult.GetValueForOption(_apiMode))
-        {
-            _logger.LogInformation("Starting in API mode...");
-            var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
-            Api.ApiServer.Start(_logger, baseBPS, GetDefaultWorldConfigs);
-            return 0; // API server runs asynchronously, main thread can exit
-        }
-        else
-        {
-            // Existing CLI logic
-            int bulk = Math.Max(context.ParseResult.GetValueForOption(_bulk), 1);
-            var baseRom = context.ParseResult.GetValueForOption(_baseRom);
-            var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
-            var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
-            bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
+        int bulk = Math.Max(context.ParseResult.GetValueForOption(_bulk), 1);
+        var baseRom = context.ParseResult.GetValueForOption(_baseRom);
+        var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
+        var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
+        bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)

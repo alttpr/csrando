@@ -5,11 +5,10 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Randomizer.Graph.GameRandomizer;
 
-public sealed class GameRandomizer : BaseGameRandomizer // Changed to inherit explicitly
+public sealed class GameRandomizer : BaseGameRandomizer
 {
-    // Added traditional constructor
-    public GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng, IRomFactory romFactory)
-        : base(randomizerConfigs, prng, romFactory)
+    public GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
+        : base(randomizerConfigs, prng)
     {
     }
 
@@ -24,7 +23,6 @@ public sealed class GameRandomizer : BaseGameRandomizer // Changed to inherit ex
         if (world is not World z1World)
             throw new ArgumentException("Passed world is not for The Legend of Zelda.", nameof(world));
 
-        // Pass the received IRom directly to the writer.
         RomWriter.Write(rom, z1World, prng);
     }
 

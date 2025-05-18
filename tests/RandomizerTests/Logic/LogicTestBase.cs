@@ -67,7 +67,7 @@ public abstract class LogicTestBase
     protected GameRandomizer GetRandomizerForConfig(WorldConfig[] config)
     {
         return _cachedRandomizers.GetOrAdd(config, config
-            => new Lazy<GameRandomizer>(() => new AlttpRandomizer(config, new(seed: 42), new FileRomFactory()),
+            => new Lazy<GameRandomizer>(() => new AlttpRandomizer(config, new(seed: 42)),
             LazyThreadSafetyMode.ExecutionAndPublication)).Value;
     }
 

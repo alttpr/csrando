@@ -2,7 +2,6 @@ namespace Randomizer.Games.Metroid;
 
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using BaseRom = RomModifications.Rom;
 
 public static class RomWriter
 {
