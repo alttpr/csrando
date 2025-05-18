@@ -1412,11 +1412,6 @@ public sealed class Rom : GameRom
     public void SetSwampWaterLevel(bool enable = true)
         => Write((SNES)0xB080A1, [(byte)(enable ? 0x01 : 0x00)]);
 
-    /// <summary>Enable/Disable the swamp floodgate state being persistent</summary>
-    /// <param name="enable">switch on or off</param>
-    public void SetPersistentFloodGate(bool enable = false)
-        => Write((SNES)0xB0803D, [(byte)(enable? 0x01 : 0x00)]);
-
     /// <summary>Enable/Disable the ROM Hack that sends Link to Real DW on death in DW dungeon if AG1 is not dead</summary>
     /// <param name="enable">switch on or off</param>
     public void SetPreAgahnimDarkWorldDeathInDungeon(bool enable = true)
