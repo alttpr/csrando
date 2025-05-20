@@ -26,7 +26,7 @@ public class Config
     public string[] CrystalsTowerChoices { get; set; } = RandomCrystals;
     private int[] _moldormEyeCountChoices = [DefaultMoldormEyeCount];
     [RandomizedOptionsFor(nameof(MoldormEyeCount))]
-    [ValueRange(0, 8)]
+    [Values(0, 1, 2, 3, 4, 5, 6, 7)]
     public int[] MoldormEyeCountChoices
     {
         get => _moldormEyeCountChoices;
@@ -40,7 +40,7 @@ public class Config
     }
     private int[] _molderpChoices = [DefaultMolderp];
     [RandomizedOptionsFor(nameof(Molderp))]
-    [ValueRange(1, 8)]
+    [Values(1, 2, 3, 4, 5, 6, 7, 8)]
     public int[] MolderpChoices
     {
         get => _molderpChoices;

@@ -1,6 +1,9 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
+
+using Randomizer.Games.Metadata;
 using Randomizer.Graph;
 
+[TargetGame(Game.SuperMetroid)]
 public class Config
 {
     private static string[] ImplicitTech = [

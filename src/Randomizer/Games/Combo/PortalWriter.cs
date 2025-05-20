@@ -68,76 +68,76 @@ internal class PortalWriter
         // z1 (out) = 0x63B000
         // m1 = 0x6C7000
 
-        if (world.Config.Games!.SuperMetroid != null)
+        if (world.WorldConfig!.SuperMetroid != null)
         {
             int address = 0x300000;
-            if (world.Config.Games.Alttp != null)
+            if (world.WorldConfig.Alttp != null)
             {
                 address = WritePortals(rom, address, _portalData[("sm", "alttp")]);
                 //address = WriteDynamicsPortals(rom, address, world, ("sm", "alttp"));
             }
 
-            if (world.Config.Games.Zelda1 != null)
+            if (world.WorldConfig.Zelda1 != null)
             {
                 address = WritePortals(rom, address, _portalData[("sm", "z1")]);
             }
 
-            if (world.Config.Games.Metroid != null)
+            if (world.WorldConfig.Metroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("sm", "m1")]);
             }
             rom.Write(address, [0x00, 0x00]);
         }
 
-        if (world.Config.Games.Alttp != null)
+        if (world.WorldConfig.Alttp != null)
         {
             int address = 0x550000;
-            if (world.Config.Games.SuperMetroid != null)
+            if (world.WorldConfig.SuperMetroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("alttp", "sm")]);
                 //address = WriteDynamicsPortals(rom, address, world, ("alttp", "sm"));
             }
-            if (world.Config.Games.Zelda1 != null)
+            if (world.WorldConfig.Zelda1 != null)
             {
                 address = WritePortals(rom, address, _portalData[("alttp", "z1")]);
             }
-            if (world.Config.Games.Metroid != null)
+            if (world.WorldConfig.Metroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("alttp", "m1")]);
             }
             rom.Write(address, [0x00, 0x00]);
         }
 
-        if (world.Config.Games.Zelda1 != null)
+        if (world.WorldConfig.Zelda1 != null)
         {
             int address = 0x63A000;
-            if (world.Config.Games.Alttp != null)
+            if (world.WorldConfig.Alttp != null)
             {
                 address = WritePortals(rom, address, _portalData[("z1", "alttp")]);
             }
-            if (world.Config.Games.SuperMetroid != null)
+            if (world.WorldConfig.SuperMetroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("z1", "sm")]);
             }
-            if (world.Config.Games.Metroid != null)
+            if (world.WorldConfig.Metroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("z1", "m1")]);
             }
             rom.Write(address, [0x00, 0x00]);
         }
 
-        if (world.Config.Games.Metroid != null)
+        if (world.WorldConfig.Metroid != null)
         {
             int address = 0x6C7000;
-            if (world.Config.Games.Alttp != null)
+            if (world.WorldConfig.Alttp != null)
             {
                 address = WritePortals(rom, address, _portalData[("m1", "alttp")]);
             }
-            if (world.Config.Games.SuperMetroid != null)
+            if (world.WorldConfig.SuperMetroid != null)
             {
                 address = WritePortals(rom, address, _portalData[("m1", "sm")]);
             }
-            if (world.Config.Games.Zelda1 != null)
+            if (world.WorldConfig.Zelda1 != null)
             {
                 address = WritePortals(rom, address, _portalData[("m1", "z1")]);
             }

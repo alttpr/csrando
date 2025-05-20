@@ -43,7 +43,7 @@ public sealed class World : IWorld
         Id = id;
         WorldConfig = randomizerConfig;
         Config = randomizerConfig.Combo ?? throw new ArgumentException("This world requires valid settings for Combo");
-        GameConfig = Config.Games ?? throw new ArgumentException("This world requires valid settings for Games");
+        GameConfig = randomizerConfig;
         Graph = graph;
         Prng = prng;
         Start = graph.AddVertex(new Vertex()
@@ -55,38 +55,39 @@ public sealed class World : IWorld
 
         StartingItems = new Inventory([GetItem("fixed")]);
 
-        if (Config.Games.Alttp != null)
+
+        if (WorldConfig.Alttp != null)
         {
-            AlttpWorld = new AlttpWorld(id, Config.Games, graph, prng);
+            AlttpWorld = new AlttpWorld(id, WorldConfig, graph, prng);
             StartingItems = StartingItems.Merge(AlttpWorld.StartingItems);
         }
-        if (Config.Games.SuperMetroid != null)
+        if (WorldConfig.SuperMetroid != null)
         {
-            SMWorld = new SMWorld(id, Config.Games, graph, prng);
+            SMWorld = new SMWorld(id, WorldConfig, graph, prng);
             StartingItems = StartingItems.Merge(SMWorld.StartingItems);
         }
-        if (Config.Games.Zelda1 != null)
+        if (WorldConfig.Zelda1 != null)
         {
-            Z1World = new Z1World(id, Config.Games, graph, prng);
+            Z1World = new Z1World(id, WorldConfig, graph, prng);
             StartingItems = StartingItems.Merge(Z1World.StartingItems);
         }
-        if (Config.Games.Metroid != null)
+        if (WorldConfig.Metroid != null)
         {
-            M1World = new M1World(id, Config.Games, graph, prng);
+            M1World = new M1World(id, WorldConfig, graph, prng);
             StartingItems = StartingItems.Merge(M1World.StartingItems);
         }
 
-        if(Config.Games.Alttp != null && Config.Games.Zelda1 != null)
+        if(WorldConfig.Alttp != null && WorldConfig.Zelda1 != null)
         {
             Graph.AddDirected(AlttpWorld!.GetLocation("start"), Z1World!.Start, AlttpWorld!.GetItem("fixed"));
         }
 
-        if (Config.Games.Alttp != null && Config.Games.Metroid != null)
+        if (WorldConfig.Alttp != null && WorldConfig.Metroid != null)
         {
             Graph.AddDirected(AlttpWorld!.GetLocation("start"), M1World!.Start, AlttpWorld!.GetItem("fixed"));
         }
 
-        if (Config.Games.SuperMetroid != null && Config.Games.Alttp != null)
+        if (WorldConfig.SuperMetroid != null && WorldConfig.Alttp != null)
         {
             // Create the portal entrances for the cross-game portals in the four rooms we need to connect for SM
             var crateriaMapStationPortalIn = graph.AddVertex(new SuperMetroid.Vertex()

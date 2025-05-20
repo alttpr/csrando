@@ -18,8 +18,8 @@ public class WorldConfig
 
     [UsableWith(RandomizerTarget.Alttpr, RandomizerTarget.Combo)]
     public AlttpConfig? Alttp { get; init; }
-    //[UsableWith(RandomizerTarget.G2R)]
-    //public Goonies2Config? Goonies2 { get; init; }
+    [UsableWith(RandomizerTarget.G2R)]
+    public Goonies2Config? Goonies2 { get; init; }
     [UsableWith(RandomizerTarget.Combo)]
     public Zelda1Config? Zelda1 { get; init; }
     [UsableWith(RandomizerTarget.Combo)]
@@ -28,17 +28,16 @@ public class WorldConfig
     public MetroidConfig? Metroid { get; init; }
     [UsableWith(RandomizerTarget.Combo)]
     public ComboConfig? Combo { get; init; }
-    public Goonies2Config? Goonies2 { get; init; }
 }
 
 public enum RandomizerTarget
 {
     [Description("The Legend of Zelda: A Link to the Past Randomizer")]
     Alttpr,
-    //[Description("The Legend of Zelda Randomizer")]
-    //Z1R,
-    //[Description("The Goonies II Randomizer")]
-    //G2R,
+    [Description("The Legend of Zelda Randomizer")]
+    Z1R,
+    [Description("The Goonies II Randomizer")]
+    G2R,
     [Description("Combo Randomizer")]
     Combo,
 }
