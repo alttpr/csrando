@@ -32,6 +32,7 @@ public class YamlReader
     private const string VerticesPath = "Vertices";
     private const string BossesPath = "Enemizer/bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
+    private const string TileRoomPatternsPath = "TileRoomPatterns";
 
     private static readonly Lazy<Vertices> _cachedVertices = new(() =>
     {
@@ -178,6 +179,24 @@ public class YamlReader
         dest.Rooms.AddRange(source.Rooms);
     }
 
+    private static readonly Lazy<List<TileRoomPattern>> _tileRoomPatterns = new(() =>
+    {
+        var patterns = new List<TileRoomPattern>();
+        var deserializer = new DeserializerBuilder().Build();
+
+        var files = Directory.GetFiles(Path.Combine(DataRoot, TileRoomPatternsPath), "*.yml", SearchOption.AllDirectories).Order();
+        foreach (string file in files)
+        {
+            using var reader = File.OpenText(file);
+            var pattern = deserializer.Deserialize<TileRoomPattern>(reader);
+            pattern.Name = Path.GetFileNameWithoutExtension(file);
+            patterns.Add(pattern);
+        }
+
+        return patterns;
+    });
+    public static IEnumerable<TileRoomPattern> LoadTileRoomPatterns() => _tileRoomPatterns.Value;
+
     public static Dictionary<string, List<string>> LoadBosses() => _cachedBosses.Value;
     public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
@@ -313,6 +332,22 @@ public class YamlBossSprite
     public ushort? PriorityLayer { get; set; }
     [YamlMember(Alias = "blkset")]
     public byte? Blkset { get; set; }
+}
+
+public class TileRoomPattern
+{
+    public string Name { get; set; } = null!;
+    [YamlMember(Alias = "speed")]
+    public byte Speed { get; set; } = 0xE0;
+    [YamlMember(Alias = "tiles")]
+    public TileRoomTile[] Tiles { get; set; } = [];
+}
+public class TileRoomTile
+{
+    [YamlMember(Alias = "x")]
+    public required int X { get; set; }
+    [YamlMember(Alias = "y")]
+    public required int Y { get; set; }
 }
 
 public class DirectedUndirectedPair

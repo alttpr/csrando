@@ -104,6 +104,8 @@ public class Config
 
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
+    public TileRoomPatternOption TileRoomPattern { get; init; } = TileRoomPatternOption.Default;
+
     // TODO: Make it a bool? Do we have more planned there?
     public ShopSupplyOption RegionShopSupply { get; init; } = ShopSupplyOption.Normal;
     public bool RegionWildKeys { get; init; } = false;
@@ -147,6 +149,12 @@ public class Config
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
     public bool EnableHints { get; init; } = false;
+}
+
+public enum TileRoomPatternOption
+{
+    Default,
+    Random,
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }

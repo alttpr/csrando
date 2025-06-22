@@ -313,6 +313,16 @@ public static class RomWriter
 
         rom.EnableFastRom(config.FastRom);
 
+        if (config.TileRoomPattern != TileRoomPatternOption.Default)
+        {
+            var availablePatterns = YamlReader.LoadTileRoomPatterns();
+            if (availablePatterns.Any())
+            {
+                var pattern = prng.GetRandomElement(availablePatterns);
+                rom.SetTileRoomPattern(pattern);
+            }
+        }
+
         rom.WriteCredits();
         rom.WriteText();
         rom.WriteInitialSram();

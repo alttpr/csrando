@@ -1478,6 +1478,30 @@ public sealed class Rom : GameRom
             Write((SNES)0x1DDC06, [(byte)derpAmount]);
         }
     }
+    /// <summary>Set tile rooms to use the specified pattern.</summary>
+    public void SetTileRoomPattern(TileRoomPattern pattern)
+    {
+        if (pattern is null)
+            return;
+        if (pattern.Tiles.Length > 0x16)
+            throw new ArgumentException($"Tile Pattern has {pattern.Tiles.Length} tiles, max. supported is 0x16.", nameof(pattern));
+
+        byte speed = pattern.Speed;
+        if (speed == 0)
+            speed = 0xE0;
+
+        // Overlord14_TileRoom.continue, LDA.b #$E0
+        Write((SNES)0x09BA21, [speed]);
+        // Overlord14_TileRoom.continue, CMP.b #$16
+        Write((SNES)0x09BA1D, [(byte)pattern.Tiles.Length]);
+
+        // SpawnFlyingTile.position_x/.position_y
+        for (int i = 0; i < pattern.Tiles.Length; i++)
+        {
+            Write((SNES)0x09BA2A + i, [(byte)((pattern.Tiles[i].X + 3) * 16)]);
+            Write((SNES)0x09BA2A + 0x16 + i, [(byte)((pattern.Tiles[i].Y + 4) * 16)]);
+        }
+    }
 
     /// <summary>Set starting with Pseudo Boots.</summary>
     public void SetPseudoBoots(bool enable = false)
