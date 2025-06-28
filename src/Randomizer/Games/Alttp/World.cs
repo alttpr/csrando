@@ -10,31 +10,19 @@ using Graph = Graph.Graph;
 ///
 /// Walk thru walls: 7E037F01
 /// </summary>
-public sealed class World : IWorld
+public sealed class World : World<Item>
 {
-    public string GameId { get; } = "Zelda3";
-    public int Id { get; }
-    public Graph Graph { get; }
-    public BaseVertex Start { get; }
-    public Inventory StartingItems { get; }
-    public WorldConfig WorldConfig { get; }
     public Config Config { get; }
-    private readonly Dictionary<string, Item> _allItems = [];
-    public ushort PlacedItemCount { get; set; }
     public (byte[] Underworld, byte[] Overworld, byte[] Special, byte[] Sets) SpriteSheets { get; set; } = ([], [], [], []);
     public Dictionary<IItem /* actualKey */, List<(BaseVertex Chest, List<BaseVertex> Regions)>> KeyForKeys { get; } = [];
-
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
+        : base("Zelda3", id, graph, randomizerConfig)
     {
-        Id = id;
-        WorldConfig = randomizerConfig;
         Config = randomizerConfig.Alttp ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda: A Link to the Past");
-        Graph = graph;
-
         Config.SelectRandomValues(prng);
 
         List<IItem> items = [GetItem("fixed")];
@@ -82,61 +70,13 @@ public sealed class World : IWorld
         return inventory;
     }
 
-    /// <summary>
-    /// Get a vertex by name in this world.
-    /// </summary>
-    /// <param name="locationName">name to search for</param>
-    public BaseVertex GetLocation(string locationName)
-    {
-        return Graph.GetVertex($"{locationName}:{GameId}:{Id}");
-    }
+    protected override Item CreateItem(string name, IWorld world) => new(name, world);
 
-    public bool HasLocation(string locationName)
-    {
-        return Graph.HasVertex($"{locationName}:{GameId}:{Id}");
-    }
-
-    /// <summary>Get all vertices in this world.</summary>
-    /// <returns></returns>
-    public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
     /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
 
-    public IItem GetItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var matchingItem))
-        {
-            return matchingItem;
-        }
-
-        // allow made up items
-        var item = Graph.RegisterItem(new Item(name, this));
-        _allItems.Add(item.Name, item);
-
-        return item;
-    }
-
-    public IItem? GetItemOrNull(string? name)
-    {
-        if (name != null)
-            return GetItem(name);
-        return null;
-    }
-
-    public IItem? GetExistingItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var item))
-            return item;
-        return null;
-    }
-
-    public IEnumerable<Item> GetAllItems()
-    {
-        return _allItems.Values;
-    }
-
-    public IEnumerable<BaseVertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    public override IEnumerable<BaseVertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();
         var item = (Item)itemToPlace;
@@ -155,12 +95,12 @@ public sealed class World : IWorld
 
         return locations;
     }
-    public void TrackPlacedItem(BaseVertex location)
+    protected override bool ShouldTrack(BaseVertex location)
     {
-        if (location is Vertex { SubType: var subType } && subType is not VertexType.Medallion and not VertexType.Refill and not VertexType.Prize)
-            location.World.PlacedItemCount++;
+        return location is Vertex { SubType: var subType } && subType is not VertexType.Medallion and not VertexType.Refill and not VertexType.Prize;
     }
-    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
+
+    public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         Searcher searcher = new(Graph, start, startingInventory);
 
