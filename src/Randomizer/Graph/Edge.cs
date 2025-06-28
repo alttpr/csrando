@@ -19,7 +19,7 @@ public sealed class Edge
     public void Deconstruct(out Vertex from, out Vertex to, out ItemCondition condition) => (from, to, condition) = (From, To, Condition);
 }
 
-[DebuggerDisplay("{Item.Name}:{Item.World.Id} >= {Count}")]
+[DebuggerDisplay("{Item.Name}:{Item.World.Game}:{Item.World.Id} >= {Count}")]
 public record struct ItemCondition(IItem Item, int Count)
 {
     public readonly bool IsUnconditional = Item.Name == "fixed";

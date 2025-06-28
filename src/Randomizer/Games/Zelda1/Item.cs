@@ -38,5 +38,5 @@ public sealed class Item : IItem
         Byte = yamlItem?.Byte;
     }
 
-    public override string ToString() => $"{Name}:{World.Id}";
+    public override string ToString() => $"{Name}:{World.GameId}:{World.Id}";
 }

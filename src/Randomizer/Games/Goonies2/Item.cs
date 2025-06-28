@@ -42,5 +42,5 @@ public sealed class Item : IItem
         Gfx = yamlItem?.Gfx;
     }
 
-    public override string ToString() => $"{Name}:{World.Id}";
+    public override string ToString() => $"{Name}:{World.GameId}:{World.Id}";
 }
