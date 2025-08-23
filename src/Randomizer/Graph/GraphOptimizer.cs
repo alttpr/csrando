@@ -36,7 +36,10 @@ public class GraphOptimizer
                 // Step 3: ⚡-MODE: Actually merge pass-through vertices for real performance gains!
         MergePassThroughVertices();
 
-        // Step 4: Identify dead ends (for info only)
+        // Step 4: 🔥 CYCLE TERMINATOR MODE: Eliminate redundant cycles!
+        EliminateRedundantCycles();
+
+        // Step 5: Identify dead ends (for info only)
         IdentifyDeadEnds();
 
         var originalEdges = _graph.GetVertices().Sum(v => v.Edges.Count);
@@ -630,9 +633,203 @@ public class GraphOptimizer
         return false;
     }
 
+    /// <summary>
+    /// 🔥 CYCLE TERMINATOR MODE: Eliminate redundant cycles that serve no purpose!
+    /// </summary>
+    private void EliminateRedundantCycles()
+    {
+        var eliminatedCount = 0;
+        var cyclesToEliminate = new List<List<Vertex>>();
 
+        // Find all cycles in the graph
+        var allCycles = FindAllCycles();
 
+        // Identify which cycles are redundant (can be eliminated)
+        foreach (var cycle in allCycles)
+        {
+            if (IsRedundantCycle(cycle))
+            {
+                cyclesToEliminate.Add(cycle);
+            }
+        }
 
+        // Eliminate redundant cycles IN-PLACE!
+        foreach (var cycle in cyclesToEliminate)
+        {
+            if (EliminateCycle(cycle))
+            {
+                eliminatedCount++;
+            }
+        }
 
+        _logger.LogInformation("🔥 CYCLE TERMINATOR: Eliminated {EliminatedCount} redundant cycles!", eliminatedCount);
+    }
 
+    /// <summary>
+    /// Find all cycles in the graph using DFS
+    /// </summary>
+    private List<List<Vertex>> FindAllCycles()
+    {
+        var cycles = new List<List<Vertex>>();
+        var visited = new HashSet<Vertex>();
+        var recursionStack = new HashSet<Vertex>();
+
+        foreach (var vertex in _graph.GetVertices())
+        {
+            if (!visited.Contains(vertex))
+            {
+                FindCyclesDFS(vertex, visited, recursionStack, new List<Vertex>(), cycles);
+            }
+        }
+
+        return cycles;
+    }
+
+    /// <summary>
+    /// DFS to find cycles starting from a vertex
+    /// </summary>
+    private void FindCyclesDFS(Vertex current, HashSet<Vertex> visited, HashSet<Vertex> recursionStack,
+        List<Vertex> currentPath, List<List<Vertex>> cycles)
+    {
+        visited.Add(current);
+        recursionStack.Add(current);
+        currentPath.Add(current);
+
+        foreach (var edge in current.Edges)
+        {
+            var next = edge.To;
+
+            if (!visited.Contains(next))
+            {
+                FindCyclesDFS(next, visited, recursionStack, currentPath, cycles);
+            }
+            else if (recursionStack.Contains(next))
+            {
+                // Found a cycle! Extract it from currentPath
+                var cycleStart = currentPath.IndexOf(next);
+                var cycle = currentPath.Skip(cycleStart).ToList();
+                if (cycle.Count > 2) // Only consider cycles with more than 2 vertices
+                {
+                    cycles.Add(new List<Vertex>(cycle));
+                }
+            }
+        }
+
+        recursionStack.Remove(current);
+        currentPath.RemoveAt(currentPath.Count - 1);
+    }
+
+    /// <summary>
+    /// Check if a cycle is redundant and can be eliminated
+    /// </summary>
+    private bool IsRedundantCycle(List<Vertex> cycle)
+    {
+        // A cycle is redundant if:
+        // 1. All edges in the cycle have empty/unconditional conditions
+        // 2. No vertices in the cycle have critical meta-data
+        // 3. The cycle serves no logical purpose (just creates unnecessary paths)
+
+        // Check if all edges are unconditional
+        var allEdgesUnconditional = true;
+        foreach (var vertex in cycle)
+        {
+            foreach (var edge in vertex.Edges)
+            {
+                if (edge.To == cycle[(cycle.IndexOf(vertex) + 1) % cycle.Count])
+                {
+                    if (!IsEmptyCondition(edge.Condition))
+                    {
+                        allEdgesUnconditional = false;
+                        break;
+                    }
+                }
+            }
+            if (!allEdgesUnconditional) break;
+        }
+
+        if (!allEdgesUnconditional)
+            return false;
+
+        // Check if any vertices have critical meta-data
+        foreach (var vertex in cycle)
+        {
+            if (HasCriticalMetaData(vertex))
+                return false;
+        }
+
+        // This cycle is redundant - eliminate it!
+        return true;
+    }
+
+    /// <summary>
+    /// Eliminate a redundant cycle by removing unnecessary edges
+    /// </summary>
+    private bool EliminateCycle(List<Vertex> cycle)
+    {
+        if (cycle.Count < 3)
+            return false;
+
+        // Find the shortest path through the cycle and remove redundant edges
+        var edgesToRemove = new List<Edge>();
+
+        for (int i = 0; i < cycle.Count; i++)
+        {
+            var current = cycle[i];
+            var next = cycle[(i + 1) % cycle.Count];
+
+            // Find the edge from current to next
+            var edge = current.Edges.FirstOrDefault(e => e.To == next);
+            if (edge != null)
+            {
+                // Check if this edge is redundant (there's another path)
+                if (HasAlternativePath(current, next, cycle))
+                {
+                    edgesToRemove.Add(edge);
+                }
+            }
+        }
+
+        // Remove redundant edges IN-PLACE!
+        foreach (var edge in edgesToRemove)
+        {
+            edge.From.Edges.Remove(edge);
+            _logger.LogTrace("🔥 CYCLE TERMINATOR: Removed redundant edge {From} → {To}",
+                edge.From.Name, edge.To.Name);
+        }
+
+        return edgesToRemove.Count > 0;
+    }
+
+    /// <summary>
+    /// Check if there's an alternative path between two vertices (excluding the cycle)
+    /// </summary>
+    private bool HasAlternativePath(Vertex from, Vertex to, List<Vertex> excludeCycle)
+    {
+        // Simple BFS to find alternative paths
+        var visited = new HashSet<Vertex>(excludeCycle);
+        var queue = new Queue<Vertex>();
+        queue.Enqueue(from);
+        visited.Add(from);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+
+            foreach (var edge in current.Edges)
+            {
+                var next = edge.To;
+
+                if (next == to)
+                    return true; // Found alternative path!
+
+                if (!visited.Contains(next))
+                {
+                    visited.Add(next);
+                    queue.Enqueue(next);
+                }
+            }
+        }
+
+        return false;
+    }
 }
