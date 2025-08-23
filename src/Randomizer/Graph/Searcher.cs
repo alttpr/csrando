@@ -255,7 +255,7 @@ public class Searcher
         return strongLocations.Count != 0 || foundItems;
     }
 
-        private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, int depth = 0, params Vertex[] additionalStarts)
+    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, int depth = 0, params Vertex[] additionalStarts)
     {
         var sw = Stopwatch.StartNew();
 
@@ -341,7 +341,7 @@ public class Searcher
 
         if (depth == 0) // Only log for top-level calls to avoid spam
         {
-            _logger.LogInformation("Recursive door search for key {Key} completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts",
+            _logger.LogTrace("Recursive door search for key {Key} completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts",
                 key.Name, sw.Elapsed, result.Item1.Count, result.Item2.Count);
         }
 
