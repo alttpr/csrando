@@ -1,5 +1,6 @@
 namespace Randomizer.Graph;
 
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
@@ -14,6 +15,7 @@ public class Searcher
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
+    private readonly GraphReducer _graphReducer;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -29,6 +31,7 @@ public class Searcher
         _searchStarts = new(graph) { start };
         _inventory = inventory;
         _setLocations = setLocations ?? new();
+        _graphReducer = new GraphReducer(graph);
 
         bool newItemsFound;
         do
@@ -226,6 +229,8 @@ public class Searcher
     }
     private bool DoorSearch(Inventory inventory)
     {
+        var sw = Stopwatch.StartNew();
+
         var strongLocations = new VertexHashSet(_graph);
         var strongSearchStarts = new VertexHashSet(_graph);
         foreach (var (key, edges) in _graph.Doors)
@@ -234,7 +239,8 @@ public class Searcher
             if (keyCount == 0)
                 continue;
 
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
+            // Use the original working logic for now - GraphReducer needs more work
+            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected, 0);
             strongLocations.UnionWith(recursiveLocations);
             strongSearchStarts.UnionWith(recursiveSearchStarts);
         }
@@ -243,11 +249,23 @@ public class Searcher
         _searchStarts.UnionWith(strongSearchStarts);
         bool foundItems = CollectItems(inventory, _visited, _collected);
 
+        _logger.LogInformation("Door search completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts",
+            sw.Elapsed, strongLocations.Count, strongSearchStarts.Count);
+
         return strongLocations.Count != 0 || foundItems;
     }
 
-    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+        private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, int depth = 0, params Vertex[] additionalStarts)
     {
+        var sw = Stopwatch.StartNew();
+
+        // Prevent infinite recursion - limit depth to 10 levels
+        if (depth > 10)
+        {
+            _logger.LogWarning("Door search recursion depth limit reached ({Depth}) for key {Key}", depth, key.Name);
+            return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
+        }
+
         if (inventory.GetCount(key) == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
 
@@ -295,7 +313,7 @@ public class Searcher
             } while (CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion));
             if (inventoryForIteration.GetCount(key) > 0)
             {
-                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
+                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, depth + 1, [.. startAt, .. weakSearchStarts]);
                 weakLocations.UnionWith(recursiveLocations);
                 weakSearchStarts.UnionWith(recursiveSearchStarts);
             }
@@ -319,7 +337,76 @@ public class Searcher
             }
         }
 
-        return (strongLocations ?? new VertexHashSet(visitedBeforeDoors.Graph), strongSearchStarts ?? new VertexHashSet(visitedBeforeDoors.Graph));
+        var result = (strongLocations ?? new VertexHashSet(visitedBeforeDoors.Graph), strongSearchStarts ?? new VertexHashSet(visitedBeforeDoors.Graph));
+
+        if (depth == 0) // Only log for top-level calls to avoid spam
+        {
+            _logger.LogInformation("Recursive door search for key {Key} completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts",
+                key.Name, sw.Elapsed, result.Item1.Count, result.Item2.Count);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Fast path using pre-computed subgraphs from GraphReducer.
+    /// This should be significantly faster than the recursive approach.
+    /// </summary>
+    private SearchResult FastDoorSearchWithReducer(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    {
+        var sw = Stopwatch.StartNew();
+
+        if (inventory.GetCount(key) == 0)
+            return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
+
+        // Get the pre-computed subgraph for this key
+        var keySubgraph = _graphReducer.GetSubgraphForKey(key);
+        var keySearchStarts = _graphReducer.GetSearchStartsForKey(key);
+
+        // If the subgraph is empty, return early
+        if (keySubgraph.Count == 0)
+            return (new VertexHashSet(visitedBeforeDoors.Graph), new VertexHashSet(visitedBeforeDoors.Graph));
+
+        // Create a restricted search space using only the relevant vertices
+        var restrictedVisited = new VertexHashSet(visitedBeforeDoors.Graph);
+        var restrictedCollected = new VertexHashSet(collectedBeforeDoors.Graph);
+
+        // Add all vertices from the key subgraph that we've already visited
+        foreach (var vertex in keySubgraph)
+        {
+            if (visitedBeforeDoors.Contains(vertex))
+            {
+                restrictedVisited.Add(vertex);
+            }
+            if (collectedBeforeDoors.Contains(vertex))
+            {
+                restrictedCollected.Add(vertex);
+            }
+        }
+
+        // Add additional start vertices that are in the key subgraph
+        var validAdditionalStarts = additionalStarts.Where(v => keySubgraph.Contains(v)).ToArray();
+
+        // Do the search in the restricted space
+        var (newlyVisited, newSearchStarts) = InternalSearch(inventory, restrictedVisited, validAdditionalStarts);
+
+        // Collect items in the restricted space
+        var foundItems = CollectItems(inventory, restrictedVisited, restrictedCollected);
+
+        // If we found items, do another search
+        if (foundItems)
+        {
+            var (additionalVisited, additionalSearchStarts) = InternalSearch(inventory, restrictedVisited, newSearchStarts);
+            newlyVisited.UnionWith(additionalVisited);
+            newSearchStarts.UnionWith(additionalSearchStarts);
+        }
+
+        var result = (newlyVisited, newSearchStarts);
+
+        _logger.LogInformation("Fast door search for key {Key} completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts (subgraph size: {SubgraphSize})",
+            key.Name, sw.Elapsed, result.Item1.Count, result.Item2.Count, keySubgraph.Count);
+
+        return result;
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];

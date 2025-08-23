@@ -41,6 +41,10 @@ public abstract class GameRandomizer
         var rootWorld = new RootWorld(Graph);
         _start = rootWorld.Start;
 
+        // 🔥 OPTIMIZE THE SHIT OUT OF THIS GRAPH! 🔥
+        // (But wait until after all worlds are built!)
+        _start = rootWorld.Start;
+
         Worlds = new IWorld[randomizerConfigs.Length];
         for (int i = 0; i < randomizerConfigs.Length; ++i)
         {
@@ -51,6 +55,13 @@ public abstract class GameRandomizer
         }
 
         Graph.SetVertexIds();
+
+        // 🔥 NOW OPTIMIZE THE SHIT OUT OF THIS GRAPH IN-PLACE! 🔥
+        var optimizer = new GraphOptimizer(Graph);
+        optimizer.OptimizeInPlace();
+
+        // Graph is now optimized in-place - no need to replace it!
+
         _itemPooler = CreateItemPooler(Worlds, PRNG);
 
         _logger.LogInformation("Graph configuration took {TimeElapsed}", sw.Elapsed);
@@ -65,12 +76,21 @@ public abstract class GameRandomizer
     /// </summary>
     public void Randomize()
     {
+        var sw = Stopwatch.StartNew();
+
         var filler = new RandomAssumedFiller(this, PRNG);
         var sets = _itemPooler.Pool;
+        _logger.LogInformation("Filler creation took {TimeElapsed}", sw.Elapsed);
 
+        var fillSw = Stopwatch.StartNew();
         filler.FillGraph(sets);
+        _logger.LogInformation("Graph filling took {TimeElapsed}", fillSw.Elapsed);
 
+        var spoilerSw = Stopwatch.StartNew();
         SpoilerLog = new SpoilerLog(this);
+        _logger.LogInformation("Spoiler log creation took {TimeElapsed}", spoilerSw.Elapsed);
+
+        _logger.LogInformation("Total randomization took {TimeElapsed}", sw.Elapsed);
     }
 
     /// <summary>
@@ -84,7 +104,13 @@ public abstract class GameRandomizer
     /// <summary>
     /// Check if the worlds are winnable. This is mostly a sanity check, since items should never be placed in a way that makes the game unwinnable.
     /// </summary>
-    public bool IsWinnable() => Worlds.All(world => world.IsWinnable(_start, _startingItems));
+    public bool IsWinnable()
+    {
+        var sw = Stopwatch.StartNew();
+        var result = Worlds.All(world => world.IsWinnable(_start, _startingItems));
+        _logger.LogInformation("Winnability check took {TimeElapsed}", sw.Elapsed);
+        return result;
+    }
 
     public void Write(FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory)
     {
