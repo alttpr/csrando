@@ -248,7 +248,7 @@ public class Searcher
         _searchStarts.UnionWith(strongSearchStarts);
         bool foundItems = CollectItems(inventory, _visited, _collected);
 
-        _logger.LogInformation("Door search completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts",
+        _logger.LogTrace("Door search completed in {TimeElapsed} - found {LocationCount} locations, {SearchStartCount} search starts",
             sw.Elapsed, strongLocations.Count, strongSearchStarts.Count);
 
         return strongLocations.Count != 0 || foundItems;
