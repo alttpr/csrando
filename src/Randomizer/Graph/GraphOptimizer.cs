@@ -39,7 +39,10 @@ public class GraphOptimizer
         // Step 4: 🔥 CYCLE TERMINATOR MODE: Eliminate redundant cycles!
         EliminateRedundantCycles();
 
-        // Step 5: Identify dead ends (for info only)
+        // Step 5: 🚀 UNCONDITIONAL EDGE OBLITERATION MODE: Eliminate useless unconditional edges!
+        ObliterateUnconditionalEdges();
+
+        // Step 6: Identify dead ends (for info only)
         IdentifyDeadEnds();
 
         var originalEdges = _graph.GetVertices().Sum(v => v.Edges.Count);
@@ -831,5 +834,220 @@ public class GraphOptimizer
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 🚀 UNCONDITIONAL EDGE OBLITERATION MODE: Eliminate useless unconditional edges that serve no purpose!
+    /// </summary>
+    private void ObliterateUnconditionalEdges()
+    {
+        var obliteratedCount = 0;
+        var edgesToObliterate = new List<Edge>();
+
+        // Find all unconditional edges that can be safely removed
+        foreach (var vertex in _graph.GetVertices())
+        {
+            foreach (var edge in vertex.Edges.ToList()) // Use ToList() to avoid modification during iteration
+            {
+                if (IsUnconditionalEdge(edge) && CanSafelyObliterateEdge(edge))
+                {
+                    edgesToObliterate.Add(edge);
+                }
+            }
+        }
+
+        // Obliterate the identified edges IN-PLACE!
+        foreach (var edge in edgesToObliterate)
+        {
+            if (ObliterateEdge(edge))
+            {
+                obliteratedCount++;
+            }
+        }
+
+        _logger.LogInformation("🚀 UNCONDITIONAL EDGE OBLITERATOR: Obliterated {ObliteratedCount} useless unconditional edges!", obliteratedCount);
+    }
+
+    /// <summary>
+    /// Check if an edge is unconditional (always passes)
+    /// </summary>
+    private bool IsUnconditionalEdge(Edge edge)
+    {
+        // An edge is unconditional if:
+        // 1. The condition is empty/always passes
+        // 2. The condition has no requirements
+        return IsEmptyCondition(edge.Condition);
+    }
+
+    /// <summary>
+    /// Check if an edge can be safely obliterated
+    /// </summary>
+    private bool CanSafelyObliterateEdge(Edge edge)
+    {
+        // An edge can be safely obliterated if:
+        // 1. It's not the only path between two vertices
+        // 2. Removing it doesn't break connectivity
+        // 3. The vertices it connects don't have critical meta-data
+
+        // Check if this is the only path from From to To
+        var alternativePaths = CountAlternativePaths(edge.From, edge.To, edge);
+        if (alternativePaths == 0)
+        {
+            // This is the only path - don't obliterate it!
+            return false;
+        }
+
+        // Check if the vertices have critical meta-data
+        if (HasCriticalMetaData(edge.From) || HasCriticalMetaData(edge.To))
+        {
+            return false;
+        }
+
+        // Check if removing this edge would break any critical paths
+        if (WouldBreakCriticalPaths(edge))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Count alternative paths between two vertices (excluding the given edge)
+    /// </summary>
+    private int CountAlternativePaths(Vertex from, Vertex to, Edge excludeEdge)
+    {
+        var visited = new HashSet<Vertex>();
+        var queue = new Queue<(Vertex, int)>();
+        queue.Enqueue((from, 0));
+        visited.Add(from);
+
+        var pathCount = 0;
+        var maxDepth = 5; // Limit search depth to avoid infinite loops
+
+        while (queue.Count > 0)
+        {
+            var (current, depth) = queue.Dequeue();
+
+            if (depth > maxDepth)
+                continue;
+
+            foreach (var edge in current.Edges)
+            {
+                if (edge == excludeEdge)
+                    continue; // Skip the edge we're trying to obliterate
+
+                var next = edge.To;
+
+                if (next == to)
+                {
+                    pathCount++;
+                    continue;
+                }
+
+                if (!visited.Contains(next))
+                {
+                    visited.Add(next);
+                    queue.Enqueue((next, depth + 1));
+                }
+            }
+        }
+
+        return pathCount;
+    }
+
+    /// <summary>
+    /// Check if removing an edge would break critical paths
+    /// </summary>
+    private bool WouldBreakCriticalPaths(Edge edge)
+    {
+        // Check if removing this edge would break paths to critical vertices
+        var criticalVertices = _graph.GetVertices()
+            .Where(v => HasCriticalMetaData(v))
+            .ToList();
+
+        foreach (var criticalVertex in criticalVertices)
+        {
+            // Check if this edge is part of a critical path
+            if (IsPartOfCriticalPath(edge, criticalVertex))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Check if an edge is part of a critical path to a critical vertex
+    /// </summary>
+    private bool IsPartOfCriticalPath(Edge edge, Vertex criticalVertex)
+    {
+        // Simple check: if removing this edge makes the critical vertex unreachable from start
+        var startVertices = _graph.GetVertices()
+            .Where(v => v.Type == VertexType.Meta || v.Type == VertexType.Entrance)
+            .ToList();
+
+        foreach (var startVertex in startVertices)
+        {
+            if (!CanReachVertexAfterRemovingEdge(startVertex, criticalVertex, edge))
+            {
+                return true; // This edge is critical!
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Check if we can still reach a vertex after removing an edge
+    /// </summary>
+    private bool CanReachVertexAfterRemovingEdge(Vertex start, Vertex target, Edge removedEdge)
+    {
+        var visited = new HashSet<Vertex>();
+        var queue = new Queue<Vertex>();
+        queue.Enqueue(start);
+        visited.Add(start);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+
+            if (current == target)
+                return true; // Still reachable!
+
+            foreach (var edge in current.Edges)
+            {
+                if (edge == removedEdge)
+                    continue; // Skip the removed edge
+
+                var next = edge.To;
+
+                if (!visited.Contains(next))
+                {
+                    visited.Add(next);
+                    queue.Enqueue(next);
+                }
+            }
+        }
+
+        return false; // No longer reachable!
+    }
+
+    /// <summary>
+    /// Actually obliterate an edge from the graph
+    /// </summary>
+    private bool ObliterateEdge(Edge edge)
+    {
+        // Remove the edge from the source vertex
+        var removed = edge.From.Edges.Remove(edge);
+
+        if (removed)
+        {
+            _logger.LogTrace("🚀 UNCONDITIONAL EDGE OBLITERATOR: Obliterated edge {From} → {To}",
+                edge.From.Name, edge.To.Name);
+        }
+
+        return removed;
     }
 }
