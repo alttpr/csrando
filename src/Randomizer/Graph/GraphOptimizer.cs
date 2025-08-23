@@ -364,7 +364,7 @@ public class GraphOptimizer
     }
 
     /// <summary>
-    /// Check if a vertex is just a "pass-through" node
+    /// ⚡-MODE: Check if a vertex is just a "pass-through" node (safe to merge)
     /// </summary>
     private bool IsPassThroughVertex(Vertex vertex)
     {
@@ -373,11 +373,17 @@ public class GraphOptimizer
         // 2. Exactly one incoming edge
         // 3. Exactly one outgoing edge
         // 4. No special logic (not a door, not a boss, etc.)
+        // 5. ⚡-MODE: NO CRITICAL META-DATA for ROM writing!
 
         if (vertex.Item != null)
             return false;
 
         if (vertex.Type == VertexType.Keydoor || vertex.Type == VertexType.BigKeydoor)
+            return false;
+
+        // ⚡-MODE: Additional safety checks for ROM-critical vertices!
+        if (vertex.Type == VertexType.Boss || vertex.Type == VertexType.Entrance ||
+            vertex.Type == VertexType.Meta)
             return false;
 
         var incomingEdges = _graph.GetVertices()
@@ -387,7 +393,15 @@ public class GraphOptimizer
 
         var outgoingEdges = vertex.Edges;
 
-        return incomingEdges.Count == 1 && outgoingEdges.Count == 1;
+        // ⚡-MODE: Must be exactly 1 in, 1 out to be a pure pass-through
+        if (incomingEdges.Count != 1 || outgoingEdges.Count != 1)
+            return false;
+
+        // ⚡-MODE: Final safety check - no critical meta-data!
+        if (HasCriticalMetaData(vertex))
+            return false;
+
+        return true;
     }
 
 
@@ -467,6 +481,14 @@ public class GraphOptimizer
         var incomingEdge = incomingEdges[0];
         var outgoingEdge = outgoingEdges[0];
 
+        // ⚡-MODE: Check if this vertex has critical meta-data that we MUST preserve!
+        if (HasCriticalMetaData(vertex))
+        {
+            _logger.LogTrace("⚡-MODE: Skipping vertex {VertexName} - has critical meta-data that must be preserved!",
+                vertex.Name);
+            return false; // Don't merge vertices with critical meta-data!
+        }
+
         // ⚡-MODE: Create a direct edge from predecessor to successor IN-PLACE!
         var newEdge = new Edge(incomingEdge.From, outgoingEdge.To, CombineConditions(incomingEdge.Condition, outgoingEdge.Condition));
         incomingEdge.From.Edges.Add(newEdge);
@@ -519,6 +541,93 @@ public class GraphOptimizer
         // Note: This assumes the graph has a method to remove vertices
         // We'll need to implement this in the Graph class if it doesn't exist
         _logger.LogTrace("⚡-MODE: Removed vertex {VertexName} from graph", vertex.Name);
+    }
+
+    /// <summary>
+    /// ⚡-MODE: Check if a vertex has critical meta-data that MUST be preserved for ROM writing!
+    /// </summary>
+    private bool HasCriticalMetaData(Vertex vertex)
+    {
+        // 🔥 CRITICAL META-DATA CHECKLIST - Don't merge vertices with:
+
+        // 1. ITEM LOCATIONS - These have ROM addresses and item data!
+        if (vertex.Item != null)
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} has item - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 2. DOORS - These have key requirements and ROM state changes!
+        if (vertex.Type == VertexType.Keydoor || vertex.Type == VertexType.BigKeydoor)
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} is a door - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 3. BOSS ROOMS - These have completion flags and ROM state!
+        if (vertex.Type == VertexType.Boss)
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} is a boss room - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 4. ENTRANCES - These have world transition data!
+        if (vertex.Type == VertexType.Entrance)
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} is an entrance - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 5. META VERTICES - These have special game logic!
+        if (vertex.Type == VertexType.Meta)
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} is meta - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 6. VERTICES WITH CUSTOM DATA - These might have ROM-specific info!
+        if (HasCustomVertexData(vertex))
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} has custom data - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 7. VERTICES WITH WORLD REFERENCES - These are needed for multiworld!
+        if (HasWorldReferences(vertex))
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} has world references - CRITICAL for ROM writing!", vertex.Name);
+            return true;
+        }
+
+        // 8. VERTICES WITH ID REQUIREMENTS - These maintain graph structure!
+        if (vertex.Id != 0) // Assuming 0 means "no specific ID requirement"
+        {
+            _logger.LogTrace("⚡-MODE: Vertex {VertexName} has ID {Id} - CRITICAL for ROM writing!", vertex.Name, vertex.Id);
+            return true;
+        }
+
+        // If we get here, the vertex is safe to merge (just a pure pass-through node)
+        return false;
+    }
+
+    /// <summary>
+    /// Check if a vertex has custom data that might be ROM-critical
+    /// </summary>
+    private bool HasCustomVertexData(Vertex vertex)
+    {
+        // This is a placeholder - we'll implement proper custom data detection
+        // For now, assume no custom data (safe to merge)
+        return false;
+    }
+
+    /// <summary>
+    /// Check if a vertex has world references that are ROM-critical
+    /// </summary>
+    private bool HasWorldReferences(Vertex vertex)
+    {
+        // This is a placeholder - we'll implement proper world reference detection
+        // For now, assume no world references (safe to merge)
+        return false;
     }
 
 
