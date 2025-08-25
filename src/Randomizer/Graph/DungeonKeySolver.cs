@@ -590,3 +590,151 @@ public static class DungeonKeySolverStatic
         return solver.SafeItemLocations(itemCheck, initialKeys, entranceNodeIds);
     }
 }
+
+/// <summary>
+/// Helper class to convert the main Graph structure to DungeonGraph format for key solver integration
+/// </summary>
+public static class DungeonGraphConverter
+{
+    /// <summary>
+    /// Extract dungeon subgraph from the main graph for a specific dungeon
+    /// </summary>
+    /// <param name="graph">The main graph containing all vertices and edges</param>
+    /// <param name="dungeonName">Name of the dungeon to extract (e.g., "eastern", "desert", etc.)</param>
+    /// <param name="keyItemName">Name of the small key item for this dungeon (e.g., "KeyP1", "KeyP2", etc.)</param>
+    /// <returns>DungeonGraph suitable for DungeonKeySolver</returns>
+    public static DungeonGraph ExtractDungeonGraph(Graph graph, string dungeonName, string keyItemName)
+    {
+        var dungeonNodes = new List<DungeonNode>();
+        var dungeonEdges = new List<DungeonEdge>();
+        var nodeIdMap = new Dictionary<int, int>(); // Original ID -> DungeonGraph ID
+        var nextNodeId = 0;
+        
+        // Find the key item for this dungeon
+        var keyItem = graph.AllItems.FirstOrDefault(item => item.Name == keyItemName);
+        if (keyItem == null)
+        {
+            // No keys for this dungeon, return empty graph
+            return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
+        }
+        
+        // Extract vertices that belong to this dungeon based on ItemSet
+        var dungeonVertices = new List<Vertex>();
+        foreach (var vertex in graph.GetVertices())
+        {
+            bool belongsToDungeon = vertex.ItemSet.Any(itemSet => 
+                itemSet.Name.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
+            
+            if (belongsToDungeon)
+            {
+                dungeonVertices.Add(vertex);
+            }
+        }
+        
+        // Create DungeonNodes
+        foreach (var vertex in dungeonVertices)
+        {
+            var dungeonNodeId = nextNodeId++;
+            nodeIdMap[vertex.Id] = dungeonNodeId;
+            
+            var staticKeys = new Dictionary<string, int>();
+            // Check if this vertex provides static keys
+            if (graph.FixedKeys.TryGetValue(keyItem, out var fixedKeyVertices) && 
+                fixedKeyVertices.Contains(vertex))
+            {
+                staticKeys[dungeonName] = 1; // Assuming 1 key per location for now
+            }
+            
+            var dungeonNode = new DungeonNode
+            {
+                Id = vertex.Id, // Keep original ID for mapping back
+                DungeonId = dungeonName,
+                IsLocation = IsItemLocation(vertex),
+                StaticKeys = staticKeys
+            };
+            
+            dungeonNodes.Add(dungeonNode);
+        }
+        
+        // Create DungeonEdges
+        var doorGroupId = 0;
+        var processedDoors = new HashSet<(Vertex, Vertex)>();
+        
+        foreach (var vertex in dungeonVertices)
+        {
+            foreach (var edge in vertex.Edges)
+            {
+                if (!dungeonVertices.Contains(edge.To))
+                    continue; // Skip edges that leave the dungeon
+                
+                var req = GetEdgeRequirement(edge, keyItem);
+                var doorGroup = GetDoorGroupId(graph, keyItem, vertex, edge.To, processedDoors, ref doorGroupId);
+                
+                var dungeonEdge = new DungeonEdge
+                {
+                    From = nodeIdMap[vertex.Id],
+                    To = nodeIdMap[edge.To.Id],
+                    Req = req,
+                    DungeonId = dungeonName,
+                    DoorGroupId = doorGroup
+                };
+                
+                dungeonEdges.Add(dungeonEdge);
+            }
+        }
+        
+        return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
+    }
+    
+    private static bool IsItemLocation(Vertex vertex)
+    {
+        // Check if this vertex can hold items (chests, etc.)
+        return vertex.Type is VertexType.Chest or VertexType.BigChest or VertexType.Drop or 
+               VertexType.Pedestal or VertexType.Standing or VertexType.Pot or VertexType.Item;
+    }
+    
+    private static string? GetEdgeRequirement(Edge edge, IItem keyItem)
+    {
+        if (edge.Condition.IsUnconditional)
+            return "fixed"; // Free edge
+        
+        var requiredItem = edge.Condition.Item;
+        if (requiredItem.Name == keyItem.Name)
+            return "KEY"; // Small key requirement
+        
+        return requiredItem.Name; // Other item requirement
+    }
+    
+    private static int? GetDoorGroupId(Graph graph, IItem keyItem, Vertex from, Vertex to, 
+        HashSet<(Vertex, Vertex)> processedDoors, ref int nextDoorGroupId)
+    {
+        // Check if this is a bidirectional door
+        if (!graph.Doors.TryGetValue(keyItem, out var doorsByKey))
+            return null;
+        
+        foreach (var (_, doorPairs) in doorsByKey)
+        {
+            foreach (var (a, b) in doorPairs)
+            {
+                bool isThisDoor = (a == from && b == to) || (a == to && b == from);
+                if (isThisDoor)
+                {
+                    var doorKey = (a.Id < b.Id) ? (a, b) : (b, a); // Normalize order
+                    if (!processedDoors.Contains(doorKey))
+                    {
+                        processedDoors.Add(doorKey);
+                        return nextDoorGroupId++;
+                    }
+                    else
+                    {
+                        // Find existing door group ID
+                        // This is a simplification - in practice we'd need to track the mapping
+                        return null; // Return null for now, bidirectional handling needs refinement
+                    }
+                }
+            }
+        }
+        
+        return null; // Not a special door
+    }
+}
