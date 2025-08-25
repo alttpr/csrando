@@ -336,4 +336,15 @@ public class DungeonKeySolverTests
         Assert.IsTrue(stopwatch.ElapsedMilliseconds < 1000, 
             $"Performance test took {stopwatch.ElapsedMilliseconds}ms for 100 iterations");
     }
+
+    /// <summary>
+    /// Test the demo to ensure it works
+    /// </summary>
+    [TestMethod]
+    public void TestDemo()
+    {
+        // Just ensure the demo runs without exceptions
+        DungeonKeySolverDemo.DemonstrateReverseFillIntegration();
+        Assert.IsTrue(true); // If we get here, demo worked
+    }
 }
