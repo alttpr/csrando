@@ -234,9 +234,21 @@ public class Searcher
             if (keyCount == 0)
                 continue;
 
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
-            strongLocations.UnionWith(recursiveLocations);
-            strongSearchStarts.UnionWith(recursiveSearchStarts);
+            // Try using DungeonKeySolver for single-dungeon scenarios
+            var dungeonSearchResult = TryDungeonKeySolverSearch(inventory, key, _visited, _collected);
+            if (dungeonSearchResult.HasValue)
+            {
+                var (dungeonLocations, dungeonSearchStarts) = dungeonSearchResult.Value;
+                strongLocations.UnionWith(dungeonLocations);
+                strongSearchStarts.UnionWith(dungeonSearchStarts);
+            }
+            else
+            {
+                // Fall back to recursive search for complex/cross-dungeon scenarios
+                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
+                strongLocations.UnionWith(recursiveLocations);
+                strongSearchStarts.UnionWith(recursiveSearchStarts);
+            }
         }
 
         _visited.UnionWith(strongLocations);
@@ -320,6 +332,141 @@ public class Searcher
         }
 
         return (strongLocations ?? new VertexHashSet(visitedBeforeDoors.Graph), strongSearchStarts ?? new VertexHashSet(visitedBeforeDoors.Graph));
+    }
+
+    /// <summary>
+    /// Try to use DungeonKeySolver for more efficient key search in single-dungeon scenarios.
+    /// Returns null if the scenario is too complex for DungeonKeySolver (cross-dungeon, etc.)
+    /// </summary>
+    private static SearchResult? TryDungeonKeySolverSearch(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors)
+    {
+        try
+        {
+            // Detect if this is a single-dungeon scenario by examining the doors
+            var doors = visitedBeforeDoors.Graph.Doors[key];
+            if (doors.Count == 0)
+                return null;
+
+            // Get the dungeon context from the first door's vertices
+            string? dungeonName = null;
+            foreach (var door in doors)
+            {
+                foreach (var (a, b) in door.Value)
+                {
+                    var dungeonFromA = GetDungeonName(a);
+                    var dungeonFromB = GetDungeonName(b);
+                    
+                    if (dungeonFromA != null)
+                    {
+                        if (dungeonName == null)
+                            dungeonName = dungeonFromA;
+                        else if (dungeonName != dungeonFromA)
+                            return null; // Cross-dungeon scenario, fall back to recursive search
+                    }
+                    
+                    if (dungeonFromB != null)
+                    {
+                        if (dungeonName == null)
+                            dungeonName = dungeonFromB;
+                        else if (dungeonName != dungeonFromB)
+                            return null; // Cross-dungeon scenario, fall back to recursive search
+                    }
+                }
+            }
+
+            if (dungeonName == null)
+                return null; // Cannot determine dungeon context
+
+            // Extract dungeon graph
+            var dungeonGraph = DungeonGraphConverter.ExtractDungeonGraph(visitedBeforeDoors.Graph, dungeonName, key.Name);
+            if (dungeonGraph.Nodes.Count == 0)
+                return null; // No valid dungeon graph
+
+            // Find entrance nodes (nodes that are currently visited/reachable from outside)
+            var entranceNodeIds = new List<int>();
+            foreach (var node in dungeonGraph.Nodes)
+            {
+                var vertex = visitedBeforeDoors.Graph.GetVertices().FirstOrDefault(v => v.Id == node.Id);
+                if (vertex != null && visitedBeforeDoors.Contains(vertex))
+                {
+                    entranceNodeIds.Add(node.Id);
+                }
+            }
+
+            if (entranceNodeIds.Count == 0)
+                return null; // No accessible entrances
+
+            // Create item check function based on current inventory
+            Func<string, bool> itemCheck = req =>
+            {
+                if (req == "fixed" || req == "KEY") return true;
+                var requiredItem = visitedBeforeDoors.Graph.AllItems.FirstOrDefault(i => i.Name == req);
+                return requiredItem != null && inventory.Has(requiredItem);
+            };
+
+            // Get available keys
+            int availableKeys = inventory.GetCount(key);
+
+            // Use DungeonKeySolver to find safe locations
+            var safeNodeIds = DungeonKeySolverStatic.SafeItemLocationsForDungeon(
+                dungeonGraph, dungeonName, entranceNodeIds, itemCheck, availableKeys);
+
+            // Convert back to vertices
+            var safeLocations = new VertexHashSet(visitedBeforeDoors.Graph);
+            var safeSearchStarts = new VertexHashSet(visitedBeforeDoors.Graph);
+
+            foreach (var nodeId in safeNodeIds)
+            {
+                var vertex = visitedBeforeDoors.Graph.GetVertices().FirstOrDefault(v => v.Id == nodeId);
+                if (vertex != null)
+                {
+                    safeLocations.Add(vertex);
+                    // For search starts, include vertices with outgoing edges that aren't in our safe set
+                    if (vertex.Edges.Any(e => !safeNodeIds.Contains(e.To.Id)))
+                    {
+                        safeSearchStarts.Add(vertex);
+                    }
+                }
+            }
+
+            return (safeLocations, safeSearchStarts);
+        }
+        catch (Exception ex)
+        {
+            // Log the error in a production environment and fall back to recursive search
+            _logger.LogWarning("DungeonKeySolver failed for key {Key}: {Message}", key.Name, ex.Message);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Extract dungeon name from a vertex's ItemSet
+    /// </summary>
+    private static string? GetDungeonName(Vertex vertex)
+    {
+        // Look for dungeon-specific ItemSet entries
+        foreach (var itemSet in vertex.ItemSet)
+        {
+            if (itemSet.World != null && IsDungeonName(itemSet.Name))
+            {
+                return itemSet.Name;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Check if a name corresponds to a known ALttP dungeon
+    /// </summary>
+    private static bool IsDungeonName(string name)
+    {
+        return name switch
+        {
+            "escape" or "eastern" or "desert" or "hera" or "agahnim" or 
+            "pod" or "swamp" or "skull" or "thieves" or "ice" or "mire" or 
+            "turtlerock" or "gt" => true,
+            _ => false
+        };
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
