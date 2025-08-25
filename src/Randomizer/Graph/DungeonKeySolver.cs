@@ -8,9 +8,16 @@ using System.Numerics;
 /// </summary>
 public sealed class DungeonNode
 {
+    /// <summary>Gets or sets the unique identifier for this node</summary>
     public int Id { get; init; }
+    
+    /// <summary>Gets or sets the dungeon identifier this node belongs to</summary>
     public string DungeonId { get; init; } = "";
+    
+    /// <summary>Gets or sets whether this node represents an item location</summary>
     public bool IsLocation { get; init; }
+    
+    /// <summary>Gets or sets the static keys available at this node by dungeon</summary>
     public Dictionary<string, int> StaticKeys { get; init; } = new();
 }
 
@@ -19,10 +26,19 @@ public sealed class DungeonNode
 /// </summary>
 public sealed class DungeonEdge
 {
+    /// <summary>Gets or sets the source node ID</summary>
     public int From { get; init; }
+    
+    /// <summary>Gets or sets the destination node ID</summary>
     public int To { get; init; }
+    
+    /// <summary>Gets or sets the requirement to traverse this edge (null/"fixed" = free, "KEY" = small key, other = item gate)</summary>
     public string? Req { get; init; }
+    
+    /// <summary>Gets or sets the dungeon identifier this edge belongs to</summary>
     public string DungeonId { get; init; } = "";
+    
+    /// <summary>Gets or sets the door group ID for bidirectional doors (null = unique door)</summary>
     public int? DoorGroupId { get; init; }
 }
 
@@ -31,7 +47,10 @@ public sealed class DungeonEdge
 /// </summary>
 public sealed class DungeonGraph
 {
+    /// <summary>Gets or sets the list of nodes in the graph</summary>
     public IReadOnlyList<DungeonNode> Nodes { get; init; } = Array.Empty<DungeonNode>();
+    
+    /// <summary>Gets or sets the list of edges in the graph</summary>
     public IReadOnlyList<DungeonEdge> Edges { get; init; } = Array.Empty<DungeonEdge>();
 }
 
@@ -165,7 +184,16 @@ internal static class StronglyConnectedComponents
 }
 
 /// <summary>
-/// Always-Accessible Locations Solver for Small-Key Dungeons
+/// Always-Accessible Locations Solver for Small-Key Dungeons.
+/// 
+/// This solver computes the set of item locations that are reachable in every maximal way 
+/// a player can spend keys, making them safe for item placement regardless of key-spend order.
+/// 
+/// The algorithm works by:
+/// 1. Condensing the dungeon to strongly connected components (SCCs) 
+/// 2. Building a meta-graph of components with door arcs
+/// 3. Using budgeted BFS with saturation to enumerate all feasible door combinations
+/// 4. Computing the intersection of reachable locations across all maximal key-spend scenarios
 /// </summary>
 public sealed class DungeonKeySolver
 {
@@ -175,8 +203,11 @@ public sealed class DungeonKeySolver
     private readonly Dictionary<int, int> _nodeIdToIndex;
 
     /// <summary>
-    /// Create a precomputed solver for a specific dungeon
+    /// Create a precomputed solver for a specific dungeon.
+    /// The solver can be reused for multiple queries with different item states and key counts.
     /// </summary>
+    /// <param name="graph">The complete dungeon graph containing nodes and edges</param>
+    /// <param name="dungeonId">The identifier of the dungeon to solve for</param>
     public DungeonKeySolver(DungeonGraph graph, string dungeonId)
     {
         _dungeonId = dungeonId;
@@ -190,8 +221,12 @@ public sealed class DungeonKeySolver
     }
 
     /// <summary>
-    /// Compute safe components for given item state and key count
+    /// Compute which strongly connected components are safe under all feasible key-spend orders.
     /// </summary>
+    /// <param name="itemCheck">Function to check if non-key requirements are satisfied</param>
+    /// <param name="initialKeys">Number of small keys available from the item pool</param>
+    /// <param name="entranceNodeIds">Node IDs where the player can enter the dungeon</param>
+    /// <returns>BitArray indicating which components are safe (true = safe)</returns>
     public BitArray SafeComponents(Func<string, bool> itemCheck, int initialKeys, IReadOnlyList<int> entranceNodeIds)
     {
         // Build the component graph based on current item state
@@ -265,8 +300,13 @@ public sealed class DungeonKeySolver
     }
 
     /// <summary>
-    /// Get safe item locations for given item state and key count
+    /// Get the set of item location node IDs that are safe under all feasible key-spend orders.
+    /// This is the main method used for reverse-fill item placement.
     /// </summary>
+    /// <param name="itemCheck">Function to check if non-key requirements are satisfied with current world state</param>
+    /// <param name="initialKeys">Number of small keys available from the item pool (excludes static keys)</param>
+    /// <param name="entranceNodeIds">Node IDs where the player can enter the dungeon</param>
+    /// <returns>Set of node IDs that are safe for item placement</returns>
     public HashSet<int> SafeItemLocations(Func<string, bool> itemCheck, int initialKeys, IReadOnlyList<int> entranceNodeIds)
     {
         var (components, compOfNode, freeAdj, doorArcs, doorsFromComp, keysInComp, doorCount) = 
@@ -524,13 +564,21 @@ public sealed class DungeonKeySolver
 }
 
 /// <summary>
-/// Static methods for one-shot calls
+/// Static methods for one-shot calls without creating a persistent solver instance.
+/// Use these methods when you need to solve for a dungeon only once, or when memory usage is a concern.
 /// </summary>
 public static class DungeonKeySolverStatic
 {
     /// <summary>
-    /// One-shot call to get safe item locations for a dungeon
+    /// One-shot call to get safe item locations for a dungeon.
+    /// Creates a temporary solver instance and computes the result.
     /// </summary>
+    /// <param name="graph">The complete dungeon graph containing nodes and edges</param>
+    /// <param name="dungeonId">The identifier of the dungeon to solve for</param>
+    /// <param name="entranceNodeIds">Node IDs where the player can enter the dungeon</param>
+    /// <param name="itemCheck">Function to check if non-key requirements are satisfied with current world state</param>
+    /// <param name="initialKeys">Number of small keys available from the item pool (excludes static keys)</param>
+    /// <returns>Set of node IDs that are safe for item placement</returns>
     public static HashSet<int> SafeItemLocationsForDungeon(
         DungeonGraph graph,
         string dungeonId,
