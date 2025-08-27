@@ -2,6 +2,7 @@ namespace Randomizer.Graph;
 
 using System.Collections;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Node in a dungeon graph for the key solver
@@ -593,12 +594,14 @@ public static class DungeonKeySolverStatic
 
 /// <summary>
 /// Helper class to convert the main Graph structure to DungeonGraph format for key solver integration
-/// Optimized with caching and performance improvements.
+/// Heavily optimized with comprehensive caching and performance improvements.
 /// </summary>
 public static class DungeonGraphConverter
 {
-    // Cache for vertex dungeon membership to avoid repeated ItemSet iteration
+    // Comprehensive caching for performance
     private static readonly Dictionary<(Vertex, string), bool> _vertexDungeonMembershipCache = new();
+    private static readonly Dictionary<string, IItem> _keyItemCache = new();
+    private static readonly Dictionary<Graph, Dictionary<string, HashSet<Vertex>>> _dungeonVerticesCache = new();
 
     /// <summary>
     /// Clear caches to free memory and handle graph changes
@@ -606,11 +609,13 @@ public static class DungeonGraphConverter
     public static void ClearCaches()
     {
         _vertexDungeonMembershipCache.Clear();
+        _keyItemCache.Clear();
+        _dungeonVerticesCache.Clear();
     }
 
     /// <summary>
     /// Extract dungeon subgraph from the main graph for a specific dungeon
-    /// Optimized with caching for performance.
+    /// Ultra-optimized with comprehensive caching and single-pass algorithms.
     /// </summary>
     /// <param name="graph">The main graph containing all vertices and edges</param>
     /// <param name="dungeonName">Name of the dungeon to extract (e.g., "eastern", "desert", etc.)</param>
@@ -618,75 +623,79 @@ public static class DungeonGraphConverter
     /// <returns>DungeonGraph suitable for DungeonKeySolver</returns>
     public static DungeonGraph ExtractDungeonGraph(Graph graph, string dungeonName, string keyItemName)
     {
-        var dungeonNodes = new List<DungeonNode>();
-        var dungeonEdges = new List<DungeonEdge>();
-        var nodeIdMap = new Dictionary<int, int>(); // Original ID -> DungeonGraph ID
-        var nextNodeId = 0;
+        // Fast key item lookup with caching
+        if (!_keyItemCache.TryGetValue(keyItemName, out var keyItem))
+        {
+            keyItem = graph.AllItems.FirstOrDefault(item => item.Name == keyItemName);
+            if (keyItem != null)
+                _keyItemCache[keyItemName] = keyItem;
+        }
         
-        // Find the key item for this dungeon
-        var keyItem = graph.AllItems.FirstOrDefault(item => item.Name == keyItemName);
         if (keyItem == null)
         {
-            // No keys for this dungeon, return empty graph
-            return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
+            return new DungeonGraph { Nodes = Array.Empty<DungeonNode>(), Edges = Array.Empty<DungeonEdge>() };
         }
         
-        // Extract vertices that belong to this dungeon based on ItemSet with caching
-        var dungeonVertices = new List<Vertex>();
-        foreach (var vertex in graph.GetVertices())
+        // Use cached dungeon vertices if available
+        if (!_dungeonVerticesCache.TryGetValue(graph, out var dungeonVerticesMap))
         {
-            if (BelongsToDungeon(vertex, dungeonName))
-            {
-                dungeonVertices.Add(vertex);
-            }
+            dungeonVerticesMap = BuildDungeonVerticesMap(graph);
+            _dungeonVerticesCache[graph] = dungeonVerticesMap;
         }
         
-        if (dungeonVertices.Count == 0)
-            return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
+        if (!dungeonVerticesMap.TryGetValue(dungeonName, out var dungeonVertices) || dungeonVertices.Count == 0)
+        {
+            return new DungeonGraph { Nodes = Array.Empty<DungeonNode>(), Edges = Array.Empty<DungeonEdge>() };
+        }
         
-        // Create DungeonNodes
+        // Pre-size collections for efficiency
+        var dungeonNodes = new List<DungeonNode>(dungeonVertices.Count);
+        var dungeonEdges = new List<DungeonEdge>(dungeonVertices.Count * 2); // Estimate
+        var vertexToNodeId = new Dictionary<int, int>(dungeonVertices.Count);
+        
+        // Get fixed keys for static key detection
+        var fixedKeyVertices = graph.FixedKeys.TryGetValue(keyItem, out var fixedKeys) ? fixedKeys : new HashSet<Vertex>();
+        
+        // Create DungeonNodes in batch
         foreach (var vertex in dungeonVertices)
         {
-            var dungeonNodeId = nextNodeId++;
-            nodeIdMap[vertex.Id] = dungeonNodeId;
-            
             var staticKeys = new Dictionary<string, int>();
-            // Check if this vertex provides static keys
-            if (graph.FixedKeys.TryGetValue(keyItem, out var fixedKeyVertices) && 
-                fixedKeyVertices.Contains(vertex))
+            if (fixedKeyVertices.Contains(vertex))
             {
-                staticKeys[dungeonName] = 1; // Assuming 1 key per location for now
+                staticKeys[dungeonName] = 1;
             }
             
             var dungeonNode = new DungeonNode
             {
-                Id = vertex.Id, // Keep original ID for mapping back
+                Id = vertex.Id,
                 DungeonId = dungeonName,
-                IsLocation = IsItemLocation(vertex),
+                IsLocation = IsItemLocationFast(vertex),
                 StaticKeys = staticKeys
             };
             
             dungeonNodes.Add(dungeonNode);
+            vertexToNodeId[vertex.Id] = dungeonNodes.Count - 1;
         }
         
-        // Create DungeonEdges - optimized processing
-        var doorGroupId = 0;
-        var processedDoors = new HashSet<(int, int)>(); // Use IDs for better performance
+        // Create DungeonEdges with optimized processing
+        var doorGroupTracker = new DoorGroupTracker();
+        var dungeonVertexSet = dungeonVertices.ToHashSet(); // O(1) lookups
         
         foreach (var vertex in dungeonVertices)
         {
-            foreach (var edge in vertex.Edges)
+            // Use spans for better performance on edge iteration
+            foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
             {
-                if (!dungeonVertices.Contains(edge.To))
-                    continue; // Skip edges that leave the dungeon
+                if (!dungeonVertexSet.Contains(edge.To))
+                    continue;
                 
-                var req = GetEdgeRequirement(edge, keyItem);
-                var doorGroup = GetDoorGroupId(graph, keyItem, vertex, edge.To, processedDoors, ref doorGroupId);
+                var req = GetEdgeRequirementFast(edge, keyItem);
+                var doorGroup = doorGroupTracker.GetDoorGroupId(graph, keyItem, vertex, edge.To);
                 
                 var dungeonEdge = new DungeonEdge
                 {
-                    From = nodeIdMap[vertex.Id],
-                    To = nodeIdMap[edge.To.Id],
+                    From = vertexToNodeId[vertex.Id],
+                    To = vertexToNodeId[edge.To.Id],
                     Req = req,
                     DungeonId = dungeonName,
                     DoorGroupId = doorGroup
@@ -698,72 +707,92 @@ public static class DungeonGraphConverter
         
         return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
     }
-    
+
     /// <summary>
-    /// Check if a vertex belongs to a dungeon with caching for performance
+    /// Build comprehensive dungeon vertices mapping for all dungeons in a single pass
     /// </summary>
-    private static bool BelongsToDungeon(Vertex vertex, string dungeonName)
+    private static Dictionary<string, HashSet<Vertex>> BuildDungeonVerticesMap(Graph graph)
     {
-        var cacheKey = (vertex, dungeonName);
-        if (_vertexDungeonMembershipCache.TryGetValue(cacheKey, out var cached))
-            return cached;
-
-        bool belongs = vertex.ItemSet.Any(itemSet => 
-            itemSet.Name.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
-
-        _vertexDungeonMembershipCache[cacheKey] = belongs;
-        return belongs;
-    }
-    
-    private static bool IsItemLocation(Vertex vertex)
-    {
-        // Check if this vertex can hold items (chests, etc.)
-        return vertex.Type is VertexType.Chest or VertexType.BigChest or VertexType.Drop or 
-               VertexType.Pedestal or VertexType.Standing or VertexType.Pot or VertexType.Item;
-    }
-    
-    private static string? GetEdgeRequirement(Edge edge, IItem keyItem)
-    {
-        if (edge.Condition.IsUnconditional)
-            return "fixed"; // Free edge
+        var dungeonMap = new Dictionary<string, HashSet<Vertex>>();
+        var knownDungeons = new[] { "escape", "eastern", "desert", "hera", "agahnim", 
+                                   "pod", "swamp", "skull", "thieves", "ice", "mire", 
+                                   "turtlerock", "gt" };
         
-        var requiredItem = edge.Condition.Item;
-        if (requiredItem.Name == keyItem.Name)
-            return "KEY"; // Small key requirement
-        
-        return requiredItem.Name; // Other item requirement
-    }
-    
-    private static int? GetDoorGroupId(Graph graph, IItem keyItem, Vertex from, Vertex to, 
-        HashSet<(int, int)> processedDoors, ref int nextDoorGroupId)
-    {
-        // Check if this is a bidirectional door
-        if (!graph.Doors.TryGetValue(keyItem, out var doorsByKey))
-            return null;
-        
-        foreach (var (_, doorPairs) in doorsByKey)
+        // Pre-initialize sets
+        foreach (var dungeon in knownDungeons)
         {
-            foreach (var (a, b) in doorPairs)
+            dungeonMap[dungeon] = new HashSet<Vertex>();
+        }
+        
+        foreach (var vertex in graph.GetVertices())
+        {
+            foreach (var itemSet in vertex.ItemSet)
             {
-                bool isThisDoor = (a == from && b == to) || (a == to && b == from);
-                if (isThisDoor)
+                if (itemSet.World != null && dungeonMap.ContainsKey(itemSet.Name))
                 {
-                    var doorKey = (Math.Min(a.Id, b.Id), Math.Max(a.Id, b.Id)); // Normalize order using IDs
-                    if (!processedDoors.Contains(doorKey))
-                    {
-                        processedDoors.Add(doorKey);
-                        return nextDoorGroupId++;
-                    }
-                    else
-                    {
-                        // Find existing door group ID
-                        // This is a simplification - in practice we'd need to track the mapping
-                        return null; // Return null for now, bidirectional handling needs refinement
-                    }
+                    dungeonMap[itemSet.Name].Add(vertex);
+                    break; // One dungeon per vertex
                 }
             }
         }
         
-        return null; // Not a special door
+        return dungeonMap;
+    }
+
+    /// <summary>
+    /// Fast item location check using optimized vertex type checking
+    /// </summary>
+    private static bool IsItemLocationFast(Vertex vertex)
+    {
+        return vertex.Type is VertexType.Chest or VertexType.BigChest or VertexType.Drop or 
+               VertexType.Pedestal or VertexType.Standing or VertexType.Pot or VertexType.Item;
+    }
+    
+    /// <summary>
+    /// Fast edge requirement determination with inlined logic
+    /// </summary>
+    private static string? GetEdgeRequirementFast(Edge edge, IItem keyItem)
+    {
+        if (edge.Condition.IsUnconditional)
+            return "fixed";
+        
+        var requiredItem = edge.Condition.Item;
+        return requiredItem.Name == keyItem.Name ? "KEY" : requiredItem.Name;
+    }
+
+    /// <summary>
+    /// Optimized door group tracking to minimize allocations
+    /// </summary>
+    private sealed class DoorGroupTracker
+    {
+        private readonly Dictionary<(int, int), int> _doorPairToGroupId = new();
+        private int _nextGroupId = 0;
+
+        public int? GetDoorGroupId(Graph graph, IItem keyItem, Vertex from, Vertex to)
+        {
+            if (!graph.Doors.TryGetValue(keyItem, out var doorsByKey))
+                return null;
+
+            var doorKey = (Math.Min(from.Id, to.Id), Math.Max(from.Id, to.Id));
+            
+            if (_doorPairToGroupId.TryGetValue(doorKey, out var existingGroupId))
+                return existingGroupId;
+
+            // Check if this is a bidirectional door
+            foreach (var (_, doorPairs) in doorsByKey)
+            {
+                foreach (var (a, b) in doorPairs)
+                {
+                    if ((a == from && b == to) || (a == to && b == from))
+                    {
+                        var groupId = _nextGroupId++;
+                        _doorPairToGroupId[doorKey] = groupId;
+                        return groupId;
+                    }
+                }
+            }
+            
+            return null;
+        }
     }
 }

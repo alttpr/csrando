@@ -15,20 +15,134 @@ public class Searcher
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
     
-    // Performance optimization: Cache dungeon solver instances and context
+    // Comprehensive performance caching system
+    private static readonly Dictionary<Graph, GraphAnalysisCache> _graphAnalysisCache = new();
     private static readonly Dictionary<(Graph, string), DungeonKeySolver> _solverCache = new();
-    private static readonly Dictionary<(Graph, string), DungeonGraph> _dungeonGraphCache = new();
-    private static readonly Dictionary<Vertex, string?> _vertexDungeonCache = new();
+    
+    /// <summary>
+    /// Pre-computed analysis cache for a graph to avoid repeated expensive operations
+    /// </summary>
+    private sealed class GraphAnalysisCache
+    {
+        public Dictionary<int, Vertex> VertexLookup { get; init; } = new();
+        public Dictionary<string, IItem> ItemLookup { get; init; } = new();
+        public Dictionary<Vertex, string?> VertexDungeonMapping { get; init; } = new();
+        public Dictionary<string, DungeonGraph> DungeonGraphs { get; init; } = new();
+        public HashSet<string> SingleDungeonKeys { get; init; } = new();
+        public HashSet<string> CrossDungeonKeys { get; init; } = new();
+    }
 
     /// <summary>
     /// Clear all caches to free memory and handle graph changes
     /// </summary>
     public static void ClearPerformanceCaches()
     {
+        _graphAnalysisCache.Clear();
         _solverCache.Clear();
-        _dungeonGraphCache.Clear();
-        _vertexDungeonCache.Clear();
         DungeonGraphConverter.ClearCaches();
+    }
+
+    /// <summary>
+    /// Get or create comprehensive analysis cache for a graph
+    /// </summary>
+    private static GraphAnalysisCache GetOrCreateGraphAnalysis(Graph graph)
+    {
+        if (_graphAnalysisCache.TryGetValue(graph, out var cache))
+            return cache;
+
+        cache = AnalyzeGraphComprehensively(graph);
+        _graphAnalysisCache[graph] = cache;
+        return cache;
+    }
+
+    /// <summary>
+    /// Perform comprehensive single-pass analysis of the graph for maximum performance
+    /// </summary>
+    private static GraphAnalysisCache AnalyzeGraphComprehensively(Graph graph)
+    {
+        var vertexLookup = new Dictionary<int, Vertex>();
+        var itemLookup = new Dictionary<string, IItem>();
+        var vertexDungeonMapping = new Dictionary<Vertex, string?>();
+        var dungeonGraphs = new Dictionary<string, DungeonGraph>();
+        var singleDungeonKeys = new HashSet<string>();
+        var crossDungeonKeys = new HashSet<string>();
+
+        // Build vertex and item lookups in single pass
+        foreach (var vertex in graph.GetVertices())
+        {
+            vertexLookup[vertex.Id] = vertex;
+        }
+
+        foreach (var item in graph.AllItems)
+        {
+            itemLookup[item.Name] = item;
+        }
+
+        // Analyze dungeon membership and keys
+        var dungeonKeyAnalysis = new Dictionary<string, HashSet<string>>();
+
+        foreach (var vertex in graph.GetVertices())
+        {
+            string? dungeonName = null;
+            foreach (var itemSet in vertex.ItemSet)
+            {
+                if (itemSet.World != null && IsDungeonName(itemSet.Name))
+                {
+                    dungeonName = itemSet.Name;
+                    break;
+                }
+            }
+            vertexDungeonMapping[vertex] = dungeonName;
+
+            // Track which dungeons each key touches
+            if (dungeonName != null)
+            {
+                foreach (var (key, doors) in graph.Doors)
+                {
+                    if (IsOptimizableKey(key.Name))
+                    {
+                        bool keyTouchesDungeon = doors.Any(door =>
+                            door.Value.Any(pair => pair.Item1 == vertex || pair.Item2 == vertex));
+
+                        if (keyTouchesDungeon)
+                        {
+                            if (!dungeonKeyAnalysis.ContainsKey(key.Name))
+                                dungeonKeyAnalysis[key.Name] = new HashSet<string>();
+                            dungeonKeyAnalysis[key.Name].Add(dungeonName);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Classify keys as single-dungeon or cross-dungeon
+        foreach (var (keyName, dungeons) in dungeonKeyAnalysis)
+        {
+            if (dungeons.Count == 1)
+                singleDungeonKeys.Add(keyName);
+            else if (dungeons.Count > 1)
+                crossDungeonKeys.Add(keyName);
+        }
+
+        // Pre-extract dungeon graphs for all single-dungeon keys
+        foreach (var keyName in singleDungeonKeys)
+        {
+            var dungeon = dungeonKeyAnalysis[keyName].First();
+            if (!dungeonGraphs.ContainsKey(dungeon))
+            {
+                dungeonGraphs[dungeon] = DungeonGraphConverter.ExtractDungeonGraph(graph, dungeon, keyName);
+            }
+        }
+
+        return new GraphAnalysisCache
+        {
+            VertexLookup = vertexLookup,
+            ItemLookup = itemLookup,
+            VertexDungeonMapping = vertexDungeonMapping,
+            DungeonGraphs = dungeonGraphs,
+            SingleDungeonKeys = singleDungeonKeys,
+            CrossDungeonKeys = crossDungeonKeys
+        };
     }
 
     /// <summary>
@@ -244,27 +358,43 @@ public class Searcher
     {
         var strongLocations = new VertexHashSet(_graph);
         var strongSearchStarts = new VertexHashSet(_graph);
+        
+        // Get pre-computed analysis for ultra-fast processing
+        var analysis = GetOrCreateGraphAnalysis(_graph);
+        
         foreach (var (key, edges) in _graph.Doors)
         {
             int keyCount = inventory.GetCount(key);
             if (keyCount == 0)
                 continue;
 
-            // Try using DungeonKeySolver for single-dungeon scenarios
-            var dungeonSearchResult = TryDungeonKeySolverSearch(inventory, key, _visited, _collected);
-            if (dungeonSearchResult.HasValue)
+            // Use ultra-fast analysis for early decisions
+            var keyName = key.Name;
+            SearchResult searchResult;
+            
+            if (analysis.SingleDungeonKeys.Contains(keyName))
             {
-                var (dungeonLocations, dungeonSearchStarts) = dungeonSearchResult.Value;
-                strongLocations.UnionWith(dungeonLocations);
-                strongSearchStarts.UnionWith(dungeonSearchStarts);
+                // Try optimized DungeonKeySolver for single-dungeon scenarios
+                var dungeonSearchResult = TryDungeonKeySolverSearch(inventory, key, _visited, _collected);
+                if (dungeonSearchResult.HasValue)
+                {
+                    searchResult = dungeonSearchResult.Value;
+                }
+                else
+                {
+                    // Fallback to recursive for edge cases
+                    searchResult = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
+                }
             }
             else
             {
-                // Fall back to recursive search for complex/cross-dungeon scenarios
-                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
-                strongLocations.UnionWith(recursiveLocations);
-                strongSearchStarts.UnionWith(recursiveSearchStarts);
+                // Use recursive search for cross-dungeon or unoptimizable keys
+                searchResult = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
             }
+            
+            var (locations, searchStarts) = searchResult;
+            strongLocations.UnionWith(locations);
+            strongSearchStarts.UnionWith(searchStarts);
         }
 
         _visited.UnionWith(strongLocations);
@@ -351,111 +481,98 @@ public class Searcher
     }
 
     /// <summary>
-    /// Try to use DungeonKeySolver for more efficient key search in single-dungeon scenarios.
-    /// Returns null if the scenario is too complex for DungeonKeySolver (cross-dungeon, etc.)
-    /// Optimized with caching and early bailouts for performance.
+    /// Optimized DungeonKeySolver integration with comprehensive pre-computed analysis.
+    /// Uses cached graph analysis to avoid expensive repeated operations.
     /// </summary>
     private static SearchResult? TryDungeonKeySolverSearch(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors)
     {
         try
         {
-            // Early bailout: Only try for ALttP small keys that match expected patterns
-            if (!IsOptimizableKey(key.Name))
+            var keyName = key.Name;
+            
+            // Early bailout: Only try for ALttP small keys
+            if (!IsOptimizableKey(keyName))
                 return null;
 
-            // Detect if this is a single-dungeon scenario by examining the doors
-            var doors = visitedBeforeDoors.Graph.Doors[key];
-            if (doors.Count == 0)
+            // Get pre-computed graph analysis
+            var analysis = GetOrCreateGraphAnalysis(visitedBeforeDoors.Graph);
+            
+            // Ultra-fast cross-dungeon detection using pre-analysis
+            if (analysis.CrossDungeonKeys.Contains(keyName))
+                return null;
+            
+            // Quick single-dungeon check
+            if (!analysis.SingleDungeonKeys.Contains(keyName))
                 return null;
 
-            // Quick dungeon detection with early bailout on cross-dungeon scenarios
+            // Find the dungeon for this key (should be exactly one)
             string? dungeonName = null;
-            int doorCheckCount = 0;
-            const int maxDoorChecks = 3; // Limit checks for performance
-
-            foreach (var door in doors)
+            foreach (var (dn, graph) in analysis.DungeonGraphs)
             {
-                if (++doorCheckCount > maxDoorChecks) break; // Early bailout for large door sets
-
-                foreach (var (a, b) in door.Value)
+                if (graph.Nodes.Any(n => n.StaticKeys.ContainsKey(dn)) && 
+                    visitedBeforeDoors.Graph.Doors.ContainsKey(key))
                 {
-                    var dungeonFromA = GetDungeonName(a);
-                    var dungeonFromB = GetDungeonName(b);
+                    // Verify this dungeon uses this key
+                    var doors = visitedBeforeDoors.Graph.Doors[key];
+                    bool duneonUsesKey = doors.Any(door =>
+                        door.Value.Any(pair =>
+                            analysis.VertexDungeonMapping.TryGetValue(pair.Item1, out var d1) && d1 == dn ||
+                            analysis.VertexDungeonMapping.TryGetValue(pair.Item2, out var d2) && d2 == dn));
                     
-                    if (dungeonFromA != null)
+                    if (duneonUsesKey)
                     {
-                        if (dungeonName == null)
-                            dungeonName = dungeonFromA;
-                        else if (dungeonName != dungeonFromA)
-                            return null; // Cross-dungeon scenario, immediate fallback
-                    }
-                    
-                    if (dungeonFromB != null)
-                    {
-                        if (dungeonName == null)
-                            dungeonName = dungeonFromB;
-                        else if (dungeonName != dungeonFromB)
-                            return null; // Cross-dungeon scenario, immediate fallback
+                        dungeonName = dn;
+                        break;
                     }
                 }
             }
 
-            if (dungeonName == null)
-                return null; // Cannot determine dungeon context
+            if (dungeonName == null || !analysis.DungeonGraphs.TryGetValue(dungeonName, out var dungeonGraph))
+                return null;
 
-            // Use cached dungeon graph if available
-            var cacheKey = (visitedBeforeDoors.Graph, dungeonName);
-            if (!_dungeonGraphCache.TryGetValue(cacheKey, out var dungeonGraph))
-            {
-                // Extract dungeon graph and cache it
-                dungeonGraph = DungeonGraphConverter.ExtractDungeonGraph(visitedBeforeDoors.Graph, dungeonName, key.Name);
-                _dungeonGraphCache[cacheKey] = dungeonGraph;
-            }
-
-            if (dungeonGraph.Nodes.Count == 0)
-                return null; // No valid dungeon graph
-
-            // Find entrance nodes (nodes that are currently visited/reachable from outside)
+            // Fast entrance detection using pre-computed vertex lookup
             var entranceNodeIds = new List<int>();
-            var graphVerticesById = CreateVertexLookup(visitedBeforeDoors.Graph); // Cache vertex lookup
-            
             foreach (var node in dungeonGraph.Nodes)
             {
-                if (graphVerticesById.TryGetValue(node.Id, out var vertex) && visitedBeforeDoors.Contains(vertex))
+                if (analysis.VertexLookup.TryGetValue(node.Id, out var vertex) && visitedBeforeDoors.Contains(vertex))
                 {
                     entranceNodeIds.Add(node.Id);
                 }
             }
 
             if (entranceNodeIds.Count == 0)
-                return null; // No accessible entrances
+                return null;
 
-            // Create item check function based on current inventory
-            var allItemsById = CreateItemLookup(visitedBeforeDoors.Graph); // Cache item lookup
+            // Fast item check using pre-computed item lookup
             Func<string, bool> itemCheck = req =>
             {
                 if (req == "fixed" || req == "KEY") return true;
-                return allItemsById.TryGetValue(req, out var requiredItem) && inventory.Has(requiredItem);
+                return analysis.ItemLookup.TryGetValue(req, out var requiredItem) && inventory.Has(requiredItem);
             };
 
-            // Get available keys
+            // Get or create cached solver
+            var solverKey = (visitedBeforeDoors.Graph, dungeonName);
+            if (!_solverCache.TryGetValue(solverKey, out var solver))
+            {
+                solver = new DungeonKeySolver(dungeonGraph, dungeonName);
+                _solverCache[solverKey] = solver;
+            }
+
+            // Use cached solver for safe locations
             int availableKeys = inventory.GetCount(key);
+            var safeNodeIds = solver.SafeItemLocations(itemCheck, availableKeys, entranceNodeIds);
 
-            // Use DungeonKeySolver to find safe locations
-            var safeNodeIds = DungeonKeySolverStatic.SafeItemLocationsForDungeon(
-                dungeonGraph, dungeonName, entranceNodeIds, itemCheck, availableKeys);
-
-            // Convert back to vertices
+            // Convert back to vertices using cached lookup
             var safeLocations = new VertexHashSet(visitedBeforeDoors.Graph);
             var safeSearchStarts = new VertexHashSet(visitedBeforeDoors.Graph);
 
             foreach (var nodeId in safeNodeIds)
             {
-                if (graphVerticesById.TryGetValue(nodeId, out var vertex))
+                if (analysis.VertexLookup.TryGetValue(nodeId, out var vertex))
                 {
                     safeLocations.Add(vertex);
-                    // For search starts, include vertices with outgoing edges that aren't in our safe set
-                    if (vertex.Edges.Any(e => !safeNodeIds.Contains(e.To.Id)))
+                    // Efficiently check for search starts using spans
+                    if (HasUnvisitedEdges(vertex, safeNodeIds))
                     {
                         safeSearchStarts.Add(vertex);
                     }
@@ -466,10 +583,22 @@ public class Searcher
         }
         catch (Exception ex)
         {
-            // Log the error in a production environment and fall back to recursive search
             _logger.LogWarning("DungeonKeySolver failed for key {Key}: {Message}", key.Name, ex.Message);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Efficiently check if vertex has edges to unvisited locations
+    /// </summary>
+    private static bool HasUnvisitedEdges(Vertex vertex, HashSet<int> safeNodeIds)
+    {
+        foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
+        {
+            if (!safeNodeIds.Contains(edge.To.Id))
+                return true;
+        }
+        return false;
     }
     
     /// <summary>
@@ -484,57 +613,6 @@ public class Searcher
             "KeyA2" => true, // Ganon's Tower
             _ => false
         };
-    }
-    
-    /// <summary>
-    /// Create an efficient lookup dictionary for vertices by ID
-    /// </summary>
-    private static Dictionary<int, Vertex> CreateVertexLookup(Graph graph)
-    {
-        var lookup = new Dictionary<int, Vertex>();
-        foreach (var vertex in graph.GetVertices())
-        {
-            lookup[vertex.Id] = vertex;
-        }
-        return lookup;
-    }
-    
-    /// <summary>
-    /// Create an efficient lookup dictionary for items by name
-    /// </summary>
-    private static Dictionary<string, IItem> CreateItemLookup(Graph graph)
-    {
-        var lookup = new Dictionary<string, IItem>();
-        foreach (var item in graph.AllItems)
-        {
-            lookup[item.Name] = item;
-        }
-        return lookup;
-    }
-
-    /// <summary>
-    /// Extract dungeon name from a vertex's ItemSet with caching for performance
-    /// </summary>
-    private static string? GetDungeonName(Vertex vertex)
-    {
-        // Use cache to avoid repeated ItemSet iteration
-        if (_vertexDungeonCache.TryGetValue(vertex, out var cachedDungeon))
-            return cachedDungeon;
-
-        // Look for dungeon-specific ItemSet entries
-        string? dungeonName = null;
-        foreach (var itemSet in vertex.ItemSet)
-        {
-            if (itemSet.World != null && IsDungeonName(itemSet.Name))
-            {
-                dungeonName = itemSet.Name;
-                break; // Early exit on first match
-            }
-        }
-        
-        // Cache the result
-        _vertexDungeonCache[vertex] = dungeonName;
-        return dungeonName;
     }
 
     /// <summary>
