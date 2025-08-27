@@ -30,6 +30,7 @@ try
     if (isVerbose && level > LogLevel.Debug)
         level = LogLevel.Debug;
     ClassLogger.SetMinimumLevel(level);
+    // Defaults: optimized searcher enabled; no debug toggles.
 
     return parser.Invoke(args);
 }

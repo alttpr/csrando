@@ -101,6 +101,11 @@ public abstract class GameRandomizer
             WriteForWorld(world, baseRom, baseBPS, outputDirectory, PRNG, Worlds.Length > 1 ? $"_W{i + 1}" : null);
     }
 
+    internal void NotifyPlacement(Vertex location)
+    {
+        _itemPooler.SetLocations.NotifyPlaced(location);
+    }
+
     private void WriteForWorld(IWorld world, FileInfo baseRom, FileInfo? baseBPS, DirectoryInfo outputDirectory, PRNG prng, string? worldSuffix = null)
     {
         // TODO: baseRom and baseBPS would likely have to be game-specific, so they might be candidates for moving into the derived classes as well.

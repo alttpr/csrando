@@ -157,6 +157,8 @@ public class Searcher
         return newItemsFound;
     }
 
+    // Classic collection removed; optimized delta collection is the default.
+
     public bool HasFound(IItem item)
     {
         return _inventory.Has(item);
@@ -440,139 +442,214 @@ public class Searcher
         // Build candidate list without ordering to reduce overhead
         var source = _setLocations[itemSet];
         var emptyLocations = new List<Vertex>(source.Count);
-        foreach (var vertex in source)
+        for (int i = 0; i < source.Count; i++)
         {
+            var vertex = source[i];
             if ((!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null)
                 emptyLocations.Add(vertex);
         }
 
         itemSets ??= new();
-        if (itemSets.Count > 0)
+        if (itemSets.Count > 0 && emptyLocations.Count > 0)
         {
+            // First pass: determine tight sets and validate availability
+            List<ItemSetName>? tightSets = null;
             foreach (var (setName, setCount) in itemSets)
             {
                 if (setName.World == null)
                     continue;
 
                 int available = 0;
-                foreach (var loc in _setLocations[setName])
+            var list = _setLocations[setName];
+            for (int i = 0; i < list.Count; i++)
+            {
+                var loc = list[i];
+                if (loc.Item == null)
                 {
-                    if (loc.Item == null)
-                        available++;
+                    available++;
+                    if (available > setCount) break;
                 }
+            }
                 if (available < setCount)
                     throw new Exception($"Not enough set locations available: {setName}");
-                // if a set has the same number of items to place as set locations
-                // left, remove it from this return.
                 if (!itemSet.Equals(setName) && available == setCount)
                 {
-                    foreach (var loc in _setLocations[setName])
+                    tightSets ??= new List<ItemSetName>(4);
+                    tightSets.Add(setName);
+                }
+            }
+
+            if (tightSets != null)
+            {
+                // Build a membership bitset for union of all tight sets (empties only)
+                var membership = new VertexHashSet(_graph);
+                foreach (var ts in tightSets)
+                {
+                    var list = _setLocations[ts];
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        if (loc.Item == null)
-                            emptyLocations.Remove(loc);
+                        var loc = list[i];
+                        if (loc.Item == null) membership.Add(loc);
                     }
                 }
+                // Filter emptyLocations in place by removing members of the tight-set union
+                int write = 0;
+                for (int read = 0; read < emptyLocations.Count; read++)
+                {
+                    var v = emptyLocations[read];
+                    if (!membership.Contains(v))
+                        emptyLocations[write++] = v;
+                }
+                if (write < emptyLocations.Count)
+                    emptyLocations.RemoveRange(write, emptyLocations.Count - write);
             }
         }
 
         return emptyLocations;
+    }
+
+    public int GetEmptyLocationsInSetCount(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool onlyReachable = true)
+    {
+        // Count empties in the primary set quickly
+        var source = _setLocations[itemSet];
+        int count = 0;
+        for (int i = 0; i < source.Count; i++)
+        {
+            var vertex = source[i];
+            if ((!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null)
+                count++;
+        }
+
+        if (count == 0)
+            return 0;
+
+        itemSets ??= new();
+        if (itemSets.Count == 0)
+            return count;
+
+        // Identify tight sets (available == setCount) and validate availability
+        List<ItemSetName>? tightSets = null;
+        foreach (var (setName, setCount) in itemSets)
+        {
+            if (setName.World == null)
+                continue;
+
+            int available = 0;
+            var list = _setLocations[setName];
+            // Early exit when availability exceeds requirement
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Item == null)
+                {
+                    available++;
+                    if (available > setCount) break;
+                }
+            }
+            if (available < setCount)
+                throw new Exception($"Not enough set locations available: {setName}");
+            if (!itemSet.Equals(setName) && available == setCount)
+            {
+                tightSets ??= new List<ItemSetName>(4);
+                tightSets.Add(setName);
+            }
+        }
+
+        if (tightSets == null || tightSets.Count == 0)
+            return count;
+
+        // Build a union membership bitset for all tight sets (empties only)
+        var membership = new VertexHashSet(_graph);
+        for (int t = 0; t < tightSets.Count; t++)
+        {
+            var ts = tightSets[t];
+            var list = _setLocations[ts];
+            for (int i = 0; i < list.Count; i++)
+            {
+                var v = list[i];
+                if (v.Item == null)
+                    membership.Add(v);
+            }
+        }
+
+        int filtered = 0;
+        for (int i = 0; i < source.Count; i++)
+        {
+            var v = source[i];
+            if ((!onlyReachable || _visited.Contains(v)) && v.Item == null)
+            {
+                if (!membership.Contains(v))
+                    filtered++;
+            }
+        }
+        return filtered;
     }
 
     public List<Vertex> GetEmptyLocationsInSetList(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool onlyReachable = true)
     {
         var source = _setLocations[itemSet];
         var emptyLocations = new List<Vertex>(source.Count);
-        foreach (var vertex in source)
+        for (int i = 0; i < source.Count; i++)
         {
+            var vertex = source[i];
             if ((!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null)
                 emptyLocations.Add(vertex);
         }
 
         itemSets ??= new();
-        if (itemSets.Count > 0)
+        if (itemSets.Count > 0 && emptyLocations.Count > 0)
         {
+            List<ItemSetName>? tightSets = null;
             foreach (var (setName, setCount) in itemSets)
             {
                 if (setName.World == null)
                     continue;
 
                 int available = 0;
-                foreach (var loc in _setLocations[setName])
+            var list = _setLocations[setName];
+            for (int i = 0; i < list.Count; i++)
+            {
+                var loc = list[i];
+                if (loc.Item == null)
                 {
-                    if (loc.Item == null)
-                        available++;
+                    available++;
+                    if (available > setCount) break;
                 }
+            }
                 if (available < setCount)
                     throw new Exception($"Not enough set locations available: {setName}");
                 if (!itemSet.Equals(setName) && available == setCount)
                 {
-                    foreach (var loc in _setLocations[setName])
+                    tightSets ??= new List<ItemSetName>(4);
+                    tightSets.Add(setName);
+                }
+            }
+
+            if (tightSets != null)
+            {
+                var membership = new VertexHashSet(_graph);
+                foreach (var ts in tightSets)
+                {
+                    var list = _setLocations[ts];
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        if (loc.Item == null)
-                            emptyLocations.Remove(loc);
+                        var loc = list[i];
+                        if (loc.Item == null) membership.Add(loc);
                     }
                 }
+                int write = 0;
+                for (int read = 0; read < emptyLocations.Count; read++)
+                {
+                    var v = emptyLocations[read];
+                    if (!membership.Contains(v))
+                        emptyLocations[write++] = v;
+                }
+                if (write < emptyLocations.Count)
+                    emptyLocations.RemoveRange(write, emptyLocations.Count - write);
             }
         }
 
         return emptyLocations;
     }
 
-    /// <summary>
-    /// Fast count for empty locations in set without materializing the list.
-    /// Mirrors filtering semantics of GetEmptyLocationsInSet.
-    /// </summary>
-    public int GetEmptyLocationCountInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets = null, bool onlyReachable = true)
-    {
-        // Build a temporary list of candidate locations for the target set
-        var candidate = new List<Vertex>();
-        foreach (var vertex in _setLocations[itemSet])
-        {
-            if ((!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null)
-                candidate.Add(vertex);
-        }
-
-        int count = candidate.Count;
-
-        // Adjust based on tight counts in other sets by removing overlaps only
-        if (itemSets is { Count: > 0 })
-        {
-            var reservedUnion = new HashSet<Vertex>();
-            foreach (var (setName, setCount) in itemSets)
-            {
-                if (setName.World == null || itemSet.Equals(setName))
-                    continue;
-
-                int otherAvailable = 0;
-                foreach (var loc in _setLocations[setName])
-                {
-                    if (loc.Item == null)
-                        otherAvailable++;
-                }
-                if (otherAvailable < setCount)
-                    throw new Exception($"Not enough set locations available: {setName}");
-
-                if (otherAvailable == setCount)
-                {
-                    foreach (var loc in _setLocations[setName])
-                    {
-                        if (loc.Item == null)
-                            reservedUnion.Add(loc);
-                    }
-                }
-            }
-
-            if (reservedUnion.Count > 0)
-            {
-                int overlap = 0;
-                foreach (var v in candidate)
-                {
-                    if (reservedUnion.Contains(v))
-                        overlap++;
-                }
-                count -= overlap;
-            }
-        }
-        return Math.Max(0, count);
-    }
+    // Removed duplicate count helper in favor of GetEmptyLocationsInSetCount
 }
