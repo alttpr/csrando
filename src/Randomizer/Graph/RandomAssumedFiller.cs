@@ -25,8 +25,25 @@ internal sealed class RandomAssumedFiller
     {
         var setCounts = items.GroupBy(k => k.Set).ToDictionary(k => k.Key, set => set.Count());
 
-        // fix placement groups
-        var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
+        // Sort by weight and shuffle ties only (equivalent random tie-breaker, fewer allocations)
+        var flatItemsArray = items.ToArray();
+        Array.Sort(flatItemsArray, (a, b) => a.Weight.CompareTo(b.Weight));
+        int start = 0;
+        while (start < flatItemsArray.Length)
+        {
+            int end = start + 1;
+            int w = flatItemsArray[start].Weight;
+            while (end < flatItemsArray.Length && flatItemsArray[end].Weight == w) end++;
+            if (end - start > 1)
+            {
+                for (int i = end - 1; i > start; --i)
+                {
+                    int r = _prng.GetRandomInt(start, i);
+                    (flatItemsArray[i], flatItemsArray[r]) = (flatItemsArray[r], flatItemsArray[i]);
+                }
+            }
+            start = end;
+        }
         var flatItems = flatItemsArray.ToList();
 
         var searchers = new Searcher[_randomizer.Worlds.Length];
@@ -60,27 +77,40 @@ internal sealed class RandomAssumedFiller
                 item.World.Start
                 );
 
-            var locations = new List<Vertex>();
+            // Build per-world candidate lists; pick world proportionally, then pick within it
+            int total = 0;
+            var perWorldCounts = new int[_randomizer.Worlds.Length];
             for (int i = 0; i < _randomizer.Worlds.Length; ++i)
             {
-                locations.AddRange(_randomizer.Worlds[i].GetEmptyLocationsInSet(searchers[i], item, itemSet, setCounts));
+                int c = searchers[i].GetEmptyLocationsInSetCount(itemSet, setCounts);
+                perWorldCounts[i] = c;
+                total += c;
             }
-
-            if (locations.Count == 0)
+            if (total == 0)
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
-            var location = _prng.GetRandomElement(locations);
+            int pick = _prng.GetRandomInt(total);
+            int chosenWorld = 0;
+            for (; chosenWorld < perWorldCounts.Length; ++chosenWorld)
+            {
+                pick -= perWorldCounts[chosenWorld];
+                if (pick < 0) break;
+            }
+            // Build only the chosen world's candidate list now
+            var worldLocations = searchers[chosenWorld].GetEmptyLocationsInSetList(itemSet, setCounts);
+            var location = worldLocations[_prng.GetRandomInt(worldLocations.Count)];
             _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
                 itemWeight,
                 item,
                 location,
                 itemSet,
-                locations.Count
+                perWorldCounts[chosenWorld]
             );
 
             location.Item = item;
             location.TrackPlacedItem();
+            _randomizer.NotifyPlacement(location);
             setCounts[itemSet]--;
         }
 
@@ -121,6 +151,7 @@ internal sealed class RandomAssumedFiller
             }
             location.Item = item;
             location.TrackPlacedItem();
+            _randomizer.NotifyPlacement(location);
             locations.Remove(location);
             _logger.LogInformation("[FF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 item,

@@ -46,6 +46,15 @@ public class PRNG
 
         return newArray;
     }
+    public void ShuffleInPlace<T>(IList<T> list)
+    {
+        int count = list.Count;
+        for (int i = count - 1; i > 0; --i)
+        {
+            int r = GetRandomInt(0, i);
+            (list[i], list[r]) = (list[r], list[i]);
+        }
+    }
     public T GetRandomElement<T>(T[] array)
     {
         return array[GetRandomInt(array.Length)];
@@ -53,7 +62,21 @@ public class PRNG
 
     public T GetRandomElement<T>(IEnumerable<T> array)
     {
-        return array.ElementAt(GetRandomInt(array.Count()));
+        if (array is IList<T> list)
+        {
+            return list[GetRandomInt(list.Count)];
+        }
+        // Fallback: single pass with reservoir-like selection
+        int idx = 0;
+        T? selected = default;
+        foreach (var item in array)
+        {
+            if (GetRandomInt(++idx) == 0)
+                selected = item;
+        }
+        if (idx == 0)
+            throw new InvalidOperationException("Sequence was empty");
+        return selected!;
     }
 
     public IEnumerable<T> GetRandomElements<T>(IEnumerable<T> source, int count) => Shuffle(source).Take(count);

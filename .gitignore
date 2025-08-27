@@ -13,3 +13,8 @@
 *.user
 *.suo
 *.bak
+*.log
+**/.tmpdiag
+*.nettrace*
+tmp*
+**/TestResults/

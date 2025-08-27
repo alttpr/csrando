@@ -14,26 +14,19 @@ public class VertexHashSet : ICollection<Vertex>
         get
         {
             if (_count >= 0) return _count;
-            if (_bitArray == null) return 0;
-
-            uint[] ints = new uint[(_bitArray.Count >> 5) + 1];
-            _bitArray.CopyTo(ints, 0);
-            int count = 0;
-            for (int i = 0; i < ints.Length; i++)
-            {
-                count += BitOperations.PopCount(ints[i]);
-            }
-
-            _count = count;
-
-            return count;
+            if (_bits == null) return 0;
+            int c = 0;
+            foreach (var w in _bits)
+                c += BitOperations.PopCount(w);
+            _count = c;
+            return c;
         }
     }
 
     public bool IsReadOnly => false;
 
     public Graph Graph { get; }
-    private BitArray? _bitArray;
+    private uint[]? _bits;
 
     public VertexHashSet(Graph graph)
     {
@@ -41,109 +34,108 @@ public class VertexHashSet : ICollection<Vertex>
         _count = 0;
     }
 
-    [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_bitArray))]
-    private void AllocateBitArray()
+    [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_bits))]
+    private void AllocateBits()
     {
         int maxId = Graph.GetVertices().Count();
-        _bitArray = new BitArray(maxId + 1);
+        int words = ((maxId + 1) + 31) >> 5;
+        _bits = new uint[Math.Max(1, words)];
     }
 
     public VertexHashSet(VertexHashSet other)
     {
         Graph = other.Graph;
-        _bitArray = (BitArray?)other._bitArray?.Clone();
+        _bits = other._bits is null ? null : (uint[])other._bits.Clone();
         _count = other._count;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(Vertex item)
     {
-        if (_bitArray == null) AllocateBitArray();
-
-        bool previous = _bitArray[item.Id];
-        _bitArray.Set(item.Id, true);
-        if (!previous && _count != -1)
-            _count++;
+        if (_bits == null) AllocateBits();
+        int id = item.Id;
+        int idx = id >> 5;
+        uint mask = 1u << (id & 31);
+        bool previous = (_bits[idx] & mask) != 0;
+        _bits[idx] |= mask;
+        if (!previous && _count != -1) _count++;
     }
 
     public void Clear()
     {
-        _bitArray?.SetAll(false);
+        if (_bits != null)
+            Array.Clear(_bits, 0, _bits.Length);
         _count = 0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Contains(Vertex item)
     {
-        return _bitArray != null && _bitArray[item.Id];
+        return _bits != null && ((_bits[item.Id >> 5] & (1u << (item.Id & 31))) != 0);
     }
 
     public void CopyTo(Vertex[] array, int arrayIndex)
     {
-        var enumerator = GetEnumerator();
-        while (enumerator.MoveNext() && arrayIndex < array.Length)
+        foreach (var v in this)
         {
-            array[arrayIndex++] = enumerator.Current;
+            if (arrayIndex >= array.Length) break;
+            array[arrayIndex++] = v;
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void IntersectWith(VertexHashSet other)
     {
-        if (_bitArray == null || other._bitArray == null)
+        if (_bits == null || other._bits == null)
         {
             Clear();
             return;
         }
-
-        _bitArray.And(other._bitArray);
+        int n = Math.Min(_bits.Length, other._bits.Length);
+        for (int i = 0; i < n; i++) _bits[i] &= other._bits[i];
+        for (int i = n; i < _bits.Length; i++) _bits[i] = 0;
         _count = -1;
     }
 
     public bool Remove(Vertex item)
     {
-        if (_bitArray == null) return false;
-
-        bool previous = _bitArray[item.Id];
-        _bitArray.Set(item.Id, false);
-        if (previous && _count != -1)
-            _count--;
-
+        if (_bits == null) return false;
+        int id = item.Id;
+        int idx = id >> 5;
+        uint mask = 1u << (id & 31);
+        bool previous = (_bits[idx] & mask) != 0;
+        _bits[idx] &= ~mask;
+        if (previous && _count != -1) _count--;
         return previous;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void UnionWith(VertexHashSet other)
     {
-        if (other._bitArray == null) return;
-
-        if (_bitArray == null) AllocateBitArray();
-
-        _bitArray.Or(other._bitArray);
+        if (other._bits == null) return;
+        if (_bits == null) AllocateBits();
+        int n = Math.Min(_bits.Length, other._bits.Length);
+        for (int i = 0; i < n; i++) _bits[i] |= other._bits[i];
         _count = -1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ExceptWith(VertexHashSet other)
     {
-        if (other._bitArray == null) return;
-
-        if (_bitArray == null) AllocateBitArray();
-
-        var otherBitCopy = new BitArray(other._bitArray);
-        otherBitCopy.Not();
-        _bitArray.And(otherBitCopy);
+        if (other._bits == null) return;
+        if (_bits == null) AllocateBits();
+        int n = Math.Min(_bits.Length, other._bits.Length);
+        for (int i = 0; i < n; i++) _bits[i] &= ~other._bits[i];
         _count = -1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SymmetricExceptWith(VertexHashSet other)
     {
-        if (other._bitArray == null) return;
-
-        if (_bitArray == null) AllocateBitArray();
-
-        _bitArray.Xor(other._bitArray);
+        if (other._bits == null) return;
+        if (_bits == null) AllocateBits();
+        int n = Math.Min(_bits.Length, other._bits.Length);
+        for (int i = 0; i < n; i++) _bits[i] ^= other._bits[i];
         _count = -1;
     }
 
@@ -157,40 +149,56 @@ public class VertexHashSet : ICollection<Vertex>
         return new Enumerator(this);
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    private struct Enumerator : IEnumerator<Vertex>
     {
-        return new Enumerator(this);
-    }
+        private readonly VertexHashSet _set;
+        private int _wordIndex;
+        private uint _word;
+        private int _baseId;
+        private Vertex _current = null!;
 
-    private struct Enumerator(VertexHashSet vertices) : IEnumerator, IEnumerator<Vertex>
-    {
-        private int _position = -1;
-
-        public readonly Vertex Current => vertices.Graph.GetVertex(_position);
-
-        readonly object IEnumerator.Current => Current;
-
-        public readonly void Dispose()
+        public Enumerator(VertexHashSet set)
         {
+            _set = set;
+            _wordIndex = -1;
+            _word = 0;
+            _baseId = 0;
         }
+
+        public Vertex Current => _current;
+        object IEnumerator.Current => Current;
+        public void Dispose() { }
 
         public bool MoveNext()
         {
-            if (vertices._bitArray is not { } bitArray)
-                return false;
-
-            for (; ; )
+            var bits = _set._bits;
+            if (bits == null) return false;
+            while (true)
             {
-                _position++;
-                if (_position == bitArray.Length) break;
-                if (bitArray[_position]) break;
+                if (_word != 0)
+                {
+                    int tz = BitOperations.TrailingZeroCount(_word);
+                    int id = _baseId + tz;
+                    _word &= _word - 1; // clear lowest set bit
+                    _current = _set.Graph.GetVertex(id);
+                    return true;
+                }
+                _wordIndex++;
+                if (_wordIndex >= bits.Length) return false;
+                _word = bits[_wordIndex];
+                _baseId = _wordIndex << 5;
             }
-            return _position < bitArray.Length;
         }
 
         public void Reset()
         {
-            _position = -1;
+            _wordIndex = -1;
+            _word = 0;
+            _baseId = 0;
         }
     }
+
+    // Classic enumerator removed; bitset enumerator is the default.
 }
