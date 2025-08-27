@@ -41,6 +41,24 @@ To generate a game one simply runs the command (from within the `src\Randomizer`
 $ dotnet run --configuration Release -- randomize --outdir={output_directory}
 ```
 
+### Logging options
+The CLI supports global logging controls:
+
+```
+--log-level <Trace|Debug|Information|Warning|Error|Critical|None>
+-v, --verbose   (shorthand for --log-level Debug)
+```
+
+Examples:
+
+```
+# Only warnings and errors
+$ dotnet run --configuration Release -- randomize --settings data/settings.json --log-level Warning
+
+# Verbose debug output
+$ dotnet run --configuration Release -- randomize --settings data/settings.json --verbose
+```
+
 ## Running tests
 These can be run in VS Code. You may need to build the Tests Project first (from within the `tests\RandomizerTests` directory):
 

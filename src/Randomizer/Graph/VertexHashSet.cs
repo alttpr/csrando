@@ -193,4 +193,6 @@ public class VertexHashSet : ICollection<Vertex>
             _position = -1;
         }
     }
+
+    // Iterates the underlying bitset linearly.
 }

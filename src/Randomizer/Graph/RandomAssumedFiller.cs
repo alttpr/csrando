@@ -25,22 +25,58 @@ internal sealed class RandomAssumedFiller
     {
         var setCounts = items.GroupBy(k => k.Set).ToDictionary(k => k.Key, set => set.Count());
 
-        // fix placement groups
-        var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
+        // Fix placement groups and prepare working sets
+        // Sort by weight, and randomize only ties to avoid global shuffle cost
+        var flatItemsArray = items.ToArray();
+        Array.Sort(flatItemsArray, (a, b) => a.Weight.CompareTo(b.Weight));
+        // Shuffle equal-weight runs to keep previous semantics (random order within same weight)
+        int start = 0;
+        while (start < flatItemsArray.Length)
+        {
+            int end = start + 1;
+            int w = flatItemsArray[start].Weight;
+            while (end < flatItemsArray.Length && flatItemsArray[end].Weight == w) end++;
+            if (end - start > 1)
+            {
+                // Fisher-Yates within [start, end)
+                for (int i = end - 1; i > start; --i)
+                {
+                    int r = _prng.GetRandomInt(start, i);
+                    (flatItemsArray[i], flatItemsArray[r]) = (flatItemsArray[r], flatItemsArray[i]);
+                }
+            }
+            start = end;
+        }
         var flatItems = flatItemsArray.ToList();
 
-        var searchers = new Searcher[_randomizer.Worlds.Length];
-        for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+        int worldsLength = _randomizer.Worlds.Length;
+        // Maintain per-world candidate inventories to avoid re-filtering each iteration
+        var itemsByWorld = new List<IItem>[worldsLength];
+        int approxPerWorld = Math.Max(1, flatItemsArray.Length / Math.Max(1, worldsLength));
+        for (int i = 0; i < worldsLength; i++)
         {
-            searchers[i] = _randomizer.GetSearcherForInventory(
-                flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
-                    .Select(i => i.Item)
-                    .ToList(),
-                _randomizer.Worlds[i].Start
-                );
+            itemsByWorld[i] = new List<IItem>(approxPerWorld + 4);
+        }
+        foreach (var pi in flatItems)
+        {
+            if (pi.Weight <= 9000)
+                itemsByWorld[pi.Item.World.Id].Add(pi.Item);
         }
 
-        int itemsToPlaceCount = flatItems.Where(i => i.Weight <= 9000).Count();
+        var searchers = new Searcher[worldsLength];
+        // Per-world cache of locations by item set for this FillGraph pass
+        // Use location count from cached arrays to avoid building lists twice per iteration
+        var locationCache = new Dictionary<ItemSetName, List<Vertex>>[worldsLength];
+        for (int i = 0; i < worldsLength; ++i)
+        {
+            searchers[i] = _randomizer.GetSearcherForInventory(
+                itemsByWorld[i],
+                _randomizer.Worlds[i].Start
+            );
+            locationCache[i] = new Dictionary<ItemSetName, List<Vertex>>(64);
+        }
+
+        int itemsToPlaceCount = itemsByWorld.Sum(l => l.Count);
 
         foreach (var itemKey in flatItemsArray)
         {
@@ -53,35 +89,70 @@ internal sealed class RandomAssumedFiller
             // we don't care to search other worlds.
             flatItems.Remove(itemKey);
 
-            searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
-                flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
-                    .Select(i => i.Item)
-                    .ToList(),
-                item.World.Start
-                );
+            // Update the per-world candidate inventory incrementally instead of re-filtering
+            var worldId = item.World.Id;
+            // Remove the just-placed item from the candidate list
+            itemsByWorld[worldId].Remove(item);
+            // Recompute the searcher for this world from the updated candidate list
+            var updatedInventory = _randomizer.BuildInventoryForItems(itemsByWorld[worldId]);
+            searchers[worldId].Recompute(updatedInventory, item.World.Start);
+            // Invalidate cached locations for this world due to searcher change
+            locationCache[worldId].Clear();
 
-            var locations = new List<Vertex>();
+            // Choose world by weighted counts, then realize only that world's locations
+            int total = 0;
+            var perWorldCounts = new int[_randomizer.Worlds.Length];
             for (int i = 0; i < _randomizer.Worlds.Length; ++i)
             {
-                locations.AddRange(_randomizer.Worlds[i].GetEmptyLocationsInSet(searchers[i], item, itemSet, setCounts));
+                // Populate and cache the actual location arrays up-front; derive counts from them
+                if (!locationCache[i].TryGetValue(itemSet, out var cachedLocs))
+                {
+                    cachedLocs = searchers[i].GetEmptyLocationsInSetList(itemSet, setCounts);
+                    // Ensure no capacity growth if we shuffle/remove
+                    cachedLocs.EnsureCapacity(cachedLocs.Count);
+                    locationCache[i][itemSet] = cachedLocs;
+                }
+                int c = cachedLocs.Count;
+                perWorldCounts[i] = c;
+                total += c;
             }
 
-            if (locations.Count == 0)
+            if (total == 0)
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
-            var location = _prng.GetRandomElement(locations);
-            _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+            int pick = _prng.GetRandomInt(total);
+            int chosenWorld = 0;
+            for (; chosenWorld < perWorldCounts.Length; ++chosenWorld)
+            {
+                pick -= perWorldCounts[chosenWorld];
+                if (pick < 0) break;
+            }
+
+            // Fetch locations for chosen world + set from cache
+            var worldLocations = locationCache[chosenWorld][itemSet];
+            var location = worldLocations[_prng.GetRandomInt(worldLocations.Count)];
+            _logger.LogDebug("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
                 itemWeight,
                 item,
                 location,
                 itemSet,
-                locations.Count
+                perWorldCounts[chosenWorld]
             );
 
             location.Item = item;
             location.TrackPlacedItem();
             setCounts[itemSet]--;
+
+            // Invalidate caches impacted by placing into this location
+            // 1) remove caches for the used set across all worlds (setCounts changed)
+            for (int i = 0; i < worldsLength; i++)
+            {
+                locationCache[i].Remove(itemSet);
+            }
+            // 2) remove caches for any sets this location belongs to in its world
+            foreach (var s in location.ItemSet)
+                locationCache[chosenWorld].Remove(s);
         }
 
         FastFillItemsInLocations(flatItems);
@@ -93,7 +164,7 @@ internal sealed class RandomAssumedFiller
     /// <param name="fillItems">Items to be placed</param>
     private void FastFillItemsInLocations(List<PooledItem> fillItems)
     {
-        _logger.LogInformation("Fast Filling {ItemCount} items", fillItems.Count);
+        _logger.LogDebug("Fast Filling {ItemCount} items", fillItems.Count);
         // assure smaller location groups are filled first
         fillItems.Sort((a, b) =>
         {
@@ -109,7 +180,10 @@ internal sealed class RandomAssumedFiller
         {
             if (currentKey != itemSet)
             {
-                locations = _prng.Shuffle(searcher.GetEmptyLocationsInSet(itemSet, null, false).ToArray()).ToList();
+                // Fetch list directly to avoid extra ToList/array snapshots
+                locations = searcher.GetEmptyLocationsInSetList(itemSet, null, false);
+                locations.EnsureCapacity(locations.Count);
+                _prng.ShuffleInPlace(locations);
                 currentKey = itemSet;
             }
 
@@ -121,8 +195,9 @@ internal sealed class RandomAssumedFiller
             }
             location.Item = item;
             location.TrackPlacedItem();
-            locations.Remove(location);
-            _logger.LogInformation("[FF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+            // Remove last element in O(1) instead of linear search
+            if (locations.Count > 0) locations.RemoveAt(locations.Count - 1);
+            _logger.LogDebug("[FF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 item,
                 location,
                 itemSet,

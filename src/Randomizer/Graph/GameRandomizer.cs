@@ -78,7 +78,16 @@ public abstract class GameRandomizer
     /// </summary>
     public Searcher GetSearcherForInventory(IEnumerable<IItem> items, Vertex? start = null)
     {
-        return new(Graph, start ?? _start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
+        var itemArray = items.ToArray();
+        var inv = new Inventory(Graph.AllItems.Count, itemArray);
+        return new(Graph, start ?? _start, _startingItems.Merge(inv), _itemPooler.SetLocations);
+    }
+
+    internal Inventory BuildInventoryForItems(IEnumerable<IItem> items)
+    {
+        var itemArray = items.ToArray();
+        var inv = new Inventory(Graph.AllItems.Count, itemArray);
+        return _startingItems.Merge(inv);
     }
 
     /// <summary>

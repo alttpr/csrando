@@ -3,15 +3,20 @@ using Microsoft.Extensions.Logging;
 
 internal static class ClassLogger
 {
-    private static readonly ILoggerFactory _loggerFactory;
-    static ClassLogger()
+    private static volatile LogLevel _minLevel = LogLevel.Information;
+    private static readonly ILoggerFactory _loggerFactory = LoggerFactory.Create(l =>
     {
-        _loggerFactory = LoggerFactory.Create(l => l.AddSimpleConsole(options =>
+        // Dynamic filter reads current _minLevel each log call
+        l.AddFilter(static (category, level) => level >= _minLevel);
+        l.AddSimpleConsole(options =>
         {
             options.IncludeScopes = true;
             options.SingleLine = true;
-        }));
-    }
+        });
+    });
+
+    public static void SetMinimumLevel(LogLevel level) => _minLevel = level;
+    public static LogLevel GetMinimumLevel() => _minLevel;
 
     public static ILogger Get()
     {

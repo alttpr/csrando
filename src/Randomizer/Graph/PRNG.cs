@@ -46,6 +46,15 @@ public class PRNG
 
         return newArray;
     }
+    public void ShuffleInPlace<T>(IList<T> list)
+    {
+        int count = list.Count;
+        for (int i = count - 1; i > 0; --i)
+        {
+            int r = GetRandomInt(0, i);
+            (list[i], list[r]) = (list[r], list[i]);
+        }
+    }
     public T GetRandomElement<T>(T[] array)
     {
         return array[GetRandomInt(array.Length)];

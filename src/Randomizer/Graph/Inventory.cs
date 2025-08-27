@@ -12,12 +12,15 @@ public sealed class Inventory
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private readonly BitArray _bits = new(400);
+    private readonly BitArray _bits;
     private readonly Dictionary<IItem, int> _itemCount = new();
     private readonly Dictionary<IWorld, float> _health = new();
 
-    public Inventory(params IItem[] items)
+    public Inventory(params IItem[] items) : this(400, (IEnumerable<IItem>)items) { }
+
+    public Inventory(int initialBitCapacity, IEnumerable<IItem> items)
     {
+        _bits = new BitArray(Math.Max(1, initialBitCapacity));
         foreach (var item in items)
         {
             AddItem(item);
@@ -28,10 +31,7 @@ public sealed class Inventory
     {
         _itemCount = new(other._itemCount);
         _health = new(other._health);
-        if (other._bits != null)
-        {
-            _bits = (BitArray)other._bits.Clone();
-        }
+        _bits = (BitArray)other._bits.Clone();
     }
 
     [Conditional("DEBUG")]
@@ -104,15 +104,10 @@ public sealed class Inventory
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Has(IItem item)
     {
-        if (_bits != null)
-        {
-            if (item.Id >= _bits.Length)
-            {
-                _bits.Length = item.Id + 1;
-            }
+        // Do not resize here; absence beyond current length implies false
+        if (item.Id < _bits.Length)
             return _bits.Get(item.Id);
-        }
-        return _itemCount.ContainsKey(item);
+        return false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -147,13 +142,12 @@ public sealed class Inventory
     public Inventory Merge(Inventory inventory)
     {
         var newInventory = new Inventory(this);
-        if (_bits != null && inventory._bits != null)
-            newInventory._bits!.Length = Math.Max(_bits.Length, inventory._bits.Length);
+        newInventory._bits.Length = Math.Max(_bits.Length, inventory._bits.Length);
 
         foreach (var (item, count) in inventory._itemCount)
         {
             newInventory._itemCount[item] = newInventory._itemCount.GetValueOrDefault(item, 0) + count;
-            newInventory._bits?.Set(item.Id, true);
+            newInventory._bits.Set(item.Id, true);
         }
 
         return newInventory;
