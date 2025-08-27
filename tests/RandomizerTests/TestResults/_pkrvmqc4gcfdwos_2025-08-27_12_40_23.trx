@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="1be1d659-7de1-4e72-9bc5-6ad5c6f7c649" name="@pkrvmqc4gcfdwos 2025-08-27 12:40:23" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-08-27T12:40:23.9002557+00:00" queuing="2025-08-27T12:40:23.9002559+00:00" start="2025-08-27T12:40:20.6291688+00:00" finish="2025-08-27T12:40:24.0219481+00:00" />
+  <TestSettings name="default" id="7266f624-33eb-4c70-915e-2f4a4bd8f28c">
+    <Deployment runDeploymentRoot="_pkrvmqc4gcfdwos_2025-08-27_12_40_23" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="ae5d3a9c-70a3-4559-b950-751218005c62" testId="0115c5a3-2e26-e97f-e4b9-9b6e1f7e49d7" testName="TestDungeonKeySolverStatic_EmptyGraph" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0003558" startTime="2025-08-27T12:40:23.8474330+00:00" endTime="2025-08-27T12:40:23.8481538+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ae5d3a9c-70a3-4559-b950-751218005c62" />
+    <UnitTestResult executionId="5413a9ce-ce3d-4e4e-a9eb-ee813a5751e0" testId="c29c21d9-6bdf-abc6-106f-39a5b9c27fc6" testName="TestSafeComponents" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0003232" startTime="2025-08-27T12:40:23.8789116+00:00" endTime="2025-08-27T12:40:23.8793256+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5413a9ce-ce3d-4e4e-a9eb-ee813a5751e0" />
+    <UnitTestResult executionId="f49014b5-fd1d-4c7e-93f3-edc1b1060b04" testId="14c33fd0-b508-1328-28e7-3d43d4e1587c" testName="TestDungeonGraphConverter_EmptyGraph" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0115554" startTime="2025-08-27T12:40:23.7896259+00:00" endTime="2025-08-27T12:40:23.8367010+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f49014b5-fd1d-4c7e-93f3-edc1b1060b04" />
+    <UnitTestResult executionId="ba0e2076-3ab7-4e1f-9edd-ba97bbd52a14" testId="278aaba5-2110-464a-6818-af9e9f9ef34d" testName="TestMultipleEntrances" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0026651" startTime="2025-08-27T12:40:23.8774547+00:00" endTime="2025-08-27T12:40:23.8822520+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ba0e2076-3ab7-4e1f-9edd-ba97bbd52a14" />
+    <UnitTestResult executionId="9c6320b1-54f4-464d-819b-b0f51eec4fe8" testId="9b50f778-d752-b08c-3cfc-03432f3d2d38" testName="TestChainOfDoors" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0007380" startTime="2025-08-27T12:40:23.8653372+00:00" endTime="2025-08-27T12:40:23.8661663+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9c6320b1-54f4-464d-819b-b0f51eec4fe8" />
+    <UnitTestResult executionId="319fac7e-5c9f-4a78-8b97-0a043931384e" testId="d6d65afc-51be-d2e2-0d60-3c0d5aa32b76" testName="TestMiniGraph_WithHammer_OneKey" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0005069" startTime="2025-08-27T12:40:23.8646697+00:00" endTime="2025-08-27T12:40:23.8653068+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="319fac7e-5c9f-4a78-8b97-0a043931384e" />
+    <UnitTestResult executionId="3e5998e8-be6b-4c22-8297-298f5959e75b" testId="a4608abe-caec-5833-72aa-eaa0b60ee806" testName="TestMiniGraph_WithStaticKey" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0005058" startTime="2025-08-27T12:40:23.8646703+00:00" endTime="2025-08-27T12:40:23.8653055+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e5998e8-be6b-4c22-8297-298f5959e75b" />
+    <UnitTestResult executionId="369cdb97-4278-480e-841f-8de2c33a2b73" testId="71a21f9d-7328-9b8c-f28b-c8c421b0ed82" testName="TestDemo" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0408146" startTime="2025-08-27T12:40:23.8998288+00:00" endTime="2025-08-27T12:40:23.9417712+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="369cdb97-4278-480e-841f-8de2c33a2b73">
+      <Output>
+        <StdOut>=== Early Game State ===
+Safe locations without Lamp/BigKey: [103, 102, 101]
+
+=== Mid Game State (have Lamp) ===
+Safe locations with Lamp: [104, 103, 102, 101]
+
+=== Late Game State (have Lamp + BigKey) ===
+Safe locations with Lamp + BigKey: [106, 105, 104, 103, 102, 101]
+
+=== Performance Demo ===
+1000 queries took 36ms (avg 0.04ms per query)
+
+=== One-shot Usage ===
+One-shot result: [103, 102, 101]</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a5a7bce5-4948-4a83-b236-ce43d8e727e7" testId="d99c37ed-7372-fc39-d198-9f0ea6c3239d" testName="TestPropertyBasedVsBruteForce" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0203135" startTime="2025-08-27T12:40:23.8793622+00:00" endTime="2025-08-27T12:40:23.8997828+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a5a7bce5-4948-4a83-b236-ce43d8e727e7" />
+    <UnitTestResult executionId="8a515e9d-7b10-47ce-a289-2ea3c6dad0e4" testId="00bb3a9e-c9d6-c644-b40d-a969bca13455" testName="TestStaticSolverMethod" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0003766" startTime="2025-08-27T12:40:23.8784146+00:00" endTime="2025-08-27T12:40:23.8788831+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a515e9d-7b10-47ce-a289-2ea3c6dad0e4" />
+    <UnitTestResult executionId="026c8cf9-d041-4484-a981-d438f94eda31" testId="154f5b73-940f-a609-7849-1375ccb18f8d" testName="TestMiniGraph_NoHammer_NoKeys" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0168830" startTime="2025-08-27T12:40:23.8474336+00:00" endTime="2025-08-27T12:40:23.8646224+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="026c8cf9-d041-4484-a981-d438f94eda31" />
+    <UnitTestResult executionId="96c1179e-d55d-41d5-a5de-6fe7076240ff" testId="65026bd6-4f6f-fb39-b048-839c6e0b78f3" testName="TestDungeonKeySolverIntegration_NoExceptions" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0370396" startTime="2025-08-27T12:40:23.7892901+00:00" endTime="2025-08-27T12:40:23.8437403+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="96c1179e-d55d-41d5-a5de-6fe7076240ff" />
+    <UnitTestResult executionId="db2c7b63-e6d7-4d86-b01d-1a2611239256" testId="de34cf3d-356d-e4da-83c4-c05314b8210a" testName="TestEmptyResult" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0007271" startTime="2025-08-27T12:40:23.8775493+00:00" endTime="2025-08-27T12:40:23.8783840+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="db2c7b63-e6d7-4d86-b01d-1a2611239256" />
+    <UnitTestResult executionId="596768ec-c001-4f58-8e77-ee75926da694" testId="2a8fdf60-bc2b-a020-941a-8b81996feec4" testName="TestBidirectionalDoor" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0005637" startTime="2025-08-27T12:40:23.8653365+00:00" endTime="2025-08-27T12:40:23.8659862+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="596768ec-c001-4f58-8e77-ee75926da694" />
+    <UnitTestResult executionId="9174806e-5157-446f-834a-4350eb698948" testId="97d5cede-753d-1c19-e7cc-345f008ff90c" testName="TestPerformanceWithLargerGraph" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0485184" startTime="2025-08-27T12:40:23.8822867+00:00" endTime="2025-08-27T12:40:23.9309284+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9174806e-5157-446f-834a-4350eb698948" />
+    <UnitTestResult executionId="9daae096-f8dc-457a-818f-77cdbe7781f1" testId="e5491835-c354-0aa6-26f2-020d9f052353" testName="TestMiniGraph_NoHammer_OneKey" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0161759" startTime="2025-08-27T12:40:23.8483354+00:00" endTime="2025-08-27T12:40:23.8646208+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9daae096-f8dc-457a-818f-77cdbe7781f1" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TestPropertyBasedVsBruteForce" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="d99c37ed-7372-fc39-d198-9f0ea6c3239d">
+      <Execution id="a5a7bce5-4948-4a83-b236-ce43d8e727e7" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestPropertyBasedVsBruteForce" />
+    </UnitTest>
+    <UnitTest name="TestBidirectionalDoor" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="2a8fdf60-bc2b-a020-941a-8b81996feec4">
+      <Execution id="596768ec-c001-4f58-8e77-ee75926da694" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestBidirectionalDoor" />
+    </UnitTest>
+    <UnitTest name="TestMiniGraph_WithHammer_OneKey" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="d6d65afc-51be-d2e2-0d60-3c0d5aa32b76">
+      <Execution id="319fac7e-5c9f-4a78-8b97-0a043931384e" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestMiniGraph_WithHammer_OneKey" />
+    </UnitTest>
+    <UnitTest name="TestMiniGraph_NoHammer_OneKey" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="e5491835-c354-0aa6-26f2-020d9f052353">
+      <Execution id="9daae096-f8dc-457a-818f-77cdbe7781f1" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestMiniGraph_NoHammer_OneKey" />
+    </UnitTest>
+    <UnitTest name="TestMiniGraph_NoHammer_NoKeys" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="154f5b73-940f-a609-7849-1375ccb18f8d">
+      <Execution id="026c8cf9-d041-4484-a981-d438f94eda31" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestMiniGraph_NoHammer_NoKeys" />
+    </UnitTest>
+    <UnitTest name="TestDungeonKeySolverIntegration_NoExceptions" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="65026bd6-4f6f-fb39-b048-839c6e0b78f3">
+      <Execution id="96c1179e-d55d-41d5-a5de-6fe7076240ff" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverIntegrationTests" name="TestDungeonKeySolverIntegration_NoExceptions" />
+    </UnitTest>
+    <UnitTest name="TestDungeonGraphConverter_EmptyGraph" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="14c33fd0-b508-1328-28e7-3d43d4e1587c">
+      <Execution id="f49014b5-fd1d-4c7e-93f3-edc1b1060b04" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverIntegrationTests" name="TestDungeonGraphConverter_EmptyGraph" />
+    </UnitTest>
+    <UnitTest name="TestStaticSolverMethod" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="00bb3a9e-c9d6-c644-b40d-a969bca13455">
+      <Execution id="8a515e9d-7b10-47ce-a289-2ea3c6dad0e4" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestStaticSolverMethod" />
+    </UnitTest>
+    <UnitTest name="TestDungeonKeySolverStatic_EmptyGraph" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="0115c5a3-2e26-e97f-e4b9-9b6e1f7e49d7">
+      <Execution id="ae5d3a9c-70a3-4559-b950-751218005c62" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverIntegrationTests" name="TestDungeonKeySolverStatic_EmptyGraph" />
+    </UnitTest>
+    <UnitTest name="TestSafeComponents" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="c29c21d9-6bdf-abc6-106f-39a5b9c27fc6">
+      <Execution id="5413a9ce-ce3d-4e4e-a9eb-ee813a5751e0" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestSafeComponents" />
+    </UnitTest>
+    <UnitTest name="TestMiniGraph_WithStaticKey" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="a4608abe-caec-5833-72aa-eaa0b60ee806">
+      <Execution id="3e5998e8-be6b-4c22-8297-298f5959e75b" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestMiniGraph_WithStaticKey" />
+    </UnitTest>
+    <UnitTest name="TestPerformanceWithLargerGraph" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="97d5cede-753d-1c19-e7cc-345f008ff90c">
+      <Execution id="9174806e-5157-446f-834a-4350eb698948" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestPerformanceWithLargerGraph" />
+    </UnitTest>
+    <UnitTest name="TestChainOfDoors" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="9b50f778-d752-b08c-3cfc-03432f3d2d38">
+      <Execution id="9c6320b1-54f4-464d-819b-b0f51eec4fe8" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestChainOfDoors" />
+    </UnitTest>
+    <UnitTest name="TestDemo" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="71a21f9d-7328-9b8c-f28b-c8c421b0ed82">
+      <Execution id="369cdb97-4278-480e-841f-8de2c33a2b73" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestDemo" />
+    </UnitTest>
+    <UnitTest name="TestMultipleEntrances" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="278aaba5-2110-464a-6818-af9e9f9ef34d">
+      <Execution id="ba0e2076-3ab7-4e1f-9edd-ba97bbd52a14" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestMultipleEntrances" />
+    </UnitTest>
+    <UnitTest name="TestEmptyResult" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="de34cf3d-356d-e4da-83c4-c05314b8210a">
+      <Execution id="db2c7b63-e6d7-4d86-b01d-1a2611239256" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.DungeonKeySolverTests" name="TestEmptyResult" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="0115c5a3-2e26-e97f-e4b9-9b6e1f7e49d7" executionId="ae5d3a9c-70a3-4559-b950-751218005c62" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c29c21d9-6bdf-abc6-106f-39a5b9c27fc6" executionId="5413a9ce-ce3d-4e4e-a9eb-ee813a5751e0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="14c33fd0-b508-1328-28e7-3d43d4e1587c" executionId="f49014b5-fd1d-4c7e-93f3-edc1b1060b04" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="278aaba5-2110-464a-6818-af9e9f9ef34d" executionId="ba0e2076-3ab7-4e1f-9edd-ba97bbd52a14" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9b50f778-d752-b08c-3cfc-03432f3d2d38" executionId="9c6320b1-54f4-464d-819b-b0f51eec4fe8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d6d65afc-51be-d2e2-0d60-3c0d5aa32b76" executionId="319fac7e-5c9f-4a78-8b97-0a043931384e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4608abe-caec-5833-72aa-eaa0b60ee806" executionId="3e5998e8-be6b-4c22-8297-298f5959e75b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="71a21f9d-7328-9b8c-f28b-c8c421b0ed82" executionId="369cdb97-4278-480e-841f-8de2c33a2b73" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d99c37ed-7372-fc39-d198-9f0ea6c3239d" executionId="a5a7bce5-4948-4a83-b236-ce43d8e727e7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="00bb3a9e-c9d6-c644-b40d-a969bca13455" executionId="8a515e9d-7b10-47ce-a289-2ea3c6dad0e4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="154f5b73-940f-a609-7849-1375ccb18f8d" executionId="026c8cf9-d041-4484-a981-d438f94eda31" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="65026bd6-4f6f-fb39-b048-839c6e0b78f3" executionId="96c1179e-d55d-41d5-a5de-6fe7076240ff" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="de34cf3d-356d-e4da-83c4-c05314b8210a" executionId="db2c7b63-e6d7-4d86-b01d-1a2611239256" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2a8fdf60-bc2b-a020-941a-8b81996feec4" executionId="596768ec-c001-4f58-8e77-ee75926da694" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="97d5cede-753d-1c19-e7cc-345f008ff90c" executionId="9174806e-5157-446f-834a-4350eb698948" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e5491835-c354-0aa6-26f2-020d9f052353" executionId="9daae096-f8dc-457a-818f-77cdbe7781f1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="16" executed="16" passed="16" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>MSTest Executor: Test Parallelization enabled for /home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll (Workers: 2, Scope: MethodLevel).
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

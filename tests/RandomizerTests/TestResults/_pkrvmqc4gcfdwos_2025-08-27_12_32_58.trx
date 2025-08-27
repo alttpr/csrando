@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="577d8458-ebe1-48da-bd1e-3149a063fe1e" name="@pkrvmqc4gcfdwos 2025-08-27 12:32:58" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-08-27T12:32:58.6990904+00:00" queuing="2025-08-27T12:32:58.6990905+00:00" start="2025-08-27T12:32:54.1569739+00:00" finish="2025-08-27T12:32:58.7080452+00:00" />
+  <TestSettings name="default" id="75a6df10-cfe3-46fe-940d-288a69a6c534">
+    <Deployment runDeploymentRoot="_pkrvmqc4gcfdwos_2025-08-27_12_32_58" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="e9125066-8466-48a3-8a70-f8d7792363b1" testId="65deb07b-1862-c9a7-4c9a-425c6092ef12" testName="TestEarlyBailoutOptimization" computerName="pkrvmqc4gcfdwos" duration="00:00:00.0111655" startTime="2025-08-27T12:32:58.4695317+00:00" endTime="2025-08-27T12:32:58.5123042+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e9125066-8466-48a3-8a70-f8d7792363b1">
+      <Output>
+        <StdOut>Early bailout test completed in 0ms</StdOut>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="640f2e64-3a6b-4ced-9fe5-76fe78739fc6" testId="24b280ee-f2b5-e875-2ca4-21d9a535657c" testName="TestSearcherPerformanceOptimizations" computerName="pkrvmqc4gcfdwos" duration="00:00:00.1167759" startTime="2025-08-27T12:32:58.4693126+00:00" endTime="2025-08-27T12:32:58.6051527+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="640f2e64-3a6b-4ced-9fe5-76fe78739fc6">
+      <Output>
+        <StdOut>Performance test completed in 0ms</StdOut>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TestEarlyBailoutOptimization" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="65deb07b-1862-c9a7-4c9a-425c6092ef12">
+      <Execution id="e9125066-8466-48a3-8a70-f8d7792363b1" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.SearcherPerformanceTests" name="TestEarlyBailoutOptimization" />
+    </UnitTest>
+    <UnitTest name="TestSearcherPerformanceOptimizations" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="24b280ee-f2b5-e875-2ca4-21d9a535657c">
+      <Execution id="640f2e64-3a6b-4ced-9fe5-76fe78739fc6" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Unit.SearcherPerformanceTests" name="TestSearcherPerformanceOptimizations" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="65deb07b-1862-c9a7-4c9a-425c6092ef12" executionId="e9125066-8466-48a3-8a70-f8d7792363b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="24b280ee-f2b5-e875-2ca4-21d9a535657c" executionId="640f2e64-3a6b-4ced-9fe5-76fe78739fc6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="2" executed="2" passed="2" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>MSTest Executor: Test Parallelization enabled for /home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll (Workers: 2, Scope: MethodLevel).
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
