@@ -593,11 +593,24 @@ public static class DungeonKeySolverStatic
 
 /// <summary>
 /// Helper class to convert the main Graph structure to DungeonGraph format for key solver integration
+/// Optimized with caching and performance improvements.
 /// </summary>
 public static class DungeonGraphConverter
 {
+    // Cache for vertex dungeon membership to avoid repeated ItemSet iteration
+    private static readonly Dictionary<(Vertex, string), bool> _vertexDungeonMembershipCache = new();
+
+    /// <summary>
+    /// Clear caches to free memory and handle graph changes
+    /// </summary>
+    public static void ClearCaches()
+    {
+        _vertexDungeonMembershipCache.Clear();
+    }
+
     /// <summary>
     /// Extract dungeon subgraph from the main graph for a specific dungeon
+    /// Optimized with caching for performance.
     /// </summary>
     /// <param name="graph">The main graph containing all vertices and edges</param>
     /// <param name="dungeonName">Name of the dungeon to extract (e.g., "eastern", "desert", etc.)</param>
@@ -618,18 +631,18 @@ public static class DungeonGraphConverter
             return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
         }
         
-        // Extract vertices that belong to this dungeon based on ItemSet
+        // Extract vertices that belong to this dungeon based on ItemSet with caching
         var dungeonVertices = new List<Vertex>();
         foreach (var vertex in graph.GetVertices())
         {
-            bool belongsToDungeon = vertex.ItemSet.Any(itemSet => 
-                itemSet.Name.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
-            
-            if (belongsToDungeon)
+            if (BelongsToDungeon(vertex, dungeonName))
             {
                 dungeonVertices.Add(vertex);
             }
         }
+        
+        if (dungeonVertices.Count == 0)
+            return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
         
         // Create DungeonNodes
         foreach (var vertex in dungeonVertices)
@@ -656,9 +669,9 @@ public static class DungeonGraphConverter
             dungeonNodes.Add(dungeonNode);
         }
         
-        // Create DungeonEdges
+        // Create DungeonEdges - optimized processing
         var doorGroupId = 0;
-        var processedDoors = new HashSet<(Vertex, Vertex)>();
+        var processedDoors = new HashSet<(int, int)>(); // Use IDs for better performance
         
         foreach (var vertex in dungeonVertices)
         {
@@ -686,6 +699,22 @@ public static class DungeonGraphConverter
         return new DungeonGraph { Nodes = dungeonNodes, Edges = dungeonEdges };
     }
     
+    /// <summary>
+    /// Check if a vertex belongs to a dungeon with caching for performance
+    /// </summary>
+    private static bool BelongsToDungeon(Vertex vertex, string dungeonName)
+    {
+        var cacheKey = (vertex, dungeonName);
+        if (_vertexDungeonMembershipCache.TryGetValue(cacheKey, out var cached))
+            return cached;
+
+        bool belongs = vertex.ItemSet.Any(itemSet => 
+            itemSet.Name.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
+
+        _vertexDungeonMembershipCache[cacheKey] = belongs;
+        return belongs;
+    }
+    
     private static bool IsItemLocation(Vertex vertex)
     {
         // Check if this vertex can hold items (chests, etc.)
@@ -706,7 +735,7 @@ public static class DungeonGraphConverter
     }
     
     private static int? GetDoorGroupId(Graph graph, IItem keyItem, Vertex from, Vertex to, 
-        HashSet<(Vertex, Vertex)> processedDoors, ref int nextDoorGroupId)
+        HashSet<(int, int)> processedDoors, ref int nextDoorGroupId)
     {
         // Check if this is a bidirectional door
         if (!graph.Doors.TryGetValue(keyItem, out var doorsByKey))
@@ -719,7 +748,7 @@ public static class DungeonGraphConverter
                 bool isThisDoor = (a == from && b == to) || (a == to && b == from);
                 if (isThisDoor)
                 {
-                    var doorKey = (a.Id < b.Id) ? (a, b) : (b, a); // Normalize order
+                    var doorKey = (Math.Min(a.Id, b.Id), Math.Max(a.Id, b.Id)); // Normalize order using IDs
                     if (!processedDoors.Contains(doorKey))
                     {
                         processedDoors.Add(doorKey);

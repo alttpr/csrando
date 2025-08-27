@@ -14,6 +14,22 @@ public class Searcher
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
+    
+    // Performance optimization: Cache dungeon solver instances and context
+    private static readonly Dictionary<(Graph, string), DungeonKeySolver> _solverCache = new();
+    private static readonly Dictionary<(Graph, string), DungeonGraph> _dungeonGraphCache = new();
+    private static readonly Dictionary<Vertex, string?> _vertexDungeonCache = new();
+
+    /// <summary>
+    /// Clear all caches to free memory and handle graph changes
+    /// </summary>
+    public static void ClearPerformanceCaches()
+    {
+        _solverCache.Clear();
+        _dungeonGraphCache.Clear();
+        _vertexDungeonCache.Clear();
+        DungeonGraphConverter.ClearCaches();
+    }
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -337,20 +353,30 @@ public class Searcher
     /// <summary>
     /// Try to use DungeonKeySolver for more efficient key search in single-dungeon scenarios.
     /// Returns null if the scenario is too complex for DungeonKeySolver (cross-dungeon, etc.)
+    /// Optimized with caching and early bailouts for performance.
     /// </summary>
     private static SearchResult? TryDungeonKeySolverSearch(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors)
     {
         try
         {
+            // Early bailout: Only try for ALttP small keys that match expected patterns
+            if (!IsOptimizableKey(key.Name))
+                return null;
+
             // Detect if this is a single-dungeon scenario by examining the doors
             var doors = visitedBeforeDoors.Graph.Doors[key];
             if (doors.Count == 0)
                 return null;
 
-            // Get the dungeon context from the first door's vertices
+            // Quick dungeon detection with early bailout on cross-dungeon scenarios
             string? dungeonName = null;
+            int doorCheckCount = 0;
+            const int maxDoorChecks = 3; // Limit checks for performance
+
             foreach (var door in doors)
             {
+                if (++doorCheckCount > maxDoorChecks) break; // Early bailout for large door sets
+
                 foreach (var (a, b) in door.Value)
                 {
                     var dungeonFromA = GetDungeonName(a);
@@ -361,7 +387,7 @@ public class Searcher
                         if (dungeonName == null)
                             dungeonName = dungeonFromA;
                         else if (dungeonName != dungeonFromA)
-                            return null; // Cross-dungeon scenario, fall back to recursive search
+                            return null; // Cross-dungeon scenario, immediate fallback
                     }
                     
                     if (dungeonFromB != null)
@@ -369,7 +395,7 @@ public class Searcher
                         if (dungeonName == null)
                             dungeonName = dungeonFromB;
                         else if (dungeonName != dungeonFromB)
-                            return null; // Cross-dungeon scenario, fall back to recursive search
+                            return null; // Cross-dungeon scenario, immediate fallback
                     }
                 }
             }
@@ -377,17 +403,25 @@ public class Searcher
             if (dungeonName == null)
                 return null; // Cannot determine dungeon context
 
-            // Extract dungeon graph
-            var dungeonGraph = DungeonGraphConverter.ExtractDungeonGraph(visitedBeforeDoors.Graph, dungeonName, key.Name);
+            // Use cached dungeon graph if available
+            var cacheKey = (visitedBeforeDoors.Graph, dungeonName);
+            if (!_dungeonGraphCache.TryGetValue(cacheKey, out var dungeonGraph))
+            {
+                // Extract dungeon graph and cache it
+                dungeonGraph = DungeonGraphConverter.ExtractDungeonGraph(visitedBeforeDoors.Graph, dungeonName, key.Name);
+                _dungeonGraphCache[cacheKey] = dungeonGraph;
+            }
+
             if (dungeonGraph.Nodes.Count == 0)
                 return null; // No valid dungeon graph
 
             // Find entrance nodes (nodes that are currently visited/reachable from outside)
             var entranceNodeIds = new List<int>();
+            var graphVerticesById = CreateVertexLookup(visitedBeforeDoors.Graph); // Cache vertex lookup
+            
             foreach (var node in dungeonGraph.Nodes)
             {
-                var vertex = visitedBeforeDoors.Graph.GetVertices().FirstOrDefault(v => v.Id == node.Id);
-                if (vertex != null && visitedBeforeDoors.Contains(vertex))
+                if (graphVerticesById.TryGetValue(node.Id, out var vertex) && visitedBeforeDoors.Contains(vertex))
                 {
                     entranceNodeIds.Add(node.Id);
                 }
@@ -397,11 +431,11 @@ public class Searcher
                 return null; // No accessible entrances
 
             // Create item check function based on current inventory
+            var allItemsById = CreateItemLookup(visitedBeforeDoors.Graph); // Cache item lookup
             Func<string, bool> itemCheck = req =>
             {
                 if (req == "fixed" || req == "KEY") return true;
-                var requiredItem = visitedBeforeDoors.Graph.AllItems.FirstOrDefault(i => i.Name == req);
-                return requiredItem != null && inventory.Has(requiredItem);
+                return allItemsById.TryGetValue(req, out var requiredItem) && inventory.Has(requiredItem);
             };
 
             // Get available keys
@@ -417,8 +451,7 @@ public class Searcher
 
             foreach (var nodeId in safeNodeIds)
             {
-                var vertex = visitedBeforeDoors.Graph.GetVertices().FirstOrDefault(v => v.Id == nodeId);
-                if (vertex != null)
+                if (graphVerticesById.TryGetValue(nodeId, out var vertex))
                 {
                     safeLocations.Add(vertex);
                     // For search starts, include vertices with outgoing edges that aren't in our safe set
@@ -438,21 +471,70 @@ public class Searcher
             return null;
         }
     }
+    
+    /// <summary>
+    /// Check if a key name is optimizable by DungeonKeySolver (ALttP small keys)
+    /// </summary>
+    private static bool IsOptimizableKey(string keyName)
+    {
+        return keyName switch
+        {
+            "KeyP1" or "KeyP2" or "KeyP3" or // Light World dungeons
+            "KeyD1" or "KeyD2" or "KeyD3" or "KeyD4" or "KeyD5" or "KeyD6" or "KeyD7" or // Dark World dungeons
+            "KeyA2" => true, // Ganon's Tower
+            _ => false
+        };
+    }
+    
+    /// <summary>
+    /// Create an efficient lookup dictionary for vertices by ID
+    /// </summary>
+    private static Dictionary<int, Vertex> CreateVertexLookup(Graph graph)
+    {
+        var lookup = new Dictionary<int, Vertex>();
+        foreach (var vertex in graph.GetVertices())
+        {
+            lookup[vertex.Id] = vertex;
+        }
+        return lookup;
+    }
+    
+    /// <summary>
+    /// Create an efficient lookup dictionary for items by name
+    /// </summary>
+    private static Dictionary<string, IItem> CreateItemLookup(Graph graph)
+    {
+        var lookup = new Dictionary<string, IItem>();
+        foreach (var item in graph.AllItems)
+        {
+            lookup[item.Name] = item;
+        }
+        return lookup;
+    }
 
     /// <summary>
-    /// Extract dungeon name from a vertex's ItemSet
+    /// Extract dungeon name from a vertex's ItemSet with caching for performance
     /// </summary>
     private static string? GetDungeonName(Vertex vertex)
     {
+        // Use cache to avoid repeated ItemSet iteration
+        if (_vertexDungeonCache.TryGetValue(vertex, out var cachedDungeon))
+            return cachedDungeon;
+
         // Look for dungeon-specific ItemSet entries
+        string? dungeonName = null;
         foreach (var itemSet in vertex.ItemSet)
         {
             if (itemSet.World != null && IsDungeonName(itemSet.Name))
             {
-                return itemSet.Name;
+                dungeonName = itemSet.Name;
+                break; // Early exit on first match
             }
         }
-        return null;
+        
+        // Cache the result
+        _vertexDungeonCache[vertex] = dungeonName;
+        return dungeonName;
     }
 
     /// <summary>
