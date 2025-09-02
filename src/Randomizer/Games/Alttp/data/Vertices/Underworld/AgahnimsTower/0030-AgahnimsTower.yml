@@ -14,7 +14,7 @@ rooms:
         # this emulates Door Rando logic, which allows Aga tower for items but prevents the kill
         - name: "Agahnims Tower - Bedroom - Zelda Check"
           connections:
-            RescueZelda:
+            fixed:
               - "Agahnims Tower - Bedroom"
 
         - name: "Agahnims Tower - Bedroom"
