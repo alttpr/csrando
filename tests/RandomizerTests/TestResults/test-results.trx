@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="bd1a7f7d-80d1-42f9-bf75-c70194e285bc" name="@pkrvmccyg1gnepe 2025-09-02 14:38:30" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-09-02T14:38:30.4396631+00:00" queuing="2025-09-02T14:38:30.4396632+00:00" start="2025-09-02T14:38:24.4051066+00:00" finish="2025-09-02T14:38:30.5172476+00:00" />
+  <TestSettings name="default" id="8a976a6b-ea8f-4121-ba9f-c87473f6d421">
+    <Deployment runDeploymentRoot="_pkrvmccyg1gnepe_2025-09-02_14_38_30" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="1f43f710-68f6-44da-9b56-2e165b0370c8" testId="cdcac105-c084-ef8f-a866-d8e4b0907d20" testName="TestLogic(Agahnims Tower - Boss Room - Agahnim, False, RescueZelda,2×KeyA1,Cape,Lamp)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0093501" startTime="2025-09-02T14:38:30.4081381+00:00" endTime="2025-09-02T14:38:30.4176604+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f43f710-68f6-44da-9b56-2e165b0370c8" />
+    <UnitTestResult executionId="b9e9bc27-ee07-4016-b176-c50f51e54fdb" testId="a2a35825-66ec-550d-e85b-7cb080f25baf" testName="TestLogic(Agahnims Tower - First Chest, True, RescueZelda,Cape)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0072853" startTime="2025-09-02T14:38:30.3570665+00:00" endTime="2025-09-02T14:38:30.3645041+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b9e9bc27-ee07-4016-b176-c50f51e54fdb" />
+    <UnitTestResult executionId="7c79c09c-d6fd-495b-9258-76849a6b259d" testId="bf7e087e-547b-8600-5809-a37cefdb7e86" testName="TestLogic(Agahnims Tower - Boss Room - Agahnim, True, RescueZelda,2×KeyA1,L1Sword,Cape,Lamp)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0086386" startTime="2025-09-02T14:38:30.4177028+00:00" endTime="2025-09-02T14:38:30.4265450+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c79c09c-d6fd-495b-9258-76849a6b259d" />
+    <UnitTestResult executionId="3fb5fec0-0376-4fcd-9f13-0fa976809ede" testId="3a40c178-118f-7cdc-9297-ed540a8f6f03" testName="TestLogic(Agahnims Tower - Second Chest, False, RescueZelda,L2Sword)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0073946" startTime="2025-09-02T14:38:30.3645535+00:00" endTime="2025-09-02T14:38:30.3720893+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3fb5fec0-0376-4fcd-9f13-0fa976809ede" />
+    <UnitTestResult executionId="5d7d1ecd-c0f8-498e-8e13-039f1938724a" testId="b13efbc6-45c5-fbcc-207c-a878c2629677" testName="TestLogic(Agahnims Tower - First Chest, False, Cape)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0053675" startTime="2025-09-02T14:38:30.3509373+00:00" endTime="2025-09-02T14:38:30.3566170+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5d7d1ecd-c0f8-498e-8e13-039f1938724a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.AreEqual failed. Expected:&lt;False&gt;. Actual:&lt;True&gt;. </Message>
+          <StackTrace>   at RandomizerTests.Logic.LogicTestBase.RunLogicTest(WorldConfig[] config, String location, Boolean expected, IEnumerable`1 inventory) in /home/runner/work/csrando/csrando/tests/RandomizerTests/Logic/LogicTestBase.cs:line 35
+   at RandomizerTests.Logic.LogicTestBase.TestLogic(String location, Boolean expected, String[] inventory) in /home/runner/work/csrando/csrando/tests/RandomizerTests/Logic/LogicTestBase.cs:line 59
+   at RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest.TestLogic(String location, Boolean expected, String[] inventory) in /home/runner/work/csrando/csrando/tests/RandomizerTests/Logic/Standard/NoGlitches/HyruleCastleTowerTest.cs:line 31
+   at InvokeStub_HyruleCastleTowerTest.TestLogic(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b24b152c-51ea-42e6-b19e-7101a2d85189" testId="f2ae2665-d075-9caf-8a5d-8ac471d8b218" testName="TestLogic(Agahnims Tower - First Chest, False, None)" computerName="pkrvmccyg1gnepe" duration="00:00:01.6311970" startTime="2025-09-02T14:38:28.6811761+00:00" endTime="2025-09-02T14:38:30.3428045+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b24b152c-51ea-42e6-b19e-7101a2d85189" />
+    <UnitTestResult executionId="7d6f2481-19a5-45ea-8559-01da703c2efe" testId="b85ab79f-6157-71bb-f82c-7a764247f72b" testName="TestLogic(Agahnims Tower - Boss Room - Agahnim, True, RescueZelda,2×KeyA1,L2Sword,Lamp)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0175767" startTime="2025-09-02T14:38:30.4107975+00:00" endTime="2025-09-02T14:38:30.4300795+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d6f2481-19a5-45ea-8559-01da703c2efe" />
+    <UnitTestResult executionId="c69fe0a5-2034-45a8-9e7d-9cc53ab699af" testId="59a583c6-0b56-53cf-5358-8e2bb01f63c6" testName="TestLogic(Agahnims Tower - Boss Room - Agahnim, False, None)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0051586" startTime="2025-09-02T14:38:30.3965879+00:00" endTime="2025-09-02T14:38:30.4019068+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c69fe0a5-2034-45a8-9e7d-9cc53ab699af" />
+    <UnitTestResult executionId="99a0f2cc-8d3f-4ccc-b8bb-f7fe525bca0d" testId="75d41835-cd56-ccf6-02bd-825749202f54" testName="TestLogic(Agahnims Tower - Second Chest, False, None)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0039311" startTime="2025-09-02T14:38:30.3591799+00:00" endTime="2025-09-02T14:38:30.3632481+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="99a0f2cc-8d3f-4ccc-b8bb-f7fe525bca0d" />
+    <UnitTestResult executionId="0694db0f-207a-4150-bd15-f1598a0996c9" testId="9f440542-08fe-2548-612d-9f0f00912319" testName="TestLogic(Agahnims Tower - Second Chest, True, RescueZelda,KeyA1,L2Sword,Lamp)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0076639" startTime="2025-09-02T14:38:30.3680879+00:00" endTime="2025-09-02T14:38:30.3759213+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0694db0f-207a-4150-bd15-f1598a0996c9" />
+    <UnitTestResult executionId="e0f1f386-6548-451c-8824-31138fc86162" testId="b9487fc0-914b-2542-1eef-0345d75c7d1d" testName="TestLogic(Agahnims Tower - Second Chest, False, L2Sword)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0046460" startTime="2025-09-02T14:38:30.3632779+00:00" endTime="2025-09-02T14:38:30.3680584+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e0f1f386-6548-451c-8824-31138fc86162" />
+    <UnitTestResult executionId="de2818b7-c574-4b50-ab8a-7f34e57899e5" testId="99b67048-a913-4a52-4672-7062f61a0734" testName="TestLogic(Agahnims Tower - First Chest, True, RescueZelda,L2Sword)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0076508" startTime="2025-09-02T14:38:30.3513415+00:00" endTime="2025-09-02T14:38:30.3591476+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="de2818b7-c574-4b50-ab8a-7f34e57899e5" />
+    <UnitTestResult executionId="ac7a0fbb-c2e7-427f-b4ac-c460067680c2" testId="326634c5-8f1b-4d1b-7610-10d49b7298e8" testName="TestLogic(Agahnims Tower - Boss Room - Agahnim, False, 2×KeyA1,Cape,Lamp)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0059585" startTime="2025-09-02T14:38:30.4019517+00:00" endTime="2025-09-02T14:38:30.4081016+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac7a0fbb-c2e7-427f-b4ac-c460067680c2" />
+    <UnitTestResult executionId="b050fd27-e9f3-49ec-b408-14cdfc8a3422" testId="ed5fbfc1-7bf7-da5b-7d5f-c1e88f340ecb" testName="TestLogic(Agahnims Tower - Second Chest, True, RescueZelda,KeyA1,Cape,Lamp)" computerName="pkrvmccyg1gnepe" duration="00:00:00.0144406" startTime="2025-09-02T14:38:30.3959998+00:00" endTime="2025-09-02T14:38:30.4107598+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b050fd27-e9f3-49ec-b408-14cdfc8a3422" />
+    <UnitTestResult executionId="7d7795dd-e7ca-4ba0-a94b-5f437326cf1f" testId="127937ba-6fc7-a27b-ee4a-c7af0adf29b0" testName="TestLogic(Agahnims Tower - First Chest, False, L2Sword)" computerName="pkrvmccyg1gnepe" duration="00:00:01.6437282" startTime="2025-09-02T14:38:28.6835556+00:00" endTime="2025-09-02T14:38:30.3492345+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d7795dd-e7ca-4ba0-a94b-5f437326cf1f">
+      <Output>
+        <StdOut>\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Graph.GameRandomizer[0] Using seed: 42
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Moldorm in 'Tower Of Hera - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Mothula in 'Skull Woods - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Lanmolas in 'Desert Palace - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing ArmosKnight in 'Eastern Palace - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Kholdstare in 'Ice Palace - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Vitreous in 'Misery Mire - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Helmasaur in 'Palace of Darkness - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Arrghus in 'Swamp Palace - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Blind in 'Thieves' Town - Boss Room - Blind Active'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.BossShuffler[0] [BS] Placing Trinexx in 'Turtle Rock - Boss Room'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack04-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack04-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack04-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack06-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePack06-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack06-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack06-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack05-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack05-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack05-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillFull' in 'PrizePack05-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePack05-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack05-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack05-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillFull' in 'PrizePack05-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill10' in 'PrizePack07-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack07-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack07-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack07-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill10' in 'PrizePack07-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack07-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack07-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack07-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack03-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack03-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack03-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack03-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill5' in 'PrizePack03-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack03-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePack03-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePack03-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'ArrowRefill10' in 'PrizePack02-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePack02-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack02-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill8' in 'PrizePack02-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePack02-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillFull' in 'PrizePack02-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Fairy' in 'PrizePack02-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Heart' in 'PrizePack02-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack01-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill8' in 'PrizePack01-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack01-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack01-03'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill4' in 'PrizePack01-04'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack01-05'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack01-06'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePack01-07'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'MagicRefillSmall' in 'PrizePackFish-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeBlue' in 'PrizePackPull-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeGreen' in 'PrizePackPull-01'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'Apple' in 'PrizePackPull-02'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'RupeeRed' in 'PrizePackCrab-Final'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill8' in 'PrizePackStun-00'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Games.Alttp.WorldModifiers.PrizePackShuffler[0] [PP] Placing 'BombRefill1' in 'PrizePackCrab-AllButLast'
+\u001b[40m\u001b[32minfo\u001b[39m\u001b[22m\u001b[49m: Randomizer.Graph.GameRandomizer[0] Graph configuration took 00:00:01.2574112</StdOut>
+        <ErrorInfo>
+          <Message>Assert.AreEqual failed. Expected:&lt;False&gt;. Actual:&lt;True&gt;. </Message>
+          <StackTrace>   at RandomizerTests.Logic.LogicTestBase.RunLogicTest(WorldConfig[] config, String location, Boolean expected, IEnumerable`1 inventory) in /home/runner/work/csrando/csrando/tests/RandomizerTests/Logic/LogicTestBase.cs:line 35
+   at RandomizerTests.Logic.LogicTestBase.TestLogic(String location, Boolean expected, String[] inventory) in /home/runner/work/csrando/csrando/tests/RandomizerTests/Logic/LogicTestBase.cs:line 59
+   at RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest.TestLogic(String location, Boolean expected, String[] inventory) in /home/runner/work/csrando/csrando/tests/RandomizerTests/Logic/Standard/NoGlitches/HyruleCastleTowerTest.cs:line 31
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TestLogic(Agahnims Tower - First Chest, False, None)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="f2ae2665-d075-9caf-8a5d-8ac471d8b218">
+      <Execution id="b24b152c-51ea-42e6-b19e-7101a2d85189" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Boss Room - Agahnim, True, RescueZelda,2×KeyA1,L2Sword,Lamp)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="b85ab79f-6157-71bb-f82c-7a764247f72b">
+      <Execution id="7d6f2481-19a5-45ea-8559-01da703c2efe" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - First Chest, True, RescueZelda,Cape)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="a2a35825-66ec-550d-e85b-7cb080f25baf">
+      <Execution id="b9e9bc27-ee07-4016-b176-c50f51e54fdb" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - First Chest, False, L2Sword)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="127937ba-6fc7-a27b-ee4a-c7af0adf29b0">
+      <Execution id="7d7795dd-e7ca-4ba0-a94b-5f437326cf1f" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Second Chest, False, None)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="75d41835-cd56-ccf6-02bd-825749202f54">
+      <Execution id="99a0f2cc-8d3f-4ccc-b8bb-f7fe525bca0d" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - First Chest, False, Cape)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="b13efbc6-45c5-fbcc-207c-a878c2629677">
+      <Execution id="5d7d1ecd-c0f8-498e-8e13-039f1938724a" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Second Chest, False, L2Sword)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="b9487fc0-914b-2542-1eef-0345d75c7d1d">
+      <Execution id="e0f1f386-6548-451c-8824-31138fc86162" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Boss Room - Agahnim, False, 2×KeyA1,Cape,Lamp)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="326634c5-8f1b-4d1b-7610-10d49b7298e8">
+      <Execution id="ac7a0fbb-c2e7-427f-b4ac-c460067680c2" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Boss Room - Agahnim, False, None)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="59a583c6-0b56-53cf-5358-8e2bb01f63c6">
+      <Execution id="c69fe0a5-2034-45a8-9e7d-9cc53ab699af" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Boss Room - Agahnim, True, RescueZelda,2×KeyA1,L1Sword,Cape,Lamp)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="bf7e087e-547b-8600-5809-a37cefdb7e86">
+      <Execution id="7c79c09c-d6fd-495b-9258-76849a6b259d" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Second Chest, False, RescueZelda,L2Sword)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="3a40c178-118f-7cdc-9297-ed540a8f6f03">
+      <Execution id="3fb5fec0-0376-4fcd-9f13-0fa976809ede" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - First Chest, True, RescueZelda,L2Sword)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="99b67048-a913-4a52-4672-7062f61a0734">
+      <Execution id="de2818b7-c574-4b50-ab8a-7f34e57899e5" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Boss Room - Agahnim, False, RescueZelda,2×KeyA1,Cape,Lamp)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="cdcac105-c084-ef8f-a866-d8e4b0907d20">
+      <Execution id="1f43f710-68f6-44da-9b56-2e165b0370c8" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Second Chest, True, RescueZelda,KeyA1,Cape,Lamp)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="ed5fbfc1-7bf7-da5b-7d5f-c1e88f340ecb">
+      <Execution id="b050fd27-e9f3-49ec-b408-14cdfc8a3422" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+    <UnitTest name="TestLogic(Agahnims Tower - Second Chest, True, RescueZelda,KeyA1,L2Sword,Lamp)" storage="/home/runner/work/csrando/csrando/tests/randomizertests/bin/debug/net8.0/randomizertests.dll" id="9f440542-08fe-2548-612d-9f0f00912319">
+      <Execution id="0694db0f-207a-4150-bd15-f1598a0996c9" />
+      <TestMethod codeBase="/home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll" adapterTypeName="executor://mstestadapter/v2" className="RandomizerTests.Logic.Standard.NoGlitches.HyruleCastleTowerTest" name="TestLogic" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="cdcac105-c084-ef8f-a866-d8e4b0907d20" executionId="1f43f710-68f6-44da-9b56-2e165b0370c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a2a35825-66ec-550d-e85b-7cb080f25baf" executionId="b9e9bc27-ee07-4016-b176-c50f51e54fdb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bf7e087e-547b-8600-5809-a37cefdb7e86" executionId="7c79c09c-d6fd-495b-9258-76849a6b259d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a40c178-118f-7cdc-9297-ed540a8f6f03" executionId="3fb5fec0-0376-4fcd-9f13-0fa976809ede" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b13efbc6-45c5-fbcc-207c-a878c2629677" executionId="5d7d1ecd-c0f8-498e-8e13-039f1938724a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f2ae2665-d075-9caf-8a5d-8ac471d8b218" executionId="b24b152c-51ea-42e6-b19e-7101a2d85189" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b85ab79f-6157-71bb-f82c-7a764247f72b" executionId="7d6f2481-19a5-45ea-8559-01da703c2efe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="59a583c6-0b56-53cf-5358-8e2bb01f63c6" executionId="c69fe0a5-2034-45a8-9e7d-9cc53ab699af" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="75d41835-cd56-ccf6-02bd-825749202f54" executionId="99a0f2cc-8d3f-4ccc-b8bb-f7fe525bca0d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9f440542-08fe-2548-612d-9f0f00912319" executionId="0694db0f-207a-4150-bd15-f1598a0996c9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9487fc0-914b-2542-1eef-0345d75c7d1d" executionId="e0f1f386-6548-451c-8824-31138fc86162" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="99b67048-a913-4a52-4672-7062f61a0734" executionId="de2818b7-c574-4b50-ab8a-7f34e57899e5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="326634c5-8f1b-4d1b-7610-10d49b7298e8" executionId="ac7a0fbb-c2e7-427f-b4ac-c460067680c2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ed5fbfc1-7bf7-da5b-7d5f-c1e88f340ecb" executionId="b050fd27-e9f3-49ec-b408-14cdfc8a3422" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="127937ba-6fc7-a27b-ee4a-c7af0adf29b0" executionId="7d7795dd-e7ca-4ba0-a94b-5f437326cf1f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="15" executed="15" passed="13" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>MSTest Executor: Test Parallelization enabled for /home/runner/work/csrando/csrando/tests/RandomizerTests/bin/Debug/net8.0/RandomizerTests.dll (Workers: 2, Scope: MethodLevel).
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

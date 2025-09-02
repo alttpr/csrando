@@ -6,13 +6,19 @@ rooms:
         - name: "Agahnims Tower - Antichamber"
           connections:
             fixed:
-              - "Agahnims Tower - Bedroom"
               - "Agahnims Tower - Bridge"
+            RescueZelda:
+              - "Agahnims Tower - Bedroom - Zelda Check"
+
+        # fix for Standard opening: require Zelda to be rescued before reaching Agahnim
+        # this emulates Door Rando logic, which allows Aga tower for items but prevents the kill
+        - name: "Agahnims Tower - Bedroom - Zelda Check"
+          connections:
+            RescueZelda:
+              - "Agahnims Tower - Bedroom"
 
         - name: "Agahnims Tower - Bedroom"
           connections:
-            fixed:
-              - "Agahnims Tower - Antichamber"
             L1Sword:
               - "Agahnims Tower - Boss Room"
             SwordlessNormal:
