@@ -55,6 +55,7 @@ public class Config
 
 
     private string? _crystalsGanon;
+    [Category("Goal")]
     [Values("0", "1", "2", "3", "4", "5", "6", "7", "Dungeons", Default = "7")]
     public string CrystalsGanon
     {
@@ -62,6 +63,7 @@ public class Config
         set => _crystalsGanon = value;
     }
     private string? _crystalsTower;
+    [Category("Goal")]
     [Values("0", "1", "2", "3", "4", "5", "6", "7", Default = "7")]
     public string CrystalsTower
     {
@@ -95,29 +97,44 @@ public class Config
         _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
+    [Category("Goal")]
     [ValueRange(1, 150, Default = 50)]
+    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
     public ushort TriforcePieces { get; set; } = 50;
 
+    [Category("Goal")]
+    [ValueRange(1, 150, Default = 30)]
+    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
+    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
+
+
+    [Category("Goal")]
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 
+    [Category("Item Placement")]
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
+    [Category("Gameplay")]
     public StateOption State { get; init; } = StateOption.Standard;
 
+    [Category("Item Placement")]
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
     public List<TechOption> Techs { get; init; } = [];
 
     public WeaponOption Weapon { get; init; } = WeaponOption.Randomized;
 
+    [Category("Gameplay")]
     public EntranceShuffleOption EntranceShuffle { get; init; } = EntranceShuffleOption.None;
 
+    [Category("Gameplay")]
     public EnemyShuffleOption EnemyShuffle { get; init; } = EnemyShuffleOption.None;
 
     public EnemyDamageOption EnemyDamage { get; init; } = EnemyDamageOption.Default;
 
     public EnemyHealthOption EnemyHealth { get; init; } = EnemyHealthOption.Default;
 
+    [Category("Gameplay")]
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
     public TileRoomPatternOption TileRoomPattern { get; init; } = TileRoomPatternOption.Default;
@@ -125,10 +142,20 @@ public class Config
     // TODO: Make it a bool? Do we have more planned there?
     [Ignore("No shop randomization yet")]
     public ShopSupplyOption RegionShopSupply { get; init; } = ShopSupplyOption.Normal;
+
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildKeys { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildBigKeys { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildMaps { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildCompasses { get; init; } = false;
+
     public bool RomRupeeBow { get; init; } = false;
 
     // TODO: Add configuration for custom prize packs
@@ -167,8 +194,6 @@ public class Config
     public bool HudItemCounter { get; init; } = false;
     [Ignore("Nobody cares about the goal icon")]
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
-    [ValueRange(1, 150, Default = 30)]
-    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
     public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;
@@ -176,6 +201,7 @@ public class Config
     public SilversEquipOption SilversAutoEquip { get; init; } = SilversEquipOption.Collection;
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
+    [Category("Gameplay")]
     public bool EnableHints { get; init; } = false;
 }
 

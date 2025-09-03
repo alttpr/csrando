@@ -60,7 +60,17 @@ public sealed partial class MetaController : ControllerBase
         string? description = string.Join('\n', NonNull(Description(property), remark))?.Trim();
         if (string.IsNullOrWhiteSpace(description))
             description = null;
-        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor);
+
+        string? category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
+        string? subcategory = property.GetCustomAttribute<SubcategoryAttribute>()?.Subcategory;
+        
+        MetaDependsOn? dependsOn = null;
+        if (property.GetCustomAttribute<DependsOnAttribute>() is { } dependsOnAttr)
+        {
+            dependsOn = new MetaDependsOn(dependsOnAttr.PropertyName, dependsOnAttr.Values);
+        }
+
+        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor, category, subcategory, dependsOn);
     }
     private static IEnumerable<string> NonNull(params IEnumerable<string?> values)
     {
@@ -194,6 +204,7 @@ public sealed record MetaRandomizer(string Name, string? Description, Randomizer
 
 public sealed record MetaRootSettings(List<MetaSetting> Settings, Dictionary<string, MetaTargetSettings> TargetSettings);
 public sealed record MetaTargetSettings(MetaTarget Target, List<MetaSetting> Settings);
+public sealed record MetaDependsOn(string Key, object[] Values);
 public sealed record MetaSetting(
     string Key,
     string Name,
@@ -203,7 +214,10 @@ public sealed record MetaSetting(
     Dictionary<string, object?>? Values = null,
     object? Default = null,
     MetaSettingsVisibility Visibility = MetaSettingsVisibility.Basic,
-    string? OptionsFor = null
+    string? OptionsFor = null,
+    string? Category = null,
+    string? Subcategory = null,
+    MetaDependsOn? DependsOn = null    
 );
 public enum MetaSettingsType { Input, SingleChoice, MultipleChoice, Toggle, Slider };
 public sealed record MetaSettingsRange(int From, int To);
