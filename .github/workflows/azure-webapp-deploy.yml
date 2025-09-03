@@ -1,0 +1,64 @@
+name: Azure Web App Deploy
+
+on:
+  push:
+    branches: ["bhaal/api"]
+
+jobs:
+  deploy:
+    name: Deploy to Azure Web App
+    runs-on: ubuntu-latest
+    env:
+      AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
+      PUBLISH_DIR: ${{ runner.temp }}/publish
+      PACKAGE_PATH: ${{ runner.temp }}/app.zip
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c Release
+
+      - name: Publish app
+        run: |
+          dotnet publish src/Randomizer/Randomizer.csproj -c Release -o "$PUBLISH_DIR"
+
+      - name: Ensure Windows App Service starts with 'api'
+        run: |
+          cat > "$PUBLISH_DIR"/web.config << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <system.webServer>
+              <handlers>
+                <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+              </handlers>
+              <aspNetCore processPath="dotnet" arguments="Randomizer.dll api" stdoutLogEnabled="false" hostingModel="OutOfProcess" />
+            </system.webServer>
+          </configuration>
+          EOF
+
+      - name: Create deployment package
+        run: |
+          cd "$PUBLISH_DIR"
+          zip -r "$PACKAGE_PATH" .
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.PACKAGE_PATH }}
+
+      - name: Post-deploy note (Linux startup)
+        run: |
+          echo "If your Azure Web App is Linux-based, set the App Service Startup Command to:"
+          echo "  dotnet Randomizer.dll api"
+          echo "You can do this once in the Azure Portal (Configuration -> General settings -> Startup Command)."
+
