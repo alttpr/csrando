@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME }}
-      PUBLISH_DIR: ${{ runner.temp }}/publish
-      PACKAGE_PATH: ${{ runner.temp }}/app.zip
+      PUBLISH_DIR: ${{ github.workspace }}/publish
+      PACKAGE_PATH: ${{ github.workspace }}/app.zip
     steps:
       - uses: actions/checkout@v4
 
@@ -61,4 +61,3 @@ jobs:
           echo "If your Azure Web App is Linux-based, set the App Service Startup Command to:"
           echo "  dotnet Randomizer.dll api"
           echo "You can do this once in the Azure Portal (Configuration -> General settings -> Startup Command)."
-
