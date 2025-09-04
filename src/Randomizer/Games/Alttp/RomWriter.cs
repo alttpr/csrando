@@ -204,10 +204,10 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
-        //TODO: This is disabled for now until we can sort out reading with logged writes for the API
-        //WriteEnemyDamageToRom(world, rom, prng);
-        //WriteEnemyHealthToRom(world, rom, prng);
-        //WriteEnemiesToRom(world, rom);
+        
+        WriteEnemyDamageToRom(world, rom, prng);
+        WriteEnemyHealthToRom(world, rom, prng);
+        WriteEnemiesToRom(world, rom);
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
         rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);
