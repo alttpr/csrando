@@ -130,6 +130,8 @@ public class IcePalaceTest : OpenNoGlitchesLogicTests
         ["Ice Palace - Map Chest", false, new string[] { "MoonPearl", "Flippers", "TitansMitt", "Bombos", "L3Sword", "Hammer", "KeyD5", "BigKeyD5" }],
         ["Ice Palace - Map Chest", false, new string[] { "MoonPearl", "Flippers", "ProgressiveGlove", "ProgressiveGlove", "Bombos", "L4Sword", "Hammer", "KeyD5", "BigKeyD5" }],
         ["Ice Palace - Map Chest", false, new string[] { "MoonPearl", "Flippers", "TitansMitt", "Bombos", "L4Sword", "Hammer", "KeyD5", "BigKeyD5" }],
+        // map chest requires Hammer (and Mitts), it is on the other side of the big block surrounded by pegs.
+        ["Ice Palace - Map Chest", false, new string[] { "MoonPearl", "Flippers", "ProgressiveGlove", "ProgressiveGlove", "FireRod", "Hookshot", "KeyD5" }],
 
         ["Ice Palace - Spike Room", false, new string[] {  }],
         ["Ice Palace - Spike Room", true, new string[] { "MoonPearl", "Flippers", "ProgressiveGlove", "ProgressiveGlove", "FireRod", "Hookshot", "KeyD5" }],
