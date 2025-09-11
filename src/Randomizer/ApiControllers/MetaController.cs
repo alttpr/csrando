@@ -22,6 +22,7 @@ public sealed partial class MetaController : ControllerBase
         // TODO: all of this lends itself to a source generator that builds a static result once.
         var rootSettings = new List<MetaSetting>();
         var gameSettings = new Dictionary<string, MetaTargetSettings>();
+        var postGenSettings = PostGenSettingsBuilder.Build();
 
         foreach (var rootProperty in SettingProperties(typeof(WorldConfig)))
         {
@@ -40,7 +41,7 @@ public sealed partial class MetaController : ControllerBase
             }
         }
 
-        return Results.Ok(new MetaRootSettings(rootSettings, gameSettings));
+        return Results.Ok(new MetaRootSettings(rootSettings, gameSettings, postGenSettings));
     }
 
     private static MetaSetting Setting(PropertyInfo property, bool noRandomValues = false)
@@ -63,7 +64,7 @@ public sealed partial class MetaController : ControllerBase
 
         string? category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
         string? subcategory = property.GetCustomAttribute<SubcategoryAttribute>()?.Subcategory;
-        
+
         MetaDependsOn? dependsOn = null;
         if (property.GetCustomAttribute<DependsOnAttribute>() is { } dependsOnAttr)
         {
@@ -202,7 +203,11 @@ public sealed partial class MetaController : ControllerBase
 public sealed record MetaTarget(string Name, string? Description, Game? Game, RandomizerTarget? Randomizer);
 public sealed record MetaRandomizer(string Name, string? Description, RandomizerTarget Randomizer);
 
-public sealed record MetaRootSettings(List<MetaSetting> Settings, Dictionary<string, MetaTargetSettings> TargetSettings);
+public sealed record MetaRootSettings(
+    List<MetaSetting> Settings,
+    Dictionary<string, MetaTargetSettings> TargetSettings,
+    Dictionary<string, MetaPostGenGameOptions> PostGenSettings
+);
 public sealed record MetaTargetSettings(MetaTarget Target, List<MetaSetting> Settings);
 public sealed record MetaDependsOn(string Key, object[] Values);
 public sealed record MetaSetting(
@@ -217,7 +222,7 @@ public sealed record MetaSetting(
     string? OptionsFor = null,
     string? Category = null,
     string? Subcategory = null,
-    MetaDependsOn? DependsOn = null    
+    MetaDependsOn? DependsOn = null
 );
 public enum MetaSettingsType { Input, SingleChoice, MultipleChoice, Toggle, Slider };
 public sealed record MetaSettingsRange(int From, int To);

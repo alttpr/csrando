@@ -240,3 +240,118 @@ public enum GoalIconOption { Triforce, Star }
 public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }
+
+[TargetGame(RandomizerTarget.Alttpr)]
+[PostGenSettingsFor("alttp")]
+public sealed class PostGenConfig
+{
+    [Name("Quick Swap")]
+    [Description("Enable item quick swap (L/R toggles items)")]
+    [OnPatch("0x18004B", "01")]
+    [OffPatch("0x18004B", "00")]
+    public bool QuickSwap { get; init; } = true;
+
+    [Name("Music")]
+    [Description("Enable in-game music")]
+    [OnPatch("0x18021A", "00")]
+    [OffPatch("0x18021A", "01")]
+    public bool EnableMusic { get; init; } = true;
+
+    [Name("MSU-1 Resume")]
+    [Description("Enable MSU-1 music resume")]
+    [OffPatch("0x18021D", "00")]
+    [OffPatch("0x18021E", "00")]
+    public bool Msu1Resume { get; init; } = true;
+
+    [Name("Menu Speed")]
+    [Description("Set in-game menu menu scroll speed")]
+    public MenuSpeed Menu { get; init; } = MenuSpeed.Normal;
+
+    [Name("Heart Color")]
+    [Description("Select heart HUD color")]
+    public HeartColor HeartHudColor { get; init; } = HeartColor.Red;
+
+    [Name("Heart Beep Speed")]
+    [Description("Low-health beep frequency")]
+    public HeartBeepSpeed HeartBeep { get; init; } = HeartBeepSpeed.Normal;
+
+    [Name("Reduce Flashes")]
+    [Description("Reduce flashing effects")]
+    [OnPatch("0x18017F", "01")]
+    [OffPatch("0x18017F", "00")]
+    public bool ReduceFlashing { get; init; } = false;
+}
+
+public enum MenuSpeed
+{
+    // instant: writes main byte and sets 3 addresses to 0x20
+    [Choice("instant", "Instant")]
+    [ChoicePatch("0x180048", "E8")]
+    [ChoicePatch("0x006DD9A", "20")]
+    [ChoicePatch("0x006DF2A", "20")]
+    [ChoicePatch("0x006E0E9", "20")]
+    Instant,
+
+    [Choice("fast", "Fast")]
+    [ChoicePatch("0x180048", "10")]
+    [ChoicePatch("0x006DD9A", "11")]
+    [ChoicePatch("0x006DF2A", "12")]
+    [ChoicePatch("0x006E0E9", "12")]
+    Fast,
+
+    [Choice("normal", "Normal")]
+    [ChoicePatch("0x180048", "08")]
+    [ChoicePatch("0x006DD9A", "11")]
+    [ChoicePatch("0x006DF2A", "12")]
+    [ChoicePatch("0x006E0E9", "12")]
+    Normal,
+
+    [Choice("slow", "Slow")]
+    [ChoicePatch("0x180048", "04")]
+    [ChoicePatch("0x006DD9A", "11")]
+    [ChoicePatch("0x006DF2A", "12")]
+    [ChoicePatch("0x006E0E9", "12")]
+    Slow,
+}
+
+public enum HeartColor
+{
+    [Choice("red", "Red")]
+    [ChoicePatch("0x187020", "00")]
+    Red,
+
+    [Choice("blue", "Blue")]
+    [ChoicePatch("0x187020", "01")]
+    Blue,
+
+    [Choice("green", "Green")]
+    [ChoicePatch("0x187020", "02")]
+    Green,
+
+    [Choice("yellow", "Yellow")]
+    [ChoicePatch("0x187020", "03")]
+    Yellow,
+}
+
+public enum HeartBeepSpeed
+{
+    [Choice("off", "Off")]
+    [ChoicePatch("0x180033", "00")]
+    Off,
+
+    [Choice("normal", "Normal")]
+    [ChoicePatch("0x180033", "20")]
+    Normal,
+
+    [Choice("half", "Half Speed")]
+    [ChoicePatch("0x180033", "40")]
+    Half,
+
+    [Choice("quarter", "Quarter Speed")]
+    [ChoicePatch("0x180033", "80")]
+    Quarter,
+
+    [Choice("double", "Double Speed")]
+    [ChoicePatch("0x180033", "10")]
+    Double,
+}
