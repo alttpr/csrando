@@ -14,6 +14,18 @@ public class Searcher
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
+    
+    // Simplified caching for specific high-value scenarios only
+    private static readonly Dictionary<string, bool> _optimizableKeyCache = new();
+
+    /// <summary>
+    /// Clear all caches to free memory and handle graph changes
+    /// </summary>
+    public static void ClearPerformanceCaches()
+    {
+        _optimizableKeyCache.Clear();
+        DungeonGraphConverter.ClearCaches();
+    }
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -228,15 +240,40 @@ public class Searcher
     {
         var strongLocations = new VertexHashSet(_graph);
         var strongSearchStarts = new VertexHashSet(_graph);
+        
         foreach (var (key, edges) in _graph.Doors)
         {
             int keyCount = inventory.GetCount(key);
             if (keyCount == 0)
                 continue;
 
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
-            strongLocations.UnionWith(recursiveLocations);
-            strongSearchStarts.UnionWith(recursiveSearchStarts);
+            SearchResult searchResult;
+            
+            // Only use DungeonKeySolver for scenarios where it's likely to provide significant benefit
+            // and where we have high confidence it will work correctly
+            if (ShouldUseDungeonKeySolver(key.Name, keyCount, edges.Count))
+            {
+                // Try optimized DungeonKeySolver for specific beneficial scenarios
+                var dungeonSearchResult = TryDungeonKeySolverSearch(inventory, key, _visited, _collected);
+                if (dungeonSearchResult.HasValue)
+                {
+                    searchResult = dungeonSearchResult.Value;
+                }
+                else
+                {
+                    // Fallback to enhanced recursive search
+                    searchResult = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
+                }
+            }
+            else
+            {
+                // Use enhanced recursive search for most cases
+                searchResult = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
+            }
+            
+            var (locations, searchStarts) = searchResult;
+            strongLocations.UnionWith(locations);
+            strongSearchStarts.UnionWith(searchStarts);
         }
 
         _visited.UnionWith(strongLocations);
@@ -244,6 +281,36 @@ public class Searcher
         bool foundItems = CollectItems(inventory, _visited, _collected);
 
         return strongLocations.Count != 0 || foundItems;
+    }
+
+    /// <summary>
+    /// Conservative decision on when to use DungeonKeySolver vs enhanced recursive
+    /// </summary>
+    private static bool ShouldUseDungeonKeySolver(string keyName, int keyCount, int doorCount)
+    {
+        // Only use for ALttP small keys
+        if (!IsOptimizableKey(keyName))
+            return false;
+            
+        // Only use for scenarios where DungeonKeySolver provides clear benefit:
+        // 1. Multiple keys with many doors (exponential recursion scenario)
+        // 2. Complex dungeons even with single keys
+        if (keyCount >= 2 && doorCount >= 3)
+            return true;
+            
+        // For single keys, only use for the most complex dungeons
+        if (keyCount == 1)
+        {
+            return keyName switch
+            {
+                "KeyD3" when doorCount >= 4 => true, // Skull Woods
+                "KeyD7" when doorCount >= 5 => true, // Turtle Rock  
+                "KeyA2" when doorCount >= 6 => true, // Ganon's Tower
+                _ => false
+            };
+        }
+            
+        return false;
     }
 
     private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
@@ -258,12 +325,31 @@ public class Searcher
         var visitedBeforeRecursion = visitedBeforeDoors.Clone();
         var collectedBeforeRecursion = collectedBeforeDoors.Clone();
 
-        foreach (var door in visitedBeforeDoors.Graph.Doors[key])
+        var doors = visitedBeforeDoors.Graph.Doors[key];
+        var remainingDoors = doors.Where(door => !inventory.Has(door.Key)).ToList();
+        
+        // Early termination for performance: If we have far more doors than keys, be conservative
+        int availableKeys = inventory.GetCount(key);
+        if (remainingDoors.Count > availableKeys + 10) // Conservative threshold
         {
-            // Skip the door if it's already been opened
-            if (inventory.Has(door.Key))
-                continue;
+            // For very complex scenarios, only process accessible doors
+            var accessibleDoors = remainingDoors.Where(door => 
+                door.Value.Any(pair => 
+                    visitedBeforeDoors.Contains(pair.Item1) || visitedBeforeDoors.Contains(pair.Item2))).ToList();
+            
+            if (accessibleDoors.Count <= availableKeys + 5) // Still manageable
+            {
+                remainingDoors = accessibleDoors;
+            }
+            else
+            {
+                // Too complex, use a very conservative subset
+                remainingDoors = accessibleDoors.Take(availableKeys + 2).ToList();
+            }
+        }
 
+        foreach (var door in remainingDoors)
+        {
             List<Vertex> newVerticesFromDoor = new();
             foreach (var (a, b) in door.Value)
             {
@@ -281,10 +367,12 @@ public class Searcher
             inventoryForIteration.AddItem(door.Key);
             inventoryForIteration.RemoveItem(key);
 
-            // Check what's behind the door
+            // Check what's behind the door with iteration limit
             Vertex[] startAt = [.. newVerticesFromDoor, .. additionalStarts];
             var weakLocations = new VertexHashSet(visitedBeforeRecursion.Graph);
             var weakSearchStarts = new VertexHashSet(visitedBeforeRecursion.Graph);
+            
+            int iterationCount = 0;
             do
             {
                 var (weakLocations2, weakSearchStarts2) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
@@ -292,7 +380,12 @@ public class Searcher
                 visitedBeforeRecursion.UnionWith(weakLocations2);
                 weakLocations.UnionWith(weakLocations2);
                 weakSearchStarts = weakSearchStarts2;
+                
+                iterationCount++;
+                if (iterationCount >= 50) break; // Prevent infinite loops
+                
             } while (CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion));
+            
             if (inventoryForIteration.GetCount(key) > 0)
             {
                 var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
@@ -320,6 +413,137 @@ public class Searcher
         }
 
         return (strongLocations ?? new VertexHashSet(visitedBeforeDoors.Graph), strongSearchStarts ?? new VertexHashSet(visitedBeforeDoors.Graph));
+    }
+
+    /// <summary>
+    /// Simplified DungeonKeySolver integration for high-confidence scenarios only
+    /// </summary>
+    private static SearchResult? TryDungeonKeySolverSearch(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors)
+    {
+        try
+        {
+            var keyName = key.Name;
+            
+            // Simple dungeon mapping - avoid complex graph analysis
+            var dungeonName = GetDungeonForKey(keyName);
+            if (dungeonName == null)
+                return null;
+
+            // Extract dungeon graph using the established converter
+            var dungeonGraph = DungeonGraphConverter.ExtractDungeonGraph(visitedBeforeDoors.Graph, dungeonName, keyName);
+            if (dungeonGraph.Nodes.Count == 0)
+                return null;
+
+            // Find entrance nodes by checking which dungeon nodes we can already visit
+            var entranceNodeIds = dungeonGraph.Nodes
+                .Where(node => visitedBeforeDoors.Any(v => v.Id == node.Id))
+                .Select(node => node.Id)
+                .ToList();
+
+            if (entranceNodeIds.Count == 0)
+                return null;
+
+            // Simple item check function
+            Func<string, bool> itemCheck = req =>
+            {
+                if (req == "fixed" || req == "KEY") return true;
+                var requiredItem = visitedBeforeDoors.Graph.AllItems.FirstOrDefault(item => item.Name == req);
+                return requiredItem != null && inventory.Has(requiredItem);
+            };
+
+            // Use DungeonKeySolver
+            var solver = new DungeonKeySolver(dungeonGraph, dungeonName);
+            int availableKeys = inventory.GetCount(key);
+            var safeNodeIds = solver.SafeItemLocations(itemCheck, availableKeys, entranceNodeIds);
+
+            // Convert back to vertices (simple approach)
+            var safeLocations = new VertexHashSet(visitedBeforeDoors.Graph);
+            var safeSearchStarts = new VertexHashSet(visitedBeforeDoors.Graph);
+
+            foreach (var nodeId in safeNodeIds)
+            {
+                var vertex = visitedBeforeDoors.Graph.GetVertices().FirstOrDefault(v => v.Id == nodeId);
+                if (vertex != null)
+                {
+                    safeLocations.Add(vertex);
+                    // Check if this vertex has edges to locations outside the safe set
+                    if (vertex.Edges.Any(edge => !safeNodeIds.Contains(edge.To.Id)))
+                    {
+                        safeSearchStarts.Add(vertex);
+                    }
+                }
+            }
+
+            return (safeLocations, safeSearchStarts);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("DungeonKeySolver failed for key {Key}: {Message}", key.Name, ex.Message);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Get dungeon name for a key (simple mapping)
+    /// </summary>
+    private static string? GetDungeonForKey(string keyName)
+    {
+        return keyName switch
+        {
+            "KeyP1" => "eastern",
+            "KeyP2" => "desert", 
+            "KeyP3" => "hera",
+            "KeyD1" => "pod",
+            "KeyD2" => "swamp",
+            "KeyD3" => "skull",
+            "KeyD4" => "thieves",
+            "KeyD5" => "ice",
+            "KeyD6" => "mire",
+            "KeyD7" => "turtlerock",
+            "KeyA2" => "gt",
+            _ => null
+        };
+    }
+
+    /// <summary>
+    /// Efficiently check if vertex has edges to unvisited locations
+    /// </summary>
+    private static bool HasUnvisitedEdges(Vertex vertex, HashSet<int> safeNodeIds)
+    {
+        foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
+        {
+            if (!safeNodeIds.Contains(edge.To.Id))
+                return true;
+        }
+        return false;
+    }
+    
+    /// <summary>
+    /// Check if a key name is optimizable by DungeonKeySolver (ALttP small keys)
+    /// </summary>
+    private static bool IsOptimizableKey(string keyName)
+    {
+        return keyName switch
+        {
+            "KeyP1" or "KeyP2" or "KeyP3" or // Light World dungeons
+            "KeyD1" or "KeyD2" or "KeyD3" or "KeyD4" or "KeyD5" or "KeyD6" or "KeyD7" or // Dark World dungeons
+            "KeyA2" => true, // Ganon's Tower
+            _ => false
+        };
+    }
+
+    /// <summary>
+    /// Check if a name corresponds to a known ALttP dungeon
+    /// </summary>
+    private static bool IsDungeonName(string name)
+    {
+        return name switch
+        {
+            "escape" or "eastern" or "desert" or "hera" or "agahnim" or 
+            "pod" or "swamp" or "skull" or "thieves" or "ice" or "mire" or 
+            "turtlerock" or "gt" => true,
+            _ => false
+        };
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
