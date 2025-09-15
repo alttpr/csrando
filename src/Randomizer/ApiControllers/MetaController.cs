@@ -62,7 +62,12 @@ public sealed partial class MetaController : ControllerBase
         if (string.IsNullOrWhiteSpace(description))
             description = null;
 
-        string? category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
+        //string? category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
+
+        MetaCategory? metaCategory = property.GetCustomAttribute<CategoryAttribute>() is { Category: string category, Display: CategoryDisplay display }
+            ? new MetaCategory(category, display)
+            : null;
+
         string? subcategory = property.GetCustomAttribute<SubcategoryAttribute>()?.Subcategory;
 
         MetaDependsOn? dependsOn = null;
@@ -71,7 +76,7 @@ public sealed partial class MetaController : ControllerBase
             dependsOn = new MetaDependsOn(dependsOnAttr.PropertyName, dependsOnAttr.Values);
         }
 
-        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor, category, subcategory, dependsOn);
+        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor, metaCategory, subcategory, dependsOn);
     }
     private static IEnumerable<string> NonNull(params IEnumerable<string?> values)
     {
@@ -210,6 +215,7 @@ public sealed record MetaRootSettings(
 );
 public sealed record MetaTargetSettings(MetaTarget Target, List<MetaSetting> Settings);
 public sealed record MetaDependsOn(string Key, object[] Values);
+public sealed record MetaCategory(string Name, CategoryDisplay? Display);
 public sealed record MetaSetting(
     string Key,
     string Name,
@@ -220,7 +226,7 @@ public sealed record MetaSetting(
     object? Default = null,
     MetaSettingsVisibility Visibility = MetaSettingsVisibility.Basic,
     string? OptionsFor = null,
-    string? Category = null,
+    MetaCategory? Category = null,
     string? Subcategory = null,
     MetaDependsOn? DependsOn = null
 );

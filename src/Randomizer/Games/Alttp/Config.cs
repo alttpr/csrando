@@ -111,7 +111,7 @@ public class Config
     [Category("Goal")]
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 
-    [Category("Item Placement")]
+    [Category("Item Placement", CategoryDisplay.Collapsed)]
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
     [Category("Gameplay")]
