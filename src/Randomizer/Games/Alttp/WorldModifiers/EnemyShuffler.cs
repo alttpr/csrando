@@ -635,7 +635,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
 
         // sprite sheets have 3 major locations:
         // 1. underworld:
-        //    - vanilla room headers (room pointer tables plus room data, OAM and sprites in the room) 
+        //    - vanilla room headers (room pointer tables plus room data, OAM and sprites in the room)
         //    - randomizer room headers (sprite sheet)
         // 2. overworld:
         //    - vanilla map headers (map pointer tables per state plus map data, sprites on the map)
@@ -687,10 +687,9 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         // grab indices for the map headers from that set.
         byte[] mapSheetBytes = overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
         byte[] specialSheetBytes = specialOverworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
-        // FIXME: not sure about this layout, but it works writing grove to 0x02E577 and zoras domain to 0x02E579.
-        //        0x02E578 has no effect on either of them, and clobbering 0x02E577 still doesn't break hobo.
+
         specialSheetBytes = [
-            specialSheetBytes[0], 0xFF, specialSheetBytes[1], 0xFF,
+            specialSheetBytes[0], specialSheetBytes[0], specialSheetBytes[1], specialSheetBytes[1],
             0xFF, 0xFF, 0xFF, 0xFF,
             0xFF, 0xFF, 0xFF, 0xFF,
             0xFF, 0xFF, 0xFF, 0xFF,
