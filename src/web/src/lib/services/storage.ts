@@ -1,0 +1,44 @@
+import type { RomFileData } from "$lib/types";
+import localforage from "localforage";
+
+let storageConfigured = false;
+
+const ensureStorage = () => {
+  if (!storageConfigured) {
+    localforage.config({
+      name: "RandoWebRoms",
+      storeName: "rom_files",
+      description: "Storage for uploaded ROM files",
+    });
+    storageConfigured = true;
+  }
+  return localforage;
+};
+
+const getRomKey = (gameId: string): string => `rom_global_${gameId}`;
+
+export async function saveRomData(
+  gameId: string,
+  romData: RomFileData,
+): Promise<void> {
+  const store = ensureStorage();
+  await store.setItem(getRomKey(gameId), romData);
+}
+
+export async function getRomData(gameId: string): Promise<RomFileData | null> {
+  const store = ensureStorage();
+  return await store.getItem<RomFileData>(getRomKey(gameId));
+}
+
+export async function removeRomData(gameId: string): Promise<void> {
+  const store = ensureStorage();
+  await store.removeItem(getRomKey(gameId));
+}
+
+export async function calculateSha256Hash(
+  buffer: ArrayBuffer,
+): Promise<string> {
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}

@@ -1,0 +1,331 @@
+{
+  "settings": [
+    {
+      "key": "logic",
+      "name": "Logic",
+      "description": "Determines the logic complexity for item placement",
+      "type": "SingleChoice",
+      "category": "Core",
+      "values": {
+        "normal": "Normal",
+        "hard": "Hard",
+        "overworld_glitches": "Overworld Glitches",
+        "hybrid_major_glitches": "Hybrid Major Glitches",
+        "no_logic": "No Logic"
+      },
+      "default": "normal"
+    },
+    {
+      "key": "item_placement",
+      "name": "Item Placement",
+      "description": "How items are placed in the world",
+      "type": "SingleChoice",
+      "category": "Core",
+      "values": {
+        "basic": "Basic",
+        "advanced": "Advanced"
+      },
+      "default": "advanced"
+    },
+    {
+      "key": "dungeon_items",
+      "name": "Dungeon Items",
+      "description": "Where dungeon items can be found",
+      "type": "SingleChoice",
+      "category": "Items",
+      "values": {
+        "standard": "Standard",
+        "mc": "Maps/Compasses",
+        "mcs": "Maps/Compasses/Small Keys",
+        "full": "Full Shuffle"
+      },
+      "default": "standard"
+    },
+    {
+      "key": "accessibility",
+      "name": "Accessibility",
+      "description": "Whether all locations must be reachable",
+      "type": "SingleChoice",
+      "category": "Core",
+      "values": {
+        "items": "100% Locations",
+        "locations": "Beatable"
+      },
+      "default": "items"
+    },
+    {
+      "key": "goal",
+      "name": "Goal",
+      "description": "Victory condition for the seed",
+      "type": "SingleChoice",
+      "category": "Goals",
+      "values": {
+        "ganon": "Defeat Ganon",
+        "fast_ganon": "Fast Ganon",
+        "dungeons": "All Dungeons",
+        "pedestal": "Pedestal",
+        "triforce_hunt": "Triforce Hunt",
+        "local_triforce_hunt": "Local Triforce Hunt",
+        "ice_rod_hunt": "Ice Rod Hunt",
+        "completionist": "Completionist"
+      },
+      "default": "ganon"
+    },
+    {
+      "key": "tower_open",
+      "name": "Ganon's Tower",
+      "description": "Requirements to open Ganon's Tower",
+      "type": "SingleChoice",
+      "category": "Goals",
+      "values": {
+        "7": "7 Crystals",
+        "random": "Random",
+        "0": "0 Crystals",
+        "1": "1 Crystal",
+        "2": "2 Crystals",
+        "3": "3 Crystals",
+        "4": "4 Crystals",
+        "5": "5 Crystals",
+        "6": "6 Crystals"
+      },
+      "default": "7"
+    },
+    {
+      "key": "ganon_open",
+      "name": "Ganon Vulnerable",
+      "description": "Requirements to make Ganon vulnerable",
+      "type": "SingleChoice",
+      "category": "Goals",
+      "values": {
+        "7": "7 Crystals",
+        "random": "Random",
+        "0": "0 Crystals",
+        "1": "1 Crystal",
+        "2": "2 Crystals",
+        "3": "3 Crystals",
+        "4": "4 Crystals",
+        "5": "5 Crystals",
+        "6": "6 Crystals"
+      },
+      "default": "7"
+    },
+    {
+      "key": "world_state",
+      "name": "World State",
+      "description": "Starting state of the world",
+      "type": "SingleChoice",
+      "category": "Core",
+      "values": {
+        "standard": "Standard",
+        "open": "Open",
+        "inverted": "Inverted"
+      },
+      "default": "standard"
+    },
+    {
+      "key": "entrance_shuffle",
+      "name": "Entrance Shuffle",
+      "description": "Randomize connections between areas",
+      "type": "SingleChoice",
+      "category": "Shuffle",
+      "values": {
+        "none": "None",
+        "simple": "Simple",
+        "restricted": "Restricted",
+        "full": "Full",
+        "crossed": "Crossed",
+        "insanity": "Insanity"
+      },
+      "default": "none"
+    },
+    {
+      "key": "hints",
+      "name": "Hints",
+      "description": "Enable helpful hints in game",
+      "type": "Toggle",
+      "category": "Quality of Life",
+      "default": true
+    },
+    {
+      "key": "tournament",
+      "name": "Tournament Mode",
+      "description": "Enable tournament restrictions",
+      "type": "Toggle",
+      "category": "Core",
+      "default": false
+    },
+    {
+      "key": "spoiler",
+      "name": "Generate Spoiler Log",
+      "description": "Create a spoiler log showing all item locations",
+      "type": "Toggle",
+      "category": "Core",
+      "default": true
+    },
+    {
+      "key": "heart_pieces",
+      "name": "Heart Pieces",
+      "description": "Number of heart pieces required for a heart container",
+      "type": "Slider",
+      "category": "Items",
+      "range": {
+        "from": 1,
+        "to": 8
+      },
+      "default": 4
+    },
+    {
+      "key": "heart_container_limit",
+      "name": "Heart Container Limit",
+      "description": "Maximum number of heart containers",
+      "type": "Slider",
+      "category": "Items",
+      "range": {
+        "from": 1,
+        "to": 20
+      },
+      "default": 20
+    },
+    {
+      "key": "custom_seed",
+      "name": "Custom Seed",
+      "description": "Enter a custom seed number (leave empty for random)",
+      "type": "Input",
+      "category": "Core",
+      "default": ""
+    }
+  ],
+  "gameSettings": {
+    "alttp": {
+      "game": {
+        "name": "The Legend of Zelda: A Link to the Past",
+        "description": "Classic action-adventure game for the Super Nintendo",
+        "code": "alttp"
+      },
+      "settings": [
+        {
+          "key": "sword_location",
+          "name": "Sword Location",
+          "description": "Where to find your starting sword",
+          "type": "SingleChoice",
+          "category": "Gameplay",
+          "values": {
+            "randomized": "Randomized",
+            "uncle": "Uncle",
+            "link_house": "Link's House"
+          },
+          "default": "randomized"
+        },
+        {
+          "key": "morph_ball",
+          "name": "Morph Ball",
+          "description": "Start with morph ball ability",
+          "type": "Toggle",
+          "category": "Starting Equipment",
+          "default": false
+        },
+        {
+          "key": "progressive_sword",
+          "name": "Progressive Sword",
+          "description": "Swords upgrade progressively",
+          "type": "Toggle",
+          "category": "Items",
+          "default": true
+        },
+        {
+          "key": "progressive_shield",
+          "name": "Progressive Shield",
+          "description": "Shields upgrade progressively",
+          "type": "Toggle",
+          "category": "Items",
+          "default": true
+        },
+        {
+          "key": "progressive_armor",
+          "name": "Progressive Armor",
+          "description": "Armor upgrades progressively",
+          "type": "Toggle",
+          "category": "Items",
+          "default": true
+        },
+        {
+          "key": "progressive_gloves",
+          "name": "Progressive Gloves",
+          "description": "Gloves upgrade progressively",
+          "type": "Toggle",
+          "category": "Items",
+          "default": true
+        },
+        {
+          "key": "progressive_bow",
+          "name": "Progressive Bow",
+          "description": "Bow upgrades progressively",
+          "type": "Toggle",
+          "category": "Items",
+          "default": true
+        },
+        {
+          "key": "retro_bow",
+          "name": "Retro Bow",
+          "description": "Bow requires arrows as separate item",
+          "type": "Toggle",
+          "category": "Items",
+          "default": false
+        },
+        {
+          "key": "retro_caves",
+          "name": "Retro Caves",
+          "description": "Use classic cave layouts",
+          "type": "Toggle",
+          "category": "World",
+          "default": false
+        },
+        {
+          "key": "boss_shuffle",
+          "name": "Boss Shuffle",
+          "description": "Randomize dungeon bosses",
+          "type": "SingleChoice",
+          "category": "Shuffle",
+          "values": {
+            "none": "None",
+            "simple": "Simple",
+            "full": "Full",
+            "chaos": "Chaos"
+          },
+          "default": "none"
+        },
+        {
+          "key": "enemy_shuffle",
+          "name": "Enemy Shuffle",
+          "description": "Randomize enemy types and locations",
+          "type": "Toggle",
+          "category": "Shuffle",
+          "default": false
+        },
+        {
+          "key": "pot_shuffle",
+          "name": "Pot Shuffle",
+          "description": "Randomize pot contents",
+          "type": "Toggle",
+          "category": "Shuffle",
+          "default": false
+        }
+      ]
+    }
+  },
+  "postGenSettings": {
+    "alttp": {
+      "options": [
+        {
+          "id": "palette_randomize",
+          "name": "Randomize Palette (z3pr-js)",
+          "description": "Randomizes Link's palettes after patching using a z3pr-style algorithm.",
+          "type": "toggle",
+          "default": false,
+          "on": { "patches": [] },
+          "off": { "patches": [] }
+        }
+      ]
+    }
+  }
+}
