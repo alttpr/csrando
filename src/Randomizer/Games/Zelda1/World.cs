@@ -8,12 +8,6 @@ using BaseVertex = Graph.Vertex;
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : World<Item>
 {
-
-    public int Id { get; }
-    public string GameId { get; } = "z1";
-    public Graph Graph { get; }
-    public Inventory StartingItems { get; }
-    public WorldConfig WorldConfig { get; }
     public Config Config { get; }
     public PRNG Prng { get; }
     public YamlReader.YamlData? YamlData { get; set; }
@@ -45,52 +39,9 @@ public sealed class World : World<Item>
     /// Get a vertex by name in this world.
     /// </summary>
     /// <param name="locationName">name to search for</param>
-    public BaseVertex GetLocation(string locationName)
-    {
-        return Graph.GetVertex($"{locationName}:{GameId}:{Id}");
-    }
-
-    public bool HasLocation(string locationName)
-    {
-        return Graph.HasVertex($"{locationName}:{GameId}:{Id}");
-    }
-
-    /// <summary>Get all vertices in this world.</summary>
-    /// <returns></returns>
-    public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
-
     protected override Item CreateItem(string name, IWorld world) => new(name, world);
 
-        // allow made up items
-        var item = Graph.RegisterItem(new Item(name, this));
-        _allItems.Add(item.Name, item);
-
-        return item;
-    }
-
-    public IItem? GetItemOrNull(string? name)
-    {
-        if (name != null)
-            return GetItem(name);
-        return null;
-    }
-
-    public IItem? GetExistingItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var item))
-            return item;
-        return null;
-    }
-
-    public IEnumerable<Item> GetAllItems()
-    {
-        return _allItems.Values;
-    }
-
-    public IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    public override IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();
 
@@ -99,18 +50,13 @@ public sealed class World : World<Item>
         return locations;
     }
 
-    public void TrackPlacedItem(BaseVertex location)
-    {
-        location.World.PlacedItemCount++;
-    }
-
     public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new Searcher(Graph, start, startingInventory);
         return winSearcher.HasFound(GetItem("Zelda"));
     }
 
-    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new Searcher(graph, start ?? Start, inventory, setLocations, this);
     }

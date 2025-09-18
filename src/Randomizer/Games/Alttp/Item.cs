@@ -45,6 +45,4 @@ public sealed class Item : Randomizer.Graph.Item
         if (Name.StartsWith("Bottle"))
             LogicalItem = world.GetItem("LogicalBottle");
     }
-
-    public override string ToString() => $"{Name}:{World.GameId}:{World.Id}";
 }

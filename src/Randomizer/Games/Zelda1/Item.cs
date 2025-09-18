@@ -32,6 +32,4 @@ public sealed class Item : Randomizer.Graph.Item
         Type = itemType;
         Bytes = [yamlItem?.Byte ?? 0];
     }
-
-    public override string ToString() => $"{Name}:{World.GameId}:{World.Id}";
 }
