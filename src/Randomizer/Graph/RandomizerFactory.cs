@@ -4,7 +4,7 @@ using Randomizer.Games;
 using Alttp = Games.Alttp.GameRandomizer;
 using Goonies2 = Games.Goonies2.GameRandomizer;
 using Zelda1 = Games.Zelda1.GameRandomizer;
-using Combo = Games.Combo.GameRandomizer; 
+using Combo = Games.Combo.GameRandomizer;
 using Metroid = Games.Metroid.GameRandomizer;
 using SuperMetroid = Games.SuperMetroid.GameRandomizer;
 using Randomizer.RomModifications; // Add this

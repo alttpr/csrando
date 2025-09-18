@@ -26,7 +26,7 @@ public class Config
     public string[] CrystalsTowerChoices { get; set; } = RandomCrystals;
     private int[] _moldormEyeCountChoices = [DefaultMoldormEyeCount];
     [RandomizedOptionsFor(nameof(MoldormEyeCount))]
-    [Values(0, 1, 2, 3, 4, 5, 6, 7)]
+    [ValueRange(0, 8)]
     public int[] MoldormEyeCountChoices
     {
         get => _moldormEyeCountChoices;
@@ -40,7 +40,7 @@ public class Config
     }
     private int[] _molderpChoices = [DefaultMolderp];
     [RandomizedOptionsFor(nameof(Molderp))]
-    [Values(1, 2, 3, 4, 5, 6, 7, 8)]
+    [ValueRange(1, 8)]
     public int[] MolderpChoices
     {
         get => _molderpChoices;
@@ -55,6 +55,7 @@ public class Config
 
 
     private string? _crystalsGanon;
+    [Category("Goal")]
     [Values("0", "1", "2", "3", "4", "5", "6", "7", "Dungeons", Default = "7")]
     public string CrystalsGanon
     {
@@ -62,6 +63,7 @@ public class Config
         set => _crystalsGanon = value;
     }
     private string? _crystalsTower;
+    [Category("Goal")]
     [Values("0", "1", "2", "3", "4", "5", "6", "7", Default = "7")]
     public string CrystalsTower
     {
@@ -95,38 +97,65 @@ public class Config
         _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
+    [Category("Goal")]
     [ValueRange(1, 150, Default = 50)]
+    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
     public ushort TriforcePieces { get; set; } = 50;
 
+    [Category("Goal")]
+    [ValueRange(1, 150, Default = 30)]
+    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
+    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
+
+
+    [Category("Goal")]
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 
+    [Category("Item Placement", CategoryDisplay.Collapsed)]
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
-    public StateOption State { get; init; } = StateOption.Open;
+    [Category("Gameplay")]
+    public StateOption State { get; init; } = StateOption.Standard;
 
+    [Category("Item Placement")]
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
     public List<TechOption> Techs { get; init; } = [];
 
     public WeaponOption Weapon { get; init; } = WeaponOption.Randomized;
 
+    [Category("Gameplay")]
     public EntranceShuffleOption EntranceShuffle { get; init; } = EntranceShuffleOption.None;
 
+    [Category("Gameplay")]
     public EnemyShuffleOption EnemyShuffle { get; init; } = EnemyShuffleOption.None;
 
     public EnemyDamageOption EnemyDamage { get; init; } = EnemyDamageOption.Default;
 
     public EnemyHealthOption EnemyHealth { get; init; } = EnemyHealthOption.Default;
 
+    [Category("Gameplay")]
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
+
+    public TileRoomPatternOption TileRoomPattern { get; init; } = TileRoomPatternOption.Default;
 
     // TODO: Make it a bool? Do we have more planned there?
     [Ignore("No shop randomization yet")]
     public ShopSupplyOption RegionShopSupply { get; init; } = ShopSupplyOption.Normal;
+
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildKeys { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildBigKeys { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildMaps { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildCompasses { get; init; } = false;
+
     public bool RomRupeeBow { get; init; } = false;
 
     // TODO: Add configuration for custom prize packs
@@ -165,8 +194,6 @@ public class Config
     public bool HudItemCounter { get; init; } = false;
     [Ignore("Nobody cares about the goal icon")]
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
-    [ValueRange(1, 150, Default = 30)]
-    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
     public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;
@@ -174,7 +201,14 @@ public class Config
     public SilversEquipOption SilversAutoEquip { get; init; } = SilversEquipOption.Collection;
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
+    [Category("Gameplay")]
     public bool EnableHints { get; init; } = false;
+}
+
+public enum TileRoomPatternOption
+{
+    Default,
+    Random,
 }
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }
@@ -206,3 +240,118 @@ public enum GoalIconOption { Triforce, Star }
 public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }
+
+[TargetGame(RandomizerTarget.Alttpr)]
+[PostGenSettingsFor("alttp")]
+public sealed class PostGenConfig
+{
+    [Name("Quick Swap")]
+    [Description("Enable item quick swap (L/R toggles items)")]
+    [OnPatch("0x18004B", "01")]
+    [OffPatch("0x18004B", "00")]
+    public bool QuickSwap { get; init; } = true;
+
+    [Name("Music")]
+    [Description("Enable in-game music")]
+    [OnPatch("0x18021A", "00")]
+    [OffPatch("0x18021A", "01")]
+    public bool EnableMusic { get; init; } = true;
+
+    [Name("MSU-1 Resume")]
+    [Description("Enable MSU-1 music resume")]
+    [OffPatch("0x18021D", "00")]
+    [OffPatch("0x18021E", "00")]
+    public bool Msu1Resume { get; init; } = true;
+
+    [Name("Menu Speed")]
+    [Description("Set in-game menu menu scroll speed")]
+    public MenuSpeed Menu { get; init; } = MenuSpeed.Normal;
+
+    [Name("Heart Color")]
+    [Description("Select heart HUD color")]
+    public HeartColor HeartHudColor { get; init; } = HeartColor.Red;
+
+    [Name("Heart Beep Speed")]
+    [Description("Low-health beep frequency")]
+    public HeartBeepSpeed HeartBeep { get; init; } = HeartBeepSpeed.Normal;
+
+    [Name("Reduce Flashes")]
+    [Description("Reduce flashing effects")]
+    [OnPatch("0x18017F", "01")]
+    [OffPatch("0x18017F", "00")]
+    public bool ReduceFlashing { get; init; } = false;
+}
+
+public enum MenuSpeed
+{
+    // instant: writes main byte and sets 3 addresses to 0x20
+    [Choice("instant", "Instant")]
+    [ChoicePatch("0x180048", "E8")]
+    [ChoicePatch("0x006DD9A", "20")]
+    [ChoicePatch("0x006DF2A", "20")]
+    [ChoicePatch("0x006E0E9", "20")]
+    Instant,
+
+    [Choice("fast", "Fast")]
+    [ChoicePatch("0x180048", "10")]
+    [ChoicePatch("0x006DD9A", "11")]
+    [ChoicePatch("0x006DF2A", "12")]
+    [ChoicePatch("0x006E0E9", "12")]
+    Fast,
+
+    [Choice("normal", "Normal")]
+    [ChoicePatch("0x180048", "08")]
+    [ChoicePatch("0x006DD9A", "11")]
+    [ChoicePatch("0x006DF2A", "12")]
+    [ChoicePatch("0x006E0E9", "12")]
+    Normal,
+
+    [Choice("slow", "Slow")]
+    [ChoicePatch("0x180048", "04")]
+    [ChoicePatch("0x006DD9A", "11")]
+    [ChoicePatch("0x006DF2A", "12")]
+    [ChoicePatch("0x006E0E9", "12")]
+    Slow,
+}
+
+public enum HeartColor
+{
+    [Choice("red", "Red")]
+    [ChoicePatch("0x187020", "00")]
+    Red,
+
+    [Choice("blue", "Blue")]
+    [ChoicePatch("0x187020", "01")]
+    Blue,
+
+    [Choice("green", "Green")]
+    [ChoicePatch("0x187020", "02")]
+    Green,
+
+    [Choice("yellow", "Yellow")]
+    [ChoicePatch("0x187020", "03")]
+    Yellow,
+}
+
+public enum HeartBeepSpeed
+{
+    [Choice("off", "Off")]
+    [ChoicePatch("0x180033", "00")]
+    Off,
+
+    [Choice("normal", "Normal")]
+    [ChoicePatch("0x180033", "20")]
+    Normal,
+
+    [Choice("half", "Half Speed")]
+    [ChoicePatch("0x180033", "40")]
+    Half,
+
+    [Choice("quarter", "Quarter Speed")]
+    [ChoicePatch("0x180033", "80")]
+    Quarter,
+
+    [Choice("double", "Double Speed")]
+    [ChoicePatch("0x180033", "10")]
+    Double,
+}

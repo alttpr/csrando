@@ -6,7 +6,7 @@ using BaseVertex = Graph.Vertex;
 using Graph = Graph.Graph;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World : IWorld
+public sealed class World : World<Item>
 {
     public int Id { get; }
     public string GameId { get; } = "g2";
@@ -15,18 +15,14 @@ public sealed class World : IWorld
     public Inventory StartingItems { get; }
     public WorldConfig WorldConfig { get; }
     public Config Config { get; }
-    private readonly Dictionary<string, Item> _allItems = new();
-    public ushort PlacedItemCount { get; set; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
+        : base("Goonies2", id, graph, randomizerConfig)
     {
-        Id = id;
-        WorldConfig = randomizerConfig;
         Config = randomizerConfig.Goonies2 ?? throw new ArgumentException("This world requires valid settings for The Goonies II: The Fratellis' Last Stand");
-        Graph = graph;
 
         List<IItem> items = [GetItem("fixed")];
         items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
@@ -61,6 +57,8 @@ public sealed class World : IWorld
     /// <summary>Get all vertices in this world.</summary>
     /// <returns></returns>
     public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
+    protected override Item CreateItem(string name, IWorld world) => new(name, world);
+
     /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
@@ -110,7 +108,7 @@ public sealed class World : IWorld
     {
         location.World.PlacedItemCount++;
     }
-    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
+    public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         throw new NotImplementedException("Veetorp doesn't know if anyone can win Goonies 2");
     }

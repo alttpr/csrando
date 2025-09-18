@@ -42,7 +42,10 @@ internal sealed class ApiServer : Command
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
+<<<<<<< HEAD
 
+=======
+>>>>>>> tewtal/web
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {

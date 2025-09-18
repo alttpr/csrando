@@ -1,0 +1,24 @@
+{
+  "sm": {
+    "id": "sm",
+    "displayName": "Super Metroid",
+    "expectedHash": "12b77c4bc9c1832cee8881244659065ee1d84c70c3d29e6eaf92e6798cc2ca72",
+    "fileExtensions": ".sfc,.smc,.zip"
+  },
+  "alttp": {
+    "id": "alttp",
+    "displayName": "A Link to the Past",
+    "expectedHash": "794e040b02c7591b59ad8843b51e7c619b88f87cddc6083a8e7a4027b96a2271",
+    "fileExtensions": ".sfc,.smc,.zip"
+  },
+  "zelda1": {
+    "id": "zelda1",
+    "displayName": "The Legend of Zelda (NES)",
+    "fileExtensions": ".nes,.zip"
+  },
+  "metroid1": {
+    "id": "metroid1",
+    "displayName": "Metroid (NES)",
+    "fileExtensions": ".nes,.zip"
+  }
+}

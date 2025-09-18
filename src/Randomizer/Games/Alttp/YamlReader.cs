@@ -32,6 +32,7 @@ public class YamlReader
     private const string VerticesPath = "Vertices";
     private const string BossesPath = "Enemizer/bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
+    private const string TileRoomPatternsPath = "TileRoomPatterns";
 
     private static readonly Lazy<Vertices> _cachedVertices = new(() =>
     {
@@ -178,6 +179,53 @@ public class YamlReader
         dest.Rooms.AddRange(source.Rooms);
     }
 
+    private static readonly Lazy<List<TileRoomPattern>> _tileRoomPatterns = new(() =>
+    {
+        var patterns = new List<TileRoomPattern>();
+        var deserializer = new DeserializerBuilder().Build();
+
+        var files = Directory.GetFiles(Path.Combine(DataRoot, TileRoomPatternsPath), "*.yml", SearchOption.AllDirectories).Order();
+        foreach (string file in files)
+        {
+            using var reader = File.OpenText(file);
+            var pattern = deserializer.Deserialize<TileRoomPattern>(reader);
+            pattern.Name = Path.GetFileNameWithoutExtension(file);
+            patterns.Add(pattern);
+        }
+
+        return patterns;
+    });
+    public static IEnumerable<TileRoomPattern> LoadTileRoomPatterns() => _tileRoomPatterns.Value;
+
+    public class GameData
+    {
+        [YamlMember(Alias = "rooms")] public List<GameRoom> Rooms { get; set; } = new();
+        [YamlMember(Alias = "enemy")] public GameEnemyData Enemy { get; set; } = new();
+    }
+    public class GameRoom
+    {
+        [YamlMember(Alias = "room")] public int Room { get; set; }
+        [YamlMember(Alias = "ptr")] public int Ptr { get; set; }
+        [YamlMember(Alias = "tiles_ptr")] public int TilesPtr { get; set; }
+        [YamlMember(Alias = "tiles_data")] public List<byte> TilesData { get; set; } = new();
+        [YamlMember(Alias = "door_ptr")] public int DoorPtr { get; set; }
+        [YamlMember(Alias = "door_ptr_entry_addr")] public int DoorPtrEntryAddress { get; set; }
+        [YamlMember(Alias = "door_data")] public List<byte> DoorData { get; set; } = new();
+    }
+    public class GameEnemyData
+    {
+        [YamlMember(Alias = "health")] public List<byte> Health { get; set; } = new();
+        [YamlMember(Alias = "damage")] public List<byte> Damage { get; set; } = new();
+    }
+    private static readonly Lazy<GameData> _gameData = new(() =>
+    {
+        var path = Path.Combine(DataRoot, "game_data.yml");
+        using var reader = File.OpenText(path);
+        var deserializer = new DeserializerBuilder().Build();
+        return deserializer.Deserialize<GameData>(reader) ?? new GameData();
+    });
+    public static GameData LoadGameData() => _gameData.Value;
+
     public static Dictionary<string, List<string>> LoadBosses() => _cachedBosses.Value;
     public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
@@ -313,6 +361,22 @@ public class YamlBossSprite
     public ushort? PriorityLayer { get; set; }
     [YamlMember(Alias = "blkset")]
     public byte? Blkset { get; set; }
+}
+
+public class TileRoomPattern
+{
+    public string Name { get; set; } = null!;
+    [YamlMember(Alias = "speed")]
+    public byte Speed { get; set; } = 0xE0;
+    [YamlMember(Alias = "tiles")]
+    public TileRoomTile[] Tiles { get; set; } = [];
+}
+public class TileRoomTile
+{
+    [YamlMember(Alias = "x")]
+    public required int X { get; set; }
+    [YamlMember(Alias = "y")]
+    public required int Y { get; set; }
 }
 
 public class DirectedUndirectedPair

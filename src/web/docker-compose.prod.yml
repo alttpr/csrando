@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: ${FRONTEND_IMAGE}
+    build: null
+    environment:
+      - NODE_ENV=production
+      - PRIVATE_DOTNET_API_BASE_URL=http://api:8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.front.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.front.entrypoints=websecure
+      - traefik.http.routers.front.tls.certresolver=letsencrypt
+      - traefik.http.services.front.loadbalancer.server.port=3000

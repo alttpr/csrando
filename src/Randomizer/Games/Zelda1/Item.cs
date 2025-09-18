@@ -8,11 +8,8 @@ public enum ItemType
     SmallKey,
 }
 
-public sealed class Item : IItem
+public sealed class Item : Randomizer.Graph.Item
 {
-    public int Id { get; set; } = -1;
-    public string Name { get; }
-    public IWorld World { get; }
     public ItemType Type { get; }
     public byte[]? Bytes { get; set; }
     public float HealthValue { get; } = 0; // FIXME: is there health increase anywhere?
@@ -25,10 +22,8 @@ public sealed class Item : IItem
     /// <param name="name">Unique name of item</param>
     /// <param name="world">World this item is in</param>
     public Item(string name, IWorld world)
+        : base(name, world)
     {
-        Name = name;
-        World = world;
-
         var yamlItems = YamlReader.LoadItems();
         var yamlItem = yamlItems.GetValueOrDefault(name);
         string typeString = yamlItem?.Type ?? "Meta";

@@ -11,6 +11,7 @@ public sealed class Rom : GameRom
 
     private readonly Text _text;
     private readonly Credits _credits;
+    private YamlReader.GameData _gameData;
 
     internal InitialSram InitialSram { get; }
 
@@ -21,7 +22,8 @@ public sealed class Rom : GameRom
         _text = new(language);
         _text.RemoveUnwanted();
         _credits = new();
-    }
+        _gameData = YamlReader.LoadGameData();
+    }    
 
     /// <summary>Write subsitutions</summary>
     /// <param name="substitutions">[[id, max, replace id, 0xFF], ...]</param>
@@ -1479,6 +1481,30 @@ public sealed class Rom : GameRom
             Write((SNES)0x1DDC06, [(byte)derpAmount]);
         }
     }
+    /// <summary>Set tile rooms to use the specified pattern.</summary>
+    public void SetTileRoomPattern(TileRoomPattern pattern)
+    {
+        if (pattern is null)
+            return;
+        if (pattern.Tiles.Length > 0x16)
+            throw new ArgumentException($"Tile Pattern has {pattern.Tiles.Length} tiles, max. supported is 0x16.", nameof(pattern));
+
+        byte speed = pattern.Speed;
+        if (speed == 0)
+            speed = 0xE0;
+
+        // Overlord14_TileRoom.continue, LDA.b #$E0
+        Write((SNES)0x09BA21, [speed]);
+        // Overlord14_TileRoom.continue, CMP.b #$16
+        Write((SNES)0x09BA1D, [(byte)pattern.Tiles.Length]);
+
+        // SpawnFlyingTile.position_x/.position_y
+        for (int i = 0; i < pattern.Tiles.Length; i++)
+        {
+            Write((SNES)0x09BA2A + i, [(byte)((pattern.Tiles[i].X + 3) * 16)]);
+            Write((SNES)0x09BA2A + 0x16 + i, [(byte)((pattern.Tiles[i].Y + 4) * 16)]);
+        }
+    }
 
     /// <summary>Set starting with Pseudo Boots.</summary>
     public void SetPseudoBoots(bool enable = false)
@@ -1724,7 +1750,7 @@ public sealed class Rom : GameRom
     /// Reads the enemy damage table from the ROM and returns it.
     /// </summary>
     public byte[] GetEnemyDamageTable()
-        => Read((SNES)0x0DB266, 0xF3);
+        => _gameData.Enemy.Damage.ToArray();
 
     /// <summary>
     /// Writes the enemy damage table to the ROM.
@@ -1757,7 +1783,7 @@ public sealed class Rom : GameRom
     /// Reads the enemy health table from the ROM and returns it.
     /// </summary>
     public byte[] GetEnemyHealthTable()
-        => Read((SNES)0x0DB173, 0xD4);
+        => _gameData.Enemy.Health.ToArray();
 
     /// <summary>
     /// Writes the enemy health table to the ROM.
@@ -1880,11 +1906,15 @@ public sealed class Rom : GameRom
 
         foreach (var (roomId, priorityLayer) in priorityLayerChanges)
         {
-            var roomDataPointer = Read(roomDataTiles + (3 * roomId), length: 3 + 1);
-            roomDataPointer[3] = 0x00; // 3-byte value only, discard the last byte
-            int roomDataStart = FromFastRom((int)BinaryPrimitives.ReadUInt32LittleEndian(roomDataPointer));
-            // TODO: the largest room to worry about is $0007 at the moment, but this might change later.
-            var roomData = Read((SNES)roomDataStart, length: 0x140);
+            var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId);
+            if (roomDataHeader == null)
+            {
+                throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
+            }
+            
+            var roomData = roomDataHeader.TilesData.ToArray();
+            int roomDataStart = roomDataHeader.TilesPtr;
+
             int layer2Start = 2;
             // skip floor layout/upper layer
             while (layer2Start + 1 < roomData.Length && !(roomData[layer2Start + 0] == 0xFF && roomData[layer2Start + 1] == 0xFF))
@@ -1897,32 +1927,26 @@ public sealed class Rom : GameRom
                 layer2End += 3;
             layer2End += 2;
 
-            int doorStart = layer2End;
-            // skip upper priority layer (layer 3)
-            while (doorStart + 1 < roomData.Length && !(roomData[doorStart + 0] == 0xF0 && roomData[doorStart + 1] == 0xFF))
-                doorStart += 3;
-            doorStart += 2;
+            var doorData = roomDataHeader.DoorData.ToArray();
+            var dataLength = roomData.Length + doorData.Length;
+            var doorStartRel = roomDataHeader.DoorPtr - roomDataHeader.TilesPtr;
 
-            int dataEnd = doorStart;
-            // skip door data
-            while (dataEnd + 1 < roomData.Length && !(roomData[dataEnd + 0] == 0xFF && roomData[dataEnd + 1] == 0xFF))
-                dataEnd += 2;
-            dataEnd += 2;
+            byte[] newRoomData = [.. roomData[..layer2End], .. priorityLayer, 0xF0, 0xFF, .. doorData];
+            int newDoorStartRel = layer2End + priorityLayer.Length + 2;
 
-            byte[] newRoomData = [.. roomData[..layer2End], .. priorityLayer, .. roomData[(doorStart - 2)..dataEnd]];
-            if (newRoomData.Length <= dataEnd)
+            if (newRoomData.Length <= dataLength)
             {
                 // we got enough space; write back to the old location
                 Write((SNES)roomDataStart, newRoomData);
                 // patch the door data start; it is right after the room data
-                BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart + doorStart));
+                BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart + newDoorStartRel));
                 Write(roomDataDoors + (3 * roomId), data[..3]);
             }
             else
             {
                 // we need more space now (additional layer2 data), queue up for later
-                unusedData.Add((roomDataStart, dataEnd));
-                newData.Add((roomId, newRoomData, doorStart));
+                unusedData.Add((roomDataStart, dataLength));
+                newData.Add((roomId, newRoomData, newDoorStartRel));
             }
         }
 

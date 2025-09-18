@@ -3,7 +3,6 @@ namespace Randomizer.Games.Alttp;
 using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-
 using BaseGameRandomizer = Graph.GameRandomizer;
 using BaseSpoilerLog = Graph.SpoilerLog;
 using GlobalConfig = Randomizer.Config;

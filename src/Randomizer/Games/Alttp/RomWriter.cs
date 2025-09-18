@@ -6,7 +6,7 @@ using Randomizer.RomModifications;
 public static class RomWriter
 {
     private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
-    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
+    public static void Write(IRom baseRom, World world, PRNG prng)
     {
         // FIXME: this offset likely needs to come from above, we only know with a full game selection where the individual games go
         var rom = new Rom(baseRom, world.WorldConfig.Language, offset);
@@ -204,6 +204,7 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
+
         WriteEnemyDamageToRom(world, rom, prng);
         WriteEnemyHealthToRom(world, rom, prng);
         WriteEnemiesToRom(world, rom);
@@ -311,6 +312,16 @@ public static class RomWriter
         rom.SetPseudoBoots(config.PseudoBoots);
 
         rom.EnableFastRom(config.FastRom);
+
+        if (config.TileRoomPattern != TileRoomPatternOption.Default)
+        {
+            var availablePatterns = YamlReader.LoadTileRoomPatterns();
+            if (availablePatterns.Any())
+            {
+                var pattern = prng.GetRandomElement(availablePatterns);
+                rom.SetTileRoomPattern(pattern);
+            }
+        }
 
         rom.WriteCredits();
         rom.WriteText();

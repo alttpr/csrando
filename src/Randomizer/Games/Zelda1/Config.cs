@@ -6,8 +6,7 @@ using Randomizer.Games.Metadata;
 public class Config
 {
     public static readonly int[] RandomTriforces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
-    [Values(0, 1, 2, 3, 4, 5, 6, 7, 8)]
+    [ValueRange(0, 8)]
     [RandomizedOptionsFor(nameof(Triforces))]
     public int[] TriforceGoalChoices { get; set; } = RandomTriforces;
 

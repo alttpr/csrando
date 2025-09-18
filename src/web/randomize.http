@@ -1,0 +1,15 @@
+POST http://localhost:5000/randomize HTTP/1.1
+content-type: application/json
+
+{
+    "seed": 0,
+    "includeSpoiler": false,
+    "configs": [
+        {
+            "Language": "en",
+            "Game": "Alttpr",
+            "Alttp": {
+            }
+        }
+    ]
+}

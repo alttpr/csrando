@@ -43,7 +43,7 @@ public sealed class Graph
             throw new Exception("Adding a vertex after Ids are set");
 
         _vertices.Add(vertex);
-        _verticesByName.Add($"{vertex.Name}:{vertex.World.GameId}:{vertex.World.Id}", vertex);
+        _verticesByName.Add(vertex.ToString(), vertex);
 
         return vertex;
     }

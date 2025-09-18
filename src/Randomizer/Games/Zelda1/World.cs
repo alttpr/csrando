@@ -6,7 +6,7 @@ using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World : IWorld
+public sealed class World : World<Item>
 {
 
     public int Id { get; }
@@ -17,19 +17,14 @@ public sealed class World : IWorld
     public Config Config { get; }
     public PRNG Prng { get; }
     public YamlReader.YamlData? YamlData { get; set; }
-    private readonly Dictionary<string, Item> _allItems = new();
-    public ushort PlacedItemCount { get; set; }
-    public BaseVertex Start { get; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
+        : base("Zelda1", id, graph, randomizerConfig)
     {
-        Id = id;
-        WorldConfig = randomizerConfig;
         Config = randomizerConfig.Zelda1 ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda");
-        Graph = graph;
         Prng = prng;
 
         List<IItem> items = [GetItem("fixed")];
@@ -67,12 +62,7 @@ public sealed class World : IWorld
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
 
-    public IItem GetItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var matchingItem))
-        {
-            return matchingItem;
-        }
+    protected override Item CreateItem(string name, IWorld world) => new(name, world);
 
         // allow made up items
         var item = Graph.RegisterItem(new Item(name, this));
@@ -114,7 +104,7 @@ public sealed class World : IWorld
         location.World.PlacedItemCount++;
     }
 
-    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
+    public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new Searcher(Graph, start, startingInventory);
         return winSearcher.HasFound(GetItem("Zelda"));

@@ -1,7 +1,7 @@
 namespace RandomizerTests.Logic.Standard.NoGlitches;
 
 [TestClass]
-public class EastTest : StandardNoGlitchesLogicTests
+public class HyruleCastleEscapeTest : StandardNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => [
         ["Sanctuary Chest", true, new string[] { "UncleSword", "KeyH2" }],
@@ -19,6 +19,12 @@ public class EastTest : StandardNoGlitchesLogicTests
         ["Hyrule Castle - Map Chest", true, new string[] { "UncleSword" }],
 
         ["Hyrule Castle - Zelda's Cell", true, new string[] { "UncleSword" }],
+
+        // Pyramid ledge needs to be gated behind rescued Zelda;
+        // otherwise logic assumes you can walk through Sanctuary to get items to actually rescue her.
+        ["Pyramid Ledge", false, new string[] { "MasterSword", "Lamp", "KeyA1", "KeyA1" }],
+        // this should never happen in practise, but verifies our data is correct.
+        ["Pyramid Ledge", true, new string[] { "MasterSword", "Lamp", "KeyA1", "KeyA1", "RescueZelda" }],
     ];
 
     [TestMethod]

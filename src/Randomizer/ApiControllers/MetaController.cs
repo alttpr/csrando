@@ -14,14 +14,15 @@ public sealed partial class MetaController : ControllerBase
     [HttpGet]
     public IEnumerable<MetaRandomizer> Get() => Enum.GetValues<RandomizerTarget>().Select(GameRandomizer);
     private static MetaRandomizer GameRandomizer(RandomizerTarget randomizer) => new(Name(randomizer), Description(randomizer), randomizer);
-    private static MetaGame Game(Game game) => new(Name(game), Description(game), game);
+    private static MetaTarget Game(Game? game, RandomizerTarget? randomizer) => new(Name((Enum?)game ?? randomizer), Description((Enum?)game ?? randomizer), game, randomizer);
 
     [HttpGet("{randomizer}")]
     public IResult Get(RandomizerTarget randomizer)
     {
         // TODO: all of this lends itself to a source generator that builds a static result once.
         var rootSettings = new List<MetaSetting>();
-        var gameSettings = new Dictionary<string, MetaGameSettings>();
+        var gameSettings = new Dictionary<string, MetaTargetSettings>();
+        var postGenSettings = PostGenSettingsBuilder.Build();
 
         foreach (var rootProperty in SettingProperties(typeof(WorldConfig)))
         {
@@ -40,7 +41,7 @@ public sealed partial class MetaController : ControllerBase
             }
         }
 
-        return Results.Ok(new MetaRootSettings(rootSettings, gameSettings));
+        return Results.Ok(new MetaRootSettings(rootSettings, gameSettings, postGenSettings));
     }
 
     private static MetaSetting Setting(PropertyInfo property, bool noRandomValues = false)
@@ -60,7 +61,22 @@ public sealed partial class MetaController : ControllerBase
         string? description = string.Join('\n', NonNull(Description(property), remark))?.Trim();
         if (string.IsNullOrWhiteSpace(description))
             description = null;
-        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor);
+
+        //string? category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
+
+        MetaCategory? metaCategory = property.GetCustomAttribute<CategoryAttribute>() is { Category: string category, Display: CategoryDisplay display }
+            ? new MetaCategory(category, display)
+            : null;
+
+        string? subcategory = property.GetCustomAttribute<SubcategoryAttribute>()?.Subcategory;
+
+        MetaDependsOn? dependsOn = null;
+        if (property.GetCustomAttribute<DependsOnAttribute>() is { } dependsOnAttr)
+        {
+            dependsOn = new MetaDependsOn(dependsOnAttr.PropertyName, dependsOnAttr.Values);
+        }
+
+        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor, metaCategory, subcategory, dependsOn);
     }
     private static IEnumerable<string> NonNull(params IEnumerable<string?> values)
     {
@@ -78,8 +94,10 @@ public sealed partial class MetaController : ControllerBase
 
         return TitleCase(property.Name);
     }
-    private static string Name(Enum @enum)
+    private static string Name(Enum? @enum)
     {
+        if (@enum is null)
+            return "(unknown)";
         if (@enum.GetCustomAttribute<NameAttribute>() is { Name: string name })
             return name;
 
@@ -101,9 +119,9 @@ public sealed partial class MetaController : ControllerBase
 
         return null;
     }
-    private static string? Description(Enum @enum)
+    private static string? Description(Enum? @enum)
     {
-        if (@enum.GetCustomAttribute<DescriptionAttribute>() is { Description: string description })
+        if (@enum?.GetCustomAttribute<DescriptionAttribute>() is { Description: string description })
             return description;
 
         return null;
@@ -162,10 +180,10 @@ public sealed partial class MetaController : ControllerBase
 
         return (MetaSettingsVisibility.Basic, null);
     }
-    private static MetaGameSettings GameSettings(PropertyInfo gameProperty)
+    private static MetaTargetSettings GameSettings(PropertyInfo gameProperty)
     {
-        var game = GameRandomizer(gameProperty.PropertyType);
-        var metaGame = Game(game);
+        var (game, randomizer) = GameRandomizer(gameProperty.PropertyType);
+        var metaGame = Game(game, randomizer);
         var settings = new List<MetaSetting>();
 
         foreach (var property in SettingProperties(gameProperty.PropertyType))
@@ -176,9 +194,10 @@ public sealed partial class MetaController : ControllerBase
         return new(metaGame, settings);
     }
 
-    private static Game GameRandomizer(Type configType)
-        => configType.GetCustomAttribute<TargetGameAttribute>()?.Game
-            ?? throw new InvalidOperationException($"{configType.FullName} requires a {nameof(TargetGameAttribute)} to indicate which game it is for.");
+    private static (Game? Game, RandomizerTarget? Randomizer) GameRandomizer(Type configType)
+        => configType.GetCustomAttribute<TargetGameAttribute>() is { Game: var game, Randomizer: var randomizer }
+            ? (game, randomizer)
+            : throw new InvalidOperationException($"{configType.FullName} requires a {nameof(TargetGameAttribute)} to indicate which game it is for.");
 
     private static IEnumerable<PropertyInfo> SettingProperties(Type type) => type.GetProperties().Where(p => p.GetCustomAttribute<IgnoreAttribute>() is null);
 
@@ -186,11 +205,17 @@ public sealed partial class MetaController : ControllerBase
     private static partial Regex TitleCaseMatch();
 }
 
-public sealed record MetaGame(string Name, string? Description, Game Game);
+public sealed record MetaTarget(string Name, string? Description, Game? Game, RandomizerTarget? Randomizer);
 public sealed record MetaRandomizer(string Name, string? Description, RandomizerTarget Randomizer);
 
-public sealed record MetaRootSettings(List<MetaSetting> Settings, Dictionary<string, MetaGameSettings> GameSettings);
-public sealed record MetaGameSettings(MetaGame Game, List<MetaSetting> Settings);
+public sealed record MetaRootSettings(
+    List<MetaSetting> Settings,
+    Dictionary<string, MetaTargetSettings> TargetSettings,
+    Dictionary<string, MetaPostGenGameOptions> PostGenSettings
+);
+public sealed record MetaTargetSettings(MetaTarget Target, List<MetaSetting> Settings);
+public sealed record MetaDependsOn(string Key, object[] Values);
+public sealed record MetaCategory(string Name, CategoryDisplay? Display);
 public sealed record MetaSetting(
     string Key,
     string Name,
@@ -200,7 +225,10 @@ public sealed record MetaSetting(
     Dictionary<string, object?>? Values = null,
     object? Default = null,
     MetaSettingsVisibility Visibility = MetaSettingsVisibility.Basic,
-    string? OptionsFor = null
+    string? OptionsFor = null,
+    MetaCategory? Category = null,
+    string? Subcategory = null,
+    MetaDependsOn? DependsOn = null
 );
 public enum MetaSettingsType { Input, SingleChoice, MultipleChoice, Toggle, Slider };
 public sealed record MetaSettingsRange(int From, int To);
