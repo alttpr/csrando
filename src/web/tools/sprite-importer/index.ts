@@ -38,8 +38,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
       alias: "g",
       type: "string",
       description:
-        'Game identifier (e.g., "alttp", "sm", "zelda1", "metroid1"). Required.',
-      choices: ["alttp", "sm", "zelda1", "metroid1"],
+        'Game identifier (e.g., "alttp", "supermetroid", "zelda1", "metroid"). Required.',
+      choices: ["alttp", "supermetroid", "zelda1", "metroid"],
       demandOption: true,
     })
     .option("sourceDir", {
@@ -69,8 +69,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
           .option("game", {
             alias: "g",
             type: "string",
-            description: "Game identifier (alttp, sm, zelda1, metroid1).",
-            choices: ["alttp", "sm", "zelda1", "metroid1"],
+            description: "Game identifier (alttp, supermetroid, zelda1, metroid).",
+            choices: ["alttp", "supermetroid", "zelda1", "metroid"],
           })
           .option("tmpDir", {
             type: "string",
@@ -434,7 +434,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
             );
           }
         }
-      } else if (game === "sm") {
+      } else if (game === "supermetroid") {
         if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
           try {
             const fileBuffer = await readRdcFileDecompressed(filePath);
@@ -506,7 +506,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               );
             }
           } catch (err) {
-            console.error(`  Error processing RDC file ${file} for SM:`, err);
+            console.error(
+              `  Error processing RDC file ${file} for supermetroid:`,
+              err,
+            );
           }
         }
       } else if (game === "zelda1") {
@@ -583,7 +586,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
             );
           }
         }
-      } else if (game === "metroid1") {
+      } else if (game === "metroid") {
         if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
           try {
             const fileBuffer = await readRdcFileDecompressed(filePath);
@@ -652,7 +655,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
             }
           } catch (err) {
             console.error(
-              `  Error processing RDC file ${file} for metroid1:`,
+              `  Error processing RDC file ${file} for metroid:`,
               err,
             );
           }

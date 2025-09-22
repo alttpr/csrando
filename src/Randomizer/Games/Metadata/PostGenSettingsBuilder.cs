@@ -1,45 +1,59 @@
 namespace Randomizer.Games.Metadata;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using Randomizer.Games.Metadata;
+using Randomizer.Games;
 
 public static class PostGenSettingsBuilder
 {
-    public static Dictionary<string, MetaPostGenGameOptions> Build()
+    public static Dictionary<string, MetaPostGenGameOptions> Build(RandomizerTarget randomizer)
     {
         var result = new Dictionary<string, MetaPostGenGameOptions>(StringComparer.OrdinalIgnoreCase);
 
         var asm = typeof(PostGenSettingsBuilder).Assembly;
         foreach (var type in asm.GetTypes())
         {
-            var pgAttr = type.GetCustomAttribute<PostGenSettingsForAttribute>();
-            if (pgAttr is null)
+            var pgAttributes = type.GetCustomAttributes<PostGenSettingsForAttribute>().ToArray();
+            if (pgAttributes.Length == 0)
                 continue;
 
-            // Ensure it is tied to a known target game for clarity/consistency
-            if (type.GetCustomAttribute<TargetGameAttribute>() is null)
-                continue;
+            var targetGameAttr = type.GetCustomAttribute<TargetGameAttribute>();
 
-            var gameKey = pgAttr.GameId;
             var instance = Activator.CreateInstance(type);
             if (instance is null)
                 continue;
 
-            var gameOptions = new MetaPostGenGameOptions();
-            foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            foreach (var pgAttr in pgAttributes)
             {
-                var setting = BuildSetting(prop, instance);
-                if (setting is not null)
-                    gameOptions.Options.Add(setting);
-            }
+                var context = BuildContext(pgAttr, targetGameAttr);
+                if (context.Target.HasValue && context.Target.Value != randomizer)
+                    continue;
 
-            result[gameKey] = gameOptions;
+                var gameOptions = new MetaPostGenGameOptions();
+                foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    var setting = BuildSetting(prop, instance, context);
+                    if (setting is not null)
+                        gameOptions.Options.Add(setting);
+                }
+
+                result[context.GameId] = gameOptions;
+            }
         }
 
         return result;
     }
 
-    private static MetaPostGenSetting? BuildSetting(PropertyInfo prop, object instance)
+    private static PostGenBuildContext BuildContext(PostGenSettingsForAttribute attr, TargetGameAttribute? targetGameAttr)
+    {
+        RandomizerTarget? target = attr.HasTarget
+            ? attr.Target
+            : targetGameAttr?.Randomizer;
+        return new PostGenBuildContext(attr.GameId, target, attr.AddressOffset);
+    }
+
+    private static MetaPostGenSetting? BuildSetting(PropertyInfo prop, object instance, PostGenBuildContext context)
     {
         var id = prop.GetCustomAttribute<PostGenIdAttribute>()?.Id;
         id ??= Slug(prop.Name); // auto-generate id from property name
@@ -50,8 +64,8 @@ public static class PostGenSettingsBuilder
         if (prop.PropertyType == typeof(bool))
         {
             var def = (bool?)prop.GetValue(instance) ?? false;
-            var onPatches = prop.GetCustomAttributes<OnPatchAttribute>().Select(a => new MetaPostGenPatch { TargetAddress = a.TargetAddress, Data = a.Data }).ToList();
-            var offPatches = prop.GetCustomAttributes<OffPatchAttribute>().Select(a => new MetaPostGenPatch { TargetAddress = a.TargetAddress, Data = a.Data }).ToList();
+            var onPatches = BuildPatches(prop.GetCustomAttributes<OnPatchAttribute>(), context);
+            var offPatches = BuildPatches(prop.GetCustomAttributes<OffPatchAttribute>(), context);
 
             return new MetaPostGenSetting
             {
@@ -79,9 +93,7 @@ public static class PostGenSettingsBuilder
                 var choiceAttr = field.GetCustomAttribute<ChoiceAttribute>();
                 var valueId = choiceAttr?.Value ?? field.Name.ToLowerInvariant();
                 var label = choiceAttr?.Label ?? Title(field.Name);
-                var patches = field.GetCustomAttributes<ChoicePatchAttribute>()
-                    .Select(a => new MetaPostGenPatch { TargetAddress = a.TargetAddress, Data = a.Data })
-                    .ToList();
+                var patches = BuildPatches(field.GetCustomAttributes<ChoicePatchAttribute>(), context);
 
                 choices.Add(new MetaPostGenSelectChoice
                 {
@@ -103,6 +115,64 @@ public static class PostGenSettingsBuilder
         }
 
         return null;
+    }
+
+    private static List<MetaPostGenPatch> BuildPatches(IEnumerable<PatchAttributeBase> attributes, PostGenBuildContext context)
+    {
+        var attrList = attributes.ToList();
+        if (attrList.Count == 0)
+            return new List<MetaPostGenPatch>();
+
+        var patches = new List<MetaPostGenPatch>(attrList.Count);
+        var target = context.Target;
+
+        var replacements = target is null
+            ? new HashSet<int>()
+            : attrList
+                .Where(a => a.AppliesTo == target && a.ReplacesAddress.HasValue)
+                .Select(a => a.ReplacesAddress!.Value)
+                .ToHashSet();
+
+        foreach (var attr in attrList)
+        {
+            if (!ShouldEmit(attr, target, replacements))
+                continue;
+
+            var address = ResolveAddress(attr, context.AddressOffset);
+            patches.Add(new MetaPostGenPatch
+            {
+                TargetAddress = address,
+                Data = attr.Data.Select(b => (int)b).ToList(),
+            });
+        }
+
+        return patches;
+    }
+
+    private static bool ShouldEmit(
+        PatchAttributeBase attr,
+        RandomizerTarget? target,
+        IReadOnlySet<int> replacements)
+    {
+        if (attr.AppliesTo.HasValue)
+            return target.HasValue && attr.AppliesTo.Value == target.Value;
+
+        if (target.HasValue && attr.ExcludeTargets.Contains(target.Value))
+            return false;
+
+        if (target.HasValue && replacements.Contains(attr.TargetAddress))
+            return false;
+
+        return true;
+    }
+
+    private static int ResolveAddress(PatchAttributeBase attr, int defaultOffset)
+    {
+        var offset = attr.SkipDefaultOffset ? 0 : defaultOffset;
+        if (attr.AdditionalOffset != 0)
+            offset += attr.AdditionalOffset;
+
+        return attr.TargetAddress + offset;
     }
 
     private static string Title(string pascal)
@@ -140,3 +210,5 @@ public static class PostGenSettingsBuilder
         return result.ToString();
     }
 }
+
+internal sealed record PostGenBuildContext(string GameId, RandomizerTarget? Target, int AddressOffset);

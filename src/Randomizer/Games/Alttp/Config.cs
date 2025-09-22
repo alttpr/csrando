@@ -241,26 +241,26 @@ public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }
 
-[TargetGame(RandomizerTarget.Alttpr)]
-[PostGenSettingsFor("alttp")]
+[PostGenSettingsFor("alttp", Target = RandomizerTarget.Alttpr)]
+[PostGenSettingsFor("alttp", Target = RandomizerTarget.Combo, AddressOffset = 0x400000)]
 public sealed class PostGenConfig
 {
     [Name("Quick Swap")]
     [Description("Enable item quick swap (L/R toggles items)")]
-    [OnPatch("0x18004B", "01")]
-    [OffPatch("0x18004B", "00")]
+    [OnPatch(0x18004B, 0x01)]
+    [OffPatch(0x18004B, 0x00)]
     public bool QuickSwap { get; init; } = true;
 
     [Name("Music")]
     [Description("Enable in-game music")]
-    [OnPatch("0x18021A", "00")]
-    [OffPatch("0x18021A", "01")]
+    [OnPatch(0x18021A, 0x00)]
+    [OffPatch(0x18021A, 0x01)]
     public bool EnableMusic { get; init; } = true;
 
     [Name("MSU-1 Resume")]
     [Description("Enable MSU-1 music resume")]
-    [OffPatch("0x18021D", "00")]
-    [OffPatch("0x18021E", "00")]
+    [OffPatch(0x18021D, 0x00)]
+    [OffPatch(0x18021E, 0x00)]
     public bool Msu1Resume { get; init; } = true;
 
     [Name("Menu Speed")]
@@ -277,8 +277,8 @@ public sealed class PostGenConfig
 
     [Name("Reduce Flashes")]
     [Description("Reduce flashing effects")]
-    [OnPatch("0x18017F", "01")]
-    [OffPatch("0x18017F", "00")]
+    [OnPatch(0x18017F, 0x01)]
+    [OffPatch(0x18017F, 0x00)]
     public bool ReduceFlashing { get; init; } = false;
 }
 
@@ -286,72 +286,72 @@ public enum MenuSpeed
 {
     // instant: writes main byte and sets 3 addresses to 0x20
     [Choice("instant", "Instant")]
-    [ChoicePatch("0x180048", "E8")]
-    [ChoicePatch("0x006DD9A", "20")]
-    [ChoicePatch("0x006DF2A", "20")]
-    [ChoicePatch("0x006E0E9", "20")]
+    [ChoicePatch(0x180048, 0xE8)]
+    [ChoicePatch(0x006DD9A, 0x20)]
+    [ChoicePatch(0x006DF2A, 0x20)]
+    [ChoicePatch(0x006E0E9, 0x20)]
     Instant,
 
     [Choice("fast", "Fast")]
-    [ChoicePatch("0x180048", "10")]
-    [ChoicePatch("0x006DD9A", "11")]
-    [ChoicePatch("0x006DF2A", "12")]
-    [ChoicePatch("0x006E0E9", "12")]
+    [ChoicePatch(0x180048, 0x10)]
+    [ChoicePatch(0x006DD9A, 0x11)]
+    [ChoicePatch(0x006DF2A, 0x12)]
+    [ChoicePatch(0x006E0E9, 0x12)]
     Fast,
 
     [Choice("normal", "Normal")]
-    [ChoicePatch("0x180048", "08")]
-    [ChoicePatch("0x006DD9A", "11")]
-    [ChoicePatch("0x006DF2A", "12")]
-    [ChoicePatch("0x006E0E9", "12")]
+    [ChoicePatch(0x180048, 0x08)]
+    [ChoicePatch(0x006DD9A, 0x11)]
+    [ChoicePatch(0x006DF2A, 0x12)]
+    [ChoicePatch(0x006E0E9, 0x12)]
     Normal,
 
     [Choice("slow", "Slow")]
-    [ChoicePatch("0x180048", "04")]
-    [ChoicePatch("0x006DD9A", "11")]
-    [ChoicePatch("0x006DF2A", "12")]
-    [ChoicePatch("0x006E0E9", "12")]
+    [ChoicePatch(0x180048, 0x04)]
+    [ChoicePatch(0x006DD9A, 0x11)]
+    [ChoicePatch(0x006DF2A, 0x12)]
+    [ChoicePatch(0x006E0E9, 0x12)]
     Slow,
 }
 
 public enum HeartColor
 {
     [Choice("red", "Red")]
-    [ChoicePatch("0x187020", "00")]
+    [ChoicePatch(0x187020, 0x00)]
     Red,
 
     [Choice("blue", "Blue")]
-    [ChoicePatch("0x187020", "01")]
+    [ChoicePatch(0x187020, 0x01)]
     Blue,
 
     [Choice("green", "Green")]
-    [ChoicePatch("0x187020", "02")]
+    [ChoicePatch(0x187020, 0x02)]
     Green,
 
     [Choice("yellow", "Yellow")]
-    [ChoicePatch("0x187020", "03")]
+    [ChoicePatch(0x187020, 0x03)]
     Yellow,
 }
 
 public enum HeartBeepSpeed
 {
     [Choice("off", "Off")]
-    [ChoicePatch("0x180033", "00")]
+    [ChoicePatch(0x180033, 0x00)]
     Off,
 
     [Choice("normal", "Normal")]
-    [ChoicePatch("0x180033", "20")]
+    [ChoicePatch(0x180033, 0x20)]
     Normal,
 
     [Choice("half", "Half Speed")]
-    [ChoicePatch("0x180033", "40")]
+    [ChoicePatch(0x180033, 0x40)]
     Half,
 
     [Choice("quarter", "Quarter Speed")]
-    [ChoicePatch("0x180033", "80")]
+    [ChoicePatch(0x180033, 0x80)]
     Quarter,
 
     [Choice("double", "Double Speed")]
-    [ChoicePatch("0x180033", "10")]
+    [ChoicePatch(0x180033, 0x10)]
     Double,
 }

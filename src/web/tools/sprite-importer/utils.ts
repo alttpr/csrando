@@ -80,13 +80,16 @@ export function getTitleAuthorFromRdc(rdcBuffer: Buffer): {
 
 export function renderPreviewImageForGame(
   rdcBuffer: Buffer,
-  game: "alttp" | "sm" | "zelda1" | "metroid1",
+  game: "alttp" | "supermetroid" | "zelda1" | "metroid",
 ): PNG | undefined {
   const rdc = Rdc.parse(rdcBuffer);
   if (rdc.contains(LinkSprite.RDC_TYPE_ID) && game === "alttp") {
     const link = rdc.tryParseBlock(rdcBuffer, LinkSprite);
     if (link) return renderZ3AvatarImage(link);
-  } else if (rdc.contains(SamusSprite.RDC_TYPE_ID) && game === "sm") {
+  } else if (
+    rdc.contains(SamusSprite.RDC_TYPE_ID) &&
+    game === "supermetroid"
+  ) {
     const samus = rdc.tryParseBlock(rdcBuffer, SamusSprite);
     if (samus) return renderSMAvatarImage(samus);
   } else if (
@@ -96,7 +99,7 @@ export function renderPreviewImageForGame(
     const z1 = rdc.tryParseBlock(rdcBuffer, Zelda1SpriteDataBlock);
     if (z1) return renderNESAvatarImage(z1);
   } else if (
-    game === "metroid1" &&
+    game === "metroid" &&
     rdc.contains(Metroid1SpriteDataBlock.RDC_TYPE_ID)
   ) {
     const m1 = rdc.tryParseBlock(rdcBuffer, Metroid1SpriteDataBlock);

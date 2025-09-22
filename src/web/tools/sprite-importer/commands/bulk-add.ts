@@ -32,7 +32,7 @@ async function scanDir(dir: string, recursive: boolean): Promise<string[]> {
 export async function bulkAddRemote(argv: unknown) {
   const args = argv as {
     repo?: string;
-    game?: "alttp" | "sm" | "zelda1" | "metroid1";
+    game?: "alttp" | "supermetroid" | "zelda1" | "metroid";
     sourceDir?: string;
     tmpDir?: string;
     dryRun?: boolean;
@@ -159,11 +159,11 @@ export async function bulkAddRemote(argv: unknown) {
     const kind =
       game === "alttp"
         ? "rdc/link"
-        : game === "sm"
+        : game === "supermetroid"
           ? "rdc/samus"
           : game === "zelda1"
             ? "rdc/nes-z1"
-            : game === "metroid1"
+            : game === "metroid"
               ? "rdc/nes-m1"
               : undefined;
     const spriteEntry: SpriteInfoFrontend = {

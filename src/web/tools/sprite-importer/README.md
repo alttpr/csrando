@@ -2,7 +2,7 @@
 
 ## Overview
 
-This CLI processes sprite assets for A Link to the Past (`alttp`), Super Metroid (`sm`), The Legend of Zelda (`zelda1`), and Metroid (`metroid1`). It ingests ZSPR and RDC files, writes normalized binary assets and preview PNGs, and keeps a `sprites.json` manifest up to date. The same entry point also exposes `remote` subcommands for working with sprite collections hosted in a Git repository.
+This CLI processes sprite assets for A Link to the Past (`alttp`), Super Metroid (`supermetroid`), The Legend of Zelda (`zelda1`), and Metroid (`metroid`). It ingests ZSPR and RDC files, writes normalized binary assets and preview PNGs, and keeps a `sprites.json` manifest up to date. The same entry point also exposes `remote` subcommands for working with sprite collections hosted in a Git repository.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ npm run import-sprites -- --game alttp --sourceDir path/to/alttp_sprites --outpu
 
 - `--game <game_id>` or `-g <game_id>`
   - **Required.** Determines which game subdirectory is updated.
-  - Supported values: `alttp`, `sm`, `zelda1`, `metroid1`.
+  - Supported values: `alttp`, `supermetroid`, `zelda1`, `metroid`.
 - `--sourceDir <path>` or `-s <path>`
   - **Required.** Directory containing `.zspr` and/or `.rdc` files to import.
 - `--outputDir <path>` or `-o <path>`
@@ -41,7 +41,7 @@ This is the default task. It performs the following actions:
 1.  **Parses Sprite Files:**
     - Processes `.zspr` files for A Link to the Past.
     - Processes `.rdc` files for A Link to the Past (Link sprites) and Super Metroid (Samus sprites).
-    - _Note: Zelda 1 and Metroid 1 files are not currently processed by the `import` task beyond basic recognition if game type is specified._
+    - _Note: Zelda 1 and Metroid files are not currently processed by the `import` task beyond basic recognition if game type is specified._
 2.  **Extracts Binary Data:**
     - Raw binary data (GFX, palettes, game-specific data like Link's gloves) are extracted.
     - These are saved as separate `.bin` files (e.g., `<sprite_name>_gfx.bin`).
@@ -91,7 +91,7 @@ Or for development with `ts-node`:
 #### Common Options for `remote` Subcommands:
 
 - `--repo <url>`: **(Required)** HTTPS URL of the GitHub repository.
-- `--game <id>`: **(Required by most subcommands)** Game identifier (e.g., `alttp`, `sm`, `zelda1`, `metroid1`). This specifies the game-specific subdirectory within the repository where sprites are managed (e.g., `alttp/sprites.json`).
+- `--game <id>`: **(Required by most subcommands)** Game identifier (e.g., `alttp`, `supermetroid`, `zelda1`, `metroid`). This specifies the game-specific subdirectory within the repository where sprites are managed (e.g., `alttp/sprites.json`).
 - `--tmpDir <path>`: (Optional) Specify a local directory for cloning the remote repository. Defaults to a system-generated temporary directory (e.g., `/tmp/sprite-importer-remote-<timestamp>`). The tool will attempt to clean up this directory after the operation, but manual cleanup might be needed if errors occur.
 - `--provider <name>`: (Optional, defaults to `github`) Specifies the remote provider. Currently, only `github` is supported.
 
@@ -168,7 +168,7 @@ Or for development with `ts-node`:
 The `remote` commands expect sprites to be organized within the repository as follows:
 
 - `<repository_root>/`
-  - `<game_id>/` (e.g., `alttp/`, `sm/`)
+  - `<game_id>/` (e.g., `alttp/`, `supermetroid/`)
     - `sprites.json` (The inventory file for this game)
     - `<spriteName1>.rdc`
     - `<spriteName1>.png` (Optional preview)

@@ -1,13 +1,14 @@
 namespace Randomizer.Games.Metadata;
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 // JSON models for the postGenSettings block
 
 public sealed class MetaPostGenPatch
 {
-    [JsonPropertyName("targetAddress")] public string TargetAddress { get; init; } = string.Empty;
-    [JsonPropertyName("data")] public string Data { get; init; } = string.Empty; // hex string
+    [JsonPropertyName("targetAddress")] public int TargetAddress { get; init; }
+    [JsonPropertyName("data")] public List<int> Data { get; init; } = new();
 }
 
 public sealed class MetaPostGenPatchGroup

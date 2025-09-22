@@ -47,7 +47,7 @@ export async function handleRemoteAtlas(argv: unknown) {
     games = [args.game];
   }
   games = games.filter((g) =>
-    ["alttp", "sm", "zelda1", "metroid1"].includes(g),
+    ["alttp", "supermetroid", "zelda1", "metroid"].includes(g),
   );
   if (games.length === 0) {
     console.log("No game directories found to build atlases for.");

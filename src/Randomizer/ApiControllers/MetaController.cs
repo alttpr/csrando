@@ -22,7 +22,7 @@ public sealed partial class MetaController : ControllerBase
         // TODO: all of this lends itself to a source generator that builds a static result once.
         var rootSettings = new List<MetaSetting>();
         var gameSettings = new Dictionary<string, MetaTargetSettings>();
-        var postGenSettings = PostGenSettingsBuilder.Build();
+        var postGenSettings = PostGenSettingsBuilder.Build(randomizer);
 
         foreach (var rootProperty in SettingProperties(typeof(WorldConfig)))
         {

@@ -26,7 +26,7 @@
 	} from "$lib/utils/rom";
 	import { sha256Hex } from "$lib/utils/hash";
 
-	import gameStaticInfoJson from "$lib/game-static-info.json?raw";
+	import { gameStaticInfo } from "$lib/game-static-info";
 
 	interface Props {
 		data: PageData;
@@ -46,22 +46,21 @@
 		!value || value.trim() === "";
 
 	const staticInfoFromFile = (() => {
-		try {
-			const parsed = JSON.parse(gameStaticInfoJson) as Record<
-				string,
-				Omit<GameStaticInfo, "id">
-			>;
-			const entries: Array<[string, GameStaticInfo]> = Object.entries(
-				parsed,
-			).map(([rawId, info]) => {
-				const normalizedId = normalizeGameId(rawId);
-				return [normalizedId, { id: normalizedId, ...info }];
-			});
-			return new Map<string, GameStaticInfo>(entries);
-		} catch (error) {
-			console.error("Failed to parse game-static-info.json:", error);
-			return new Map<string, GameStaticInfo>();
-		}
+		const entries: Array<[string, GameStaticInfo]> = Object.entries(
+			gameStaticInfo,
+		).map(([rawId, info]) => {
+			const normalizedId = normalizeGameId(rawId);
+			return [
+				normalizedId,
+				{
+					id: normalizedId,
+					displayName: info.displayName,
+					expectedHash: info.expectedHash,
+					fileExtensions: info.fileExtensions ?? "",
+				},
+			];
+		});
+		return new Map<string, GameStaticInfo>(entries);
 	})();
 
 	const hiddenMetadataGameIds = new Set(
@@ -224,6 +223,37 @@
 		({ id }) => !isMetadataGameHidden(id),
 	);
 
+	const resolvedRandomizerIdRaw =
+		typeof data.randomizerId === "string"
+			? data.randomizerId
+			: typeof globalOptions.Game === "string"
+				? (globalOptions.Game as string)
+				: null;
+
+	const resolvedRandomizerIdNormalized = resolvedRandomizerIdRaw
+		? resolvedRandomizerIdRaw.toLowerCase()
+		: null;
+
+	const requiredRomGameIds = resolvedRandomizerIdNormalized
+		? Object.entries(gameStaticInfo)
+				.filter(([gid, info]) => {
+					if (gid === "combo") return false;
+					const offset =
+						info.targetOffsets?.[resolvedRandomizerIdNormalized];
+					return typeof offset === "number" && offset >= 0;
+				})
+				.map(([gid]) => normalizeGameId(gid))
+		: [];
+
+	const romUploadGameIds = (() => {
+		const ids = visibleGameOptions.map((g) => g.id);
+		for (const gid of requiredRomGameIds) {
+			if (!ids.includes(gid)) {
+				ids.push(gid);
+			}
+		}
+		return ids;
+	})();
 	// Primary game id (first entry) for patcher logic
 	let primaryGameId = $derived(visibleGameOptions[0]?.id?.toLowerCase());
 
@@ -243,6 +273,33 @@
 	}
 
 	let romsData = $state(new Map<string, RomFileData>());
+
+	if (romUploadGameIds.length > 0) {
+		const initialStaticInfo = new Map<string, GameStaticInfo>();
+		const initialRomData = new Map<string, RomFileData>();
+		for (const gameId of romUploadGameIds) {
+			const normalizedId = normalizeGameId(gameId);
+			let staticInfoEntry = staticInfoFromFile.get(normalizedId);
+			if (!staticInfoEntry) {
+				staticInfoEntry = {
+					id: normalizedId,
+					displayName: `Game: ${normalizedId}`,
+					fileExtensions: ".rom,.sfc,.smc",
+					expectedHash: undefined,
+				};
+			}
+			initialStaticInfo.set(normalizedId, staticInfoEntry);
+			initialRomData.set(normalizedId, {
+				buffer: null,
+				fileName: null,
+				hashStatus: "no_rom",
+				gameName: staticInfoEntry.displayName,
+				expectedHash: staticInfoEntry.expectedHash,
+			});
+		}
+		gameIdToStaticInfo = initialStaticInfo;
+		romsData = initialRomData;
+	}
 
 	function getLocalForageKey(gameId: string): string {
 		return `rom_global_${gameId}`;
@@ -325,10 +382,10 @@
 			const newRomsData = new Map<string, RomFileData>();
 			const newGameIdToStaticInfo = new Map<string, GameStaticInfo>();
 
-			if (visibleGameOptions.length > 0) {
-				// First, populate static info and ROM data (as before)
-				for (const game of visibleGameOptions) {
-					const gameId = normalizeGameId(game.id);
+			if (romUploadGameIds.length > 0) {
+				// First, populate static info and ROM data for every game that needs a ROM upload
+				for (const gameIdRaw of romUploadGameIds) {
+					const gameId = normalizeGameId(gameIdRaw);
 					let staticInfoEntry = staticInfoFromFile.get(gameId);
 
 					if (!staticInfoEntry) {
@@ -380,7 +437,7 @@
 					newRomsData.set(gameId, romFileDataToSet);
 				}
 
-				// After visible game options are processed for static/ROM info, fetch sprite configs
+				// After ROM data is processed, fetch sprite configs only for games with settings
 				for (const game of visibleGameOptions) {
 					const gameId = normalizeGameId(game.id); // Ensure consistent casing
 					// Base URL where sprite folders live. For GitHub Pages hosting, set PUBLIC_SPRITES_BASE_URL
@@ -979,7 +1036,7 @@
 		}
 
 		const currentSeedOpts = data.seedDetails?.options;
-		if (visibleGameOptions.length === 0 || !currentSeedOpts) {
+		if (romUploadGameIds.length === 0 || !currentSeedOpts) {
 			alert(
 				m.seed_page_rom_patch_error_missing_seed_details() ||
 					"Game list not available.",
@@ -987,8 +1044,7 @@
 			return;
 		}
 
-		for (const game of visibleGameOptions) {
-			const gameId = game.id;
+		for (const gameId of romUploadGameIds) {
 			const romData = romsData.get(gameId);
 			const gameInfo = gameIdToStaticInfo.get(gameId);
 
@@ -1035,8 +1091,7 @@
 		}
 
 		const additionalRoms: { [gameId: string]: ArrayBuffer } = {};
-		for (const game of visibleGameOptions) {
-			const gameId = game.id;
+		for (const gameId of romUploadGameIds) {
 			if (gameId !== resolvedPrimaryId) {
 				// resolvedPrimaryId is string here
 				const romData = romsData.get(gameId);
@@ -1064,10 +1119,7 @@
 		}
 
 		// Derive randomizerId:
-		const randomizerId =
-			(data.randomizerId as string | null | undefined) ??
-			(globalOptions.Game as string | undefined) ??
-			undefined;
+		const randomizerId = resolvedRandomizerIdRaw ?? undefined;
 
 		const primaryGameOptionsEntry = visibleGameOptions.find(
 			(game) => game.id === resolvedPrimaryId,
@@ -1130,10 +1182,9 @@
 			const resolvedPrimaryId = primaryGameId; // Use the derived state
 			if (!resolvedPrimaryId) return false;
 
-			if (visibleGameOptions.length === 0) return false;
+			if (romUploadGameIds.length === 0) return false;
 
-			for (const game of visibleGameOptions) {
-				const gameId = game.id;
+			for (const gameId of romUploadGameIds) {
 				const romData = romsData.get(gameId);
 				const gameInfo = gameIdToStaticInfo.get(gameId);
 
@@ -1261,70 +1312,68 @@
 						]}
 						<!-- Use direct reactive lookup instead of {@const} to allow updates -->
 
-						<div class="w-full md:w-1/2">
-							<label
-								for={`sprite-select-${gameId}`}
-								class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
-							>
-								{`Sprite for ${gameDisplayName}`}
-							</label>
-							{#if spriteOptionsForGame.length > 0}
-								<SpriteSelect
-									id={`sprite-select-${gameId}`}
-									game={gameId}
-									items={spriteOptionsWithDefault}
-									value={spriteSelections[gameId] || ""}
-									on:change={async (
-										e: CustomEvent<{ value: string }>,
-									) => {
-										const newVal = e.detail.value;
-										selectedSpritesByGameId.set(
-											gameId,
-											newVal,
-										);
-										spriteSelections[gameId] = newVal;
-										selectedSpritesByGameId =
-											selectedSpritesByGameId;
-										spriteSelections = {
-											...spriteSelections,
-										};
-										await persistSpriteSelection(
-											gameId,
-											newVal,
-										);
-									}}
-									placeholder={m.sprite_select_placeholder() ||
-										"Select a sprite"}
-									className="text-xs"
-								/>
-							{:else}
-								<p
-									class="text-xs text-slate-500 dark:text-slate-400 mt-1"
-								>
-									{`Sprites not available for ${gameDisplayName}.`}
-								</p>
-							{/if}
-						</div>
-
-						<!-- Post-generation settings for this game -->
-						{@const postGenConfig =
-							gameIdToPostGenConfigMap.get(gameId)}
-						{#if postGenConfig && postGenConfig.options.length > 0}
-							<!-- Per‑game label for clarity in multi‑rando -->
-							<div class="flex items-center gap-2 mt-3 mb-2">
-								<div
-									class="h-4 w-1 rounded bg-indigo-500"
-								></div>
-								<h4
-									class="text-[12px] font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300"
-								>
-									{gameDisplayName}
-								</h4>
-							</div>
+					<!-- Post-generation settings for this game -->
+					{@const postGenConfig =
+						gameIdToPostGenConfigMap.get(gameId)}
+					{@const postGenOptions = postGenConfig?.options ?? []}
+					{@const hasSpriteOptions = spriteOptionsForGame.length > 0}
+					{@const hasPostGenOptions = postGenOptions.length > 0}
+					{#if hasSpriteOptions || hasPostGenOptions}
+						<!-- Per‑game label for clarity in multi‑rando -->
+						<div class="flex items-center gap-2 mt-3 mb-2">
 							<div
-								class="w-full rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
+								class="h-4 w-1 rounded bg-indigo-500"
+							></div>
+							<h4
+								class="text-[12px] font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300"
 							>
-								{#each postGenConfig.options as opt (opt.id)}
+								{gameDisplayName}
+							</h4>
+						</div>
+						<div
+							class="w-full rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
+						>
+							{#if hasSpriteOptions}
+								<div class="space-y-1 md:col-span-2 md:w-1/2">
+									<label
+										for={`sprite-select-${gameId}`}
+										class="block text-xs font-medium text-slate-900 dark:text-slate-100"
+									>
+										{`Sprite for ${gameDisplayName}`}
+									</label>
+									<SpriteSelect
+										id={`sprite-select-${gameId}`}
+										game={gameId}
+										items={spriteOptionsWithDefault}
+										value={spriteSelections[gameId] || ""}
+										on:change={async (
+											e: CustomEvent<{ value: string }>,
+										) => {
+											const newVal = e.detail.value;
+											selectedSpritesByGameId.set(
+												gameId,
+												newVal,
+											);
+											spriteSelections[gameId] = newVal;
+											selectedSpritesByGameId =
+												selectedSpritesByGameId;
+											spriteSelections = {
+												...spriteSelections,
+											};
+											await persistSpriteSelection(
+												gameId,
+												newVal,
+											);
+										}}
+										placeholder={m.sprite_select_placeholder() ||
+											"Select a sprite"}
+										className="text-xs"
+									/>
+								</div>
+							{/if}
+
+							{#if hasPostGenOptions}
+								{#each postGenOptions as opt (opt.id)}
 									{#if opt.type === "toggle"}
 										<div class="space-y-1">
 											<label
@@ -1540,8 +1589,9 @@
 												</div>
 											{/if}
 										</div>
-									{:else if opt.type === "select"}
-										<div class="space-y-1">
+								{/if}
+								{#if opt.type === "select"}
+									<div class="space-y-1">
 											<label
 												class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
 												for={`postgen-${gameId}-${opt.id}`}
@@ -1605,14 +1655,15 @@
 										</div>
 									{/if}
 								{/each}
-							</div>
-						{:else}
-							<p
-								class="text-[11px] text-slate-500 dark:text-slate-400 mt-1"
-							>
-								No post-generation settings for {gameDisplayName}.
-							</p>
-						{/if}
+							{:else}
+								<p
+									class="md:col-span-2 text-[11px] text-slate-500 dark:text-slate-400 mt-1"
+								>
+									No post-generation settings for {gameDisplayName}.
+								</p>
+							{/if}
+						</div>
+					{/if}
 					{/each}
 				</div>
 			</div>
@@ -1638,9 +1689,8 @@
 						<p>{$patchingServiceError}</p>
 					</div>
 				{/if}
-				{#if seedOptions && visibleGameOptions.length > 0}
-					{#each visibleGameOptions as game (game.id)}
-						{@const gameId = game.id}
+				{#if seedOptions && romUploadGameIds.length > 0}
+					{#each romUploadGameIds as gameId (gameId)}
 						{@const staticInfo = gameIdToStaticInfo.get(gameId)}
 						{#if staticInfo}
 							<RomUploader

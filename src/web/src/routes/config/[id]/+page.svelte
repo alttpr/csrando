@@ -1,13 +1,13 @@
 <script lang="ts">
-	import * as m from '$lib/paraglide/messages';
-	import { goto } from '$app/navigation';
-	import { base } from '$app/paths';
-	import GameSelector from '$lib/components/config/GameSelector.svelte';
-	import OptionForm from '$lib/components/config/OptionForm.svelte';
-	import GameTabs from '$lib/components/config/GameTabs.svelte';
-	import Button from '$lib/components/ui/Button.svelte';
-	import Select from '$lib/components/ui/Select.svelte';
-	import { createSeed } from '$lib/services/data';
+	import * as m from "$lib/paraglide/messages";
+	import { goto } from "$app/navigation";
+	import { base } from "$app/paths";
+	import GameSelector from "$lib/components/config/GameSelector.svelte";
+	import OptionForm from "$lib/components/config/OptionForm.svelte";
+	import GameTabs from "$lib/components/config/GameTabs.svelte";
+	import Button from "$lib/components/ui/Button.svelte";
+	import Select from "$lib/components/ui/Select.svelte";
+	import { createSeed } from "$lib/services/data";
 	import type {
 		Metadata,
 		MetadataSetting,
@@ -16,9 +16,9 @@
 		SliderSetting,
 		ToggleSetting,
 		GenericSetting,
-		InputSetting
-	} from '$lib/types';
-	import { onMount } from 'svelte';
+		InputSetting,
+	} from "$lib/types";
+	import { onMount } from "svelte";
 
 	interface PageData {
 		metadata: Metadata | null;
@@ -48,43 +48,53 @@
 	let activeGameTab: string | null = $state(null);
 	let generating = $state(false);
 	let formSubmissionError: string | null = $state(null);
-	let selectedVisibility = $state(['Basic']);
-	let visibilitySelection = $state<'basic' | 'advanced' | 'expert'>('basic');
+	let selectedVisibility = $state(["Basic"]);
+	let visibilitySelection = $state<"basic" | "advanced" | "expert">("basic");
 
 	const visibilityLevels = [
-		{ id: 'basic', name: 'Basic', value: ['Basic'] as const },
-		{ id: 'advanced', name: 'Advanced', value: ['Basic', 'Advanced'] as const },
-		{ id: 'expert', name: 'Expert', value: ['Basic', 'Advanced', 'Expert'] as const }
+		{ id: "basic", name: "Basic", value: ["Basic"] as const },
+		{
+			id: "advanced",
+			name: "Advanced",
+			value: ["Basic", "Advanced"] as const,
+		},
+		{
+			id: "expert",
+			name: "Expert",
+			value: ["Basic", "Advanced", "Expert"] as const,
+		},
 	];
 
 	$effect(() => {
 		// keep selectedVisibility in sync with compact selection
 		const map: Record<typeof visibilitySelection, string[]> = {
-			basic: ['Basic'],
-			advanced: ['Basic', 'Advanced'],
-			expert: ['Basic', 'Advanced', 'Expert']
+			basic: ["Basic"],
+			advanced: ["Basic", "Advanced"],
+			expert: ["Basic", "Advanced", "Expert"],
 		};
 		selectedVisibility = map[visibilitySelection];
 	});
 
 	const hasGlobalOptions = $derived(
-		!!(metadata && metadata.settings && metadata.settings.length > 0)
+		!!(metadata && metadata.settings && metadata.settings.length > 0),
 	);
 
 	// Show global options only if there is actually a choice to make for the
 	// current visibility level. If all visible globals are selects with a single
 	// item, hide the card entirely.
 	const shouldShowGlobalOptions = () => {
-		if (!(metadata && metadata.settings && metadata.settings.length > 0)) return false;
+		if (!(metadata && metadata.settings && metadata.settings.length > 0))
+			return false;
 
 		let showGlobalOptions = false;
 		if (metadata && metadata.settings) {
 			for (const option of metadata.settings) {
-				if (selectedVisibility.includes(option.visibility || 'Basic')) {
+				if (selectedVisibility.includes(option.visibility || "Basic")) {
 					if (
-						option.type !== 'SingleChoice' ||
-						(option.type === 'SingleChoice' &&
-							Object.keys((option as SingleChoiceSetting).values).length > 1)
+						option.type !== "SingleChoice" ||
+						(option.type === "SingleChoice" &&
+							Object.keys((option as SingleChoiceSetting).values)
+								.length > 1)
 					) {
 						showGlobalOptions = true;
 						break;
@@ -97,11 +107,35 @@
 
 	const hasSelectedGames = $derived(selectedGames.length > 0);
 
-	const requiredGames = $state(['Alttp']);
+	// Hotfix: when global target is "Combo", require Alttp to be selected and lock it
+	let requiredGames: string[] = $state([]);
+
+	$effect(() => {
+		// Determine current global target (RandomizerTarget)
+		const currentTarget =
+			(formValues.global?.["Game"] as string) ||
+			"" ||
+			((
+				metadata?.settings?.find((s) => s.key === "Game") as
+					| { default?: string }
+					| undefined
+			)?.default ??
+				"");
+		const isCombo = (currentTarget || "").toLowerCase() === "combo";
+		requiredGames = isCombo ? ["Alttp"] : [];
+
+		// Ensure Alttp remains selected when Combo target is active
+		if (isCombo && !selectedGames.includes("Alttp")) {
+			selectedGames = ["Alttp", ...selectedGames];
+		}
+	});
 
 	$effect(() => {
 		// Check if there's only one game available and the activeGameTab is not set or the wrong game, and reset it
-		if (selectedGames.length === 1 && (!activeGameTab || !selectedGames.includes(activeGameTab))) {
+		if (
+			selectedGames.length === 1 &&
+			(!activeGameTab || !selectedGames.includes(activeGameTab))
+		) {
 			activeGameTab = selectedGames[0];
 		}
 	});
@@ -112,7 +146,7 @@
 			availableGames = [...initData.availableGames];
 			formValues = {
 				global: { ...initData.formGlobal },
-				perGame: { ...initData.formPerGame }
+				perGame: { ...initData.formPerGame },
 			};
 			selectedGames = [...initData.selectedGames];
 			activeGameTab = initData.activeTab;
@@ -121,24 +155,25 @@
 
 	function getDefaultValue(option: MetadataSetting): unknown {
 		switch (option.type) {
-			case 'SingleChoice': {
+			case "SingleChoice": {
 				const sc = option as SingleChoiceSetting;
-				if (sc.default && sc.default in option.values) return sc.default;
+				if (sc.default && sc.default in option.values)
+					return sc.default;
 				const firstKey = Object.keys(option.values)[0];
 				if (firstKey) {
 					return option.values[firstKey];
 				}
-				return '';
+				return "";
 			}
-			case 'MultipleChoice':
+			case "MultipleChoice":
 				return (option as MultipleChoiceSetting).default || [];
-			case 'Slider':
+			case "Slider":
 				return (option as SliderSetting).default || 0;
-			case 'Toggle':
+			case "Toggle":
 				return (option as ToggleSetting).default || false;
-			case 'Input':
-				return (option as InputSetting).default || '';
-			case 'Generic':
+			case "Input":
+				return (option as InputSetting).default || "";
+			case "Generic":
 				return (option as GenericSetting).default || null;
 			default:
 				return null;
@@ -152,9 +187,11 @@
 				description?: string;
 			}>,
 			formGlobal: {} as { [key: string]: unknown },
-			formPerGame: {} as { [gameKey: string]: { [key: string]: unknown } },
+			formPerGame: {} as {
+				[gameKey: string]: { [key: string]: unknown };
+			},
 			selectedGames: [] as string[],
-			activeTab: null as string | null
+			activeTab: null as string | null,
 		};
 
 		// Process global settings
@@ -172,22 +209,36 @@
 				result.formPerGame[game] = {};
 
 				const gameSpecificOptions =
-					gameSettings && gameSettings.settings ? gameSettings.settings : [];
+					gameSettings && gameSettings.settings
+						? gameSettings.settings
+						: [];
 
 				// Only add to availableGames if there are actual settings
-				if (Array.isArray(gameSpecificOptions) && gameSpecificOptions.length > 0) {
+				if (
+					Array.isArray(gameSpecificOptions) &&
+					gameSpecificOptions.length > 0
+				) {
 					// Add to our results array
 					result.availableGames.push({
 						id: game,
-						name: (gameSettings as unknown as { game?: { name?: string } }).game?.name || game,
-						description: (gameSettings as unknown as { game?: { description?: string } }).game
-							?.description
+						name:
+							(
+								gameSettings as unknown as {
+									game?: { name?: string };
+								}
+							).game?.name || game,
+						description: (
+							gameSettings as unknown as {
+								game?: { description?: string };
+							}
+						).game?.description,
 					});
 
 					// Process each option
 					for (const option of gameSpecificOptions) {
-						if (option && typeof option.key === 'string') {
-							result.formPerGame[game][option.key] = getDefaultValue(option);
+						if (option && typeof option.key === "string") {
+							result.formPerGame[game][option.key] =
+								getDefaultValue(option);
 						}
 					}
 				}
@@ -232,22 +283,24 @@
 						}
 
 						// Filter out empty strings
-						if (typeof value === 'string' && value.trim() === '') {
+						if (typeof value === "string" && value.trim() === "") {
 							return false;
 						}
 
 						return true;
-					})
+					}),
 				);
 			};
 
-			const gameSettings: { [key: string]: { [key: string]: unknown } } = {};
+			const gameSettings: { [key: string]: { [key: string]: unknown } } =
+				{};
 
 			for (const gameId of selectedGames) {
 				const currentGameOptions = formValues.perGame[gameId];
 
 				if (currentGameOptions) {
-					const validGameOptions = filterNonNullValues(currentGameOptions);
+					const validGameOptions =
+						filterNonNullValues(currentGameOptions);
 
 					if (Object.keys(validGameOptions).length > 0) {
 						gameSettings[gameId] = validGameOptions;
@@ -257,29 +310,45 @@
 
 			// If there's a "default" game in metadata, always include it if it's not already in gameSettings
 			if (metadata && metadata.settings) {
-				const gameSetting = metadata.settings.find((opt) => opt.key === 'Game');
-				if (gameSetting && gameSetting.default && !gameSettings[gameSetting.default as string]) {
+				const gameSetting = metadata.settings.find(
+					(opt) => opt.key === "Game",
+				);
+				if (
+					gameSetting &&
+					gameSetting.default &&
+					!gameSettings[gameSetting.default as string]
+				) {
 					gameSettings[gameSetting.default as string] = {
-						...formValues.perGame[gameSetting.default as string]
+						...formValues.perGame[gameSetting.default as string],
 					};
 				}
 			}
 
 			// Transform per-game settings for sliders that provide options (optionsFor)
 			if (metadata?.gameSettings) {
-				for (const [gameKey, gameMeta] of Object.entries(metadata.gameSettings)) {
+				for (const [gameKey, gameMeta] of Object.entries(
+					metadata.gameSettings,
+				)) {
 					for (const setting of gameMeta.settings) {
-						if (setting.type === 'Slider' && setting.optionsFor) {
-							const currentVal = (gameSettings[gameKey] || {})[setting.key];
+						if (setting.type === "Slider" && setting.optionsFor) {
+							const currentVal = (gameSettings[gameKey] || {})[
+								setting.key
+							];
 							if (currentVal === undefined) {
 								// If user didn't pick, send full numeric range as array
 								const from = setting.range.from ?? 0;
 								const to = setting.range.to;
-								const arr = Array.from({ length: to - from + 1 }, (_, i) => i + from);
-								if (!gameSettings[gameKey]) gameSettings[gameKey] = {};
+								const arr = Array.from(
+									{ length: to - from + 1 },
+									(_, i) => i + from,
+								);
+								if (!gameSettings[gameKey])
+									gameSettings[gameKey] = {};
 								gameSettings[gameKey][setting.key] = arr;
-							} else if (typeof currentVal === 'number') {
-								gameSettings[gameKey][setting.key] = [currentVal];
+							} else if (typeof currentVal === "number") {
+								gameSettings[gameKey][setting.key] = [
+									currentVal,
+								];
 							}
 						}
 					}
@@ -287,22 +356,26 @@
 			}
 
 			// Use the explicit global Game setting (RandomizerTarget enum) provided by metadata instead of deriving.
-			let globalGameTarget = (formValues.global['Game'] as string) || '';
+			let globalGameTarget = (formValues.global["Game"] as string) || "";
 			if (!globalGameTarget && metadata?.settings) {
-				const gameSetting = metadata.settings.find((s) => s.key === 'Game');
+				const gameSetting = metadata.settings.find(
+					(s) => s.key === "Game",
+				);
 				if (
 					gameSetting &&
-					'default' in gameSetting &&
-					typeof (gameSetting as { default?: unknown }).default === 'string'
+					"default" in gameSetting &&
+					typeof (gameSetting as { default?: unknown }).default ===
+						"string"
 				) {
-					globalGameTarget = (gameSetting as { default?: string }).default as string;
+					globalGameTarget = (gameSetting as { default?: string })
+						.default as string;
 				}
 			}
-			if (!globalGameTarget) globalGameTarget = 'Alttpr';
+			if (!globalGameTarget) globalGameTarget = "Alttpr";
 
 			const worldConfig: Record<string, unknown> = {
-				Language: (formValues.global['Language'] as string) || 'en',
-				Game: globalGameTarget
+				Language: (formValues.global["Language"] as string) || "en",
+				Game: globalGameTarget,
 			};
 
 			const worldGameKeys = new Set<string>();
@@ -310,12 +383,27 @@
 				worldGameKeys.add(gameKey);
 			}
 			if (metadata?.settings) {
-				const defaultGame = metadata.settings.find((opt) => opt.key === 'Game' && typeof (opt as { default?: unknown }).default === 'string') as {
-					default?: string;
-				} | undefined;
-				if (defaultGame?.default && metadata?.gameSettings?.[defaultGame.default]) {
+				const defaultGame = metadata.settings.find(
+					(opt) =>
+						opt.key === "Game" &&
+						typeof (opt as { default?: unknown }).default ===
+							"string",
+				) as
+					| {
+							default?: string;
+					  }
+					| undefined;
+				if (
+					defaultGame?.default &&
+					metadata?.gameSettings?.[defaultGame.default]
+				) {
 					worldGameKeys.add(defaultGame.default);
 				}
+			}
+
+			// Hotfix enforcement: if Combo target, ensure Alttp is always included
+			if ((globalGameTarget || "").toLowerCase() === "combo") {
+				worldGameKeys.add("Alttp");
 			}
 
 			for (const gameKey of worldGameKeys) {
@@ -326,21 +414,29 @@
 			}
 
 			if (worldGameKeys.size === 0) {
-				worldConfig['Alttp'] = filterNonNullValues(formValues.perGame['Alttp']) || {};
+				worldConfig["Alttp"] =
+					filterNonNullValues(formValues.perGame["Alttp"]) || {};
 			}
 
-			const payload = { Seed: 0, IncludeSpoiler: false, Configs: [worldConfig] };
+			const payload = {
+				Seed: 0,
+				IncludeSpoiler: false,
+				Configs: [worldConfig],
+			};
 
 			const result = await createSeed(payload);
 
 			if (!result.id) {
 				throw new Error(m.config_randomize_no_seed_id());
 			}
+
 			// Navigate to the generated seed page. Use an absolute path to avoid base path issues.
 			await goto(`/seed/${result.id}`);
 		} catch (e: unknown) {
-			formSubmissionError = (e as { message?: string })?.message || m.config_unknown_error();
-			console.error('Failed to generate seed:', e);
+			formSubmissionError =
+				(e as { message?: string })?.message ||
+				m.config_unknown_error();
+			console.error("Failed to generate seed:", e);
 		} finally {
 			generating = false;
 		}
@@ -379,14 +475,20 @@
 
 		<!-- Compact visibility selector -->
 		<div class="mb-2 flex justify-end items-center gap-2">
-			<label for="visibility-select" class="text-xs text-slate-600 dark:text-slate-400">
+			<label
+				for="visibility-select"
+				class="text-xs text-slate-600 dark:text-slate-400"
+			>
 				Options detail
 			</label>
 			<div class="w-44">
 				<Select
 					id="visibility-select"
 					bind:value={visibilitySelection}
-					items={visibilityLevels.map((l) => ({ value: l.id, name: l.name }))}
+					items={visibilityLevels.map((l) => ({
+						value: l.id,
+						name: l.name,
+					}))}
 					className="text-xs py-1.5"
 				/>
 			</div>
@@ -400,7 +502,12 @@
 			class="space-y-4"
 		>
 			<!-- Game Selection Component -->
-			<GameSelector games={availableGames} bind:selectedGames loading={false} {requiredGames} />
+			<GameSelector
+				games={availableGames}
+				bind:selectedGames
+				loading={false}
+				{requiredGames}
+			/>
 			<!-- Global Options Component -->
 			{#if hasGlobalOptions && shouldShowGlobalOptions()}
 				<OptionForm
@@ -433,7 +540,9 @@
 					className="relative"
 				>
 					{#if generating}
-						<span class="absolute left-2 top-1/2 transform -translate-y-1/2">
+						<span
+							class="absolute left-2 top-1/2 transform -translate-y-1/2"
+						>
 							<svg
 								class="animate-spin h-3.5 w-3.5 text-white"
 								xmlns="http://www.w3.org/2000/svg"
@@ -456,7 +565,9 @@
 							</svg>
 						</span>
 					{/if}
-					{generating ? m.config_generating() : m.config_generate_seed_button()}
+					{generating
+						? m.config_generating()
+						: m.config_generate_seed_button()}
 				</Button>
 			</div>
 		</form>

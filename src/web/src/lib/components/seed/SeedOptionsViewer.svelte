@@ -14,13 +14,13 @@
 
 	// Feature flag: hide global settings in seed view for now
 	const SHOW_GLOBAL_SETTINGS = false;
-	import gameStaticDataFromFile from '$lib/game-static-info.json';
+	import { gameStaticInfo as gameStaticDataFromFile } from '$lib/game-static-info';
 
 	interface GameStaticData {
 		[gameId: string]: {
 			id: string;
 			displayName: string;
-			// Add other fields from game-static-info.json if needed for display
+			// Add other fields from game-static-info.ts if needed for display
 			expectedHash?: string;
 			fileExtensions?: string;
 		};

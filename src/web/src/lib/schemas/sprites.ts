@@ -7,7 +7,7 @@ export const SpritePatchFileSchema = z.object({
 
 export const SpritePatchEntrySchema = z.object({
   fileId: z.string().min(1),
-  targetAddress: z.string().min(1),
+  targetAddress: z.union([z.number().int(), z.string().min(1)]),
   dataLength: z.number().int().nonnegative(),
   dataOffsetInFile: z.number().int().nonnegative().optional(),
 });

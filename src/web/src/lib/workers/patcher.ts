@@ -1,5 +1,11 @@
 import { applyPatch } from "$lib/patch/apply";
-import gameStaticInfo from "$lib/game-static-info.json";
+import {
+  gameStaticInfo,
+  type RomMapping,
+  type RdcManifestSegment,
+  type SpriteManifestConfig,
+  type SpriteTargetVariant,
+} from "$lib/game-static-info";
 
 // ROM Patcher Web Worker
 
@@ -95,130 +101,47 @@ function copyBytes(
   dst.set(src.subarray(srcOffset, srcOffset + length), dstOffset);
 }
 
-function parseNumeric(value: unknown): number | null {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (!trimmed) {
-      return null;
-    }
-    const lower = trimmed.toLowerCase();
-    if (lower.startsWith("snes:") || lower.startsWith("pc:")) {
-      const colon = trimmed.indexOf(":");
-      return parseNumeric(trimmed.slice(colon + 1));
-    }
-    const isHex = lower.startsWith("0x");
-    const withoutPrefix = isHex ? lower.slice(2) : lower;
-    const parsed = Number.parseInt(withoutPrefix, isHex ? 16 : 10);
-    return Number.isNaN(parsed) ? null : parsed;
-  }
-  return null;
-}
-
-type RdcAddressRef = {
-  address: number;
-  addressType: "pc" | "snes";
-  applyBaseOffset?: boolean;
-};
-
 type RdcResolvedSegment = {
   pcAddress: number;
-  applyBaseOffset: boolean;
 };
 
-function normalizeSegmentConfig(value: unknown): RdcAddressRef | null {
-  if (value === null || value === undefined) return null;
+type ResolvedManifestSegment = {
+  addresses: number[];
+  addressType: "pc" | "snes";
+  length: number;
+  entries: number;
+  entryStride: number;
+  entryOffsets?: number[];
+};
 
-  if (typeof value === "number") {
-    return { address: value, addressType: "pc" };
-  }
-
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (!trimmed) return null;
-    const lower = trimmed.toLowerCase();
-    if (lower.startsWith("snes:")) {
-      const addr = parseNumeric(trimmed.slice(trimmed.indexOf(":") + 1));
-      if (addr === null) return null;
-      return { address: addr, addressType: "snes" };
-    }
-    if (lower.startsWith("pc:")) {
-      const addr = parseNumeric(trimmed.slice(trimmed.indexOf(":") + 1));
-      if (addr === null) return null;
-      return { address: addr, addressType: "pc" };
-    }
-    const addr = parseNumeric(trimmed);
-    if (addr === null) return null;
-    return { address: addr, addressType: "pc" };
-  }
-
-  if (typeof value === "object") {
-    const obj = value as Record<string, unknown>;
-    const hasSnes = Object.prototype.hasOwnProperty.call(obj, "snes");
-    const hasPc = Object.prototype.hasOwnProperty.call(obj, "pc");
-    const hasAddress = Object.prototype.hasOwnProperty.call(obj, "address");
-    let address: number | null = null;
-    let addressType: "pc" | "snes" = "pc";
-    if (hasSnes) {
-      address = parseNumeric(obj.snes);
-      addressType = "snes";
-    } else if (hasPc) {
-      address = parseNumeric(obj.pc);
-      addressType = "pc";
-    } else if (hasAddress) {
-      address = parseNumeric(obj.address);
-      const typeRaw = typeof obj.addressType === "string" ? obj.addressType.toLowerCase() : undefined;
-      addressType = typeRaw === "snes" ? "snes" : "pc";
-    }
-    if (address === null) return null;
-    const applyBaseOffsetRaw = obj.applyBaseOffset;
-    const absoluteRaw = obj.absolute;
-    let applyBaseOffset: boolean | undefined;
-    if (typeof applyBaseOffsetRaw === "boolean") {
-      applyBaseOffset = applyBaseOffsetRaw;
-    } else if (typeof absoluteRaw === "boolean") {
-      applyBaseOffset = !absoluteRaw;
-    }
-    return { address, addressType, applyBaseOffset };
-  }
-
-  return null;
-}
-
-function isPlainRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function getRdcTargetConfig(
+function getSpriteTargetVariant(
   gameId: string,
   spriteKind: string,
   randomizerId?: string,
-): Record<string, unknown> | undefined {
-  const info = (gameStaticInfo as Record<string, any>)[gameId];
-  const perKind = (info?.rdcTargets as Record<string, any> | undefined)?.[
-    spriteKind
-  ];
-  if (!perKind) return undefined;
+): SpriteTargetVariant | undefined {
+  const info = gameStaticInfo[gameId];
+  const variantMap = info?.rdcTargets?.[spriteKind];
+  if (!variantMap) return undefined;
 
-  const defaultConfig = isPlainRecord(perKind.default)
-    ? (perKind.default as Record<string, unknown>)
-    : undefined;
-
+  const defaultVariant = variantMap.default ?? {};
+  const mergedPointers = { ...(defaultVariant.pointers ?? {}) };
   const randomizerKey = randomizerId?.toLowerCase();
-  if (!randomizerKey) return defaultConfig;
+  const specific = randomizerKey ? variantMap[randomizerKey] : undefined;
 
-  const specificRaw = perKind[randomizerKey];
-  const specificConfig = isPlainRecord(specificRaw)
-    ? (specificRaw as Record<string, unknown>)
-    : undefined;
-
-  if (defaultConfig) {
-    return specificConfig ? { ...defaultConfig, ...specificConfig } : defaultConfig;
+  if (specific?.pointers) {
+    Object.assign(mergedPointers, specific.pointers);
   }
 
-  return specificConfig;
+  const manifest = specific?.manifest ?? defaultVariant.manifest;
+  const result: SpriteTargetVariant = {};
+  if (Object.keys(mergedPointers).length > 0) {
+    result.pointers = mergedPointers;
+  }
+  if (manifest) {
+    result.manifest = manifest;
+  }
+
+  return result;
 }
 
 function resolveRdcSegmentTargets(
@@ -227,27 +150,73 @@ function resolveRdcSegmentTargets(
   randomizerId: string | undefined,
   requiredSegments: readonly string[],
 ): Map<string, RdcResolvedSegment> {
-  const config = getRdcTargetConfig(gameId, spriteKind, randomizerId);
-  if (!config) {
+  const variant = getSpriteTargetVariant(gameId, spriteKind, randomizerId);
+  const pointers = variant?.pointers;
+
+  if (!pointers) {
     throw new Error(
       `Missing RDC target configuration for '${spriteKind}' on game '${gameId}'.`,
     );
   }
 
-  const configRecord = config as Record<string, unknown>;
   const resolved = new Map<string, RdcResolvedSegment>();
 
   for (const segment of requiredSegments) {
-    const ref = normalizeSegmentConfig(configRecord[segment]);
-    if (!ref) {
+    const pointer = pointers[segment];
+    if (!pointer) {
       throw new Error(
         `Missing RDC segment '${segment}' for '${spriteKind}' on game '${gameId}'.`,
       );
     }
     const pcAddress =
-      ref.addressType === "snes" ? snesToPc(ref.address) : ref.address;
-    const applyBaseOffset = ref.applyBaseOffset !== false;
-    resolved.set(segment, { pcAddress, applyBaseOffset });
+      pointer.type === "snes" ? snesToPc(pointer.address) : pointer.address;
+    resolved.set(segment, {
+      pcAddress,
+    });
+  }
+
+  return resolved;
+}
+
+function selectAddressesForMapping(
+  segment: RdcManifestSegment,
+  mapping: RomMapping,
+): number[] {
+  const normalized = mapping.toLowerCase();
+  const direct = segment.addresses.filter((entry) => entry.mapping === normalized);
+  if (direct.length > 0) return direct.map((entry) => entry.address);
+
+  const lorom = segment.addresses.filter((entry) => entry.mapping === "lorom");
+  if (lorom.length > 0) return lorom.map((entry) => entry.address);
+
+  const defaults = segment.addresses.filter((entry) => entry.mapping === "default");
+  if (defaults.length > 0) return defaults.map((entry) => entry.address);
+
+  return segment.addresses.map((entry) => entry.address);
+}
+
+function resolveManifestSegmentsForMapping(
+  manifest: SpriteManifestConfig,
+): ResolvedManifestSegment[] {
+  const mapping = manifest.mapping;
+  const resolved: ResolvedManifestSegment[] = [];
+
+  for (const segment of manifest.segments) {
+    const addresses = selectAddressesForMapping(segment, mapping);
+    if (addresses.length === 0) {
+      throw new Error(
+        `Manifest segment has no addresses for mapping '${mapping}'.`,
+      );
+    }
+
+    resolved.push({
+      addresses,
+      addressType: segment.addressType,
+      length: segment.length,
+      entries: segment.entries ?? 1,
+      entryStride: segment.entryStride ?? 0,
+      entryOffsets: segment.entryOffsets,
+    });
   }
 
   return resolved;
@@ -256,170 +225,48 @@ function resolveRdcSegmentTargets(
 function computeSegmentTarget(
   resolved: Map<string, RdcResolvedSegment>,
   segment: string,
-  baseOffset: number,
 ): number {
   const entry = resolved.get(segment);
   if (!entry) {
     throw new Error(`Missing resolved RDC segment '${segment}'.`);
   }
-  return entry.pcAddress + (entry.applyBaseOffset ? baseOffset : 0);
+  return entry.pcAddress;
 }
 
 type RdcApplyOptions = {
   gameId: string;
   randomizerId?: string;
-  baseOffset?: number;
   spriteKind?: string;
-};
-
-type RdcManifestSegment = {
-  addresses: number[];
-  addressType: "snes" | "pc";
-  length: number;
-  entries: number;
-  entryStride: number;
-  entryOffsets?: number[];
-  applyBaseOffset: boolean;
 };
 
 function snesToPcHiRom(snesAddr: number): number {
   return snesAddr & 0x3fffff;
 }
 
-function snesToPcByMapping(snesAddr: number, mapping: string): number {
-  const mode = mapping?.toLowerCase?.() ?? "lorom";
+function snesToPcByMapping(snesAddr: number, mapping: RomMapping): number {
+  const mode = mapping.toLowerCase();
   if (mode === "hirom" || mode === "exhirom") {
     return snesToPcHiRom(snesAddr);
   }
+  if (mode === "sa1rom") {
+    const lorom = snesToPc(snesAddr);
+    if (snesAddr >= 0x800000 && snesAddr < 0xc00000) {
+      return lorom;
+    }
+    if (snesAddr >= 0xc00000) {
+      return (snesAddr & 0x3fffff) | 0x200000;
+    }
+    return lorom | 0x400000;
+  }
   return snesToPc(snesAddr);
-}
-
-function resolveAddressesForMapping(
-  raw: unknown,
-  mapping: string,
-): { addresses: number[]; addressType: "snes" | "pc" } | null {
-  if (raw === null || raw === undefined) return null;
-
-  let source: unknown = raw;
-  if (isPlainRecord(raw)) {
-    const record = raw as Record<string, unknown>;
-    const entries = Object.entries(record);
-    const lowerMapping = mapping.toLowerCase();
-    let selected = entries.find(([key]) => key.toLowerCase() === lowerMapping)?.[1];
-    if (selected === undefined) {
-      selected = entries.find(([key]) => key.toLowerCase() === "lorom")?.[1];
-    }
-    if (selected === undefined) {
-      selected = entries.find(([key]) => key.toLowerCase() === "default")?.[1];
-    }
-    if (selected === undefined && entries.length > 0) {
-      selected = entries[0][1];
-    }
-    source = selected;
-  }
-
-  if (source === undefined) return null;
-
-  const list = Array.isArray(source) ? source : [source];
-  const addresses: number[] = [];
-  let addressType: "snes" | "pc" = "snes";
-
-  for (const item of list) {
-    if (typeof item === "number") {
-      addresses.push(Math.trunc(item));
-      continue;
-    }
-    if (typeof item === "string") {
-      let text = item.trim();
-      if (!text) continue;
-      let explicitType: "snes" | "pc" | undefined;
-      const lower = text.toLowerCase();
-      if (lower.startsWith("pc:")) {
-        explicitType = "pc";
-        text = text.slice(3);
-      } else if (lower.startsWith("snes:")) {
-        explicitType = "snes";
-        text = text.slice(5);
-      }
-      const parsed = parseNumeric(text);
-      if (parsed === null) continue;
-      addresses.push(Math.trunc(parsed));
-      if (explicitType) addressType = explicitType;
-    }
-  }
-
-  if (addresses.length === 0) return null;
-  return { addresses, addressType };
-}
-
-function resolveManifestSegments(
-  segmentsRaw: unknown,
-  mapping: string,
-  defaultApplyBaseOffset: boolean,
-): RdcManifestSegment[] {
-  if (!Array.isArray(segmentsRaw)) return [];
-  const resolved: RdcManifestSegment[] = [];
-
-  for (const entry of segmentsRaw) {
-    if (!isPlainRecord(entry)) continue;
-    const record = entry as Record<string, unknown>;
-    const lengthVal = parseNumeric(record.length) ?? null;
-    if (lengthVal === null) continue;
-    const length = Math.max(0, Math.trunc(lengthVal));
-    if (length === 0) continue;
-
-    const entriesVal = parseNumeric(record.entries ?? 1) ?? 1;
-    const entries = Math.max(1, Math.trunc(entriesVal));
-
-    const entryStrideVal = parseNumeric(
-      record.entryStride ?? record.entryStep ?? record.offset ?? 0,
-    ) ?? 0;
-    const entryStride = Math.trunc(entryStrideVal);
-
-    let entryOffsets: number[] | undefined;
-    const entryOffsetsRaw = record.entryOffsets ?? record.offsets;
-    if (Array.isArray(entryOffsetsRaw)) {
-      entryOffsets = entryOffsetsRaw
-        .map((v) => parseNumeric(v) ?? 0)
-        .map((v) => Math.trunc(v));
-    }
-
-    const addressInfo = resolveAddressesForMapping(record.addresses, mapping);
-    if (!addressInfo) continue;
-
-    const explicitType =
-      typeof record.addressType === "string"
-        ? record.addressType.toLowerCase() === "pc"
-          ? "pc"
-          : "snes"
-        : undefined;
-
-    const applyBaseOffset =
-      typeof record.applyBaseOffset === "boolean"
-        ? record.applyBaseOffset
-        : defaultApplyBaseOffset;
-
-    resolved.push({
-      addresses: addressInfo.addresses,
-      addressType: explicitType ?? addressInfo.addressType,
-      length,
-      entries,
-      entryStride,
-      entryOffsets,
-      applyBaseOffset,
-    });
-  }
-
-  return resolved;
 }
 
 function applySamusManifestSegments(
   romU8: Uint8Array,
   rdcU8: Uint8Array,
   samusOffset: number,
-  segments: RdcManifestSegment[],
-  mapping: string,
-  baseOffset: number,
+  segments: ResolvedManifestSegment[],
+  mapping: RomMapping,
   gameId: string,
 ) {
   let cursor = samusOffset;
@@ -450,7 +297,6 @@ function applySamusManifestSegments(
         } else {
           destPc = snesToPcByMapping(baseAddress + offsetValue, mapping);
         }
-        if (segment.applyBaseOffset) destPc += baseOffset;
 
         if (destPc < 0 || destPc + segment.length > romU8.length) {
           console.error(
@@ -485,7 +331,6 @@ async function applyLinkRdc(
   const {
     gameId = "alttp",
     randomizerId,
-    baseOffset = 0,
     spriteKind,
   } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
@@ -518,9 +363,9 @@ async function applyLinkRdc(
     randomizerId,
     ["gfx", "palette", "gloves"],
   );
-  const gfxDst = computeSegmentTarget(resolved, "gfx", baseOffset);
-  const palDst = computeSegmentTarget(resolved, "palette", baseOffset);
-  const glvDst = computeSegmentTarget(resolved, "gloves", baseOffset);
+  const gfxDst = computeSegmentTarget(resolved, "gfx");
+  const palDst = computeSegmentTarget(resolved, "palette");
+  const glvDst = computeSegmentTarget(resolved, "gloves");
 
   // Optional debug (can be toggled later with an env flag)
   // Allow an optional debug flag on the worker global without using 'any'
@@ -545,7 +390,7 @@ async function applyNesRdc(
   gameId: "zelda1" | "metroid1",
   options: RdcApplyOptions = { gameId },
 ): Promise<ArrayBuffer> {
-  const { randomizerId, baseOffset = 0, spriteKind } = options || {};
+  const { randomizerId, spriteKind } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
   const typeId =
     gameId === "zelda1"
@@ -570,8 +415,8 @@ async function applyNesRdc(
     ["gfx", "palette"],
   );
 
-  const gfxDst = computeSegmentTarget(resolved, "gfx", baseOffset);
-  const palDst = computeSegmentTarget(resolved, "palette", baseOffset);
+  const gfxDst = computeSegmentTarget(resolved, "gfx");
+  const palDst = computeSegmentTarget(resolved, "palette");
 
   // Bounds-safe copies (clamped)
   copyBytes(
@@ -599,7 +444,6 @@ async function applySamusRdc(
   const {
     gameId = "supermetroid",
     randomizerId,
-    baseOffset = 0,
     spriteKind,
   } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
@@ -612,30 +456,15 @@ async function applySamusRdc(
   const rdcU8 = new Uint8Array(rdcBuf);
 
   const spriteKindKey = (spriteKind ?? "rdc/samus").toLowerCase();
-  const config = getRdcTargetConfig(gameId, spriteKindKey, randomizerId);
-  const configRecord = config as Record<string, unknown> | undefined;
-  const mappingValue =
-    typeof configRecord?.mapping === "string"
-      ? configRecord.mapping
-      : "lorom";
-  const manifestApplyBaseOffset =
-    typeof configRecord?.applyBaseOffset === "boolean"
-      ? configRecord.applyBaseOffset
-      : true;
-  const manifestSegmentsRaw = configRecord?.segments;
-
-  if (!Array.isArray(manifestSegmentsRaw)) {
+  const variant = getSpriteTargetVariant(gameId, spriteKindKey, randomizerId);
+  const manifest = variant?.manifest;
+  if (!manifest) {
     throw new Error(
       `Missing 'segments' manifest for '${spriteKindKey}' on game '${gameId}'.`,
     );
   }
 
-  const manifestSegments = resolveManifestSegments(
-    manifestSegmentsRaw,
-    mappingValue,
-    manifestApplyBaseOffset,
-  );
-
+  const manifestSegments = resolveManifestSegmentsForMapping(manifest);
   if (manifestSegments.length === 0) {
     throw new Error(
       `Empty 'segments' manifest for '${spriteKindKey}' on game '${gameId}'.`,
@@ -647,8 +476,7 @@ async function applySamusRdc(
     rdcU8,
     samusOffset,
     manifestSegments,
-    mappingValue,
-    baseOffset,
+    manifest.mapping,
     gameId,
   );
   return workingRom;
@@ -785,14 +613,12 @@ self.onmessage = async (event) => {
       let totalSize = 0;
       let validWithOffsets = 0;
       for (const [gid, buf] of included) {
-        const info: any = (gameStaticInfo as Record<string, any>)[gid];
-        const offsRaw = info?.targetOffsets?.[randomizerIdLc];
-        const offs: number | undefined =
-          typeof offsRaw === "number" ? offsRaw : undefined;
-        if (offs === undefined || offs < 0) {
+        const info = gameStaticInfo[gid];
+        const offs = info?.targetOffsets?.[randomizerIdLc];
+        if (typeof offs !== "number" || offs < 0) {
           console.warn(
             `Game ${gid} has invalid targetOffsets.${randomizerIdLc} (${String(
-              offsRaw,
+              offs,
             )}); skipping from combined ROM`,
           );
           continue;
@@ -806,21 +632,22 @@ self.onmessage = async (event) => {
       if (validWithOffsets >= 2 && totalSize > 0) {
         // Warn if some expected games for this randomizer weren't provided
         try {
-          const expectedGames = Object.keys(
-            gameStaticInfo as Record<string, any>,
-          ).filter((g) => {
-            const t = (gameStaticInfo as Record<string, any>)[g]?.targetOffsets?.[
-              randomizerIdLc
-            ];
-            return typeof t === "number" && t >= 0 && g !== "combo";
-          });
+          const expectedGames = Object.entries(gameStaticInfo)
+            .filter(([, info]) => {
+              const t = info.targetOffsets?.[randomizerIdLc];
+              return typeof t === "number" && t >= 0;
+            })
+            .map(([gid]) => gid)
+            .filter((gid) => gid !== "combo");
           const missing = expectedGames.filter((g) => !included.has(g));
           if (missing.length > 0) {
             console.warn(
               `Combined base will be incomplete for randomizer '${randomizerIdLc}'. Missing ROMs: ${missing.join(", ")}`,
             );
           }
-        } catch { }
+        } catch (err) {
+          void err;
+        }
 
         const combined = new ArrayBuffer(totalSize);
         const combinedU8 = new Uint8Array(combined);
@@ -838,7 +665,9 @@ self.onmessage = async (event) => {
             `[Patcher] Combined base assembled for '${randomizerIdLc}'. Total ${totalSize} bytes. Offsets: `,
             entries,
           );
-        } catch { }
+        } catch (err) {
+          void err;
+        }
         workingBaseRom = combined;
         isCombined = true;
       }
@@ -854,99 +683,72 @@ self.onmessage = async (event) => {
 
     // Note: BPS patches are always applied to the base (or combined) ROM as a whole.
 
-    // Always attempt to apply a base patch. Prefer explicit bytes/url if provided; otherwise fallback by randomizerId.
-    // Mapping can be extended as new randomizers are supported.
+    // Always attempt to apply a base patch. New logic: try API first (bytes/url),
+    // then silently fallback to static mapping. If both fail, hard fail patching.
     const basePatchMap: Record<string, string> = {
       alttpr: "/alttpr.ips",
+      combo: "/combo.bps",
       // e.g. 'smz3': '/smz3_base.ips', 'metroid1rando': '/m1_base.ips'
     };
 
-    let basePatchPath = randomizerId
-      ? basePatchMap[String(randomizerId).toLowerCase()]
+    const staticPath = randomizerIdLc
+      ? basePatchMap[randomizerIdLc]
       : undefined;
 
-    if (basePatchUrl) {
-      basePatchPath = basePatchUrl; // override mapping with explicit per-seed url
-    }
-
-    if (basePatchBytes && basePatchBytes instanceof ArrayBuffer) {
-      try {
-        self.postMessage({
-          type: "progress",
-          progress: 12,
-          note: "Applying base patch (inline)",
-        });
-        workingBaseRom = applyPatch(workingBaseRom, basePatchBytes);
-        self.postMessage({
-          type: "progress",
-          progress: 18,
-          note: "Base patch applied",
-        });
-      } catch (e) {
-        console.error("Failed applying provided base patch bytes:", e);
+    async function obtainBasePatch(): Promise<ArrayBuffer> {
+      // 1) API-first: inline bytes count as a successful API fetch
+      if (basePatchBytes && basePatchBytes instanceof ArrayBuffer && basePatchBytes.byteLength > 0) {
+        return basePatchBytes;
       }
-    } else if (basePatchPath) {
-      try {
-        self.postMessage({
-          type: "progress",
-          progress: 12,
-          note: `Fetching base patch (${randomizerId})`,
-        });
-        const resp = await fetch(basePatchPath);
-        if (!resp.ok)
-          throw new Error(
-            `Failed to fetch base patch ${basePatchPath} (status ${resp.status})`,
-          );
-        const baseIps = await resp.arrayBuffer();
-        self.postMessage({
-          type: "progress",
-          progress: 15,
-          note: "Applying base patch",
-        });
-        workingBaseRom = applyPatch(workingBaseRom, baseIps);
-        self.postMessage({
-          type: "progress",
-          progress: 18,
-          note: "Base patch applied",
-        });
-      } catch (e) {
-        console.error(`Failed applying base patch from ${basePatchPath}:`, e);
-        // Fallback to mapping if we were using an explicit URL override
-        if (basePatchUrl && randomizerId) {
-          const fallback = basePatchMap[String(randomizerId).toLowerCase()];
-          if (fallback && fallback !== basePatchPath) {
-            try {
-              const resp2 = await fetch(fallback);
-              if (resp2.ok) {
-                const baseIps2 = await resp2.arrayBuffer();
-                self.postMessage({
-                  type: "progress",
-                  progress: 15,
-                  note: "Applying base patch",
-                });
-                workingBaseRom = applyPatch(workingBaseRom, baseIps2);
-                self.postMessage({
-                  type: "progress",
-                  progress: 18,
-                  note: "Base patch applied",
-                });
-              } else {
-                console.warn(
-                  `Fallback fetch failed for base patch ${fallback} (status ${resp2.status})`,
-                );
-                // Continue even if base fails; main patch may still partially work.
-              }
-              // eslint-disable-next-line no-empty
-            } catch { }
-            // else: nothing to fallback to
+      if (basePatchUrl) {
+        try {
+          self.postMessage({
+            type: "progress",
+            progress: 12,
+            note: `Fetching base patch from API`,
+          });
+          const resp = await fetch(basePatchUrl);
+          if (resp.ok) {
+            return await resp.arrayBuffer();
           }
+        } catch (err) {
+          console.debug('Base patch fetch failed', err);
+          // swallow and try static
         }
       }
-    } else {
-      console.warn(
-        `No base patch mapping found for randomizerId='${randomizerId}'. Proceeding without base patch.`,
+      // 2) Static fallback by mapping
+      if (staticPath) {
+        try {
+          self.postMessage({
+            type: "progress",
+            progress: 12,
+            note: `Fetching base patch (static)`
+          });
+          const resp = await fetch(staticPath);
+          if (resp.ok) {
+            return await resp.arrayBuffer();
+          }
+        } catch (err) {
+          console.debug('Static base patch fetch failed', err);
+          // fall through
+        }
+      }
+      // 3) Hard fail: no base patch available
+      const srcs: string[] = [];
+      if (basePatchUrl) srcs.push(`api:${basePatchUrl}`);
+      if (staticPath) srcs.push(`static:${staticPath}`);
+      throw new Error(
+        srcs.length > 0
+          ? `Failed to obtain base patch (tried ${srcs.join(", ")}).`
+          : `No base patch source available for randomizerId='${randomizerIdLc}'.`
       );
     }
+
+    // Obtain and apply base patch (required)
+    const basePatchBuf = await obtainBasePatch();
+    self.postMessage({ type: "progress", progress: 15, note: "Applying base patch" });
+    workingBaseRom = applyPatch(workingBaseRom, basePatchBuf);
+    self.postMessage({ type: "progress", progress: 18, note: "Base patch applied" });
 
     // Progress: Main patch (20% -> 50%)
     self.postMessage({ type: "progress", progress: 20 });
@@ -991,7 +793,6 @@ self.onmessage = async (event) => {
     for (const gameId of allGameIds) {
       const selectedSpriteValue = selectedSpritesByGameId.get(gameId);
       let romToPatch = romBuffers.get(gameId);
-      const baseOffset = baseOffsetByGame.get(gameId) ?? 0;
 
       if (isCombined && !baseOffsetByGame.has(gameId)) {
         // Not part of the combined image (no offset defined); skip
@@ -1034,28 +835,24 @@ self.onmessage = async (event) => {
           if (kind === "rdc/link") {
             updated = await applyLinkRdc(romToPatch, rdcBuf, {
               gameId,
-              baseOffset,
               randomizerId: randomizerKey,
               spriteKind: kind,
             });
           } else if (kind === "rdc/nes-z1") {
             updated = await applyNesRdc(romToPatch, rdcBuf, "zelda1", {
               gameId: "zelda1",
-              baseOffset,
               randomizerId: randomizerKey,
               spriteKind: kind,
             });
           } else if (kind === "rdc/nes-m1") {
             updated = await applyNesRdc(romToPatch, rdcBuf, "metroid1", {
               gameId: "metroid1",
-              baseOffset,
               randomizerId: randomizerKey,
               spriteKind: kind,
             });
           } else if (kind === "rdc/samus") {
             updated = await applySamusRdc(romToPatch, rdcBuf, {
               gameId,
-              baseOffset,
               randomizerId: randomizerKey,
               spriteKind: kind,
             });
@@ -1063,7 +860,6 @@ self.onmessage = async (event) => {
             // Default to Link-style handling when sprite kind is unspecified
             updated = await applyLinkRdc(romToPatch, rdcBuf, {
               gameId,
-              baseOffset,
               randomizerId: randomizerKey,
               spriteKind: kind || "rdc/link",
             });
@@ -1102,10 +898,15 @@ self.onmessage = async (event) => {
           );
 
           if (patchBinary) {
-            const targetAddress = parseInt(patchEntry.targetAddress, 16);
-            if (isNaN(targetAddress)) {
+            const rawTargetAddress =
+              (patchEntry as { targetAddress: number | string }).targetAddress;
+            const targetAddress =
+              typeof rawTargetAddress === "number"
+                ? rawTargetAddress
+                : Number.parseInt(rawTargetAddress, 16);
+            if (!Number.isFinite(targetAddress)) {
               console.error(
-                `Patching error: Invalid targetAddress ${patchEntry.targetAddress} for sprite ${selectedSpriteValue} on game ${gameId}.`,
+                `Patching error: Invalid targetAddress ${rawTargetAddress} for sprite ${selectedSpriteValue} on game ${gameId}.`,
               );
               continue;
             }
@@ -1141,7 +942,6 @@ self.onmessage = async (event) => {
       const totalPostGenGames = allGameIds.length;
       for (const gameId of allGameIds) {
         const romToPatch = romBuffers.get(gameId);
-        const baseOffset = baseOffsetByGame.get(gameId) ?? 0;
         if (isCombined && !baseOffsetByGame.has(gameId)) {
           currentPostGenGame++;
           continue;
@@ -1181,8 +981,12 @@ self.onmessage = async (event) => {
           ) => {
             if (!entries) return;
             for (const e of entries) {
-              const addr = parseInt(String(e.targetAddress), 16);
-              if (isNaN(addr)) continue;
+              const addrRaw = e.targetAddress as number | string;
+              const addr =
+                typeof addrRaw === "number"
+                  ? addrRaw
+                  : Number.parseInt(addrRaw, 16);
+              if (!Number.isFinite(addr)) continue;
               let bytes: Uint8Array | null = null;
               if (Array.isArray(e.data)) {
                 bytes = new Uint8Array(
@@ -1238,7 +1042,14 @@ self.onmessage = async (event) => {
                   ),
                   seed: seedNum,
                 } as const;
-                z3prRandomize(u8, z3opts as unknown as Record<string, unknown>);
+                if (isCombined) {
+                  const offset = 0x400000;
+                  const slice = u8.subarray(offset, offset + 0x200000);
+                  z3prRandomize(slice, z3opts as unknown as Record<string, unknown>);
+                  u8.set(slice, offset);
+                } else {
+                  z3prRandomize(u8, z3opts as unknown as Record<string, unknown>);
+                }
               } catch (e) {
                 console.error("ALTTP palette randomization failed:", e);
               }

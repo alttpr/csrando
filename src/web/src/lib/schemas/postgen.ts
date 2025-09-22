@@ -1,8 +1,23 @@
 import { z } from "zod";
 
+const TargetAddressSchema = z
+  .union([z.number().int(), z.string().min(1)])
+  .transform((value, ctx) => {
+    if (typeof value === "number") return value;
+    const trimmed = value.trim();
+    const parsed = Number.parseInt(trimmed, 16);
+    if (Number.isNaN(parsed)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Invalid hex address: ${value}`,
+      });
+      return z.NEVER;
+    }
+    return parsed;
+  });
+
 export const PostGenPatchEntrySchema = z.object({
-  // Hex string (e.g., "0x1A2B3C" or "1A2B3C")
-  targetAddress: z.string().min(1),
+  targetAddress: TargetAddressSchema,
   // Bytes to write at targetAddress. Either array of 0-255 or hex string ("FF00AA" or "FF 00 AA")
   data: z.union([
     z.array(z.number().int().min(0).max(0xff)),

@@ -5,7 +5,7 @@ export interface SpritePatchFile {
 
 export interface SpritePatchEntry {
   fileId: string;
-  targetAddress: string;
+  targetAddress: string | number;
   dataLength: number;
   dataOffsetInFile?: number;
 }

@@ -4,7 +4,7 @@ These guidelines are the quick-reference for contributors and automation agents.
 
 ## Project Structure & Module Organization
 
-- Source: `src/` (SvelteKit). Key areas: `src/routes/` (pages, API via `+server.ts`), `src/lib/` (components, utilities, server helpers, i18n), and `src/lib/game-static-info.json`.
+- Source: `src/` (SvelteKit). Key areas: `src/routes/` (pages, API via `+server.ts`), `src/lib/` (components, utilities, server helpers, i18n), and `src/lib/game-static-info.ts`.
 - Assets: `static/` (favicon, sprites, public files).
 - Database: `drizzle/` (migrations), config in `drizzle.config.ts`.
 - i18n: raw messages in `messages/`, project config in `project.inlang/`, generated code in `src/lib/paraglide/` (auto-generated; do not edit).

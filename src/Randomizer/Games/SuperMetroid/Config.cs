@@ -115,12 +115,12 @@ public class Config
 
     public Dictionary<Logic, string[]> LogicTechs = new()
     {
-        [Logic.Basic] = 
+        [Logic.Basic] =
             [
                 ..ImplicitTech,
                 ..BasicTech,
             ],
-        [Logic.Medium] = 
+        [Logic.Medium] =
             [
                 ..ImplicitTech,
                 ..BasicTech,
@@ -196,4 +196,21 @@ public class SkillConfig
     public int ShinechargeLeniencyFrames { get; init; } = 0;
     public decimal HeatDamageMultiplier { get; init; } = 0m;
     public decimal EnemyDamageMultiplier { get; init; } = 0m;
+}
+
+[PostGenSettingsFor("supermetroid", Target = RandomizerTarget.Combo)]
+public class SuperMetroidPostGenSettings
+{
+    [Name("Separate Screw Attack Animation")]
+    [Description("If enabled, Screw Attack will have its own separate animation.")]
+    [OnPatch(0x3F0208, 0x01)]
+    [OffPatch(0x3F0208, 0x00)]
+    public bool SeparateScrewAttack { get; init; } = false;
+
+    [Name("Low Energy Beep")]
+    [Description("If enabled, a beep will sound when energy is low.")]
+    [OffPatch(0x086A9B, 0x80)]
+    [OffPatch(0x087337, 0x80)]
+    [OffPatch(0x08E6D5, 0x80)]
+    public bool LowEnergyBeep { get; init; } = true;
 }

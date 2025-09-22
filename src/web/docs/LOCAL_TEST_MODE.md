@@ -31,7 +31,7 @@ Currently supported mock data:
 
 The mock data service maps the following IDs to the Zelda 3 metadata:
 
-- `alttp` - Standard game ID from game-static-info.json
+- `alttp` - Standard game ID from game-static-info.ts
 - `alttpr` - Common abbreviation for "A Link to the Past Randomizer"
 - `zelda3` - Alternative identifier
 

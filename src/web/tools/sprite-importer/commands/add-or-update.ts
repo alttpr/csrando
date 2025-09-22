@@ -32,7 +32,7 @@ export async function handleRemoteAddOrUpdate(
   if (!args.game) throw new Error("Missing --game");
   if (!args.sourceRdc) throw new Error("Missing --sourceRdc");
   const repoUrl = args.repo;
-  const game = args.game as "alttp" | "sm" | "zelda1" | "metroid1";
+  const game = args.game as "alttp" | "supermetroid" | "zelda1" | "metroid";
   const sourceRdcPath = path.resolve(args.sourceRdc);
   const sourcePngPath = args.sourcePng
     ? path.resolve(args.sourcePng)
@@ -154,11 +154,11 @@ export async function handleRemoteAddOrUpdate(
   const kind =
     game === "alttp"
       ? "rdc/link"
-      : game === "sm"
+      : game === "supermetroid"
         ? "rdc/samus"
         : game === "zelda1"
           ? "rdc/nes-z1"
-          : game === "metroid1"
+          : game === "metroid"
             ? "rdc/nes-m1"
             : undefined;
   const spriteEntry: SpriteInfoFrontend = {
