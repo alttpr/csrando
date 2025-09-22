@@ -18,7 +18,6 @@ public enum ItemType
 public sealed class Item : Randomizer.Graph.Item
 {
     public ItemType Type { get; }
-    public byte[]? Bytes { get; }
 
     /// <summary>
     /// Create a new Item.

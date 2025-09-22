@@ -18,7 +18,7 @@
     let {
         gameId,
         gameName,
-        expectedFileExtensions = '.rom,.sfc,.smc',
+        expectedFileExtensions = '.rom,.sfc,.smc,.zip',
         hashStatus = 'no_rom',
         calculatedHash = undefined,
         expectedHash = undefined,

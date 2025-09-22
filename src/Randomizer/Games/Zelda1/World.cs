@@ -16,7 +16,7 @@ public sealed class World : World<Item>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
-        : base("Zelda1", id, graph, randomizerConfig)
+        : base("z1", id, graph, randomizerConfig)
     {
         Config = randomizerConfig.Zelda1 ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda");
         Prng = prng;

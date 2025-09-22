@@ -28,7 +28,20 @@
 
 	const gameStaticData = gameStaticDataFromFile as GameStaticData;
 
+	function isBlank(value: string | undefined): boolean {
+		return !value || value.trim() === '';
+	}
+
+	const hiddenGameIds = new Set(
+		Object.entries(gameStaticData)
+			.filter(([, info]) => isBlank(info?.displayName) || isBlank(info?.fileExtensions))
+			.map(([gameId]) => gameId)
+	);
+
+	const visibleOptions = options.filter(({ id }) => !hiddenGameIds.has(id));
+
 	function getGameDisplayName(gameId: string): string {
+		if (hiddenGameIds.has(gameId)) return gameId;
 		return gameStaticData[gameId]?.displayName || gameId; // Fallback to gameId if not found
 	}
 
@@ -290,16 +303,16 @@
 	}
 </script>
 
-{#if options && options.length > 0}
+{#if visibleOptions.length > 0}
 	<div class="space-y-3">
 		<!-- Games Included Section -->
-		{#if options.length > 1}
+		{#if visibleOptions.length > 1}
 			<div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-3">
 				<h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
 					Games Included
 				</h4>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-1 pl-1">
-					{#each options as game (game)}
+					{#each visibleOptions as game (game)}
 						{@const gameId = game.id}
 						<div class="text-slate-700 dark:text-slate-300 flex items-center gap-1.5 text-sm">
 							<span class="inline-block w-1.5 h-1.5 bg-slate-400 dark:bg-slate-500 rounded-full"
@@ -478,12 +491,12 @@
 		{/if}
 
 		<!-- Per-Game Settings Section (Grouped) -->
-		{#if options && options.length > 0}
+		{#if visibleOptions.length > 0}
 			<div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-3">
 				<h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
 					Game-Specific Settings
 				</h4>
-				{#each options as game (game)}
+				{#each visibleOptions as game (game)}
 					{@const gameId = game.id}
 					{@const gameSettings = game.options}
 					{#if gameSettings && Object.keys(gameSettings).length > 0}
@@ -653,6 +666,12 @@
 			</div>
 		{/if}
 	</div>
+{:else if options && options.length > 0}
+	<Card>
+		<p class="text-sm text-slate-500 dark:text-slate-400">
+			Seed options for this seed are hidden.
+		</p>
+	</Card>
 {:else}
 	<Card>
 		<p class="text-sm text-slate-500 dark:text-slate-400">

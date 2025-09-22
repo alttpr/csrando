@@ -1859,8 +1859,10 @@ public class ItemMapper
 
     public static byte[]? GetItemBytes(BaseVertex location, IItem item)
     {
-        string itemFromGame = item.World.GameId;
-        string itemInGame = location.World.GameId;
+        string? itemFromGame = item.World.GameId;
+        string? itemInGame = location.World.GameId;
+        if (itemFromGame == null || itemInGame == null)
+            return null;
         string itemName = item.Name;
 
         var itemBytes = _itemBytes.GetValueOrDefault(itemFromGame)?.GetValueOrDefault(itemName)?.GetValueOrDefault(itemInGame);

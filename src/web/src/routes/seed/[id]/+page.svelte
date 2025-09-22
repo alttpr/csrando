@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import * as m from '$lib/paraglide/messages';
-	import type { PageData } from './$types';
-	import { onMount, onDestroy } from 'svelte';
-	import localforage from 'localforage';
+	import { page } from "$app/stores";
+	import * as m from "$lib/paraglide/messages";
+	import type { PageData } from "./$types";
+	import { onMount, onDestroy } from "svelte";
+	import localforage from "localforage";
 	import {
 		patchingError as patchingServiceError,
 		initiatePatching,
 		type InitiatePatchingParams,
 		patchingProgress as patchingServiceProgress,
 		isPatching as patchingServiceIsPatching,
-		cleanupPatcher
-	} from '$lib/services/patching';
-	import SpriteSelect from '$lib/components/ui/SpriteSelect.svelte';
-	import Progressbar from '$lib/components/ui/Progressbar.svelte';
-	import Button from '$lib/components/ui/Button.svelte';
-	import SeedOptionsViewer from '$lib/components/seed/SeedOptionsViewer.svelte';
-	import RomUploader from '$lib/components/seed/RomUploader.svelte';
-	import { getPublicSpritesBaseUrl } from '$lib/env';
-	import Toggle from '$lib/components/ui/Toggle.svelte';
-	import { buildOptionSummaryTokens } from '$lib/utils/options-summary';
+		cleanupPatcher,
+	} from "$lib/services/patching";
+	import SpriteSelect from "$lib/components/ui/SpriteSelect.svelte";
+	import Progressbar from "$lib/components/ui/Progressbar.svelte";
+	import Button from "$lib/components/ui/Button.svelte";
+	import SeedOptionsViewer from "$lib/components/seed/SeedOptionsViewer.svelte";
+	import RomUploader from "$lib/components/seed/RomUploader.svelte";
+	import { getPublicSpritesBaseUrl } from "$lib/env";
+	import Toggle from "$lib/components/ui/Toggle.svelte";
+	import { buildOptionSummaryTokens } from "$lib/utils/options-summary";
 
-	import gameStaticInfoJson from '$lib/game-static-info.json?raw';
+	import gameStaticInfoJson from "$lib/game-static-info.json?raw";
 
 	interface Props {
 		data: PageData;
@@ -35,21 +35,62 @@
 		expectedHash?: string;
 		fileExtensions: string;
 	}
+
+	const normalizeGameId = (value: string) => value.toLowerCase();
+	const isBlank = (value: string | undefined) =>
+		!value || value.trim() === "";
+
+	const staticInfoFromFile = (() => {
+		try {
+			const parsed = JSON.parse(gameStaticInfoJson) as Record<
+				string,
+				Omit<GameStaticInfo, "id">
+			>;
+			const entries: Array<[string, GameStaticInfo]> = Object.entries(
+				parsed,
+			).map(([rawId, info]) => {
+				const normalizedId = normalizeGameId(rawId);
+				return [normalizedId, { id: normalizedId, ...info }];
+			});
+			return new Map<string, GameStaticInfo>(entries);
+		} catch (error) {
+			console.error("Failed to parse game-static-info.json:", error);
+			return new Map<string, GameStaticInfo>();
+		}
+	})();
+
+	const hiddenMetadataGameIds = new Set(
+		Array.from(staticInfoFromFile.entries())
+			.filter(
+				([, info]) =>
+					isBlank(info.displayName) || isBlank(info.fileExtensions),
+			)
+			.map(([gameId]) => gameId),
+	);
+
+	const isMetadataGameHidden = (gameId: string | undefined | null) => {
+		if (!gameId) return false;
+		return hiddenMetadataGameIds.has(normalizeGameId(gameId));
+	};
 	let gameIdToStaticInfo = $state(new Map<string, GameStaticInfo>());
 
 	// Sprite Configuration Interfaces
-	import type { GameSpriteConfig, Metadata } from '$lib/types';
-	import { GameSpriteConfigSchema } from '$lib/schemas/sprites';
+	import type { GameSpriteConfig, Metadata } from "$lib/types";
+	import { GameSpriteConfigSchema } from "$lib/schemas/sprites";
 	let gameIdToSpriteInfoMap = $state(new Map<string, GameSpriteConfig>());
 	// Map retained for patcher; plain object used for reactive UI rendering
 	let selectedSpritesByGameId = $state(new Map<string, string>());
 	let spriteSelections = $state<Record<string, string>>({});
 
 	// Post-Generation Settings Interfaces
-	import type { GamePostGenConfig } from '$lib/types';
+	import type { GamePostGenConfig } from "$lib/types";
 	let gameIdToPostGenConfigMap = $state(new Map<string, GamePostGenConfig>());
-	let selectedPostGenByGameId = $state(new Map<string, Record<string, string | boolean>>());
-	let postGenSelections = $state<Record<string, Record<string, string | boolean>>>({});
+	let selectedPostGenByGameId = $state(
+		new Map<string, Record<string, string | boolean>>(),
+	);
+	let postGenSelections = $state<
+		Record<string, Record<string, string | boolean>>
+	>({});
 
 	// Persistence helpers for sprite selections
 	function spriteSelectionKey(gameId: string) {
@@ -71,7 +112,7 @@
 			/* ignore */
 		}
 		if (import.meta.env.DEV) {
-			console.debug('[sprites] persisted selection', { gameId, value });
+			console.debug("[sprites] persisted selection", { gameId, value });
 		}
 	}
 
@@ -80,7 +121,10 @@
 		return `postgen_selection_${gameId}`;
 	}
 
-	async function persistPostGenSelection(gameId: string, values: Record<string, string | boolean>) {
+	async function persistPostGenSelection(
+		gameId: string,
+		values: Record<string, string | boolean>,
+	) {
 		const key = postGenSelectionKey(gameId);
 		try {
 			localStorage.setItem(key, JSON.stringify(values));
@@ -93,24 +137,31 @@
 			/* ignore */
 		}
 		if (import.meta.env.DEV) {
-			console.debug('[postgen] persisted selection', { gameId, values });
+			console.debug("[postgen] persisted selection", { gameId, values });
 		}
 	}
 
 	async function loadPostGenSelection(
-		gameId: string
+		gameId: string,
 	): Promise<Record<string, string | boolean> | null> {
 		const key = postGenSelectionKey(gameId);
 		try {
-			await (localforage as unknown as { ready?: () => Promise<void> }).ready?.();
-			const v = await localforage.getItem<Record<string, string | boolean>>(key);
+			await (
+				localforage as unknown as { ready?: () => Promise<void> }
+			).ready?.();
+			const v =
+				await localforage.getItem<Record<string, string | boolean>>(
+					key,
+				);
 			if (v) return v;
 		} catch {
 			/* ignore */
 		}
 		try {
 			const raw = localStorage.getItem(key);
-			return raw ? (JSON.parse(raw) as Record<string, string | boolean>) : null;
+			return raw
+				? (JSON.parse(raw) as Record<string, string | boolean>)
+				: null;
 		} catch {
 			return null;
 		}
@@ -119,7 +170,9 @@
 	async function loadSpriteSelection(gameId: string): Promise<string | null> {
 		const key = spriteSelectionKey(gameId);
 		try {
-			await (localforage as unknown as { ready?: () => Promise<void> }).ready?.();
+			await (
+				localforage as unknown as { ready?: () => Promise<void> }
+			).ready?.();
 			const v = await localforage.getItem<string>(key);
 			if (v) return v;
 		} catch {
@@ -141,24 +194,44 @@
 	const configsArray = optionsRoot?.Configs ?? [];
 	const rawConfig = configsArray[0] || {};
 	const gameOptions = Object.entries(rawConfig)
-		.filter(([, v]) => v !== null && typeof v === 'object' && (v as object).constructor === Object)
+		.filter(
+			([, v]) =>
+				v !== null &&
+				typeof v === "object" &&
+				(v as object).constructor === Object,
+		)
 		.map(([id, options]) => ({
 			id: id.toLowerCase(),
-			options: options as Record<string, unknown>
+			options: options as Record<string, unknown>,
 		}));
 	const globalOptions = Object.fromEntries(
 		Object.entries(rawConfig).filter(
-			([, v]) => !(v !== null && typeof v === 'object' && (v as object).constructor === Object)
-		)
+			([, v]) =>
+				!(
+					v !== null &&
+					typeof v === "object" &&
+					(v as object).constructor === Object
+				),
+		),
+	);
+
+	const visibleGameOptions = gameOptions.filter(
+		({ id }) => !isMetadataGameHidden(id),
 	);
 
 	// Primary game id (first entry) for patcher logic
-	let primaryGameId = $derived(gameOptions[0]?.id?.toLowerCase());
+	let primaryGameId = $derived(visibleGameOptions[0]?.id?.toLowerCase());
 
 	interface RomFileData {
 		buffer: ArrayBuffer | null;
 		fileName: string | null;
-		hashStatus: 'no_rom' | 'checking' | 'verified' | 'mismatch' | 'error' | 'uploaded_no_verify';
+		hashStatus:
+			| "no_rom"
+			| "checking"
+			| "verified"
+			| "mismatch"
+			| "error"
+			| "uploaded_no_verify";
 		calculatedHash?: string;
 		expectedHash?: string;
 		gameName: string;
@@ -172,20 +245,25 @@
 
 	onMount(() => {
 		localforage.config({
-			name: 'RandoWebRoms',
-			storeName: 'rom_files',
-			description: 'Storage for uploaded ROM files'
+			name: "RandoWebRoms",
+			storeName: "rom_files",
+			description: "Storage for uploaded ROM files",
 		});
 
 		(async () => {
 			// Early hydration of sprite selections (localStorage only) before async fetch of sprite configs
 			try {
 				let changed = false;
-				for (const g of gameOptions) {
+				for (const g of visibleGameOptions) {
 					const gid = g.id.toLowerCase();
-					const persisted = localStorage.getItem(spriteSelectionKey(gid));
+					const persisted = localStorage.getItem(
+						spriteSelectionKey(gid),
+					);
 					// Allow empty string as a valid persisted "Default sprite" selection
-					if (persisted !== null && !selectedSpritesByGameId.has(gid)) {
+					if (
+						persisted !== null &&
+						!selectedSpritesByGameId.has(gid)
+					) {
 						selectedSpritesByGameId.set(gid, persisted);
 						spriteSelections[gid] = persisted;
 						changed = true;
@@ -202,12 +280,17 @@
 			// Early hydration of post-gen selections (localStorage only) before async fetch of configs
 			try {
 				let changed = false;
-				for (const g of gameOptions) {
+				for (const g of visibleGameOptions) {
 					const gid = g.id.toLowerCase();
-					const persisted = localStorage.getItem(postGenSelectionKey(gid));
+					const persisted = localStorage.getItem(
+						postGenSelectionKey(gid),
+					);
 					if (persisted && !selectedPostGenByGameId.has(gid)) {
 						try {
-							const parsed = JSON.parse(persisted) as Record<string, string | boolean>;
+							const parsed = JSON.parse(persisted) as Record<
+								string,
+								string | boolean
+							>;
 							selectedPostGenByGameId.set(gid, parsed);
 							postGenSelections[gid] = parsed;
 							changed = true;
@@ -224,46 +307,44 @@
 				/* ignore */
 			}
 
-			// Parse Static Game Info
-			const parsedStaticInfo = new Map<string, GameStaticInfo>();
-			try {
-				const staticInfoObj = JSON.parse(gameStaticInfoJson);
-				Object.entries(staticInfoObj).forEach(([gameId, gameInfo]) => {
-					parsedStaticInfo.set(gameId, { id: gameId, ...(gameInfo as Omit<GameStaticInfo, 'id'>) });
-				});
-			} catch (error) {
-				console.error('Failed to parse game-static-info.json:', error);
-			}
-
 			// Placeholder for new sprite info map while fetching
-			const newSpriteInfoMapProvisional = new Map<string, GameSpriteConfig>();
-			const newPostGenInfoMapProvisional = new Map<string, GamePostGenConfig>();
+			const newSpriteInfoMapProvisional = new Map<
+				string,
+				GameSpriteConfig
+			>();
+			const newPostGenInfoMapProvisional = new Map<
+				string,
+				GamePostGenConfig
+			>();
 
 			const newRomsData = new Map<string, RomFileData>();
 			const newGameIdToStaticInfo = new Map<string, GameStaticInfo>();
 
-			if (gameOptions.length > 0) {
+			if (visibleGameOptions.length > 0) {
 				// First, populate static info and ROM data (as before)
-				for (const game of gameOptions) {
-					const gameId = game.id; // Already lowercased from gameOptions definition
-					let staticInfoEntry = parsedStaticInfo.get(gameId);
+				for (const game of visibleGameOptions) {
+					const gameId = normalizeGameId(game.id);
+					let staticInfoEntry = staticInfoFromFile.get(gameId);
 
 					if (!staticInfoEntry) {
-						console.warn(`Static info for game ID ${gameId} not found in JSON. Creating fallback.`);
+						console.warn(
+							`Static info for game ID ${gameId} not found in JSON. Creating fallback.`,
+						);
 						staticInfoEntry = {
 							id: gameId,
 							displayName: `Game: ${gameId}`,
-							fileExtensions: '.rom,.sfc,.smc',
-							expectedHash: undefined
+							fileExtensions: ".rom,.sfc,.smc",
+							expectedHash: undefined,
 						};
 					}
 					newGameIdToStaticInfo.set(gameId, staticInfoEntry);
 
 					let romFileDataToSet: RomFileData | null = null;
 					try {
-						const persistedRomData = await localforage.getItem<RomFileData>(
-							getLocalForageKey(gameId)
-						);
+						const persistedRomData =
+							await localforage.getItem<RomFileData>(
+								getLocalForageKey(gameId),
+							);
 						if (persistedRomData) {
 							romFileDataToSet = {
 								...persistedRomData,
@@ -271,28 +352,32 @@
 								expectedHash: staticInfoEntry.expectedHash,
 								buffer: persistedRomData.buffer || null,
 								fileName: persistedRomData.fileName || null,
-								hashStatus: persistedRomData.hashStatus || 'no_rom'
+								hashStatus:
+									persistedRomData.hashStatus || "no_rom",
 							};
 						}
 					} catch (error) {
-						console.error(`Error loading ROM data for ${gameId} from localforage:`, error);
+						console.error(
+							`Error loading ROM data for ${gameId} from localforage:`,
+							error,
+						);
 					}
 
 					if (!romFileDataToSet) {
 						romFileDataToSet = {
 							buffer: null,
 							fileName: null,
-							hashStatus: 'no_rom',
+							hashStatus: "no_rom",
 							gameName: staticInfoEntry.displayName,
-							expectedHash: staticInfoEntry.expectedHash
+							expectedHash: staticInfoEntry.expectedHash,
 						};
 					}
 					newRomsData.set(gameId, romFileDataToSet);
 				}
 
-				// After gameOptions are processed for static/ROM info, fetch sprite configs
-				for (const game of gameOptions) {
-					const gameId = game.id.toLowerCase(); // Ensure consistent casing
+				// After visible game options are processed for static/ROM info, fetch sprite configs
+				for (const game of visibleGameOptions) {
+					const gameId = normalizeGameId(game.id); // Ensure consistent casing
 					// Base URL where sprite folders live. For GitHub Pages hosting, set PUBLIC_SPRITES_BASE_URL
 					// to the absolute URL (e.g. https://<user>.github.io/<repo>/sprites) so we don't hit the local dev origin.
 					const spritesBase = getPublicSpritesBaseUrl();
@@ -305,16 +390,19 @@
 						const response = await fetch(spriteJsonPath);
 						if (response.ok) {
 							const json = await response.json();
-							const parsed = GameSpriteConfigSchema.safeParse(json);
+							const parsed =
+								GameSpriteConfigSchema.safeParse(json);
 							if (parsed.success) {
 								// Normalize image and patch file paths so that relative or root-relative entries
 								// in remote metadata still resolve correctly when served from a different origin.
-								const normalizePath = (p: string | undefined): string | undefined => {
+								const normalizePath = (
+									p: string | undefined,
+								): string | undefined => {
 									if (!p) return p;
 									// Already absolute URL (http/https) -> leave untouched
 									if (/^https?:\/\//i.test(p)) return p;
 									// If starts with '/' treat it as relative to the spritesBase origin (strip leading slash first)
-									if (p.startsWith('/')) {
+									if (p.startsWith("/")) {
 										return `${spritesBase}${p}`; // spritesBase already trimmed
 									}
 									// Bare relative filename -> assume spritesBase/<gameId>/<filename>
@@ -322,46 +410,58 @@
 								};
 
 								const normalized = {
-									defaultSpriteValue: parsed.data.defaultSpriteValue,
+									defaultSpriteValue:
+										parsed.data.defaultSpriteValue,
 									sprites: parsed.data.sprites.map((s) => ({
 										...s,
 										imagePath: normalizePath(s.imagePath)!,
 										patchDetails: s.patchDetails
 											? {
-													files: s.patchDetails.files.map((f) => ({
-														...f,
-														path: normalizePath(f.path)!
-													})),
-													patches: s.patchDetails.patches
+													files: s.patchDetails.files.map(
+														(f) => ({
+															...f,
+															path: normalizePath(
+																f.path,
+															)!,
+														}),
+													),
+													patches:
+														s.patchDetails.patches,
 												}
-											: undefined
-									}))
+											: undefined,
+									})),
 								};
-								newSpriteInfoMapProvisional.set(gameId, normalized);
+								newSpriteInfoMapProvisional.set(
+									gameId,
+									normalized,
+								);
 							} else {
-								console.warn(`Invalid sprite config for ${gameId}:`, parsed.error.flatten());
+								console.warn(
+									`Invalid sprite config for ${gameId}:`,
+									parsed.error.flatten(),
+								);
 								newSpriteInfoMapProvisional.set(gameId, {
 									defaultSpriteValue: undefined,
-									sprites: []
+									sprites: [],
 								});
 							}
 						} else {
 							console.warn(
-								`Sprite configuration file not found for game ${gameId} at ${spriteJsonPath} (status: ${response.status}). This game will have no custom sprites.`
+								`Sprite configuration file not found for game ${gameId} at ${spriteJsonPath} (status: ${response.status}). This game will have no custom sprites.`,
 							);
 							newSpriteInfoMapProvisional.set(gameId, {
 								defaultSpriteValue: undefined,
-								sprites: []
+								sprites: [],
 							});
 						}
 					} catch (error) {
 						console.error(
 							`Error fetching or parsing sprite configuration for game ${gameId} from ${spriteJsonPath}:`,
-							error
+							error,
 						);
 						newSpriteInfoMapProvisional.set(gameId, {
 							defaultSpriteValue: undefined,
-							sprites: []
+							sprites: [],
 						});
 					}
 				}
@@ -370,32 +470,42 @@
 				// Build post-generation settings from backend metadata
 				const metaPostGen =
 					(data.metadata &&
-						(data.metadata as unknown as { postGenSettings?: Record<string, GamePostGenConfig> })
-							.postGenSettings) ||
+						(
+							data.metadata as unknown as {
+								postGenSettings?: Record<
+									string,
+									GamePostGenConfig
+								>;
+							}
+						).postGenSettings) ||
 					{};
-				for (const game of gameOptions) {
-					const gameId = game.id.toLowerCase();
+				for (const game of visibleGameOptions) {
+					const gameId = normalizeGameId(game.id);
 					let cfg =
 						(metaPostGen as Record<string, unknown>)[gameId] ||
 						(metaPostGen as Record<string, unknown>)[game.id];
 					let baseCfg: GamePostGenConfig =
-						cfg && typeof cfg === 'object' ? (cfg as GamePostGenConfig) : { options: [] };
+						cfg && typeof cfg === "object"
+							? (cfg as GamePostGenConfig)
+							: { options: [] };
 
 					// Always include ALTTP palette randomizer option, regardless of backend
-					if (gameId === 'alttp') {
-						const hasPalette = (baseCfg.options || []).some((o) => o.id === 'palette_randomize');
+					if (gameId === "alttp") {
+						const hasPalette = (baseCfg.options || []).some(
+							(o) => o.id === "palette_randomize",
+						);
 						if (!hasPalette) {
 							baseCfg = {
 								options: [
 									...(baseCfg.options || []),
 									{
-										id: 'palette_randomize',
-										name: 'Randomize Palette',
-										type: 'toggle',
+										id: "palette_randomize",
+										name: "Randomize Palette",
+										type: "toggle",
 										default: false,
-										on: { patches: [] }
-									}
-								]
+										on: { patches: [] },
+									},
+								],
 							};
 						}
 					}
@@ -407,17 +517,24 @@
 				// Load persisted sprite selections (if any) and apply only if still valid.
 				try {
 					let changed = false;
-					for (const game of gameOptions) {
+					for (const game of visibleGameOptions) {
 						const gid = game.id.toLowerCase();
 						if (selectedSpritesByGameId.has(gid)) continue; // already set
 						const persistedVal = await loadSpriteSelection(gid);
-						if (import.meta.env.DEV) console.debug('[sprites] load attempt', { gid, persistedVal });
+						if (import.meta.env.DEV)
+							console.debug("[sprites] load attempt", {
+								gid,
+								persistedVal,
+							});
 						if (persistedVal !== null) {
 							const cfg = gameIdToSpriteInfoMap.get(gid);
 							// Accept empty string (Default sprite) or a valid sprite value
 							if (
-								persistedVal === '' ||
-								(cfg && cfg.sprites.some((s) => s.value === persistedVal))
+								persistedVal === "" ||
+								(cfg &&
+									cfg.sprites.some(
+										(s) => s.value === persistedVal,
+									))
 							) {
 								selectedSpritesByGameId.set(gid, persistedVal);
 								spriteSelections[gid] = persistedVal;
@@ -430,36 +547,58 @@
 						spriteSelections = { ...spriteSelections };
 					}
 				} catch (e) {
-					console.warn('Failed to load persisted sprite selections', e);
+					console.warn(
+						"Failed to load persisted sprite selections",
+						e,
+					);
 				}
 
 				// Load persisted post-generation selections (if any) and apply only if still valid keys
 				try {
 					let changed = false;
-					for (const game of gameOptions) {
+					for (const game of visibleGameOptions) {
 						const gid = game.id.toLowerCase();
 						if (selectedPostGenByGameId.has(gid)) continue;
-					const persisted = await loadPostGenSelection(gid);
+						const persisted = await loadPostGenSelection(gid);
 						if (persisted) {
 							const cfg = gameIdToPostGenConfigMap.get(gid);
 							if (cfg) {
 								// Only keep entries with matching option ids
-								const valid: Record<string, string | boolean> = {};
-								const optionIds = new Set(cfg.options.map((o) => o.id));
+								const valid: Record<string, string | boolean> =
+									{};
+								const optionIds = new Set(
+									cfg.options.map((o) => o.id),
+								);
 								// Allow special nested keys for ALTTP palette randomizer
 								const extraAllowed = new Set<string>();
-								if (gid === 'alttp' && optionIds.has('palette_randomize')) {
-									extraAllowed.add('palette_randomize_mode');
-									extraAllowed.add('palette_randomize_overworld');
-									extraAllowed.add('palette_randomize_dungeon');
-									extraAllowed.add('palette_randomize_link_sprite');
-									extraAllowed.add('palette_randomize_sword');
-									extraAllowed.add('palette_randomize_shield');
-									extraAllowed.add('palette_randomize_hud');
+								if (
+									gid === "alttp" &&
+									optionIds.has("palette_randomize")
+								) {
+									extraAllowed.add("palette_randomize_mode");
+									extraAllowed.add(
+										"palette_randomize_overworld",
+									);
+									extraAllowed.add(
+										"palette_randomize_dungeon",
+									);
+									extraAllowed.add(
+										"palette_randomize_link_sprite",
+									);
+									extraAllowed.add("palette_randomize_sword");
+									extraAllowed.add(
+										"palette_randomize_shield",
+									);
+									extraAllowed.add("palette_randomize_hud");
 								}
 
-								for (const [k, v] of Object.entries(persisted)) {
-									if (optionIds.has(k) || extraAllowed.has(k)) {
+								for (const [k, v] of Object.entries(
+									persisted,
+								)) {
+									if (
+										optionIds.has(k) ||
+										extraAllowed.has(k)
+									) {
 										valid[k] = v as string | boolean;
 									}
 								}
@@ -474,7 +613,10 @@
 						postGenSelections = { ...postGenSelections };
 					}
 				} catch (e) {
-					console.warn('Failed to load persisted post-generation selections', e);
+					console.warn(
+						"Failed to load persisted post-generation selections",
+						e,
+					);
 				}
 			}
 
@@ -484,18 +626,20 @@
 	});
 
 	$effect(() => {
-		if (gameOptions.length > 0 && gameIdToSpriteInfoMap.size > 0) {
+		if (visibleGameOptions.length > 0 && gameIdToSpriteInfoMap.size > 0) {
 			let changed = false;
-			for (const game of gameOptions) {
+			for (const game of visibleGameOptions) {
 				const gameId = game.id.toLowerCase();
 				// Do not override explicit empty string (Default sprite). Only set when missing entirely.
 				if (!selectedSpritesByGameId.has(gameId)) {
 					const gameSpriteConfig = gameIdToSpriteInfoMap.get(gameId);
-					let initialSpriteValue = '';
+					let initialSpriteValue = "";
 					if (gameSpriteConfig) {
 						initialSpriteValue =
 							gameSpriteConfig.defaultSpriteValue ||
-							(gameSpriteConfig.sprites.length > 0 ? gameSpriteConfig.sprites[0].value : '');
+							(gameSpriteConfig.sprites.length > 0
+								? gameSpriteConfig.sprites[0].value
+								: "");
 					}
 					selectedSpritesByGameId.set(gameId, initialSpriteValue);
 					spriteSelections[gameId] = initialSpriteValue;
@@ -506,7 +650,7 @@
 				selectedSpritesByGameId = selectedSpritesByGameId;
 				spriteSelections = { ...spriteSelections };
 			}
-		} else if (gameOptions.length === 0) {
+		} else if (visibleGameOptions.length === 0) {
 			selectedSpritesByGameId = new Map<string, string>();
 			spriteSelections = {};
 		}
@@ -514,29 +658,40 @@
 
 	// Initialize cosmetics defaults if missing selections
 	$effect(() => {
-		if (gameOptions.length > 0 && gameIdToPostGenConfigMap.size > 0) {
+		if (
+			visibleGameOptions.length > 0 &&
+			gameIdToPostGenConfigMap.size > 0
+		) {
 			let changed = false;
-			for (const game of gameOptions) {
+			for (const game of visibleGameOptions) {
 				const gid = game.id.toLowerCase();
 				if (!selectedPostGenByGameId.has(gid)) {
 					const cfg = gameIdToPostGenConfigMap.get(gid);
 					const initial: Record<string, string | boolean> = {};
 					if (cfg) {
 						for (const opt of cfg.options) {
-							if (opt.type === 'toggle') initial[opt.id] = opt.default ?? false;
-							else if (opt.type === 'select')
-								initial[opt.id] = opt.default ?? opt.choices[0]?.value;
+							if (opt.type === "toggle")
+								initial[opt.id] = opt.default ?? false;
+							else if (opt.type === "select")
+								initial[opt.id] =
+									opt.default ?? opt.choices[0]?.value;
 						}
 						// Special defaults for ALTTP palette randomizer nested options
-						if (gid === 'alttp' && cfg.options.some((o) => o.id === 'palette_randomize')) {
-							if (initial['palette_randomize'] === undefined) initial['palette_randomize'] = false;
-							initial['palette_randomize_mode'] = 'maseya';
-							initial['palette_randomize_overworld'] = true;
-							initial['palette_randomize_dungeon'] = true;
-							initial['palette_randomize_link_sprite'] = true;
-							initial['palette_randomize_sword'] = true;
-							initial['palette_randomize_shield'] = true;
-							initial['palette_randomize_hud'] = true;
+						if (
+							gid === "alttp" &&
+							cfg.options.some(
+								(o) => o.id === "palette_randomize",
+							)
+						) {
+							if (initial["palette_randomize"] === undefined)
+								initial["palette_randomize"] = false;
+							initial["palette_randomize_mode"] = "maseya";
+							initial["palette_randomize_overworld"] = true;
+							initial["palette_randomize_dungeon"] = true;
+							initial["palette_randomize_link_sprite"] = true;
+							initial["palette_randomize_sword"] = true;
+							initial["palette_randomize_shield"] = true;
+							initial["palette_randomize_hud"] = true;
 						}
 					}
 					selectedPostGenByGameId.set(gid, initial);
@@ -548,7 +703,7 @@
 				selectedPostGenByGameId = selectedPostGenByGameId;
 				postGenSelections = { ...postGenSelections };
 			}
-		} else if (gameOptions.length === 0) {
+		} else if (visibleGameOptions.length === 0) {
 			selectedPostGenByGameId = new Map();
 			postGenSelections = {};
 		}
@@ -558,17 +713,265 @@
 		cleanupPatcher();
 	});
 
-	async function calculateSHA256(buffer: ArrayBuffer): Promise<string> {
-		const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-		const hashArray = Array.from(new Uint8Array(hashBuffer));
-		return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+	const ZIP_EOCD_SIGNATURE = 0x06054b50;
+	const ZIP_CENTRAL_DIR_SIGNATURE = 0x02014b50;
+	const ZIP_LOCAL_FILE_HEADER_SIGNATURE = 0x04034b50;
+	const zipUtf8Decoder = new TextDecoder("utf-8", { fatal: false });
+	const DEFAULT_ROM_EXTENSIONS = [".rom", ".sfc", ".smc", ".zip"];
+
+	type ZipCentralDirectoryEntry = {
+		fileName: string;
+		compressionMethod: number;
+		compressedSize: number;
+		uncompressedSize: number;
+		localHeaderOffset: number;
+		generalPurposeFlag: number;
+	};
+
+	function normalizeRomExtensions(value: string | undefined): string[] {
+		if (!value) {
+			return [...DEFAULT_ROM_EXTENSIONS];
+		}
+		const normalized = value
+			.split(",")
+			.map((ext) => ext.trim().toLowerCase())
+			.filter(Boolean);
+		if (normalized.length === 0) {
+			return [...DEFAULT_ROM_EXTENSIONS];
+		}
+		return Array.from(new Set(normalized));
 	}
 
-	async function verifyRomHash(gameId: string, buffer: ArrayBuffer, expectedHash?: string) {
+	function extensionFromName(fileName: string): string {
+		const normalized = fileName.toLowerCase().replace(/\\/g, "/");
+		const base = normalized.split("/").pop() ?? normalized;
+		const dotIndex = base.lastIndexOf(".");
+		return dotIndex === -1 ? "" : base.slice(dotIndex);
+	}
+
+	function findZipEndOfCentralDirectory(bytes: Uint8Array): number {
+		for (let i = bytes.length - 22; i >= 0; i--) {
+			if (
+				bytes[i] === 0x50 &&
+				bytes[i + 1] === 0x4b &&
+				bytes[i + 2] === 0x05 &&
+				bytes[i + 3] === 0x06
+			) {
+				return i;
+			}
+		}
+		throw new Error(
+			"ZIP archive is missing the end of central directory record.",
+		);
+	}
+
+	function decodeZipFileName(bytes: Uint8Array, isUtf8: boolean): string {
+		if (isUtf8) {
+			return zipUtf8Decoder.decode(bytes);
+		}
+		let result = "";
+		for (let i = 0; i < bytes.length; i++) {
+			result += String.fromCharCode(bytes[i]);
+		}
+		return result;
+	}
+
+	function parseZipCentralDirectory(
+		buffer: ArrayBuffer,
+	): ZipCentralDirectoryEntry[] {
+		const bytes = new Uint8Array(buffer);
+		const view = new DataView(buffer);
+		const eocdOffset = findZipEndOfCentralDirectory(bytes);
+		const totalEntries = view.getUint16(eocdOffset + 10, true);
+		const directoryOffset = view.getUint32(eocdOffset + 16, true);
+		const entries: ZipCentralDirectoryEntry[] = [];
+		let offset = directoryOffset;
+		for (let i = 0; i < totalEntries; i++) {
+			const signature = view.getUint32(offset, true);
+			if (signature !== ZIP_CENTRAL_DIR_SIGNATURE) {
+				throw new Error(
+					"Invalid ZIP central directory header signature.",
+				);
+			}
+			const generalPurposeFlag = view.getUint16(offset + 8, true);
+			const compressionMethod = view.getUint16(offset + 10, true);
+			const compressedSize = view.getUint32(offset + 20, true);
+			const uncompressedSize = view.getUint32(offset + 24, true);
+			const fileNameLength = view.getUint16(offset + 28, true);
+			const extraLength = view.getUint16(offset + 30, true);
+			const commentLength = view.getUint16(offset + 32, true);
+			const localHeaderOffset = view.getUint32(offset + 42, true);
+			if (
+				compressedSize === 0xffffffff ||
+				uncompressedSize === 0xffffffff ||
+				localHeaderOffset === 0xffffffff
+			) {
+				throw new Error("ZIP64 archives are not supported.");
+			}
+			const nameStart = offset + 46;
+			const nameEnd = nameStart + fileNameLength;
+			const nameBytes = bytes.subarray(nameStart, nameEnd);
+			const fileName = decodeZipFileName(
+				nameBytes,
+				(generalPurposeFlag & 0x0800) !== 0,
+			);
+			entries.push({
+				fileName,
+				compressionMethod,
+				compressedSize,
+				uncompressedSize,
+				localHeaderOffset,
+				generalPurposeFlag,
+			});
+			offset = nameEnd + extraLength + commentLength;
+		}
+		return entries;
+	}
+
+	async function decompressZipDeflate(
+		compressed: ArrayBuffer,
+	): Promise<ArrayBuffer> {
+		const DecompressionStreamCtor = (
+			globalThis as { DecompressionStream?: any }
+		).DecompressionStream;
+		if (!DecompressionStreamCtor) {
+			throw new Error(
+				"Zip decompression is not supported in this browser.",
+			);
+		}
+		const stream = new Blob([compressed])
+			.stream()
+			.pipeThrough(new DecompressionStreamCtor("deflate-raw"));
+		return await new Response(stream).arrayBuffer();
+	}
+
+	async function extractRomFromZip(
+		zipBuffer: ArrayBuffer,
+		allowedExtensions: string[],
+	): Promise<{ buffer: ArrayBuffer; fileName: string }> {
+		const normalized = allowedExtensions
+			.map((ext) => ext.trim().toLowerCase())
+			.filter(Boolean);
+		if (normalized.length === 0) {
+			throw new Error("No ROM extensions configured for ZIP extraction.");
+		}
+		const entries = parseZipCentralDirectory(zipBuffer).filter(
+			(entry) => !entry.fileName.endsWith("/"),
+		);
+		if (entries.length === 0) {
+			throw new Error("ZIP archive does not contain any files.");
+		}
+		const candidates = entries.filter((entry) =>
+			normalized.includes(extensionFromName(entry.fileName)),
+		);
+		if (candidates.length === 0) {
+			throw new Error(
+				`ZIP archive does not contain a supported ROM. Expected one of: ${normalized.join(", ")}.`,
+			);
+		}
+		if (candidates.length > 1) {
+			throw new Error(
+				"ZIP archive contains multiple ROM files. Please include only one.",
+			);
+		}
+		const entry = candidates[0];
+		if ((entry.generalPurposeFlag & 0x0001) !== 0) {
+			throw new Error("Encrypted ZIP archives are not supported.");
+		}
+		const view = new DataView(zipBuffer);
+		const signature = view.getUint32(entry.localHeaderOffset, true);
+		if (signature !== ZIP_LOCAL_FILE_HEADER_SIGNATURE) {
+			throw new Error("Invalid ZIP local file header signature.");
+		}
+		const fileNameLength = view.getUint16(
+			entry.localHeaderOffset + 26,
+			true,
+		);
+		const extraFieldLength = view.getUint16(
+			entry.localHeaderOffset + 28,
+			true,
+		);
+		const dataStart =
+			entry.localHeaderOffset + 30 + fileNameLength + extraFieldLength;
+		const dataEnd = dataStart + entry.compressedSize;
+		if (dataEnd > zipBuffer.byteLength) {
+			throw new Error("ZIP entry data exceeds archive bounds.");
+		}
+		const compressedData = zipBuffer.slice(dataStart, dataEnd);
+		let romBuffer: ArrayBuffer;
+		switch (entry.compressionMethod) {
+			case 0:
+				romBuffer = compressedData;
+				break;
+			case 8:
+				romBuffer = await decompressZipDeflate(compressedData);
+				if (
+					entry.uncompressedSize > 0 &&
+					entry.uncompressedSize !== romBuffer.byteLength
+				) {
+					console.warn(
+						"ZIP entry uncompressed size mismatch.",
+						entry.uncompressedSize,
+						romBuffer.byteLength,
+					);
+				}
+				break;
+			default:
+				throw new Error(
+					`Unsupported ZIP compression method: ${entry.compressionMethod}.`,
+				);
+		}
+		const segments = entry.fileName.split("/").filter(Boolean);
+		const displayName =
+			segments.length > 0
+				? segments[segments.length - 1]
+				: entry.fileName;
+		return { buffer: romBuffer, fileName: displayName };
+	}
+
+	async function resolveUploadedRomBuffer(
+		fileName: string,
+		buffer: ArrayBuffer,
+		allowedExtensions: string[],
+	): Promise<{ buffer: ArrayBuffer; fileName: string }> {
+		const normalized = allowedExtensions.map((ext) => ext.toLowerCase());
+		const extension = extensionFromName(fileName);
+		if (extension === ".zip") {
+			const innerAllowed = normalized.filter((ext) => ext !== ".zip");
+			if (innerAllowed.length === 0) {
+				throw new Error("ZIP uploads are not supported for this game.");
+			}
+			return await extractRomFromZip(buffer, innerAllowed);
+		}
+		if (!normalized.includes(extension)) {
+			if (normalized.length === 0) {
+				throw new Error("No supported ROM extensions are configured.");
+			}
+			throw new Error(
+				`Unsupported file type. Expected one of: ${normalized.join(", ")}.`,
+			);
+		}
+		return { buffer, fileName };
+	}
+
+	async function calculateSHA256(buffer: ArrayBuffer): Promise<string> {
+		const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+		const hashArray = Array.from(new Uint8Array(hashBuffer));
+		return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+	}
+
+	async function verifyRomHash(
+		gameId: string,
+		buffer: ArrayBuffer,
+		expectedHash?: string,
+	) {
 		const gameData = romsData.get(gameId);
 		if (!gameData) return;
 
-		let updatedGameData: RomFileData = { ...gameData, hashStatus: 'checking' };
+		let updatedGameData: RomFileData = {
+			...gameData,
+			hashStatus: "checking",
+		};
 		{
 			const next = new Map(romsData);
 			next.set(gameId, updatedGameData);
@@ -577,20 +980,34 @@
 
 		try {
 			const calculatedHash = await calculateSHA256(buffer);
-			let newStatus: RomFileData['hashStatus'] = 'error';
+			let newStatus: RomFileData["hashStatus"] = "error";
 			if (expectedHash) {
-				if (calculatedHash.toLowerCase() === expectedHash.toLowerCase()) {
-					newStatus = 'verified';
+				if (
+					calculatedHash.toLowerCase() === expectedHash.toLowerCase()
+				) {
+					newStatus = "verified";
 				} else {
-					newStatus = 'mismatch';
+					newStatus = "mismatch";
 				}
 			} else {
-				newStatus = 'uploaded_no_verify';
+				newStatus = "uploaded_no_verify";
 			}
-			updatedGameData = { ...updatedGameData, calculatedHash, hashStatus: newStatus, buffer };
+			updatedGameData = {
+				...updatedGameData,
+				calculatedHash,
+				hashStatus: newStatus,
+				buffer,
+			};
 		} catch (e) {
-			console.error('Error calculating SHA256 for game ' + gameId + ':', e);
-			updatedGameData = { ...updatedGameData, hashStatus: 'error', buffer };
+			console.error(
+				"Error calculating SHA256 for game " + gameId + ":",
+				e,
+			);
+			updatedGameData = {
+				...updatedGameData,
+				hashStatus: "error",
+				buffer,
+			};
 		}
 		{
 			const next = new Map(romsData);
@@ -599,12 +1016,15 @@
 		}
 
 		try {
-			await localforage.setItem(getLocalForageKey(gameId), updatedGameData);
+			await localforage.setItem(
+				getLocalForageKey(gameId),
+				updatedGameData,
+			);
 		} catch (error) {
 			console.error(
 				`Error saving ROM data for ${gameId} to localforage:`,
 
-				error
+				error,
 			);
 		}
 	}
@@ -614,35 +1034,50 @@
 		file: File;
 	}
 
-	async function handleFileUpload(eventData: FileSelectedEventDetail, gameId: string) {
+	async function handleFileUpload(
+		eventData: FileSelectedEventDetail,
+		gameId: string,
+	) {
 		const file = eventData.file;
-		let currentRomData = romsData.get(gameId);
+		const staticInfo = gameIdToStaticInfo.get(gameId);
 
+		if (!staticInfo) {
+			alert(
+				m.seed_page_rom_error_missing_game_config({ gameId }) ||
+					`Error: Game with ID '${gameId}' is not configured.`,
+			);
+			return;
+		}
+
+		let currentRomData = romsData.get(gameId);
 		if (!currentRomData) {
-			const staticInfo = gameIdToStaticInfo.get(gameId);
-			if (!staticInfo) {
-				alert(
-					m.seed_page_rom_error_missing_game_config({ gameId }) ||
-						`Error: Game with ID '${gameId}' is not configured.`
-				);
-				return;
-			}
 			currentRomData = {
 				buffer: null,
 				fileName: null,
-				hashStatus: 'no_rom',
+				hashStatus: "no_rom",
 				gameName: staticInfo.displayName,
-				expectedHash: staticInfo.expectedHash
+				expectedHash: staticInfo.expectedHash,
+			};
+		} else {
+			currentRomData = {
+				...currentRomData,
+				gameName: staticInfo.displayName,
+				expectedHash: staticInfo.expectedHash,
 			};
 		}
 
 		let updatedRomData: RomFileData = { ...currentRomData };
+		const allowedExtensions = normalizeRomExtensions(
+			staticInfo.fileExtensions,
+		);
 
 		if (file) {
 			updatedRomData.fileName = file.name;
 			updatedRomData.buffer = null;
 			updatedRomData.calculatedHash = undefined;
-			updatedRomData.hashStatus = updatedRomData.expectedHash ? 'checking' : 'uploaded_no_verify';
+			updatedRomData.hashStatus = updatedRomData.expectedHash
+				? "checking"
+				: "uploaded_no_verify";
 
 			{
 				const next = new Map(romsData);
@@ -654,9 +1089,66 @@
 			reader.onload = async (e) => {
 				const resultBuffer = e.target?.result as ArrayBuffer | null;
 				if (resultBuffer) {
-					await verifyRomHash(gameId, resultBuffer, updatedRomData.expectedHash);
+					try {
+						const resolved = await resolveUploadedRomBuffer(
+							file.name,
+							resultBuffer,
+							allowedExtensions,
+						);
+						if (
+							resolved.fileName &&
+							resolved.fileName !== updatedRomData.fileName
+						) {
+							updatedRomData = {
+								...updatedRomData,
+								fileName: resolved.fileName,
+							};
+							const next = new Map(romsData);
+							next.set(gameId, updatedRomData);
+							romsData = next;
+						}
+						await verifyRomHash(
+							gameId,
+							resolved.buffer,
+							updatedRomData.expectedHash,
+						);
+					} catch (error) {
+						console.error(
+							`Error processing ROM upload for ${gameId}:`,
+							error,
+						);
+						const errorData: RomFileData = {
+							...updatedRomData,
+							hashStatus: "error",
+							buffer: null,
+						};
+						{
+							const next = new Map(romsData);
+							next.set(gameId, errorData);
+							romsData = next;
+						}
+						try {
+							await localforage.removeItem(
+								getLocalForageKey(gameId),
+							);
+						} catch (storageError) {
+							console.error(
+								`Error removing ROM data for ${gameId} from localforage:`,
+								storageError,
+							);
+						}
+						const message =
+							error instanceof Error
+								? error.message
+								: "Failed to process uploaded ROM file.";
+						alert(message);
+					}
 				} else {
-					const errorData: RomFileData = { ...updatedRomData, hashStatus: 'error', buffer: null };
+					const errorData: RomFileData = {
+						...updatedRomData,
+						hashStatus: "error",
+						buffer: null,
+					};
 					{
 						const next = new Map(romsData);
 						next.set(gameId, errorData);
@@ -664,17 +1156,20 @@
 					}
 					try {
 						await localforage.removeItem(getLocalForageKey(gameId));
-					} catch (error) {
+					} catch (storageError) {
 						console.error(
 							`Error removing ROM data for ${gameId} from localforage:`,
-
-							error
+							storageError,
 						);
 					}
 				}
 			};
 			reader.onerror = async () => {
-				const errorData: RomFileData = { ...updatedRomData, hashStatus: 'error', buffer: null };
+				const errorData: RomFileData = {
+					...updatedRomData,
+					hashStatus: "error",
+					buffer: null,
+				};
 				{
 					const next = new Map(romsData);
 					next.set(gameId, errorData);
@@ -685,8 +1180,7 @@
 				} catch (error) {
 					console.error(
 						`Error removing ROM data for ${gameId} from localforage:`,
-
-						error
+						error,
 					);
 				}
 			};
@@ -696,8 +1190,8 @@
 				...updatedRomData,
 				buffer: null,
 				fileName: null,
-				hashStatus: 'no_rom',
-				calculatedHash: undefined
+				hashStatus: "no_rom",
+				calculatedHash: undefined,
 			};
 			{
 				const next = new Map(romsData);
@@ -709,8 +1203,7 @@
 			} catch (error) {
 				console.error(
 					`Error removing ROM data for ${gameId} from localforage:`,
-
-					error
+					error,
 				);
 			}
 		}
@@ -722,18 +1215,21 @@
 		if (!resolvedPrimaryId) {
 			alert(
 				m.seed_page_rom_patch_error_missing_seed_details() ||
-					'Primary game for patching not identified.'
+					"Primary game for patching not identified.",
 			);
 			return;
 		}
 
 		const currentSeedOpts = data.seedDetails?.options;
-		if (gameOptions.length === 0 || !currentSeedOpts) {
-			alert(m.seed_page_rom_patch_error_missing_seed_details() || 'Game list not available.');
+		if (visibleGameOptions.length === 0 || !currentSeedOpts) {
+			alert(
+				m.seed_page_rom_patch_error_missing_seed_details() ||
+					"Game list not available.",
+			);
 			return;
 		}
 
-		for (const game of gameOptions) {
+		for (const game of visibleGameOptions) {
 			const gameId = game.id;
 			const romData = romsData.get(gameId);
 			const gameInfo = gameIdToStaticInfo.get(gameId);
@@ -741,7 +1237,7 @@
 			if (!gameInfo) {
 				alert(
 					m.seed_page_rom_error_missing_game_config({ gameId }) ||
-						`Error: Game with ID '${gameId}' is not configured.`
+						`Error: Game with ID '${gameId}' is not configured.`,
 				);
 				return;
 			}
@@ -749,17 +1245,19 @@
 			if (!romData || !romData.buffer) {
 				alert(
 					m.seed_page_rom_patch_error_missing_file_for_game({
-						gameName: gameInfo.displayName || gameId
-					}) || `ROM for ${gameInfo.displayName || gameId} is missing.`
+						gameName: gameInfo.displayName || gameId,
+					}) ||
+						`ROM for ${gameInfo.displayName || gameId} is missing.`,
 				);
 				return;
 			}
 
-			if (gameInfo.expectedHash && romData.hashStatus !== 'verified') {
+			if (gameInfo.expectedHash && romData.hashStatus !== "verified") {
 				alert(
 					m.seed_page_rom_patch_error_unverified_for_game({
-						gameName: gameInfo.displayName || gameId
-					}) || `ROM for ${gameInfo.displayName || gameId} is not verified.`
+						gameName: gameInfo.displayName || gameId,
+					}) ||
+						`ROM for ${gameInfo.displayName || gameId} is not verified.`,
 				);
 				return;
 			}
@@ -779,7 +1277,7 @@
 		}
 
 		const additionalRoms: { [gameId: string]: ArrayBuffer } = {};
-		for (const game of gameOptions) {
+		for (const game of visibleGameOptions) {
 			const gameId = game.id;
 			if (gameId !== resolvedPrimaryId) {
 				// resolvedPrimaryId is string here
@@ -792,8 +1290,16 @@
 
 		const currentPatchData = data.seedDetails.patchData;
 
-		if (!(typeof currentPatchData === 'string' || currentPatchData instanceof ArrayBuffer)) {
-			console.error('Patch data is in an unrecognized format:', currentPatchData);
+		if (
+			!(
+				typeof currentPatchData === "string" ||
+				currentPatchData instanceof ArrayBuffer
+			)
+		) {
+			console.error(
+				"Patch data is in an unrecognized format:",
+				currentPatchData,
+			);
 			alert(m.seed_page_rom_patch_error_generic());
 			patchingServiceError.set(m.seed_page_rom_patch_error_generic());
 			return;
@@ -802,21 +1308,28 @@
 		// Derive randomizerId:
 		const randomizerId =
 			(data.randomizerId as string | null | undefined) ??
-			((globalOptions.Game as string | undefined) ?? undefined);
+			(globalOptions.Game as string | undefined) ??
+			undefined;
 
-		const primaryGameOptionsEntry = gameOptions.find((game) => game.id === resolvedPrimaryId);
+		const primaryGameOptionsEntry = visibleGameOptions.find(
+			(game) => game.id === resolvedPrimaryId,
+		);
 		const optionSummary = buildOptionSummaryTokens({
 			metadata: data.metadata,
 			gameId: resolvedPrimaryId,
 			options: primaryGameOptionsEntry?.options,
 			maxTokens: 6,
-			maxTokenLength: 12
+			maxTokenLength: 12,
 		});
 		let optionSummaryTokens = optionSummary.tokens;
 		if (optionSummary.total > optionSummary.tokens.length) {
-			const extraCount = optionSummary.total - optionSummary.tokens.length;
+			const extraCount =
+				optionSummary.total - optionSummary.tokens.length;
 			if (extraCount > 0) {
-				optionSummaryTokens = [...optionSummaryTokens, `x${extraCount}`];
+				optionSummaryTokens = [
+					...optionSummaryTokens,
+					`x${extraCount}`,
+				];
 			}
 		}
 
@@ -830,26 +1343,27 @@
 			outputFileNameDetails: {
 				seedId: data.seedDetails.id,
 				baseName: primaryRomData.fileName,
-				defaultDisplayName: primaryGameInfo?.displayName || 'rom',
-				defaultExtension: primaryGameInfo?.fileExtensions.split(',')[0] || '.sfc',
+				defaultDisplayName: primaryGameInfo?.displayName || "rom",
+				defaultExtension:
+					primaryGameInfo?.fileExtensions.split(",")[0] || ".sfc",
 				randomizerVersion: data.randomizerVersion?.versionTag ?? null,
 				optionSummary: {
 					tokens: optionSummaryTokens,
 					total: optionSummary.total,
-					derivedFromMetadata: optionSummary.derivedFromMetadata
-				}
+					derivedFromMetadata: optionSummary.derivedFromMetadata,
+				},
 			},
 			selectedSpritesByGameId,
 			gameIdToSpriteInfoMap,
 			// Post-generation settings
 			selectedPostGenByGameId,
-			gameIdToPostGenConfigMap
+			gameIdToPostGenConfigMap,
 		};
 
 		try {
 			await initiatePatching(patchParams);
 		} catch (error) {
-			console.error('Error during initiatePatching call:', error);
+			console.error("Error during initiatePatching call:", error);
 		}
 	}
 
@@ -858,9 +1372,9 @@
 			const resolvedPrimaryId = primaryGameId; // Use the derived state
 			if (!resolvedPrimaryId) return false;
 
-			if (gameOptions.length === 0) return false;
+			if (visibleGameOptions.length === 0) return false;
 
-			for (const game of gameOptions) {
+			for (const game of visibleGameOptions) {
 				const gameId = game.id;
 				const romData = romsData.get(gameId);
 				const gameInfo = gameIdToStaticInfo.get(gameId);
@@ -869,14 +1383,17 @@
 				if (!romData || !romData.buffer) return false;
 
 				if (gameInfo.expectedHash) {
-					if (romData.hashStatus !== 'verified') return false;
+					if (romData.hashStatus !== "verified") return false;
 				} else {
-					if (romData.hashStatus !== 'uploaded_no_verify' && romData.hashStatus !== 'verified')
+					if (
+						romData.hashStatus !== "uploaded_no_verify" &&
+						romData.hashStatus !== "verified"
+					)
 						return false;
 				}
 			}
 			return true;
-		})()
+		})(),
 	);
 </script>
 
@@ -895,10 +1412,15 @@
 		</div>
 	{:else if data.seedDetails}
 		{@const seedDetails = data.seedDetails}
-		{@const seedOptions = gameOptions.length > 0 ? gameOptions[0].options : {}}
-		<div class="space-y-4 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg">
+		{@const seedOptions =
+			visibleGameOptions.length > 0 ? visibleGameOptions[0].options : {}}
+		<div
+			class="space-y-4 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg"
+		>
 			<div>
-				<h2 class="text-xl font-semibold mb-1 text-slate-900 dark:text-slate-100 flex items-center">
+				<h2
+					class="text-xl font-semibold mb-1 text-slate-900 dark:text-slate-100 flex items-center"
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400"
@@ -913,50 +1435,71 @@
 						/></svg
 					>
 					{m.seed_id()}:
-					<span class="font-mono text-primary-600 dark:text-primary-400 ml-2">{seedDetails.id}</span
+					<span
+						class="font-mono text-primary-600 dark:text-primary-400 ml-2"
+						>{seedDetails.id}</span
 					>
 				</h2>
 				<p class="text-xs text-slate-600 dark:text-slate-300">
-					<strong class="text-slate-700 dark:text-slate-200">{m.seed_created_at()}:</strong>
+					<strong class="text-slate-700 dark:text-slate-200"
+						>{m.seed_created_at()}:</strong
+					>
 					{new Date(seedDetails.createdAt).toLocaleString()}
 				</p>
 				{#if data.randomizerVersion?.versionTag}
 					<p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
-						<strong class="text-slate-700 dark:text-slate-200">Randomizer version:</strong>
-						<span class="font-mono">{data.randomizerVersion.versionTag}</span>
+						<strong class="text-slate-700 dark:text-slate-200"
+							>Randomizer version:</strong
+						>
+						<span class="font-mono"
+							>{data.randomizerVersion.versionTag}</span
+						>
 					</p>
 				{/if}
 			</div>
 			<div>
-				<h3 class="text-lg font-semibold mb-1 text-slate-900 dark:text-slate-100">
+				<h3
+					class="text-lg font-semibold mb-1 text-slate-900 dark:text-slate-100"
+				>
 					{m.seed_options()}:
 				</h3>
 				<SeedOptionsViewer
-					options={gameOptions}
+					options={visibleGameOptions}
 					{globalOptions}
 					metadata={data.metadata as Metadata | null}
-					visibility={['Basic', 'Advanced', 'Expert']}
+					visibility={["Basic", "Advanced", "Expert"]}
 				/>
 			</div>
 
 			<!-- Post-generation settings -->
-			<div class="mt-4 pt-4 border-t border-slate-300 dark:border-slate-600">
-				<h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
+			<div
+				class="mt-4 pt-4 border-t border-slate-300 dark:border-slate-600"
+			>
+				<h3
+					class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1"
+				>
 					{m.post_generation_settings_title()}
 				</h3>
 				<p class="text-xs text-slate-600 dark:text-slate-300 mb-2">
 					{m.post_generation_settings_description()}
 				</p>
 				<div class="space-y-4">
-					{#each gameOptions as game (game.id)}
+					{#each visibleGameOptions as game (game.id)}
 						{@const gameId = game.id.toLowerCase()}
 						{@const staticInfo = gameIdToStaticInfo.get(gameId)}
-						{@const gameDisplayName = staticInfo?.displayName || `Game: ${gameId}`}
-						{@const gameSpriteConfig = gameIdToSpriteInfoMap.get(gameId)}
-						{@const spriteOptionsForGame = gameSpriteConfig?.sprites || []}
+						{@const gameDisplayName =
+							staticInfo?.displayName || `Game: ${gameId}`}
+						{@const gameSpriteConfig =
+							gameIdToSpriteInfoMap.get(gameId)}
+						{@const spriteOptionsForGame =
+							gameSpriteConfig?.sprites || []}
 						{@const spriteOptionsWithDefault = [
-							{ value: '', name: 'Default sprite', imagePath: '' },
-							...spriteOptionsForGame
+							{
+								value: "",
+								name: "Default sprite",
+								imagePath: "",
+							},
+							...spriteOptionsForGame,
 						]}
 						<!-- Use direct reactive lookup instead of {@const} to allow updates -->
 
@@ -972,159 +1515,343 @@
 									id={`sprite-select-${gameId}`}
 									game={gameId}
 									items={spriteOptionsWithDefault}
-									value={spriteSelections[gameId] || ''}
-									on:change={async (e: CustomEvent<{ value: string }>) => {
+									value={spriteSelections[gameId] || ""}
+									on:change={async (
+										e: CustomEvent<{ value: string }>,
+									) => {
 										const newVal = e.detail.value;
-										selectedSpritesByGameId.set(gameId, newVal);
+										selectedSpritesByGameId.set(
+											gameId,
+											newVal,
+										);
 										spriteSelections[gameId] = newVal;
-										selectedSpritesByGameId = selectedSpritesByGameId;
-										spriteSelections = { ...spriteSelections };
-										await persistSpriteSelection(gameId, newVal);
+										selectedSpritesByGameId =
+											selectedSpritesByGameId;
+										spriteSelections = {
+											...spriteSelections,
+										};
+										await persistSpriteSelection(
+											gameId,
+											newVal,
+										);
 									}}
-								placeholder={m.sprite_select_placeholder() || 'Select a sprite'}
-								className="text-xs"
-							/>
+									placeholder={m.sprite_select_placeholder() ||
+										"Select a sprite"}
+									className="text-xs"
+								/>
 							{:else}
-								<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+								<p
+									class="text-xs text-slate-500 dark:text-slate-400 mt-1"
+								>
 									{`Sprites not available for ${gameDisplayName}.`}
 								</p>
 							{/if}
 						</div>
 
 						<!-- Post-generation settings for this game -->
-						{@const postGenConfig = gameIdToPostGenConfigMap.get(gameId)}
+						{@const postGenConfig =
+							gameIdToPostGenConfigMap.get(gameId)}
 						{#if postGenConfig && postGenConfig.options.length > 0}
 							<!-- Per‑game label for clarity in multi‑rando -->
 							<div class="flex items-center gap-2 mt-3 mb-2">
-								<div class="h-4 w-1 rounded bg-indigo-500"></div>
-								<h4 class="text-[12px] font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">
+								<div
+									class="h-4 w-1 rounded bg-indigo-500"
+								></div>
+								<h4
+									class="text-[12px] font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300"
+								>
 									{gameDisplayName}
 								</h4>
 							</div>
-							<div class="w-full rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
+							<div
+								class="w-full rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
+							>
 								{#each postGenConfig.options as opt (opt.id)}
-									{#if opt.type === 'toggle'}
+									{#if opt.type === "toggle"}
 										<div class="space-y-1">
-											<label class="block text-xs font-medium text-slate-900 dark:text-slate-100" for={`postgen-${gameId}-${opt.id}`}>{opt.name}</label>
+											<label
+												class="block text-xs font-medium text-slate-900 dark:text-slate-100"
+												for={`postgen-${gameId}-${opt.id}`}
+												>{opt.name}</label
+											>
 											{#if opt.description}
-												<p class="text-xs text-slate-500 dark:text-slate-400">{opt.description}</p>
+												<p
+													class="text-xs text-slate-500 dark:text-slate-400"
+												>
+													{opt.description}
+												</p>
 											{/if}
 											<Toggle
 												id={`postgen-${gameId}-${opt.id}`}
 												size="sm"
-												checked={(postGenSelections[gameId]?.[opt.id] as boolean) ?? opt.default ?? false}
-												on:change={(e: CustomEvent<{ checked: boolean }>) => {
+												checked={(postGenSelections[
+													gameId
+												]?.[opt.id] as boolean) ??
+													opt.default ??
+													false}
+												on:change={(
+													e: CustomEvent<{
+														checked: boolean;
+													}>,
+												) => {
 													const on = e.detail.checked;
-													const cur = selectedPostGenByGameId.get(gameId) || {};
+													const cur =
+														selectedPostGenByGameId.get(
+															gameId,
+														) || {};
 													cur[opt.id] = on;
-													selectedPostGenByGameId.set(gameId, cur);
-													postGenSelections[gameId] = { ...(postGenSelections[gameId] || {}), [opt.id]: on };
-													selectedPostGenByGameId = selectedPostGenByGameId;
-													postGenSelections = { ...postGenSelections };
-													persistPostGenSelection(gameId, postGenSelections[gameId]);
+													selectedPostGenByGameId.set(
+														gameId,
+														cur,
+													);
+													postGenSelections[gameId] =
+														{
+															...(postGenSelections[
+																gameId
+															] || {}),
+															[opt.id]: on,
+														};
+													selectedPostGenByGameId =
+														selectedPostGenByGameId;
+													postGenSelections = {
+														...postGenSelections,
+													};
+													persistPostGenSelection(
+														gameId,
+														postGenSelections[
+															gameId
+														],
+													);
 												}}
 											/>
-											{#if opt.id === 'palette_randomize' && ((postGenSelections[gameId]?.[opt.id] as boolean) ?? opt.default ?? false)}
+											{#if opt.id === "palette_randomize" && ((postGenSelections[gameId]?.[opt.id] as boolean) ?? opt.default ?? false)}
 												<!-- Nested z3pr settings when palette randomizer is enabled -->
-												<div class="mt-2 space-y-3 p-3 rounded-md bg-white/60 dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-slate-700">
+												<div
+													class="mt-2 space-y-3 p-3 rounded-md bg-white/60 dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-slate-700"
+												>
 													<!-- Mode select -->
-													<label class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100" for={`postgen-${gameId}-palette-mode`}>
+													<label
+														class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
+														for={`postgen-${gameId}-palette-mode`}
+													>
 														Palette Mode
 													</label>
 													<select
 														id={`postgen-${gameId}-palette-mode`}
 														class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
-														value={(postGenSelections[gameId]?.['palette_randomize_mode'] as string) ?? 'maseya'}
+														value={(postGenSelections[
+															gameId
+														]?.[
+															"palette_randomize_mode"
+														] as string) ??
+															"maseya"}
 														onchange={(e) => {
-															const v = (e.currentTarget as HTMLSelectElement).value;
-															const cur = selectedPostGenByGameId.get(gameId) || {};
-															cur['palette_randomize_mode'] = v;
-															selectedPostGenByGameId.set(gameId, cur);
-															postGenSelections[gameId] = { ...(postGenSelections[gameId] || {}), palette_randomize_mode: v };
-															selectedPostGenByGameId = selectedPostGenByGameId;
-															postGenSelections = { ...postGenSelections };
-															persistPostGenSelection(gameId, postGenSelections[gameId]);
+															const v = (
+																e.currentTarget as HTMLSelectElement
+															).value;
+															const cur =
+																selectedPostGenByGameId.get(
+																	gameId,
+																) || {};
+															cur[
+																"palette_randomize_mode"
+															] = v;
+															selectedPostGenByGameId.set(
+																gameId,
+																cur,
+															);
+															postGenSelections[
+																gameId
+															] = {
+																...(postGenSelections[
+																	gameId
+																] || {}),
+																palette_randomize_mode:
+																	v,
+															};
+															selectedPostGenByGameId =
+																selectedPostGenByGameId;
+															postGenSelections =
+																{
+																	...postGenSelections,
+																};
+															persistPostGenSelection(
+																gameId,
+																postGenSelections[
+																	gameId
+																],
+															);
 														}}
 													>
-														<option value="maseya">Maseya</option>
-														<option value="grayscale">Grayscale</option>
-														<option value="negative">Negative</option>
-														<option value="blackout">Blackout</option>
-														<option value="classic">Classic</option>
-														<option value="dizzy">Dizzy (Hue)</option>
-														<option value="sick">Sick (Luma)</option>
-														<option value="puke">Puke (Random)</option>
+														<option value="maseya"
+															>Maseya</option
+														>
+														<option
+															value="grayscale"
+															>Grayscale</option
+														>
+														<option value="negative"
+															>Negative</option
+														>
+														<option value="blackout"
+															>Blackout</option
+														>
+														<option value="classic"
+															>Classic</option
+														>
+														<option value="dizzy"
+															>Dizzy (Hue)</option
+														>
+														<option value="sick"
+															>Sick (Luma)</option
+														>
+														<option value="puke"
+															>Puke (Random)</option
+														>
 													</select>
 
 													<!-- Scope toggles -->
-													<div class="grid grid-cols-2 gap-3 mt-1">
-														{#each [
-															{ key: 'palette_randomize_overworld', label: 'Overworld' },
-															{ key: 'palette_randomize_dungeon', label: 'Dungeon/Underworld' },
-															{ key: 'palette_randomize_link_sprite', label: 'Link Sprite' },
-															{ key: 'palette_randomize_sword', label: 'Sword' },
-															{ key: 'palette_randomize_shield', label: 'Shield' },
-															{ key: 'palette_randomize_hud', label: 'HUD' }
-														] as flag (flag.key)}
-														<div class="flex items-center justify-between gap-2">
-															<span class="text-[11px] text-slate-900 dark:text-slate-100">{flag.label}</span>
-                                <Toggle
-                                    id={`postgen-${gameId}-${flag.key}`}
-                                    size="sm"
-                                    checked={(postGenSelections[gameId]?.[flag.key] as boolean) ?? true}
-                                    on:change={(e: CustomEvent<{ checked: boolean }>) => {
-                                        const on = e.detail.checked;
-                                        const cur = selectedPostGenByGameId.get(gameId) || {};
-                                        cur[flag.key] = on;
-                                        selectedPostGenByGameId.set(gameId, cur);
-                                        postGenSelections[gameId] = { ...(postGenSelections[gameId] || {}), [flag.key]: on };
-                                        selectedPostGenByGameId = selectedPostGenByGameId;
-                                        postGenSelections = { ...postGenSelections };
-                                        persistPostGenSelection(gameId, postGenSelections[gameId]);
-                                    }}
-                                    />
-														</div>
+													<div
+														class="grid grid-cols-2 gap-3 mt-1"
+													>
+														{#each [{ key: "palette_randomize_overworld", label: "Overworld" }, { key: "palette_randomize_dungeon", label: "Dungeon/Underworld" }, { key: "palette_randomize_link_sprite", label: "Link Sprite" }, { key: "palette_randomize_sword", label: "Sword" }, { key: "palette_randomize_shield", label: "Shield" }, { key: "palette_randomize_hud", label: "HUD" }] as flag (flag.key)}
+															<div
+																class="flex items-center justify-between gap-2"
+															>
+																<span
+																	class="text-[11px] text-slate-900 dark:text-slate-100"
+																	>{flag.label}</span
+																>
+																<Toggle
+																	id={`postgen-${gameId}-${flag.key}`}
+																	size="sm"
+																	checked={(postGenSelections[
+																		gameId
+																	]?.[
+																		flag.key
+																	] as boolean) ??
+																		true}
+																	on:change={(
+																		e: CustomEvent<{
+																			checked: boolean;
+																		}>,
+																	) => {
+																		const on =
+																			e
+																				.detail
+																				.checked;
+																		const cur =
+																			selectedPostGenByGameId.get(
+																				gameId,
+																			) ||
+																			{};
+																		cur[
+																			flag.key
+																		] = on;
+																		selectedPostGenByGameId.set(
+																			gameId,
+																			cur,
+																		);
+																		postGenSelections[
+																			gameId
+																		] = {
+																			...(postGenSelections[
+																				gameId
+																			] ||
+																				{}),
+																			[flag.key]:
+																				on,
+																		};
+																		selectedPostGenByGameId =
+																			selectedPostGenByGameId;
+																		postGenSelections =
+																			{
+																				...postGenSelections,
+																			};
+																		persistPostGenSelection(
+																			gameId,
+																			postGenSelections[
+																				gameId
+																			],
+																		);
+																	}}
+																/>
+															</div>
 														{/each}
 													</div>
 												</div>
 											{/if}
 										</div>
-								{:else if opt.type === 'select'}
+									{:else if opt.type === "select"}
 										<div class="space-y-1">
-                                <label
-                                    class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
-                                    for={`postgen-${gameId}-${opt.id}`}
-                                >
-                                    {opt.name}
-                                </label>
-                                {#if opt.description}
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">{opt.description}</p>
-                                {/if}
-                                <select
-                                    id={`postgen-${gameId}-${opt.id}`}
-                                    class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
-                                    value={(postGenSelections[gameId]?.[opt.id] as string) ?? opt.default ?? opt.choices[0]?.value}
-                                    onchange={(e) => {
-                                        const v = (e.currentTarget as HTMLSelectElement).value;
-                                        const cur = selectedPostGenByGameId.get(gameId) || {};
-                                        cur[opt.id] = v;
-                                        selectedPostGenByGameId.set(gameId, cur);
-                                        postGenSelections[gameId] = { ...(postGenSelections[gameId] || {}), [opt.id]: v };
-                                        selectedPostGenByGameId = selectedPostGenByGameId;
-                                        postGenSelections = { ...postGenSelections };
-                                        persistPostGenSelection(gameId, postGenSelections[gameId]);
-                                    }}
-                                >
-                                    {#each opt.choices as c (c.value)}
-                                        <option value={c.value}>{c.label}</option>
-                                    {/each}
-                                </select>
+											<label
+												class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
+												for={`postgen-${gameId}-${opt.id}`}
+											>
+												{opt.name}
+											</label>
+											{#if opt.description}
+												<p
+													class="text-xs text-slate-500 dark:text-slate-400 mb-1"
+												>
+													{opt.description}
+												</p>
+											{/if}
+											<select
+												id={`postgen-${gameId}-${opt.id}`}
+												class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
+												value={(postGenSelections[
+													gameId
+												]?.[opt.id] as string) ??
+													opt.default ??
+													opt.choices[0]?.value}
+												onchange={(e) => {
+													const v = (
+														e.currentTarget as HTMLSelectElement
+													).value;
+													const cur =
+														selectedPostGenByGameId.get(
+															gameId,
+														) || {};
+													cur[opt.id] = v;
+													selectedPostGenByGameId.set(
+														gameId,
+														cur,
+													);
+													postGenSelections[gameId] =
+														{
+															...(postGenSelections[
+																gameId
+															] || {}),
+															[opt.id]: v,
+														};
+													selectedPostGenByGameId =
+														selectedPostGenByGameId;
+													postGenSelections = {
+														...postGenSelections,
+													};
+													persistPostGenSelection(
+														gameId,
+														postGenSelections[
+															gameId
+														],
+													);
+												}}
+											>
+												{#each opt.choices as c (c.value)}
+													<option value={c.value}
+														>{c.label}</option
+													>
+												{/each}
+											</select>
 										</div>
 									{/if}
 								{/each}
 							</div>
 						{:else}
-							<p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+							<p
+								class="text-[11px] text-slate-500 dark:text-slate-400 mt-1"
+							>
 								No post-generation settings for {gameDisplayName}.
 							</p>
 						{/if}
@@ -1135,7 +1862,9 @@
 			<div
 				class="p-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/70 shadow mt-4 pt-4 border-t border-slate-300 dark:border-slate-600"
 			>
-				<h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
+				<h3
+					class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1"
+				>
 					{m.seed_page_patch_download_title()}
 				</h3>
 				<p class="text-xs text-slate-600 dark:text-slate-300 mb-2">
@@ -1151,22 +1880,28 @@
 						<p>{$patchingServiceError}</p>
 					</div>
 				{/if}
-				{#if seedOptions && gameOptions.length > 0}
-					{#each gameOptions as game (game.id)}
+				{#if seedOptions && visibleGameOptions.length > 0}
+					{#each visibleGameOptions as game (game.id)}
 						{@const gameId = game.id}
 						{@const staticInfo = gameIdToStaticInfo.get(gameId)}
 						{#if staticInfo}
-                            <RomUploader
-                                {gameId}
-                                gameName={staticInfo.displayName}
-                                expectedFileExtensions={staticInfo.fileExtensions}
-                                hashStatus={romsData.get(gameId)?.hashStatus}
-                                calculatedHash={romsData.get(gameId)?.calculatedHash}
-                                expectedHash={romsData.get(gameId)?.expectedHash}
-                                fileName={romsData.get(gameId)?.fileName}
-                                                useCard={false}
-                                                onFileSelected={(d) => handleFileUpload(d as FileSelectedEventDetail, gameId)}
-                            />
+							<RomUploader
+								{gameId}
+								gameName={staticInfo.displayName}
+								expectedFileExtensions={staticInfo.fileExtensions}
+								hashStatus={romsData.get(gameId)?.hashStatus}
+								calculatedHash={romsData.get(gameId)
+									?.calculatedHash}
+								expectedHash={romsData.get(gameId)
+									?.expectedHash}
+								fileName={romsData.get(gameId)?.fileName}
+								useCard={false}
+								onFileSelected={(d) =>
+									handleFileUpload(
+										d as FileSelectedEventDetail,
+										gameId,
+									)}
+							/>
 						{/if}
 					{/each}
 					<div class="mt-4 space-y-3">
@@ -1178,7 +1913,9 @@
 									labelInside
 									className="mb-1 dark:bg-slate-600 text-xs"
 								/>
-								<p class="text-xs text-center text-slate-700 dark:text-slate-300">
+								<p
+									class="text-xs text-center text-slate-700 dark:text-slate-300"
+								>
 									{m.seed_page_patching_in_progress_label()}...
 								</p>
 							</div>

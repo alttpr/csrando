@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 public class Config
 {
     [Ignore("We don't allow to set this yet")]
-    public string InitialGame { get; init; } = "";
+    public string InitialGame { get; init; } = "alttp";
     [Ignore("We don't allow to set this yet")]
     public bool Race { get; init; }
     [Ignore("We don't allow to set this yet")]

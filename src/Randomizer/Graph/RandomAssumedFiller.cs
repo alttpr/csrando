@@ -37,7 +37,7 @@ internal sealed class RandomAssumedFiller
         // Do special things for SM in combo
         if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
         {
-            if(comboWorld.Config.InitialGame == "sm")
+            if (comboWorld.Config.InitialGame == "sm")
             {
                 for (int i = 0; i < _randomizer.Worlds.Length; ++i)
                 {
@@ -151,7 +151,8 @@ internal sealed class RandomAssumedFiller
                         location = _prng.GetRandomElement(locations);
                         continue;
                     }
-                } else
+                }
+                else
                 {
                     backtrackCheck = true;
                 }
@@ -184,19 +185,19 @@ internal sealed class RandomAssumedFiller
             throw new Exception("No valid location for any item");
         }
 
-        while(locations.Count > 0)
+        while (locations.Count > 0)
         {
             var location = _prng.GetRandomElement(locations);
 
             // Backtrack check if the location is in SM
-            if(location.World.GameId == "sm")
+            if (location.World.GameId == "sm")
             {
                 // Test backtracking
                 var backtrackInventory = startingItems.Clone();
-                var statefulSearcher = (StatefulSearcher)searcher;
+                var statefulSearcher = (StatefulSearcher)location.World.GetSearcherForWorld(graph, location.World.Start, startingItems);
                 var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, flatItem.Item3);
 
-                if(!backtrackCheck)
+                if (!backtrackCheck)
                 {
                     locations.Remove(location);
                     continue;
@@ -220,7 +221,7 @@ internal sealed class RandomAssumedFiller
     private void SmartFrontFill(IWorld world, Inventory inventory, List<(ItemSetName, int, IItem)> flatItems, int count)
     {
         int bestLocationCount = 0;
-        while(bestLocationCount < count)
+        while (bestLocationCount < count)
         {
             var filteredFlatItems = flatItems.Where(f => f.Item3.World.GameId == world.GameId).ToList();
             var bestLocations = GetBestLocationsForItems(world, filteredFlatItems, inventory);
@@ -248,7 +249,7 @@ internal sealed class RandomAssumedFiller
     private IEnumerable<((ItemSetName, int, IItem), Vertex location, int newLocationCount)> GetBestLocationsForItems(IWorld world, List<(ItemSetName, int, IItem)> flatItems, Inventory inventory)
     {
         var placementCandidates = new List<((ItemSetName, int, IItem), Vertex location, int newLocationCount)>();
-        foreach(var itemKey in flatItems)
+        foreach (var itemKey in flatItems)
         {
             var (itemSet, itemWeight, item) = itemKey;
             var location = GetBestLocationForItem(world, item, inventory);
@@ -271,7 +272,7 @@ internal sealed class RandomAssumedFiller
         }
         var locationCandidates = _prng.Shuffle(locations).ToList();
         var locationCandidateResults = new List<(Vertex Location, int newLocations)>();
-        
+
         while (locationCandidates.Count > 0)
         {
             var locationCandidate = locationCandidates.First();
@@ -294,12 +295,12 @@ internal sealed class RandomAssumedFiller
             locationCandidate.Item = null;
             locationCandidateResults.Add((locationCandidate, newLocations.Count));
         }
-        
+
         if (locationCandidateResults.Count == 0)
         {
             return null;
         }
-        
+
         return locationCandidateResults.OrderBy(x => x.newLocations).First();
     }
 

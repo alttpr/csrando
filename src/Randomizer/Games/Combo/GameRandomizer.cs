@@ -35,7 +35,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
             Zelda1.RomWriter.Write(rom, comboWorld.Z1World, prng);
 
         if (comboWorld.M1World != null)
-            Metroid.RomWriter.Write(rom, comboWorld.M1World, prng); 
+            Metroid.RomWriter.Write(rom, comboWorld.M1World, prng);
 
         if (comboWorld.SMWorld != null)
             SuperMetroid.RomWriter.Write(rom, comboWorld.SMWorld, prng);
@@ -131,7 +131,9 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
             }
 
             // Clear out address so the item isn't written by the game specific writers with the wrong bytes
+            Console.WriteLine($"Wrote {location.Item?.Name} to {location.Name} at {string.Join(", ", location.Addresses)}");
             location.Addresses = null;
+            Console.WriteLine($"Cleared addresses for {location.Name} to prevent double-writing.");
         }
     }
 

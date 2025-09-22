@@ -300,20 +300,36 @@
 			}
 			if (!globalGameTarget) globalGameTarget = 'Alttpr';
 
-			const configsArray: Array<Record<string, unknown>> = [];
+			const worldConfig: Record<string, unknown> = {
+				Language: (formValues.global['Language'] as string) || 'en',
+				Game: globalGameTarget
+			};
+
+			const worldGameKeys = new Set<string>();
 			for (const gameKey of selectedGames) {
-				const perGame = gameSettings[gameKey] || {};
-				const world: Record<string, unknown> = {
-					Language: (formValues.global['Language'] as string) || 'en',
-					Game: globalGameTarget
-				};
-				world[gameKey] = perGame; // nest under the metadata key exactly
-				configsArray.push(world);
+				worldGameKeys.add(gameKey);
 			}
-			if (configsArray.length === 0) {
-				configsArray.push({ Language: 'en', Game: 'Alttpr', Alttp: {} });
+			if (metadata?.settings) {
+				const defaultGame = metadata.settings.find((opt) => opt.key === 'Game' && typeof (opt as { default?: unknown }).default === 'string') as {
+					default?: string;
+				} | undefined;
+				if (defaultGame?.default && metadata?.gameSettings?.[defaultGame.default]) {
+					worldGameKeys.add(defaultGame.default);
+				}
 			}
-			const payload = { Seed: 0, IncludeSpoiler: false, Configs: configsArray };
+
+			for (const gameKey of worldGameKeys) {
+				const perGame =
+					gameSettings[gameKey] ??
+					filterNonNullValues(formValues.perGame[gameKey]);
+				worldConfig[gameKey] = perGame || {};
+			}
+
+			if (worldGameKeys.size === 0) {
+				worldConfig['Alttp'] = filterNonNullValues(formValues.perGame['Alttp']) || {};
+			}
+
+			const payload = { Seed: 0, IncludeSpoiler: false, Configs: [worldConfig] };
 
 			const result = await createSeed(payload);
 

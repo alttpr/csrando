@@ -5,6 +5,13 @@
 	import { page } from '$app/state';
 	import * as m from '$lib/paraglide/messages';
 	import { onMount } from 'svelte';
+	import type { Snippet } from 'svelte';
+
+	interface LayoutProps {
+		children: Snippet;
+	}
+
+	let { children }: LayoutProps = $props();
 
 	// Bridge PUBLIC_SPRITES_BASE_URL to client runtime for env resolver
 	onMount(() => {
@@ -44,7 +51,7 @@
 >
 	<Navbar user={page.data.user} />
 	<main class="flex-1">
-		<slot />
+		{@render children?.()}
 	</main>
 
 	<Footer />
