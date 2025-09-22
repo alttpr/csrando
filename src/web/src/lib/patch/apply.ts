@@ -159,184 +159,52 @@ function ensureRange(
   }
 }
 
+import { parse as bpsParse, apply as bpsApply } from "bps";
+
 export function applyBpsPatch(
   baseRom: ArrayBuffer,
   patchData: ArrayBuffer,
 ): ArrayBuffer {
-  const patchBytes = asUint8Array(patchData);
-  if (patchBytes.length < 19) {
-    throw new Error("Invalid BPS patch: File too small.");
-  }
-  if (
-    patchBytes[0] !== 0x42 ||
-    patchBytes[1] !== 0x50 ||
-    patchBytes[2] !== 0x53 ||
-    patchBytes[3] !== 0x31
-  ) {
-    throw new Error('Invalid BPS patch: Missing "BPS1" header.');
-  }
+  // Parse BPS into an instruction set and apply using the library
+  const { instructions } = bpsParse(new Uint8Array(patchData));
 
-  // CRC32 helper (IEEE 802.3 polynomial 0xEDB88320)
-  const CRC_TABLE = (() => {
-    const table = new Uint32Array(256);
-    for (let i = 0; i < 256; i++) {
-      let c = i;
-      for (let j = 0; j < 8; j++) {
-        c = c & 1 ? (c >>> 1) ^ 0xedb88320 : c >>> 1;
-      }
-      table[i] = c >>> 0;
-    }
-    return table;
-  })();
-  function crc32(data: Uint8Array, start = 0, end = data.length): number {
-    let crc = 0xffffffff;
-    for (let i = start; i < end; i++) {
-      crc = CRC_TABLE[(crc ^ data[i]) & 0xff] ^ (crc >>> 8);
-    }
-    return (crc ^ 0xffffffff) >>> 0;
-  }
-
-  const state = { offset: 4 };
-
-  const sourceSize = readUnsignedNumber(patchBytes, state);
-  const targetSize = readUnsignedNumber(patchBytes, state);
-  const metadataSize = readUnsignedNumber(patchBytes, state);
-
-  ensureRange("Metadata", state.offset, metadataSize, patchBytes.length);
-  state.offset += metadataSize;
-
+  // The library validates source checksum; we still need to ensure the baseRom view
+  // matches the expected source size (handling 512-byte copier headers gracefully)
   const sourceBytes = asUint8Array(baseRom);
   let sourceView: Uint8Array = sourceBytes;
-  if (sourceView.byteLength < sourceSize) {
+  const srcSize = (instructions as any).sourceSize >>> 0;
+  if (sourceView.byteLength < srcSize) {
     throw new Error(
-      `Invalid base ROM: BPS patch expects ${sourceSize} bytes but received ${sourceView.byteLength}.`,
+      `Invalid base ROM: BPS patch expects ${srcSize} bytes but received ${sourceView.byteLength}.`,
     );
   }
-  if (sourceView.byteLength > sourceSize) {
-    if (sourceView.byteLength - sourceSize === 512) {
-      sourceView = sourceView.subarray(512, 512 + sourceSize);
+  if (sourceView.byteLength > srcSize) {
+    if (sourceView.byteLength - srcSize === 512) {
+      sourceView = sourceView.subarray(512, 512 + srcSize);
     } else {
-      sourceView = sourceView.subarray(0, sourceSize);
+      sourceView = sourceView.subarray(0, srcSize);
     }
   }
 
-  const output = new Uint8Array(targetSize);
-  const dataEnd = patchBytes.length - 12; // last 12 bytes: [sourceCRC, targetCRC, patchCRC]
-  if (dataEnd < state.offset) {
-    throw new Error("Invalid BPS patch: Missing data records.");
+  const result = bpsApply(instructions as any, sourceView);
+  // Ensure ArrayBuffer return type
+  return result.buffer as ArrayBuffer;
+}
+
+// Helper to read BPS source/target sizes using the library's parser
+export function getBpsPatchInfo(
+  patchData: ArrayBuffer,
+): { sourceSize: number; targetSize: number } | null {
+  try {
+    const { instructions } = bpsParse(new Uint8Array(patchData));
+    const src = Number((instructions as any).sourceSize ?? 0);
+    const tgt = Number((instructions as any).targetSize ?? 0);
+    if (!Number.isFinite(src) || !Number.isFinite(tgt) || src <= 0 || tgt <= 0)
+      return null;
+    return { sourceSize: src, targetSize: tgt };
+  } catch {
+    return null;
   }
-
-  // Validate patch CRCs early to catch corrupted patches
-  const dv = new DataView(
-    patchBytes.buffer,
-    patchBytes.byteOffset,
-    patchBytes.byteLength,
-  );
-  const sourceCrcInPatch = dv.getUint32(patchBytes.byteLength - 12, true);
-  const targetCrcInPatch = dv.getUint32(patchBytes.byteLength - 8, true);
-  const patchCrcInPatch = dv.getUint32(patchBytes.byteLength - 4, true);
-
-  // Verify patch CRC covers everything except the final 4 bytes (patch CRC itself)
-  const computedPatchCrc = crc32(patchBytes, 0, patchBytes.length - 4);
-  if (computedPatchCrc !== patchCrcInPatch) {
-    throw new Error(
-      `Invalid BPS patch: Patch CRC mismatch (expected ${patchCrcInPatch >>> 0}, computed ${computedPatchCrc >>> 0}).`,
-    );
-  }
-
-  let sourceRelativeOffset = 0;
-  let targetRelativeOffset = 0;
-  let sourceReadOffset = 0;
-  let targetOffset = 0;
-
-  while (state.offset < dataEnd) {
-    const encoded = readUnsignedNumber(patchBytes, state);
-    const action = encoded & 3;
-    const length = (encoded >> 2) + 1;
-
-    switch (action) {
-      case 0: {
-        ensureRange("Source read", sourceReadOffset, length, sourceView.length);
-        ensureRange("Target write", targetOffset, length, output.length);
-        output.set(
-          sourceView.subarray(sourceReadOffset, sourceReadOffset + length),
-          targetOffset,
-        );
-        sourceReadOffset += length;
-        targetOffset += length;
-        break;
-      }
-      case 1: {
-        ensureRange("Target literal", state.offset, length, dataEnd);
-        ensureRange("Target write", targetOffset, length, output.length);
-        output.set(
-          patchBytes.subarray(state.offset, state.offset + length),
-          targetOffset,
-        );
-        state.offset += length;
-        targetOffset += length;
-        break;
-      }
-      case 2: {
-        sourceRelativeOffset += readSignedNumber(patchBytes, state);
-        ensureRange(
-          "Source copy",
-          sourceRelativeOffset,
-          length,
-          sourceView.length,
-        );
-        ensureRange("Target write", targetOffset, length, output.length);
-        output.set(
-          sourceView.subarray(
-            sourceRelativeOffset,
-            sourceRelativeOffset + length,
-          ),
-          targetOffset,
-        );
-        sourceRelativeOffset += length;
-        targetOffset += length;
-        break;
-      }
-      case 3: {
-        targetRelativeOffset += readSignedNumber(patchBytes, state);
-        ensureRange("Target copy", targetRelativeOffset, length, output.length);
-        ensureRange("Target write", targetOffset, length, output.length);
-        output.copyWithin(
-          targetOffset,
-          targetRelativeOffset,
-          targetRelativeOffset + length,
-        );
-        targetRelativeOffset += length;
-        targetOffset += length;
-        break;
-      }
-      default: {
-        throw new Error(`Invalid BPS patch: Unknown action ${action}.`);
-      }
-    }
-  }
-
-  if (targetOffset !== targetSize) {
-    throw new Error(
-      `Invalid BPS patch: Output size mismatch (expected ${targetSize}, wrote ${targetOffset}).`,
-    );
-  }
-
-  // Verify CRCs for source and target contents
-  const computedSourceCrc = crc32(sourceView);
-  if (computedSourceCrc !== sourceCrcInPatch) {
-    throw new Error(
-      `Invalid base ROM: CRC mismatch (expected ${sourceCrcInPatch >>> 0}, computed ${computedSourceCrc >>> 0}).`,
-    );
-  }
-  const computedTargetCrc = crc32(output);
-  if (computedTargetCrc !== targetCrcInPatch) {
-    throw new Error(
-      `Invalid BPS patch: Target CRC mismatch (expected ${targetCrcInPatch >>> 0}, computed ${computedTargetCrc >>> 0}).`,
-    );
-  }
-
-  return output.buffer;
 }
 
 export function applyPatch(

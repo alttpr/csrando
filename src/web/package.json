@@ -69,6 +69,7 @@
     "yargs": "^18.0.0"
   },
   "dependencies": {
+    "bps": "^2.0.1",
     "@inlang/paraglide-js": "^2.0.0",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@maseya/z3pr": "^1.0.1",

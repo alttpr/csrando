@@ -1,4 +1,7 @@
 import { applyPatch } from "$lib/patch/apply";
+// JSON with targetOffsets per randomizerId for each game
+// Example structure: { alttp: { targetOffsets: { combo: 3145728, alttpr: 0 } }, supermetroid: { targetOffsets: { combo: 0 } }, ... }
+import gameStaticInfo from "$lib/game-static-info.json";
 
 // ROM Patcher Web Worker
 
@@ -348,7 +351,99 @@ self.onmessage = async (event) => {
 
     self.postMessage({ type: "progress", progress: 10 });
 
+    // Prepare base offsets per game (0 by default). If multiple ROMs are supplied and
+    // static game data provides targetOffsets for this randomizer, assemble a combined ROM first.
+    const randomizerIdLc = String(randomizerId || "").toLowerCase();
+    const baseOffsetByGame = new Map<string, number>();
+    const sourceLengthByGame = new Map<string, number>();
+
     let workingBaseRom: ArrayBuffer = baseRom;
+    let isCombined = false;
+
+    // Collect provided ROMs (primary + any additional)
+    const included = new Map<string, ArrayBuffer>();
+    included.set(primaryGameId, baseRom);
+    if (additionalRoms) {
+      for (const [gid, buf] of Object.entries(additionalRoms)) {
+        if (buf instanceof ArrayBuffer) {
+          included.set(gid, buf);
+        }
+      }
+    }
+
+    // Attempt to combine if more than one ROM is supplied and targetOffsets exist for this randomizer
+    if (included.size > 1) {
+      let totalSize = 0;
+      let validWithOffsets = 0;
+      for (const [gid, buf] of included) {
+        const info: any = (gameStaticInfo as Record<string, any>)[gid];
+        const offsRaw = info?.targetOffsets?.[randomizerIdLc];
+        const offs: number | undefined =
+          typeof offsRaw === "number" ? offsRaw : undefined;
+        if (offs === undefined || offs < 0) {
+          console.warn(
+            `Game ${gid} has invalid targetOffsets.${randomizerIdLc} (${String(
+              offsRaw,
+            )}); skipping from combined ROM`,
+          );
+          continue;
+        }
+        validWithOffsets++;
+        baseOffsetByGame.set(gid, offs);
+        sourceLengthByGame.set(gid, buf.byteLength);
+        totalSize = Math.max(totalSize, offs + buf.byteLength);
+      }
+
+      if (validWithOffsets >= 2 && totalSize > 0) {
+        // Warn if some expected games for this randomizer weren't provided
+        try {
+          const expectedGames = Object.keys(
+            gameStaticInfo as Record<string, any>,
+          ).filter((g) => {
+            const t = (gameStaticInfo as Record<string, any>)[g]?.targetOffsets?.[
+              randomizerIdLc
+            ];
+            return typeof t === "number" && t >= 0 && g !== "combo";
+          });
+          const missing = expectedGames.filter((g) => !included.has(g));
+          if (missing.length > 0) {
+            console.warn(
+              `Combined base will be incomplete for randomizer '${randomizerIdLc}'. Missing ROMs: ${missing.join(", ")}`,
+            );
+          }
+        } catch { }
+
+        const combined = new ArrayBuffer(totalSize);
+        const combinedU8 = new Uint8Array(combined);
+        for (const [gid, buf] of included) {
+          const offs = baseOffsetByGame.get(gid);
+          if (offs === undefined || offs < 0) continue;
+          combinedU8.set(new Uint8Array(buf), offs);
+        }
+        // Log a brief map of offsets used for debugging
+        try {
+          const entries: Array<[string, number]> = [];
+          for (const [gid, off] of baseOffsetByGame) entries.push([gid, off]);
+          entries.sort((a, b) => a[1] - b[1]);
+          console.debug(
+            `[Patcher] Combined base assembled for '${randomizerIdLc}'. Total ${totalSize} bytes. Offsets: `,
+            entries,
+          );
+        } catch { }
+        workingBaseRom = combined;
+        isCombined = true;
+      }
+    }
+
+    // If not combined, default offsets to 0 for provided ROMs
+    if (!isCombined) {
+      for (const [gid, buf] of included) {
+        baseOffsetByGame.set(gid, 0);
+        sourceLengthByGame.set(gid, buf.byteLength);
+      }
+    }
+
+    // Note: BPS patches are always applied to the base (or combined) ROM as a whole.
 
     // Always attempt to apply a base patch. Prefer explicit bytes/url if provided; otherwise fallback by randomizerId.
     // Mapping can be extended as new randomizers are supported.
@@ -433,7 +528,7 @@ self.onmessage = async (event) => {
                 // Continue even if base fails; main patch may still partially work.
               }
               // eslint-disable-next-line no-empty
-            } catch {}
+            } catch { }
             // else: nothing to fallback to
           }
         }
@@ -447,8 +542,15 @@ self.onmessage = async (event) => {
     // Progress: Main patch (20% -> 50%)
     self.postMessage({ type: "progress", progress: 20 });
 
-    // Apply the main patch to the (possibly base-patched) primary ROM (trim-aware wrapper)
-    const patchedRomBuffer = applyPatch(workingBaseRom, patchData);
+    // Apply the main patch to the (possibly base-patched) ROM
+    let patchedRomBuffer: ArrayBuffer;
+    try {
+      patchedRomBuffer = applyPatch(workingBaseRom, patchData);
+    } catch (err) {
+      console.error("Main patch application failed:", err);
+      // Re-throw to trigger error handling downstream
+      throw err;
+    }
 
     if (!patchedRomBuffer || patchedRomBuffer.byteLength === 0) {
       throw new Error("Main patching resulted in an empty or invalid ROM.");
@@ -457,11 +559,18 @@ self.onmessage = async (event) => {
 
     // Create ROM Buffers Map
     const romBuffers = new Map<string, ArrayBuffer>();
-    romBuffers.set(primaryGameId, patchedRomBuffer); // This is the buffer modified by IPS patch
-    if (additionalRoms) {
-      for (const [gameId, buffer] of Object.entries(additionalRoms)) {
-        // Ensure buffer is ArrayBuffer. Assuming it is from postMessage.
-        romBuffers.set(gameId, buffer as ArrayBuffer);
+    if (isCombined) {
+      // In combo mode, all gameIds share the same combined buffer
+      for (const gid of allGameIds as string[]) {
+        romBuffers.set(gid, patchedRomBuffer);
+      }
+    } else {
+      romBuffers.set(primaryGameId, patchedRomBuffer); // This is the buffer modified by IPS patch
+      if (additionalRoms) {
+        for (const [gameId, buffer] of Object.entries(additionalRoms)) {
+          // Ensure buffer is ArrayBuffer. Assuming it is from postMessage.
+          romBuffers.set(gameId, buffer as ArrayBuffer);
+        }
       }
     }
     self.postMessage({ type: "progress", progress: 55 }); // ROM buffers map created
@@ -473,6 +582,13 @@ self.onmessage = async (event) => {
     for (const gameId of allGameIds) {
       const selectedSpriteValue = selectedSpritesByGameId.get(gameId);
       let romToPatch = romBuffers.get(gameId);
+      const baseOffset = baseOffsetByGame.get(gameId) ?? 0;
+
+      if (isCombined && !baseOffsetByGame.has(gameId)) {
+        // Not part of the combined image (no offset defined); skip
+        currentSpritePatchGame++;
+        continue;
+      }
 
       if (!selectedSpriteValue || !romToPatch) {
         currentSpritePatchGame++;
@@ -590,6 +706,11 @@ self.onmessage = async (event) => {
       const totalPostGenGames = allGameIds.length;
       for (const gameId of allGameIds) {
         const romToPatch = romBuffers.get(gameId);
+        const baseOffset = baseOffsetByGame.get(gameId) ?? 0;
+        if (isCombined && !baseOffsetByGame.has(gameId)) {
+          currentPostGenGame++;
+          continue;
+        }
         if (!romToPatch) {
           currentPostGenGame++;
           continue;
@@ -672,11 +793,7 @@ self.onmessage = async (event) => {
                     cosmeticSelections?.["palette_randomize_dungeon"] ?? true,
                   ),
                   randomize_link_sprite: Boolean(
-                    cosmeticSelections?.["palette_randomize_link_sprite"] ??
-                      true,
-                  ),
-                  randomize_sword: Boolean(
-                    cosmeticSelections?.["palette_randomize_sword"] ?? true,
+                    cosmeticSelections?.["palette_randomize_link_sprite"] ?? true,
                   ),
                   randomize_shield: Boolean(
                     cosmeticSelections?.["palette_randomize_shield"] ?? true,
@@ -740,10 +857,10 @@ self.onmessage = async (event) => {
 
     const summaryTokens = Array.isArray(optionSummary?.tokens)
       ? optionSummary.tokens
-          .map((token: string) =>
-            slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
-          )
-          .filter((token: string) => token.length > 0)
+        .map((token: string) =>
+          slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
+        )
+        .filter((token: string) => token.length > 0)
       : [];
 
     let summarySegment: string | null = null;
