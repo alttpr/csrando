@@ -1,6 +1,4 @@
 import { applyPatch } from "$lib/patch/apply";
-// JSON with targetOffsets per randomizerId for each game
-// Example structure: { alttp: { targetOffsets: { combo: 3145728, alttpr: 0 } }, supermetroid: { targetOffsets: { combo: 0 } }, ... }
 import gameStaticInfo from "$lib/game-static-info.json";
 
 // ROM Patcher Web Worker
@@ -97,6 +95,381 @@ function copyBytes(
   dst.set(src.subarray(srcOffset, srcOffset + length), dstOffset);
 }
 
+function parseNumeric(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return null;
+    }
+    const lower = trimmed.toLowerCase();
+    if (lower.startsWith("snes:") || lower.startsWith("pc:")) {
+      const colon = trimmed.indexOf(":");
+      return parseNumeric(trimmed.slice(colon + 1));
+    }
+    const isHex = lower.startsWith("0x");
+    const withoutPrefix = isHex ? lower.slice(2) : lower;
+    const parsed = Number.parseInt(withoutPrefix, isHex ? 16 : 10);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+  return null;
+}
+
+type RdcAddressRef = {
+  address: number;
+  addressType: "pc" | "snes";
+  applyBaseOffset?: boolean;
+};
+
+type RdcResolvedSegment = {
+  pcAddress: number;
+  applyBaseOffset: boolean;
+};
+
+function normalizeSegmentConfig(value: unknown): RdcAddressRef | null {
+  if (value === null || value === undefined) return null;
+
+  if (typeof value === "number") {
+    return { address: value, addressType: "pc" };
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    const lower = trimmed.toLowerCase();
+    if (lower.startsWith("snes:")) {
+      const addr = parseNumeric(trimmed.slice(trimmed.indexOf(":") + 1));
+      if (addr === null) return null;
+      return { address: addr, addressType: "snes" };
+    }
+    if (lower.startsWith("pc:")) {
+      const addr = parseNumeric(trimmed.slice(trimmed.indexOf(":") + 1));
+      if (addr === null) return null;
+      return { address: addr, addressType: "pc" };
+    }
+    const addr = parseNumeric(trimmed);
+    if (addr === null) return null;
+    return { address: addr, addressType: "pc" };
+  }
+
+  if (typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    const hasSnes = Object.prototype.hasOwnProperty.call(obj, "snes");
+    const hasPc = Object.prototype.hasOwnProperty.call(obj, "pc");
+    const hasAddress = Object.prototype.hasOwnProperty.call(obj, "address");
+    let address: number | null = null;
+    let addressType: "pc" | "snes" = "pc";
+    if (hasSnes) {
+      address = parseNumeric(obj.snes);
+      addressType = "snes";
+    } else if (hasPc) {
+      address = parseNumeric(obj.pc);
+      addressType = "pc";
+    } else if (hasAddress) {
+      address = parseNumeric(obj.address);
+      const typeRaw = typeof obj.addressType === "string" ? obj.addressType.toLowerCase() : undefined;
+      addressType = typeRaw === "snes" ? "snes" : "pc";
+    }
+    if (address === null) return null;
+    const applyBaseOffsetRaw = obj.applyBaseOffset;
+    const absoluteRaw = obj.absolute;
+    let applyBaseOffset: boolean | undefined;
+    if (typeof applyBaseOffsetRaw === "boolean") {
+      applyBaseOffset = applyBaseOffsetRaw;
+    } else if (typeof absoluteRaw === "boolean") {
+      applyBaseOffset = !absoluteRaw;
+    }
+    return { address, addressType, applyBaseOffset };
+  }
+
+  return null;
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function getRdcTargetConfig(
+  gameId: string,
+  spriteKind: string,
+  randomizerId?: string,
+): Record<string, unknown> | undefined {
+  const info = (gameStaticInfo as Record<string, any>)[gameId];
+  const perKind = (info?.rdcTargets as Record<string, any> | undefined)?.[
+    spriteKind
+  ];
+  if (!perKind) return undefined;
+
+  const defaultConfig = isPlainRecord(perKind.default)
+    ? (perKind.default as Record<string, unknown>)
+    : undefined;
+
+  const randomizerKey = randomizerId?.toLowerCase();
+  if (!randomizerKey) return defaultConfig;
+
+  const specificRaw = perKind[randomizerKey];
+  const specificConfig = isPlainRecord(specificRaw)
+    ? (specificRaw as Record<string, unknown>)
+    : undefined;
+
+  if (defaultConfig) {
+    return specificConfig ? { ...defaultConfig, ...specificConfig } : defaultConfig;
+  }
+
+  return specificConfig;
+}
+
+function resolveRdcSegmentTargets(
+  gameId: string,
+  spriteKind: string,
+  randomizerId: string | undefined,
+  requiredSegments: readonly string[],
+): Map<string, RdcResolvedSegment> {
+  const config = getRdcTargetConfig(gameId, spriteKind, randomizerId);
+  if (!config) {
+    throw new Error(
+      `Missing RDC target configuration for '${spriteKind}' on game '${gameId}'.`,
+    );
+  }
+
+  const configRecord = config as Record<string, unknown>;
+  const resolved = new Map<string, RdcResolvedSegment>();
+
+  for (const segment of requiredSegments) {
+    const ref = normalizeSegmentConfig(configRecord[segment]);
+    if (!ref) {
+      throw new Error(
+        `Missing RDC segment '${segment}' for '${spriteKind}' on game '${gameId}'.`,
+      );
+    }
+    const pcAddress =
+      ref.addressType === "snes" ? snesToPc(ref.address) : ref.address;
+    const applyBaseOffset = ref.applyBaseOffset !== false;
+    resolved.set(segment, { pcAddress, applyBaseOffset });
+  }
+
+  return resolved;
+}
+
+function computeSegmentTarget(
+  resolved: Map<string, RdcResolvedSegment>,
+  segment: string,
+  baseOffset: number,
+): number {
+  const entry = resolved.get(segment);
+  if (!entry) {
+    throw new Error(`Missing resolved RDC segment '${segment}'.`);
+  }
+  return entry.pcAddress + (entry.applyBaseOffset ? baseOffset : 0);
+}
+
+type RdcApplyOptions = {
+  gameId: string;
+  randomizerId?: string;
+  baseOffset?: number;
+  spriteKind?: string;
+};
+
+type RdcManifestSegment = {
+  addresses: number[];
+  addressType: "snes" | "pc";
+  length: number;
+  entries: number;
+  entryStride: number;
+  entryOffsets?: number[];
+  applyBaseOffset: boolean;
+};
+
+function snesToPcHiRom(snesAddr: number): number {
+  return snesAddr & 0x3fffff;
+}
+
+function snesToPcByMapping(snesAddr: number, mapping: string): number {
+  const mode = mapping?.toLowerCase?.() ?? "lorom";
+  if (mode === "hirom" || mode === "exhirom") {
+    return snesToPcHiRom(snesAddr);
+  }
+  return snesToPc(snesAddr);
+}
+
+function resolveAddressesForMapping(
+  raw: unknown,
+  mapping: string,
+): { addresses: number[]; addressType: "snes" | "pc" } | null {
+  if (raw === null || raw === undefined) return null;
+
+  let source: unknown = raw;
+  if (isPlainRecord(raw)) {
+    const record = raw as Record<string, unknown>;
+    const entries = Object.entries(record);
+    const lowerMapping = mapping.toLowerCase();
+    let selected = entries.find(([key]) => key.toLowerCase() === lowerMapping)?.[1];
+    if (selected === undefined) {
+      selected = entries.find(([key]) => key.toLowerCase() === "lorom")?.[1];
+    }
+    if (selected === undefined) {
+      selected = entries.find(([key]) => key.toLowerCase() === "default")?.[1];
+    }
+    if (selected === undefined && entries.length > 0) {
+      selected = entries[0][1];
+    }
+    source = selected;
+  }
+
+  if (source === undefined) return null;
+
+  const list = Array.isArray(source) ? source : [source];
+  const addresses: number[] = [];
+  let addressType: "snes" | "pc" = "snes";
+
+  for (const item of list) {
+    if (typeof item === "number") {
+      addresses.push(Math.trunc(item));
+      continue;
+    }
+    if (typeof item === "string") {
+      let text = item.trim();
+      if (!text) continue;
+      let explicitType: "snes" | "pc" | undefined;
+      const lower = text.toLowerCase();
+      if (lower.startsWith("pc:")) {
+        explicitType = "pc";
+        text = text.slice(3);
+      } else if (lower.startsWith("snes:")) {
+        explicitType = "snes";
+        text = text.slice(5);
+      }
+      const parsed = parseNumeric(text);
+      if (parsed === null) continue;
+      addresses.push(Math.trunc(parsed));
+      if (explicitType) addressType = explicitType;
+    }
+  }
+
+  if (addresses.length === 0) return null;
+  return { addresses, addressType };
+}
+
+function resolveManifestSegments(
+  segmentsRaw: unknown,
+  mapping: string,
+  defaultApplyBaseOffset: boolean,
+): RdcManifestSegment[] {
+  if (!Array.isArray(segmentsRaw)) return [];
+  const resolved: RdcManifestSegment[] = [];
+
+  for (const entry of segmentsRaw) {
+    if (!isPlainRecord(entry)) continue;
+    const record = entry as Record<string, unknown>;
+    const lengthVal = parseNumeric(record.length) ?? null;
+    if (lengthVal === null) continue;
+    const length = Math.max(0, Math.trunc(lengthVal));
+    if (length === 0) continue;
+
+    const entriesVal = parseNumeric(record.entries ?? 1) ?? 1;
+    const entries = Math.max(1, Math.trunc(entriesVal));
+
+    const entryStrideVal = parseNumeric(
+      record.entryStride ?? record.entryStep ?? record.offset ?? 0,
+    ) ?? 0;
+    const entryStride = Math.trunc(entryStrideVal);
+
+    let entryOffsets: number[] | undefined;
+    const entryOffsetsRaw = record.entryOffsets ?? record.offsets;
+    if (Array.isArray(entryOffsetsRaw)) {
+      entryOffsets = entryOffsetsRaw
+        .map((v) => parseNumeric(v) ?? 0)
+        .map((v) => Math.trunc(v));
+    }
+
+    const addressInfo = resolveAddressesForMapping(record.addresses, mapping);
+    if (!addressInfo) continue;
+
+    const explicitType =
+      typeof record.addressType === "string"
+        ? record.addressType.toLowerCase() === "pc"
+          ? "pc"
+          : "snes"
+        : undefined;
+
+    const applyBaseOffset =
+      typeof record.applyBaseOffset === "boolean"
+        ? record.applyBaseOffset
+        : defaultApplyBaseOffset;
+
+    resolved.push({
+      addresses: addressInfo.addresses,
+      addressType: explicitType ?? addressInfo.addressType,
+      length,
+      entries,
+      entryStride,
+      entryOffsets,
+      applyBaseOffset,
+    });
+  }
+
+  return resolved;
+}
+
+function applySamusManifestSegments(
+  romU8: Uint8Array,
+  rdcU8: Uint8Array,
+  samusOffset: number,
+  segments: RdcManifestSegment[],
+  mapping: string,
+  baseOffset: number,
+  gameId: string,
+) {
+  let cursor = samusOffset;
+
+  for (const segment of segments) {
+    const totalLength = segment.length * segment.entries;
+    if (cursor + totalLength > rdcU8.length) {
+      throw new Error(
+        `[SamusRDC] Segment data truncated for ${gameId}; expected ${totalLength} bytes at ${cursor}, have ${rdcU8.length - cursor}.`,
+      );
+    }
+    const segmentData = rdcU8.subarray(cursor, cursor + totalLength);
+    cursor += totalLength;
+
+    for (const baseAddress of segment.addresses) {
+      for (let entryIndex = 0; entryIndex < segment.entries; entryIndex++) {
+        const srcOffset = entryIndex * segment.length;
+        const offsetValue =
+          segment.entryOffsets && segment.entryOffsets.length > 0
+            ? segment.entryOffsets[
+            Math.min(entryIndex, segment.entryOffsets.length - 1)
+            ] ?? 0
+            : segment.entryStride * entryIndex;
+
+        let destPc: number;
+        if (segment.addressType === "pc") {
+          destPc = baseAddress + offsetValue;
+        } else {
+          destPc = snesToPcByMapping(baseAddress + offsetValue, mapping);
+        }
+        if (segment.applyBaseOffset) destPc += baseOffset;
+
+        if (destPc < 0 || destPc + segment.length > romU8.length) {
+          console.error(
+            `[SamusRDC] target out of bounds`,
+            {
+              gameId,
+              destination: destPc,
+              segmentLength: segment.length,
+            },
+          );
+          continue;
+        }
+
+        copyBytes(romU8, segmentData, destPc, srcOffset, segment.length);
+      }
+    }
+  }
+}
+
 function snesToPc(snesAddr: number): number {
   if (snesAddr < 0x8000) {
     throw new Error(`Invalid SNES address: ${snesAddr.toString(16)}`);
@@ -107,7 +480,14 @@ function snesToPc(snesAddr: number): number {
 async function applyLinkRdc(
   rom: ArrayBuffer,
   rdcBuf: ArrayBuffer,
+  options: RdcApplyOptions = { gameId: "alttp" },
 ): Promise<ArrayBuffer> {
+  const {
+    gameId = "alttp",
+    randomizerId,
+    baseOffset = 0,
+    spriteKind,
+  } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
   const linkDataOffset = offsets.get(1 /* LinkSprite */);
   if (linkDataOffset === undefined)
@@ -132,10 +512,15 @@ async function applyLinkRdc(
   const gfxSrc = linkDataOffset;
   const palSrc = gfxSrc + LINK_GFX_LEN;
   const glvSrc = palSrc + LINK_PALETTE_LEN;
-
-  const gfxDst = snesToPc(0x108000);
-  const palDst = snesToPc(0x1bd308);
-  const glvDst = snesToPc(0x1bedf5);
+  const resolved = resolveRdcSegmentTargets(
+    gameId,
+    (spriteKind ?? "rdc/link").toLowerCase(),
+    randomizerId,
+    ["gfx", "palette", "gloves"],
+  );
+  const gfxDst = computeSegmentTarget(resolved, "gfx", baseOffset);
+  const palDst = computeSegmentTarget(resolved, "palette", baseOffset);
+  const glvDst = computeSegmentTarget(resolved, "gloves", baseOffset);
 
   // Optional debug (can be toggled later with an env flag)
   // Allow an optional debug flag on the worker global without using 'any'
@@ -158,7 +543,9 @@ async function applyNesRdc(
   rom: ArrayBuffer,
   rdcBuf: ArrayBuffer,
   gameId: "zelda1" | "metroid1",
+  options: RdcApplyOptions = { gameId },
 ): Promise<ArrayBuffer> {
+  const { randomizerId, baseOffset = 0, spriteKind } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
   const typeId =
     gameId === "zelda1"
@@ -176,10 +563,15 @@ async function applyNesRdc(
   const palLen = 0x20;
   const gfxSrc = blockOffset;
   const palSrc = gfxSrc + gfxLen;
+  const resolved = resolveRdcSegmentTargets(
+    gameId,
+    (spriteKind ?? (gameId === "zelda1" ? "rdc/nes-z1" : "rdc/nes-m1")).toLowerCase(),
+    randomizerId,
+    ["gfx", "palette"],
+  );
 
-  // Dummy target offsets (adjust once real integration points are known)
-  const gfxDst = gameId === "zelda1" ? 0x001000 : 0x003000;
-  const palDst = gameId === "zelda1" ? 0x002000 : 0x004000;
+  const gfxDst = computeSegmentTarget(resolved, "gfx", baseOffset);
+  const palDst = computeSegmentTarget(resolved, "palette", baseOffset);
 
   // Bounds-safe copies (clamped)
   copyBytes(
@@ -202,7 +594,14 @@ async function applyNesRdc(
 async function applySamusRdc(
   rom: ArrayBuffer,
   rdcBuf: ArrayBuffer,
+  options: RdcApplyOptions = { gameId: "supermetroid" },
 ): Promise<ArrayBuffer> {
+  const {
+    gameId = "supermetroid",
+    randomizerId,
+    baseOffset = 0,
+    spriteKind,
+  } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
   const samusOffset = offsets.get(4 /* SamusSprite */);
   if (samusOffset === undefined)
@@ -212,36 +611,46 @@ async function applySamusRdc(
   const romU8 = new Uint8Array(workingRom);
   const rdcU8 = new Uint8Array(rdcBuf);
 
-  // Segment lengths aligned with tools/sprite-importer/rdc-types SamusSprite.parse
-  const lengths = [
-    // 13 DMA banks
-    0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000,
-    0x8000, 0x8000, 0x8000, 0x8000,
-    // partial bank
-    0x7880,
-    // aux segments
-    0x3f60, 0x3f60, 0x03c0, 0x0600, 0x0020, 0x0020,
-    // Power Standard palette
-    0x001e,
-  ];
+  const spriteKindKey = (spriteKind ?? "rdc/samus").toLowerCase();
+  const config = getRdcTargetConfig(gameId, spriteKindKey, randomizerId);
+  const configRecord = config as Record<string, unknown> | undefined;
+  const mappingValue =
+    typeof configRecord?.mapping === "string"
+      ? configRecord.mapping
+      : "lorom";
+  const manifestApplyBaseOffset =
+    typeof configRecord?.applyBaseOffset === "boolean"
+      ? configRecord.applyBaseOffset
+      : true;
+  const manifestSegmentsRaw = configRecord?.segments;
 
-  // We will place the first DMA bank and the Power Standard palette at dummy offsets near 0xDA7000.
-  // Use bounds-safe clamp to avoid overruns.
-  const dma0Src = samusOffset;
-  const dma0Len = lengths[0];
-  const palSrc =
-    samusOffset +
-    lengths.slice(0, lengths.length - 1).reduce((a, b) => a + b, 0);
-  const palLen = 0x001e;
+  if (!Array.isArray(manifestSegmentsRaw)) {
+    throw new Error(
+      `Missing 'segments' manifest for '${spriteKindKey}' on game '${gameId}'.`,
+    );
+  }
 
-  const dmaDst = 0xda7000;
-  const palDst = 0xda7004;
+  const manifestSegments = resolveManifestSegments(
+    manifestSegmentsRaw,
+    mappingValue,
+    manifestApplyBaseOffset,
+  );
 
-  const safeDmaDst = Math.min(dmaDst, Math.max(0, romU8.length - dma0Len));
-  const safePalDst = Math.min(palDst, Math.max(0, romU8.length - palLen));
+  if (manifestSegments.length === 0) {
+    throw new Error(
+      `Empty 'segments' manifest for '${spriteKindKey}' on game '${gameId}'.`,
+    );
+  }
 
-  copyBytes(romU8, rdcU8, safeDmaDst, dma0Src, Math.min(dma0Len, romU8.length));
-  copyBytes(romU8, rdcU8, safePalDst, palSrc, Math.min(palLen, romU8.length));
+  applySamusManifestSegments(
+    romU8,
+    rdcU8,
+    samusOffset,
+    manifestSegments,
+    mappingValue,
+    baseOffset,
+    gameId,
+  );
   return workingRom;
 }
 
@@ -620,18 +1029,44 @@ self.onmessage = async (event) => {
             throw new Error(`Failed to fetch RDC: ${url} (${resp.status})`);
           const rdcBuf = await resp.arrayBuffer();
           const kind = (spriteConfig.kind || "").toLowerCase();
+          const randomizerKey = randomizerIdLc ? randomizerIdLc : undefined;
           let updated: ArrayBuffer | undefined;
           if (kind === "rdc/link") {
-            updated = await applyLinkRdc(romToPatch, rdcBuf);
+            updated = await applyLinkRdc(romToPatch, rdcBuf, {
+              gameId,
+              baseOffset,
+              randomizerId: randomizerKey,
+              spriteKind: kind,
+            });
           } else if (kind === "rdc/nes-z1") {
-            updated = await applyNesRdc(romToPatch, rdcBuf, "zelda1");
+            updated = await applyNesRdc(romToPatch, rdcBuf, "zelda1", {
+              gameId: "zelda1",
+              baseOffset,
+              randomizerId: randomizerKey,
+              spriteKind: kind,
+            });
           } else if (kind === "rdc/nes-m1") {
-            updated = await applyNesRdc(romToPatch, rdcBuf, "metroid1");
+            updated = await applyNesRdc(romToPatch, rdcBuf, "metroid1", {
+              gameId: "metroid1",
+              baseOffset,
+              randomizerId: randomizerKey,
+              spriteKind: kind,
+            });
           } else if (kind === "rdc/samus") {
-            updated = await applySamusRdc(romToPatch, rdcBuf);
+            updated = await applySamusRdc(romToPatch, rdcBuf, {
+              gameId,
+              baseOffset,
+              randomizerId: randomizerKey,
+              spriteKind: kind,
+            });
           } else {
             // Default to Link-style handling when sprite kind is unspecified
-            updated = await applyLinkRdc(romToPatch, rdcBuf);
+            updated = await applyLinkRdc(romToPatch, rdcBuf, {
+              gameId,
+              baseOffset,
+              randomizerId: randomizerKey,
+              spriteKind: kind || "rdc/link",
+            });
           }
           if (updated && updated !== romToPatch) {
             romToPatch = updated;

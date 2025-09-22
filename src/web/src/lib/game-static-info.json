@@ -7,6 +7,566 @@
     "targetOffsets": {
       "alttpr": -1,
       "combo": 0
+    },
+    "rdcTargets": {
+      "rdc/samus": {
+        "default": {
+          "mapping": "lorom",
+          "segments": [
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x440000"
+                ],
+                "lorom": [
+                  "0x9C8000"
+                ],
+                "sa1rom": [
+                  "0x9C8000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x450000"
+                ],
+                "lorom": [
+                  "0x9D8000"
+                ],
+                "sa1rom": [
+                  "0x9D8000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x460000"
+                ],
+                "lorom": [
+                  "0x9E8000"
+                ],
+                "sa1rom": [
+                  "0x9E8000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x470000"
+                ],
+                "lorom": [
+                  "0x9F8000"
+                ],
+                "sa1rom": [
+                  "0x9F8000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x480000"
+                ],
+                "lorom": [
+                  "0xF58000"
+                ],
+                "sa1rom": [
+                  "0xD10000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x490000"
+                ],
+                "lorom": [
+                  "0xF68000"
+                ],
+                "sa1rom": [
+                  "0xD18000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x4A0000"
+                ],
+                "lorom": [
+                  "0xF78000"
+                ],
+                "sa1rom": [
+                  "0xD20000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x4B0000"
+                ],
+                "lorom": [
+                  "0xF88000"
+                ],
+                "sa1rom": [
+                  "0xD28000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x540000"
+                ],
+                "lorom": [
+                  "0xF98000"
+                ],
+                "sa1rom": [
+                  "0xD30000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x550000"
+                ],
+                "lorom": [
+                  "0xFA8000"
+                ],
+                "sa1rom": [
+                  "0xD38000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x560000"
+                ],
+                "lorom": [
+                  "0xFB8000"
+                ],
+                "sa1rom": [
+                  "0xD40000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x570000"
+                ],
+                "lorom": [
+                  "0xFC8000"
+                ],
+                "sa1rom": [
+                  "0xD48000"
+                ]
+              }
+            },
+            {
+              "length": "0x8000",
+              "addresses": {
+                "exhirom": [
+                  "0x580000"
+                ],
+                "lorom": [
+                  "0xFD8000"
+                ],
+                "sa1rom": [
+                  "0xD50000"
+                ]
+              }
+            },
+            {
+              "length": "0x7880",
+              "addresses": {
+                "exhirom": [
+                  "0x590000"
+                ],
+                "lorom": [
+                  "0xFE8000"
+                ],
+                "sa1rom": [
+                  "0xD58000"
+                ]
+              }
+            },
+            {
+              "length": "0x3F60",
+              "addresses": {
+                "exhirom": [
+                  "0x5A0000"
+                ],
+                "lorom": [
+                  "0xFF8000"
+                ],
+                "sa1rom": [
+                  "0xD60000"
+                ]
+              }
+            },
+            {
+              "length": "0x3F60",
+              "addresses": {
+                "exhirom": [
+                  "0x5A4000"
+                ],
+                "lorom": [
+                  "0xFFC000"
+                ],
+                "sa1rom": [
+                  "0xD64000"
+                ]
+              }
+            },
+            {
+              "length": "0x3C0",
+              "addresses": [
+                "0x9A9A00"
+              ]
+            },
+            {
+              "length": "0x600",
+              "addresses": [
+                "0xB6DA00"
+              ]
+            },
+            {
+              "length": "0x20",
+              "addresses": [
+                "0xB6D900"
+              ]
+            },
+            {
+              "length": "0x20",
+              "addresses": [
+                "0xB6D980"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x9B9402"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x9B9522"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x9B9802"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 9,
+              "entryOffsets": [
+                "0x0",
+                "0x24",
+                "0x4F",
+                "0x73",
+                "0x9E",
+                "0xC2",
+                "0xED",
+                "0x111",
+                "0x139"
+              ],
+              "addresses": [
+                "0x8DDB6D"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 9,
+              "entryOffsets": [
+                "0x0",
+                "0x24",
+                "0x4F",
+                "0x73",
+                "0x9E",
+                "0xC2",
+                "0xED",
+                "0x111",
+                "0x139"
+              ],
+              "addresses": [
+                "0x8DDCD3"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 9,
+              "entryOffsets": [
+                "0x0",
+                "0x24",
+                "0x4F",
+                "0x73",
+                "0x9E",
+                "0xC2",
+                "0xED",
+                "0x111",
+                "0x139"
+              ],
+              "addresses": [
+                "0x8DDE39"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 16,
+              "entryStride": "0x22",
+              "addresses": [
+                "0x8DE468"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 16,
+              "entryStride": "0x22",
+              "addresses": [
+                "0x8DE694"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 16,
+              "entryStride": "0x22",
+              "addresses": [
+                "0x8DE8C0"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 8,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9822"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 8,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9922"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 8,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9A22"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9B22"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9D22"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9F22"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9BA2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9DA2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9FA2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9C22"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9E22"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9BA022"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9CA2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B9EA2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 4,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9BA0A2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 6,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9B96C2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 9,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9BA122"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 10,
+              "entryStride": "0x20",
+              "addresses": [
+                "0x9BA242"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x9BA3A2",
+                "0x8CE56B"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x9BA382"
+              ]
+            },
+            {
+              "length": "0x6",
+              "addresses": [
+                "0x9BA3C0",
+                "0x9BA3C6"
+              ]
+            },
+            {
+              "length": "0x2",
+              "addresses": [
+                "0x82E52C"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x8EE5E2"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "addresses": [
+                "0x8CE68B"
+              ]
+            },
+            {
+              "length": "0x1E",
+              "entries": 16,
+              "entryStride": "0x24",
+              "addresses": [
+                "0x8DD6C2"
+              ]
+            },
+            {
+              "length": "0x1C",
+              "addresses": [
+                "0xA2A5A0"
+              ]
+            },
+            {
+              "length": "0x2",
+              "entries": 14,
+              "entryStride": "0x6",
+              "addresses": [
+                "0x8DCA54"
+              ]
+            }
+          ]
+        },
+        "combo": {
+          "mapping": "sa1rom"
+        }
+      }
     }
   },
   "alttp": {
@@ -17,6 +577,35 @@
     "targetOffsets": {
       "alttpr": 0,
       "combo": 3145728
+    },
+    "rdcTargets": {
+      "rdc/link": {
+        "default": {
+          "gfx": {
+            "snes": "0x108000"
+          },
+          "palette": {
+            "snes": "0x1BD308"
+          },
+          "gloves": {
+            "snes": "0x1BEDF5"
+          }
+        },
+        "combo": {
+          "gfx": {
+            "pc": "0x380000",
+            "absolute": true
+          },
+          "palette": {
+            "pc": "0x3DD308",
+            "absolute": true
+          },
+          "gloves": {
+            "pc": "0x3DEDF5",
+            "absolute": true
+          }
+        }
+      }
     }
   },
   "zelda1": {
@@ -27,6 +616,28 @@
     "targetOffsets": {
       "alttpr": -1,
       "combo": 4325392
+    },
+    "rdcTargets": {
+      "rdc/nes-z1": {
+        "default": {
+          "gfx": {
+            "pc": "0x001000"
+          },
+          "palette": {
+            "pc": "0x002000"
+          }
+        },
+        "combo": {
+          "gfx": {
+            "pc": "0x421000",
+            "absolute": true
+          },
+          "palette": {
+            "pc": "0x422000",
+            "absolute": true
+          }
+        }
+      }
     }
   },
   "metroid": {
@@ -37,6 +648,28 @@
     "targetOffsets": {
       "alttpr": -1,
       "combo": 4194304
+    },
+    "rdcTargets": {
+      "rdc/nes-m1": {
+        "default": {
+          "gfx": {
+            "pc": "0x003000"
+          },
+          "palette": {
+            "pc": "0x004000"
+          }
+        },
+        "combo": {
+          "gfx": {
+            "pc": "0x403000",
+            "absolute": true
+          },
+          "palette": {
+            "pc": "0x404000",
+            "absolute": true
+          }
+        }
+      }
     }
   },
   "combo": {
