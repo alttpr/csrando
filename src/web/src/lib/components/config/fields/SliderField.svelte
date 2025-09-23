@@ -27,5 +27,4 @@
 		class="w-full h-1 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer"
 	/>
 	<span class="text-xs font-medium">{value}</span>
-	<input type="hidden" aria-hidden="true" value={String(value)} />
 </div>

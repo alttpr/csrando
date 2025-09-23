@@ -4,9 +4,9 @@ This project provides a web interface for a game randomizer, allowing users to c
 
 ## Prerequisites
 
-- Node.js
-- npm
-- .NET backend (The web interface communicates with a separate .NET backend API for core randomizer functionality and data storage.)
+- Node.js 20+
+- npm (ships with Node)
+- Access to the .NET backend API (the web UI talks to it for randomizer data and seed generation)
 
 ## Setup and Installation
 
@@ -20,7 +20,7 @@ This project provides a web interface for a game randomizer, allowing users to c
 2.  **Install dependencies:**
 
     ```bash
-    npm install
+    npm ci
     ```
 
 3.  **Database setup:**
@@ -33,13 +33,18 @@ This project provides a web interface for a game randomizer, allowing users to c
     This command will apply any pending database migrations. If you need to create new migrations, you might use a command like `npm run db:push` (refer to `package.json` for exact Drizzle ORM commands).
 
 4.  **Environment Variables:**
-    Certain configurations, such as the URL for the .NET backend API, might be managed through environment variables. Create a `.env` file in the root of the project if it doesn't exist. For example:
+    Create a `.env` file in the project root (if it doesn’t exist yet) with the required variables:
 
     ```env
-    PRIVATE_DOTNET_API_BASE_URL="http://localhost:5000"
+    PRIVATE_DOTNET_API_BASE_URL=http://localhost:5000
+    PUBLIC_SPRITES_BASE_URL=/sprites
+    DATABASE_URL=sqlite:dev.db
     ```
 
-    - Set `PRIVATE_ADMIN_VERSION_TOKEN` to enable the `/admin/new-version` page. The token is required to create new randomizer versions from an already deployed site.
+    Optional extras:
+
+    - `PRIVATE_ADMIN_VERSION_TOKEN` enables the `/admin/new-version` UI for managing randomizer snapshots.
+    - `LOCAL_TEST_MODE=true` switches various services (metadata, randomizer calls) to bundled mock data.
 
 ## Running the Development Server
 
@@ -49,39 +54,35 @@ To start the SvelteKit development server:
 npm run dev
 ```
 
-This will typically make the application available at `http://localhost:5173`.
+The app is served at `http://localhost:5173` by default.
 
-## Linting and Formatting
+## Linting, Formatting, and Type Safety
 
-- To check for linting issues:
-
-  ```bash
-  npx eslint . && npx prettier --check .
-  ```
-
-- To automatically format the code:
-  ```bash
-  npx prettier --write .
-  ```
+```bash
+npm run check       # svelte-check + kit sync
+npm run lint        # ESLint
+npm run format      # Prettier (write mode)
+npm run test:run    # Vitest in CI mode
+```
 
 ## Building for Production
 
-To create a production build of the application:
+Create an optimized build with:
 
 ```bash
 npm run build
 ```
 
-The output will be in the `build` directory (or as configured in `svelte.config.js`).
+Artifacts are emitted to `.svelte-kit/` and the adapter target (`build/` for the Node adapter).
 
 ## Other Available Scripts
 
-The `package.json` file contains other scripts that might be useful, such as:
+The `package.json` includes additional scripts:
 
-- `npm run preview`: To preview the production build locally.
-- `npm run check`: To run Svelte check for type checking.
-- `npm run db:migrate`: To apply migrations (often used in production or CI/CD instead of `db:push`).
-- `npm run db:studio`: To open Drizzle Studio for database inspection.
+- `npm run preview` – preview the production build locally.
+- `npm run db:migrate` / `npm run db:push` – manage Drizzle migrations.
+- `npm run db:studio` – open Drizzle Studio for inspecting the SQLite database.
+- `npm run import-sprites` – CLI for the remote sprite workflow.
 
 ## Randomizer Versions (Snapshots)
 
@@ -111,7 +112,7 @@ Use the CLI to store immutable snapshots of the randomizer (base IPS/BPS patch +
 
   You can also point at a single metadata resource via `--metadataUrl https://api/meta/alttpr`. `--patchMap` / `--metadataMap` accept JSON objects that map ids to paths (relative paths resolve from the map file’s folder). Legacy `--ips*` aliases still work.
 
-When generating seeds, the app links each new seed to the currently active snapshot; patching then uses that snapshot’s base IPS or BPS data and options metadata to ensure back-compat.
+When generating seeds, the app links each new seed to the currently active snapshot; patching then uses that snapshot’s base IPS/BPS data and options metadata to ensure compatibility with older seeds.
 
 Batch create snapshots for all games
 
@@ -141,6 +142,17 @@ Notes
 - Append `--dryRun` to preview the operations without touching the database.
 
 Refer to the `package.json` for a full list and their specific functions.
+
+## Manual Validation Checklist
+
+Before opening a PR or deploying, run the suite:
+
+1. `npm run build`
+2. `npm run test:run`
+3. `npm run check`
+4. `npm run lint`
+5. `npm run format`
+6. Launch `npm run dev`, visit `http://localhost:5173`, verify the landing page, and navigate to the config flow (expect the “Failed to communicate with backend” banner if the .NET API isn’t running).
 
 ## Sprite Importer: Remote Workflow
 

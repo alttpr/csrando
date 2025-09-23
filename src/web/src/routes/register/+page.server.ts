@@ -5,7 +5,7 @@ import { db } from "$lib/server/db";
 import { users } from "$lib/server/db/schema";
 import { nanoid } from "nanoid";
 import type { Actions } from "./$types";
-import * as m from "$lib/paraglide/messages"; // For error messages
+import * as m from "$lib/paraglide/messages";
 
 export const actions: Actions = {
   default: async ({ request, cookies }) => {
@@ -37,7 +37,7 @@ export const actions: Actions = {
     }
 
     const hashedPassword = await new Argon2id().hash(password);
-    const userId = nanoid(15); // Generate a unique user ID
+    const userId = nanoid(15);
 
     try {
       await db.insert(users).values({
@@ -46,7 +46,6 @@ export const actions: Actions = {
         hashedPassword: hashedPassword,
       });
     } catch (e: unknown) {
-      // Basic check for unique constraint on username. Drizzle might offer better ways.
       if (
         e instanceof Error &&
         e.message?.includes("UNIQUE constraint failed: user.username")

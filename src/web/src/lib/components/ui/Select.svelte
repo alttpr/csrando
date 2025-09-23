@@ -24,13 +24,9 @@
 	}: SelectProps & { class?: string } = $props<SelectProps & { class?: string }>();
 
 	function handleChange(event: Event) {
-		if (onchange === undefined) {
-			return;
-		}
-
 		const target = event.target as HTMLSelectElement;
 		value = target.value;
-		onchange(value);
+		onchange?.(value);
 	}
 </script>
 

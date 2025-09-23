@@ -3,6 +3,7 @@ import { error as svelteError } from "@sveltejs/kit";
 import type { Metadata } from "$lib/types";
 import { parseMetadata } from "$lib/schemas/metadata";
 import { mockDataService } from "./mock-data";
+import { candidateGameIds, canonicalRandomizerId } from "$lib/utils/game-aliases";
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
@@ -99,48 +100,37 @@ export const metadataApi = {
    * Falls back to the provided id if no match is found.
    */
   resolveCanonicalId: async (id: string): Promise<string> => {
-    const want = (id || "").toLowerCase();
-    if (!want) return id;
-
-    // Quick alias map to bridge common shorthand -> backend ids
-    const alias: Record<string, string> = {
-      alttp: "Alttpr",
-      z3: "Alttpr",
-      zelda3: "Alttpr",
-      z1: "Z1R",
-      zelda1: "Z1R",
-      goonies2: "G2R",
-      g2: "G2R",
-    };
+    const normalized = (id || "").trim().toLowerCase();
+    if (!normalized) return id;
 
     try {
-      const index = (await callBackendApi<
+      const index = await callBackendApi<
         Array<{ name?: string; description?: string; randomizer: string }>
-      >("meta")) as Array<{
-        name?: string;
-        description?: string;
-        randomizer: string;
-      }>;
-      // Exact/randomizer match (case-insensitive) or name match
-      let match = index.find(
-        (e) =>
-          e.randomizer?.toLowerCase() === want ||
-          e.name?.toLowerCase() === want,
-      );
+      >("meta");
+
+      const candidates = candidateGameIds(normalized);
+
+      const match = index.find((entry) => {
+        const randomizer = entry.randomizer?.toLowerCase();
+        const name = entry.name?.toLowerCase();
+        return candidates.some(
+          (candidate) => candidate === randomizer || candidate === name,
+        );
+      });
       if (match) return match.randomizer;
 
-      // Alias mapping to a candidate, then match again to be safe
-      const candidate = alias[want];
-      if (candidate) {
-        const lc = candidate.toLowerCase();
-        match = index.find((e) => e.randomizer?.toLowerCase() === lc);
-        if (match) return match.randomizer;
-        return candidate; // fall back to alias string even if index mismatch
+      const canonicalAlias = canonicalRandomizerId(normalized);
+      if (canonicalAlias) {
+        const lc = canonicalAlias.toLowerCase();
+        const canonicalMatch = index.find(
+          (entry) => entry.randomizer?.toLowerCase() === lc,
+        );
+        return canonicalMatch?.randomizer ?? canonicalAlias;
       }
     } catch {
-      // ignore
+      // ignore network/parse issues and fall back to provided id
     }
-    // No mapping found, return original id
+
     return id;
   },
   /**

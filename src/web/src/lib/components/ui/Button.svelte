@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	interface ButtonProps {
-		onclick?: (event: Event) => void;
+		onclick?: (event: MouseEvent) => void;
 		href?: string;
 		type?: 'button' | 'submit' | 'reset';
 		variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
@@ -48,6 +48,10 @@
 	const classes = $derived(
 		`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${fullWidth ? 'w-full' : ''} ${disabled ? 'opacity-60 cursor-not-allowed' : ''} ${className} ${classAttr}`
 	);
+
+	export type $$Events = {
+		click: MouseEvent;
+	};
 </script>
 
 {#if href !== undefined}

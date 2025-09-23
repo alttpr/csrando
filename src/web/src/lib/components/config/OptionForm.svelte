@@ -78,14 +78,8 @@
 				const category = getCategoryName(option);
 				const subcategory = getSubcategoryName(option);
 
-				if (!acc[category]) {
-					acc[category] = {};
-				}
-
-				if (!acc[category][subcategory]) {
-					acc[category][subcategory] = [];
-				}
-
+				acc[category] ??= {};
+				acc[category][subcategory] ??= [];
 				acc[category][subcategory].push(option);
 				return acc;
 			},
@@ -93,8 +87,8 @@
 		)
 	);
 
-	const orderedCategories: Array<[string, Record<string, MetadataSetting[]>]> = $derived(
-		(() => {
+	const orderedCategories = $derived<[string, Record<string, MetadataSetting[]>][]>
+		((() => {
 			const entries = Object.entries(groupedOptions) as Array<
 				[string, Record<string, MetadataSetting[]>]
 			>;
@@ -103,8 +97,7 @@
 				.sort((a, b) => a[0].localeCompare(b[0]));
 			const general = entries.filter(([c]) => c === 'General');
 			return [...specified, ...general];
-		})()
-	);
+		})());
 
 	// Collapsible display modes inferred from metadata on any option within the group.
 	// Normalize various upstream casings/values to a single internal shape.
@@ -184,31 +177,73 @@
 		return best;
 	}
 
+	interface GroupedSubcategory {
+		name: string;
+		options: MetadataSetting[];
+		displayMode: DisplayMode;
+		showHeading: boolean;
+	}
+
+	interface GroupedCategory {
+		name: string;
+		subcategories: GroupedSubcategory[];
+		displayMode: DisplayMode;
+		showHeading: boolean;
+	}
+
+	const categories = $derived<GroupedCategory[]>
+		((() =>
+			orderedCategories.map(([categoryName, subcategories]) => {
+				const entries = Object.entries(subcategories)
+					.sort((a, b) => {
+						if (a[0] === 'General' && b[0] !== 'General') return 1;
+						if (b[0] === 'General' && a[0] !== 'General') return -1;
+						return a[0].localeCompare(b[0]);
+					})
+					.map(([name, opts], _, all) => ({
+						name,
+						options: opts,
+						displayMode: resolveSubcategoryDisplay(categoryName, name),
+						showHeading: !(all.length === 1 && name === 'General')
+					}));
+
+				return {
+					name: categoryName,
+					subcategories: entries,
+					displayMode: resolveCategoryDisplay(categoryName),
+					showHeading: !(orderedCategories.length === 1 && categoryName === 'General')
+				};
+			})
+		)());
+
 	// child relationships handled by OptionField
 </script>
 
 <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 mb-3">
 	<h2 class="text-lg font-bold mb-2">{title}</h2>
 
-	{#each orderedCategories as [category, subcategories] (category)}
-		<div
-			class="mb-6 pt-4 border-t first:border-t-0 first:pt-0 border-slate-200 dark:border-slate-700"
-		>
-			{#if resolveCategoryDisplay(category)}
-				<details class="mb-1 group" open={resolveCategoryDisplay(category) === 'Expanded'}>
+	{#snippet OptionsGrid(options: MetadataSetting[])}
+		<div class="rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
+			{#each options as option (option.key)}
+				<div><OptionField {option} bind:values {visibleOptions} depth={0} /></div>
+			{/each}
+		</div>
+	{/snippet}
+
+	{#each categories as category (category.name)}
+		<div class="mb-6 pt-4 border-t first:border-t-0 first:pt-0 border-slate-200 dark:border-slate-700">
+			{#if category.displayMode}
+				<details class="mb-1 group" open={category.displayMode === 'Expanded'}>
 					<summary
 						class="cursor-pointer flex items-center gap-3 mb-2 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 rounded"
 						title="Toggle section"
 					>
 						<div class="h-5 w-1 rounded bg-gradient-to-b from-indigo-500 to-violet-500"></div>
 						<span
-							class="inline-flex items-center justify-center h-6 w-6 rounded-md bg-slate-100 text-slate-600 ring-1 ring-slate-200/70 transition-colors
-															 hover:bg-slate-200 hover:ring-slate-300
-															 dark:bg-slate-700/70 dark:text-slate-100 dark:ring-slate-500/50 dark:hover:bg-slate-600/70 dark:hover:ring-slate-400/60
-															 group-open:bg-indigo-50 group-open:text-indigo-600 dark:group-open:bg-indigo-400/25 dark:group-open:text-indigo-200"
+							class="inline-flex items-center justify-center h-6 w-6 rounded-md bg-slate-100 text-slate-600 ring-1 ring-slate-200/70 transition-colors hover:bg-slate-200 hover:ring-slate-300 dark:bg-slate-700/70 dark:text-slate-100 dark:ring-slate-500/50 dark:hover:bg-slate-600/70 dark:hover:ring-slate-400/60 group-open:bg-indigo-50 group-open:text-indigo-600 dark:group-open:bg-indigo-400/25 dark:group-open:text-indigo-200"
 						>
 							<svg
-									class="h-4.5 w-4.5 text-current transition-transform group-open:rotate-90"
+								class="h-4.5 w-4.5 text-current transition-transform group-open:rotate-90"
 								viewBox="0 0 20 20"
 								fill="currentColor"
 								aria-hidden="true"
@@ -216,32 +251,21 @@
 								<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 							</svg>
 						</span>
-						<h3
-							class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-200"
-						>
-							{category}
+						<h3 class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-200">
+							{category.name}
 						</h3>
 					</summary>
-					{#each Object.entries(subcategories).sort((a, b) => {
-						if (a[0] === 'General' && b[0] !== 'General') return 1;
-						if (b[0] === 'General' && a[0] !== 'General') return -1;
-						return a[0].localeCompare(b[0]);
-					}) as [subcategory, opts] (subcategory)}
+
+					{#each category.subcategories as subcategory (subcategory.name)}
 						<div class="mb-4">
-							{#if resolveSubcategoryDisplay(category, subcategory)}
-								<details
-									class="mb-1 group"
-									open={resolveSubcategoryDisplay(category, subcategory) === 'Expanded'}
-								>
+							{#if subcategory.displayMode}
+								<details class="mb-1 group" open={subcategory.displayMode === 'Expanded'}>
 									<summary
-									class="cursor-pointer mb-2 flex items-center gap-2 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 rounded"
-									title="Toggle section"
-								>
-									<span
-										class="inline-flex items-center justify-center h-5.5 w-5.5 rounded-md bg-slate-100 text-slate-600 ring-1 ring-slate-200/70 transition-colors
-																 hover:bg-slate-200 hover:ring-slate-300
-																 dark:bg-slate-700/70 dark:text-slate-100 dark:ring-slate-500/50 dark:hover:bg-slate-600/70 dark:hover:ring-slate-400/60
-																 group-open:bg-indigo-50 group-open:text-indigo-600 dark:group-open:bg-indigo-400/25 dark:group-open:text-indigo-200"
+										class="cursor-pointer mb-2 flex items-center gap-2 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 rounded"
+										title="Toggle section"
+									>
+										<span
+											class="inline-flex items-center justify-center h-5.5 w-5.5 rounded-md bg-slate-100 text-slate-600 ring-1 ring-slate-200/70 transition-colors hover:bg-slate-200 hover:ring-slate-300 dark:bg-slate-700/70 dark:text-slate-100 dark:ring-slate-500/50 dark:hover:bg-slate-600/70 dark:hover:ring-slate-400/60 group-open:bg-indigo-50 group-open:text-indigo-600 dark:group-open:bg-indigo-400/25 dark:group-open:text-indigo-200"
 										>
 											<svg
 												class="h-4 w-4 text-current transition-transform group-open:rotate-90"
@@ -252,71 +276,50 @@
 												<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
 											</svg>
 										</span>
-										<h4 class="text-[13px] font-medium text-slate-600 dark:text-slate-300">
-											{subcategory}
-										</h4>
-										<div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+										{#if subcategory.showHeading}
+											<h4 class="text-[13px] font-medium text-slate-600 dark:text-slate-300">
+												{subcategory.name}
+											</h4>
+											<div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+										{/if}
 									</summary>
-									<div
-										class="rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
-									>
-										{#each opts as MetadataSetting[] as option (option.key)}
-											<div><OptionField {option} bind:values {visibleOptions} depth={0} /></div>
-										{/each}
-									</div>
+									{@render OptionsGrid(subcategory.options)}
 								</details>
 							{:else}
-								{#if !(Object.keys(subcategories).length === 1 && subcategory === 'General')}
+								{#if subcategory.showHeading}
 									<div class="mb-2 flex items-center gap-2">
 										<h4 class="text-[13px] font-medium text-slate-600 dark:text-slate-300">
-											{subcategory}
+											{subcategory.name}
 										</h4>
 										<div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
 									</div>
 								{/if}
-								<div
-									class="rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
-								>
-									{#each opts as MetadataSetting[] as option (option.key)}
-										<div><OptionField {option} bind:values {visibleOptions} depth={0} /></div>
-									{/each}
-								</div>
+								{@render OptionsGrid(subcategory.options)}
 							{/if}
 						</div>
 					{/each}
 				</details>
 			{:else}
-				{#if !(orderedCategories.length === 1 && category === 'General')}
+				{#if category.showHeading}
 					<div class="flex items-center gap-2 mb-3">
 						<div class="h-5 w-1 rounded bg-gradient-to-b from-indigo-500 to-violet-500"></div>
-						<h3
-							class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-200"
-						>
-							{category}
+						<h3 class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-200">
+							{category.name}
 						</h3>
 					</div>
 				{/if}
-				{#each Object.entries(subcategories).sort((a, b) => {
-					if (a[0] === 'General' && b[0] !== 'General') return 1;
-					if (b[0] === 'General' && a[0] !== 'General') return -1;
-					return a[0].localeCompare(b[0]);
-				}) as [subcategory, opts] (subcategory)}
+
+				{#each category.subcategories as subcategory (subcategory.name)}
 					<div class="mb-4">
-						{#if !(Object.keys(subcategories).length === 1 && subcategory === 'General')}
+						{#if subcategory.showHeading}
 							<div class="mb-2 flex items-center gap-2">
 								<h4 class="text-[13px] font-medium text-slate-600 dark:text-slate-300">
-									{subcategory}
+									{subcategory.name}
 								</h4>
 								<div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
 							</div>
 						{/if}
-						<div
-							class="rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
-						>
-							{#each opts as MetadataSetting[] as option (option.key)}
-								<div><OptionField {option} bind:values {visibleOptions} depth={0} /></div>
-							{/each}
-						</div>
+						{@render OptionsGrid(subcategory.options)}
 					</div>
 				{/each}
 			{/if}

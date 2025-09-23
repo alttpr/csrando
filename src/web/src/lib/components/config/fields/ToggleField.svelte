@@ -17,4 +17,3 @@
 </script>
 
 <Toggle {id} bind:checked={value} label={description} {size} {disabled} />
-<input type="hidden" aria-hidden="true" value={value ? '1' : '0'} />

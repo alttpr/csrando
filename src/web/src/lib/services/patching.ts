@@ -11,16 +11,134 @@ export const patchingError = writable<string | null>(null);
 
 let patcherWorkerInstance: Worker | null = null;
 
-// Utility function to convert Base64 to ArrayBuffer
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  const binaryString = window.atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
+const SPRITE_PROGRESS_START = 5;
+const SPRITE_PROGRESS_RANGE = 15; // 5 -> 20 in the legacy UI
+
+const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
+  const atobFn =
+    typeof globalThis.atob === "function" ? globalThis.atob : undefined;
+  if (!atobFn) {
+    throw new Error("Base64 decoding is not supported in this environment");
+  }
+
+  const binaryString = atobFn(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i += 1) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes.buffer;
-}
+};
+
+type SpriteRequest = {
+  path: string;
+  url: string;
+};
+
+const createWorker = () =>
+  new Worker(new URL("../workers/patcher.ts", import.meta.url), {
+    type: "module",
+  });
+
+const updateSpriteProgress = (completed: number, total: number) => {
+  if (total === 0) return;
+  const progress =
+    SPRITE_PROGRESS_START +
+    Math.round((completed / total) * SPRITE_PROGRESS_RANGE);
+  patchingProgress.set(progress);
+};
+
+const collectSpriteRequests = (
+  params: InitiatePatchingParams,
+): { requests: SpriteRequest[]; gameIds: string[] } => {
+  const base = getPublicSpritesBaseUrl();
+  const gameIds = Array.from(
+    new Set<string>([
+      params.primaryGameId,
+      ...Object.keys(params.additionalRoms),
+    ]),
+  );
+
+  const requests: SpriteRequest[] = [];
+  const seenPaths = new Set<string>();
+
+  for (const gameId of gameIds) {
+    const spriteValue = params.selectedSpritesByGameId.get(gameId);
+    if (!spriteValue) continue;
+
+    const spriteConfig = params.gameIdToSpriteInfoMap
+      .get(gameId)
+      ?.sprites?.find((sprite) => sprite.value === spriteValue);
+    const spriteFiles = spriteConfig?.patchDetails?.files ?? [];
+
+    for (const fileEntry of spriteFiles) {
+      if (seenPaths.has(fileEntry.path)) continue;
+      const url = /^(https?:)?\/\//.test(fileEntry.path)
+        ? fileEntry.path
+        : `${base}/${gameId}/${fileEntry.path}`;
+      requests.push({ path: fileEntry.path, url });
+      seenPaths.add(fileEntry.path);
+    }
+  }
+
+  return { requests, gameIds };
+};
+
+const fetchSpritePatchFiles = async (requests: SpriteRequest[]) => {
+  const contents = new Map<string, ArrayBuffer>();
+  if (requests.length === 0) {
+    return contents;
+  }
+
+  let completed = 0;
+  for (const request of requests) {
+    try {
+      const response = await fetchWithTimeout(request.url, {
+        timeoutMs: 20000,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      contents.set(request.path, arrayBuffer);
+    } catch (fetchError) {
+      console.error(
+        "Failed to fetch sprite patch file",
+        request.url,
+        fetchError,
+      );
+      throw new Error(
+        m.patching_error_fetching_sprite_file({
+          filePath: request.path,
+        }) + (fetchError instanceof Error ? ` (${fetchError.message})` : ""),
+      );
+    }
+    completed += 1;
+    updateSpriteProgress(completed, requests.length);
+  }
+
+  return contents;
+};
+
+const downloadPatchedRom = (
+  payload: { fileName: string | undefined; patchedRom: ArrayBuffer },
+  params: InitiatePatchingParams,
+) => {
+  const blob = new Blob([payload.patchedRom], {
+    type: "application/octet-stream",
+  });
+  const url = URL.createObjectURL(blob);
+
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download =
+    payload.fileName ||
+    `patched_rom_${params.outputFileNameDetails.seedId}${params.outputFileNameDetails.defaultExtension}`;
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  URL.revokeObjectURL(url);
+  document.body.removeChild(anchor);
+};
 
 // Internal helper to reset patching state and terminate worker
 function resetPatchingState(
@@ -48,9 +166,9 @@ export interface InitiatePatchingParams {
   basePatchUrl?: string; // Optional explicit base patch URL (e.g., per-seed)
   outputFileNameDetails: {
     seedId: string;
-    baseName?: string | null; // From original ROM filename
-    defaultDisplayName: string; // Game's display name
-    defaultExtension: string; // e.g., ".sfc"
+    baseName?: string | null;
+    defaultDisplayName: string;
+    defaultExtension: string;
     randomizerVersion?: string | null;
     optionSummary?: {
       tokens: string[];
@@ -58,10 +176,8 @@ export interface InitiatePatchingParams {
       derivedFromMetadata: boolean;
     };
   };
-  // New params for sprite patching
   selectedSpritesByGameId: Map<string, string>;
   gameIdToSpriteInfoMap: Map<string, GameSpriteConfig>;
-  // New params for post-generation settings
   selectedPostGenByGameId?: Map<string, Record<string, string | boolean>>;
   gameIdToPostGenConfigMap?: Map<string, GamePostGenConfig>;
 }
@@ -79,99 +195,22 @@ export async function initiatePatching(
   patchingError.set(null);
 
   try {
-    // Fetch sprite binary data
-    const spritePatchDataContents = new Map<string, ArrayBuffer>();
-    const gameIdsInSeed = new Set<string>([
-      params.primaryGameId,
-      ...Object.keys(params.additionalRoms),
-    ]);
+    const { requests, gameIds } = collectSpriteRequests(params);
 
-    patchingProgress.set(5); // Initial progress for fetching sprite data
+    patchingProgress.set(SPRITE_PROGRESS_START);
+    const spritePatchDataContents = await fetchSpritePatchFiles(requests);
+    patchingProgress.set(SPRITE_PROGRESS_START + SPRITE_PROGRESS_RANGE);
 
-    let currentFile = 0;
-    const totalFilesToFetch = Array.from(gameIdsInSeed).reduce(
-      (count, gameId) => {
-        const spriteValue = params.selectedSpritesByGameId.get(gameId);
-        if (spriteValue) {
-          const spriteConfig = params.gameIdToSpriteInfoMap
-            .get(gameId)
-            ?.sprites?.find((s) => s.value === spriteValue);
-          if (spriteConfig?.patchDetails?.files) {
-            return count + spriteConfig.patchDetails.files.length;
-          }
-        }
-        return count;
-      },
-      0,
-    );
-
-    for (const gameId of gameIdsInSeed) {
-      const spriteValue = params.selectedSpritesByGameId.get(gameId);
-      if (spriteValue) {
-        const spriteConfig = params.gameIdToSpriteInfoMap
-          .get(gameId)
-          ?.sprites?.find((s) => s.value === spriteValue);
-        if (spriteConfig?.patchDetails?.files) {
-          for (const fileEntry of spriteConfig.patchDetails.files) {
-            if (!spritePatchDataContents.has(fileEntry.path)) {
-              try {
-                const base = getPublicSpritesBaseUrl();
-                const resolvedUrl = /^(https?:)?\//.test(fileEntry.path)
-                  ? fileEntry.path
-                  : `${base}/${gameId}/${fileEntry.path}`;
-                const response = await fetchWithTimeout(resolvedUrl, {
-                  timeoutMs: 20000,
-                });
-                if (!response.ok) {
-                  throw new Error(
-                    `Failed to fetch sprite patch file: ${resolvedUrl} (status: ${response.status})`,
-                  );
-                }
-                const arrayBuffer = await response.arrayBuffer();
-                spritePatchDataContents.set(fileEntry.path, arrayBuffer);
-              } catch (fetchError) {
-                console.error(fetchError);
-                throw new Error(
-                  m.patching_error_fetching_sprite_file({
-                    filePath: fileEntry.path,
-                  }) +
-                    (fetchError instanceof Error
-                      ? ` (${fetchError.message})`
-                      : ""),
-                );
-              }
-            }
-            currentFile++;
-            if (totalFilesToFetch > 0) {
-              patchingProgress.set(
-                5 + Math.round((currentFile / totalFilesToFetch) * 15),
-              ); // Sprite fetching up to 20%
-            }
-          }
-        }
-      }
-    }
-
-    patchingProgress.set(20); // Sprite data fetching complete
-
-    // Convert main patchData to correct format if it's a base64 string
     const patchData =
       typeof params.patchDataSource === "string"
         ? base64ToArrayBuffer(params.patchDataSource)
         : params.patchDataSource;
 
-    // Create a Web Worker for processing
-    patcherWorkerInstance = new Worker(
-      new URL("../workers/patcher.ts", import.meta.url),
-      {
-        type: "module",
-      },
-    );
+    patcherWorkerInstance = createWorker();
 
-    // Pass data to worker
-    patcherWorkerInstance.postMessage({
+    const payload = {
       baseRom: params.baseRomBuffer,
-      patchData: patchData,
+      patchData,
       additionalRoms: params.additionalRoms,
       primaryGameId: params.primaryGameId,
       randomizerId: params.randomizerId,
@@ -179,49 +218,49 @@ export async function initiatePatching(
       outputFileNameDetails: params.outputFileNameDetails,
       selectedSpritesByGameId: params.selectedSpritesByGameId,
       gameIdToSpriteInfoMap: params.gameIdToSpriteInfoMap,
-      spritePatchDataContents: spritePatchDataContents,
-      allGameIds: Array.from(gameIdsInSeed),
+      spritePatchDataContents,
+      allGameIds: gameIds,
       publicSpritesBaseUrl: getPublicSpritesBaseUrl(),
       selectedPostGenByGameId: params.selectedPostGenByGameId,
       gameIdToPostGenConfigMap: params.gameIdToPostGenConfigMap,
-    });
+    };
 
-    // Handle worker messages
-    patcherWorkerInstance.onmessage = (e) => {
-      const data = e.data as
+    patcherWorkerInstance.postMessage(payload);
+
+    patcherWorkerInstance.onmessage = (event) => {
+      const data = event.data as
+        | { type: "ready" }
         | { type: "progress"; progress: number }
-        | { type: "complete"; patchedRom: ArrayBuffer; fileName: string }
+        | { type: "complete"; patchedRom: ArrayBuffer; fileName?: string }
         | { type: "error"; message?: string };
+
+      if (data.type === "ready") {
+        // Worker startup acknowledgement; nothing to do yet.
+        return;
+      }
 
       if (data.type === "progress") {
         patchingProgress.set(data.progress);
-      } else if (data.type === "complete") {
-        // Create a download for the patched ROM
-        const blob = new Blob([data.patchedRom], {
-          type: "application/octet-stream",
-        });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download =
-          data.fileName ||
-          `patched_rom_${params.outputFileNameDetails.seedId}${params.outputFileNameDetails.defaultExtension}`;
-        document.body.appendChild(a);
-        a.click();
-
-        // Clean up
-        URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-
-        resetPatchingState(null, true); // Patching complete, keep progress (e.g. 100%), clear error
-      } else if (data.type === "error") {
-        // Error reported by the worker's message
-        resetPatchingState(data.message || m.patching_generic_error());
+        return;
       }
+
+      if (data.type === "complete") {
+        downloadPatchedRom(
+          { patchedRom: data.patchedRom, fileName: data.fileName },
+          params,
+        );
+        resetPatchingState(null, true);
+        return;
+      }
+
+      if (data.type === "error") {
+        resetPatchingState(data.message || m.patching_generic_error());
+        return;
+      }
+
+      console.warn("Received unexpected message from patcher worker", data);
     };
 
-    // Handle worker errors directly
     patcherWorkerInstance.onerror = (errorEvent) => {
       console.error("Patching worker error event:", errorEvent);
       resetPatchingState(
@@ -231,7 +270,6 @@ export async function initiatePatching(
     };
   } catch (error) {
     console.error("Error initiating patching process:", error);
-    // Error during the setup of the patching process
     resetPatchingState(
       m.patching_initiation_error() +
         (error instanceof Error ? ` (${error.message})` : ""),

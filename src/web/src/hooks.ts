@@ -1,7 +1,6 @@
 import { deLocalizeUrl } from "$lib/paraglide/runtime";
 import { initThemeService } from "$lib/services/theme";
 
-// Initialize the theme service
 if (typeof window !== "undefined") {
   initThemeService();
 }

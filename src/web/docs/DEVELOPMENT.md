@@ -4,6 +4,10 @@ This guide covers running the app locally, running tests, and using the sprite t
 
 ## Prerequisites
 
+- Node.js 20+
+- npm
+- Optional: running .NET API for real metadata/seed generation (otherwise set `LOCAL_TEST_MODE=true`)
+
 ## Install and Run
 
 1. Install dependencies
@@ -12,14 +16,23 @@ This guide covers running the app locally, running tests, and using the sprite t
 npm ci
 ```
 
-2. Type-check, lint (optional but recommended)
+2. Configure environment variables (create `.env` if missing)
+
+```env
+PRIVATE_DOTNET_API_BASE_URL=http://localhost:5000
+PUBLIC_SPRITES_BASE_URL=/sprites
+DATABASE_URL=sqlite:dev.db
+```
+
+3. Type-check, lint, test
 
 ```bash
 npm run check
 npm run lint
+npm run test:run
 ```
 
-3. Start the dev server
+4. Start the dev server
 
 ```bash
 npm run dev
@@ -38,6 +51,15 @@ npm run db:migrate
 # Open Drizzle Studio
 npm run db:studio
 ```
+
+## Manual Validation (pre-PR checklist)
+
+1. `npm run build`
+2. `npm run test:run`
+3. `npm run check`
+4. `npm run lint`
+5. `npm run format`
+6. Launch `npm run dev` and smoke test the UI (landing page + configuration flow)
 
 ## Tests
 

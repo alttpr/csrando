@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
 	import type { GameSettings } from '$lib/types';
 
 	import * as m from '$lib/paraglide/messages';
@@ -71,7 +70,7 @@
 								? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
 								: 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'}"
 							aria-current={activeGameTab === gameId ? 'page' : undefined}
-							onclick={preventDefault(() => (activeGameTab = gameId))}
+							onclick={() => (activeGameTab = gameId)}
 						>
 							{getGameName(gameId)}
 						</button>

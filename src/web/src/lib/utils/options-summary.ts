@@ -1,13 +1,5 @@
 import type { Metadata, MetadataSetting } from "$lib/types";
-
-const GAME_ALIASES: Record<string, string[]> = {
-  alttp: ["alttpr", "zelda3", "z3"],
-  alttpr: ["alttp", "zelda3", "z3"],
-  z1: ["z1r", "zelda1"],
-  z1r: ["z1", "zelda1"],
-  g2: ["g2r", "goonies2"],
-  g2r: ["g2", "goonies2"],
-};
+import { candidateGameIds } from "$lib/utils/game-aliases";
 
 export interface OptionSummaryParams {
   metadata: Metadata | null | undefined;
@@ -38,16 +30,13 @@ function resolveGameSettingsKey(
   const entries = Object.keys(metadata.gameSettings ?? {});
   if (entries.length === 0) return undefined;
 
-  const normalized = gameId.toLowerCase();
+  const candidates = candidateGameIds(gameId);
   const byLower = new Map(
     entries.map((key) => [key.toLowerCase(), key] as const),
   );
-  const direct = byLower.get(normalized);
-  if (direct) return direct;
 
-  const aliases = GAME_ALIASES[normalized] ?? [];
-  for (const alias of aliases) {
-    const match = byLower.get(alias.toLowerCase());
+  for (const candidate of candidates) {
+    const match = byLower.get(candidate);
     if (match) return match;
   }
 

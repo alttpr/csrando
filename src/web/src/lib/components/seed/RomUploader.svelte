@@ -35,7 +35,6 @@
             fileInput.value = '';
         }
     }
-
 	function getStatusColor() {
 		switch (hashStatus) {
 			case 'verified':
@@ -104,7 +103,6 @@
 							<button
 								type="button"
 								class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-500 transition-colors"
-								onclick={() => document.getElementById(`file_input_${gameId}`)?.click()}
 							>
 								<svg
 									class="w-4 h-4 mr-2"
@@ -213,7 +211,6 @@
 						<button
 							type="button"
 							class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 dark:bg-slate-600 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-500 transition-colors"
-							onclick={() => document.getElementById(`file_input_${gameId}`)?.click()}
 						>
 							<svg
 								class="w-4 h-4 mr-2"

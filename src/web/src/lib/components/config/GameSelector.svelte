@@ -15,22 +15,14 @@
 	}: Props = $props();
 
 	function toggleGameSelection(gameId: string) {
-		if (requiredGames.includes(gameId)) {
-			return;
-		}
-
-		if (selectedGames.includes(gameId)) {
-			const newSelection = selectedGames.filter((id) => id !== gameId);
-			selectedGames = newSelection;
-		} else {
-			selectedGames = [...selectedGames, gameId];
-		}
+		if (requiredGames.includes(gameId)) return;
+		selectedGames = selectedGames.includes(gameId)
+			? selectedGames.filter((id) => id !== gameId)
+			: [...selectedGames, gameId];
 	}
 </script>
 
-{#if games.length == 1}
-	<div></div>
-{:else}
+{#if games.length >= 2}
 	<div class="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 mb-3">
 		<h2 class="text-lg font-bold mb-1.5">{m.config_game_selection_title()}</h2>
 		<p class="mb-2 text-xs text-slate-600 dark:text-slate-400">
@@ -46,20 +38,21 @@
 		{:else}
 			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 mb-2">
 				{#each games as game (game.id)}
+					{@const isSelected = selectedGames.includes(game.id)}
 					<button
 						type="button"
 						class="border rounded-md p-1.5 cursor-pointer transition-all text-xs
-                  {selectedGames.includes(game.id)
+						{isSelected
 							? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
 							: 'border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700'}"
 						onclick={() => toggleGameSelection(game.id)}
-						aria-pressed={selectedGames.includes(game.id)}
+						aria-pressed={isSelected}
 					>
 						<div class="flex items-start space-x-1.5">
 							<input
 								type="checkbox"
 								class="mt-0.5 h-3 w-3 pointer-events-none"
-								checked={selectedGames.includes(game.id)}
+								checked={isSelected}
 								tabindex="-1"
 								aria-hidden="true"
 							/>

@@ -47,13 +47,14 @@ Always perform these after making changes:
 
 1. Build validation: `npm run build` (never cancel)
 2. Test validation: `npm run test:run`
-3. Application testing:
+3. Type/lint passes: `npm run check` and `npm run lint`
+4. Application testing:
    - Start `npm run dev`
    - Open `http://localhost:5173`
    - Verify homepage shows "Welcome to the Game Randomizer!"
    - Click "Get Started" to reach config page
    - Expected (without backend): "Failed to communicate with backend" error
-4. Linting/formatting: `npm run format` before committing
+5. Formatting: `npm run format` before committing
 
 ## Coding Style & Naming Conventions
 

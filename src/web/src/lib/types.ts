@@ -21,7 +21,6 @@ import {
   RandomizerResponseSchema,
   RandomizeRequestSchema,
 } from "$lib/schemas/backend";
-// Post-Generation Settings (preferred naming)
 import {
   GamePostGenConfigSchema,
   PostGenSettingSchema,
@@ -99,7 +98,6 @@ export type MetadataSetting = z.infer<typeof MetadataSettingSchema>;
 export type GameSettings = z.infer<typeof GameSettingsSchema>;
 export type Metadata = z.infer<typeof MetadataSchema>;
 
-// Sprite config types inferred from Zod schemas
 export type SpritePatchFile = z.infer<typeof SpritePatchFileSchema>;
 export type SpritePatchEntry = z.infer<typeof SpritePatchEntrySchema>;
 export type SpritePatchDetails = z.infer<typeof SpritePatchDetailsSchema>;
@@ -108,11 +106,9 @@ export type GameSpriteConfig = z.infer<typeof GameSpriteConfigSchema>;
 
 export type GameSpriteConfigMap = Map<string, GameSpriteConfig>;
 
-// Backend response types inferred from schema
 export type RandomizerResponse = z.infer<typeof RandomizerResponseSchema>;
 export type RandomizeRequest = z.infer<typeof RandomizeRequestSchema>;
 
-// Post-generation settings config types (preferred names)
 export type GamePostGenConfig = z.infer<typeof GamePostGenConfigSchema>;
 export type PostGenSetting = z.infer<typeof PostGenSettingSchema>;
 export type SelectPostGenSetting = z.infer<typeof SelectPostGenSettingSchema>;
