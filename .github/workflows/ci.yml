@@ -26,6 +26,8 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --configuration Release --no-build
 
   frontend:
     name: Build/Test Frontend
@@ -56,4 +58,3 @@ jobs:
           PUBLIC_SPRITES_BASE_URL: /sprites
           DATABASE_URL: sqlite:ci.db
         run: npm run build
-
