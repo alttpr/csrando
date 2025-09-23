@@ -13,9 +13,6 @@ jobs:
   backend:
     name: Build .NET Backend
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/Randomizer
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
@@ -23,11 +20,11 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore ALttPR.sln
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build ALttPR.sln --configuration Release --no-restore
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        run: dotnet test ALttPR.sln --configuration Release --no-build
 
   frontend:
     name: Build/Test Frontend
