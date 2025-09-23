@@ -140,12 +140,12 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         // Get the current Git commit hash
         string commitHash = ThisAssembly.Git.Commit;
         var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
-        string versionString = $"Quad v.{version.Major}.{version.Minor}.{version.Build} S{prng.Seed:X08}";
+        string versionString = $"Quad v.{version.Major}.{version.Minor}.{version.Build} S{PRNG.Seed:X08}";
         string commitString = $"{DateTime.Now.ToShortDateString()} - #{commitHash}".PadLeft(26, ' ');
 
         rom.Write(0x7C0001, ConvertStringToByteArray(versionString));
         rom.Write(0x7C001D, ConvertStringToByteArray(commitString));
-        rom.Write(0x7FFFF0, BitConverter.GetBytes(prng.Seed));
+        rom.Write(0x7FFFF0, BitConverter.GetBytes(PRNG.Seed));
 
     }
 

@@ -209,8 +209,17 @@ public class Rom : GameRom
         {
             foreach (var door in world.Map.doors)
             {
-                var fromRoom = world.JsonData.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.from.exit_ptr));
-                var toRoom = world.JsonData.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.to.exit_ptr));
+                if (!door.from.exit_ptr.HasValue || !door.to.exit_ptr.HasValue)
+                {
+                    Console.WriteLine($"Skipping door with missing exit pointers: {door.from} -> {door.to}");
+                    continue;
+                }
+
+                var fromExitPtr = door.from.exit_ptr.Value;
+                var toExitPtr = door.to.exit_ptr.Value;
+
+                var fromRoom = world.JsonData.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr));
+                var toRoom = world.JsonData.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr));
 
                 ushort fromRoomId = (ushort)(int.Parse(fromRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
                 ushort toRoomId = (ushort)(int.Parse(toRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
@@ -226,7 +235,7 @@ public class Rom : GameRom
                     originalDoorData.elevator = (byte)(originalDoorData.elevator & ~0x40);
                 }
 
-                Write((Address)door.from.exit_ptr, DoorReader.GetDoorBytes(originalDoorData));
+                Write((Address)fromExitPtr, DoorReader.GetDoorBytes(originalDoorData));
 
                 if (door.from.exit_ptr == 0x1A798)
                 {
@@ -237,7 +246,10 @@ public class Rom : GameRom
 
                 if (door.bidirectional == true)
                 {
-                    originalDoorData = doorData.Where(d => d.ptr == door.from.entrance_ptr).First();
+                    if (!door.from.entrance_ptr.HasValue)
+                        continue;
+
+                    originalDoorData = doorData.Where(d => d.ptr == door.from.entrance_ptr.Value).First();
                     if (fromRoom != null && toRoom != null && fromRoom.Area != toRoom.Area)
                     {
                         originalDoorData.elevator |= 0x40;
@@ -246,7 +258,7 @@ public class Rom : GameRom
                     {
                         originalDoorData.elevator = (byte)(originalDoorData.elevator & ~0x40);
                     }
-                    Write((Address)door.to.exit_ptr, DoorReader.GetDoorBytes(originalDoorData));
+                    Write((Address)toExitPtr, DoorReader.GetDoorBytes(originalDoorData));
                 }
             }
 
@@ -743,6 +755,9 @@ public class Rom : GameRom
 
         if (doorPlmData.PLMs != null)
         {
+            if (otherDoor.Node is null)
+                throw new InvalidOperationException("Expected door node information for Mother Brain room.");
+
             // Write a new PLM to this room with our mother brain door, facing the correct way
             var plmToWrite = otherDoor.Node.DoorOrientation switch
             {
@@ -764,6 +779,9 @@ public class Rom : GameRom
 
         if (doorPlmDataLeft.PLMs != null)
         {
+            if (otherLeftdoor.Node is null)
+                throw new InvalidOperationException("Expected door node information for Mother Brain left door.");
+
             // Write a new PLM to this room with our mother brain door, facing the correct way
             var plmToWrite = otherLeftdoor.Node.DoorOrientation switch
             {

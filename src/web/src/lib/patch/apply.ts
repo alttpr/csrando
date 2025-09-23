@@ -1,3 +1,5 @@
+import { parse as bpsParse, apply as bpsApply } from "bps";
+
 export type PatchFormat = "ips" | "bps";
 
 function asUint8Array(buffer: ArrayBuffer | Uint8Array): Uint8Array {
@@ -116,51 +118,6 @@ export function applyIpsPatch(
   );
 }
 
-function readUnsignedNumber(
-  data: Uint8Array,
-  state: { offset: number },
-): number {
-  let result = 0;
-  let shift = 1;
-
-  while (true) {
-    if (state.offset >= data.length) {
-      throw new Error(
-        "Invalid BPS patch: Unexpected end of file while reading varint.",
-      );
-    }
-    const value = data[state.offset++];
-    result += (value & 0x7f) * shift;
-    if (value & 0x80) break;
-    shift <<= 7;
-    result += shift;
-  }
-
-  return result;
-}
-
-function readSignedNumber(data: Uint8Array, state: { offset: number }): number {
-  const unsigned = readUnsignedNumber(data, state);
-  const negative = (unsigned & 1) === 1;
-  const magnitude = unsigned >> 1;
-  return negative ? -(magnitude + 1) : magnitude;
-}
-
-function ensureRange(
-  label: string,
-  start: number,
-  length: number,
-  max: number,
-) {
-  if (start < 0 || length < 0 || start + length > max) {
-    throw new Error(
-      `${label} out of bounds while applying BPS patch (offset=${start}, length=${length}, size=${max}).`,
-    );
-  }
-}
-
-import { parse as bpsParse, apply as bpsApply } from "bps";
-
 export function applyBpsPatch(
   baseRom: ArrayBuffer,
   patchData: ArrayBuffer,
@@ -172,7 +129,7 @@ export function applyBpsPatch(
   // matches the expected source size (handling 512-byte copier headers gracefully)
   const sourceBytes = asUint8Array(baseRom);
   let sourceView: Uint8Array = sourceBytes;
-  const srcSize = (instructions as any).sourceSize >>> 0;
+  const srcSize = instructions.sourceSize >>> 0;
   if (sourceView.byteLength < srcSize) {
     throw new Error(
       `Invalid base ROM: BPS patch expects ${srcSize} bytes but received ${sourceView.byteLength}.`,
@@ -186,7 +143,7 @@ export function applyBpsPatch(
     }
   }
 
-  const result = bpsApply(instructions as any, sourceView);
+  const result = bpsApply(instructions, sourceView);
   // Ensure ArrayBuffer return type
   return result.buffer as ArrayBuffer;
 }
@@ -197,8 +154,8 @@ export function getBpsPatchInfo(
 ): { sourceSize: number; targetSize: number } | null {
   try {
     const { instructions } = bpsParse(new Uint8Array(patchData));
-    const src = Number((instructions as any).sourceSize ?? 0);
-    const tgt = Number((instructions as any).targetSize ?? 0);
+    const src = Number(instructions.sourceSize ?? 0);
+    const tgt = Number(instructions.targetSize ?? 0);
     if (!Number.isFinite(src) || !Number.isFinite(tgt) || src <= 0 || tgt <= 0)
       return null;
     return { sourceSize: src, targetSize: tgt };

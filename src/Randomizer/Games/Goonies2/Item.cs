@@ -13,7 +13,6 @@ public enum ItemType
 public sealed class Item : Randomizer.Graph.Item
 {
     public ItemType Type { get; }
-    public byte[]? Bytes { get; set; }
     public byte? Gfx { get; }
 
     /// <summary>

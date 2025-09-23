@@ -89,7 +89,6 @@ public abstract class GameRandomizer
 
     public void Write(IRomBroker broker)
     {
-        IRom? lastRom = null;
         foreach (var (i, world) in Worlds.Indexed())
             WriteForWorld(world, broker, PRNG, Worlds.Length > 1 ? $"_W{i + 1}" : null);
     }

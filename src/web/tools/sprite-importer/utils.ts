@@ -86,10 +86,7 @@ export function renderPreviewImageForGame(
   if (rdc.contains(LinkSprite.RDC_TYPE_ID) && game === "alttp") {
     const link = rdc.tryParseBlock(rdcBuffer, LinkSprite);
     if (link) return renderZ3AvatarImage(link);
-  } else if (
-    rdc.contains(SamusSprite.RDC_TYPE_ID) &&
-    game === "supermetroid"
-  ) {
+  } else if (rdc.contains(SamusSprite.RDC_TYPE_ID) && game === "supermetroid") {
     const samus = rdc.tryParseBlock(rdcBuffer, SamusSprite);
     if (samus) return renderSMAvatarImage(samus);
   } else if (

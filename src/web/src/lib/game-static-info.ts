@@ -186,297 +186,205 @@ const samusManifestSegments: RdcManifestSegment[] = [
   {
     length: 0x3c0,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9a9a00 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9a9a00 }],
   },
   {
     length: 0x600,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0xb6da00 },
-    ],
+    addresses: [{ mapping: "default", address: 0xb6da00 }],
   },
   {
     length: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0xb6d900 },
-    ],
+    addresses: [{ mapping: "default", address: 0xb6d900 }],
   },
   {
     length: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0xb6d980 },
-    ],
+    addresses: [{ mapping: "default", address: 0xb6d980 }],
   },
   {
     length: 0x1e,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9402 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9402 }],
   },
   {
     length: 0x1e,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9522 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9522 }],
   },
   {
     length: 0x1e,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9802 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9802 }],
   },
   {
     length: 0x1e,
     entries: 9,
-    entryOffsets: [
-      0x0,
-      0x24,
-      0x4f,
-      0x73,
-      0x9e,
-      0xc2,
-      0xed,
-      0x111,
-      0x139,
-    ],
+    entryOffsets: [0x0, 0x24, 0x4f, 0x73, 0x9e, 0xc2, 0xed, 0x111, 0x139],
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8ddb6d },
-    ],
+    addresses: [{ mapping: "default", address: 0x8ddb6d }],
   },
   {
     length: 0x1e,
     entries: 9,
-    entryOffsets: [
-      0x0,
-      0x24,
-      0x4f,
-      0x73,
-      0x9e,
-      0xc2,
-      0xed,
-      0x111,
-      0x139,
-    ],
+    entryOffsets: [0x0, 0x24, 0x4f, 0x73, 0x9e, 0xc2, 0xed, 0x111, 0x139],
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8ddcd3 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8ddcd3 }],
   },
   {
     length: 0x1e,
     entries: 9,
-    entryOffsets: [
-      0x0,
-      0x24,
-      0x4f,
-      0x73,
-      0x9e,
-      0xc2,
-      0xed,
-      0x111,
-      0x139,
-    ],
+    entryOffsets: [0x0, 0x24, 0x4f, 0x73, 0x9e, 0xc2, 0xed, 0x111, 0x139],
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8dde39 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8dde39 }],
   },
   {
     length: 0x1e,
     entries: 16,
     entryStride: 0x22,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8de468 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8de468 }],
   },
   {
     length: 0x1e,
     entries: 16,
     entryStride: 0x22,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8de694 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8de694 }],
   },
   {
     length: 0x1e,
     entries: 16,
     entryStride: 0x22,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8de8c0 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8de8c0 }],
   },
   {
     length: 0x1e,
     entries: 8,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9822 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9822 }],
   },
   {
     length: 0x1e,
     entries: 8,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9922 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9922 }],
   },
   {
     length: 0x1e,
     entries: 8,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9a22 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9a22 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9b22 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9b22 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9d22 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9d22 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9f22 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9f22 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9ba2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9ba2 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9da2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9da2 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9fa2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9fa2 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9c22 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9c22 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9e22 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9e22 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9ba022 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9ba022 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9ca2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9ca2 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b9ea2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b9ea2 }],
   },
   {
     length: 0x1e,
     entries: 4,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9ba0a2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9ba0a2 }],
   },
   {
     length: 0x1e,
     entries: 6,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9b96c2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9b96c2 }],
   },
   {
     length: 0x1e,
     entries: 9,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9ba122 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9ba122 }],
   },
   {
     length: 0x1e,
     entries: 10,
     entryStride: 0x20,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9ba242 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9ba242 }],
   },
   {
     length: 0x1e,
@@ -489,9 +397,7 @@ const samusManifestSegments: RdcManifestSegment[] = [
   {
     length: 0x1e,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x9ba382 },
-    ],
+    addresses: [{ mapping: "default", address: 0x9ba382 }],
   },
   {
     length: 0x6,
@@ -504,48 +410,36 @@ const samusManifestSegments: RdcManifestSegment[] = [
   {
     length: 0x2,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x82e52c },
-    ],
+    addresses: [{ mapping: "default", address: 0x82e52c }],
   },
   {
     length: 0x1e,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8ee5e2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8ee5e2 }],
   },
   {
     length: 0x1e,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8ce68b },
-    ],
+    addresses: [{ mapping: "default", address: 0x8ce68b }],
   },
   {
     length: 0x1e,
     entries: 16,
     entryStride: 0x24,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8dd6c2 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8dd6c2 }],
   },
   {
     length: 0x1c,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0xa2a5a0 },
-    ],
+    addresses: [{ mapping: "default", address: 0xa2a5a0 }],
   },
   {
     length: 0x2,
     entries: 14,
     entryStride: 0x6,
     addressType: "snes",
-    addresses: [
-      { mapping: "default", address: 0x8dca54 },
-    ],
+    addresses: [{ mapping: "default", address: 0x8dca54 }],
   },
 ];
 

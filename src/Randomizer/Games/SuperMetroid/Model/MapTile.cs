@@ -14,7 +14,7 @@ namespace Randomizer.Games.SuperMetroid.Model
     public class MapRoom
     {
         public int RoomId { get; set; }
-        public string RoomName { get; set; }
+        public required string RoomName { get; set; } = string.Empty;
         public List<MapTile> MapTiles { get; set; } = new();
 
         [JsonInclude] public decimal? WaterLevel { get; set; }
@@ -30,7 +30,7 @@ namespace Randomizer.Games.SuperMetroid.Model
         private const ushort MapPalette = 0x0C00;
 
         // Tile coordinates: (X = Coords[0], Y = Coords[1])
-        public int[] Coords { get; set; }
+        public required int[] Coords { get; set; } = Array.Empty<int>();
 
         // Edges
         [JsonConverter(typeof(JsonStringEnumConverter))]

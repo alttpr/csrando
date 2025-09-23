@@ -11,9 +11,6 @@ public enum ItemType
 public sealed class Item : Randomizer.Graph.Item
 {
     public ItemType Type { get; }
-    public byte[]? Bytes { get; set; }
-    public float HealthValue { get; } = 0; // FIXME: is there health increase anywhere?
-    public IItem? LogicalItem { get; } // FIXME: are there logic-relevant items that represent viable alternatives?
 
     /// <summary>
     /// Create a new Item.

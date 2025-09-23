@@ -16,7 +16,7 @@ public class YamlReader
 
     private Config config;
     private YamlData? data;
-    private readonly Dictionary<string, Dictionary<string, object>> vertices = [];
+    private readonly Dictionary<string, Dictionary<string, object?>> vertices = [];
     private readonly Dictionary<string, DirectedUndirectedPair> edges = [];
 
     public YamlData? Data { get { return data; } }
@@ -101,7 +101,7 @@ public class YamlReader
         public Area area;
         public Scrolling scroll;
         public required int[] position;
-        public int[] screens;
+        public required int[] screens { get; set; } = Array.Empty<int>();
         public List<Sprite>? sprites;
     }
 
@@ -206,7 +206,7 @@ public class YamlReader
         return yamlData;
     }
 
-    private T LoadFile<T>(string path)
+    private T? LoadFile<T>(string path)
     {
         var deserializer = new DeserializerBuilder().Build();
         try
@@ -239,7 +239,7 @@ public class YamlReader
         return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
-    public List<Dictionary<string, object>> GetVertices(World world)
+    public List<Dictionary<string, object?>> GetVertices(World world)
     {
         return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
     }
@@ -256,25 +256,30 @@ public class YamlReader
             BuildRoom(room);
         }
 
-        // Construct item table data 
+        // Construct item table data
 
     }
 
-    private Dictionary<string, object> CreateNode(Dictionary<string, object> nodeData)
+    private Dictionary<string, object?> CreateNode(Dictionary<string, object?> nodeData)
     {
-        vertices.Add((string)nodeData["name"], nodeData);
-        return nodeData;
+        if (nodeData.TryGetValue("name", out var nameValue) && nameValue is string name)
+        {
+            vertices.Add(name, nodeData);
+            return nodeData;
+        }
+
+        throw new InvalidOperationException("Node data must include a non-null name");
     }
 
-    private Dictionary<string, object> FindOrCreateNode(string name, string? item = null)
+    private Dictionary<string, object?> FindOrCreateNode(string name, string? item = null)
     {
         if (!vertices.TryGetValue(name, out var vertexData))
         {
-            vertexData = new Dictionary<string, object>
+            vertexData = new Dictionary<string, object?>
             {
                 { "name", name },
                 { "type", VertexType.Meta },
-                { "item", item! },
+                { "item", item },
             };
             vertices.Add(name, vertexData);
         }
@@ -282,7 +287,7 @@ public class YamlReader
         return vertexData;
     }
 
-    private void AddEdge(Dictionary<string, object> from, Dictionary<string, object> to, string edgeGroup, bool undirected = false)
+    private void AddEdge(Dictionary<string, object?> from, Dictionary<string, object?> to, string edgeGroup, bool undirected = false)
     {
         if (!edges.TryGetValue(edgeGroup, out var edgePair))
         {
@@ -290,22 +295,25 @@ public class YamlReader
             edges.Add(edgeGroup, edgePair);
         }
 
+        if (from["name"] is not string fromName || to["name"] is not string toName)
+            throw new InvalidOperationException("Node name missing for edge creation");
+
         if (undirected)
         {
-            edgePair.Undirected.Add([(string)from["name"], (string)to["name"]]);
+            edgePair.Undirected.Add([fromName, toName]);
         }
         else
         {
-            edgePair.Directed.Add([(string)from["name"], (string)to["name"]]);
+            edgePair.Directed.Add([fromName, toName]);
         }
     }
 
-    private void AddDirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, string edgeGroup)
+    private void AddDirectedEdge(Dictionary<string, object?> from, Dictionary<string, object?> to, string edgeGroup)
     {
         AddEdge(from, to, edgeGroup);
     }
 
-    private void AddUndirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, string edgeGroup)
+    private void AddUndirectedEdge(Dictionary<string, object?> from, Dictionary<string, object?> to, string edgeGroup)
     {
         AddEdge(from, to, edgeGroup, true);
     }
@@ -366,11 +374,20 @@ public class YamlReader
             var elevator = screen.nodes?.exits?.Find(e => e.type == ExitType.Elevator && e.direction == Direction.Down && room.screens.Length == 1);
             if (elevator is not null)
             {
-                var targetRoom = data.rooms.Find(r => r.position[0] == position[0] && r.position[1] == position[1] + 1);
+                var targetRoom = data!.rooms.Find(r => r.position[0] == position[0] && r.position[1] == position[1] + 1);
+                if (targetRoom?.screens is null || targetRoom.screens.Length == 0)
+                    continue;
+
                 var targetScreenId = targetRoom.screens[0];
                 var targetScreen = data.screens.Find(s => s.area == targetRoom.area && s.screen == targetScreenId);
-                var targetExit = targetScreen.nodes.exits?.Find(e => e.type == ExitType.Elevator && e.direction == Direction.Up);
-                var targetExitName = $"{targetRoom.area} - {targetRoom.name} - {targetScreen.name} (0) - {targetExit?.name}";
+                if (targetScreen?.nodes?.exits is null)
+                    continue;
+
+                var targetExit = targetScreen.nodes.exits.Find(e => e.type == ExitType.Elevator && e.direction == Direction.Up);
+                if (targetExit is null)
+                    continue;
+
+                var targetExitName = $"{targetRoom.area} - {targetRoom.name} - {targetScreen.name} (0) - {targetExit.name}";
 
                 var elevatorName = $"{screenName} - {elevator.name}";
 
@@ -416,6 +433,9 @@ public class YamlReader
                 if (screen.nodes?.exits is not null)
                 {
                     var toScreen = data.screens.Find(s => s.area == room.area && s.screen == room.screens[prevScreen]);
+                    if (toScreen is null)
+                        continue;
+
                     var toScreenName = $"{roomName} - {toScreen.name} ({prevScreen})";
 
                     foreach (var exit in screen.nodes.exits.Where(e => e.direction == fromDirection))
@@ -481,6 +501,9 @@ public class YamlReader
 
     private string? FindDoor(Room fromRoom, Door fromDoor, int[] targetDoorPosition)
     {
+        if (data is null)
+            throw new InvalidOperationException("Data must be loaded before calling FindDoor");
+
         foreach (var room in data.rooms.Where(r => r.area == fromRoom.area))
         {
             foreach (var (screenNum, screenId) in room.screens.Select((s, i) => (i, s)))
@@ -495,15 +518,20 @@ public class YamlReader
                 if (position[0] == targetDoorPosition[0] && position[1] == targetDoorPosition[1])
                 {
                     var screen = data.screens.Find(s => s.area == fromRoom.area && s.screen == screenId);
+                    if (screen?.nodes?.doors is null)
+                    {
+                        continue;
+                    }
+
                     var roomName = $"{room.area} - {room.name}";
                     var screenName = $"{roomName} - {screen.name} ({screenNum})";
 
                     var targetDoor = fromDoor.direction switch
                     {
-                        Direction.Up => screen.nodes.doors?.Find(d => d.direction == Direction.Down),
-                        Direction.Down => screen.nodes.doors?.Find(d => d.direction == Direction.Up),
-                        Direction.Left => screen.nodes.doors?.Find(d => d.direction == Direction.Right),
-                        Direction.Right => screen.nodes.doors?.Find(d => d.direction == Direction.Left),
+                        Direction.Up => screen.nodes.doors.Find(d => d.direction == Direction.Down),
+                        Direction.Down => screen.nodes.doors.Find(d => d.direction == Direction.Up),
+                        Direction.Left => screen.nodes.doors.Find(d => d.direction == Direction.Right),
+                        Direction.Right => screen.nodes.doors.Find(d => d.direction == Direction.Left),
                         _ => throw new NotImplementedException(),
                     } ?? throw new Exception($"Could not find door in {screenName} to match {fromDoor.name}");
 

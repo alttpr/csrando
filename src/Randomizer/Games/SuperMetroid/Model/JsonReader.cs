@@ -362,7 +362,7 @@ public class JsonReader
                             continue;
                         }
 
-                        foreach (var lockStrat in nodeLock.UnlockStrats)
+                        foreach (var lockStrat in nodeLock.UnlockStrats ?? Array.Empty<Strat>())
                         {
                             var lockStratNodeName = $"{room.Area} - {room.Name} - {node.Name} - Lock Strat: {lockStrat.Name}";
                             var lockStratNode = FindNode(lockStratNodeName) ?? CreateNode(new()
@@ -541,17 +541,20 @@ public class JsonReader
     public void ConnectNode(Room room, Node from, string obstacleState)
     {
         var fromNodeName = obstacleState == "" ? $"{room.Area} - {room.Name} - {from.Name}" : $"{room.Area} - {room.Name} - {from.Name} - {obstacleState}";
-        var fromNodeData = FindNode(fromNodeName)!;
+        var fromNodeData = FindNode(fromNodeName) ?? throw new InvalidOperationException($"Node {fromNodeName} not found");
 
         if (from.SpawnAt != null)
         {
             // Create a fixed link to node id in spawnAt
-            var spawnNode = room.Nodes.Where(n => n.Id == from.SpawnAt).FirstOrDefault()!;
-            var spawnNodeName = $"{room.Area} - {room.Name} - {spawnNode.Name}";
-            var spawnNodeData = FindNode(spawnNodeName)!;
-            if (spawnNodeData != null)
+            var spawnNode = room.Nodes.FirstOrDefault(n => n.Id == from.SpawnAt);
+            if (spawnNode is not null)
             {
-                AddDirectedEdge(fromNodeData, spawnNodeData, new Requirement.Always());
+                var spawnNodeName = $"{room.Area} - {room.Name} - {spawnNode.Name}";
+                var spawnNodeData = FindNode(spawnNodeName);
+                if (spawnNodeData != null)
+                {
+                    AddDirectedEdge(fromNodeData, spawnNodeData, new Requirement.Always());
+                }
             }
         }
 
@@ -563,8 +566,14 @@ public class JsonReader
         {
             foreach (var linkTo in link.To)
             {
-                var toNode = room.Nodes.Where(n => n.Id == linkTo.Id).FirstOrDefault()!;
-                var linkStrats = room.Strats.Where(s => s.Link[0] == link.From && s.Link[1] == linkTo.Id).ToList();
+                var toNode = room.Nodes.FirstOrDefault(n => n.Id == linkTo.Id);
+                if (toNode is null)
+                {
+                    continue;
+                }
+                var linkStrats = room.Strats
+                    .Where(s => s.Link is { Length: >= 2 } linkIds && linkIds[0] == link.From && linkIds[1] == linkTo.Id)
+                    .ToList();
 
                 foreach (var strat in linkStrats)
                 {
@@ -596,11 +605,20 @@ public class JsonReader
                         newObstacleState = string.Join(",", currentObstacles.Except(strat.ResetsObstacles).OrderBy(c => c)).Trim(',');
                     }
 
+                    if (strat.Link is not { Length: >= 2 })
+                    {
+                        continue;
+                    }
+
                     var stratNodeName = $"{fromNodeName} - {string.Join(",", strat.Link)} - Strat: {strat.Name}";
                     var stratNode = FindOrCreateNode(stratNodeName);
 
                     var toNodeName = newObstacleState == "" ? $"{room.Area} - {room.Name} - {toNode.Name}" : $"{room.Area} - {room.Name} - {toNode.Name} - {newObstacleState}";
-                    var toNodeData = FindNode(toNodeName)!;
+                    var toNodeData = FindNode(toNodeName);
+                    if (toNodeData is null)
+                    {
+                        continue;
+                    }
 
                     var requirement = strat.Requires == new Requirement.And([]) ? new Requirement.Always() : strat.Requires;
 

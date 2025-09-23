@@ -3,7 +3,10 @@ import { error as svelteError } from "@sveltejs/kit";
 import type { Metadata } from "$lib/types";
 import { parseMetadata } from "$lib/schemas/metadata";
 import { mockDataService } from "./mock-data";
-import { candidateGameIds, canonicalRandomizerId } from "$lib/utils/game-aliases";
+import {
+  candidateGameIds,
+  canonicalRandomizerId,
+} from "$lib/utils/game-aliases";
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
@@ -104,9 +107,10 @@ export const metadataApi = {
     if (!normalized) return id;
 
     try {
-      const index = await callBackendApi<
-        Array<{ name?: string; description?: string; randomizer: string }>
-      >("meta");
+      const index =
+        await callBackendApi<
+          Array<{ name?: string; description?: string; randomizer: string }>
+        >("meta");
 
       const candidates = candidateGameIds(normalized);
 

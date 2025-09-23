@@ -13,22 +13,22 @@ using YamlDotNet.Core.Tokens;
 
 public class StatefulSearcher : ISearcher
 {
-    private Graph _graph;
-    private Dictionary<Vertex, List<VisitedState>> _visitedStates;
-    private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates;
-    private Queue<(Vertex vertex, VisitedState state)> _queue;
-    private Dictionary<Vertex, List<VisitedState>> _inQueue;
-    private Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
-    private HashSet<Vertex> _visitedVertices;
-    private HashSet<IItem> _foundItems;
-    private Inventory _inventory;
-    private Dictionary<(Vertex, IItem), VisitedState> _prevItems;
+    private Graph _graph = null!;
+    private Dictionary<Vertex, List<VisitedState>> _visitedStates = null!;
+    private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates = null!;
+    private readonly Queue<(Vertex vertex, VisitedState state)> _queue = new();
+    private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = new();
+    private Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations = null!;
+    private HashSet<Vertex> _visitedVertices = null!;
+    private readonly HashSet<IItem> _foundItems = new();
+    private Inventory _inventory = null!;
+    private Dictionary<(Vertex, IItem), VisitedState> _prevItems = null!;
     private Vertex? _target;
-    private Vertex _start;
-    private List<(Vertex, VisitedState)> _startStates;
+    private Vertex _start = null!;
+    private List<(Vertex, VisitedState)> _startStates = null!;
     private SetLocations? _setLocations;
-    private List<Randomizer.Graph.Vertex> _otherWorldLocations;
-    private HashSet<Weapon> _currentWeapons;
+    private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = new();
+    private readonly HashSet<Weapon> _currentWeapons = new();
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
@@ -38,7 +38,7 @@ public class StatefulSearcher : ISearcher
         _target = target;
         _start = start;
         _setLocations = setLocations;
-        _otherWorldLocations = new();
+        _otherWorldLocations.Clear();
 
         var startState = (start, visitedState ?? new VisitedState
         {
@@ -182,9 +182,10 @@ public class StatefulSearcher : ISearcher
         if (_target == null)
         {
             //Console.WriteLine($"StatefulSearcher took {stopWatch.ElapsedMilliseconds}ms to complete, doing {z} passes");
-        }
+            }
 
-        _foundItems = new HashSet<IItem>(_prevItems.Select(x => x.Key.Item2));
+            _foundItems.Clear();
+            _foundItems.UnionWith(_prevItems.Select(x => x.Key.Item2));
     }
 
     private void AddUnvisited(Vertex vertex, VisitedState state, HashSet<string> missingItems)
@@ -222,11 +223,11 @@ public class StatefulSearcher : ISearcher
     private Dictionary<(Vertex, IItem), VisitedState> InternalSearch(List<(Vertex, VisitedState)> starts, Inventory inventory, Vertex? target = null)
     {
         var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
-        _queue = new Queue<(Vertex vertex, VisitedState state)>();
-        _inQueue = new Dictionary<Vertex, List<VisitedState>>();
-        _currentWeapons = ((World)_start.World).JsonData.Weapons.Weapons
-            .Where(w => RequirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met)
-            .ToHashSet();
+        _queue.Clear();
+        _inQueue.Clear();
+        _currentWeapons.Clear();
+        _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
+            .Where(w => RequirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met));
 
         foreach (var start in starts)
         {
@@ -517,7 +518,7 @@ public class StatefulSearcher : ISearcher
                 var unlockStratStates = new List<VisitedState>();
                 
 
-                foreach (var unlockStrat in lck.UnlockStrats)
+                foreach (var unlockStrat in lck.UnlockStrats ?? Array.Empty<Strat>())
                 {
                     var result = RequirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
@@ -575,6 +576,9 @@ public class StatefulSearcher : ISearcher
 
     IEnumerable<Randomizer.Graph.Vertex> ISearcher.GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets, bool onlyReachable)
     {
+        if (_setLocations is null)
+            throw new InvalidOperationException("Set locations are not available for this searcher instance.");
+
         var emptyLocations = _setLocations[itemSet].Where((vertex) =>
         {
             return (!onlyReachable || (_visitedVertices.Contains(vertex) && _visitedItemLocations.ContainsKey((Vertex)vertex))) && vertex.Item == null;

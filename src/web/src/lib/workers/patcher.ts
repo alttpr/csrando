@@ -183,13 +183,17 @@ function selectAddressesForMapping(
   mapping: RomMapping,
 ): number[] {
   const normalized = mapping.toLowerCase();
-  const direct = segment.addresses.filter((entry) => entry.mapping === normalized);
+  const direct = segment.addresses.filter(
+    (entry) => entry.mapping === normalized,
+  );
   if (direct.length > 0) return direct.map((entry) => entry.address);
 
   const lorom = segment.addresses.filter((entry) => entry.mapping === "lorom");
   if (lorom.length > 0) return lorom.map((entry) => entry.address);
 
-  const defaults = segment.addresses.filter((entry) => entry.mapping === "default");
+  const defaults = segment.addresses.filter(
+    (entry) => entry.mapping === "default",
+  );
   if (defaults.length > 0) return defaults.map((entry) => entry.address);
 
   return segment.addresses.map((entry) => entry.address);
@@ -286,9 +290,9 @@ function applySamusManifestSegments(
         const srcOffset = entryIndex * segment.length;
         const offsetValue =
           segment.entryOffsets && segment.entryOffsets.length > 0
-            ? segment.entryOffsets[
-            Math.min(entryIndex, segment.entryOffsets.length - 1)
-            ] ?? 0
+            ? (segment.entryOffsets[
+                Math.min(entryIndex, segment.entryOffsets.length - 1)
+              ] ?? 0)
             : segment.entryStride * entryIndex;
 
         let destPc: number;
@@ -299,14 +303,11 @@ function applySamusManifestSegments(
         }
 
         if (destPc < 0 || destPc + segment.length > romU8.length) {
-          console.error(
-            `[SamusRDC] target out of bounds`,
-            {
-              gameId,
-              destination: destPc,
-              segmentLength: segment.length,
-            },
-          );
+          console.error(`[SamusRDC] target out of bounds`, {
+            gameId,
+            destination: destPc,
+            segmentLength: segment.length,
+          });
           continue;
         }
 
@@ -328,11 +329,7 @@ async function applyLinkRdc(
   rdcBuf: ArrayBuffer,
   options: RdcApplyOptions = { gameId: "alttp" },
 ): Promise<ArrayBuffer> {
-  const {
-    gameId = "alttp",
-    randomizerId,
-    spriteKind,
-  } = options || {};
+  const { gameId = "alttp", randomizerId, spriteKind } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
   const linkDataOffset = offsets.get(1 /* LinkSprite */);
   if (linkDataOffset === undefined)
@@ -410,7 +407,9 @@ async function applyNesRdc(
   const palSrc = gfxSrc + gfxLen;
   const resolved = resolveRdcSegmentTargets(
     gameId,
-    (spriteKind ?? (gameId === "zelda1" ? "rdc/nes-z1" : "rdc/nes-m1")).toLowerCase(),
+    (
+      spriteKind ?? (gameId === "zelda1" ? "rdc/nes-z1" : "rdc/nes-m1")
+    ).toLowerCase(),
     randomizerId,
     ["gfx", "palette"],
   );
@@ -441,11 +440,7 @@ async function applySamusRdc(
   rdcBuf: ArrayBuffer,
   options: RdcApplyOptions = { gameId: "supermetroid" },
 ): Promise<ArrayBuffer> {
-  const {
-    gameId = "supermetroid",
-    randomizerId,
-    spriteKind,
-  } = options || {};
+  const { gameId = "supermetroid", randomizerId, spriteKind } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
   const samusOffset = offsets.get(4 /* SamusSprite */);
   if (samusOffset === undefined)
@@ -697,7 +692,11 @@ self.onmessage = async (event) => {
 
     async function obtainBasePatch(): Promise<ArrayBuffer> {
       // 1) API-first: inline bytes count as a successful API fetch
-      if (basePatchBytes && basePatchBytes instanceof ArrayBuffer && basePatchBytes.byteLength > 0) {
+      if (
+        basePatchBytes &&
+        basePatchBytes instanceof ArrayBuffer &&
+        basePatchBytes.byteLength > 0
+      ) {
         return basePatchBytes;
       }
       if (basePatchUrl) {
@@ -712,7 +711,7 @@ self.onmessage = async (event) => {
             return await resp.arrayBuffer();
           }
         } catch (err) {
-          console.debug('Base patch fetch failed', err);
+          console.debug("Base patch fetch failed", err);
           // swallow and try static
         }
       }
@@ -722,14 +721,14 @@ self.onmessage = async (event) => {
           self.postMessage({
             type: "progress",
             progress: 12,
-            note: `Fetching base patch (static)`
+            note: `Fetching base patch (static)`,
           });
           const resp = await fetch(staticPath);
           if (resp.ok) {
             return await resp.arrayBuffer();
           }
         } catch (err) {
-          console.debug('Static base patch fetch failed', err);
+          console.debug("Static base patch fetch failed", err);
           // fall through
         }
       }
@@ -740,15 +739,23 @@ self.onmessage = async (event) => {
       throw new Error(
         srcs.length > 0
           ? `Failed to obtain base patch (tried ${srcs.join(", ")}).`
-          : `No base patch source available for randomizerId='${randomizerIdLc}'.`
+          : `No base patch source available for randomizerId='${randomizerIdLc}'.`,
       );
     }
 
     // Obtain and apply base patch (required)
     const basePatchBuf = await obtainBasePatch();
-    self.postMessage({ type: "progress", progress: 15, note: "Applying base patch" });
+    self.postMessage({
+      type: "progress",
+      progress: 15,
+      note: "Applying base patch",
+    });
     workingBaseRom = applyPatch(workingBaseRom, basePatchBuf);
-    self.postMessage({ type: "progress", progress: 18, note: "Base patch applied" });
+    self.postMessage({
+      type: "progress",
+      progress: 18,
+      note: "Base patch applied",
+    });
 
     // Progress: Main patch (20% -> 50%)
     self.postMessage({ type: "progress", progress: 20 });
@@ -898,8 +905,9 @@ self.onmessage = async (event) => {
           );
 
           if (patchBinary) {
-            const rawTargetAddress =
-              (patchEntry as { targetAddress: number | string }).targetAddress;
+            const rawTargetAddress = (
+              patchEntry as { targetAddress: number | string }
+            ).targetAddress;
             const targetAddress =
               typeof rawTargetAddress === "number"
                 ? rawTargetAddress
@@ -1032,7 +1040,8 @@ self.onmessage = async (event) => {
                     cosmeticSelections?.["palette_randomize_dungeon"] ?? true,
                   ),
                   randomize_link_sprite: Boolean(
-                    cosmeticSelections?.["palette_randomize_link_sprite"] ?? true,
+                    cosmeticSelections?.["palette_randomize_link_sprite"] ??
+                      true,
                   ),
                   randomize_shield: Boolean(
                     cosmeticSelections?.["palette_randomize_shield"] ?? true,
@@ -1045,10 +1054,16 @@ self.onmessage = async (event) => {
                 if (isCombined) {
                   const offset = 0x400000;
                   const slice = u8.subarray(offset, offset + 0x200000);
-                  z3prRandomize(slice, z3opts as unknown as Record<string, unknown>);
+                  z3prRandomize(
+                    slice,
+                    z3opts as unknown as Record<string, unknown>,
+                  );
                   u8.set(slice, offset);
                 } else {
-                  z3prRandomize(u8, z3opts as unknown as Record<string, unknown>);
+                  z3prRandomize(
+                    u8,
+                    z3opts as unknown as Record<string, unknown>,
+                  );
                 }
               } catch (e) {
                 console.error("ALTTP palette randomization failed:", e);
@@ -1103,10 +1118,10 @@ self.onmessage = async (event) => {
 
     const summaryTokens = Array.isArray(optionSummary?.tokens)
       ? optionSummary.tokens
-        .map((token: string) =>
-          slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
-        )
-        .filter((token: string) => token.length > 0)
+          .map((token: string) =>
+            slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
+          )
+          .filter((token: string) => token.length > 0)
       : [];
 
     let summarySegment: string | null = null;

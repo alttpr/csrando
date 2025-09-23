@@ -45,16 +45,18 @@ internal static class DataLoader
         return startingVertex;
     }
 
-    private static void LoadVertices(World world, List<Dictionary<string, object>> vertices)
+    private static void LoadVertices(World world, List<Dictionary<string, object?>> vertices)
     {
         foreach (var vtx in vertices)
         {
-            var name = vtx.TryGetValue("name", out object? nameValue) ? (string)nameValue : throw new InvalidDataException("Metroid vertex without a name");
-            var type = vtx.TryGetValue("type", out object? typeValue) ? (VertexType)typeValue : VertexType.Meta;
-            var subtype = vtx.TryGetValue("subtype", out object? subtypeValue) ? (VertexType?)subtypeValue : (type == VertexType.Item ? VertexType.Standing : null);
-            var item = vtx.TryGetValue("item", out object? itemValue) ? (string)itemValue : null;
-            var itemset = vtx.TryGetValue("itemset", out object? itemsetValue) ? (string[])itemsetValue : null;
-            var address = vtx.TryGetValue("address", out object? addressValue) ? (int?)addressValue : null;
+            if (!vtx.TryGetValue("name", out var nameValue) || nameValue is not string name)
+                throw new InvalidDataException("Metroid vertex without a name");
+
+            var type = vtx.TryGetValue("type", out var typeValue) && typeValue is VertexType typeCast ? typeCast : VertexType.Meta;
+            VertexType? subtype = vtx.TryGetValue("subtype", out var subtypeValue) && subtypeValue is VertexType subtypeCast ? subtypeCast : (type == VertexType.Item ? VertexType.Standing : null);
+            var item = vtx.TryGetValue("item", out var itemValue) && itemValue is string itemName ? itemName : null;
+            var itemset = vtx.TryGetValue("itemset", out var itemsetValue) && itemsetValue is string[] itemsetArray ? itemsetArray : null;
+            int? address = vtx.TryGetValue("address", out var addressValue) && addressValue is int addressInt ? addressInt : null;
 
             if(type == VertexType.Item)
             {
@@ -68,7 +70,7 @@ internal static class DataLoader
                 Type = type,
                 Item = item != null ? world.GetItem(item) : null,
                 ItemSet = itemset?.Select(i => new ItemSetName(i, world)).ToArray() ?? [],
-                Addresses = address != null ? [(long)address.Value] : null,
+                Addresses = address.HasValue ? [(long)address.Value] : null,
             };
 
             world.Graph.AddVertex(vertex);

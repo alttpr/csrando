@@ -80,15 +80,25 @@ public class MapRandomizer
                         toRoom = _reader.Rooms.Find(r => r.Name == toRoomGeometry.name);
                     }
                 }
-                else
-                {
-                    Console.WriteLine($"Failed to find room for door {door.from} -> {door.to}");
-                    continue;
-                }
             }
 
-            var fromNode = fromRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.from.exit_ptr).FirstOrDefault();
-            var toNode = toRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.to.exit_ptr).FirstOrDefault();
+            if (fromRoom == null || toRoom == null)
+            {
+                Console.WriteLine($"Failed to find room for door {door.from} -> {door.to}");
+                continue;
+            }
+
+            if (!door.from.exit_ptr.HasValue || !door.to.exit_ptr.HasValue)
+            {
+                Console.WriteLine($"Skipping door with missing exit pointers: {door.from} -> {door.to}");
+                continue;
+            }
+
+            var fromExitPtr = door.from.exit_ptr.Value;
+            var toExitPtr = door.to.exit_ptr.Value;
+
+            var fromNode = fromRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr).FirstOrDefault();
+            var toNode = toRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr).FirstOrDefault();
 
             if (toNode == null && door.bidirectional == false)
             {
@@ -96,16 +106,34 @@ public class MapRandomizer
                 toNode = toRoom.Nodes.Where(n => n.NodeType == "entrance" && n.NodeSubType == "sandpit").FirstOrDefault();
             }
 
+            if (fromNode is null || toNode is null)
+            {
+                Console.WriteLine($"Failed to resolve nodes for door {door.from} -> {door.to}");
+                continue;
+            }
+
+            string fromOrientation = fromNode.DoorOrientation ?? string.Empty;
+            string toOrientation = toNode.DoorOrientation ?? string.Empty;
+
+            static string MapDoorType(string orientation) => orientation switch
+            {
+                "left" or "right" => "HorizontalDoor",
+                "up" or "down" => "VerticalDoor",
+                string direction => throw new Exception($"Unknown direction {direction}")
+            };
+
+            static string MapNodeOrientation(string orientation) => orientation switch
+            {
+                "left" => "left",
+                "right" => "right",
+                "up" => "top",
+                "down" => "bottom",
+                string direction => throw new Exception($"Unknown direction {direction}")
+            };
+
             var fromConnection = new Connection
             (
-                fromNode?.DoorOrientation ?? "" switch
-                {
-                    "left" => "HorizontalDoor",
-                    "right" => "HorizontalDoor",
-                    "up" => "VerticalDoor",
-                    "down" => "VerticalDoor",
-                    string direction => throw new Exception($"Unknown direction {direction}")
-                },
+                MapDoorType(fromOrientation),
                 door.bidirectional ? "Bidirectional" : "Forward",
                 $"From {fromRoom.Name}:{fromNode.Name} to {toRoom.Name}:{toNode.Name}",
                 [
@@ -116,14 +144,7 @@ public class MapRandomizer
                         fromRoom.Name,
                         fromNode.Id,
                         fromNode.Name,
-                        fromNode?.DoorOrientation ?? "" switch
-                        {
-                            "left" => "left",
-                            "right" => "right",
-                            "up" => "top",
-                            "down" => "bottom",
-                            string direction => throw new Exception($"Unknown direction {direction}")
-                        },
+                        MapNodeOrientation(fromOrientation),
                         null,
                         null
                     ),
@@ -134,14 +155,7 @@ public class MapRandomizer
                         toRoom.Name,
                         toNode.Id,
                         toNode.Name,
-                        fromNode?.DoorOrientation ?? "" switch
-                        {
-                            "left" => "left",
-                            "right" => "right",
-                            "up" => "top",
-                            "down" => "bottom",
-                            string direction => throw new Exception($"Unknown direction {direction}")
-                        },
+                        MapNodeOrientation(toOrientation),
                         null,
                         null
                     ),
@@ -184,5 +198,3 @@ public class MapRandomizer
     }
 
 }
-
-

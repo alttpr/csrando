@@ -132,9 +132,12 @@ internal sealed class RandomAssumedFiller
                     var statefulSearcher = searchers[location.World.Id] switch
                     {
                         Games.SuperMetroid.StatefulSearcher s => s,
-                        Games.Combo.ComboSearcher c => c.SMSearcher,
+                        Games.Combo.ComboSearcher { SMSearcher: { } smSearcher } => smSearcher,
                         _ => throw new Exception("Invalid searcher type")
                     };
+
+                    if (statefulSearcher is null)
+                        throw new InvalidOperationException("Super Metroid searcher is required for backtracking");
 
                     var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
                             .Select(i => i.Item)

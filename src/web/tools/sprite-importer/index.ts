@@ -69,7 +69,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
           .option("game", {
             alias: "g",
             type: "string",
-            description: "Game identifier (alttp, supermetroid, zelda1, metroid).",
+            description:
+              "Game identifier (alttp, supermetroid, zelda1, metroid).",
             choices: ["alttp", "supermetroid", "zelda1", "metroid"],
           })
           .option("tmpDir", {

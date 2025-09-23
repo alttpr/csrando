@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as m from "$lib/paraglide/messages";
 	import { goto } from "$app/navigation";
-	import { base } from "$app/paths";
 	import GameSelector from "$lib/components/config/GameSelector.svelte";
 	import OptionForm from "$lib/components/config/OptionForm.svelte";
 	import GameTabs from "$lib/components/config/GameTabs.svelte";

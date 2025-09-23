@@ -15,7 +15,7 @@ Copy the template and set values:
 cp .env.template .env
 ```
 
- Set:
+Set:
 
 - `DOMAIN`: the site domain (e.g., `example.com`)
 - `TRAEFIK_ACME_EMAIL`: email for Let’s Encrypt
