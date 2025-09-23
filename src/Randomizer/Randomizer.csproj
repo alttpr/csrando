@@ -7,9 +7,9 @@
     <AssemblyVersion>0.2.1</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Games\SuperMetroid\maps\**" />
-    <EmbeddedResource Remove="Games\SuperMetroid\maps\**" />
-    <None Remove="Games\SuperMetroid\maps\**" />
+    <Compile Remove="Games\SuperMetroid\data\maps\**" />
+    <EmbeddedResource Remove="Games\SuperMetroid\data\maps\**" />
+    <None Remove="Games\SuperMetroid\data\maps\**" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -32,5 +32,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Games\SuperMetroid\data\maps\**" />
   </ItemGroup>
 </Project>
