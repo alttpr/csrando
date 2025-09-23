@@ -131,9 +131,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
             }
 
             // Clear out address so the item isn't written by the game specific writers with the wrong bytes
-            Console.WriteLine($"Wrote {location.Item?.Name} to {location.Name} at {string.Join(", ", location.Addresses)}");
             location.Addresses = null;
-            Console.WriteLine($"Cleared addresses for {location.Name} to prevent double-writing.");
         }
     }
 
