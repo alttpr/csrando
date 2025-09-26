@@ -8,27 +8,17 @@ using AlttpWorld = Randomizer.Games.Alttp.World;
 using SMWorld = Randomizer.Games.SuperMetroid.World;
 using Z1World = Randomizer.Games.Zelda1.World;
 using M1World = Randomizer.Games.Metroid.World;
-using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.RomModifications;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World : IWorld
+public sealed class World : World<Item>
 {
-
-    public int Id { get; }
-    public string GameId { get; } = "combo";
-    public Graph Graph { get; }
-    public Inventory StartingItems { get; }
-    public WorldConfig WorldConfig { get; }
     public Config Config { get; }
     public PRNG Prng { get; }
-    public ushort PlacedItemCount { get; set; }
-    private readonly Dictionary<string, Item> _allItems = new();
-    public BaseVertex Start { get; }
 
     public WorldConfig GameConfig { get; init; }
 
-    public AlttpWorld? AlttpWorld { get;  init; }
+    public AlttpWorld? AlttpWorld { get; init; }
     public SMWorld? SMWorld { get; init; }
     public Z1World? Z1World { get; init; }
     public M1World? M1World { get; init; }
@@ -39,12 +29,10 @@ public sealed class World : IWorld
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
+        : base("combo", id, graph, randomizerConfig)
     {
-        Id = id;
-        WorldConfig = randomizerConfig;
         Config = randomizerConfig.Combo ?? throw new ArgumentException("This world requires valid settings for Combo");
         GameConfig = randomizerConfig;
-        Graph = graph;
         Prng = prng;
         Start = graph.AddVertex(new Vertex()
         {
@@ -77,7 +65,7 @@ public sealed class World : IWorld
             StartingItems = StartingItems.Merge(M1World.StartingItems);
         }
 
-        if(WorldConfig.Alttp != null && WorldConfig.Zelda1 != null)
+        if (WorldConfig.Alttp != null && WorldConfig.Zelda1 != null)
         {
             Graph.AddDirected(AlttpWorld!.GetLocation("start"), Z1World!.Start, AlttpWorld!.GetItem("fixed"));
         }
@@ -95,7 +83,7 @@ public sealed class World : IWorld
                 Name = "Crateria - Crateria Map Room - Portal - In",
                 Type = VertexType.Entrance,
                 World = SMWorld!,
-                Addresses = [((SNES)0x83AE00).Value],                
+                Addresses = [((SNES)0x83AE00).Value],
             });
 
             var crateriaMapStationPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
@@ -201,14 +189,16 @@ public sealed class World : IWorld
         }
     }
 
+    protected override Item CreateItem(string name, IWorld world) => new(name, world);
+
     public Inventory ComputeStartingItems()
     {
         var inventory = new Inventory([GetItem("fixed")]);
-        if(AlttpWorld != null)
+        if (AlttpWorld != null)
         {
             inventory.Merge(AlttpWorld.ComputeStartingItems());
-        } 
-        if(SMWorld != null)
+        }
+        if (SMWorld != null)
         {
             inventory.Merge(SMWorld.ComputeStartingItems());
         }
@@ -224,77 +214,9 @@ public sealed class World : IWorld
         return inventory;
     }
 
-    /// <summary>
-    /// Get a vertex by name in this world.
-    /// </summary>
-    /// <param name="locationName">name to search for</param>
-    public BaseVertex GetLocation(string locationName)
+    public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
-        return Graph.GetVertex($"{locationName}:{Id}");
-    }
 
-    public bool HasLocation(string locationName)
-    {
-        return Graph.HasVertex($"{locationName}:{Id}");
-    }
-
-    /// <summary>Get all vertices in this world.</summary>
-    /// <returns></returns>
-    public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World.Id == this.Id);
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    public IEnumerable<BaseVertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
-
-    public IItem GetItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var matchingItem))
-        {
-            return matchingItem;
-        }
-
-        // allow made up items
-        var item = Graph.RegisterItem(new Item(name, this));
-        _allItems.Add(item.Name, item);
-
-        return item;
-    }
-
-    public IItem? GetItemOrNull(string? name)
-    {
-        if (name != null)
-            return GetItem(name);
-        return null;
-    }
-
-    public IItem? GetExistingItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var item))
-            return item;
-        return null;
-    }
-
-    public IEnumerable<Item> GetAllItems()
-    {
-        return _allItems.Values;
-    }
-    
-    public IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
-    {
-        var locations = new List<BaseVertex>();
-
-        locations.AddRange(searcher.GetEmptyLocationsInSet(itemSet, setCounts));
-
-        return locations;
-    }
-
-    public void TrackPlacedItem(BaseVertex location)
-    {
-        location.World.PlacedItemCount++;
-    }
-    
-    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
-    {
-        
         var searcher = GetSearcherForWorld(Graph, Start, startingInventory);
         if (AlttpWorld != null && !searcher.HasFound(AlttpWorld.GetItem("Triforce")))
         {
@@ -319,7 +241,7 @@ public sealed class World : IWorld
         return true;
     }
 
-    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new ComboSearcher(graph, (Vertex)(start ?? Start), inventory, setLocations);
     }

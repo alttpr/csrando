@@ -3,7 +3,7 @@ namespace Randomizer.Games.Goonies2;
 using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using BaseGameRandomizer = Randomizer.Graph.GameRandomizer; // Corrected using alias
+using BaseGameRandomizer = Randomizer.Graph.GameRandomizer;
 
 public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
     : BaseGameRandomizer(randomizerConfigs, prng)
@@ -19,7 +19,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
-        // This needs implementation and handling for IRom types
+        // TODO: Implement ROM writing for Goonies 2
         throw new NotImplementedException();
     }
 }

@@ -11,7 +11,7 @@ public sealed class Rom : GameRom
 
     private readonly Text _text;
     private readonly Credits _credits;
-    private YamlReader.GameData _gameData;
+    private readonly YamlReader.GameData _gameData;
 
     internal InitialSram InitialSram { get; }
 
@@ -23,7 +23,7 @@ public sealed class Rom : GameRom
         _text.RemoveUnwanted();
         _credits = new();
         _gameData = YamlReader.LoadGameData();
-    }    
+    }
 
     /// <summary>Write subsitutions</summary>
     /// <param name="substitutions">[[id, max, replace id, 0xFF], ...]</param>
@@ -1911,7 +1911,7 @@ public sealed class Rom : GameRom
             {
                 throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
             }
-            
+
             var roomData = roomDataHeader.TilesData.ToArray();
             int roomDataStart = roomDataHeader.TilesPtr;
 

@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 public class ComboSearcher : ISearcher
 {
-    private World _world;
-    private Graph _graph;
-    private Inventory _inventory;
+    private readonly World _world;
+    private readonly Graph _graph;
+    private readonly Inventory _inventory;
 
-    private ISearcher? _alttpSearcher;
-    private ISearcher? _smSearcher;
-    private ISearcher? _m1Searcher;
-    private ISearcher? _z1Searcher;
+    private readonly ISearcher? _alttpSearcher;
+    private readonly ISearcher? _smSearcher;
+    private readonly ISearcher? _m1Searcher;
+    private readonly ISearcher? _z1Searcher;
 
     public StatefulSearcher? SMSearcher => _smSearcher as StatefulSearcher;
 
@@ -82,7 +82,7 @@ public class ComboSearcher : ISearcher
         do
         {
             prevInventory = inventory.Clone();
-            if(_world.GameConfig.Alttp != null)
+            if (_world.GameConfig.Alttp != null)
             {
                 var starts = otherWorldVertices.Where(v => v.World == _world.AlttpWorld).ToList();
                 if (_alttpSearcher == null)
@@ -125,7 +125,7 @@ public class ComboSearcher : ISearcher
                 _smSearcher.ResumeSearch(starts, prevInventory);
                 otherWorldVertices.UnionWith(_smSearcher.GetOtherWorld().ToHashSet());
             }
-        } while(prevInventory.All().Count() != inventory.All().Count());
+        } while (prevInventory.All().Count() != inventory.All().Count());
 
     }
 
