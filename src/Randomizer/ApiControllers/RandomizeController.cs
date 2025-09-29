@@ -15,21 +15,23 @@ public sealed class RandomizeController(ILogger<RandomizeController> logger) : C
     [HttpPost]
     public IResult Post(RandomizeRequest request)
     {
+        var seed = request.Seed == 0 ? null : request.Seed;
+
         if (request.Configs is not [_, ..])
             return Results.Problem("At least one world config is required.");
 
-        logger.LogTrace("Seed {Seed} called with {Settings}", request.Seed, request.Configs);
+        logger.LogTrace("Seed {Seed} called with {Settings}", seed, request.Configs);
 
         var worldConfigs = request.Configs;
 
-        var randomizer = RandomizerFactory.Create(worldConfigs, request.Seed);
+        var randomizer = RandomizerFactory.Create(worldConfigs, seed);
 
         try
         {
             randomizer.Randomize();
             if (!randomizer.IsWinnable())
             {
-                logger.LogError("API generated unwinnable game for seed: {Seed}", request.Seed);
+                logger.LogError("API generated unwinnable game for seed: {Seed}", seed);
                 return Results.Problem("Generated game is unwinnable.");
             }
 
@@ -47,7 +49,7 @@ public sealed class RandomizeController(ILogger<RandomizeController> logger) : C
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error during API randomization for seed: {Seed}", request.Seed);
+            logger.LogError(ex, "Error during API randomization for seed: {Seed}", seed);
             return Results.Problem($"An error occurred during randomization: {ex.Message}");
         }
 
