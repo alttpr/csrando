@@ -16,7 +16,16 @@
 			size="lg"
 			className="transform hover:-translate-y-1"
 		>
-			{m.landing_cta()}
+			{m.landing_alttpr()}
+		</Button>
+		&nbsp;
+		<Button
+			href="/config/combo"
+			variant="primary"
+			size="lg"
+			className="transform hover:-translate-y-1"
+		>
+			{m.landing_combo()}
 		</Button>
 	</div>
 

@@ -22,7 +22,12 @@
 			<a
 				href="/config/alttpr"
 				class="text-lg font-semibold hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-				>{m.nav_config()}</a
+				>{m.nav_config_alttpr()}</a
+			>
+			<a
+				href="/config/combo"
+				class="text-lg font-semibold hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+				>{m.nav_config_combo()}</a
 			>
 		</div>
 
