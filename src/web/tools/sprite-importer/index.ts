@@ -21,7 +21,15 @@ import {
   Zelda1SpriteDataBlock,
   Metroid1SpriteDataBlock,
 } from "./rdc-types";
-import { readRdcFileDecompressed } from "./utils";
+import { readRdcFileDecompressed, sanitizeId } from "./utils";
+import {
+  loadZelda1AssetModule,
+  extractZelda1SegmentsFromAsset,
+} from "./zelda1-assets";
+import {
+  loadMetroidAssetModule,
+  extractMetroidSegmentsFromAsset,
+} from "./metroid-assets";
 import {
   renderZ3AvatarImage,
   renderSMAvatarImage,
@@ -514,7 +522,100 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
           }
         }
       } else if (game === "zelda1") {
-        if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
+        const ensureUniqueSpriteKey = (candidate: string): string => {
+          const base = candidate || sanitizeId(`${baseName}`);
+          let attempt = base || "sprite";
+          let counter = 1;
+
+          while (
+            existingSpritesJson[attempt] !== undefined ||
+            newEntriesMap.has(attempt)
+          ) {
+            attempt = `${base || "sprite"}_${counter++}`;
+          }
+          return attempt;
+        };
+
+        if ([".js", ".mjs", ".cjs"].includes(fileExt)) {
+          try {
+            const assets = await loadZelda1AssetModule(filePath);
+            if (!assets.length) {
+              console.log("  No Zelda 1 sprite definitions found in module.");
+              continue;
+            }
+
+            let assetIndex = 0;
+            for (const asset of assets) {
+              assetIndex += 1;
+              const titleFromAsset = asset.name?.trim();
+              const spriteTitle = titleFromAsset || `${baseName}_${assetIndex}`;
+              console.log(`  Processing Zelda 1 asset: ${spriteTitle}`);
+
+              const { buffers, unusedWrites } =
+                extractZelda1SegmentsFromAsset(asset);
+              if (unusedWrites.length > 0) {
+                console.warn(
+                  `  Warning: ${unusedWrites.length} unused write segments found for "${spriteTitle}".`,
+                );
+              }
+
+              const z1Block = new Zelda1SpriteDataBlock();
+              z1Block.setContent(buffers);
+
+              const authorName =
+                asset.creator?.trim() ||
+                asset.originalBy?.trim() ||
+                "Unknown";
+              const metaDataBlock = new MetaDataBlock({
+                title: spriteTitle,
+                author: authorName,
+                sourceFile: file,
+                category: asset.category,
+                originalBy: asset.originalBy,
+                creator: asset.creator,
+              });
+              const rdcBuffer = Rdc.write(authorName, [
+                metaDataBlock,
+                z1Block,
+              ]);
+
+              const candidateKey = sanitizeId(spriteTitle);
+              const spriteKey = ensureUniqueSpriteKey(
+                candidateKey || sanitizeId(`${baseName}_${assetIndex}`),
+              );
+
+              const rdcPath = path.join(outputBaseDir, `${spriteKey}.rdc`);
+
+              await fs.writeFile(rdcPath, rdcBuffer);
+              const pngPath = path.join(outputBaseDir, `${spriteKey}.png`);
+              const pngImage = renderNESAvatarImage(z1Block);
+              await fs.writeFile(pngPath, PNG.sync.write(pngImage));
+              console.log(
+                `  Wrote Zelda 1 asset "${spriteTitle}" to ${rdcPath} with preview ${pngPath}`,
+              );
+
+              const newEntry: SpriteInfoEntry = {
+                title: spriteTitle,
+                author: authorName,
+                game,
+                path: path
+                  .relative(outputDirRoot, pngPath)
+                  .replace(/\\/g, "/"),
+                files: {
+                  rdc: path
+                    .relative(outputDirRoot, rdcPath)
+                    .replace(/\\/g, "/"),
+                },
+              };
+              newEntriesMap.set(spriteKey, newEntry);
+            }
+          } catch (err) {
+            console.error(
+              `  Error processing Zelda 1 asset module ${file}:`,
+              err,
+            );
+          }
+        } else if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
           try {
             const fileBuffer = await readRdcFileDecompressed(filePath);
             const rdc = Rdc.parse(fileBuffer);
@@ -525,17 +626,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               if (z1) {
                 const spriteKey = baseName;
                 const pngPath = path.join(outputBaseDir, `${spriteKey}.png`);
-                const gfxPath = path.join(
-                  outputBaseDir,
-                  `${spriteKey}_gfx.bin`,
-                );
-                const palPath = path.join(
-                  outputBaseDir,
-                  `${spriteKey}_palette.bin`,
-                );
-
-                await fs.writeFile(gfxPath, z1.content[0]);
-                await fs.writeFile(palPath, z1.content[1]);
+                const rdcOutPath = path.join(outputBaseDir, `${spriteKey}.rdc`);
+                await fs.writeFile(rdcOutPath, fileBuffer);
                 const pngImage = renderNESAvatarImage(z1);
                 await fs.writeFile(pngPath, PNG.sync.write(pngImage));
                 console.log(
@@ -564,17 +656,14 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                   path: path
                     .relative(outputDirRoot, pngPath)
                     .replace(/\\/g, "/"),
-                  files: {
-                    gfx: path
-                      .relative(outputDirRoot, gfxPath)
-                      .replace(/\\/g, "/"),
-                    palette: path
-                      .relative(outputDirRoot, palPath)
-                      .replace(/\\/g, "/"),
-                  },
-                };
-                newEntriesMap.set(spriteKey, newEntry);
-              }
+                files: {
+                  rdc: path
+                    .relative(outputDirRoot, rdcOutPath)
+                    .replace(/\\/g, "/"),
+                },
+              };
+              newEntriesMap.set(spriteKey, newEntry);
+            }
             } else {
               console.log(
                 `  RDC file ${file} does not contain Zelda1SpriteDataBlock data (type ${Zelda1SpriteDataBlock.RDC_TYPE_ID}).`,
@@ -588,7 +677,99 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
           }
         }
       } else if (game === "metroid") {
-        if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
+        const ensureUniqueSpriteKey = (candidate: string): string => {
+          const base = candidate || sanitizeId(`${baseName}`);
+          let attempt = base || "sprite";
+          let counter = 1;
+          while (
+            existingSpritesJson[attempt] !== undefined ||
+            newEntriesMap.has(attempt)
+          ) {
+            attempt = `${base || "sprite"}_${counter++}`;
+          }
+          return attempt;
+        };
+
+        if ([".js", ".mjs", ".cjs"].includes(fileExt)) {
+          try {
+            const assets = await loadMetroidAssetModule(filePath);
+            if (!assets.length) {
+              console.log("  No Metroid sprite definitions found in module.");
+              continue;
+            }
+
+            let assetIndex = 0;
+            for (const asset of assets) {
+              assetIndex += 1;
+              const titleFromAsset = asset.name?.trim();
+              const spriteTitle = titleFromAsset || `${baseName}_${assetIndex}`;
+              console.log(`  Processing Metroid asset: ${spriteTitle}`);
+
+              const { buffers, unusedWrites } =
+                extractMetroidSegmentsFromAsset(asset);
+              if (unusedWrites.length > 0) {
+                console.warn(
+                  `  Warning: ${unusedWrites.length} unused write segments found for "${spriteTitle}".`,
+                );
+              }
+
+              const m1Block = new Metroid1SpriteDataBlock();
+              m1Block.setContent(buffers);
+
+              const authorName =
+                asset.creator?.trim() ||
+                asset.originalBy?.trim() ||
+                "Unknown";
+              const metaDataBlock = new MetaDataBlock({
+                title: spriteTitle,
+                author: authorName,
+                sourceFile: file,
+                category: asset.category,
+                originalBy: asset.originalBy,
+                creator: asset.creator,
+              });
+              const rdcBuffer = Rdc.write(authorName, [
+                metaDataBlock,
+                m1Block,
+              ]);
+
+              const candidateKey = sanitizeId(spriteTitle);
+              const spriteKey = ensureUniqueSpriteKey(
+                candidateKey || sanitizeId(`${baseName}_${assetIndex}`),
+              );
+
+              const rdcPath = path.join(outputBaseDir, `${spriteKey}.rdc`);
+              await fs.writeFile(rdcPath, rdcBuffer);
+
+              const pngPath = path.join(outputBaseDir, `${spriteKey}.png`);
+              const pngImage = renderNESAvatarImage(m1Block);
+              await fs.writeFile(pngPath, PNG.sync.write(pngImage));
+              console.log(
+                `  Wrote Metroid asset "${spriteTitle}" to ${rdcPath} with preview ${pngPath}`,
+              );
+
+              const newEntry: SpriteInfoEntry = {
+                title: spriteTitle,
+                author: authorName,
+                game,
+                path: path
+                  .relative(outputDirRoot, pngPath)
+                  .replace(/\\/g, "/"),
+                files: {
+                  rdc: path
+                    .relative(outputDirRoot, rdcPath)
+                    .replace(/\\/g, "/"),
+                },
+              };
+              newEntriesMap.set(spriteKey, newEntry);
+            }
+          } catch (err) {
+            console.error(
+              `  Error processing Metroid asset module ${file}:`,
+              err,
+            );
+          }
+        } else if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
           try {
             const fileBuffer = await readRdcFileDecompressed(filePath);
             const rdc = Rdc.parse(fileBuffer);
@@ -599,17 +780,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               if (m1) {
                 const spriteKey = baseName;
                 const pngPath = path.join(outputBaseDir, `${spriteKey}.png`);
-                const gfxPath = path.join(
-                  outputBaseDir,
-                  `${spriteKey}_gfx.bin`,
-                );
-                const palPath = path.join(
-                  outputBaseDir,
-                  `${spriteKey}_palette.bin`,
-                );
-
-                await fs.writeFile(gfxPath, m1.content[0]);
-                await fs.writeFile(palPath, m1.content[1]);
+                const rdcOutPath = path.join(outputBaseDir, `${spriteKey}.rdc`);
+                await fs.writeFile(rdcOutPath, fileBuffer);
                 const pngImage = renderNESAvatarImage(m1);
                 await fs.writeFile(pngPath, PNG.sync.write(pngImage));
                 console.log(
@@ -638,17 +810,14 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                   path: path
                     .relative(outputDirRoot, pngPath)
                     .replace(/\\/g, "/"),
-                  files: {
-                    gfx: path
-                      .relative(outputDirRoot, gfxPath)
-                      .replace(/\\/g, "/"),
-                    palette: path
-                      .relative(outputDirRoot, palPath)
-                      .replace(/\\/g, "/"),
-                  },
-                };
-                newEntriesMap.set(spriteKey, newEntry);
-              }
+                files: {
+                  rdc: path
+                    .relative(outputDirRoot, rdcOutPath)
+                    .replace(/\\/g, "/"),
+                },
+              };
+              newEntriesMap.set(spriteKey, newEntry);
+            }
             } else {
               console.log(
                 `  RDC file ${file} does not contain Metroid1SpriteDataBlock data (type ${Metroid1SpriteDataBlock.RDC_TYPE_ID}).`,

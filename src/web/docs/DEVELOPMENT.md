@@ -115,7 +115,7 @@ Options:
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| `--game <id>` | Specific game (`alttp`, `sm`, `zelda1`, `metroid1`) | required unless `--all` |
+| `--game <id>` | Specific game (`alttp`, `sm`, `zelda1`, `metroid`) | required unless `--all` |
 | `--all` | Build atlases for all game folders containing `sprites.json` | false |
 | `--maxWidth <px>` | Maximum sheet width; grid wraps after this | 2048 |
 | `--keep <n>` | Number of historical sheet versions (hash variants) to keep | 2 |
