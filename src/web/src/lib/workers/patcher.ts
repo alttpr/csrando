@@ -291,8 +291,8 @@ function applySamusManifestSegments(
         const offsetValue =
           segment.entryOffsets && segment.entryOffsets.length > 0
             ? (segment.entryOffsets[
-                Math.min(entryIndex, segment.entryOffsets.length - 1)
-              ] ?? 0)
+              Math.min(entryIndex, segment.entryOffsets.length - 1)
+            ] ?? 0)
             : segment.entryStride * entryIndex;
 
         let destPc: number;
@@ -389,49 +389,59 @@ async function applyNesRdc(
 ): Promise<ArrayBuffer> {
   const { randomizerId, spriteKind } = options || {};
   const { offsets } = parseRdcOffsets(rdcBuf);
-  const typeId =
-    gameId === "zelda1"
-      ? 2 /* Zelda1SpriteDataBlock */
-      : 3; /* Metroid1SpriteDataBlock */
+  const typeId = gameId === "zelda1" ? 2 : 3; // Zelda1SpriteDataBlock / Metroid1SpriteDataBlock
   const blockOffset = offsets.get(typeId);
-  if (blockOffset === undefined)
+  if (blockOffset === undefined) {
     throw new Error("RDC does not contain NES sprite data");
+  }
 
   const workingRom = rom;
   const romU8 = new Uint8Array(workingRom);
   const rdcU8 = new Uint8Array(rdcBuf);
 
-  const gfxLen = gameId === "zelda1" ? 0x1000 : 0x2000;
-  const palLen = 0x20;
-  const gfxSrc = blockOffset;
-  const palSrc = gfxSrc + gfxLen;
-  const resolved = resolveRdcSegmentTargets(
-    gameId,
-    (
-      spriteKind ?? (gameId === "zelda1" ? "rdc/nes-z1" : "rdc/nes-m1")
-    ).toLowerCase(),
-    randomizerId,
-    ["gfx", "palette"],
-  );
+  // Resolve manifest (now defined for both zelda1 & metroid) and apply sequentially.
+  const spriteKindKey = (
+    spriteKind ?? (gameId === "zelda1" ? "rdc/nes-z1" : "rdc/nes-m1")
+  ).toLowerCase();
+  const variant = getSpriteTargetVariant(gameId, spriteKindKey, randomizerId);
+  const manifest = variant?.manifest;
+  if (!manifest) {
+    throw new Error(
+      `Missing manifest for NES sprite '${spriteKindKey}' on game '${gameId}'.`,
+    );
+  }
 
-  const gfxDst = computeSegmentTarget(resolved, "gfx");
-  const palDst = computeSegmentTarget(resolved, "palette");
+  // Reuse generic segment application logic akin to Samus but simpler: no entries/stride logic needed here.
+  let cursor = blockOffset;
+  for (const segment of manifest.segments) {
+    const segmentLen = segment.length * (segment.entries ?? 1);
+    if (cursor + segmentLen > rdcU8.length) {
+      throw new Error(
+        `[NESRDC] Segment overruns RDC buffer (need ${segmentLen} at ${cursor}, size=${rdcU8.length}).`,
+      );
+    }
+    const segmentData = rdcU8.subarray(cursor, cursor + segmentLen);
+    cursor += segmentLen;
 
-  // Bounds-safe copies (clamped)
-  copyBytes(
-    romU8,
-    rdcU8,
-    Math.min(gfxDst, Math.max(0, romU8.length - gfxLen)),
-    gfxSrc,
-    Math.min(gfxLen, romU8.length),
-  );
-  copyBytes(
-    romU8,
-    rdcU8,
-    Math.min(palDst, Math.max(0, romU8.length - palLen)),
-    palSrc,
-    Math.min(palLen, romU8.length),
-  );
+    for (const addressEntry of segment.addresses) {
+      const baseAddr = addressEntry.address;
+      const entries = segment.entries ?? 1;
+      for (let e = 0; e < entries; e++) {
+        const entryOffset = segment.entryOffsets
+          ? segment.entryOffsets[Math.min(e, segment.entryOffsets.length - 1)]
+          : (segment.entryStride ?? 0) * e;
+        const srcOffset = e * segment.length;
+        const destPc = baseAddr + entryOffset;
+        if (destPc < 0 || destPc + segment.length > romU8.length) {
+          console.error(
+            `[NESRDC] Target out of bounds (dest=${destPc.toString(16)}, len=${segment.length}, game=${gameId}).`,
+          );
+          continue;
+        }
+        copyBytes(romU8, segmentData, destPc, srcOffset, segment.length);
+      }
+    }
+  }
   return workingRom;
 }
 
@@ -1041,7 +1051,7 @@ self.onmessage = async (event) => {
                   ),
                   randomize_link_sprite: Boolean(
                     cosmeticSelections?.["palette_randomize_link_sprite"] ??
-                      true,
+                    true,
                   ),
                   randomize_shield: Boolean(
                     cosmeticSelections?.["palette_randomize_shield"] ?? true,
@@ -1118,10 +1128,10 @@ self.onmessage = async (event) => {
 
     const summaryTokens = Array.isArray(optionSummary?.tokens)
       ? optionSummary.tokens
-          .map((token: string) =>
-            slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
-          )
-          .filter((token: string) => token.length > 0)
+        .map((token: string) =>
+          slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
+        )
+        .filter((token: string) => token.length > 0)
       : [];
 
     let summarySegment: string | null = null;
