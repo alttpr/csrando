@@ -164,6 +164,10 @@ maps:
               position: { x: 0x16, y: 0x14 }
               sprite: "Apple"
               state: [1, 2]
+            - name: "Hyrule Castle - Courtyard - Murahdahla"
+              position: { x: 0x19, y: 0x12 }
+              sprite: "Sahasrahla"
+              state: [1, 2]
 
         # Upper area
         - name: "Hyrule Castle - Wall Walk"

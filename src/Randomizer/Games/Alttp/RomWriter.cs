@@ -59,7 +59,7 @@ public static class RomWriter
         if (config.State == StateOption.Standard)
             SetEscapeFills(world, rom);
 
-        rom.SetGoalRequiredCount(config.GoalRequiredCount);
+        rom.SetGoalRequiredCount((config.Goal == GoalOption.TriforceHunt || config.Goal == GoalOption.Trifecta) ? config.GoalRequiredCount : (ushort)0);
         rom.SetGoalIcon(config.GoalIcon);
 
         // Set item functionality settings
