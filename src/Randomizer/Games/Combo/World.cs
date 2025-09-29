@@ -189,8 +189,6 @@ public sealed class World : World<Item>
         }
     }
 
-    protected override Item CreateItem(string name, IWorld world) => new(name, world);
-
     public Inventory ComputeStartingItems()
     {
         var inventory = new Inventory([GetItem("fixed")]);
@@ -213,6 +211,12 @@ public sealed class World : World<Item>
 
         return inventory;
     }
+
+    protected override Item CreateItem(string name, IWorld world) => new(name, world);
+
+    public new IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World.Id == Id);
+    public new IEnumerable<BaseVertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
+
 
     public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {

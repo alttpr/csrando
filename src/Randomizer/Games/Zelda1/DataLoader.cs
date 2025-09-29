@@ -13,7 +13,7 @@ internal static class DataLoader
         yamlReader.LoadData();
 
         // Shuffle entrances in the data if needed before building the graph
-        if(world.Config.EntranceShuffle == EntranceShuffleOption.Overworld)
+        if (world.Config.EntranceShuffle == EntranceShuffleOption.Overworld)
         {
             var entranceShuffler = new EntranceShuffler(world.Prng, yamlReader);
             entranceShuffler.Shuffle();
@@ -47,7 +47,7 @@ internal static class DataLoader
         // Patch the Level 9 entrance edge to account for different triforce requirements
         var levelEntrance = world.GetLocation("Level 9 - Entrance");
         var entranceEdge = levelEntrance.Edges.Find(e => e.Condition.Item.Name == "Triforce")!;
-        var newEdge = new Edge(entranceEdge.From, entranceEdge.To, new ItemCondition(entranceEdge.Condition.Item, world.Config.Triforces));
+        var newEdge = new Edge(entranceEdge.From, entranceEdge.To, new ItemCondition(entranceEdge.Condition.Item, Convert.ToInt32(world.Config.Triforces)));
         levelEntrance.Edges.Remove(entranceEdge);
         levelEntrance.Edges.Add(newEdge);
 

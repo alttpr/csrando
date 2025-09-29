@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 public class MapRandomizer
 {
-    JsonReader _reader;
-    World _world;
-    PRNG _prng;
+    private readonly JsonReader _reader;
+    private readonly World _world;
+    private readonly PRNG _prng;
 
     public MapRandomizer(JsonReader reader, World world, PRNG prng)
     {
@@ -33,7 +33,7 @@ public class MapRandomizer
 
         var connections = CreateConnections(map);
 
-        (string,string)[] keepDoors = [
+        (string, string)[] keepDoors = [
             ("Bomb Torizo Room", "Left Door"),
         ];
 
@@ -43,7 +43,7 @@ public class MapRandomizer
         {
             foreach (var node in room.Nodes)
             {
-                if(keepDoors.Contains((room.Name, node.Name)))
+                if (keepDoors.Contains((room.Name, node.Name)))
                 {
                     continue;
                 }

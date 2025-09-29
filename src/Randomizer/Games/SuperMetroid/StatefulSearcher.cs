@@ -13,20 +13,20 @@ using YamlDotNet.Core.Tokens;
 
 public class StatefulSearcher : ISearcher
 {
-    private Graph _graph = null!;
+    private readonly Graph _graph;
     private Dictionary<Vertex, List<VisitedState>> _visitedStates = null!;
     private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates = null!;
     private readonly Queue<(Vertex vertex, VisitedState state)> _queue = new();
     private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = new();
-    private Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations = null!;
-    private HashSet<Vertex> _visitedVertices = null!;
+    private readonly Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
+    private readonly HashSet<Vertex> _visitedVertices;
     private readonly HashSet<IItem> _foundItems = new();
-    private Inventory _inventory = null!;
-    private Dictionary<(Vertex, IItem), VisitedState> _prevItems = null!;
-    private Vertex? _target;
-    private Vertex _start = null!;
-    private List<(Vertex, VisitedState)> _startStates = null!;
-    private SetLocations? _setLocations;
+    private readonly Inventory _inventory;
+    private readonly Dictionary<(Vertex, IItem), VisitedState> _prevItems;
+    private readonly Vertex? _target;
+    private readonly Vertex _start;
+    private readonly List<(Vertex, VisitedState)> _startStates;
+    private readonly SetLocations? _setLocations;
     private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = new();
     private readonly HashSet<Weapon> _currentWeapons = new();
 
@@ -63,12 +63,12 @@ public class StatefulSearcher : ISearcher
     }
 
     public void Search(List<(Vertex, VisitedState)> initialStates)
-    { 
+    {
         var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
         var newItems = new Dictionary<(Vertex, IItem), VisitedState>();
         int z = 0;
 
-        foreach(var (vertex, state) in initialStates)
+        foreach (var (vertex, state) in initialStates)
         {
             _startStates.Add((vertex, state));
         }
@@ -78,14 +78,15 @@ public class StatefulSearcher : ISearcher
             z++;
             foundItems = InternalSearch(_startStates, _inventory, _target);
             //newItems = new(foundItems);
-            
+
             newItems = foundItems.Where(x => !_prevItems.ContainsKey(x.Key)).ToDictionary(x => x.Key, x => x.Value);
-            foreach(var foundItem in foundItems)
+            foreach (var foundItem in foundItems)
             {
                 if (!_prevItems.ContainsKey(foundItem.Key))
                 {
                     _prevItems.Add(foundItem.Key, foundItem.Value);
-                } else
+                }
+                else
                 {
                     _prevItems[foundItem.Key] = foundItem.Value;
                 }
@@ -182,15 +183,15 @@ public class StatefulSearcher : ISearcher
         if (_target == null)
         {
             //Console.WriteLine($"StatefulSearcher took {stopWatch.ElapsedMilliseconds}ms to complete, doing {z} passes");
-            }
+        }
 
-            _foundItems.Clear();
-            _foundItems.UnionWith(_prevItems.Select(x => x.Key.Item2));
+        _foundItems.Clear();
+        _foundItems.UnionWith(_prevItems.Select(x => x.Key.Item2));
     }
 
     private void AddUnvisited(Vertex vertex, VisitedState state, HashSet<string> missingItems)
     {
-        if(missingItems.Count == 0)
+        if (missingItems.Count == 0)
         {
             return;
         }
@@ -199,9 +200,9 @@ public class StatefulSearcher : ISearcher
         if (_unvisitedStates.TryGetValue(vertex, out var states))
         {
             var mergedItems = states.Item1.Union(missingItems);
-            
+
             // If this state is a "best" state, add it
-            if(states.Item2.Any(s => s.Dominates(state)))
+            if (states.Item2.Any(s => s.Dominates(state)))
             {
                 // There is a better state already in the list, only update the missing items
                 states.Item1 = mergedItems.ToHashSet();
@@ -213,7 +214,7 @@ public class StatefulSearcher : ISearcher
                 states.Item1 = mergedItems.ToHashSet();
             }
             _unvisitedStates[vertex] = states;
-        } 
+        }
         else
         {
             _unvisitedStates[vertex] = (missingItems, new List<VisitedState> { state });
@@ -240,7 +241,7 @@ public class StatefulSearcher : ISearcher
             var (current, state) = DequeueState()!.Value;
 
             //Console.WriteLine($"Visiting {current.Name} with state {state}");
-                        
+
             // If we've already visited this vertex with a state that dominates the current state, skip it
             if (_visitedStates.TryGetValue(current, out var visitedStates) && visitedStates.Any(vs => vs.Dominates(state)))
             {
@@ -265,7 +266,7 @@ public class StatefulSearcher : ISearcher
             }
 
             //Console.WriteLine($"Visiting {current.Name} with state {state}");
-            
+
             var currentNode = current.Node;
             if (currentNode == null)
             {
@@ -296,13 +297,13 @@ public class StatefulSearcher : ISearcher
             if (unlockState != null)
             {
                 state = unlockState.Value;
-                if(current.Node!.NodeType == "door")
+                if (current.Node!.NodeType == "door")
                 {
                     state = state.WithDoorUnlocked(current.NodeId);
                 }
 
                 unlocked = true;
-                foreach(var yieldItem in yields)
+                foreach (var yieldItem in yields)
                 {
                     if (foundItems.TryGetValue(yieldItem.Key, out var existingState))
                     {
@@ -315,7 +316,7 @@ public class StatefulSearcher : ISearcher
                     {
                         foundItems.Add(yieldItem.Key, yieldItem.Value);
                     }
-                }            
+                }
             }
 
             if (unlocked && current.Type == VertexType.Item)
@@ -344,10 +345,10 @@ public class StatefulSearcher : ISearcher
                     }
                 }
             }
- 
+
             foreach (var edge in current.Edges)
             {
-                if(edge.To.World != current.World)
+                if (edge.To.World != current.World)
                 {
                     // TODO: Maybe this should be a bit more sophisticated, but for now it makes sense to skip backtracking when we change worlds
                     if (target != null)
@@ -367,7 +368,7 @@ public class StatefulSearcher : ISearcher
                     continue;
                 }
 
-                if(edge is not SuperMetroid.Edge)
+                if (edge is not SuperMetroid.Edge)
                 {
                     // This is a regular base edge, so no strats to consider, just enqueue the next vertex
                     EnqueueState((Vertex)edge.To, state);
@@ -412,7 +413,7 @@ public class StatefulSearcher : ISearcher
                 }
 
                 if (stratStates.Count == 0)
-                {                     
+                {
                     continue;
                 }
 
@@ -423,7 +424,7 @@ public class StatefulSearcher : ISearcher
                     // If any of the strats we "could" use sets flags, add them to the found items
                     if (strat.SetsFlags != null)
                     {
-                        foreach(var flag in strat.SetsFlags)
+                        foreach (var flag in strat.SetsFlags)
                         {
                             var flagItem = current.World.GetItem(flag);
                             if (foundItems.TryGetValue((current, flagItem), out var existingState))
@@ -450,7 +451,7 @@ public class StatefulSearcher : ISearcher
 
                 Vertex toVtx = (Vertex)edge.To;
 
-                if(toVtx.RoomId != current.RoomId)
+                if (toVtx.RoomId != current.RoomId)
                 {
                     bestState = bestState with { ObstacleBitFlags = 0, DoorUnlockedFlags = 0 };
                 }
@@ -516,7 +517,7 @@ public class StatefulSearcher : ISearcher
                 }
 
                 var unlockStratStates = new List<VisitedState>();
-                
+
 
                 foreach (var unlockStrat in lck.UnlockStrats ?? Array.Empty<Strat>())
                 {
@@ -550,7 +551,7 @@ public class StatefulSearcher : ISearcher
 
                 if (unlockStratStates.Count == 0)
                 {
-                    
+
                     return (null, []);
                 }
 
@@ -620,14 +621,14 @@ public class StatefulSearcher : ISearcher
     public bool BacktrackLocation(Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace)
     {
         var (startState, startFlags) = _visitedItemLocations[vertex];
-        
-        foreach(var flag in startFlags.All())
+
+        foreach (var flag in startFlags.All())
         {
-            if(!inventory.Has(flag.Key))
+            if (!inventory.Has(flag.Key))
                 inventory.AddItem(flag.Key);
         }
 
-        while(inventory.Has(itemToPlace))
+        while (inventory.Has(itemToPlace))
         {
             inventory.RemoveItem(itemToPlace);
         }
@@ -671,7 +672,7 @@ public class StatefulSearcher : ISearcher
             }
         }
 
-        foreach(Vertex start in startAt)
+        foreach (Vertex start in startAt)
         {
             if (!_visitedVertices.Contains(start))
             {
@@ -706,7 +707,7 @@ public class StatefulSearcher : ISearcher
                     .ToList()
             );
 
-        if(_startStates.Count > 0)
+        if (_startStates.Count > 0)
         {
             Search([]);
         }
@@ -735,10 +736,14 @@ public struct VisitedState
     public VisitedState? ApplyCost(RequirementCost cost, Inventory inventory, World world)
     {
         // Handle drain costs (> 0x8000)
-        if (cost.Energy > 0x8000) { cost.Energy = Math.Min(Energy, cost.Energy & 0x7FFF); };
-        if (cost.Missiles > 0x8000) { cost.Missiles = Math.Min(Missiles, cost.Missiles & 0x7FFF); };
-        if (cost.SuperMissiles > 0x8000) { cost.SuperMissiles = Math.Min(SuperMissiles, cost.SuperMissiles & 0x7FFF); };
-        if (cost.PowerBombs > 0x8000) { cost.PowerBombs = Math.Min(PowerBombs, cost.PowerBombs & 0x7FFF); };
+        if (cost.Energy > 0x8000) { cost.Energy = Math.Min(Energy, cost.Energy & 0x7FFF); }
+        ;
+        if (cost.Missiles > 0x8000) { cost.Missiles = Math.Min(Missiles, cost.Missiles & 0x7FFF); }
+        ;
+        if (cost.SuperMissiles > 0x8000) { cost.SuperMissiles = Math.Min(SuperMissiles, cost.SuperMissiles & 0x7FFF); }
+        ;
+        if (cost.PowerBombs > 0x8000) { cost.PowerBombs = Math.Min(PowerBombs, cost.PowerBombs & 0x7FFF); }
+        ;
 
         // Redistribute missile cost to super cost if we run out of missiles (at a rate of 3:1)
         if (Missiles - cost.Missiles < 0)

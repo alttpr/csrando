@@ -9,5 +9,5 @@ public class Edge : BaseEdge
     public Edge(Vertex from, Vertex to, ItemCondition condition) : base(from, to, condition) { }
     public Edge(Vertex from, Vertex to, IEnumerable<Strat> strats) : base(from, to, new ItemCondition(from.World.GetItem("fixed"), 1)) { Strats = strats.ToArray(); }
 
-    public Strat[]? Strats;
+    public Strat[]? Strats { get; init; }
 }

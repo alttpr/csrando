@@ -8,20 +8,12 @@ using Randomizer.Games.SuperMetroid.Model;
 using System.Diagnostics;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World : IWorld
+public sealed class World : Randomizer.Graph.World<Item>
 {
 
-    public int Id { get; }
-    public string GameId { get; } = "sm";
-    public Graph Graph { get; }
-    public Inventory StartingItems { get; }
-    public WorldConfig WorldConfig { get; }
     public Config Config { get; }
     public PRNG Prng { get; }
     public JsonReader JsonData { get; set; }
-    public ushort PlacedItemCount { get; set; }
-    public BaseVertex Start { get; }
-    private readonly Dictionary<string, Item> _allItems = new();
     public List<string> AllowedTechs { get; init; }
     public Map? Map { get; set; }
 
@@ -29,11 +21,9 @@ public sealed class World : IWorld
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
+        : base("sm", id, graph, randomizerConfig)
     {
-        Id = id;
-        WorldConfig = randomizerConfig;
         Config = randomizerConfig.SuperMetroid ?? throw new ArgumentException("This world requires valid settings for Super Metroid");
-        Graph = graph;
         Prng = prng;
 
         List<IItem> items = [GetItem("fixed")];
@@ -67,82 +57,17 @@ public sealed class World : IWorld
         return inventory;
     }
 
-    /// <summary>
-    /// Get a vertex by name in this world.
-    /// </summary>
-    /// <param name="locationName">name to search for</param>
-    public BaseVertex GetLocation(string locationName)
-    {
-        return Graph.GetVertex($"{locationName}:{GameId}:{Id}");
-    }
+    protected override Item CreateItem(string name, IWorld world) => new(name, world);
 
-    public bool HasLocation(string locationName)
-    {
-        return Graph.HasVertex($"{locationName}:{GameId}:{Id}");
-    }
+    public new IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type).Cast<Vertex>();
 
-    /// <summary>Get all vertices in this world.</summary>
-    /// <returns></returns>
-    public IEnumerable<BaseVertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
-
-    public IItem GetItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var matchingItem))
-        {
-            return matchingItem;
-        }
-
-        // allow made up items
-        var item = Graph.RegisterItem(new Item(name, this));
-        _allItems.Add(item.Name, item);
-
-        return item;
-    }
-
-    public IItem? GetItemOrNull(string? name)
-    {
-        if (name != null)
-            return GetItem(name);
-        return null;
-    }
-
-    public IItem? GetExistingItem(string name)
-    {
-        if (_allItems.TryGetValue(name, out var item))
-            return item;
-        return null;
-    }
-
-    public IEnumerable<Item> GetAllItems()
-    {
-        return _allItems.Values;
-    }   
-
-    public void TrackPlacedItem(BaseVertex location)
-    {
-        location.World.PlacedItemCount++;
-    }
-    
-    public bool IsWinnable(BaseVertex start, Inventory startingInventory)
+    public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new StatefulSearcher(Graph, (Vertex)this.Start, startingInventory);
         return winSearcher.HasFound(GetItem("f_DefeatedMotherBrain"));
-        //return true;
     }
 
-    public IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
-    {
-        var locations = new List<BaseVertex>();
-
-        locations.AddRange(searcher.GetEmptyLocationsInSet(itemSet, setCounts));
-
-        return locations;
-    }
-
-    public ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new StatefulSearcher(graph, (Vertex)(start ?? Start), inventory, setLocations);
     }

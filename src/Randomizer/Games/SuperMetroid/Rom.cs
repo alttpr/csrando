@@ -40,6 +40,11 @@ public class Rom : GameRom
             if (location.Addresses == null)
                 continue;
 
+            if (location.Item!.Bytes.Length < 2)
+            {
+                Console.WriteLine($"Item {location.Item.Name} does not have enough bytes");
+                continue;
+            }
 
             int plmBytes = (int)location.Item!.Bytes[0] + ((int)location.Item!.Bytes[1] << 8);
             int offset = location.Node!.NodeSubType switch

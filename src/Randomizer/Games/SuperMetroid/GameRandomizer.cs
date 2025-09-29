@@ -4,9 +4,9 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Randomizer.Graph.GameRandomizer;
 
-public sealed class GameRandomizer : BaseGameRandomizer // Changed to inherit explicitly
+public sealed class GameRandomizer : BaseGameRandomizer
 {
-    // Added traditional constructor
+
     public GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         : base(randomizerConfigs, prng)
     {

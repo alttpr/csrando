@@ -7,7 +7,7 @@ using Zelda1 = Games.Zelda1.GameRandomizer;
 using Combo = Games.Combo.GameRandomizer;
 using Metroid = Games.Metroid.GameRandomizer;
 using SuperMetroid = Games.SuperMetroid.GameRandomizer;
-using Randomizer.RomModifications; // Add this
+using Randomizer.RomModifications;
 
 /// <summary>
 /// Get the world one needs for randomization based on the config provided.

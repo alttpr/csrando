@@ -143,16 +143,32 @@ public class Config
         [Logic.Hard] = HardSkillConfig
     };
 
+    [Ignore("Starting equipment is too advanced to be represented with simple attributes")]
     public List<string> StartingEquipment { get; init; } = new();
+
+    [Category("Gameplay")]
     public Logic Logic { get; init; } = Logic.Basic;
+
+    [Ignore("Skill config is too complex to be represented with simple attributes")]
     public string[] CustomTech { get; init; } = [];
+
+    [Category("Goal")]
     public Keycards Keycards { get; init; } = Keycards.None;
+
+    [Category("Gameplay")]
     public bool FastG4 { get; init; } = false;
+
+    [Category("Gameplay")]
     public MapRandomizerSetting MapRandomizer { get; init; } = MapRandomizerSetting.None;
 
+    [RandomizedOptionsFor(nameof(Bosses))]
+    [Values("0", "1", "2", "3", "4")]
     public string[] BossChoices { get; set; } = RandomBosses;
 
     private string? _bosses;
+
+    [Category("Goal")]
+    [Values("0", "1", "2", "3", "4", Default = "4")]
     public string Bosses
     {
         get => _bosses ?? "4";

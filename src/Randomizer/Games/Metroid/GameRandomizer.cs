@@ -2,7 +2,7 @@ namespace Randomizer.Games.Metroid;
 
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using BaseGameRandomizer = Randomizer.Graph.GameRandomizer; // Corrected using alias
+using BaseGameRandomizer = Randomizer.Graph.GameRandomizer;
 
 public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
     : BaseGameRandomizer(randomizerConfigs, prng)
