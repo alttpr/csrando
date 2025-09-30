@@ -1,5 +1,5 @@
 rooms:
-  - roomid: 0x011C
+  - roomid: 0x0124
     nodes:
       regions:
         - name: "Desert Thief Hideout"
