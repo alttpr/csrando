@@ -264,31 +264,43 @@
 		}
 
 		try {
+			const isRandomSelection = (value: unknown) =>
+				typeof value === "string" && value.trim().toLowerCase() === "random";
+
 			const filterNonNullValues = (obj: unknown) => {
 				const o = obj as Record<string, unknown> | undefined;
 				if (!o) {
 					return {};
 				}
-				return Object.fromEntries(
-					Object.entries(o).filter(([, value]) => {
-						// Filter out null values
-						if (value === null) {
-							return false;
-						}
+				const entries: Array<[string, unknown]> = [];
+				for (const [key, value] of Object.entries(o)) {
+					if (value === null || isRandomSelection(value)) {
+						continue;
+					}
 
-						// Filter out empty arrays
-						if (Array.isArray(value) && value.length === 0) {
-							return false;
+					if (Array.isArray(value)) {
+						const sanitizedArray = value.filter(
+							(item) => item != null && !isRandomSelection(item),
+						);
+						if (sanitizedArray.length === 0) {
+							continue;
 						}
+						entries.push([key, sanitizedArray]);
+						continue;
+					}
 
-						// Filter out empty strings
-						if (typeof value === "string" && value.trim() === "") {
-							return false;
+					if (typeof value === "string") {
+						const trimmed = value.trim();
+						if (!trimmed || trimmed.toLowerCase() === "random") {
+							continue;
 						}
+						entries.push([key, trimmed]);
+						continue;
+					}
 
-						return true;
-					}),
-				);
+					entries.push([key, value]);
+				}
+				return Object.fromEntries(entries);
 			};
 
 			const gameSettings: { [key: string]: { [key: string]: unknown } } =
@@ -317,9 +329,10 @@
 					gameSetting.default &&
 					!gameSettings[gameSetting.default as string]
 				) {
-					gameSettings[gameSetting.default as string] = {
-						...formValues.perGame[gameSetting.default as string],
-					};
+					gameSettings[gameSetting.default as string] =
+						filterNonNullValues(
+							formValues.perGame[gameSetting.default as string],
+						);
 				}
 			}
 
@@ -374,8 +387,10 @@
 
 			const worldConfig: Record<string, unknown> = {
 				Language: (formValues.global["Language"] as string) || "en",
-				Game: globalGameTarget,
 			};
+			if (!isRandomSelection(globalGameTarget)) {
+				worldConfig.Game = globalGameTarget;
+			}
 
 			const worldGameKeys = new Set<string>();
 			for (const gameKey of selectedGames) {
