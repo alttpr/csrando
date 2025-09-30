@@ -384,7 +384,7 @@ async function applyLinkRdc(
 async function applyNesRdc(
   rom: ArrayBuffer,
   rdcBuf: ArrayBuffer,
-  gameId: "zelda1" | "metroid1",
+  gameId: "zelda1" | "metroid",
   options: RdcApplyOptions = { gameId },
 ): Promise<ArrayBuffer> {
   const { randomizerId, spriteKind } = options || {};
@@ -862,8 +862,8 @@ self.onmessage = async (event) => {
               spriteKind: kind,
             });
           } else if (kind === "rdc/nes-m1") {
-            updated = await applyNesRdc(romToPatch, rdcBuf, "metroid1", {
-              gameId: "metroid1",
+            updated = await applyNesRdc(romToPatch, rdcBuf, "metroid", {
+              gameId: "metroid",
               randomizerId: randomizerKey,
               spriteKind: kind,
             });

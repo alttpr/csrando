@@ -16,6 +16,82 @@ export interface Color {
 
 export const TransparentBlack: Color = { r: 0, g: 0, b: 0, a: 0 };
 
+const NES_MASTER_PALETTE_HEX: Array<string | null> = [
+  "#626262",
+  "#002263",
+  "#0d107d",
+  "#2b027d",
+  "#440063",
+  "#530036",
+  "#530502",
+  "#441500",
+  "#2b2700",
+  "#0d3600",
+  "#003e00",
+  "#003d02",
+  "#003336",
+  null,
+  "#000000",
+  "#000000",
+  "#ababab",
+  "#1251a8",
+  "#3438cb",
+  "#5c24cb",
+  "#7e19a8",
+  "#921b6b",
+  "#922924",
+  "#7e3f00",
+  "#5c5700",
+  "#346b00",
+  "#127600",
+  "#007424",
+  "#00676b",
+  "#000000",
+  "#000000",
+  "#000000",
+  "#ffffff",
+  "#62a1fa",
+  "#8589ff",
+  "#ac75ff",
+  "#cf6afa",
+  "#e36cbc",
+  "#e37975",
+  "#cf9037",
+  "#aca814",
+  "#85bc14",
+  "#62c737",
+  "#4ec575",
+  "#4eb7bc",
+  "#4e4e4e",
+  "#000000",
+  "#000000",
+  "#ffffff",
+  "#c4ddff",
+  "#d1d3ff",
+  "#e1cbff",
+  "#efc7ff",
+  "#f6c8e7",
+  "#f6cdcb",
+  "#efd6b3",
+  "#e1dfa6",
+  "#d1e7a6",
+  "#c4ebb3",
+  "#bcebcb",
+  "#bce5e7",
+  "#b8b8b8",
+  "#000000",
+  "#000000",
+];
+
+function hexToColor(hex?: string | null): Color {
+  if (!hex) return TransparentBlack;
+  const normalized = hex.startsWith("#") ? hex.slice(1) : hex;
+  const r = Number.parseInt(normalized.slice(0, 2), 16) || 0;
+  const g = Number.parseInt(normalized.slice(2, 4), 16) || 0;
+  const b = Number.parseInt(normalized.slice(4, 6), 16) || 0;
+  return { r, g, b, a: 255 };
+}
+
 /**
  * Converts a 2-byte SNES color value to an RGBA Color object.
  * Correct SNES color format (BGR15): 0BBBBBGGGGGRRRRR (bit 0-4 = Red, 5-9 = Green, 10-14 = Blue)
@@ -396,39 +472,170 @@ export function convertNesTile2bppToPixelIndices(tileData: Buffer): number[] {
   return pixels;
 }
 
+function buildNesPalette(paletteBytes: Buffer): Color[] {
+  const colors: Color[] = [TransparentBlack];
+  for (let i = 0; i < paletteBytes.length && colors.length < 4; i++) {
+    const index = paletteBytes[i] & 0x3f;
+    colors.push(hexToColor(NES_MASTER_PALETTE_HEX[index]));
+  }
+  while (colors.length < 4) colors.push(TransparentBlack);
+  return colors;
+}
+
+function drawNesTile(
+  png: PNG,
+  tilePixels: number[],
+  palette: Color[],
+  destX: number,
+  destY: number,
+  scale: number,
+) {
+  const width = png.width;
+  for (let ty = 0; ty < 8; ty++) {
+    for (let tx = 0; tx < 8; tx++) {
+      const idx = ty * 8 + tx;
+      const paletteIndex = tilePixels[idx];
+      if (paletteIndex === 0) continue;
+      const color = palette[paletteIndex] ?? TransparentBlack;
+      if (color.a === 0) continue;
+      for (let sy = 0; sy < scale; sy++) {
+        const y = destY + ty * scale + sy;
+        if (y < 0 || y >= png.height) continue;
+        for (let sx = 0; sx < scale; sx++) {
+          const x = destX + tx * scale + sx;
+          if (x < 0 || x >= width) continue;
+          const offset = (width * y + x) << 2;
+          png.data[offset] = color.r;
+          png.data[offset + 1] = color.g;
+          png.data[offset + 2] = color.b;
+          png.data[offset + 3] = color.a;
+        }
+      }
+    }
+  }
+}
+
+function decodeNesTiles(chr: Buffer): number[][] {
+  const tiles: number[][] = [];
+  for (let offset = 0; offset + 16 <= chr.length; offset += 16) {
+    tiles.push(convertNesTile2bppToPixelIndices(chr.subarray(offset, offset + 16)));
+  }
+  return tiles;
+}
+
+function flipTileHorizontally(tile: number[]): number[] {
+  const flipped = tile.slice();
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 4; x++) {
+      const leftIndex = y * 8 + x;
+      const rightIndex = y * 8 + (7 - x);
+      const tmp = flipped[leftIndex];
+      flipped[leftIndex] = flipped[rightIndex];
+      flipped[rightIndex] = tmp;
+    }
+  }
+  return flipped;
+}
+
+function renderMetroidAvatarImage(
+  sprite: Metroid1SpriteDataBlock,
+  outputWidth: number,
+  outputHeight: number,
+): PNG {
+  const paletteBytes = sprite.content[18] ?? Buffer.alloc(0);
+  const palette = buildNesPalette(paletteBytes);
+
+  const sliceTiles = (buffer: Buffer | undefined, start: number, end: number) => {
+    if (!buffer || buffer.length === 0) return [] as number[][];
+    const tiles = decodeNesTiles(buffer);
+    return tiles.slice(start, Math.min(end, tiles.length));
+  };
+
+  const headTiles = sliceTiles(sprite.content[0], 2, 4);
+  const shouldersTiles = sliceTiles(sprite.content[11], 2, 4).map((tile) =>
+    tile ? flipTileHorizontally(tile) : tile,
+  );
+  const torsoTiles = sliceTiles(sprite.content[5], 2, 4);
+  const legsTiles = sliceTiles(sprite.content[8], 1, 4);
+
+  const tiles = headTiles
+    .concat(shouldersTiles)
+    .concat(torsoTiles)
+    .concat(legsTiles);
+
+  const order = [0, 1, 3, 2, 4, 5, 6, 7, 8];
+  const cols = 3;
+  const rows = 4;
+  const baseWidth = cols * 8;
+  const baseHeight = rows * 8;
+  const scaleX = Math.floor(outputWidth / baseWidth);
+  const scaleY = Math.floor(outputHeight / baseHeight);
+  const scale = Math.max(1, Math.min(scaleX || 0, scaleY || 0) || 1);
+  const png = new PNG({ width: baseWidth * scale, height: baseHeight * scale });
+  png.data.fill(0);
+
+  order.forEach((tileIndex, i) => {
+    const tilePixels = tiles[tileIndex];
+    if (!tilePixels) return;
+    const col = i === 8 ? 2 : i % 2;
+    const row = Math.min(Math.floor(i / 2), 3);
+    drawNesTile(png, tilePixels, palette, col * 8 * scale, row * 8 * scale, scale);
+  });
+
+  return png;
+}
+
 export function renderNESAvatarImage(
   sprite: Zelda1SpriteDataBlock | Metroid1SpriteDataBlock,
   outputWidth: number = 16,
   outputHeight: number = 16,
 ): PNG {
-  // For our NES format, palette content[1] is 0x20 bytes, we use first 8 bytes (4 colors)
-  const palBuf = sprite.content[1] ?? Buffer.alloc(0);
-  const palette = convertPalette(
-    palBuf.subarray(0, Math.min(8, palBuf.length)),
-    true,
-  );
+  if (sprite instanceof Zelda1SpriteDataBlock) {
+    const paletteSource =
+      sprite.content[6]?.subarray(0, 3) ?? sprite.content[9]?.subarray(0, 3) ?? Buffer.alloc(0);
+    const palette = buildNesPalette(paletteSource);
+    const chrSegment = sprite.content[2] ?? Buffer.alloc(0);
+    const tiles = decodeNesTiles(chrSegment);
+    const order = [0, 2, 1, 3];
+    const cols = 2;
+    const rows = 2;
+    const scaleX = Math.max(1, Math.floor(outputWidth / (cols * 8)) || 1);
+    const scaleY = Math.max(1, Math.floor(outputHeight / (rows * 8)) || 1);
+    const scale = Math.max(1, Math.min(scaleX, scaleY));
+    const png = new PNG({ width: cols * 8 * scale, height: rows * 8 * scale });
+    png.data.fill(0);
 
-  const fetchNesTile = (tileIndex: number): Buffer => {
-    const gfx = sprite.content[0] ?? Buffer.alloc(0);
-    const offs = tileIndex * 16;
-    if (offs < 0 || offs + 16 > gfx.length) return Buffer.alloc(16, 0);
-    return gfx.subarray(offs, offs + 16);
-  };
-
-  const png = new PNG({ width: outputWidth, height: outputHeight });
-  // Clear transparent
-  for (let i = 0; i < png.data.length; i++) png.data[i] = 0;
-
-  // Draw a simple 2x2 meta-tile using tile indices 0,1,16,17 (like a typical CHR page layout)
-  const tiles = [0, 1, 16, 17];
-  let idx = 0;
-  for (let y = 0; y < 2; y++) {
-    for (let x = 0; x < 2; x++) {
-      const tile = fetchNesTile(tiles[idx++] || 0);
-      const indices = convertNesTile2bppToPixelIndices(tile);
-      const tilePng = renderTile(indices, palette, 8, 8);
-      PNG.bitblt(tilePng, png, 0, 0, 8, 8, x * 8, y * 8);
-    }
+    order.forEach((tileIdx, slot) => {
+      if (tileIdx >= tiles.length) return;
+      const tilePixels = tiles[tileIdx];
+      const destX = (slot % cols) * 8 * scale;
+      const destY = Math.floor(slot / cols) * 8 * scale;
+      drawNesTile(png, tilePixels, palette, destX, destY, scale);
+    });
+    return png;
+  } else if (sprite instanceof Metroid1SpriteDataBlock) {
+    return renderMetroidAvatarImage(sprite, outputWidth, outputHeight);
   }
+
+  // Fallback: attempt a generic NES 2x2 render for Metroid assets
+  const paletteCandidate =
+    sprite.content.find((buf) => buf.length >= 3 && buf.length <= 8) ?? Buffer.alloc(0);
+  const palette = buildNesPalette(paletteCandidate);
+  const chrCandidate =
+    sprite.content.find((buf) => buf.length >= 16 && buf.length % 16 === 0) ?? Buffer.alloc(0);
+  const tiles = decodeNesTiles(chrCandidate).slice(0, 4);
+  const cols = 2;
+  const rows = 2;
+  const scaleX = Math.max(1, Math.floor(outputWidth / (cols * 8)) || 1);
+  const scaleY = Math.max(1, Math.floor(outputHeight / (rows * 8)) || 1);
+  const scale = Math.max(1, Math.min(scaleX, scaleY));
+  const png = new PNG({ width: cols * 8 * scale, height: rows * 8 * scale });
+  png.data.fill(0);
+
+  tiles.forEach((tilePixels, idx) => {
+    const destX = (idx % cols) * 8 * scale;
+    const destY = Math.floor(idx / cols) * 8 * scale;
+    drawNesTile(png, tilePixels, palette, destX, destY, scale);
+  });
   return png;
 }

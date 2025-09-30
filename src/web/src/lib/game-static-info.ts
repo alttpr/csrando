@@ -75,7 +75,7 @@ const zelda1ManifestConfig: SpriteManifestConfig = {
   segments: zelda1ManifestSegments,
 };
 
-const metroid1ManifestSegments: RdcManifestSegment[] = [
+const metroidManifestSegments: RdcManifestSegment[] = [
   { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0000 }] },
   { length: 80, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0050 }] },
   { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b00b0 }] },
@@ -156,9 +156,9 @@ const metroid1ManifestSegments: RdcManifestSegment[] = [
   },
 ];
 
-const metroid1ManifestConfig: SpriteManifestConfig = {
+const metroidManifestConfig: SpriteManifestConfig = {
   mapping: "lorom",
-  segments: metroid1ManifestSegments,
+  segments: metroidManifestSegments,
 };
 
 const samusManifestSegments: RdcManifestSegment[] = [
@@ -640,8 +640,8 @@ export const gameStaticInfo: Record<string, GameStaticInfo> = {
     targetOffsets: { alttpr: -1, combo: 4_194_304 },
     rdcTargets: {
       "rdc/nes-m1": {
-        default: { manifest: metroid1ManifestConfig },
-        combo: { manifest: metroid1ManifestConfig },
+        default: { manifest: metroidManifestConfig },
+        combo: { manifest: metroidManifestConfig },
       },
     },
   },
