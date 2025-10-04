@@ -265,7 +265,8 @@
 
 		try {
 			const isRandomSelection = (value: unknown) =>
-				typeof value === "string" && value.trim().toLowerCase() === "random";
+				typeof value === "string" &&
+				value.trim().toLowerCase() === "random";
 
 			const filterNonNullValues = (obj: unknown) => {
 				const o = obj as Record<string, unknown> | undefined;
@@ -434,7 +435,7 @@
 
 			const payload = {
 				Seed: 0,
-				IncludeSpoiler: false,
+				IncludeSpoiler: true,
 				Configs: [worldConfig],
 			};
 

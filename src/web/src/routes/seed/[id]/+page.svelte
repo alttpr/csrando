@@ -16,6 +16,7 @@
 	import Progressbar from "$lib/components/ui/Progressbar.svelte";
 	import Button from "$lib/components/ui/Button.svelte";
 	import SeedOptionsViewer from "$lib/components/seed/SeedOptionsViewer.svelte";
+	import SpoilerLog from "$lib/components/seed/SpoilerLog.svelte";
 	import RomUploader from "$lib/components/seed/RomUploader.svelte";
 	import { getPublicSpritesBaseUrl } from "$lib/env";
 	import Toggle from "$lib/components/ui/Toggle.svelte";
@@ -1312,358 +1313,376 @@
 						]}
 						<!-- Use direct reactive lookup instead of {@const} to allow updates -->
 
-					<!-- Post-generation settings for this game -->
-					{@const postGenConfig =
-						gameIdToPostGenConfigMap.get(gameId)}
-					{@const postGenOptions = postGenConfig?.options ?? []}
-					{@const hasSpriteOptions = spriteOptionsForGame.length > 0}
-					{@const hasPostGenOptions = postGenOptions.length > 0}
-					{#if hasSpriteOptions || hasPostGenOptions}
-						<!-- Per‑game label for clarity in multi‑rando -->
-						<div class="flex items-center gap-2 mt-3 mb-2">
+						<!-- Post-generation settings for this game -->
+						{@const postGenConfig =
+							gameIdToPostGenConfigMap.get(gameId)}
+						{@const postGenOptions = postGenConfig?.options ?? []}
+						{@const hasSpriteOptions =
+							spriteOptionsForGame.length > 0}
+						{@const hasPostGenOptions = postGenOptions.length > 0}
+						{#if hasSpriteOptions || hasPostGenOptions}
+							<!-- Per‑game label for clarity in multi‑rando -->
+							<div class="flex items-center gap-2 mt-3 mb-2">
+								<div
+									class="h-4 w-1 rounded bg-indigo-500"
+								></div>
+								<h4
+									class="text-[12px] font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300"
+								>
+									{gameDisplayName}
+								</h4>
+							</div>
 							<div
-								class="h-4 w-1 rounded bg-indigo-500"
-							></div>
-							<h4
-								class="text-[12px] font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300"
+								class="w-full rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
 							>
-								{gameDisplayName}
-							</h4>
-						</div>
-						<div
-							class="w-full rounded-md ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-50/60 dark:bg-slate-900/40 p-3 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4"
-						>
-							{#if hasSpriteOptions}
-								<div class="space-y-1 md:col-span-2 md:w-1/2">
-									<label
-										for={`sprite-select-${gameId}`}
-										class="block text-xs font-medium text-slate-900 dark:text-slate-100"
+								{#if hasSpriteOptions}
+									<div
+										class="space-y-1 md:col-span-2 md:w-1/2"
 									>
-										{`Sprite for ${gameDisplayName}`}
-									</label>
-									<SpriteSelect
-										id={`sprite-select-${gameId}`}
-										game={gameId}
-										items={spriteOptionsWithDefault}
-										value={spriteSelections[gameId] || ""}
-										on:change={async (
-											e: CustomEvent<{ value: string }>,
-										) => {
-											const newVal = e.detail.value;
-											selectedSpritesByGameId.set(
-												gameId,
-												newVal,
-											);
-											spriteSelections[gameId] = newVal;
-											selectedSpritesByGameId =
-												selectedSpritesByGameId;
-											spriteSelections = {
-												...spriteSelections,
-											};
-											await persistSpriteSelection(
-												gameId,
-												newVal,
-											);
-										}}
-										placeholder={m.sprite_select_placeholder() ||
-											"Select a sprite"}
-										className="text-xs"
-									/>
-								</div>
-							{/if}
+										<label
+											for={`sprite-select-${gameId}`}
+											class="block text-xs font-medium text-slate-900 dark:text-slate-100"
+										>
+											{`Sprite for ${gameDisplayName}`}
+										</label>
+										<SpriteSelect
+											id={`sprite-select-${gameId}`}
+											game={gameId}
+											items={spriteOptionsWithDefault}
+											value={spriteSelections[gameId] ||
+												""}
+											on:change={async (
+												e: CustomEvent<{
+													value: string;
+												}>,
+											) => {
+												const newVal = e.detail.value;
+												selectedSpritesByGameId.set(
+													gameId,
+													newVal,
+												);
+												spriteSelections[gameId] =
+													newVal;
+												selectedSpritesByGameId =
+													selectedSpritesByGameId;
+												spriteSelections = {
+													...spriteSelections,
+												};
+												await persistSpriteSelection(
+													gameId,
+													newVal,
+												);
+											}}
+											placeholder={m.sprite_select_placeholder() ||
+												"Select a sprite"}
+											className="text-xs"
+										/>
+									</div>
+								{/if}
 
-							{#if hasPostGenOptions}
-								{#each postGenOptions as opt (opt.id)}
-									{#if opt.type === "toggle"}
-										<div class="space-y-1">
-											<label
-												class="block text-xs font-medium text-slate-900 dark:text-slate-100"
-												for={`postgen-${gameId}-${opt.id}`}
-												>{opt.name}</label
-											>
-											{#if opt.description}
-												<p
-													class="text-xs text-slate-500 dark:text-slate-400"
+								{#if hasPostGenOptions}
+									{#each postGenOptions as opt (opt.id)}
+										{#if opt.type === "toggle"}
+											<div class="space-y-1">
+												<label
+													class="block text-xs font-medium text-slate-900 dark:text-slate-100"
+													for={`postgen-${gameId}-${opt.id}`}
+													>{opt.name}</label
 												>
-													{opt.description}
-												</p>
-											{/if}
-											<Toggle
-												id={`postgen-${gameId}-${opt.id}`}
-												size="sm"
-												checked={(postGenSelections[
-													gameId
-												]?.[opt.id] as boolean) ??
-													opt.default ??
-													false}
-												on:change={(
-													e: CustomEvent<{
-														checked: boolean;
-													}>,
-												) => {
-													const on = e.detail.checked;
-													const cur =
-														selectedPostGenByGameId.get(
+												{#if opt.description}
+													<p
+														class="text-xs text-slate-500 dark:text-slate-400"
+													>
+														{opt.description}
+													</p>
+												{/if}
+												<Toggle
+													id={`postgen-${gameId}-${opt.id}`}
+													size="sm"
+													checked={(postGenSelections[
+														gameId
+													]?.[opt.id] as boolean) ??
+														opt.default ??
+														false}
+													on:change={(
+														e: CustomEvent<{
+															checked: boolean;
+														}>,
+													) => {
+														const on =
+															e.detail.checked;
+														const cur =
+															selectedPostGenByGameId.get(
+																gameId,
+															) || {};
+														cur[opt.id] = on;
+														selectedPostGenByGameId.set(
 															gameId,
-														) || {};
-													cur[opt.id] = on;
-													selectedPostGenByGameId.set(
-														gameId,
-														cur,
-													);
-													postGenSelections[gameId] =
-														{
+															cur,
+														);
+														postGenSelections[
+															gameId
+														] = {
 															...(postGenSelections[
 																gameId
 															] || {}),
 															[opt.id]: on,
 														};
-													selectedPostGenByGameId =
-														selectedPostGenByGameId;
-													postGenSelections = {
-														...postGenSelections,
-													};
-													persistPostGenSelection(
-														gameId,
-														postGenSelections[
-															gameId
-														],
-													);
-												}}
-											/>
-											{#if opt.id === "palette_randomize" && ((postGenSelections[gameId]?.[opt.id] as boolean) ?? opt.default ?? false)}
-												<!-- Nested z3pr settings when palette randomizer is enabled -->
-												<div
-													class="mt-2 space-y-3 p-3 rounded-md bg-white/60 dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-slate-700"
-												>
-													<!-- Mode select -->
-													<label
-														class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
-														for={`postgen-${gameId}-palette-mode`}
-													>
-														Palette Mode
-													</label>
-													<select
-														id={`postgen-${gameId}-palette-mode`}
-														class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
-														value={(postGenSelections[
-															gameId
-														]?.[
-															"palette_randomize_mode"
-														] as string) ??
-															"maseya"}
-														onchange={(e) => {
-															const v = (
-																e.currentTarget as HTMLSelectElement
-															).value;
-															const cur =
-																selectedPostGenByGameId.get(
-																	gameId,
-																) || {};
-															cur[
-																"palette_randomize_mode"
-															] = v;
-															selectedPostGenByGameId.set(
-																gameId,
-																cur,
-															);
+														selectedPostGenByGameId =
+															selectedPostGenByGameId;
+														postGenSelections = {
+															...postGenSelections,
+														};
+														persistPostGenSelection(
+															gameId,
 															postGenSelections[
 																gameId
-															] = {
-																...(postGenSelections[
-																	gameId
-																] || {}),
-																palette_randomize_mode:
-																	v,
-															};
-															selectedPostGenByGameId =
-																selectedPostGenByGameId;
-															postGenSelections =
-																{
-																	...postGenSelections,
-																};
-															persistPostGenSelection(
-																gameId,
+															],
+														);
+													}}
+												/>
+												{#if opt.id === "palette_randomize" && ((postGenSelections[gameId]?.[opt.id] as boolean) ?? opt.default ?? false)}
+													<!-- Nested z3pr settings when palette randomizer is enabled -->
+													<div
+														class="mt-2 space-y-3 p-3 rounded-md bg-white/60 dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-slate-700"
+													>
+														<!-- Mode select -->
+														<label
+															class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
+															for={`postgen-${gameId}-palette-mode`}
+														>
+															Palette Mode
+														</label>
+														<select
+															id={`postgen-${gameId}-palette-mode`}
+															class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
+															value={(postGenSelections[
+																gameId
+															]?.[
+																"palette_randomize_mode"
+															] as string) ??
+																"maseya"}
+															onchange={(e) => {
+																const v = (
+																	e.currentTarget as HTMLSelectElement
+																).value;
+																const cur =
+																	selectedPostGenByGameId.get(
+																		gameId,
+																	) || {};
+																cur[
+																	"palette_randomize_mode"
+																] = v;
+																selectedPostGenByGameId.set(
+																	gameId,
+																	cur,
+																);
 																postGenSelections[
 																	gameId
-																],
-															);
-														}}
-													>
-														<option value="maseya"
-															>Maseya</option
-														>
-														<option
-															value="grayscale"
-															>Grayscale</option
-														>
-														<option value="negative"
-															>Negative</option
-														>
-														<option value="blackout"
-															>Blackout</option
-														>
-														<option value="classic"
-															>Classic</option
-														>
-														<option value="dizzy"
-															>Dizzy (Hue)</option
-														>
-														<option value="sick"
-															>Sick (Luma)</option
-														>
-														<option value="puke"
-															>Puke (Random)</option
-														>
-													</select>
-
-													<!-- Scope toggles -->
-													<div
-														class="grid grid-cols-2 gap-3 mt-1"
-													>
-														{#each [{ key: "palette_randomize_overworld", label: "Overworld" }, { key: "palette_randomize_dungeon", label: "Dungeon/Underworld" }, { key: "palette_randomize_link_sprite", label: "Link Sprite" }, { key: "palette_randomize_sword", label: "Sword" }, { key: "palette_randomize_shield", label: "Shield" }, { key: "palette_randomize_hud", label: "HUD" }] as flag (flag.key)}
-															<div
-																class="flex items-center justify-between gap-2"
-															>
-																<span
-																	class="text-[11px] text-slate-900 dark:text-slate-100"
-																	>{flag.label}</span
-																>
-																<Toggle
-																	id={`postgen-${gameId}-${flag.key}`}
-																	size="sm"
-																	checked={(postGenSelections[
+																] = {
+																	...(postGenSelections[
 																		gameId
-																	]?.[
-																		flag.key
-																	] as boolean) ??
-																		true}
-																	on:change={(
-																		e: CustomEvent<{
-																			checked: boolean;
-																		}>,
-																	) => {
-																		const on =
-																			e
-																				.detail
-																				.checked;
-																		const cur =
-																			selectedPostGenByGameId.get(
-																				gameId,
-																			) ||
-																			{};
-																		cur[
-																			flag.key
-																		] = on;
-																		selectedPostGenByGameId.set(
-																			gameId,
-																			cur,
-																		);
-																		postGenSelections[
+																	] || {}),
+																	palette_randomize_mode:
+																		v,
+																};
+																selectedPostGenByGameId =
+																	selectedPostGenByGameId;
+																postGenSelections =
+																	{
+																		...postGenSelections,
+																	};
+																persistPostGenSelection(
+																	gameId,
+																	postGenSelections[
+																		gameId
+																	],
+																);
+															}}
+														>
+															<option
+																value="maseya"
+																>Maseya</option
+															>
+															<option
+																value="grayscale"
+																>Grayscale</option
+															>
+															<option
+																value="negative"
+																>Negative</option
+															>
+															<option
+																value="blackout"
+																>Blackout</option
+															>
+															<option
+																value="classic"
+																>Classic</option
+															>
+															<option
+																value="dizzy"
+																>Dizzy (Hue)</option
+															>
+															<option value="sick"
+																>Sick (Luma)</option
+															>
+															<option value="puke"
+																>Puke (Random)</option
+															>
+														</select>
+
+														<!-- Scope toggles -->
+														<div
+															class="grid grid-cols-2 gap-3 mt-1"
+														>
+															{#each [{ key: "palette_randomize_overworld", label: "Overworld" }, { key: "palette_randomize_dungeon", label: "Dungeon/Underworld" }, { key: "palette_randomize_link_sprite", label: "Link Sprite" }, { key: "palette_randomize_sword", label: "Sword" }, { key: "palette_randomize_shield", label: "Shield" }, { key: "palette_randomize_hud", label: "HUD" }] as flag (flag.key)}
+																<div
+																	class="flex items-center justify-between gap-2"
+																>
+																	<span
+																		class="text-[11px] text-slate-900 dark:text-slate-100"
+																		>{flag.label}</span
+																	>
+																	<Toggle
+																		id={`postgen-${gameId}-${flag.key}`}
+																		size="sm"
+																		checked={(postGenSelections[
 																			gameId
-																		] = {
-																			...(postGenSelections[
-																				gameId
-																			] ||
-																				{}),
-																			[flag.key]:
-																				on,
-																		};
-																		selectedPostGenByGameId =
-																			selectedPostGenByGameId;
-																		postGenSelections =
-																			{
-																				...postGenSelections,
-																			};
-																		persistPostGenSelection(
-																			gameId,
+																		]?.[
+																			flag
+																				.key
+																		] as boolean) ??
+																			true}
+																		on:change={(
+																			e: CustomEvent<{
+																				checked: boolean;
+																			}>,
+																		) => {
+																			const on =
+																				e
+																					.detail
+																					.checked;
+																			const cur =
+																				selectedPostGenByGameId.get(
+																					gameId,
+																				) ||
+																				{};
+																			cur[
+																				flag.key
+																			] =
+																				on;
+																			selectedPostGenByGameId.set(
+																				gameId,
+																				cur,
+																			);
 																			postGenSelections[
 																				gameId
-																			],
-																		);
-																	}}
-																/>
-															</div>
-														{/each}
+																			] =
+																				{
+																					...(postGenSelections[
+																						gameId
+																					] ||
+																						{}),
+																					[flag.key]:
+																						on,
+																				};
+																			selectedPostGenByGameId =
+																				selectedPostGenByGameId;
+																			postGenSelections =
+																				{
+																					...postGenSelections,
+																				};
+																			persistPostGenSelection(
+																				gameId,
+																				postGenSelections[
+																					gameId
+																				],
+																			);
+																		}}
+																	/>
+																</div>
+															{/each}
+														</div>
 													</div>
-												</div>
-											{/if}
-										</div>
-								{/if}
-								{#if opt.type === "select"}
-									<div class="space-y-1">
-											<label
-												class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
-												for={`postgen-${gameId}-${opt.id}`}
-											>
-												{opt.name}
-											</label>
-											{#if opt.description}
-												<p
-													class="text-xs text-slate-500 dark:text-slate-400 mb-1"
+												{/if}
+											</div>
+										{/if}
+										{#if opt.type === "select"}
+											<div class="space-y-1">
+												<label
+													class="block mb-1 text-xs font-medium text-slate-900 dark:text-slate-100"
+													for={`postgen-${gameId}-${opt.id}`}
 												>
-													{opt.description}
-												</p>
-											{/if}
-											<select
-												id={`postgen-${gameId}-${opt.id}`}
-												class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
-												value={(postGenSelections[
-													gameId
-												]?.[opt.id] as string) ??
-													opt.default ??
-													opt.choices[0]?.value}
-												onchange={(e) => {
-													const v = (
-														e.currentTarget as HTMLSelectElement
-													).value;
-													const cur =
-														selectedPostGenByGameId.get(
+													{opt.name}
+												</label>
+												{#if opt.description}
+													<p
+														class="text-xs text-slate-500 dark:text-slate-400 mb-1"
+													>
+														{opt.description}
+													</p>
+												{/if}
+												<select
+													id={`postgen-${gameId}-${opt.id}`}
+													class="w-full text-xs border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
+													value={(postGenSelections[
+														gameId
+													]?.[opt.id] as string) ??
+														opt.default ??
+														opt.choices[0]?.value}
+													onchange={(e) => {
+														const v = (
+															e.currentTarget as HTMLSelectElement
+														).value;
+														const cur =
+															selectedPostGenByGameId.get(
+																gameId,
+															) || {};
+														cur[opt.id] = v;
+														selectedPostGenByGameId.set(
 															gameId,
-														) || {};
-													cur[opt.id] = v;
-													selectedPostGenByGameId.set(
-														gameId,
-														cur,
-													);
-													postGenSelections[gameId] =
-														{
+															cur,
+														);
+														postGenSelections[
+															gameId
+														] = {
 															...(postGenSelections[
 																gameId
 															] || {}),
 															[opt.id]: v,
 														};
-													selectedPostGenByGameId =
-														selectedPostGenByGameId;
-													postGenSelections = {
-														...postGenSelections,
-													};
-													persistPostGenSelection(
-														gameId,
-														postGenSelections[
-															gameId
-														],
-													);
-												}}
-											>
-												{#each opt.choices as c (c.value)}
-													<option value={c.value}
-														>{c.label}</option
-													>
-												{/each}
-											</select>
-										</div>
-									{/if}
-								{/each}
-							{:else}
-								<p
-									class="md:col-span-2 text-[11px] text-slate-500 dark:text-slate-400 mt-1"
-								>
-									No post-generation settings for {gameDisplayName}.
-								</p>
-							{/if}
-						</div>
-					{/if}
+														selectedPostGenByGameId =
+															selectedPostGenByGameId;
+														postGenSelections = {
+															...postGenSelections,
+														};
+														persistPostGenSelection(
+															gameId,
+															postGenSelections[
+																gameId
+															],
+														);
+													}}
+												>
+													{#each opt.choices as c (c.value)}
+														<option value={c.value}
+															>{c.label}</option
+														>
+													{/each}
+												</select>
+											</div>
+										{/if}
+									{/each}
+								{:else}
+									<p
+										class="md:col-span-2 text-[11px] text-slate-500 dark:text-slate-400 mt-1"
+									>
+										No post-generation settings for {gameDisplayName}.
+									</p>
+								{/if}
+							</div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -1676,9 +1695,29 @@
 				>
 					{m.seed_page_patch_download_title()}
 				</h3>
-				<p class="text-xs text-slate-600 dark:text-slate-300 mb-2">
-					{m.seed_page_patch_download_instructions()}
-				</p>
+				{#if allRomsReadyForPatching}
+					<p
+						class="mb-2 inline-flex items-center gap-2 text-xs font-medium text-emerald-700 dark:text-emerald-300"
+					>
+						<svg
+							class="h-3.5 w-3.5"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.07 7.072a1 1 0 0 1-1.42.007L3.29 8.852a1 1 0 0 1 1.418-1.41l4.093 4.116 6.363-6.364a1 1 0 0 1 1.54.096"
+								clip-rule="evenodd"
+							/>
+						</svg>
+						{m.seed_ready_to_patch()}
+					</p>
+				{:else}
+					<p class="text-xs text-slate-600 dark:text-slate-300 mb-2">
+						{m.seed_page_patch_download_instructions()}
+					</p>
+				{/if}
 				<!-- Display patching error from the service store -->
 				{#if $patchingServiceError}
 					<div
@@ -1690,28 +1729,31 @@
 					</div>
 				{/if}
 				{#if seedOptions && romUploadGameIds.length > 0}
-					{#each romUploadGameIds as gameId (gameId)}
-						{@const staticInfo = gameIdToStaticInfo.get(gameId)}
-						{#if staticInfo}
-							<RomUploader
-								{gameId}
-								gameName={staticInfo.displayName}
-								expectedFileExtensions={staticInfo.fileExtensions}
-								hashStatus={romsData.get(gameId)?.hashStatus}
-								calculatedHash={romsData.get(gameId)
-									?.calculatedHash}
-								expectedHash={romsData.get(gameId)
-									?.expectedHash}
-								fileName={romsData.get(gameId)?.fileName}
-								useCard={false}
-								onFileSelected={(d) =>
-									handleFileUpload(
-										d as FileSelectedEventDetail,
-										gameId,
-									)}
-							/>
-						{/if}
-					{/each}
+					{#if !allRomsReadyForPatching}
+						{#each romUploadGameIds as gameId (gameId)}
+							{@const staticInfo = gameIdToStaticInfo.get(gameId)}
+							{#if staticInfo}
+								<RomUploader
+									{gameId}
+									gameName={staticInfo.displayName}
+									expectedFileExtensions={staticInfo.fileExtensions}
+									hashStatus={romsData.get(gameId)
+										?.hashStatus}
+									calculatedHash={romsData.get(gameId)
+										?.calculatedHash}
+									expectedHash={romsData.get(gameId)
+										?.expectedHash}
+									fileName={romsData.get(gameId)?.fileName}
+									useCard={false}
+									onFileSelected={(d) =>
+										handleFileUpload(
+											d as FileSelectedEventDetail,
+											gameId,
+										)}
+								/>
+							{/if}
+						{/each}
+					{/if}
 					<div class="mt-4 space-y-3">
 						{#if $patchingServiceIsPatching}
 							<div>
@@ -1753,6 +1795,11 @@
 					</p>
 				{/if}
 			</div>
+
+			<!-- Spoiler Log Section -->
+			{#if seedDetails.spoilerLog}
+				<SpoilerLog spoilerLog={seedDetails.spoilerLog} />
+			{/if}
 		</div>
 	{:else}
 		<p

@@ -44,6 +44,7 @@ export const seeds = sqliteTable("seed", {
   options: text("options", { mode: "json" }).notNull(), // JSON object of options used
   patchData: text("patch_data", { mode: "json" }).notNull(), // Could be base64 string or other format for binary patch
   placementInfo: text("placement_info", { mode: "json" }).notNull(), // JSON object for item placement
+  spoilerLog: text("spoiler_log", { mode: "json" }), // Optional spoiler log data
   // Optional reference to the randomizer version used when this seed was generated
   randomizerVersionId: text("randomizer_version_id").references(
     () => randomizerVersions.id,

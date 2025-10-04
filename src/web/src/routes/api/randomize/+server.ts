@@ -88,6 +88,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       options: optionsFromRequest,
       patchData: returnedPatchData,
       placementInfo: [],
+      spoilerLog: randomizeResponse.spoilerLog || null,
       randomizerVersionId: activeVersion?.id,
       createdAt: new Date(),
     });

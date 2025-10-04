@@ -46,6 +46,7 @@ export interface Seed {
   };
   patchData: unknown;
   placementInfo: unknown;
+  spoilerLog?: Record<string, Record<string, string>> | null;
   createdAt: string;
 }
 

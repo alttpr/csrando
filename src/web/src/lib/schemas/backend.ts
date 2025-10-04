@@ -8,6 +8,7 @@ export const BackendWorldPatchSchema = z.object({
 export const RandomizerResponseSchema = z.object({
   seed: z.number().int(),
   worlds: z.record(BackendWorldPatchSchema),
+  spoilerLog: z.record(z.record(z.string())).optional(),
 });
 
 // Minimal request validation for /api/randomize

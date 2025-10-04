@@ -3,7 +3,7 @@ content-type: application/json
 
 {
     "seed": 0,
-    "includeSpoiler": false,
+    "includeSpoiler": true,
     "configs": [
         {
             "Language": "en",
