@@ -942,6 +942,10 @@ ChestGameGuy: #SHOPKEEPER / CHEST GAME GUY
   id: 0xBB
   flags: NoPlace
   sheets: [0x4F, 0x4D, 0x4A, null]
+BatGuy: #HYPE CAVE GUY
+  id: 0xBB
+  flags: NoPlace
+  sheets: [0x15, null, null, null]
 Drunkard:
   id: 0xBC
   flags: NoPlace

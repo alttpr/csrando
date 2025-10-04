@@ -13,11 +13,11 @@ rooms:
               type: "npc"
               itemset: ["dw"]
           mobs:
-            - name: "Hype Cave - Shopkeeper"
+            - name: "Hype Cave - Bat Guy"
               position: { x: 0x18, y: 0x16, z: 0x00 }
-              sprite: "Salesman"
+              sprite: "BatGuy"
               allow:
-                - "Salesman"
+                - "BatGuy"
 
         - name: "Hype Cave"
           connections:
