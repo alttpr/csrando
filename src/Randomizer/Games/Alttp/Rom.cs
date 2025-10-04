@@ -1921,18 +1921,12 @@ public sealed class Rom : GameRom
                 layer2Start += 3;
             layer2Start += 2;
 
-            int layer2End = layer2Start;
-            // skip lower layer (layer 2)
-            while (layer2End + 1 < roomData.Length && !(roomData[layer2End + 0] == 0xFF && roomData[layer2End + 1] == 0xFF))
-                layer2End += 3;
-            layer2End += 2;
-
             var doorData = roomDataHeader.DoorData.ToArray();
             var dataLength = roomData.Length + doorData.Length;
             var doorStartRel = roomDataHeader.DoorPtr - roomDataHeader.TilesPtr;
 
-            byte[] newRoomData = [.. roomData[..layer2End], .. priorityLayer, 0xF0, 0xFF, .. doorData];
-            int newDoorStartRel = layer2End + priorityLayer.Length + 2;
+            byte[] newRoomData = [.. roomData[..layer2Start], 0xFF, 0xFF, .. priorityLayer, 0xF0, 0xFF, .. doorData];
+            int newDoorStartRel = layer2Start + priorityLayer.Length + 2;
 
             if (newRoomData.Length <= dataLength)
             {
