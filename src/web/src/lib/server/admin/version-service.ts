@@ -4,7 +4,8 @@ import { metadataApi } from "$lib/services/api";
 import { db } from "$lib/server/db";
 import { randomizerVersions } from "$lib/server/db/schema";
 import { and, eq, ne, sql } from "drizzle-orm";
-import { createHash, randomUUID } from "crypto";
+import { createHash } from "crypto";
+import { generateId } from "$lib/utils/id";
 
 export const ADMIN_VERSION_COOKIE_NAME = "admin_version_token";
 
@@ -224,7 +225,7 @@ export async function createRandomizerVersion(
 
   const patchSha256 = createHash("sha256").update(patchBuffer).digest("hex");
   const ipsBase64 = patchBuffer.toString("base64");
-  const versionId = randomUUID();
+  const versionId = generateId();
 
   try {
     await db.insert(randomizerVersions).values({

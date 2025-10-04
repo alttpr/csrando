@@ -26,6 +26,12 @@ public class YamlReader
 
         do
         {
+            // First try the published output structure (Games/Zelda1/data)
+            string publishedDataRoot = Path.Combine(currentDirectory.FullName, "Games/Zelda1/data");
+            if (Directory.Exists(publishedDataRoot))
+                return publishedDataRoot;
+
+            // Then try the source structure (src/Randomizer/Games/Zelda1/data)
             string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Games/Zelda1/data");
             if (Directory.Exists(dataRoot))
                 return dataRoot;
@@ -445,7 +451,7 @@ public class YamlReader
 
     public void BuildGraph()
     {
-        if(data == null)
+        if (data == null)
         {
             throw new Exception("Data not loaded");
         }
@@ -492,7 +498,7 @@ public class YamlReader
             var caveEntranceNode = FindNode($"Cave {cave.cave:X2} - Entrance");
             var caveNode = FindOrCreateNode($"Cave {cave.cave:X2}");
 
-            if(caveEntranceNode == null)
+            if (caveEntranceNode == null)
             {
                 throw new Exception($"Cave {cave.cave:X2} entrance not found");
             }
@@ -556,7 +562,7 @@ public class YamlReader
 
     private void BuildOverworldMap(OverworldMap map)
     {
-        if(data == null)
+        if (data == null)
         {
             throw new Exception("Data not loaded");
         }

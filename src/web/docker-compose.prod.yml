@@ -7,6 +7,10 @@ services:
     environment:
       - NODE_ENV=production
       - PRIVATE_DOTNET_API_BASE_URL=http://api:8080
+      - DATABASE_URL=/data/production.db
+      - PUBLIC_SPRITES_BASE_URL=${PUBLIC_SPRITES_BASE_URL:-https://alttpr.com/sprites}
+    volumes:
+      - frontend_data:/data
     labels:
       - traefik.enable=true
       - traefik.http.routers.front.rule=Host(`${DOMAIN}`)

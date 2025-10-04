@@ -10,6 +10,12 @@ public class YamlReader
 
         do
         {
+            // First try the published output structure (Games/Goonies2/data)
+            string publishedDataRoot = Path.Combine(currentDirectory.FullName, "Games/Goonies2/data");
+            if (Directory.Exists(publishedDataRoot))
+                return publishedDataRoot;
+
+            // Then try the source structure (src/Randomizer/Games/Goonies2/data)
             string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Games/Goonies2/data");
             if (Directory.Exists(dataRoot))
                 return dataRoot;

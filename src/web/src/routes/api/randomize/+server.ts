@@ -1,10 +1,10 @@
 import { json, error as svelteError } from "@sveltejs/kit";
-import { dev } from "$app/environment";
 import type { RequestHandler } from "./$types";
 import { randomizeApi } from "$lib/services/api";
 import { db } from "$lib/server/db";
 import { seeds, userSeeds } from "$lib/server/db/schema";
 import { getActiveRandomizerVersionFor } from "$lib/server/db/randomizer";
+import { generateId } from "$lib/utils/id";
 import {
   RandomizerResponseSchema,
   RandomizeRequestSchema,
@@ -23,11 +23,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     // forgot to wrap it, wrap here defensively.
 
     // Forward body directly; backend expects root object with Seed, IncludeSpoiler, Configs
-    if (dev)
-      console.debug(
-        "Randomize payload -> .NET:",
-        JSON.stringify(optionsFromRequest),
-      );
     const randomizeResponseRaw = await randomizeApi.create(optionsFromRequest);
     const parsedRequest = RandomizeRequestSchema.safeParse(optionsFromRequest);
     if (!parsedRequest.success) {
@@ -62,7 +57,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     }
 
     // Generate a unique ID by generating a random UUID
-    const uniqueId = crypto.randomUUID();
+    const uniqueId = generateId();
 
     const inferredRandomizerId: string | null =
       optionsFromRequest.Configs?.[0].Game.toLowerCase() || null;
@@ -82,7 +77,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     }
 
     // Save the seed to the database
-    console.debug("Saving seed with id", uniqueId);
     await db.insert(seeds).values({
       id: uniqueId,
       options: optionsFromRequest,
@@ -103,7 +97,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     }
     // --- End of Database Interaction ---
 
-    return json({ id: uniqueId, ...randomizeResponse });
+    const response = {
+      id: uniqueId,
+      seed: randomizeResponse.seed,
+      worlds: randomizeResponse.worlds,
+      spoilerLog: randomizeResponse.spoilerLog,
+    };
+    return json(response);
   } catch (err: unknown) {
     console.error("Error in POST /api/randomize:", err);
     if (
