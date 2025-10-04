@@ -1724,7 +1724,11 @@ public sealed class Rom : GameRom
             case "Tower Of Hera - Basement Cage":
                 // in case this location is a hera key, be vanilla and don't allow players to
                 // pick up the key with a boomerang. any other item is fair game though.
-                Write((SNES)0x09E3BB, [(byte)(item?.Name == "KeyP3" ? 0xE4 : 0xEB)]);
+                if (item?.Name != "KeyP3" && location.World.GetLocation("Tower Of Hera - Tile Room - Key") is Vertex basementCageKey)
+                {
+                    // this isn't _really_ a heart piece, but what we'd usually patch over the tile sprite (for boomerang pickups).
+                    basementCageKey.Sprite = Sprite.Get("HeartPiece");
+                }
                 break;
         }
     }
