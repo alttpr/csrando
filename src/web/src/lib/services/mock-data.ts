@@ -33,8 +33,9 @@ class MockDataService {
       } else {
         console.warn("Failed to parse mock metadata for zelda3:", parsed.error);
       }
-    } catch (error) {
-      console.warn("Failed to load mock metadata files:", error);
+    } catch {
+      // Silently ignore - mock files are only needed when LOCAL_TEST_MODE=true
+      // and they won't exist in production containers
     }
   }
 

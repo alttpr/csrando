@@ -13,6 +13,12 @@ public class YamlReader
 
         do
         {
+            // First try the published output structure (Games/Alttp/data)
+            string publishedDataRoot = Path.Combine(currentDirectory.FullName, "Games/Alttp/data");
+            if (Directory.Exists(publishedDataRoot))
+                return publishedDataRoot;
+
+            // Then try the source structure (src/Randomizer/Games/Alttp/data)
             string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Games/Alttp/data");
             if (Directory.Exists(dataRoot))
                 return dataRoot;
@@ -652,7 +658,7 @@ public partial class Position
             Y = self.Y * mult,
             Z = self.Z * mult,
         };
-}
+    }
     [return: NotNullIfNotNull(nameof(self))]
     public static Position? operator /(Position? self, int div)
     {

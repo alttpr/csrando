@@ -23,6 +23,12 @@ public class JsonReader
 
         do
         {
+            // First try the published output structure (Games/SuperMetroid/data)
+            string publishedDataRoot = Path.Combine(currentDirectory.FullName, "Games/SuperMetroid/data");
+            if (Directory.Exists(publishedDataRoot))
+                return publishedDataRoot;
+
+            // Then try the source structure (src/Randomizer/Games/SuperMetroid/data)
             string dataRoot = Path.Combine(currentDirectory.FullName, "src/Randomizer/Games/SuperMetroid/data");
             if (Directory.Exists(dataRoot))
                 return dataRoot;

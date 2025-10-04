@@ -1,6 +1,23 @@
 # Combined Web + Backend Setup
 
-This repo contains a SvelteKit frontend (`src/web`) and a .NET API backend (`src/Randomizer`). This guide explains how to run them together for local development and how to deploy in production.
+This repo contains a SvelteKi1) Create `src/web/.env` from the template and set values:
+
+```
+cp src/web/.env.example src/web/.env
+```
+
+Required variables:
+
+- `DOMAIN` – your site domain (e.g., `randomizer.example.com`)
+- `TRAEFIK_ACME_EMAIL` – email for Let's Encrypt certificate notifications
+- `API_IMAGE` – the API image (e.g., `ghcr.io/alttpr/csrando-api:latest`)
+- `FRONTEND_IMAGE` – (production only) prebuilt frontend image (e.g., `ghcr.io/alttpr/rando-web-frontend:latest`)
+
+Optional variables:
+
+- `PUBLIC_SPRITES_BASE_URL` – base URL for sprite images (defaults to `https://alttpr.com/sprites`)
+
+2) Run the stack on your server:rc/web`) and a .NET API backend (`src/Randomizer`). This guide explains how to run them together for local development and how to deploy in production.
 
 ## Local Development (one command)
 
