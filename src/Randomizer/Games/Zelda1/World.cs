@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Zelda1;
 
+using Randomizer.Games;
 using Randomizer.Graph;
 using Graph = Graph.Graph;
 using BaseVertex = Graph.Vertex;
@@ -15,7 +16,7 @@ public sealed class World : World<Item>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
-        : base("Zelda1", id, graph, randomizerConfig)
+        : base("z1", id, graph, randomizerConfig)
     {
         Config = randomizerConfig.Zelda1 ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda");
         Prng = prng;
@@ -34,15 +35,30 @@ public sealed class World : World<Item>
         return inventory;
     }
 
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
-
+    /// <summary>
+    /// Get a vertex by name in this world.
+    /// </summary>
+    /// <param name="locationName">name to search for</param>
     protected override Item CreateItem(string name, IWorld world) => new(name, world);
+
+    public override IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    {
+        var locations = new List<BaseVertex>();
+
+        locations.AddRange(searcher.GetEmptyLocationsInSet(itemSet, setCounts));
+
+        return locations;
+    }
 
     public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new Searcher(Graph, start, startingInventory);
-        return winSearcher.HasFound(GetItem("Triforce"));
+        return winSearcher.HasFound(GetItem("Zelda"));
     }
+
+    public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    {
+        return new Searcher(graph, start ?? Start, inventory, setLocations, this);
+    }
+
 }

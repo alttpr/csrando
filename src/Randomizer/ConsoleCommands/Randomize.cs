@@ -8,6 +8,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
@@ -75,15 +76,19 @@ internal sealed class Randomize : Command
             );
             randomizer.Randomize();
             if (!randomizer.IsWinnable())
-                throw new Exception($"Game Unwinnable.");
+                throw new Exception("Game Unwinnable.");
 
             if (outputDirectory != null)
             {
                 baseRom ??= randomizer.ProvideBaseRom();
-                if (baseRom != null)
-                    randomizer.Write(baseRom, baseBPS, outputDirectory);
-                else
+                if (baseRom == null)
+                {
                     _logger.LogError("Writing a ROM requires all options: {RequiredOptions}", string.Join(", ", [_baseRom.Name, _outputDirectory.Name]));
+                    continue;
+                }
+
+                var fileRomBroker = new FileRomBroker(baseRom, baseBPS, outputDirectory);
+                randomizer.Write(fileRomBroker);
             }
             if (dumpSpoiler)
             {

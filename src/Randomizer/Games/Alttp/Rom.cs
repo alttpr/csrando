@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Buffers.Binary;
+using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
@@ -10,16 +11,18 @@ public sealed class Rom : GameRom
 
     private readonly Text _text;
     private readonly Credits _credits;
+    private readonly YamlReader.GameData _gameData;
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(RomModifications.Rom rom, string language, int offset)
+    public Rom(RomModifications.IRom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
         _text = new(language);
         _text.RemoveUnwanted();
         _credits = new();
+        _gameData = YamlReader.LoadGameData();
     }
 
     /// <summary>Write subsitutions</summary>
@@ -1402,15 +1405,15 @@ public sealed class Rom : GameRom
     public void SetSaveAndQuitFromBossRoom(bool enable = false)
         => Write((SNES)0xB08042, [(byte)(enable ? 0x01 : 0x00)]);
 
+    /// <summary>Enable/Disable the swamp floodgate state being persistent</summary>
+    /// <param name="enable">switch on or off</param>
+    public void SetPersistentFloodGate(bool enable = false)
+        => Write((SNES)0xB0803D, [(byte)(enable ? 0x01 : 0x00)]);
+
     /// <summary>Enable/Disable the ROM Hack that drains the Swamp on transition</summary>
     /// <param name="enable">switch on or off</param>
     public void SetSwampWaterLevel(bool enable = true)
         => Write((SNES)0xB080A1, [(byte)(enable ? 0x01 : 0x00)]);
-
-    /// <summary>Enable/Disable the swamp floodgate state being persistent</summary>
-    /// <param name="enable">switch on or off</param>
-    public void SetPersistentFloodGate(bool enable = false)
-        => Write((SNES)0xB0803D, [(byte)(enable? 0x01 : 0x00)]);
 
     /// <summary>Enable/Disable the ROM Hack that sends Link to Real DW on death in DW dungeon if AG1 is not dead</summary>
     /// <param name="enable">switch on or off</param>
@@ -1713,6 +1716,9 @@ public sealed class Rom : GameRom
 
     public void WriteLocationSpecificData(Vertex location, Item? item)
     {
+        if (item == null)
+            return;
+
         switch (location?.Name)
         {
             case "Tower Of Hera - Basement Cage":
@@ -1744,7 +1750,7 @@ public sealed class Rom : GameRom
     /// Reads the enemy damage table from the ROM and returns it.
     /// </summary>
     public byte[] GetEnemyDamageTable()
-        => Read((SNES)0x0DB266, 0xF3);
+        => _gameData.Enemy.Damage.ToArray();
 
     /// <summary>
     /// Writes the enemy damage table to the ROM.
@@ -1777,7 +1783,7 @@ public sealed class Rom : GameRom
     /// Reads the enemy health table from the ROM and returns it.
     /// </summary>
     public byte[] GetEnemyHealthTable()
-        => Read((SNES)0x0DB173, 0xD4);
+        => _gameData.Enemy.Health.ToArray();
 
     /// <summary>
     /// Writes the enemy health table to the ROM.
@@ -1874,6 +1880,7 @@ public sealed class Rom : GameRom
         // special OW 0x02E575 // zora/msp/hobo
         Write((SNES)0x02E575, specialSpriteSheets);
     }
+
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)
@@ -1899,11 +1906,15 @@ public sealed class Rom : GameRom
 
         foreach (var (roomId, priorityLayer) in priorityLayerChanges)
         {
-            var roomDataPointer = Read(roomDataTiles + (3 * roomId), length: 3 + 1);
-            roomDataPointer[3] = 0x00; // 3-byte value only, discard the last byte
-            int roomDataStart = FromFastRom((int)BinaryPrimitives.ReadUInt32LittleEndian(roomDataPointer));
-            // TODO: the largest room to worry about is $0007 at the moment, but this might change later.
-            var roomData = Read((SNES)roomDataStart, length: 0x140);
+            var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId);
+            if (roomDataHeader == null)
+            {
+                throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
+            }
+
+            var roomData = roomDataHeader.TilesData.ToArray();
+            int roomDataStart = roomDataHeader.TilesPtr;
+
             int layer2Start = 2;
             // skip floor layout/upper layer
             while (layer2Start + 1 < roomData.Length && !(roomData[layer2Start + 0] == 0xFF && roomData[layer2Start + 1] == 0xFF))
@@ -1916,32 +1927,26 @@ public sealed class Rom : GameRom
                 layer2End += 3;
             layer2End += 2;
 
-            int doorStart = layer2End;
-            // skip upper priority layer (layer 3)
-            while (doorStart + 1 < roomData.Length && !(roomData[doorStart + 0] == 0xF0 && roomData[doorStart + 1] == 0xFF))
-                doorStart += 3;
-            doorStart += 2;
+            var doorData = roomDataHeader.DoorData.ToArray();
+            var dataLength = roomData.Length + doorData.Length;
+            var doorStartRel = roomDataHeader.DoorPtr - roomDataHeader.TilesPtr;
 
-            int dataEnd = doorStart;
-            // skip door data
-            while (dataEnd + 1 < roomData.Length && !(roomData[dataEnd + 0] == 0xFF && roomData[dataEnd + 1] == 0xFF))
-                dataEnd += 2;
-            dataEnd += 2;
+            byte[] newRoomData = [.. roomData[..layer2End], .. priorityLayer, 0xF0, 0xFF, .. doorData];
+            int newDoorStartRel = layer2End + priorityLayer.Length + 2;
 
-            byte[] newRoomData = [.. roomData[..layer2End], .. priorityLayer, .. roomData[(doorStart - 2)..dataEnd]];
-            if (newRoomData.Length <= dataEnd)
+            if (newRoomData.Length <= dataLength)
             {
                 // we got enough space; write back to the old location
                 Write((SNES)roomDataStart, newRoomData);
                 // patch the door data start; it is right after the room data
-                BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart + doorStart));
+                BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart + newDoorStartRel));
                 Write(roomDataDoors + (3 * roomId), data[..3]);
             }
             else
             {
                 // we need more space now (additional layer2 data), queue up for later
-                unusedData.Add((roomDataStart, dataEnd));
-                newData.Add((roomId, newRoomData, doorStart));
+                unusedData.Add((roomDataStart, dataLength));
+                newData.Add((roomId, newRoomData, newDoorStartRel));
             }
         }
 

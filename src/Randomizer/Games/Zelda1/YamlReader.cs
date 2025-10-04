@@ -177,6 +177,7 @@ public class YamlReader
         public required int room_item;
         public required int item_pos;
         public required int behaviour;
+        public bool? level_nine_check;
     }
 
     public enum DoorType : int
@@ -479,7 +480,7 @@ public class YamlReader
                 6 => "CanDefeatGohma",
                 7 => "CanDefeatDigdogger",
                 8 => "CanDefeatGohma",
-                9 => "Triforce|8",
+                9 => "Triforce|" + config.Triforces.ToString(),
                 _ => "CanHurtEnemies"
             };
 
@@ -1089,9 +1090,12 @@ public class YamlReader
             _ => throw new Exception("Invalid exit direction")
         };
 
+        var sourceBehaviour = (RoomBehaviour)from.behaviour;
+
         var target = data!.underworld_maps.Where(m => m.area == from.area && m.map == from.map + offset && level.rooms.Contains(m.map)).FirstOrDefault();
         if (target != null)
         {
+            var targetBehaviour = (RoomBehaviour)target.behaviour;
             var targetMapName = $"{target.area} - {level.name} - {target.name}";
 
             var targetDoor = (DoorType)target.doors[(int)oppositeDirection];
@@ -1111,7 +1115,9 @@ public class YamlReader
                 DoorType.Bombable => "UseBombs",
                 DoorType.Locked => "Key",
                 DoorType.Locked2 => "Key",
-                DoorType.Shutter => "fixed",
+                DoorType d when d == DoorType.Shutter && (from.level_nine_check ?? false) => "Triforce|" + config.Triforces.ToString(),
+                DoorType d when d == DoorType.Shutter && sourceBehaviour == RoomBehaviour.None => "Never",
+                DoorType d when d == DoorType.Shutter && sourceBehaviour > RoomBehaviour.None => "fixed",
                 _ => throw new Exception("Unknown door type")
             };
 
@@ -1124,7 +1130,8 @@ public class YamlReader
                 DoorType.Bombable => "UseBombs",
                 DoorType.Locked => "Key",
                 DoorType.Locked2 => "Key",
-                DoorType.Shutter => "fixed",
+                DoorType d when d == DoorType.Shutter && targetBehaviour == RoomBehaviour.None => "Never",
+                DoorType d when d == DoorType.Shutter && targetBehaviour > RoomBehaviour.None => "fixed",
                 _ => throw new Exception("Unknown door type")
             };
 

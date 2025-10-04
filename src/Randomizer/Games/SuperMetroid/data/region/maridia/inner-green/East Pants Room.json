@@ -1,0 +1,475 @@
+{
+  "$schema": "../../../schema/m3-room.schema.json",
+  "id": 322,
+  "name": "East Pants Room",
+  "area": "Maridia",
+  "subarea": "Inner",
+  "subsubarea": "Green",
+  "roomAddress": "0x7D69A",
+  "roomEnvironments": [{"heated": false}],
+  "nodes": [
+    {
+      "id": 1,
+      "name": "Left Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x001a7b0",
+      "doorOrientation": "left",
+      "doorEnvironments": [{"physics": "water"}],
+      "note": "The center door that is accessible from the puyo side",
+      "twinDoorAddresses": [{"roomAddress": "0x7D646", "doorAddress": "0x001a7a4"}]
+    },
+    {
+      "id": 2,
+      "name": "Right Door",
+      "nodeType": "door",
+      "nodeSubType": "blue",
+      "nodeAddress": "0x001a7bc",
+      "doorOrientation": "right",
+      "doorEnvironments": [{"physics": "water"}],
+      "twinDoorAddresses": [{"roomAddress": "0x7D646", "doorAddress": "0x001a798"}]
+    },
+    {
+      "id": 3,
+      "name": "Junction Below Right Door",
+      "nodeType": "junction",
+      "nodeSubType": "junction"
+    }
+  ],
+  "enemies": [
+    {
+      "id": "e1",
+      "groupName": "East Pants Room Top Puyo",
+      "enemyName": "Puyo",
+      "quantity": 1,
+      "homeNodes": [2]
+    },
+    {
+      "id": "e2",
+      "groupName": "East Pants Room Middle Puyos",
+      "enemyName": "Puyo",
+      "quantity": 2,
+      "homeNodes": [3]
+    },
+    {
+      "id": "e3",
+      "groupName": "East Pants Room Bottom Puyos",
+      "enemyName": "Puyo",
+      "quantity": 2,
+      "homeNodes": [1]
+    }
+  ],
+  "links": [
+    {
+      "from": 1,
+      "to": [
+        {"id": 1},
+        {"id": 3}
+      ]
+    },
+    {
+      "from": 2,
+      "to": [
+        {"id": 1},
+        {"id": 2},
+        {"id": 3}
+      ]
+    },
+    {
+      "from": 3,
+      "to": [
+        {"id": 1},
+        {"id": 2}
+      ]
+    }
+  ],
+  "strats": [
+    {
+      "id": 1,
+      "link": [1, 1],
+      "name": "Leave with Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 3,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 2,
+      "link": [1, 1],
+      "name": "Puyo Farm",
+      "requires": [
+        "canDodgeWhileShooting",
+        {"resetRoom": {
+          "nodes": [1]
+        }},
+        {"partialRefill": {"type": "Energy", "limit": 160}},
+        {"partialRefill": {"type": "Missile", "limit": 6}},
+        {"partialRefill": {"type": "PowerBomb", "limit": 2}}
+      ],
+      "note": "Stand (don't crouch) next to the door and shoot diagonally down into the sand until the puyos are killed."
+    },
+    {
+      "id": 3,
+      "link": [1, 1],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canCrystalFlash"
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 4,
+      "link": [1, 1],
+      "name": "G-Mode Setup - Get Hit By Puyo",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGModeSetup": {}
+      },
+      "flashSuitChecked": true,
+      "devNote": "This can only be useful if the door does not connect to the Pants Room."
+    },
+    {
+      "id": 5,
+      "link": [1, 1],
+      "name": "G-Mode Regain Mobility",
+      "requires": [
+        {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}}
+      ],
+      "gModeRegainMobility": {},
+      "flashSuitChecked": true,
+      "devNote": "This can only be useful if the door does not connect to the Pants Room."
+    },
+    {
+      "id": 6,
+      "link": [1, 3],
+      "name": "Base",
+      "requires": [
+        "Gravity"
+      ]
+    },
+    {
+      "id": 7,
+      "link": [1, 3],
+      "name": "Suitless Base",
+      "requires": [
+        "canSuitlessMaridia",
+        "HiJump",
+        {"or": [
+          "canSpringBallJumpMidAir",
+          "h_canCrouchJumpDownGrab",
+          "canUseFrozenEnemies"
+        ]}
+      ]
+    },
+    {
+      "id": 8,
+      "link": [1, 3],
+      "name": "Max Height SpringBall Jump",
+      "requires": [
+        "canSuitlessMaridia",
+        "h_canMaxHeightSpringBallJump",
+        {"or": [
+          "can4HighMidAirMorph",
+          "canStationaryLateralMidAirMorph",
+          {"and": [
+            "canNeutralDamageBoost",
+            {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 2}}
+          ]}
+        ]}
+      ],
+      "note": "It is recommended to shoot the ceiling block immediately upon room entry to bring one of the Puyos down so that it will not be a problem later."
+    },
+    {
+      "id": 9,
+      "link": [1, 3],
+      "name": "Suitless Frozen Puyo",
+      "requires": [
+        "canSuitlessMaridia",
+        "canTrickyUseFrozenEnemies",
+        {"or": [
+          "h_canCrouchJumpDownGrab",
+          "canTwoTileSqueeze",
+          "Morph"
+        ]}
+      ],
+      "note": [
+        "Involves breaking the top left Puyo free and then freezing it while it falls.",
+        "Walk to the end of the door platform and wait for the above puyo to land on the shot block.",
+        "It will float there until its next jump, where it will slowly descend."
+      ]
+    },
+    {
+      "id": 10,
+      "link": [1, 3],
+      "name": "Jump into Respawning Block",
+      "requires": [
+        "canSuitlessMaridia",
+        "HiJump",
+        "canJumpIntoRespawningBlock"
+      ]
+    },
+    {
+      "id": 11,
+      "link": [1, 3],
+      "name": "SpringBall Jump into Respawning Block",
+      "requires": [
+        "canSuitlessMaridia",
+        "canTrickySpringBallJump",
+        "canTrickyJump",
+        "canJumpIntoRespawningBlock",
+        {"or": [
+          "can4HighMidAirMorph",
+          "canStationaryLateralMidAirMorph"
+        ]}
+      ],
+      "note": "It is recommended to shoot the ceiling block immediately upon room entry to bring one of the Puyos down so that it will not be a problem later."
+    },
+    {
+      "id": 12,
+      "link": [1, 3],
+      "name": "Cross Room Gravity Jump",
+      "entranceCondition": {
+        "comeInJumping": {
+          "speedBooster": false,
+          "minTiles": 2
+        }
+      },
+      "requires": [
+        "canTrickyJump",
+        "canCrossRoomJumpIntoWater",
+        "canMomentumConservingTurnaround",
+        {"or": [
+          "canUseFrozenEnemies",
+          "canSpringBallJumpMidAir",
+          "HiJump"
+        ]}
+      ],
+      "note": [
+        "Quickly shoot to break the shot block and then do a momentumConservingTurnaround to ascend into the little region.",
+        "Another movement item will be needed to get closer to the crumble blocks."
+      ],
+      "devNote": [
+        "The transition likely connects to Pants Room making this strat not likely to be useful.",
+        "This can be done with a slightly shorter, closed end runway."
+      ]
+    },
+    {
+      "id": 26,
+      "link": [1, 3],
+      "name": "Use Flash Suit",
+      "requires": [
+        "canPlayInSand",
+        {"useFlashSuit": {}},
+        {"shinespark": {"frames": 11, "excessFrames": 1}}
+      ],
+      "note": "Cross the sand, then spark up left."
+    },
+    {
+      "id": 13,
+      "link": [2, 1],
+      "name": "Grapple Teleport",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[2, 34]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true
+    },
+    {
+      "id": 14,
+      "link": [2, 1],
+      "name": "Carry Grapple Teleport",
+      "entranceCondition": {
+        "comeInWithGrappleTeleport": {
+          "blockPositions": [[2, 34]]
+        }
+      },
+      "requires": [],
+      "bypassesDoorShell": true,
+      "exitCondition": {
+        "leaveWithGrappleTeleport": {
+          "blockPositions": [[2, 34]]
+        }
+      }
+    },
+    {
+      "id": 15,
+      "link": [2, 2],
+      "name": "Leave with Runway",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithRunway": {
+          "length": 8,
+          "openEnd": 1
+        }
+      }
+    },
+    {
+      "id": 16,
+      "link": [2, 2],
+      "name": "Crystal Flash",
+      "requires": [
+        "h_canCrystalFlash"
+      ],
+      "flashSuitChecked": true
+    },
+    {
+      "id": 17,
+      "link": [2, 2],
+      "name": "G-Mode Setup - Get Hit By Puyo",
+      "requires": [],
+      "exitCondition": {
+        "leaveWithGModeSetup": {}
+      },
+      "flashSuitChecked": true
+    },
+    {
+      "id": 18,
+      "link": [2, 2],
+      "name": "G-Mode Regain Mobility",
+      "requires": [
+        {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}}
+      ],
+      "gModeRegainMobility": {},
+      "flashSuitChecked": true
+    },
+    {
+      "id": 19,
+      "link": [2, 3],
+      "name": "Base",
+      "requires": []
+    },
+    {
+      "id": 20,
+      "link": [3, 1],
+      "name": "Base",
+      "requires": [
+        {"or": [
+          "h_canNavigateUnderwater",
+          {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 1}}
+        ]}
+      ]
+    },
+    {
+      "id": 21,
+      "link": [3, 2],
+      "name": "Puyo Clip with Morph and X-Ray",
+      "requires": [
+        {"notable": "Puyo Clip"},
+        "Gravity",
+        "h_canXRayMorphIceClip",
+        {"or": [
+          "canTrickyJump",
+          {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 2}}
+        ]}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Freeze the Puyo at standing-shot height and then jump on top of it with a spinjump before morphing, unmorphing, and using X-Ray to standup and clip.",
+        "Standing on a side of the room and shooting forward will freeze the Puyo at the correct height."
+      ]
+    },
+    {
+      "id": 22,
+      "link": [3, 2],
+      "name": "Puyo Clip Precise Freeze",
+      "requires": [
+        {"notable": "Puyo Clip Precise Freeze"},
+        "Gravity",
+        "h_canPreciseIceClip",
+        {"or": [
+          "canTrickyJump",
+          {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 2}}
+        ]}
+      ],
+      "flashSuitChecked": true,
+      "note": "Freeze the Puyo at the start of its jump animation, on the right frame."
+    },
+    {
+      "id": 23,
+      "link": [3, 2],
+      "name": "Suitless Puyo Clip",
+      "requires": [
+        {"notable": "Suitless Puyo Clip"},
+        "canSuitlessMaridia",
+        "h_canHighPixelIceClip",
+        {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 2}},
+        {"or": [
+          {"enemyDamage": {"enemy": "Puyo", "type": "contact", "hits": 6}},
+          {"resetRoom": {
+            "nodes": [1]
+          }}
+        ]}
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Positioning the Puyo requires it to perform a big jump then start falling with a frame perfect freeze.",
+        "One possible setup stands on the left tile of the right side and lets the puyo jump up taking a contact hit.",
+        "Then so long as the puyo isn't on the very edge, it will do a big jump.",
+        "Clip onto the puyo by doing an aim down jump and switching to a forward diagonal at the right time."
+      ],
+      "devNote": [
+        "1 hit per attempt, 7 for leniency, which is reduced if Samus can reset the room and farm the Puyos.",
+        "FIXME: leniencies should be moved to helpers or some central location.",
+        "FIXME: There is a normalized setup which can be described and most or all of the leniency can be removed."
+      ]
+    },
+    {
+      "id": 24,
+      "link": [3, 2],
+      "name": "Crystal Flash Clip with Bombs",
+      "requires": [
+        "h_canBombIntoCrystalFlashClip",
+        "Gravity"
+      ],
+      "flashSuitChecked": true,
+      "note": "Clip below the crumble blocks on the left side.  Hold down after clipping to break them."
+    },
+    {
+      "id": 25,
+      "link": [3, 2],
+      "name": "Suitless Crystal Flash Clip",
+      "requires": [
+        "h_canJumpIntoCrystalFlashClip",
+        "canSuitlessMaridia"
+      ],
+      "flashSuitChecked": true,
+      "note": [
+        "Place a PB up against the crumble blocks, then jump and midair morph into that same position at the end of the explosion while holding CF inputs.",
+        "Immediately after the CF, hold down to break the crumble blocks."
+      ]
+    }
+  ],
+  "nextStratId": 27,
+  "notables": [
+    {
+      "id": 1,
+      "name": "Puyo Clip",
+      "note": [
+        "Freeze a Puyo at the correct height for clipping through the tile high ceiling, with Gravity Suit equipped.",
+        "With Morph and X-Ray, freeze the Puyo at standing-shot height and then jump on top of it with a spinjump before morphing, unmorphing, and using X-Ray to standup and clip.",
+        "Otherwise, freeze it on the first frame of it's jump animation for the right height."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Puyo Clip Precise Freeze",
+      "note": "Freeze the Puyo at the start of its jump animation, on the right frame."
+    },
+    {
+      "id": 3,
+      "name": "Suitless Puyo Clip",
+      "note": [
+        "Positioning the Puyo requires it to perform a big jump then start falling with a frame perfect freeze.",
+        "One possible setup stands on the left tile of the right side and lets the puyo jump up taking a contact hit.",
+        "Then so long as the puyo isn't on the very edge, it will do a big jump.",
+        "Clip onto the puyo by doing an aim down jump and switching to a forward diagonal at the right time."
+      ]
+    }
+  ],
+  "nextNotableId": 4
+}

@@ -1,7 +1,8 @@
 namespace Randomizer.Games.Alttp;
 
-using System.IO;
+using Randomizer.Games;
 using Randomizer.Graph;
+using Randomizer.RomModifications;
 using BaseGameRandomizer = Graph.GameRandomizer;
 using BaseSpoilerLog = Graph.SpoilerLog;
 using GlobalConfig = Randomizer.Config;
@@ -15,21 +16,12 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
 
     public override void AppendSpoiler(BaseSpoilerLog spoilerLog) => Spoiler.Log(Worlds, spoilerLog);
 
-    protected override RomModifications.Rom CreateRom(FileInfo baseRom, FileInfo? baseBPS)
+    public override void ApplyPatch(IRom rom, FileInfo baseBPS)
     {
-        var rom = new RomModifications.Rom(baseRom.FullName);
-        // TODO: check hash? do we need that?
-
-        // assume we either have a vanilla rom and a BPS, or an already pre-patched base rom.
-        if (baseBPS != null)
-        {
-            rom.Resize(RomSize);
-            rom.ApplyBasePatch(baseBPS);
-        }
-
-        return rom;
+        rom.Resize(RomSize);
+        rom.ApplyBasePatch(baseBPS);
     }
-    protected override void WriteWorldToRom(IWorld world, RomModifications.Rom rom, PRNG prng)
+    protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
         if (world is not World alttpWorld)
             throw new ArgumentException("Passed world is not for The Legend of Zelda: A Link to the Past.", nameof(world));

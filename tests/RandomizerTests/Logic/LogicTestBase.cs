@@ -1,6 +1,8 @@
 ﻿namespace RandomizerTests.Logic;
 
+using Randomizer.Games;
 using Randomizer.Graph;
+using Randomizer.RomModifications;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -31,7 +33,7 @@ public abstract class LogicTestBase
             Assert.Fail($"Location \"{location}\" doesn't exist in the graph");
         }
 
-        var searcher = randomizer.GetSearcherForInventory(inventory.Select(world.GetItem));
+        var searcher = randomizer.GetSearcherForInventory(world, inventory.Select(world.GetItem), world.Start);
         Assert.AreEqual(expected, searcher.GetVisited().Any(v => v.Name == location));
     }
 

@@ -1,5 +1,5 @@
+using Randomizer.Games;
 using Randomizer.Games.Alttp;
-using Randomizer.Graph;
 
 namespace RandomizerTests.Logic.Inverted.MajorGlitches;
 

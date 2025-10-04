@@ -1,6 +1,10 @@
 namespace Randomizer.Graph;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Games.Combo;
+using Randomizer.Games.SuperMetroid;
+using Randomizer.Games.SuperMetroid.Model;
+using static Randomizer.Games.Metroid.YamlReader;
 
 internal sealed class RandomAssumedFiller
 {
@@ -29,10 +33,59 @@ internal sealed class RandomAssumedFiller
         var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
 
-        var searchers = new Searcher[_randomizer.Worlds.Length];
+
+        // Do special things for SM in combo
+        if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
+        {
+            if (comboWorld.Config.InitialGame == "sm")
+            {
+                for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+                {
+                    var world = _randomizer.Worlds[i];
+                    if (world != null)
+                    {
+                        var smWorld = world switch
+                        {
+                            Games.SuperMetroid.World sm => sm,
+                            Games.Combo.World c => c.SMWorld,
+                            _ => null
+                        };
+
+                        if (smWorld != null)
+                        {
+                            SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
+
+                            // If we didn't fill morph, then fill it
+                            if (flatItems.Any(f => f.Item.Name == "Morph"))
+                            {
+                                var flatMorph = flatItems.First(i => i.Item == smWorld.GetItem("Morph"));
+                                SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
+                                flatItems.Remove(flatMorph);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                string[] frontFillItemNames = ["Morph"];
+                foreach (var frontFillItemName in frontFillItemNames)
+                {
+                    var flatItemToPlace = flatItems.FirstOrDefault(i => i.Item.Name == frontFillItemName);
+                    FrontFillCrossWorld(_randomizer.Worlds[0], _randomizer.Worlds[0].StartingItems, _randomizer.Graph, flatItemToPlace);
+                    flatItems.Remove(flatItemToPlace);
+                }
+
+            }
+        }
+
+        flatItemsArray = flatItems.ToArray();
+
+        var searchers = new ISearcher[_randomizer.Worlds.Length];
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
         {
             searchers[i] = _randomizer.GetSearcherForInventory(
+                _randomizer.Worlds[i],
                 flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
                     .Select(i => i.Item)
                     .ToList(),
@@ -54,10 +107,11 @@ internal sealed class RandomAssumedFiller
             flatItems.Remove(itemKey);
 
             searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
-                flatItems.Where(i => i.Weight <= 9000 && item.World == i.Item.World)
+                _randomizer.Worlds[item.World.Id],
+                flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
                     .Select(i => i.Item)
                     .ToList(),
-                item.World.Start
+                _randomizer.Worlds[item.World.Id].Start
                 );
 
             var locations = new List<Vertex>();
@@ -69,7 +123,44 @@ internal sealed class RandomAssumedFiller
             if (locations.Count == 0)
                 throw new Exception($"No locations for `{item}` in set `{itemSet}`");
 
+            bool backtrackCheck = false;
             var location = _prng.GetRandomElement(locations);
+            while (!backtrackCheck)
+            {
+                if (location.World is Games.SuperMetroid.World)
+                {
+                    var statefulSearcher = searchers[location.World.Id] switch
+                    {
+                        Games.SuperMetroid.StatefulSearcher s => s,
+                        Games.Combo.ComboSearcher { SMSearcher: { } smSearcher } => smSearcher,
+                        _ => throw new Exception("Invalid searcher type")
+                    };
+
+                    if (statefulSearcher is null)
+                        throw new InvalidOperationException("Super Metroid searcher is required for backtracking");
+
+                    var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
+                            .Select(i => i.Item)
+                            .ToList();
+                    var backtrackInventory = new Inventory(backtrackItems.ToArray());
+                    backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, item);
+                    if (!backtrackCheck)
+                    {
+                        locations.Remove(location);
+                        if (locations.Count == 0)
+                        {
+                            throw new Exception($"No valid locations for `{item}` in set `{itemSet}`");
+                        }
+                        location = _prng.GetRandomElement(locations);
+                        continue;
+                    }
+                }
+                else
+                {
+                    backtrackCheck = true;
+                }
+            }
+
             _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
                 (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
                 itemWeight,
@@ -87,6 +178,137 @@ internal sealed class RandomAssumedFiller
         FastFillItemsInLocations(flatItems);
     }
 
+    // Finds a location available with only the starting items and fills it, without checking if it's a good candidate
+    private void FrontFillCrossWorld(IWorld world, Inventory startingItems, Graph graph, (ItemSetName, int, IItem) flatItem)
+    {
+        var searcher = _randomizer.GetSearcherForInventory(world, startingItems.All().Select(x => x.Key), world.Start);
+        var locations = searcher.GetEmptyLocationsInSet(flatItem.Item1, null, true).ToList();
+        if (locations.Count == 0)
+        {
+            throw new Exception("No valid location for any item");
+        }
+
+        while (locations.Count > 0)
+        {
+            var location = _prng.GetRandomElement(locations);
+
+            // Backtrack check if the location is in SM
+            if (location.World.GameId == "sm")
+            {
+                // Test backtracking
+                var backtrackInventory = startingItems.Clone();
+                var statefulSearcher = (StatefulSearcher)location.World.GetSearcherForWorld(graph, location.World.Start, startingItems);
+                var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, flatItem.Item3);
+
+                if (!backtrackCheck)
+                {
+                    locations.Remove(location);
+                    continue;
+                }
+            }
+
+            location.Item = flatItem.Item3;
+            location.TrackPlacedItem();
+            _logger.LogInformation("[FF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+                flatItem.Item3,
+                location,
+                flatItem.Item1,
+                locations.Count
+            );
+            break;
+        }
+
+    }
+
+
+    private void SmartFrontFill(IWorld world, Inventory inventory, List<(ItemSetName, int, IItem)> flatItems, int count)
+    {
+        int bestLocationCount = 0;
+        while (bestLocationCount < count)
+        {
+            var filteredFlatItems = flatItems.Where(f => f.Item3.World.GameId == world.GameId).ToList();
+            var bestLocations = GetBestLocationsForItems(world, filteredFlatItems, inventory);
+            if (bestLocations.Count() == 0)
+            {
+                throw new Exception("No valid location for any item");
+            }
+
+            var bestLocation = bestLocations.OrderByDescending(x => x.newLocationCount).First();
+            var (itemSet, itemWeight, item) = bestLocation.Item1;
+            bestLocation.location.Item = item;
+            bestLocation.location.TrackPlacedItem();
+            flatItems.Remove(bestLocation.Item1);
+            _logger.LogInformation("(0%) [SFF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+                item,
+                bestLocation.location,
+                itemSet,
+                bestLocation.newLocationCount
+            );
+
+            bestLocationCount = bestLocation.newLocationCount;
+        }
+    }
+
+    private IEnumerable<((ItemSetName, int, IItem), Vertex location, int newLocationCount)> GetBestLocationsForItems(IWorld world, List<(ItemSetName, int, IItem)> flatItems, Inventory inventory)
+    {
+        var placementCandidates = new List<((ItemSetName, int, IItem), Vertex location, int newLocationCount)>();
+        foreach (var itemKey in flatItems)
+        {
+            var (itemSet, itemWeight, item) = itemKey;
+            var location = GetBestLocationForItem(world, item, inventory);
+            if (location.HasValue)
+            {
+                placementCandidates.Add((itemKey, location.Value.location, location.Value.newLocationCount));
+            }
+        }
+
+        return placementCandidates;
+    }
+
+    private (Vertex location, int newLocationCount)? GetBestLocationForItem(IWorld world, IItem item, Inventory inventory)
+    {
+        var searcher = _randomizer.GetSearcherForInventory(world, inventory.All().Select(x => x.Key), world.Start);
+        var locations = searcher.GetEmptyLocationsInSet(ItemSetName.DefaultSet, null, true).ToList();
+        if (locations.Count == 0)
+        {
+            return null;
+        }
+        var locationCandidates = _prng.Shuffle(locations).ToList();
+        var locationCandidateResults = new List<(Vertex Location, int newLocations)>();
+
+        while (locationCandidates.Count > 0)
+        {
+            var locationCandidate = locationCandidates.First();
+            locationCandidates.Remove(locationCandidate);
+
+            // Test backtracking
+            var backtrackInventory = inventory.Clone();
+            var statefulSearcher = (StatefulSearcher)searcher;
+            var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)locationCandidate, backtrackInventory, (Games.SuperMetroid.Vertex)locationCandidate.World.Start, item);
+
+            if (!backtrackCheck)
+            {
+                continue;
+            }
+
+            // Verify that placing this item opens up at least one new location
+            locationCandidate.Item = item;
+            var newSearcher = _randomizer.GetSearcherForInventory(world, inventory.All().Select(x => x.Key), world.Start);
+            var newLocations = newSearcher.GetEmptyLocationsInSet(ItemSetName.DefaultSet, null, true).ToList();
+            locationCandidate.Item = null;
+            locationCandidateResults.Add((locationCandidate, newLocations.Count));
+        }
+
+        if (locationCandidateResults.Count == 0)
+        {
+            return null;
+        }
+
+        return locationCandidateResults.OrderBy(x => x.newLocations).First();
+    }
+
+
+
     /// <summary>
     /// Quickly place items in locations respecting placemenmt groups.
     /// </summary>
@@ -103,7 +325,7 @@ internal sealed class RandomAssumedFiller
         });
 
         ItemSetName? currentKey = null;
-        var searcher = _randomizer.GetSearcherForInventory([]);
+        var searcher = _randomizer.GetSearcherForInventory(_randomizer.Worlds[0], [], _randomizer.Worlds[0].Start);
         var locations = new List<Vertex>();
         foreach (var (itemSet, _, item) in fillItems)
         {

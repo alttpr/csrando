@@ -1,27 +1,21 @@
 namespace Randomizer.Games.Zelda1;
 
 using Randomizer.Graph;
-using BaseRom = RomModifications.Rom;
+using Randomizer.RomModifications;
 
 public static class RomWriter
 {
-    public static void Write(BaseRom baseRom, World world, PRNG prng)
+    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
     {
+        var rom = new Rom(baseRom, offset);
+        var data = world.YamlData!;
 
-        foreach (var location in world.GetLocationsOfType(VertexType.Item))
+        rom.WriteItems(world);
+
+        if (world.Config.EntranceShuffle != EntranceShuffleOption.None)
         {
-            var item = location.Item as Item;
-            if (item != null && location.Addresses != null)
-            {
-                baseRom.Write((int)location.Addresses[0], new byte[] { (byte)item.Id });
-            }
+            rom.WriteOverworldMapData(world, prng, data);
+            rom.WriteSpecial(world, prng, data);
         }
-
-        //var startingEquipment = world.ComputeStartingItems();
-        //foreach (var item in startingEquipment.All())
-        //{
-        //    // Write starting equipment to ROM
-        //    baseRom.Write(0x123456, new byte[] { (byte)((Item)item.Key).Byte! }); // Replace 0x123456 with the actual address
-        //}
     }
 }

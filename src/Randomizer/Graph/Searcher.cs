@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
-public class Searcher
+public class Searcher : ISearcher
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
@@ -14,6 +14,8 @@ public class Searcher
     private readonly VertexHashSet _searchStarts;
     private readonly Inventory _inventory;
     private readonly SetLocations _setLocations;
+    private readonly VertexHashSet _otherWorldLocations;
+    private readonly IWorld? _world;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -21,14 +23,16 @@ public class Searcher
     /// <param name="graph">The graph to search</param>
     /// <param name="start">The starting point to search from</param>
     /// <param name="inventory">The current inventory to use while searching</param>
-    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null)
+    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null, IWorld? world = null)
     {
+        _world = world;
         _graph = graph;
         _visited = new(graph);
         _collected = new(graph);
         _searchStarts = new(graph) { start };
         _inventory = inventory;
         _setLocations = setLocations ?? new();
+        _otherWorldLocations = new(graph);
 
         bool newItemsFound;
         do
@@ -43,7 +47,36 @@ public class Searcher
                 newItemsFound = CollectItems(inventory, _visited, _collected);
             } while (newItemsFound);
 
-            if (DoorSearch(inventory))
+            if (_world == null || _world is Games.Alttp.World)
+            {
+                if (DoorSearch(inventory))
+                    newItemsFound = true;
+            }
+        } while (newItemsFound);
+    }
+
+    public void ResumeSearch(IEnumerable<Vertex> startAt, Inventory prevInventory)
+    {
+        foreach (var vertex in startAt)
+        {
+            if (!_visited.Contains(vertex))
+                _searchStarts.Add(vertex);
+        }
+
+        bool newItemsFound;
+        do
+        {
+            do
+            {
+                var (newlyVisited, newSearchStarts) = InternalSearch(_inventory, _visited, _searchStarts);
+                _visited.UnionWith(newlyVisited);
+                _searchStarts.Clear();
+                _searchStarts.UnionWith(newSearchStarts);
+
+                newItemsFound = CollectItems(_inventory, _visited, _collected);
+            } while (newItemsFound);
+
+            if (DoorSearch(_inventory))
                 newItemsFound = true;
         } while (newItemsFound);
     }
@@ -109,7 +142,7 @@ public class Searcher
         }
     }
 
-    private static bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
+    private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
         var newlyVisited = visited.Clone();
@@ -174,9 +207,12 @@ public class Searcher
     /// <returns>
     /// Returns the list of new reachable nodes and nodes with remaining accessible regions.
     /// </returns>
-    private static SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
+    private SearchResult InternalSearch(Inventory collected, VertexHashSet visited, IEnumerable<Vertex> startAt)
     {
-        SpendObviousKeys(collected, visited);
+        if (_world == null || _world is Games.Alttp.World)
+        {
+            SpendObviousKeys(collected, visited);
+        }
 
         var newlyVisited = new VertexHashSet(visited.Graph);
         var newSearchStarts = new VertexHashSet(visited.Graph);
@@ -198,6 +234,12 @@ public class Searcher
 
             foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
             {
+                if(edge.To.World != vertex.World)
+                {
+                    _otherWorldLocations.Add(edge.To);                    
+                    continue;
+                }
+
                 if (!edge.Condition.IsUnconditional)
                 {
                     if (!collected.Has(edge.Condition))
@@ -246,7 +288,7 @@ public class Searcher
         return strongLocations.Count != 0 || foundItems;
     }
 
-    private static SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
     {
         if (inventory.GetCount(key) == 0)
             return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
@@ -323,7 +365,7 @@ public class Searcher
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
-    private static bool DropOffSearch(IWorld world, Inventory inventory)
+    private bool DropOffSearch(IWorld world, Inventory inventory)
     {
         var inventoryWithBombInTow = inventory.Clone();
         foreach (string item in _noBombFollowerItems)
@@ -367,4 +409,6 @@ public class Searcher
 
         return emptyLocations.ToArray();
     }
+
+    public IEnumerable<Vertex> GetOtherWorld() => _otherWorldLocations;
 }

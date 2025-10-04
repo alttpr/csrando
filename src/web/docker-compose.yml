@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  proxy:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    environment:
+      - NODE_ENV=production
+      - PRIVATE_DOTNET_API_BASE_URL=http://api:8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.front.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.front.entrypoints=websecure
+      - traefik.http.routers.front.tls.certresolver=letsencrypt
+      - traefik.http.services.front.loadbalancer.server.port=3000
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    image: ${API_IMAGE}
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls.certresolver=letsencrypt
+      - traefik.http.middlewares.api-strip.stripprefix.prefixes=/api
+      - traefik.http.routers.api.middlewares=api-strip
+      - traefik.http.services.api.loadbalancer.server.port=8080
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    command: --interval 300 --cleanup
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+volumes:
+  traefik_letsencrypt:

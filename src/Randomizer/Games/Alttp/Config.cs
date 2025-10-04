@@ -1,23 +1,32 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Collections.Generic;
+using Randomizer.Games.Metadata;
 using Randomizer.Graph;
 
+[TargetGame(Game.Zelda3)]
 public class Config
 {
     public static readonly string[] RandomCrystals = ["0", "1", "2", "3", "4", "5", "6", "7"];
-    public static readonly int DefaultMoldormEyeCount = 2;
-    public static readonly int DefaultMolderp = 2;
+    public const int DefaultMoldormEyeCount = 2;
+    public const int DefaultMolderp = 2;
 
     // TODO: Align this with current website which broke it down to multiple settings.
     // See https://github.com/sporchia/alttp_vt_randomizer/pull/951
+    [Ignore("This should really just be a boolean")]
     public int RomHardMode { get; init; } = 0;
 
     // Use an array of allowed random values for randomizing the number of crystals.
     // A single-element array acts as specific count to use.
+    [RandomizedOptionsFor(nameof(CrystalsGanon))]
+    [Values("0", "1", "2", "3", "4", "5", "6", "7", "Dungeons")]
     public string[] CrystalsGanonChoices { get; set; } = RandomCrystals;
+    [RandomizedOptionsFor(nameof(CrystalsTower))]
+    [Values("0", "1", "2", "3", "4", "5", "6", "7")]
     public string[] CrystalsTowerChoices { get; set; } = RandomCrystals;
     private int[] _moldormEyeCountChoices = [DefaultMoldormEyeCount];
+    [RandomizedOptionsFor(nameof(MoldormEyeCount))]
+    [ValueRange(0, 8)]
     public int[] MoldormEyeCountChoices
     {
         get => _moldormEyeCountChoices;
@@ -30,6 +39,8 @@ public class Config
         }
     }
     private int[] _molderpChoices = [DefaultMolderp];
+    [RandomizedOptionsFor(nameof(Molderp))]
+    [ValueRange(1, 8)]
     public int[] MolderpChoices
     {
         get => _molderpChoices;
@@ -44,12 +55,16 @@ public class Config
 
 
     private string? _crystalsGanon;
+    [Category("Goal")]
+    [Values("0", "1", "2", "3", "4", "5", "6", "7", "Dungeons", Default = "7")]
     public string CrystalsGanon
     {
         get => _crystalsGanon ?? "7";
         set => _crystalsGanon = value;
     }
     private string? _crystalsTower;
+    [Category("Goal")]
+    [Values("0", "1", "2", "3", "4", "5", "6", "7", Default = "7")]
     public string CrystalsTower
     {
         get => _crystalsTower ?? "7";
@@ -57,12 +72,14 @@ public class Config
     }
 
     private int? _moldormEyeCount;
+    [ValueRange(0, 8, Default = DefaultMoldormEyeCount)]
     public int MoldormEyeCount
     {
         get => _moldormEyeCount.GetValueOrDefault(DefaultMoldormEyeCount);
         init => _moldormEyeCount = value;
     }
     private int? _molderp;
+    [ValueRange(1, 8, Default = DefaultMolderp)]
     public int Molderp
     {
         get => _molderp.GetValueOrDefault(DefaultMolderp);
@@ -80,57 +97,93 @@ public class Config
         _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
+    [Category("Goal")]
+    [ValueRange(1, 150, Default = 50)]
+    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
     public ushort TriforcePieces { get; set; } = 50;
 
+    [Category("Goal")]
+    [ValueRange(1, 150, Default = 30)]
+    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
+    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
+
+
+    [Category("Goal")]
     public GoalOption Goal { get; init; } = GoalOption.Ganon;
 
+    [Category("Item Placement", CategoryDisplay.Collapsed)]
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
+    [Category("Gameplay")]
     public StateOption State { get; init; } = StateOption.Standard;
 
+    [Category("Item Placement")]
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
-    public List<TechOption> Techs { get; init; } = new();
+    public List<TechOption> Techs { get; init; } = [];
 
     public WeaponOption Weapon { get; init; } = WeaponOption.Randomized;
 
+    [Category("Gameplay")]
     public EntranceShuffleOption EntranceShuffle { get; init; } = EntranceShuffleOption.None;
 
+    [Category("Gameplay")]
     public EnemyShuffleOption EnemyShuffle { get; init; } = EnemyShuffleOption.None;
 
     public EnemyDamageOption EnemyDamage { get; init; } = EnemyDamageOption.Default;
 
     public EnemyHealthOption EnemyHealth { get; init; } = EnemyHealthOption.Default;
 
+    [Category("Gameplay")]
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
     public TileRoomPatternOption TileRoomPattern { get; init; } = TileRoomPatternOption.Default;
 
     // TODO: Make it a bool? Do we have more planned there?
+    [Ignore("No shop randomization yet")]
     public ShopSupplyOption RegionShopSupply { get; init; } = ShopSupplyOption.Normal;
+
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildKeys { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildBigKeys { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildMaps { get; init; } = false;
+    [Category("Item Placement")]
+    [Subcategory("Dungeon Item Shuffle")]
     public bool RegionWildCompasses { get; init; } = false;
+
     public bool RomRupeeBow { get; init; } = false;
 
     // TODO: Add configuration for custom prize packs
+    [Ignore("No custom prize packs yet")]
     public bool CustomPrizePacks { get; init; } = false;
 
-    public List<string> StartingEquipment { get; init; } = new();
+    [Ignore("Starting inventory is too advenced to be represented with simple attributes")]
+    public List<string> StartingEquipment { get; init; } = [];
 
     public bool MapOnPickup { get; init; } = false;
     public bool EscapeAssist { get; init; } = false;
     public bool PseudoBoots { get; init; } = false;
+    [Ignore("Is there even a reason to turn this off?")]
     public bool FastRom { get; init; } = true;
     public bool QuickSwap { get; init; } = false;
     public bool NoMusic { get; init; } = false;
+    [Advanced("Directly provides a ROM value")]
     public byte CapeMagicUsageNormal { get; init; } = 0x04;
+    [Advanced("Directly provides a ROM value")]
     public byte CapeMagicUsageHalf { get; init; } = 0x08;
+    [Advanced("Directly provides a ROM value")]
     public byte CapeMagicUsageQuarter { get; init; } = 0x10;
     public bool CaneOfByrnaInvulnerability { get; init; } = true;
+    [Advanced("Directly provides a ROM value")]
     public byte PowderedSpriteFairyPrize { get; init; } = 0xE3;
+    [Advanced("Directly provides a ROM value")]
     public byte BottleFillHealth { get; init; } = 0xA0;
+    [Advanced("Directly provides a ROM value")]
     public byte BottleFillMagic { get; init; } = 0x80;
     public bool CatchableFairies { get; init; } = true;
     public bool CatchableBees { get; init; } = true;
@@ -139,8 +192,8 @@ public class Config
     public bool SilversOnlyAtGanon { get; init; } = false;
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
+    [Ignore("Nobody cares about the goal icon")]
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
-    public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
     public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;
@@ -148,6 +201,7 @@ public class Config
     public SilversEquipOption SilversAutoEquip { get; init; } = SilversEquipOption.Collection;
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
+    [Category("Gameplay")]
     public bool EnableHints { get; init; } = false;
 }
 
@@ -186,3 +240,118 @@ public enum GoalIconOption { Triforce, Star }
 public enum GanonAgahnimRngOption { None = 0x01, Table = 0x00, Vanilla = Table }
 public enum SilversEquipOption { Off = 0x00, Collection = 0x01, Ganon = 0x02, Both = 0x03 }
 public enum CompassCounterOption { Off = 0x00, Pickup = 0x01, On = 0x02 }
+
+[PostGenSettingsFor("alttp", Target = RandomizerTarget.Alttpr)]
+[PostGenSettingsFor("alttp", Target = RandomizerTarget.Combo, AddressOffset = 0x400000)]
+public sealed class PostGenConfig
+{
+    [Name("Quick Swap")]
+    [Description("Enable item quick swap (L/R toggles items)")]
+    [OnPatch(0x18004B, 0x01)]
+    [OffPatch(0x18004B, 0x00)]
+    public bool QuickSwap { get; init; } = true;
+
+    [Name("Music")]
+    [Description("Enable in-game music")]
+    [OnPatch(0x18021A, 0x00)]
+    [OffPatch(0x18021A, 0x01)]
+    public bool EnableMusic { get; init; } = true;
+
+    [Name("MSU-1 Resume")]
+    [Description("Enable MSU-1 music resume")]
+    [OffPatch(0x18021D, 0x00)]
+    [OffPatch(0x18021E, 0x00)]
+    public bool Msu1Resume { get; init; } = true;
+
+    [Name("Menu Speed")]
+    [Description("Set in-game menu menu scroll speed")]
+    public MenuSpeed Menu { get; init; } = MenuSpeed.Normal;
+
+    [Name("Heart Color")]
+    [Description("Select heart HUD color")]
+    public HeartColor HeartHudColor { get; init; } = HeartColor.Red;
+
+    [Name("Heart Beep Speed")]
+    [Description("Low-health beep frequency")]
+    public HeartBeepSpeed HeartBeep { get; init; } = HeartBeepSpeed.Normal;
+
+    [Name("Reduce Flashes")]
+    [Description("Reduce flashing effects")]
+    [OnPatch(0x18017F, 0x01)]
+    [OffPatch(0x18017F, 0x00)]
+    public bool ReduceFlashing { get; init; } = false;
+}
+
+public enum MenuSpeed
+{
+    // instant: writes main byte and sets 3 addresses to 0x20
+    [Choice("instant", "Instant")]
+    [ChoicePatch(0x180048, 0xE8)]
+    [ChoicePatch(0x006DD9A, 0x20)]
+    [ChoicePatch(0x006DF2A, 0x20)]
+    [ChoicePatch(0x006E0E9, 0x20)]
+    Instant,
+
+    [Choice("fast", "Fast")]
+    [ChoicePatch(0x180048, 0x10)]
+    [ChoicePatch(0x006DD9A, 0x11)]
+    [ChoicePatch(0x006DF2A, 0x12)]
+    [ChoicePatch(0x006E0E9, 0x12)]
+    Fast,
+
+    [Choice("normal", "Normal")]
+    [ChoicePatch(0x180048, 0x08)]
+    [ChoicePatch(0x006DD9A, 0x11)]
+    [ChoicePatch(0x006DF2A, 0x12)]
+    [ChoicePatch(0x006E0E9, 0x12)]
+    Normal,
+
+    [Choice("slow", "Slow")]
+    [ChoicePatch(0x180048, 0x04)]
+    [ChoicePatch(0x006DD9A, 0x11)]
+    [ChoicePatch(0x006DF2A, 0x12)]
+    [ChoicePatch(0x006E0E9, 0x12)]
+    Slow,
+}
+
+public enum HeartColor
+{
+    [Choice("red", "Red")]
+    [ChoicePatch(0x187020, 0x00)]
+    Red,
+
+    [Choice("blue", "Blue")]
+    [ChoicePatch(0x187020, 0x01)]
+    Blue,
+
+    [Choice("green", "Green")]
+    [ChoicePatch(0x187020, 0x02)]
+    Green,
+
+    [Choice("yellow", "Yellow")]
+    [ChoicePatch(0x187020, 0x03)]
+    Yellow,
+}
+
+public enum HeartBeepSpeed
+{
+    [Choice("off", "Off")]
+    [ChoicePatch(0x180033, 0x00)]
+    Off,
+
+    [Choice("normal", "Normal")]
+    [ChoicePatch(0x180033, 0x20)]
+    Normal,
+
+    [Choice("half", "Half Speed")]
+    [ChoicePatch(0x180033, 0x40)]
+    Half,
+
+    [Choice("quarter", "Quarter Speed")]
+    [ChoicePatch(0x180033, 0x80)]
+    Quarter,
+
+    [Choice("double", "Double Speed")]
+    [ChoicePatch(0x180033, 0x10)]
+    Double,
+}

@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using Randomizer.Games;
+
 public interface IWorld
 {
     /// <summary>Get an <see cref="IItem"/> that exists in this world, or create a meta-item for it.</summary>
@@ -22,7 +24,7 @@ public interface IWorld
     IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(v => v.Type == type);
     bool HasLocation(string locationName);
 
-    IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
+    IEnumerable<Vertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
     /// <summary>
     /// Tracks the item for <paramref name="location"/> as placed. This might affect a game's ability to determine how many items were placed in total.
     /// </summary>
@@ -33,6 +35,16 @@ public interface IWorld
     /// <param name="start">Starting location of the player.</param>
     /// <param name="startingInventory">Starting items the player has innate access to.</param>
     bool IsWinnable(Vertex start, Inventory startingInventory);
+
+    /// <summary>
+    /// Get a searcher for this specific world.
+    /// </summary>
+    /// <param name="graph"></param>
+    /// <param name="start"></param>
+    /// <param name="inventory"></param>
+    /// <param name="setLocations"></param>
+    /// <returns></returns>
+    ISearcher GetSearcherForWorld(Graph graph, Vertex? start, Inventory inventory, SetLocations? setLocations = null);
 
     WorldConfig WorldConfig { get; }
     Graph Graph { get; }

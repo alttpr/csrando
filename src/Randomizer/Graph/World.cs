@@ -1,5 +1,7 @@
 namespace Randomizer.Graph;
 
+using Randomizer.Games;
+
 public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConfig worldConfig) : IWorld
     where TItem : IItem
 {
@@ -12,7 +14,7 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     public Vertex Start { get; protected init; } = null!;
     public Inventory StartingItems { get; protected init; } = null!;
 
-    private readonly Dictionary<string, TItem> _allItems = [];
+    protected readonly Dictionary<string, TItem> _allItems = [];
     public ushort PlacedItemCount { get; set; }
 
     IItem IWorld.GetItem(string name) => GetItem(name);
@@ -58,6 +60,9 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     /// <summary>Get all vertices in this world.</summary>
     /// <returns></returns>
     public IEnumerable<Vertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
+    /// <summary>Get all vertices of a given type in this world.</summary>
+    /// <param name="type">type to search for</param>
+    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
 
     public void TrackPlacedItem(Vertex location)
     {
@@ -66,8 +71,10 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     }
     protected virtual bool ShouldTrack(Vertex location) => true;
 
-    public virtual IEnumerable<Vertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    public virtual IEnumerable<Vertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
         => searcher.GetEmptyLocationsInSet(itemSet, setCounts);
 
     public abstract bool IsWinnable(Vertex start, Inventory startingInventory);
+
+    public abstract ISearcher GetSearcherForWorld(Graph graph, Vertex? start, Inventory inventory, SetLocations? setLocations = null);
 }

@@ -22,6 +22,9 @@ Further people who have been instremental in making this all work:
 ## Local Setup
 Specifically for ALttP currently, please update this file as more games are added.
 
+### Web + API (combined)
+For the new Svelte web + .NET API stack, see docs/COMBINED-SETUP.md for one-command local dev and Docker-based deployment.
+
 ### System Setup
 This assumes you're developing in VS Code.
 

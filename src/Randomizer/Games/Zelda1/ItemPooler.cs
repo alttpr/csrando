@@ -104,7 +104,7 @@ internal sealed class ItemPooler : IItemPooler
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Bombs")), 20),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Key")), 8),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Rupee")), 5),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Rupee5")), 11),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Rupee5")), 12),
         ];
 
         return worldSet;

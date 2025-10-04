@@ -1,5 +1,6 @@
 namespace Randomizer.Games.Alttp;
 
+using Randomizer.Games;
 using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using BaseVertex = Graph.Vertex;
@@ -20,7 +21,7 @@ public sealed class World : World<Item>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
-        : base("Zelda3", id, graph, randomizerConfig)
+        : base("alttp", id, graph, randomizerConfig)
     {
         Config = randomizerConfig.Alttp ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda: A Link to the Past");
         Config.SelectRandomValues(prng);
@@ -74,9 +75,9 @@ public sealed class World : World<Item>
 
     /// <summary>Get all vertices of a given type in this world.</summary>
     /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
+    public new IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
 
-    public override IEnumerable<BaseVertex> GetEmptyLocationsInSet(Searcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
+    public override IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();
         var item = (Item)itemToPlace;
@@ -140,5 +141,10 @@ public sealed class World : World<Item>
         }
 
         return true;
+    }
+
+    public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
+    {
+        return new Searcher(graph, start ?? Start, inventory, setLocations, this);
     }
 }

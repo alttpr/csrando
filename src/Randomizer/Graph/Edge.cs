@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 /// <summary>Edge in Graph.</summary>
 [DebuggerDisplay("{Condition}: {From.Name} -> {To.Name}")]
-public sealed class Edge
+public class Edge
 {
     public Vertex From { get; }
     public Vertex To { get; set; }

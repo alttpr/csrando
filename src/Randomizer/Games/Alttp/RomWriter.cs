@@ -1,16 +1,14 @@
 ﻿namespace Randomizer.Games.Alttp;
 
-using System.Buffers.Binary;
 using Randomizer.Graph;
-using BaseRom = RomModifications.Rom;
+using Randomizer.RomModifications;
 
 public static class RomWriter
 {
     private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
-    public static void Write(BaseRom baseRom, World world, PRNG prng)
+    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
     {
-        // FIXME: this offset likely needs to come from above, we only know with a full game selection where the individual games go
-        var rom = new Rom(baseRom, world.WorldConfig.Language, offset: 0);
+        var rom = new Rom(baseRom, world.WorldConfig.Language, offset);
 
         var config = world.Config;
         var heartColor = config.HeartColor;
@@ -61,7 +59,7 @@ public static class RomWriter
         if (config.State == StateOption.Standard)
             SetEscapeFills(world, rom);
 
-        rom.SetGoalRequiredCount(config.GoalRequiredCount);
+        rom.SetGoalRequiredCount((config.Goal == GoalOption.TriforceHunt || config.Goal == GoalOption.Trifecta) ? config.GoalRequiredCount : (ushort)0);
         rom.SetGoalIcon(config.GoalIcon);
 
         // Set item functionality settings
@@ -205,6 +203,7 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
+
         WriteEnemyDamageToRom(world, rom, prng);
         WriteEnemyHealthToRom(world, rom, prng);
         WriteEnemiesToRom(world, rom);

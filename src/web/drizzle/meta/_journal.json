@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1746687827418,
+      "tag": "0000_needy_captain_britain",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1757679200000,
+      "tag": "0001_add_randomizer_versions",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1757679300000,
+      "tag": "0002_add_randomizer_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1759591671175,
+      "tag": "0003_add_spoiler_log",
+      "breakpoints": true
+    }
+  ]
+}

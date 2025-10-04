@@ -20,7 +20,7 @@ internal class EntranceShuffler
     {
         /* Disallow shuffling the portal caves for now */
         /* TODO: Make this configurable */
-        List<int> portalMapIds = [];
+        List<int> portalMapIds = [0x66];
 
         /* Find all caves and dungeon levels */
         var caveIds = _data.overworld_maps.Where(m => !portalMapIds.Contains(m.map) && m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).Select(m => m.cave).ToList();

@@ -3,9 +3,11 @@
 **/.vscode/
 **/.config/
 **/dist/
+**/out/
 **/node_modules/
 **/PublishProfiles/
 **/DB/
+**/SuperMetroid/data/maps/
 .vs
 .cr
 *.sfc
