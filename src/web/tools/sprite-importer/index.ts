@@ -563,9 +563,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               z1Block.setContent(buffers);
 
               const authorName =
-                asset.creator?.trim() ||
-                asset.originalBy?.trim() ||
-                "Unknown";
+                asset.creator?.trim() || asset.originalBy?.trim() || "Unknown";
               const metaDataBlock = new MetaDataBlock({
                 title: spriteTitle,
                 author: authorName,
@@ -574,10 +572,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                 originalBy: asset.originalBy,
                 creator: asset.creator,
               });
-              const rdcBuffer = Rdc.write(authorName, [
-                metaDataBlock,
-                z1Block,
-              ]);
+              const rdcBuffer = Rdc.write(authorName, [metaDataBlock, z1Block]);
 
               const candidateKey = sanitizeId(spriteTitle);
               const spriteKey = ensureUniqueSpriteKey(
@@ -598,9 +593,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                 title: spriteTitle,
                 author: authorName,
                 game,
-                path: path
-                  .relative(outputDirRoot, pngPath)
-                  .replace(/\\/g, "/"),
+                path: path.relative(outputDirRoot, pngPath).replace(/\\/g, "/"),
                 files: {
                   rdc: path
                     .relative(outputDirRoot, rdcPath)
@@ -615,7 +608,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               err,
             );
           }
-        } else if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
+        } else if (
+          fileExt === ".rdc" ||
+          file.toLowerCase().endsWith(".rdc.gz")
+        ) {
           try {
             const fileBuffer = await readRdcFileDecompressed(filePath);
             const rdc = Rdc.parse(fileBuffer);
@@ -656,14 +652,14 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                   path: path
                     .relative(outputDirRoot, pngPath)
                     .replace(/\\/g, "/"),
-                files: {
-                  rdc: path
-                    .relative(outputDirRoot, rdcOutPath)
-                    .replace(/\\/g, "/"),
-                },
-              };
-              newEntriesMap.set(spriteKey, newEntry);
-            }
+                  files: {
+                    rdc: path
+                      .relative(outputDirRoot, rdcOutPath)
+                      .replace(/\\/g, "/"),
+                  },
+                };
+                newEntriesMap.set(spriteKey, newEntry);
+              }
             } else {
               console.log(
                 `  RDC file ${file} does not contain Zelda1SpriteDataBlock data (type ${Zelda1SpriteDataBlock.RDC_TYPE_ID}).`,
@@ -717,9 +713,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               m1Block.setContent(buffers);
 
               const authorName =
-                asset.creator?.trim() ||
-                asset.originalBy?.trim() ||
-                "Unknown";
+                asset.creator?.trim() || asset.originalBy?.trim() || "Unknown";
               const metaDataBlock = new MetaDataBlock({
                 title: spriteTitle,
                 author: authorName,
@@ -728,10 +722,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                 originalBy: asset.originalBy,
                 creator: asset.creator,
               });
-              const rdcBuffer = Rdc.write(authorName, [
-                metaDataBlock,
-                m1Block,
-              ]);
+              const rdcBuffer = Rdc.write(authorName, [metaDataBlock, m1Block]);
 
               const candidateKey = sanitizeId(spriteTitle);
               const spriteKey = ensureUniqueSpriteKey(
@@ -752,9 +743,7 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                 title: spriteTitle,
                 author: authorName,
                 game,
-                path: path
-                  .relative(outputDirRoot, pngPath)
-                  .replace(/\\/g, "/"),
+                path: path.relative(outputDirRoot, pngPath).replace(/\\/g, "/"),
                 files: {
                   rdc: path
                     .relative(outputDirRoot, rdcPath)
@@ -769,7 +758,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
               err,
             );
           }
-        } else if (fileExt === ".rdc" || file.toLowerCase().endsWith(".rdc.gz")) {
+        } else if (
+          fileExt === ".rdc" ||
+          file.toLowerCase().endsWith(".rdc.gz")
+        ) {
           try {
             const fileBuffer = await readRdcFileDecompressed(filePath);
             const rdc = Rdc.parse(fileBuffer);
@@ -810,14 +802,14 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
                   path: path
                     .relative(outputDirRoot, pngPath)
                     .replace(/\\/g, "/"),
-                files: {
-                  rdc: path
-                    .relative(outputDirRoot, rdcOutPath)
-                    .replace(/\\/g, "/"),
-                },
-              };
-              newEntriesMap.set(spriteKey, newEntry);
-            }
+                  files: {
+                    rdc: path
+                      .relative(outputDirRoot, rdcOutPath)
+                      .replace(/\\/g, "/"),
+                  },
+                };
+                newEntriesMap.set(spriteKey, newEntry);
+              }
             } else {
               console.log(
                 `  RDC file ${file} does not contain Metroid1SpriteDataBlock data (type ${Metroid1SpriteDataBlock.RDC_TYPE_ID}).`,

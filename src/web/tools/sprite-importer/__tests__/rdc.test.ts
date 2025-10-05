@@ -794,7 +794,9 @@ describe("Zelda1SpriteDataBlock", () => {
     const dummyRdcDataSegment = Buffer.alloc(block.length, 0xbb);
     block.parse(dummyRdcDataSegment, 0);
     expect(block.content).toHaveLength(block.manifest.length);
-    expectedSegmentLengths.forEach((len, idx) => expect(block.content[idx].length).toBe(len));
+    expectedSegmentLengths.forEach((len, idx) =>
+      expect(block.content[idx].length).toBe(len),
+    );
   });
 });
 

@@ -518,7 +518,9 @@ function drawNesTile(
 function decodeNesTiles(chr: Buffer): number[][] {
   const tiles: number[][] = [];
   for (let offset = 0; offset + 16 <= chr.length; offset += 16) {
-    tiles.push(convertNesTile2bppToPixelIndices(chr.subarray(offset, offset + 16)));
+    tiles.push(
+      convertNesTile2bppToPixelIndices(chr.subarray(offset, offset + 16)),
+    );
   }
   return tiles;
 }
@@ -545,7 +547,11 @@ function renderMetroidAvatarImage(
   const paletteBytes = sprite.content[18] ?? Buffer.alloc(0);
   const palette = buildNesPalette(paletteBytes);
 
-  const sliceTiles = (buffer: Buffer | undefined, start: number, end: number) => {
+  const sliceTiles = (
+    buffer: Buffer | undefined,
+    start: number,
+    end: number,
+  ) => {
     if (!buffer || buffer.length === 0) return [] as number[][];
     const tiles = decodeNesTiles(buffer);
     return tiles.slice(start, Math.min(end, tiles.length));
@@ -579,7 +585,14 @@ function renderMetroidAvatarImage(
     if (!tilePixels) return;
     const col = i === 8 ? 2 : i % 2;
     const row = Math.min(Math.floor(i / 2), 3);
-    drawNesTile(png, tilePixels, palette, col * 8 * scale, row * 8 * scale, scale);
+    drawNesTile(
+      png,
+      tilePixels,
+      palette,
+      col * 8 * scale,
+      row * 8 * scale,
+      scale,
+    );
   });
 
   return png;
@@ -592,7 +605,9 @@ export function renderNESAvatarImage(
 ): PNG {
   if (sprite instanceof Zelda1SpriteDataBlock) {
     const paletteSource =
-      sprite.content[6]?.subarray(0, 3) ?? sprite.content[9]?.subarray(0, 3) ?? Buffer.alloc(0);
+      sprite.content[6]?.subarray(0, 3) ??
+      sprite.content[9]?.subarray(0, 3) ??
+      Buffer.alloc(0);
     const palette = buildNesPalette(paletteSource);
     const chrSegment = sprite.content[2] ?? Buffer.alloc(0);
     const tiles = decodeNesTiles(chrSegment);
@@ -619,10 +634,12 @@ export function renderNESAvatarImage(
 
   // Fallback: attempt a generic NES 2x2 render for Metroid assets
   const paletteCandidate =
-    sprite.content.find((buf) => buf.length >= 3 && buf.length <= 8) ?? Buffer.alloc(0);
+    sprite.content.find((buf) => buf.length >= 3 && buf.length <= 8) ??
+    Buffer.alloc(0);
   const palette = buildNesPalette(paletteCandidate);
   const chrCandidate =
-    sprite.content.find((buf) => buf.length >= 16 && buf.length % 16 === 0) ?? Buffer.alloc(0);
+    sprite.content.find((buf) => buf.length >= 16 && buf.length % 16 === 0) ??
+    Buffer.alloc(0);
   const tiles = decodeNesTiles(chrCandidate).slice(0, 4);
   const cols = 2;
   const rows = 2;

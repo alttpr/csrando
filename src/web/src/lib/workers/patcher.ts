@@ -291,8 +291,8 @@ function applySamusManifestSegments(
         const offsetValue =
           segment.entryOffsets && segment.entryOffsets.length > 0
             ? (segment.entryOffsets[
-              Math.min(entryIndex, segment.entryOffsets.length - 1)
-            ] ?? 0)
+                Math.min(entryIndex, segment.entryOffsets.length - 1)
+              ] ?? 0)
             : segment.entryStride * entryIndex;
 
         let destPc: number;
@@ -1051,7 +1051,7 @@ self.onmessage = async (event) => {
                   ),
                   randomize_link_sprite: Boolean(
                     cosmeticSelections?.["palette_randomize_link_sprite"] ??
-                    true,
+                      true,
                   ),
                   randomize_shield: Boolean(
                     cosmeticSelections?.["palette_randomize_shield"] ?? true,
@@ -1128,10 +1128,10 @@ self.onmessage = async (event) => {
 
     const summaryTokens = Array.isArray(optionSummary?.tokens)
       ? optionSummary.tokens
-        .map((token: string) =>
-          slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
-        )
-        .filter((token: string) => token.length > 0)
+          .map((token: string) =>
+            slugifyForFilename(token, { maxLength: 20, preserveCase: true }),
+          )
+          .filter((token: string) => token.length > 0)
       : [];
 
     let summarySegment: string | null = null;

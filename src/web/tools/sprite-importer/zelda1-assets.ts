@@ -46,8 +46,8 @@ const DEFAULT_ZELDA1_SEGMENT_LAYOUT: Zelda1SegmentLayout[] = [
   { addresses: [0x61067f], length: 32 },
   {
     addresses: [
-      0x631314, 0x631410, 0x63150c, 0x631608, 0x631704, 0x631800, 0x6318f0,
-      0x6319f0, 0x631af0, 0x631bf0, 0x631cec, 0x3d3804,
+      0x631314, 0x631410, 0x63150c, 0x631608, 0x631704, 0x631800, 0x6318fc,
+      0x6319f8, 0x631af4, 0x631bf0, 0x631cec, 0x3d3804,
     ],
     length: 3,
   },
@@ -81,19 +81,25 @@ function normalizeOffset(value: string | number): number {
   if (typeof value === "string") {
     const trimmed = value.trim();
     if (!trimmed) {
-      throw new Error("Encountered empty offset string while normalizing Zelda 1 asset data.");
+      throw new Error(
+        "Encountered empty offset string while normalizing Zelda 1 asset data.",
+      );
     }
     const radix = trimmed.toLowerCase().startsWith(HEX_PREFIX) ? 16 : 10;
     const parsed = Number.parseInt(trimmed.replace(/_/g, ""), radix);
     if (Number.isNaN(parsed)) {
-      throw new Error(`Unable to parse offset value "${value}" from Zelda 1 asset data.`);
+      throw new Error(
+        `Unable to parse offset value "${value}" from Zelda 1 asset data.`,
+      );
     }
     return parsed;
   }
   throw new Error(`Unsupported offset value type: ${typeof value}`);
 }
 
-function normalizeOffsets(value: string | number | Array<string | number>): number[] {
+function normalizeOffsets(
+  value: string | number | Array<string | number>,
+): number[] {
   const arr = Array.isArray(value) ? value : [value];
   return arr.map((entry) => normalizeOffset(entry));
 }

@@ -70,7 +70,9 @@ function buildMetroidSegmentLayout(): MetroidSegmentLayout[] {
         const [addresses, length] = entry as [number[], number, number[]];
         if (!addresses || addresses.length === 0) {
           return {
-            addresses: [DEFAULT_METROID_SEGMENT_LAYOUT[idx]?.addresses?.[0] ?? idx],
+            addresses: [
+              DEFAULT_METROID_SEGMENT_LAYOUT[idx]?.addresses?.[0] ?? idx,
+            ],
             length,
           } satisfies MetroidSegmentLayout;
         }
@@ -91,18 +93,28 @@ function normalizeOffset(value: string | number): number {
   }
   if (typeof value === "string") {
     const trimmed = value.trim();
-    if (!trimmed) throw new Error("Encountered empty offset while normalizing Metroid asset data.");
-    const radix = trimmed.startsWith("0x") || trimmed.startsWith("0X") ? 16 : 10;
+    if (!trimmed)
+      throw new Error(
+        "Encountered empty offset while normalizing Metroid asset data.",
+      );
+    const radix =
+      trimmed.startsWith("0x") || trimmed.startsWith("0X") ? 16 : 10;
     const parsed = Number.parseInt(trimmed.replace(/_/g, ""), radix);
     if (Number.isNaN(parsed)) {
-      throw new Error(`Unable to parse offset "${value}" from Metroid asset data.`);
+      throw new Error(
+        `Unable to parse offset "${value}" from Metroid asset data.`,
+      );
     }
     return parsed;
   }
-  throw new Error(`Unsupported offset type for Metroid asset data: ${typeof value}`);
+  throw new Error(
+    `Unsupported offset type for Metroid asset data: ${typeof value}`,
+  );
 }
 
-function normalizeOffsets(value: string | number | Array<string | number>): number[] {
+function normalizeOffsets(
+  value: string | number | Array<string | number>,
+): number[] {
   const arr = Array.isArray(value) ? value : [value];
   return arr.map((entry) => normalizeOffset(entry));
 }
@@ -115,7 +127,10 @@ function canonicalize(addresses: number[]): string {
     .join(",");
 }
 
-function normalizeWrite(write: MetroidAssetWrite, index: number): NormalizedMetroidWrite {
+function normalizeWrite(
+  write: MetroidAssetWrite,
+  index: number,
+): NormalizedMetroidWrite {
   const offsets = normalizeOffsets(write.offset);
   const data = Buffer.from(write.base64, "base64");
   const expectedLength = write.length ?? data.length;
@@ -155,7 +170,9 @@ function findMatchingWrite(
     if (partial) return partial;
   }
 
-  const lengthOnly = writes.filter((w) => !w.used && w.length === segment.length);
+  const lengthOnly = writes.filter(
+    (w) => !w.used && w.length === segment.length,
+  );
   if (lengthOnly.length === 1) return lengthOnly[0];
   if (lengthOnly.length > 1) return lengthOnly[0];
   return undefined;
@@ -189,7 +206,9 @@ export function extractMetroidSegmentsFromAsset(
     throw new Error("Malformed Metroid asset: missing writes array.");
   }
 
-  const normalizedWrites = asset.writes.map((write, idx) => normalizeWrite(write, idx));
+  const normalizedWrites = asset.writes.map((write, idx) =>
+    normalizeWrite(write, idx),
+  );
   const buffers: Buffer[] = [];
 
   for (const segment of SEGMENT_LAYOUT) {

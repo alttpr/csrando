@@ -75,7 +75,7 @@ Segments map directly to NES PRG-ROM offsets. Palette segments appear multiple t
 | 3 | 32 | `0x6105BF` | `WALK2_PROFILE_BIGSHIELD`
 | 4 | 64 | `0x6105FF` | `WALK1_DOWN_SMALLSHIELD`, `WALK2_DOWN_SMALLSHIELD`
 | 5 | 32 | `0x61067F` | `FACING_DOWN_BIGSHIELD`
-| 6 | 3 | `0x631314`, `0x631410`, `0x63150C`, `0x631608`, `0x631704`, `0x631800`, `0x6318FC`, `0x6319F8`, `0x631AF4`, `0x631BF4`, `0x631CEC`, `0x3D3804` | `BASE_COLORS`
+| 6 | 3 | `0x631314`, `0x631410`, `0x63150C`, `0x631608`, `0x631704`, `0x631800`, `0x6318FC`, `0x6319F8`, `0x631AF4`, `0x631BF0`, `0x631CEC`, `0x3D3804` | `BASE_COLORS`
 | 7 | 3 | `0x631CF0` | `LEVEL2_COLORS`
 | 8 | 3 | `0x631CF4` | `LEVEL3_COLORS`
 | 9 | 3 | `0x612287` | `TUNIC_COLORS`
@@ -224,4 +224,3 @@ A type `0` block starts with a 32-bit length (little-endian) followed by that ma
 - [ ] Validate lengths before reading or writing.
 
 Following this guide will create RDC sprite files fully compatible with existing randomizer tooling.
-

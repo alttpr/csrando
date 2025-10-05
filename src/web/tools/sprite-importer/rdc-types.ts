@@ -337,16 +337,30 @@ export class Zelda1SpriteDataBlock extends DataBlock {
       [DataBlock.addr(0x6105bf), 32, DataBlock.single()], // $WALK2_PROFILE_BIGSHIELD
       [DataBlock.addr(0x6105ff), 64, DataBlock.single()], // $WALK1_DOWN_SMALLSHIELD, $WALK2_DOWN_SMALLSHIELD
       [DataBlock.addr(0x61067f), 32, DataBlock.single()], // $FACING_DOWN_BIGSHIELD
-      [DataBlock.addr(0x631314, 0x631410, 0x63150c, 0x631608, 0x631704, 0x631800, 0x6318f0, 0x6319f0, 0x631af0, 0x631bf0, 0x631cec, 0x3d3804), 3, DataBlock.single()], // $BASE_COLORS
+      [
+        DataBlock.addr(
+          0x631314,
+          0x631410,
+          0x63150c,
+          0x631608,
+          0x631704,
+          0x631800,
+          0x6318fc,
+          0x6319f8,
+          0x631af4,
+          0x631bf0,
+          0x631cec,
+          0x3d3804,
+        ),
+        3,
+        DataBlock.single(),
+      ], // $BASE_COLORS
       [DataBlock.addr(0x631cf0), 3, DataBlock.single()], // $LEVEL2_COLORS
       [DataBlock.addr(0x631cf4), 3, DataBlock.single()], // $LEVEL3_COLORS
       [DataBlock.addr(0x612287), 3, DataBlock.single()], // $TUNIC_COLORS
     ];
   }
 }
-
-
-
 
 /**
  * Metroid 1 Sprite data block (type 3).

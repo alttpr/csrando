@@ -22,9 +22,10 @@ describe("metroid asset utilities", () => {
       const toHex = (addr: number) => `0x${addr.toString(16)}`;
       const buffer = Buffer.alloc(length, idx + 1);
       const base64 = buffer.toString("base64");
-      const offsetValue = addresses.length > 1
-        ? addresses.map(() => toHex(addressCursor))
-        : toHex(addressCursor);
+      const offsetValue =
+        addresses.length > 1
+          ? addresses.map(() => toHex(addressCursor))
+          : toHex(addressCursor);
       asset.writes.push({
         offset: offsetValue,
         length,

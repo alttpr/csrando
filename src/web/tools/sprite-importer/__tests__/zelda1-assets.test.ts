@@ -24,9 +24,10 @@ describe("zelda1 asset utilities", () => {
       const toHex = (addr: number) => `0x${addr.toString(16)}`;
       const buffer = Buffer.alloc(length, idx);
       const base64 = buffer.toString("base64");
-      const offsetValue = addresses.length > 1
-        ? addresses.map((addr) => toHex(addr))
-        : toHex(addresses[0]);
+      const offsetValue =
+        addresses.length > 1
+          ? addresses.map((addr) => toHex(addr))
+          : toHex(addresses[0]);
       asset.writes.push({
         offset: offsetValue,
         length,

@@ -40,12 +40,36 @@ export interface GameStaticInfo {
 
 // --- NES Manifests (Zelda 1 & Metroid 1) ---
 const zelda1ManifestSegments: RdcManifestSegment[] = [
-  { length: 32, addressType: "pc", addresses: [{ mapping: "default", address: 0x608e34 }] }, // LIFTING_ITEM
-  { length: 32, addressType: "pc", addresses: [{ mapping: "default", address: 0x608eb4 }] }, // WALK1_PROFILE_BIGSHIELD
-  { length: 448, addressType: "pc", addresses: [{ mapping: "default", address: 0x61007f }] }, // 7 poses block
-  { length: 32, addressType: "pc", addresses: [{ mapping: "default", address: 0x6105bf }] }, // WALK2_PROFILE_BIGSHIELD
-  { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6105ff }] }, // WALK1_DOWN_SMALLSHIELD + WALK2_DOWN_SMALLSHIELD
-  { length: 32, addressType: "pc", addresses: [{ mapping: "default", address: 0x61067f }] }, // FACING_DOWN_BIGSHIELD
+  {
+    length: 32,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x608e34 }],
+  }, // LIFTING_ITEM
+  {
+    length: 32,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x608eb4 }],
+  }, // WALK1_PROFILE_BIGSHIELD
+  {
+    length: 448,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x61007f }],
+  }, // 7 poses block
+  {
+    length: 32,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6105bf }],
+  }, // WALK2_PROFILE_BIGSHIELD
+  {
+    length: 64,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6105ff }],
+  }, // WALK1_DOWN_SMALLSHIELD + WALK2_DOWN_SMALLSHIELD
+  {
+    length: 32,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x61067f }],
+  }, // FACING_DOWN_BIGSHIELD
   {
     length: 3,
     addressType: "pc",
@@ -57,17 +81,29 @@ const zelda1ManifestSegments: RdcManifestSegment[] = [
       { mapping: "default", address: 0x631608 },
       { mapping: "default", address: 0x631704 },
       { mapping: "default", address: 0x631800 },
-      { mapping: "default", address: 0x6318f0 },
-      { mapping: "default", address: 0x6319f0 },
-      { mapping: "default", address: 0x631af0 },
+      { mapping: "default", address: 0x6318fc },
+      { mapping: "default", address: 0x6319f8 },
+      { mapping: "default", address: 0x631af4 },
       { mapping: "default", address: 0x631bf0 },
       { mapping: "default", address: 0x631cec },
       { mapping: "default", address: 0x3d3804 },
     ],
   },
-  { length: 3, addressType: "pc", addresses: [{ mapping: "default", address: 0x631cf0 }] }, // LEVEL2_COLORS
-  { length: 3, addressType: "pc", addresses: [{ mapping: "default", address: 0x631cf4 }] }, // LEVEL3_COLORS
-  { length: 3, addressType: "pc", addresses: [{ mapping: "default", address: 0x612287 }] }, // TUNIC_COLORS
+  {
+    length: 3,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x631cf0 }],
+  }, // LEVEL2_COLORS
+  {
+    length: 3,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x631cf4 }],
+  }, // LEVEL3_COLORS
+  {
+    length: 3,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x612287 }],
+  }, // TUNIC_COLORS
 ];
 
 const zelda1ManifestConfig: SpriteManifestConfig = {
@@ -76,24 +112,96 @@ const zelda1ManifestConfig: SpriteManifestConfig = {
 };
 
 const metroidManifestSegments: RdcManifestSegment[] = [
-  { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0000 }] },
-  { length: 80, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0050 }] },
-  { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b00b0 }] },
-  { length: 16, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0170 }] },
-  { length: 96, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0190 }] },
-  { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0200 }] },
-  { length: 48, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0250 }] },
-  { length: 96, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0290 }] },
-  { length: 96, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0310 }] },
-  { length: 16, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0390 }] },
-  { length: 32, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b03b0 }] },
-  { length: 96, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0400 }] },
-  { length: 48, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0490 }] },
-  { length: 112, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0500 }] },
-  { length: 112, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0600 }] },
-  { length: 16, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0690 }] },
-  { length: 32, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0720 }] },
-  { length: 64, addressType: "pc", addresses: [{ mapping: "default", address: 0x6b0770 }] },
+  {
+    length: 64,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0000 }],
+  },
+  {
+    length: 80,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0050 }],
+  },
+  {
+    length: 64,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b00b0 }],
+  },
+  {
+    length: 16,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0170 }],
+  },
+  {
+    length: 96,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0190 }],
+  },
+  {
+    length: 64,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0200 }],
+  },
+  {
+    length: 48,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0250 }],
+  },
+  {
+    length: 96,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0290 }],
+  },
+  {
+    length: 96,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0310 }],
+  },
+  {
+    length: 16,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0390 }],
+  },
+  {
+    length: 32,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b03b0 }],
+  },
+  {
+    length: 96,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0400 }],
+  },
+  {
+    length: 48,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0490 }],
+  },
+  {
+    length: 112,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0500 }],
+  },
+  {
+    length: 112,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0600 }],
+  },
+  {
+    length: 16,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0690 }],
+  },
+  {
+    length: 32,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0720 }],
+  },
+  {
+    length: 64,
+    addressType: "pc",
+    addresses: [{ mapping: "default", address: 0x6b0770 }],
+  },
   {
     length: 3,
     addressType: "pc",
