@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Randomizer.Games;
 using Randomizer.Graph;
+using Randomizer.Graph.Json;
 using Randomizer.RomModifications;
 
 /// <summary>Run randomizer as command.</summary>
@@ -25,6 +26,7 @@ internal sealed class Randomize : Command
     private readonly Option<DirectoryInfo> _outputDirectory = new("outdir", "--outdir") { Description = "output directory for generated games" };
     private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>("settings", "--settings") { Description = "JSON serialized settings file" }.AcceptExistingOnly();
     private readonly Option<bool> _dumpSpoiler = new("spoiler", "--spoiler") { Description = "dump spoiler log" };
+    private readonly Option<bool> _dumpLocationsAsJson = new("locations-json", "--locations-json") { Description = "dump location JSON Graph file" };
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -37,6 +39,7 @@ internal sealed class Randomize : Command
         Add(_outputDirectory);
         Add(_settingsFile);
         Add(_dumpSpoiler);
+        Add(_dumpLocationsAsJson);
 
         _multiworld.Validators.Add(r =>
         {
@@ -60,6 +63,7 @@ internal sealed class Randomize : Command
         var baseBPS = parseResult.GetValue(_baseBPS);
         var outputDirectory = parseResult.GetValue(_outputDirectory);
         bool dumpSpoiler = parseResult.GetValue(_dumpSpoiler);
+        bool dumpLocations = parseResult.GetValue(_dumpLocationsAsJson);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
@@ -93,9 +97,62 @@ internal sealed class Randomize : Command
                     WriteIndented = true
                 }));
             }
+            if (dumpLocations)
+            {
+                DumpLocationJsonGraph(randomizer.Graph, outputDirectory);
+            }
         }
         _logger.LogInformation("Randomization took {TimeElapsed}", sw.Elapsed);
         return 0;
+    }
+
+    private void DumpLocationJsonGraph(Graph graph, DirectoryInfo? outputDirectory)
+    {
+        string outputFile = Path.Combine(outputDirectory == null ? Directory.GetCurrentDirectory() : outputDirectory.FullName, "locations.json");
+        var edges = new List<JsonEdge>();
+        var nodes = new Dictionary<string, JsonNode>();
+
+        foreach (var vertex in graph.GetVertices())
+        {
+            nodes.Add(vertex.Id.ToString(), new JsonNode
+            {
+                Id = vertex.Id.ToString(),
+                Label = vertex.Name,
+                // TODO: get this from the vertex (or the randomizer)
+                Metadata = new Dictionary<string, object?>
+                {
+                    { "name", vertex.Name },
+                    { "game", vertex.World.GameId },
+                    { "type", vertex.Type.ToString() },
+                    { "item", vertex.Item?.ToString() },
+                    { "trophy", vertex.Trophy?.ToString() },
+                },
+            });
+
+            foreach (var edge in vertex.Edges)
+            {
+                edges.Add(new()
+                {
+                    Id = $"{edge.From.Id}->{edge.To.Id}",
+                    Directed = true,
+                    Relation = edge.Condition.IsUnconditional ? "" : edge.Condition.Count > 1 ? $"{edge.Condition.Count}x{edge.Condition.Item?.Name}" : edge.Condition.Item?.Name,
+                    Source = edge.From.Id.ToString(),
+                    Target = edge.To.Id.ToString(),
+                    Metadata = new Dictionary<string, object?>
+                    {
+                        { "relation", edge.Condition.IsUnconditional ? "" : edge.Condition.Count > 1 ? $"{edge.Condition.Count}x{edge.Condition.Item?.Name}" : edge.Condition.Item?.Name },
+                    },
+                });
+            }
+        }
+
+        var jsonRoot = new JsonRoot();
+        jsonRoot.Graph.Id = "ALTTPR";
+        jsonRoot.Graph.Directed = true;
+        jsonRoot.Graph.Nodes = nodes;
+        jsonRoot.Graph.Edges = edges;
+
+        File.WriteAllText(outputFile, JsonSerializer.Serialize(jsonRoot));
     }
 
     private static readonly JsonSerializerOptions _options = new()
