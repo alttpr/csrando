@@ -153,6 +153,8 @@ public sealed partial class MetaController : ControllerBase
             defaultValue ??= attribute.Default;
         }
 
+        defaultValue ??= property.GetCustomAttribute<DefaultAttribute>()?.DefaultValue;
+
         if (possibleValues.Count == 0 && property.PropertyType.IsEnum)
         {
             foreach (var enumValue in Enum.GetValues(property.PropertyType).Cast<Enum>())
