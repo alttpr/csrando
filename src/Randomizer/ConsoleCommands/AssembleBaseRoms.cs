@@ -1,7 +1,10 @@
 namespace Randomizer.ConsoleCommands;
 
+using System.Collections.Generic;
 using System.CommandLine;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using BpsNet;
 
@@ -45,8 +48,11 @@ internal sealed class AssembleBaseRoms : Command
             AssembleAlttpBaseRom(z3Rom, featurePatreonSupporters);
             if (createBpsPatch)
             {
-                CreateBPSPatch([z3Rom], Config.BaseRomFile, Config.DataDirectory + "/randomizer.bps");
-                File.Copy(Config.DataDirectory + "/randomizer.bps", Config.RootDirectory + "/src/web/static/alttpr.bps", overwrite: true);
+                string randomizerPatchFile = Path.Combine(Config.DataDirectory, "randomizer.bps");
+                CreateBPSPatch([z3Rom], Config.BaseRomFile, randomizerPatchFile);
+
+                string webStaticDirectory = Path.Combine(Config.RootDirectory, "src", "web", "static");
+                File.Copy(randomizerPatchFile, Path.Combine(webStaticDirectory, "alttpr.bps"), overwrite: true);
             }
         }
 
@@ -60,29 +66,22 @@ internal sealed class AssembleBaseRoms : Command
             AssembleComboBaseRom(z3Rom, z1Rom, m1Rom, smRom);
             if (createBpsPatch)
             {
-                CreateBPSPatch([smRom, z3Rom, m1Rom, z1Rom], Config.ComboBaseRomFile, Config.DataDirectory + "/combo.bps");
-                File.Copy(Config.DataDirectory + "/combo.bps", Config.RootDirectory + "/src/web/static/combo.bps", overwrite: true);
+                string comboPatchFile = Path.Combine(Config.DataDirectory, "combo.bps");
+                CreateBPSPatch([smRom, z3Rom, m1Rom, z1Rom], Config.ComboBaseRomFile, comboPatchFile);
+
+                string webStaticDirectory = Path.Combine(Config.RootDirectory, "src", "web", "static");
+                File.Copy(comboPatchFile, Path.Combine(webStaticDirectory, "combo.bps"), overwrite: true);
             }
         }
     }
 
     private void AssembleAlttpBaseRom(FileInfo z3Rom, bool featurePatreonSupporters)
     {
-        string asmDirectory = Config.AsmDirectory + "/z3randomizer";
+        string asmDirectory = Path.Combine(Config.AsmDirectory, "z3randomizer");
         string baseRomFile = Config.BaseRomFile;
 
-        Directory.CreateDirectory(Config.DataDirectory);
         z3Rom.CopyTo(baseRomFile, overwrite: true);
 
-        string asar = 0 switch
-        {
-            _ when RuntimeInformation.IsOSPlatform(OSPlatform.Windows) => "windows/asar.exe",
-            _ when RuntimeInformation.IsOSPlatform(OSPlatform.Linux) => "linux/asar",
-            _ when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => "macos/asar",
-            _ => throw new Exception("Unsupported operating system"),
-        };
-
-        string asarPath = Path.Combine(asmDirectory, "bin", asar);
         var asarArgs = new List<string>
         {
             Path.Combine(asmDirectory, "LTTP_RND_GeneralBugfixes.asm"),
@@ -92,48 +91,74 @@ internal sealed class AssembleBaseRoms : Command
         if (featurePatreonSupporters)
             asarArgs.Insert(0, "-DFEATURE_PATREON_SUPPORTERS=1");
 
-        using var process = Process.Start(new ProcessStartInfo(asarPath, asarArgs)
-        {
-            WorkingDirectory = asmDirectory,
-        });
-
-        process?.WaitForExit();
+        RunAsar(asmDirectory, asarArgs);
     }
 
     private void AssembleComboBaseRom(FileInfo z3Rom, FileInfo z1Rom, FileInfo m1Rom, FileInfo smRom)
     {
-        string asmDirectory = Config.AsmDirectory + "/multirando-asm";
-        string asarDirectory = Config.AsmDirectory + "/z3randomizer";
+        string asmDirectory = Path.Combine(Config.AsmDirectory, "multirando-asm");
+        string asarDirectory = Path.Combine(Config.AsmDirectory, "z3randomizer");
         string baseRomFile = Config.ComboBaseRomFile;
 
         Directory.CreateDirectory(Config.DataDirectory);
-        z3Rom.CopyTo(asmDirectory + "/resources/zelda3.sfc", overwrite: true);
-        z1Rom.CopyTo(asmDirectory + "/resources/zelda1prg0.nes", overwrite: true);
-        m1Rom.CopyTo(asmDirectory + "/resources/metroid.nes", overwrite: true);
-        smRom.CopyTo(asmDirectory + "/resources/sm.sfc", overwrite: true);
-
-
-        string asar = 0 switch
+        string? baseRomDirectory = Path.GetDirectoryName(baseRomFile);
+        if (!string.IsNullOrEmpty(baseRomDirectory))
         {
-            _ when RuntimeInformation.IsOSPlatform(OSPlatform.Windows) => "windows/asar.exe",
-            _ when RuntimeInformation.IsOSPlatform(OSPlatform.Linux) => "linux/asar",
-            _ when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => "macos/asar",
-            _ => throw new Exception("Unsupported operating system"),
-        };
+            Directory.CreateDirectory(baseRomDirectory);
+        }
 
-        string asarPath = Path.Combine(asarDirectory, "bin", asar);
+        string resourcesDirectory = Path.Combine(asmDirectory, "resources");
+        Directory.CreateDirectory(resourcesDirectory);
+
+        z3Rom.CopyTo(Path.Combine(resourcesDirectory, "zelda3.sfc"), overwrite: true);
+        z1Rom.CopyTo(Path.Combine(resourcesDirectory, "zelda1prg0.nes"), overwrite: true);
+        m1Rom.CopyTo(Path.Combine(resourcesDirectory, "metroid.nes"), overwrite: true);
+        smRom.CopyTo(Path.Combine(resourcesDirectory, "sm.sfc"), overwrite: true);
+
         var asarArgs = new List<string>
         {
             Path.Combine(asmDirectory, "src/main.asm"),
             baseRomFile,
         };
 
-        using var process = Process.Start(new ProcessStartInfo(asarPath, asarArgs)
+        RunAsar(asmDirectory, asarArgs, asarDirectory);
+    }
+
+    private static string GetAsarExecutable()
+    {
+        return 0 switch
         {
-            WorkingDirectory = asmDirectory,
+            _ when RuntimeInformation.IsOSPlatform(OSPlatform.Windows) => Path.Combine("windows", "asar.exe"),
+            _ when RuntimeInformation.IsOSPlatform(OSPlatform.Linux) => Path.Combine("linux", "asar"),
+            _ when RuntimeInformation.IsOSPlatform(OSPlatform.OSX) => Path.Combine("macos", "asar"),
+            _ => throw new InvalidOperationException("Unsupported operating system"),
+        };
+    }
+
+    private void RunAsar(string workingDirectory, IEnumerable<string> asarArgs, string? asarRootDirectory = null)
+    {
+        string asarExecutable = GetAsarExecutable();
+        string asarDirectory = asarRootDirectory ?? workingDirectory;
+        string asarPath = Path.Combine(asarDirectory, "bin", asarExecutable);
+
+        var argumentList = asarArgs as IList<string> ?? asarArgs.ToList();
+
+        using var process = Process.Start(new ProcessStartInfo(asarPath, argumentList)
+        {
+            WorkingDirectory = workingDirectory,
         });
 
-        process?.WaitForExit();
+        if (process is null)
+        {
+            throw new InvalidOperationException($"Failed to start asar at '{asarPath}'.");
+        }
+
+        process.WaitForExit();
+
+        if (process.ExitCode != 0)
+        {
+            throw new InvalidOperationException($"Asar exited with code {process.ExitCode}.");
+        }
     }
 
     private void CreateBPSPatch(FileInfo[] originalFiles, string modifiedFile, string outputPatchFile)
