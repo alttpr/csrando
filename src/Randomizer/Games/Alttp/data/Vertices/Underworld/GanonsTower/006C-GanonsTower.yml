@@ -7,13 +7,13 @@ rooms:
           connections:
             fixed:
               - "Ganon's Tower - Gauntlet 5"
-              - "Ganon's Tower - Lanmolas"
+              - "Ganon's Tower - Lanmolas Boss Room"
           mobs:
             - name: "Ganon's Tower - Lanmolas - Bunny Beam"
               position: { x: 0x17, y: 0x18, z: 0x00 }
               sprite: "BunnyBeam"
 
-        - name: "Ganon's Tower - Lanmolas"
+        - name: "Ganon's Tower - Lanmolas Boss Room"
           offset: { x: 0x00, y: 0x10, z: 0x00 }
           bosses:
             - DefeatArmosKnight
@@ -25,15 +25,21 @@ rooms:
             - DefeatKholdstare
             - DefeatVitreous
             - DefeatTrinexx
-
           connections:
             fixed:
               - "Ganon's Tower - Gauntlet Refill"
-              - "Ganon's Tower - Lame Refill"
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Ganon's Tower - Lanmolas"
           mobs:
             - name: "Ganon's Tower - Lanmolas - Medusa"
               position: { x: 0x03, y: 0x1c, z: 0x00 }
               sprite: "Medusa"
+
+        - name: "Ganon's Tower - Lanmolas"
+          connections:
+            fixed:
+              - "Ganon's Tower - Lame Refill"
 
         - name: "Ganon's Tower - Lame Refill"
           connections:
