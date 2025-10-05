@@ -51,9 +51,11 @@ public class PRNG
         return array[GetRandomInt(array.Length)];
     }
 
-    public T GetRandomElement<T>(IEnumerable<T> array)
+    public T GetRandomElement<T>(IEnumerable<T> enumerable)
     {
-        return array.ElementAt(GetRandomInt(array.Count()));
+        if (!enumerable.TryGetNonEnumeratedCount(out int count))
+            count = enumerable.Count();
+        return enumerable.ElementAt(GetRandomInt(count));
     }
 
     public IEnumerable<T> GetRandomElements<T>(IEnumerable<T> source, int count) => Shuffle(source).Take(count);
