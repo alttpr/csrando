@@ -30,4 +30,27 @@ public sealed class Vertex : BaseVertex
     public string[]? Deny { get; init; }
     public int? Group { get; init; }
     public Position? RoomOffset { get; set; }
+
+    protected override void AdditionalGraphDumpMetadata(Dictionary<string, object?> metadata)
+    {
+        base.AdditionalGraphDumpMetadata(metadata);
+        if (SubType.HasValue)
+            metadata["Z3.Subtype"] = SubType.Value.ToString();
+        if (Dark)
+            metadata["Z3.Dark"] = "yes";
+        if (MoonPearl.GetValueOrDefault())
+            metadata["Z3.MoonPearlRequired"] = "yes";
+        if (Cost is int cost and not 0)
+            metadata["Z3.Cost"] = cost.ToString();
+        if (Type == VertexType.Entrance && EntranceId.HasValue)
+            metadata["Z3.Entrance"] = EntranceId.Value.ToString();
+        if (EntranceIds is int[] entrances)
+            metadata["Z3.Entrances"] = string.Join(", ", entrances);
+        if (Type == VertexType.Outlet && OutletId.HasValue)
+            metadata["Z3.Outlet"] = OutletId.Value.ToString();
+        if (InletId.HasValue && InletId.Value != 0)
+            metadata["Z3.Inlet"] = InletId.Value.ToString();
+        if (Sprite is { Name: string name })
+            metadata["Z3.Sprite"] = name;
+    }
 }

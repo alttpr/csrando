@@ -14,4 +14,13 @@ public sealed class Vertex : BaseVertex
     /// door with a particular entrance condition.
     /// </summary>
     public string? LogicalName { get; init; }
+
+    protected override void AdditionalGraphDumpMetadata(Dictionary<string, object?> metadata)
+    {
+        base.AdditionalGraphDumpMetadata(metadata);
+        if (Node is { Name: string name })
+            metadata["SM.Node"] = name;
+        if (!string.IsNullOrWhiteSpace(LogicalName))
+            metadata["SM.LogicalName"] = LogicalName;
+    }
 }

@@ -62,4 +62,21 @@ public abstract class Vertex : ICloneable
         return MemberwiseClone();
     }
     public void TrackPlacedItem() => World.TrackPlacedItem(this);
+
+    internal Dictionary<string, object?> GetGraphDumpMetadata()
+    {
+        var metadata = new Dictionary<string, object?>
+        {
+            { "name", Name },
+            { "game", World.GameId },
+            { "type", Type.ToString() },
+            { "item", Item?.ToString() },
+            { "trophy", Trophy?.ToString() },
+        };
+
+        AdditionalGraphDumpMetadata(metadata);
+
+        return metadata;
+    }
+    protected virtual void AdditionalGraphDumpMetadata(Dictionary<string, object?> metadata) { }
 }
