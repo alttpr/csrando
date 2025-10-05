@@ -77,7 +77,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                     IEnumerable<string> bosses = placeBosses;
                     if (location is Vertex { Allow: string[] acceptableBosses })
                         bosses = bosses.Intersect(acceptableBosses);
-                    string boss = prng.Shuffle(bosses).First();
+                    string boss = prng.GetRandomElement(bosses);
                     PlaceBossItemInLocation(boss, location, world);
                 }
                 break;
@@ -95,14 +95,14 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                     "DefeatVitreous",
                     "DefeatTrinexx",
                 ];
-                placeBosses.AddRange(prng.Shuffle(placeBosses).Take(3));
+                placeBosses.AddRange(prng.GetRandomElements(placeBosses, 3));
 
                 foreach (var location in bossLocations)
                 {
                     IEnumerable<string> bosses = placeBosses;
                     if (location is Vertex { Allow: string[] acceptableBosses })
                         bosses = bosses.Intersect(acceptableBosses);
-                    string boss = prng.Shuffle(bosses).First();
+                    string boss = prng.GetRandomElement(bosses);
                     placeBosses.Remove(boss);
                     PlaceBossItemInLocation(boss, location, world);
                 }
@@ -130,7 +130,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                     IEnumerable<string> bosses = placeBosses;
                     if (location is Vertex { Allow: string[] acceptableBosses })
                         bosses = bosses.Intersect(acceptableBosses);
-                    string boss = prng.Shuffle(bosses).First();
+                    string boss = prng.GetRandomElement(bosses);
                     placeBosses.Remove(boss);
                     PlaceBossItemInLocation(boss, location, world);
                 }
