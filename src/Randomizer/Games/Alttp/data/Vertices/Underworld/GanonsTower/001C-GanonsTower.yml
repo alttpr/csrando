@@ -4,6 +4,9 @@ rooms:
     nodes:
       regions:
         - name: "Ganon's Tower - Ice Armos"
+          connections:
+            fixed:
+              - "Ganon's Tower - Big Key Room"
         - name: "Ganon's Tower - Ice Room"
           offset: { x: 0x10, y: 0x10, z: 0x00 }
           bosses:
@@ -20,8 +23,10 @@ rooms:
             - DefeatTrinexx
           connections:
             fixed:
-              - "Ganon's Tower - Big Key Room"
               - "Ganon's Tower - Empty Torch Room"
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Ganon's Tower - Ice Armos"
 
         - name: "Ganon's Tower - Empty Torch Room"
           connections:

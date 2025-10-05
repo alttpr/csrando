@@ -25,7 +25,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
         { "Misery Mire - Boss Room", "DefeatVitreous" },
         { "Turtle Rock - Boss Room", "DefeatTrinexx" },
         { "Ganon's Tower - Ice Room", "DefeatArmosKnight" },
-        { "Ganon's Tower - Lanmolas", "DefeatLanmolas" },
+        { "Ganon's Tower - Lanmolas Boss Room", "DefeatLanmolas" },
         { "Ganon's Tower - Moldorm - Kill Zone", "DefeatMoldorm" },
     };
 

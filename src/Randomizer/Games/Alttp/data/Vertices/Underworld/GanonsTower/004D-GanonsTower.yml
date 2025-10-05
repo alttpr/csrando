@@ -25,14 +25,17 @@ rooms:
             - DefeatMothula
             - DefeatKholdstare
             - DefeatVitreous
-
           connections:
             fixed:
               - "Ganon's Tower - Below Moldorm"
-            Hookshot:
-              - "Ganon's Tower - Moldorm - Chest Platform"
+            # required for Boss Shuffle to work
+            bossKillShufflerOverwrite:
+              - "Ganon's Tower - Moldorm"
 
         - name: "Ganon's Tower - Moldorm"
+          connections:
+            Hookshot:
+              - "Ganon's Tower - Moldorm - Chest Platform"
 
         - name: "Ganon's Tower - Moldorm - Chest Platform"
           pit: true
