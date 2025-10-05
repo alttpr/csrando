@@ -43,7 +43,7 @@ export const SingleChoiceSettingSchema = SettingBaseSchema.extend({
       Object.entries(rec).map(([k, v]) => [k, v ?? k]), // fallback to key when value is null
     ),
   ),
-  default: z.string().optional(),
+  default: z.union([z.string(), z.number()]).optional(),
 });
 
 export const MultipleChoiceSettingSchema = SettingBaseSchema.extend({
@@ -74,7 +74,7 @@ export const ToggleSettingSchema = SettingBaseSchema.extend({
 
 export const InputSettingSchema = SettingBaseSchema.extend({
   type: z.literal("Input"),
-  default: z.string().optional(),
+  default: z.union([z.string(), z.number()]).optional(),
 });
 
 export const GenericSettingSchema = SettingBaseSchema.extend({

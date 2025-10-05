@@ -17,7 +17,6 @@
 		GenericSetting,
 		InputSetting,
 	} from "$lib/types";
-	import { onMount } from "svelte";
 
 	interface PageData {
 		metadata: Metadata | null;
@@ -33,18 +32,132 @@
 	let metadata = $state<Metadata | null>(data.metadata);
 	let pageError = $state<string | null>(data.error);
 
+	// Helper function to get default value for an option
+	function getDefaultValue(option: MetadataSetting): unknown {
+		switch (option.type) {
+			case "SingleChoice": {
+				const sc = option as SingleChoiceSetting;
+				if (sc.default && sc.default in option.values)
+					return sc.default;
+				const firstKey = Object.keys(option.values)[0];
+				if (firstKey) {
+					return option.values[firstKey];
+				}
+				return "";
+			}
+			case "MultipleChoice":
+				return (option as MultipleChoiceSetting).default || [];
+			case "Slider":
+				return (option as SliderSetting).default || 0;
+			case "Toggle":
+				return (option as ToggleSetting).default ?? false;
+			case "Input":
+				return (option as InputSetting).default || "";
+			case "Generic":
+				return (option as GenericSetting).default || null;
+			default:
+				return null;
+		}
+	}
+
+	function initializeFormValues(metadata: Metadata) {
+		const result = {
+			availableGames: [] as Array<{
+				id: string;
+				name: string;
+				description?: string;
+			}>,
+			formGlobal: {} as { [key: string]: unknown },
+			formPerGame: {} as {
+				[gameKey: string]: { [key: string]: unknown };
+			},
+			selectedGames: [] as string[],
+			activeTab: null as string | null,
+		};
+
+		// Process global settings
+		if (metadata.settings) {
+			for (const option of metadata.settings) {
+				result.formGlobal[option.key] = getDefaultValue(option);
+			}
+		}
+
+		if (metadata.gameSettings) {
+			for (const game in metadata.gameSettings) {
+				const gameSettings = metadata.gameSettings[game];
+
+				// Initialize an empty object for this game's options
+				result.formPerGame[game] = {};
+
+				const gameSpecificOptions =
+					gameSettings && gameSettings.settings
+						? gameSettings.settings
+						: [];
+
+				// Only add to availableGames if there are actual settings
+				if (
+					Array.isArray(gameSpecificOptions) &&
+					gameSpecificOptions.length > 0
+				) {
+					// Add to our results array
+					result.availableGames.push({
+						id: game,
+						name:
+							(
+								gameSettings as unknown as {
+									game?: { name?: string };
+								}
+							).game?.name || game,
+						description: (
+							gameSettings as unknown as {
+								game?: { description?: string };
+							}
+						).game?.description,
+					});
+
+					// Process each option
+					for (const option of gameSpecificOptions) {
+						if (option && typeof option.key === "string") {
+							result.formPerGame[game][option.key] =
+								getDefaultValue(option);
+						}
+					}
+				}
+			}
+		}
+
+		// Set initial selection if games are available
+		if (result.availableGames.length > 0) {
+			// Set all available games as selected by default
+			result.selectedGames = result.availableGames.map((game) => game.id);
+			// Set the first game as the active tab
+			result.activeTab = result.availableGames[0].id;
+		}
+
+		return result;
+	}
+
+	// Initialize form values immediately with metadata
+	const initData = metadata ? initializeFormValues(metadata) : {
+		availableGames: [],
+		formGlobal: {},
+		formPerGame: {},
+		selectedGames: [],
+		activeTab: null
+	};
+
 	let formValues: {
 		global: { [key: string]: unknown };
 		perGame: { [gameKey: string]: { [key: string]: unknown } };
-	} = $state({ global: {}, perGame: {} });
+	} = $state({ global: { ...initData.formGlobal }, perGame: { ...initData.formPerGame } });
 
 	let availableGames: Array<{
 		id: string;
 		name: string;
 		description?: string;
-	}> = $state([]);
-	let selectedGames: string[] = $state([]);
-	let activeGameTab: string | null = $state(null);
+	}> = $state([...initData.availableGames]);
+	let selectedGames: string[] = $state([...initData.selectedGames]);
+	let activeGameTab: string | null = $state(initData.activeTab);
 	let generating = $state(false);
 	let formSubmissionError: string | null = $state(null);
 	let selectedVisibility = $state(["Basic"]);
@@ -139,120 +252,6 @@
 		}
 	});
 
-	onMount(() => {
-		if (metadata) {
-			const initData = initializeFormValues(metadata);
-			availableGames = [...initData.availableGames];
-			formValues = {
-				global: { ...initData.formGlobal },
-				perGame: { ...initData.formPerGame },
-			};
-			selectedGames = [...initData.selectedGames];
-			activeGameTab = initData.activeTab;
-		}
-	});
-
-	function getDefaultValue(option: MetadataSetting): unknown {
-		switch (option.type) {
-			case "SingleChoice": {
-				const sc = option as SingleChoiceSetting;
-				if (sc.default && sc.default in option.values)
-					return sc.default;
-				const firstKey = Object.keys(option.values)[0];
-				if (firstKey) {
-					return option.values[firstKey];
-				}
-				return "";
-			}
-			case "MultipleChoice":
-				return (option as MultipleChoiceSetting).default || [];
-			case "Slider":
-				return (option as SliderSetting).default || 0;
-			case "Toggle":
-				return (option as ToggleSetting).default || false;
-			case "Input":
-				return (option as InputSetting).default || "";
-			case "Generic":
-				return (option as GenericSetting).default || null;
-			default:
-				return null;
-		}
-	}
-	function initializeFormValues(metadata: Metadata) {
-		const result = {
-			availableGames: [] as Array<{
-				id: string;
-				name: string;
-				description?: string;
-			}>,
-			formGlobal: {} as { [key: string]: unknown },
-			formPerGame: {} as {
-				[gameKey: string]: { [key: string]: unknown };
-			},
-			selectedGames: [] as string[],
-			activeTab: null as string | null,
-		};
-
-		// Process global settings
-		if (metadata.settings) {
-			for (const option of metadata.settings) {
-				result.formGlobal[option.key] = getDefaultValue(option);
-			}
-		}
-
-		if (metadata.gameSettings) {
-			for (const game in metadata.gameSettings) {
-				const gameSettings = metadata.gameSettings[game];
-
-				// Initialize an empty object for this game's options
-				result.formPerGame[game] = {};
-
-				const gameSpecificOptions =
-					gameSettings && gameSettings.settings
-						? gameSettings.settings
-						: [];
-
-				// Only add to availableGames if there are actual settings
-				if (
-					Array.isArray(gameSpecificOptions) &&
-					gameSpecificOptions.length > 0
-				) {
-					// Add to our results array
-					result.availableGames.push({
-						id: game,
-						name:
-							(
-								gameSettings as unknown as {
-									game?: { name?: string };
-								}
-							).game?.name || game,
-						description: (
-							gameSettings as unknown as {
-								game?: { description?: string };
-							}
-						).game?.description,
-					});
-
-					// Process each option
-					for (const option of gameSpecificOptions) {
-						if (option && typeof option.key === "string") {
-							result.formPerGame[game][option.key] =
-								getDefaultValue(option);
-						}
-					}
-				}
-			}
-		}
-
-		// Set initial selection if games are available
-		if (result.availableGames.length > 0) {
-			// Set all available games as selected by default
-			result.selectedGames = result.availableGames.map((game) => game.id);
-			result.activeTab = result.selectedGames[0];
-		}
-
-		return result;
-	}
 	async function handleSubmit() {
 		generating = true;
 		formSubmissionError = null; // Clear previous submission errors

@@ -115,7 +115,8 @@ public class Config
     public AccessibilityOption Accessibility { get; init; } = AccessibilityOption.Items;
 
     [Category("Gameplay")]
-    public StateOption State { get; init; } = StateOption.Standard;
+    [Default(StateOption.Open)]
+    public StateOption State { get; init; } = StateOption.Open;
 
     [Category("Item Placement")]
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
@@ -170,34 +171,52 @@ public class Config
     public bool PseudoBoots { get; init; } = false;
     [Ignore("Is there even a reason to turn this off?")]
     public bool FastRom { get; init; } = true;
+    [Ignore("Exposed as a post-generation setting")]
     public bool QuickSwap { get; init; } = false;
+    [Ignore("Exposed as a post-generation setting")]
     public bool NoMusic { get; init; } = false;
     [Advanced("Directly provides a ROM value")]
+    [Default(0x04)]
     public byte CapeMagicUsageNormal { get; init; } = 0x04;
     [Advanced("Directly provides a ROM value")]
+    [Default(0x08)]
     public byte CapeMagicUsageHalf { get; init; } = 0x08;
     [Advanced("Directly provides a ROM value")]
+    [Default(0x10)]
     public byte CapeMagicUsageQuarter { get; init; } = 0x10;
+    [Default(true)]
     public bool CaneOfByrnaInvulnerability { get; init; } = true;
     [Advanced("Directly provides a ROM value")]
+    [Default(0xE3)]
     public byte PowderedSpriteFairyPrize { get; init; } = 0xE3;
     [Advanced("Directly provides a ROM value")]
+    [Default(0xA0)]
     public byte BottleFillHealth { get; init; } = 0xA0;
     [Advanced("Directly provides a ROM value")]
+    [Default(0x80)]
     public byte BottleFillMagic { get; init; } = 0x80;
+    [Default(true)]
     public bool CatchableFairies { get; init; } = true;
+    [Default(true)]
     public bool CatchableBees { get; init; } = true;
+    [Default(true)]
     public bool StunItemsHookshot { get; init; } = true;
+    [Default(true)]
     public bool StunItemsBoomerang { get; init; } = true;
     public bool SilversOnlyAtGanon { get; init; } = false;
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
     [Ignore("Nobody cares about the goal icon")]
     public GoalIconOption GoalIcon { get; init; } = GoalIconOption.Triforce;
+    [Ignore("Exposed as a post-generation setting")]
     public HeartColorOption HeartColor { get; init; } = HeartColorOption.Red;
+    [Ignore("Exposed as a post-generation setting")]
     public HeartBeepSpeedOption HeartBeepSpeed { get; init; } = HeartBeepSpeedOption.Half;
+    [Ignore("Exposed as a post-generation setting")]
     public MenuSpeedOption MenuSpeed { get; init; } = MenuSpeedOption.Normal;
+    [Default(GanonAgahnimRngOption.Table)]
     public GanonAgahnimRngOption GanonAgahnimRNG { get; init; } = GanonAgahnimRngOption.Table;
+    [Default(SilversEquipOption.Collection)]
     public SilversEquipOption SilversAutoEquip { get; init; } = SilversEquipOption.Collection;
     public CompassCounterOption CompassCounter { get; init; } = CompassCounterOption.Off;
     public bool RevealBootsLocation { get; init; } = false;
