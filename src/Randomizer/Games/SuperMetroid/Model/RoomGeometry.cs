@@ -22,6 +22,7 @@ public record GeometryItem(
 );
 
 public record RoomGeometry(
+    int room_id,
     string name,
     int area,
     int rom_address,

@@ -2,12 +2,14 @@
 
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
+using SolTechnology.Avro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Randomizer.Games.Metroid.YamlReader;
 
 public class MapRandomizer
 {
@@ -63,18 +65,31 @@ public class MapRandomizer
     private IEnumerable<Connection> CreateConnections(Map map)
     {
         var connections = new List<Connection>();
-        foreach (var door in map.doors)
+        for(int i = 0; i < map.conn_from_door_id.Count; i++)
         {
-            var fromRoom = _reader.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.from.exit_ptr));
-            var toRoom = _reader.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.to.exit_ptr));
+            var bidirectional = map.conn_bidirectional[i];
+            var fromRoomId = map.conn_from_room_id[i];
+            var toRoomId = map.conn_to_room_id[i];
+
+            var fromRoom = _reader.Rooms.Find(r => r.Id == fromRoomId);
+            var toRoom = _reader.Rooms.Find(r => r.Id == toRoomId);
+
+            var fromDoorId = map.conn_from_door_id[i];
+            var toDoorId = map.conn_to_door_id[i];
+
+            var fromGeo = _reader.RoomGeometries.Where(r => r.room_id == fromRoomId).First();
+            var toGeo = _reader.RoomGeometries.Where(r => r.room_id == toRoomId).First();
+
+            var fromGeoDoor = fromGeo.doors[fromDoorId];
+            var toGeoDoor = toGeo.doors[toDoorId];
 
             if (fromRoom == null || toRoom == null)
             {
                 // Check if sandfall
-                if (door.bidirectional == false)
+                if (bidirectional == false)
                 {
                     // Try to match with room geometry data
-                    var toRoomGeometry = _reader.RoomGeometries.Find(r => r.doors.Any(d => d.entrance_ptr == door.to.entrance_ptr));
+                    var toRoomGeometry = _reader.RoomGeometries.Find(r => r.doors.Any(d => d.entrance_ptr == toGeoDoor.entrance_ptr));
                     if (toRoomGeometry != null)
                     {
                         toRoom = _reader.Rooms.Find(r => r.Name == toRoomGeometry.name);
@@ -84,23 +99,23 @@ public class MapRandomizer
 
             if (fromRoom == null || toRoom == null)
             {
-                Console.WriteLine($"Failed to find room for door {door.from} -> {door.to}");
+                Console.WriteLine($"Failed to find room for door {fromGeoDoor} -> {toGeoDoor}");
                 continue;
             }
 
-            if (!door.from.exit_ptr.HasValue || !door.to.exit_ptr.HasValue)
+            if (!fromGeoDoor.exit_ptr.HasValue || !toGeoDoor.exit_ptr.HasValue)
             {
-                Console.WriteLine($"Skipping door with missing exit pointers: {door.from} -> {door.to}");
+                Console.WriteLine($"Skipping door with missing exit pointers: {fromGeoDoor} -> {toGeoDoor}");
                 continue;
             }
 
-            var fromExitPtr = door.from.exit_ptr.Value;
-            var toExitPtr = door.to.exit_ptr.Value;
+            var fromExitPtr = fromGeoDoor.exit_ptr.Value;
+            var toExitPtr = toGeoDoor.exit_ptr.Value;
 
             var fromNode = fromRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr).FirstOrDefault();
             var toNode = toRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr).FirstOrDefault();
 
-            if (toNode == null && door.bidirectional == false)
+            if (toNode == null && bidirectional == false)
             {
                 // Try to get the first sandfall entrance
                 toNode = toRoom.Nodes.Where(n => n.NodeType == "entrance" && n.NodeSubType == "sandpit").FirstOrDefault();
@@ -108,7 +123,7 @@ public class MapRandomizer
 
             if (fromNode is null || toNode is null)
             {
-                Console.WriteLine($"Failed to resolve nodes for door {door.from} -> {door.to}");
+                Console.WriteLine($"Failed to resolve nodes for door {fromGeoDoor} -> {toGeoDoor}");
                 continue;
             }
 
@@ -134,7 +149,7 @@ public class MapRandomizer
             var fromConnection = new Connection
             (
                 MapDoorType(fromOrientation),
-                door.bidirectional ? "Bidirectional" : "Forward",
+                bidirectional ? "Bidirectional" : "Forward",
                 $"From {fromRoom.Name}:{fromNode.Name} to {toRoom.Name}:{toNode.Name}",
                 [
                     new(
@@ -168,6 +183,7 @@ public class MapRandomizer
 
 
             Console.WriteLine($"Connecting {fromRoom.Name}:{fromNode.Name} to {toRoom.Name}:{toNode.Name}");
+
         }
 
         return connections;
@@ -176,25 +192,12 @@ public class MapRandomizer
     private Map? LoadMap()
     {
         var path = Path.Combine(JsonReader.DataRoot, "maps");
-        var allMaps = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories).Order();
+        var allMaps = Directory.GetFiles(path, "*.avro", SearchOption.AllDirectories).Order();
+        var avroFile = _prng.GetRandomElement(allMaps);
+        var maps = AvroConvert.Deserialize<IEnumerable<Map>>(File.ReadAllBytes(avroFile));
+        var map = _prng.GetRandomElement(maps);
+        return map;
 
-        // Pick a map at random using the PRNG
-        var mapPath = _prng.GetRandomElement(allMaps);
-
-        try
-        {
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            };
-            var data = JsonSerializer.Deserialize<Map>(File.ReadAllText(mapPath), options);
-            return data ?? default;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error while deserializing: {path}, {e.Message} ({e.InnerException?.Source ?? ""}");
-            return default;
-        }
     }
 
 }

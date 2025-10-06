@@ -212,24 +212,37 @@ public class Rom : GameRom
         // Writes the door connections of a map randomizer map
         if (world.Map != null)
         {
-            foreach (var door in world.Map.doors)
+            for(int i = 0; i < world.Map.conn_from_door_id.Count; i++)
             {
-                if (!door.from.exit_ptr.HasValue || !door.to.exit_ptr.HasValue)
-                {
-                    Console.WriteLine($"Skipping door with missing exit pointers: {door.from} -> {door.to}");
-                    continue;
-                }
+                var from_room_id = world.Map.conn_from_room_id[i];
+                var to_room_id = world.Map.conn_to_room_id[i];
 
-                var fromExitPtr = door.from.exit_ptr.Value;
-                var toExitPtr = door.to.exit_ptr.Value;
+                var from_door_id = world.Map.conn_from_door_id[i];
+                var to_door_id = world.Map.conn_to_door_id[i];
 
-                var fromRoom = world.JsonData.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr));
-                var toRoom = world.JsonData.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr));
+                var fromRoom = world.JsonData.Rooms.Find(r => r.Id == from_room_id);
+                var toRoom = world.JsonData.Rooms.Find(r => r.Id == to_room_id);
+
+                var fromGeo = world.JsonData.RoomGeometries.Find(r => r.room_id == from_room_id)!;
+                var toGeo = world.JsonData.RoomGeometries.Find(r => r.room_id == to_room_id)!;
+
+                var fromGeoDoor = fromGeo.doors[from_door_id];
+                var toGeoDoor = toGeo.doors[to_door_id];
+
+                var bidirectional = world.Map.conn_bidirectional[i];
 
                 ushort fromRoomId = (ushort)(int.Parse(fromRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
                 ushort toRoomId = (ushort)(int.Parse(toRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
 
-                var originalDoorData = doorData.Where(d => d.ptr == door.to.entrance_ptr).First();
+                // Debug write
+                Console.WriteLine($"Door {fromRoom?.Name} ({fromRoomId:X4}) -> {toRoom?.Name} ({toRoomId:X4}), bidir: {bidirectional}, ptrs: {fromGeoDoor.exit_ptr:X4}->{fromGeoDoor.entrance_ptr:X4} to {toGeoDoor.exit_ptr:X4}->{toGeoDoor.entrance_ptr:X4}");
+
+                var originalDoorData = doorData.Where(d => d.ptr == toGeoDoor.entrance_ptr).FirstOrDefault();
+                if(originalDoorData == null)
+                {
+                    Console.WriteLine($"Failed to find door data for door ptr {toGeoDoor.entrance_ptr:X4} ({fromRoom?.Name} -> {toRoom?.Name})");
+                    continue;
+                }
 
                 if (fromRoom != null && toRoom != null && fromRoom.Area != toRoom.Area)
                 {
@@ -240,21 +253,22 @@ public class Rom : GameRom
                     originalDoorData.elevator = (byte)(originalDoorData.elevator & ~0x40);
                 }
 
-                Write((Address)fromExitPtr, DoorReader.GetDoorBytes(originalDoorData));
+                Console.WriteLine($" Writing door ptr {fromGeoDoor.exit_ptr:X4} to point to room {toRoomId:X4} at door ptr {toGeoDoor.entrance_ptr:X4}, original data: {originalDoorData}");
+                Write((Address)fromGeoDoor.exit_ptr!, DoorReader.GetDoorBytes(originalDoorData));
 
-                if (door.from.exit_ptr == 0x1A798)
+                if (fromGeoDoor.exit_ptr! == 0x1A798)
                 {
                     // Pants Room right door
                     // Also write the same data to the East Pants Room right door
                     Write((Address)0x1A7BC, DoorReader.GetDoorBytes(originalDoorData));
                 }
 
-                if (door.bidirectional == true)
+                if (bidirectional == true)
                 {
-                    if (!door.from.entrance_ptr.HasValue)
+                    if (fromGeoDoor.entrance_ptr == 0)
                         continue;
 
-                    originalDoorData = doorData.Where(d => d.ptr == door.from.entrance_ptr.Value).First();
+                    originalDoorData = doorData.Where(d => d.ptr == fromGeoDoor.entrance_ptr).First();
                     if (fromRoom != null && toRoom != null && fromRoom.Area != toRoom.Area)
                     {
                         originalDoorData.elevator |= 0x40;
@@ -263,7 +277,8 @@ public class Rom : GameRom
                     {
                         originalDoorData.elevator = (byte)(originalDoorData.elevator & ~0x40);
                     }
-                    Write((Address)toExitPtr, DoorReader.GetDoorBytes(originalDoorData));
+                    Console.WriteLine($" Writing reverse door ptr {toGeoDoor.exit_ptr:X4} to point to room {fromRoomId:X4} at door ptr {fromGeoDoor.entrance_ptr:X4}, original data: {originalDoorData}");
+                    Write((Address)toGeoDoor.exit_ptr!, DoorReader.GetDoorBytes(originalDoorData));
                 }
             }
 
@@ -279,12 +294,24 @@ public class Rom : GameRom
             var newDoorMap = new Dictionary<int, int>();
 
             // Loop over each door in the world's map.
-            foreach (var door in world.Map.doors)
+            //foreach (var door in world.Map.doors)
+            for(int i = 0; i < world.Map.conn_from_door_id.Count; i++)
             {
-                int? srcExitPtr = door.from.exit_ptr;
-                int? srcEntrancePtr = door.from.entrance_ptr;
-                int? dstExitPtr = door.to.exit_ptr;
-                int? dstEntrancePtr = door.to.entrance_ptr;
+                var from_room_id = world.Map.conn_from_room_id[i];
+                var to_room_id = world.Map.conn_to_room_id[i];
+                var from_door_id = world.Map.conn_from_door_id[i];
+                var to_door_id = world.Map.conn_to_door_id[i];
+
+                var fromGeoRoom = world.JsonData.RoomGeometries.Find(r => r.room_id == from_room_id)!;
+                var toGeoRoom = world.JsonData.RoomGeometries.Find(r => r.room_id == to_room_id)!;
+
+                var fromGeoDoor = fromGeoRoom.doors[from_door_id];
+                var toGeoDoor = toGeoRoom.doors[to_door_id];
+
+                int? srcExitPtr = fromGeoDoor.exit_ptr;
+                int? srcEntrancePtr = fromGeoDoor.entrance_ptr;
+                int? dstExitPtr = toGeoDoor.exit_ptr;
+                int? dstEntrancePtr = toGeoDoor.entrance_ptr;
 
                 // Populate origDoorMap for source door if both pointers exist.
                 if (srcExitPtr.HasValue && srcEntrancePtr.HasValue)
@@ -323,6 +350,44 @@ public class Rom : GameRom
 
                 // Write the lower 16 bits of the new entrance pointer back to ROM.
                 Write((Address)((ptr + 2)), BitConverter.GetBytes((ushort)(entranceDoorPtr & 0xFFFF)));
+            }
+
+            // Write new save stations for the cross-game transition rooms (stations 6/7/10/11 per area)
+            // TODO: Hardcoded, fix later
+            (int, int,int)[] transitionRooms = [
+                (0, 0x9994, 0x8BDA), // Crateria Map Room
+                //(1, 0x8C35, 0x8D36), // Brinstar Map Room (no portal yet)
+                (2, 0x9DD8, 0x9306), // Norfair Map Room
+                (2, 0x9E90, 0x9A7A), // Lower norfair energy station
+                (4, 0xD765, 0xA8F4), // Maridia Missile Station
+            ];
+
+            // Group by area (first value) and write new stations
+            var roomsByArea = transitionRooms.GroupBy(t => t.Item1);
+            int[] areaOffsets = [0x44C5, 0x45CF, 0x46D9, 0x481B, 0x4917, 0xCA2F];
+            foreach (var areaRooms in roomsByArea)
+            {
+                int saveIndex = 6;
+                foreach (var room in areaRooms)
+                {
+                    int area = room.Item1;
+                    int roomPtr = room.Item2;
+                    int entrancePtr = room.Item3;
+                    int ptr = areaOffsets[area] + (saveIndex * 14);
+                    saveIndex++;
+                    if (saveIndex == 8) { saveIndex = 0x10; }
+                    
+                    // Calculate the full original entrance door pointer.
+                    int origEntranceDoorPtr = entrancePtr + 0x10000;
+                    // Lookup the corresponding exit pointer and then the new entrance pointer.
+                    int exitDoorPtr = origDoorMap[origEntranceDoorPtr];
+                    int entranceDoorPtr = newDoorMap[exitDoorPtr];
+
+                    Write((Address)ptr, BitConverter.GetBytes((ushort)(roomPtr & 0xFFFF)));
+                    Write((Address)(ptr + 2), BitConverter.GetBytes((ushort)(entranceDoorPtr & 0xFFFF)));
+                    Write((Address)(ptr + 4), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0x00, 0x00, 0x00]);
+                    Console.WriteLine($"Writing new save station at area {area} ptr {ptr:X4} to point to room {roomPtr:X4} at door ptr {entranceDoorPtr:X4}");
+                }
             }
 
             // Write extra door asm for toilet and boss rooms
@@ -547,10 +612,12 @@ public class Rom : GameRom
                 0x8D, 0x10, 0x0B,
             };
 
-            var door = world.Map!.doors.FirstOrDefault(d => d.to.entrance_ptr == toPtr!.Value);
-            var exitPtr = door!.from.exit_ptr!.Value;
-
-            asmPtr = WriteExtraDoorAsm(world, exitPtr & 0xFFFF, asmPtr, asm.ToArray());
+            var door = world.JsonData.RoomGeometries.SelectMany(r => r.doors).Where(d => d.entrance_ptr == toPtr!.Value).FirstOrDefault();
+            if (door?.exit_ptr != null)
+            {
+                var exitPtr = door!.exit_ptr!.Value;
+                asmPtr = WriteExtraDoorAsm(world, exitPtr & 0xFFFF, asmPtr, asm.ToArray());
+            }
 
         }
 
@@ -598,6 +665,9 @@ public class Rom : GameRom
 
     private void WriteMiniMapData(World world)
     {
+        var mapStations = new List<(int, int, int)>(); // area, x, y
+        var bossIcons = new List<(int, int, int)>(); // area, x, y
+
         for (int i = 0; i < 0x8000; i += 2)
         {
             Write((SNES)(0xB58000 + i), new byte[] { 0x1F, 0x00 });
@@ -607,21 +677,55 @@ public class Rom : GameRom
         int[] area_y_offsets = new int[6];
         for (int i = 0; i < 6; i++)
         {
-            area_x_offsets[i] = world.Map!.rooms.Select((r, idx) => (r, idx)).Where(r => world.Map.area[r.idx] == i).Min(r => r.r.x);
-            area_y_offsets[i] = world.Map!.rooms.Select((r, idx) => (r, idx)).Where(r => world.Map.area[r.idx] == i).Min(r => r.r.y);
+            area_x_offsets[i] = world.Map!.room_x.Select((r, idx) => (r, idx)).Where(r => world.Map.room_area[r.idx] == i).Min(r => r.r);
+            area_y_offsets[i] = world.Map!.room_y.Select((r, idx) => (r, idx)).Where(r => world.Map.room_area[r.idx] == i).Min(r => r.r);
         }
 
-        for (int i = 0; i < world.Map!.rooms.Count(); i++)
+        for (int i = 0; i < world.Map!.room_id.Count(); i++)
         {
-            var mapRoom = world.Map.rooms[i];
-            var mapArea = world.Map.area[i];
-            var roomGeometry = world.JsonData.RoomGeometries[i];
-            var mapTiles = world.JsonData.MapRoomData.Rooms.First(r => r.RoomName.ToLower() == roomGeometry.name.ToLower())!;
-            var (offsetX, offsetY) = (mapRoom.x - area_x_offsets[mapArea], mapRoom.y - area_y_offsets[mapArea]);
+            var mapRoom = world.Map.room_id[i];
+            var mapRoomX = world.Map.room_x[i];
+            var mapRoomY = world.Map.room_y[i];
+            var mapArea = world.Map.room_area[i];
+            var roomGeometry = world.JsonData.RoomGeometries.Where(r => r.room_id == mapRoom).FirstOrDefault();
+
+            if(roomGeometry == null)
+            {
+                Console.WriteLine($"Warning: No room geometry found for room ID {mapRoom}, skipping minimap data for this room.");
+                continue;
+            }
+
+            var mapTiles = world.JsonData.MapRoomData.Rooms.FirstOrDefault(r => r.RoomName.ToLower() == roomGeometry.name.ToLower());
+
+            if(mapTiles == null)
+            {
+                Console.WriteLine($"Warning: No map tile data found for room '{roomGeometry.name}', skipping minimap data for this room.");
+                continue;
+            }
+
+            var (offsetX, offsetY) = (mapRoomX - area_x_offsets[mapArea], mapRoomY - area_y_offsets[mapArea]);
 
             foreach (var tile in mapTiles.MapTiles)
             {
-                WriteMapTile(mapArea, (offsetX + tile.Coords[0]), (offsetY + tile.Coords[1]) + 1, tile.GetBytes());
+                var tileBytes = tile.GetBytes();
+                
+                ushort palette = MapTile.Red;
+                if(mapTiles.Heated == true)
+                {
+                    palette = MapTile.Orange;
+                } 
+                else if ((mapTiles.LiquidType ?? "") == "water" && (mapTiles.LiquidLevel ?? 0m) <= 1m)
+                {
+                    palette = MapTile.Green;
+                }
+
+                tileBytes[1] = (byte)((tileBytes[1] | ((palette>>8) & 0x1F)));
+
+                WriteMapTile(mapArea, (offsetX + tile.Coords[0]), (offsetY + tile.Coords[1]) + 1, tileBytes);
+                if(tile.Interior == TileInterior.MapStation)
+                {
+                    mapStations.Add((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1] + 1));
+                }
             }
 
             Write((Address)(roomGeometry.rom_address + 2), [(byte)offsetX, (byte)offsetY]);
@@ -642,6 +746,9 @@ public class Rom : GameRom
                 Write((SNES)(0x8FFD00 + (roomHeader.RoomArea * 128) + 0x11), [(byte)mapArea]);
             }
         }
+
+        WriteMapMarkers(world);
+        WriteDecoTiles(world, mapStations);
     }
 
     private void WriteMapTile(int mapArea, int x, int y, byte[] mapTileData)
@@ -658,6 +765,89 @@ public class Rom : GameRom
         };
 
         Write((SNES)(areaAddress + (((x % 32) * 2 + y * 64) + (x / 32) * 0x800)), mapTileData);
+    }
+
+    private void WriteMapMarkers(World world)
+    {
+        // When playing map rando, the default map markers are useless so let's disable all of them for now
+        // TODO: Actually write updated markers in the correct spots
+        Write((SNES)0x82C7CB, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        Write((SNES)0x82C7DB, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        Write((SNES)0x82C7EB, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        Write((SNES)0x82C7FB, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        Write((SNES)0x82C80B, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        Write((SNES)0x82C81B, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+        Write((SNES)0x82C82B, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+    }
+
+    /*
+     Map Decoration has 3 layers which work as followed:
+        Area Pointer:
+	        A list of all areas to point to a list of decoration groups for their respective area.
+	        This is labeled on top in the file as "MapDecoration_AreaPointer".
+	        You can change the label to a unique one, for instance "MapDecoration_List_Crateria" to point to a new decoration list
+	        or "MapDecoration_NoDecoration" to not draw any deco tiles for that area.
+        Deco Group List:
+	        A list of various deco group instructions to point to and position to in the map.
+	        An instruction for it looks like this:
+		        DW $aaaa : DB $xx, $yy
+	        aaaa : pointer to deco group instruction. Labels also can be used for this.
+	               $0000 is the terminator for deco group lists.
+	        xx : X position for deco tilegroup (range: $00 - $1F ($3F, if vertical map is not set for this area))
+	        yy : Y position for deco tilegroup (range: $00 - $1F ($3F, if vertical map is set for this area))
+        Deco Group Instruction:
+	        The actual instruction to draw these decorations.
+	        An instruction for it looks like this:
+		        DB bb : DW tttt, ...
+	        bb : amount of tiles to draw in one row. If 00, it will jump to the next row.
+	             Setting it to $40 and above is the terminator for deco group instructions.
+	        tttt : tiledata. You should write as many tiledata as listed in "bb"
+	               the bitmask for tiledata looks like this:
+				        vhpc cctt tttt tttt
+		           v = vertical mirror of tile
+		           h = horizontal mirror of tile
+		           p = priority bit (must be 0)
+		           c = palette
+		           t = tile ID (must be $100 and above to be considered as a deco tile)
+    */
+    private void WriteDecoTiles(World world, List<(int, int, int)> mapStations)
+    {
+        int decoTilePtr = 0x89E000;
+        int decoInstructionPtr = 0x89E020;
+
+        int decoTileInstruction = decoInstructionPtr;
+
+        // Write the deco instruction for writing a single map tile
+        Write((SNES)decoInstructionPtr, [0x01]); // 1 tile in a row
+        decoInstructionPtr += 1;
+        // Tile data for map station icon
+        Write((SNES)decoInstructionPtr, [0x3C, 0x04]); // Tile 0x3C ("M"), palette 1
+        decoInstructionPtr += 4;
+        // End of decoration group instruction
+        Write((SNES)decoInstructionPtr, [0x40]); // Terminator
+        decoInstructionPtr += 1;
+
+        int decoTileDataPtr = decoInstructionPtr;
+        var stationsByArea = mapStations.GroupBy(s => s.Item1);
+        foreach (var areaGroup in stationsByArea)
+        {
+            int area = areaGroup.Key;
+            int decoTileAreaPtr = decoTilePtr + (area * 2);
+            Write((SNES)decoTileAreaPtr, BitConverter.GetBytes((ushort)(decoTileDataPtr & 0xFFFF)));
+
+            foreach (var (a, x, y) in areaGroup)
+            {
+                // Write the decoration group list entry
+                Write((SNES)decoTileDataPtr, BitConverter.GetBytes((ushort)(decoTileInstruction & 0xFFFF)));
+                decoTileDataPtr += 2;
+                Write((SNES)decoTileDataPtr, [(byte)x, (byte)y]);
+                decoTileDataPtr += 2;
+            }
+
+            // Write the terminator for the decoration group list
+            Write((SNES)decoTileDataPtr, [0x00, 0x00]);
+            decoTileDataPtr += 2;
+        }
     }
 
     private void WriteDoorCaps(World world)

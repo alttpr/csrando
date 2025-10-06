@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="AvroConvert" Version="3.4.16" />
     <PackageReference Include="BpsNet" Version="1.0.0" />
     <PackageReference Include="GitInfo" Version="3.3.5">
       <PrivateAssets>all</PrivateAssets>

@@ -17,17 +17,21 @@ namespace Randomizer.Games.SuperMetroid.Model
         public required string RoomName { get; set; } = string.Empty;
         public List<MapTile> MapTiles { get; set; } = new();
 
-        [JsonInclude] public decimal? WaterLevel { get; set; }
+        [JsonInclude] public string? LiquidType { get; set; }
+        [JsonInclude] public decimal? LiquidLevel { get; set; }
         [JsonInclude] public bool? Heated { get; set; }
 
     }
 
     public class MapTile
     {
-
-        private const ushort VFlip = 0x8000;
-        private const ushort HFlip = 0x4000;
-        private const ushort MapPalette = 0x0C00;
+        public const ushort VFlip = 0x8000;
+        public const ushort HFlip = 0x4000;
+        public const ushort Red = 0x0C00;
+        public const ushort Green = 0x1000;
+        public const ushort Yellow = 0x1400;
+        public const ushort Orange = 0x1800;
+        public const ushort Grey = 0x1C00;
 
         // Tile coordinates: (X = Coords[0], Y = Coords[1])
         public required int[] Coords { get; set; } = Array.Empty<int>();
@@ -59,11 +63,11 @@ namespace Randomizer.Games.SuperMetroid.Model
 
             ushort tileMapValue = (left, right, top, bottom, Interior) switch
             {
-                (_, _, _, _, TileInterior.MapStation) => 0x006F,
+                (_, _, _, _, TileInterior.MapStation) => 0x0020,
                 (_, _, _, _, TileInterior.SaveStation) => 0x004D,
                 (_, _, _, _, TileInterior.AmmoRefill) => 0x0020,
                 (_, _, _, _, TileInterior.EnergyRefill) => 0x0020,
-                (TileEdge.Wall or TileEdge.Door, TileEdge.Wall or TileEdge.Door, _, _, TileInterior.ElevatorPlatformHigh) => 0x0010,
+                (TileEdge.Wall or TileEdge.Door, TileEdge.Wall or TileEdge.Door, _, _, TileInterior.ElevatorPlatformHigh) => 0x004F | VFlip,
                 (TileEdge.Empty or TileEdge.Passage, TileEdge.Empty or TileEdge.Passage, _, _, TileInterior.ElevatorPlatformHigh) => 0x005F,
                 (TileEdge.Wall or TileEdge.Door, TileEdge.Wall or TileEdge.Door, _, _, TileInterior.ElevatorPlatformLow) => 0x004F,
                 (TileEdge.Empty or TileEdge.Passage, TileEdge.Empty or TileEdge.Passage, _, _, TileInterior.ElevatorPlatformLow) => 0x005F | VFlip,
@@ -187,7 +191,7 @@ namespace Randomizer.Games.SuperMetroid.Model
                 }
             };
 
-            return (ushort)(tileMapValue | MapPalette);
+            return (ushort)(tileMapValue);
         }
 
         /// <summary>
