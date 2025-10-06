@@ -1,3 +1,7 @@
-[submodule "asm"]
-	path = asm
+[submodule "asm/z3randomizer"]
+	path = asm/z3randomizer
 	url = https://github.com/KatDevsGames/z3randomizer
+	branch = v32.0
+[submodule "asm/multirando-asm"]
+	path = asm/multirando-asm
+	url = https://github.com/tewtal/multirando-asm
