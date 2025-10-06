@@ -120,12 +120,7 @@ export class MetaDataBlock implements BlockType {
 }
 
 // Manifest entry types for DataBlock
-// Simple: [snes_addresses, length_of_data_segment, single_entry_offsets_array]
 type ManifestEntrySimple = [number[], number, number[]];
-// Complex (not used by LinkSprite or SamusSprite, but for future):
-// [snes_addresses, length_of_data_segment, number_of_entries, entry_offsets_or_single_offset_value]
-// type ManifestEntryComplex = [number[], number, number, number[]];
-// For now, we'll stick to ManifestEntrySimple as Samus manifest also fits this with pre-calculated offsets.
 type ManifestEntry = ManifestEntrySimple;
 
 /**
@@ -133,7 +128,7 @@ type ManifestEntry = ManifestEntrySimple;
  */
 export abstract class DataBlock implements BlockType {
   abstract get type(): number;
-  protected abstract get manifest(): Array<ManifestEntry>;
+  public abstract get manifest(): Array<ManifestEntry>; // Exposed publicly for inspection/testing
 
   protected _content: Buffer[] = [];
 
@@ -259,7 +254,7 @@ export class LinkSprite extends DataBlock {
     return LinkSprite.RDC_TYPE_ID;
   }
 
-  protected get manifest(): Array<ManifestEntry> {
+  public get manifest(): Array<ManifestEntry> {
     return [
       // NOTE: These are the canonical LoROM addresses (banks $10/$1B) for Link's sprite assets.
       // Previous values using $50/$5B were mirror banks; keeping a single canonical form avoids
@@ -334,27 +329,78 @@ export class Zelda1SpriteDataBlock extends DataBlock {
   get type(): number {
     return Zelda1SpriteDataBlock.RDC_TYPE_ID;
   }
-  protected get manifest(): Array<ManifestEntry> {
+  public get manifest(): Array<ManifestEntry> {
     return [
-      [DataBlock.addr(0x0000), 0x1000, DataBlock.single()], // GFX
-      [DataBlock.addr(0x1000), 0x0020, DataBlock.single()], // Palette
+      [DataBlock.addr(0x608e34), 32, DataBlock.single()], // $LIFTING_ITEM
+      [DataBlock.addr(0x608eb4), 32, DataBlock.single()], // $WALK1_PROFILE_BIGSHIELD
+      [DataBlock.addr(0x61007f), 448, DataBlock.single()], // $WALK1_PROFILE, $WALK2_PROFILE, $FACING_DOWN_NOSHIELD, $FACING_UP, $ATTACKING_PROFILE, $ATTACKING_DOWN, $ATTACKING_UP
+      [DataBlock.addr(0x6105bf), 32, DataBlock.single()], // $WALK2_PROFILE_BIGSHIELD
+      [DataBlock.addr(0x6105ff), 64, DataBlock.single()], // $WALK1_DOWN_SMALLSHIELD, $WALK2_DOWN_SMALLSHIELD
+      [DataBlock.addr(0x61067f), 32, DataBlock.single()], // $FACING_DOWN_BIGSHIELD
+      [
+        DataBlock.addr(
+          0x631314,
+          0x631410,
+          0x63150c,
+          0x631608,
+          0x631704,
+          0x631800,
+          0x6318fc,
+          0x6319f8,
+          0x631af4,
+          0x631bf0,
+          0x631cec,
+          0x3d3804,
+        ),
+        3,
+        DataBlock.single(),
+      ], // $BASE_COLORS
+      [DataBlock.addr(0x631cf0), 3, DataBlock.single()], // $LEVEL2_COLORS
+      [DataBlock.addr(0x631cf4), 3, DataBlock.single()], // $LEVEL3_COLORS
+      [DataBlock.addr(0x612287), 3, DataBlock.single()], // $TUNIC_COLORS
     ];
   }
 }
 
 /**
  * Metroid 1 Sprite data block (type 3).
- * Simple fixed layout: 0x2000 bytes of GFX followed by 0x20 bytes of palette.
+ * Detailed segment layout matching the manifest used in game-static-info.ts.
+ * Addresses here are placeholders (0x0000 etc.) because for RDC extraction we only care about
+ * segment ordering and lengths; actual ROM target addresses live in web runtime manifests.
  */
 export class Metroid1SpriteDataBlock extends DataBlock {
   static readonly RDC_TYPE_ID = 3;
   get type(): number {
     return Metroid1SpriteDataBlock.RDC_TYPE_ID;
   }
-  protected get manifest(): Array<ManifestEntry> {
+  public get manifest(): Array<ManifestEntry> {
+    // We emulate the structure of the runtime manifest but use sequential pseudo-address groups
+    // to delineate segments. Each segment is a single chunk; color segments are replicated at apply time
+    // via addresses array in the runtime manifest (not needed here). Therefore we only list one addr per segment.
     return [
-      [DataBlock.addr(0x0000), 0x2000, DataBlock.single()], // GFX
-      [DataBlock.addr(0x2000), 0x0020, DataBlock.single()], // Palette
+      [DataBlock.addr(0x0000), 64, DataBlock.single()],
+      [DataBlock.addr(0x0001), 80, DataBlock.single()],
+      [DataBlock.addr(0x0002), 64, DataBlock.single()],
+      [DataBlock.addr(0x0003), 16, DataBlock.single()],
+      [DataBlock.addr(0x0004), 96, DataBlock.single()],
+      [DataBlock.addr(0x0005), 64, DataBlock.single()],
+      [DataBlock.addr(0x0006), 48, DataBlock.single()],
+      [DataBlock.addr(0x0007), 96, DataBlock.single()],
+      [DataBlock.addr(0x0008), 96, DataBlock.single()],
+      [DataBlock.addr(0x0009), 16, DataBlock.single()],
+      [DataBlock.addr(0x000a), 32, DataBlock.single()],
+      [DataBlock.addr(0x000b), 96, DataBlock.single()],
+      [DataBlock.addr(0x000c), 48, DataBlock.single()],
+      [DataBlock.addr(0x000d), 112, DataBlock.single()],
+      [DataBlock.addr(0x000e), 112, DataBlock.single()],
+      [DataBlock.addr(0x000f), 16, DataBlock.single()],
+      [DataBlock.addr(0x0010), 32, DataBlock.single()],
+      [DataBlock.addr(0x0011), 64, DataBlock.single()],
+      [DataBlock.addr(0x0012), 3, DataBlock.single()],
+      [DataBlock.addr(0x0013), 2, DataBlock.single()],
+      [DataBlock.addr(0x0014), 2, DataBlock.single()],
+      [DataBlock.addr(0x0015), 2, DataBlock.single()],
+      [DataBlock.addr(0x0016), 2, DataBlock.single()],
     ];
   }
 }
@@ -375,7 +421,7 @@ export class SamusSprite extends DataBlock {
     return SamusSprite.RDC_TYPE_ID;
   }
 
-  protected get manifest(): Array<ManifestEntry> {
+  public get manifest(): Array<ManifestEntry> {
     // The static manifest is not used for parsing in this implementation.
     // We keep a minimal placeholder to satisfy abstract requirements.
     return [];

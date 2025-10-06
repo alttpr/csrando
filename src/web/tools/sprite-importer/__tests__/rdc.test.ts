@@ -781,23 +781,22 @@ describe("Zelda1SpriteDataBlock", () => {
     expect(Zelda1SpriteDataBlock.RDC_TYPE_ID).toBe(2);
   });
 
-  it("should calculate correct total length from manifest", () => {
+  it("should calculate correct total length from manifest (sum of segments)", () => {
     const block = new Zelda1SpriteDataBlock();
-    // Manifest: GFX (0x1000), Palette (0x20)
-    const expectedLength = 0x1000 + 0x20;
+    const expectedSegmentLengths = [32, 32, 448, 32, 64, 32, 3, 3, 3, 3];
+    const expectedLength = expectedSegmentLengths.reduce((a, b) => a + b, 0);
     expect(block.length).toBe(expectedLength);
   });
 
-  it("should parse a dummy buffer into correct content segments", () => {
+  it("should parse a dummy buffer into correct content segments (manifest order)", () => {
     const block = new Zelda1SpriteDataBlock();
-    const totalLen = block.length;
-    const dummyRdcDataSegment = Buffer.alloc(totalLen, 0xaa);
-
+    const expectedSegmentLengths = [32, 32, 448, 32, 64, 32, 3, 3, 3, 3];
+    const dummyRdcDataSegment = Buffer.alloc(block.length, 0xbb);
     block.parse(dummyRdcDataSegment, 0);
-
     expect(block.content).toHaveLength(block.manifest.length);
-    expect(block.content[0].length).toBe(0x1000); // GFX
-    expect(block.content[1].length).toBe(0x20); // Palette
+    expectedSegmentLengths.forEach((len, idx) =>
+      expect(block.content[idx].length).toBe(len),
+    );
   });
 });
 
@@ -808,22 +807,27 @@ describe("Metroid1SpriteDataBlock", () => {
     expect(Metroid1SpriteDataBlock.RDC_TYPE_ID).toBe(3);
   });
 
-  it("should calculate correct total length from manifest", () => {
+  it("should calculate correct total length from manifest (sum of segments)", () => {
     const block = new Metroid1SpriteDataBlock();
-    // Manifest: GFX (0x2000), Palette (0x20)
-    const expectedLength = 0x2000 + 0x20;
+    const expectedSegmentLengths = [
+      64, 80, 64, 16, 96, 64, 48, 96, 96, 16, 32, 96, 48, 112, 112, 16, 32, 64,
+      3, 2, 2, 2, 2,
+    ];
+    const expectedLength = expectedSegmentLengths.reduce((a, b) => a + b, 0);
     expect(block.length).toBe(expectedLength);
   });
 
-  it("should parse a dummy buffer into correct content segments", () => {
+  it("should parse a dummy buffer into correct content segments (manifest order)", () => {
     const block = new Metroid1SpriteDataBlock();
-    const totalLen = block.length;
-    const dummyRdcDataSegment = Buffer.alloc(totalLen, 0xbb);
-
+    const expectedSegmentLengths = [
+      64, 80, 64, 16, 96, 64, 48, 96, 96, 16, 32, 96, 48, 112, 112, 16, 32, 64,
+      3, 2, 2, 2, 2,
+    ];
+    const dummyRdcDataSegment = Buffer.alloc(block.length, 0xcc);
     block.parse(dummyRdcDataSegment, 0);
-
     expect(block.content).toHaveLength(block.manifest.length);
-    expect(block.content[0].length).toBe(0x2000); // GFX
-    expect(block.content[1].length).toBe(0x20); // Palette
+    expectedSegmentLengths.forEach((len, idx) =>
+      expect(block.content[idx].length).toBe(len),
+    );
   });
 });
