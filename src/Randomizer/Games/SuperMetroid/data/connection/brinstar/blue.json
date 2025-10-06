@@ -1,4 +1,4 @@
-{
+  {
   "$schema": "../../schema/m3-connection.schema.json",
   "connections": [
     {
