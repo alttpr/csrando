@@ -103,14 +103,14 @@ public class MapRandomizer
                 continue;
             }
 
-            if (!fromGeoDoor.exit_ptr.HasValue || !toGeoDoor.exit_ptr.HasValue)
+            if (!fromGeoDoor.exit_ptr.HasValue)
             {
-                Console.WriteLine($"Skipping door with missing exit pointers: {fromGeoDoor} -> {toGeoDoor}");
+                Console.WriteLine($"Skipping door with missing exit pointer: {fromGeoDoor} -> {toGeoDoor} ({fromRoom.Name} -> {toRoom.Name})");
                 continue;
             }
 
             var fromExitPtr = fromGeoDoor.exit_ptr.Value;
-            var toExitPtr = toGeoDoor.exit_ptr.Value;
+            var toExitPtr = toGeoDoor.exit_ptr ?? 0;
 
             var fromNode = fromRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr).FirstOrDefault();
             var toNode = toRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr).FirstOrDefault();
@@ -119,11 +119,17 @@ public class MapRandomizer
             {
                 // Try to get the first sandfall entrance
                 toNode = toRoom.Nodes.Where(n => n.NodeType == "entrance" && n.NodeSubType == "sandpit").FirstOrDefault();
+                Console.WriteLine($"Warning: could not find exit pointer {toExitPtr:X} in room {toRoom.Name}, falling back to sandfall entrance {toNode?.Name}");
             }
 
             if (fromNode is null || toNode is null)
             {
-                Console.WriteLine($"Failed to resolve nodes for door {fromGeoDoor} -> {toGeoDoor}");
+                if(fromRoom.Name == "Pants Room" && toRoom.Name == "Pants Room")
+                {
+                    // Don't warn about this vanilla connection
+                    continue;
+                }
+                Console.WriteLine($"Failed to resolve nodes for door {fromGeoDoor} -> {toGeoDoor} ({fromRoom.Name} -> {toRoom.Name})");
                 continue;
             }
 

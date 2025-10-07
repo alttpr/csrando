@@ -1,7 +1,7 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
-using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
 using Randomizer.Games.Alttp;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
@@ -10,15 +10,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static Randomizer.Games.Metroid.YamlReader;
 using static Randomizer.Games.SuperMetroid.Model.Requirement;
-using System.Diagnostics.Metrics;
 
 
 public class Rom : GameRom
@@ -217,6 +218,12 @@ public class Rom : GameRom
                 var from_room_id = world.Map.conn_from_room_id[i];
                 var to_room_id = world.Map.conn_to_room_id[i];
 
+                var from_room_idx = world.Map.room_id.FindIndex(r => r == from_room_id);
+                var to_room_idx = world.Map.room_id.FindIndex(r => r == to_room_id);
+
+                var from_area = world.Map.room_area[from_room_idx];
+                var to_area = world.Map.room_area[to_room_idx];
+
                 var from_door_id = world.Map.conn_from_door_id[i];
                 var to_door_id = world.Map.conn_to_door_id[i];
 
@@ -244,7 +251,7 @@ public class Rom : GameRom
                     continue;
                 }
 
-                if (fromRoom != null && toRoom != null && fromRoom.Area != toRoom.Area)
+                if (from_area != to_area)
                 {
                     originalDoorData.elevator |= 0x40;
                 }
@@ -269,7 +276,7 @@ public class Rom : GameRom
                         continue;
 
                     originalDoorData = doorData.Where(d => d.ptr == fromGeoDoor.entrance_ptr).First();
-                    if (fromRoom != null && toRoom != null && fromRoom.Area != toRoom.Area)
+                    if (from_area != to_area)
                     {
                         originalDoorData.elevator |= 0x40;
                     }
@@ -357,9 +364,9 @@ public class Rom : GameRom
             (int, int,int)[] transitionRooms = [
                 (0, 0x9994, 0x8BDA), // Crateria Map Room
                 //(1, 0x8C35, 0x8D36), // Brinstar Map Room (no portal yet)
-                (2, 0x9DD8, 0x9306), // Norfair Map Room
-                (2, 0x9E90, 0x9A7A), // Lower norfair energy station
-                (4, 0xD765, 0xA8F4), // Maridia Missile Station
+                (2, 0xB0B4, 0x9306), // Norfair Map Room
+                (2, 0xB305, 0x9A7A), // Lower norfair energy station
+                (4, 0xD845, 0xA8F4), // Maridia Missile Station
             ];
 
             // Group by area (first value) and write new stations
@@ -695,7 +702,7 @@ public class Rom : GameRom
                 continue;
             }
 
-            var mapTiles = world.JsonData.MapRoomData.Rooms.FirstOrDefault(r => r.RoomName.ToLower() == roomGeometry.name.ToLower());
+            var mapTiles = world.JsonData.MapRoomData.Rooms.FirstOrDefault(r => r.RoomId == roomGeometry.room_id);
 
             if(mapTiles == null)
             {
@@ -748,7 +755,7 @@ public class Rom : GameRom
         }
 
         WriteMapMarkers(world);
-        WriteDecoTiles(world, mapStations);
+        WriteDecoTiles(world, mapStations, area_x_offsets, area_y_offsets);
     }
 
     private void WriteMapTile(int mapArea, int x, int y, byte[] mapTileData)
@@ -810,44 +817,157 @@ public class Rom : GameRom
 		           c = palette
 		           t = tile ID (must be $100 and above to be considered as a deco tile)
     */
-    private void WriteDecoTiles(World world, List<(int, int, int)> mapStations)
+    private void WriteDecoTiles(World world, List<(int, int, int)> mapStations, int[] areaXOffsets, int[] areaYOffsets)
     {
         int decoTilePtr = 0x89E000;
         int decoInstructionPtr = 0x89E020;
 
-        int decoTileInstruction = decoInstructionPtr;
+        (var mapInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x081C, decoInstructionPtr);
+        
+        (var createriaInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x0832, decoInstructionPtr); // "C"
+        (var brinstarInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x0831, decoInstructionPtr); // "B"
+        (var wreckedShipInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x0846, decoInstructionPtr); // "W"
+        (var maridiaInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x083C, decoInstructionPtr); // "M"
+        (var tourianInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x0843, decoInstructionPtr); // "T"
+        (var norfairInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x083D, decoInstructionPtr); // "N"
+        
+        var areaInstructions = new int[]
+        {
+            createriaInstruction,
+            brinstarInstruction,
+            norfairInstruction,
+            wreckedShipInstruction,
+            maridiaInstruction,
+            tourianInstruction
+        };
 
-        // Write the deco instruction for writing a single map tile
-        Write((SNES)decoInstructionPtr, [0x01]); // 1 tile in a row
-        decoInstructionPtr += 1;
-        // Tile data for map station icon
-        Write((SNES)decoInstructionPtr, [0x3C, 0x04]); // Tile 0x3C ("M"), palette 1
-        decoInstructionPtr += 4;
-        // End of decoration group instruction
-        Write((SNES)decoInstructionPtr, [0x40]); // Terminator
-        decoInstructionPtr += 1;
 
-        int decoTileDataPtr = decoInstructionPtr;
+        List<(int, int, int)>[] areaDecoInstructions = new List<(int, int, int)>[6];
+        for (int i = 0; i < 6; i++)
+        {
+            areaDecoInstructions[i] = new List<(int, int, int)>();
+        }
+
+
+        // Find all cross-area connections
+        foreach (var connection in world.JsonData.Connections.SelectMany(c => c.Connections))
+        {
+            // Get source node
+            var leftNode = world.JsonData.Rooms.Find(r => connection.Nodes[0].RoomId == r.Id)?.Nodes.First(n => n.Id == connection.Nodes[0].NodeId);
+            var rightNode = world.JsonData.Rooms.Find(r => connection.Nodes[1].RoomId == r.Id)?.Nodes.First(n => n.Id == connection.Nodes[1].NodeId);
+
+            if (leftNode == null || rightNode == null)
+            {
+                Console.WriteLine($"Warning: Could not find nodes for cross-area connection between room {connection.Nodes[0].RoomId} and {connection.Nodes[1].RoomId}");
+            }
+
+            var leftExitPtr = Convert.ToInt32(leftNode?.NodeAddress?.Substring(2) ?? "0", 16);
+            var leftRoomGeometry = world.JsonData.RoomGeometries.FirstOrDefault(r => r.doors.Any(d => d.exit_ptr == leftExitPtr));
+            var leftRoomMapIdx = world.Map!.room_id.IndexOf(leftRoomGeometry?.room_id ?? -1);
+
+            var rightExitPtr = Convert.ToInt32(rightNode?.NodeAddress?.Substring(2) ?? "0", 16);
+            var rightRoomGeometry = world.JsonData.RoomGeometries.FirstOrDefault(r => r.doors.Any(d => d.exit_ptr == rightExitPtr));
+            var rightRoomMapIdx = world.Map!.room_id.IndexOf(rightRoomGeometry?.room_id ?? -1);
+
+            if(leftRoomMapIdx == -1 || rightRoomMapIdx == -1)
+            {
+                Console.WriteLine($"Warning: Could not find map data for cross-area connection between room {connection.Nodes[0].RoomId} and {connection.Nodes[1].RoomId}");
+                continue;
+            }
+
+            if (world.Map.room_area[leftRoomMapIdx] == world.Map.room_area[rightRoomMapIdx])
+            {
+                continue;
+            }
+
+            Console.WriteLine($"Adding map decoration for cross-area connection between {leftRoomGeometry?.name} and {rightRoomGeometry?.name}");
+
+            var (leftArea, rightArea) = (world.Map.room_area[leftRoomMapIdx], world.Map.room_area[rightRoomMapIdx]);
+
+            foreach (var node in new[] { (leftNode, rightArea), (rightNode, leftArea) })
+            {
+                // Get exitptr of source node
+                var exitPtr = Convert.ToInt32(node.Item1?.NodeAddress?.Substring(2) ?? "0", 16);
+                var roomGeometry = world.JsonData.RoomGeometries.FirstOrDefault(r => r.doors.Any(d => d.exit_ptr == exitPtr));
+                var doorGeometry = roomGeometry?.doors.FirstOrDefault(d => d.exit_ptr == exitPtr)!;
+                var roomMapIdx = world.Map!.room_id.IndexOf(roomGeometry?.room_id ?? -1);
+                var roomMapX = world.Map!.room_x[roomMapIdx];
+                var roomMapY = world.Map!.room_y[roomMapIdx];
+                var roomMapArea = world.Map!.room_area[roomMapIdx];
+
+                // Offset by door coordinates
+                var x = roomMapX + (doorGeometry?.x ?? 0);
+                var y = roomMapY + (doorGeometry?.y ?? 0) + 1;
+
+                // Offset by door orientation
+                var (dx, dy) = doorGeometry!.direction switch
+                {
+                    "left" => (-1, 0),
+                    "right" => (1, 0),
+                    "down" => (0, 1),
+                    "up" => (0, -1),
+                    _ => (0, 0)
+                };
+
+                if(doorGeometry!.subtype == "elevator")
+                {
+                    var elevatorHeight = roomGeometry!.map.Count();
+                    if(doorGeometry!.direction == "up")
+                    {
+                        y += (elevatorHeight - 1);
+                    } 
+                    else if(doorGeometry!.direction == "down")
+                    {
+                        y -= (elevatorHeight - 1);
+                    }
+                }
+
+                var markerCoordinates = ((x + dx) - areaXOffsets[roomMapArea], (y + dy) - areaYOffsets[roomMapArea]);
+                areaDecoInstructions[roomMapArea].Add((areaInstructions[node.Item2], markerCoordinates.Item1, markerCoordinates.Item2));
+            }
+        }
+
+        // Add map stations
         var stationsByArea = mapStations.GroupBy(s => s.Item1);
         foreach (var areaGroup in stationsByArea)
         {
-            int area = areaGroup.Key;
-            int decoTileAreaPtr = decoTilePtr + (area * 2);
-            Write((SNES)decoTileAreaPtr, BitConverter.GetBytes((ushort)(decoTileDataPtr & 0xFFFF)));
-
             foreach (var (a, x, y) in areaGroup)
             {
+                areaDecoInstructions[a].Add((mapInstruction, x, y));
+            }
+        }
+
+        // Write out all the decoration group lists
+        int decoTileDataPtr = decoInstructionPtr;
+        for (int area = 0; area < 6; area++)
+        {
+            int decoTileAreaPtr = decoTilePtr + (area * 2);
+            Write((SNES)decoTileAreaPtr, BitConverter.GetBytes((ushort)(decoTileDataPtr & 0xFFFF)));
+            foreach (var (instructionPtr, x, y) in areaDecoInstructions[area])
+            {
                 // Write the decoration group list entry
-                Write((SNES)decoTileDataPtr, BitConverter.GetBytes((ushort)(decoTileInstruction & 0xFFFF)));
+                Write((SNES)decoTileDataPtr, BitConverter.GetBytes((ushort)(instructionPtr & 0xFFFF)));
                 decoTileDataPtr += 2;
                 Write((SNES)decoTileDataPtr, [(byte)x, (byte)y]);
                 decoTileDataPtr += 2;
             }
-
             // Write the terminator for the decoration group list
             Write((SNES)decoTileDataPtr, [0x00, 0x00]);
             decoTileDataPtr += 2;
         }
+
+    }
+
+    private (int, int) CreateDecoTileInstruction(ushort tileMask, int instructionPtr)
+    {
+        int next = instructionPtr;
+        Write((SNES)next, [0x01]); // 1 tile in a row
+        next += 1;
+        Write((SNES)next, BitConverter.GetBytes(tileMask));
+        next += 2;
+        Write((SNES)next, [0x40]); // Terminator
+        next += 1;
+        return (instructionPtr, next);
     }
 
     private void WriteDoorCaps(World world)
