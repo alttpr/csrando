@@ -533,19 +533,19 @@ SparkCCW: #SPARK COUNTERCLOCKWISE
   id: 0x5C
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-RollerVD: #ROLLER VERTICAL DOWN FIRST?
+RollerVU: #ROLLER VERTICAL UP (placed high, moving downwards first)
   id: 0x5D
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-RollerVU: #ROLLER VERTICAL UP FIRST
+RollerVD: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   id: 0x5E
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-RollerHR: #ROLLER HORIZONTAL RIGHT FIRST
+RollerHL: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   id: 0x5F
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-RollerHL: #ROLLER HORIZONTAL LEFT FIRST
+RollerHR: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   id: 0x60
   flags: NoDrop
   sheets: [null, null, 0x27, null]
@@ -568,19 +568,19 @@ ShootingGalleryNPC: #ARCHERY GUY
   id: 0x65
   flags: NoPlace
   sheets: [0x4B, null, null, null]
-CannonBallShooterL: #WALL CANNON VERTICAL LEFT
+CannonBallShooterR: #WALL CANNON VERTICAL RIGHT (placed left, shooting right)
   id: 0x66
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-CannonBallShooterR: #WALL CANNON VERTICAL RIGHT
+CannonBallShooterL: #WALL CANNON VERTICAL LEFT (placed right, shooting left)
   id: 0x67
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-CannonBallShooterU: #WALL CANNON HORIZONTAL TOP
+CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM (placed high, shooting downwards)
   id: 0x68
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM
+CannonBallShooterU: #WALL CANNON HORIZONTAL TOP (placed low, shooting upwards)
   id: 0x69
   flags: NoDrop
   sheets: [0x2F, null, null, null]
@@ -785,19 +785,19 @@ Pirogusu: #PIROGUSU / TILE ROOM TILE?
   id: 0x94
   flags: NoPlace
   sheets: [null, null, 0x22, null]
-LaserEyeL: #LASER EYE LEFT
+LaserEyeR: #LASER EYE RIGHT (placed left, shooting right)
   id: 0x95
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-LaserEyeR: #LASER EYE RIGHT
+LaserEyeL: #LASER EYE LEFT (placed right, shooting left)
   id: 0x96
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-LaserEyeU: #LASER EYE TOP
+LaserEyeD: #LASER EYE BOTTOM (placed high, shooting down)
   id: 0x97
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-LaserEyeD: #LASER EYE BOTTOM
+LaserEyeU: #LASER EYE TOP (placed low, shooting up)
   id: 0x98
   flags: NoPlace
   sheets: [null, null, null, 0x52]
