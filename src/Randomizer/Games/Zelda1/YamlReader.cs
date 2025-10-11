@@ -366,8 +366,8 @@ public class YamlReader
         }
 
         // Check if the edge already exists
-        var edgeExists = undirected ? edgePair.Undirected.Any(e => e.SequenceEqual(new string[] { (string)from["name"], (string)to["name"] })) :
-                                      edgePair.Directed.Any(e => e.SequenceEqual(new string[] { (string)from["name"], (string)to["name"] }));
+        var edgeExists = undirected ? edgePair.Undirected.Any(e => e.SequenceEqual([(string)from["name"], (string)to["name"]])) :
+                                      edgePair.Directed.Any(e => e.SequenceEqual([(string)from["name"], (string)to["name"]]));
 
         if (!edgeExists)
         {
