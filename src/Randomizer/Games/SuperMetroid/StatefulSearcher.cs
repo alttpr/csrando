@@ -519,7 +519,7 @@ public class StatefulSearcher : ISearcher
                 var unlockStratStates = new List<VisitedState>();
 
 
-                foreach (var unlockStrat in lck.UnlockStrats ?? Array.Empty<Strat>())
+                foreach (var unlockStrat in lck.UnlockStrats ?? [])
                 {
                     var result = RequirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
