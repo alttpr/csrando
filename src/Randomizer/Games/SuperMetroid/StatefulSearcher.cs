@@ -17,18 +17,18 @@ public class StatefulSearcher : ISearcher
     private Dictionary<Vertex, List<VisitedState>> _visitedStates = null!;
     private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates = null!;
     private readonly Queue<(Vertex vertex, VisitedState state)> _queue = new();
-    private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = new();
+    private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = [];
     private readonly Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
     private readonly HashSet<Vertex> _visitedVertices;
-    private readonly HashSet<IItem> _foundItems = new();
+    private readonly HashSet<IItem> _foundItems = [];
     private readonly Inventory _inventory;
     private readonly Dictionary<(Vertex, IItem), VisitedState> _prevItems;
     private readonly Vertex? _target;
     private readonly Vertex _start;
     private readonly List<(Vertex, VisitedState)> _startStates;
     private readonly SetLocations? _setLocations;
-    private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = new();
-    private readonly HashSet<Weapon> _currentWeapons = new();
+    private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = [];
+    private readonly HashSet<Weapon> _currentWeapons = [];
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
@@ -49,13 +49,13 @@ public class StatefulSearcher : ISearcher
             ObstacleBitFlags = 0
         });
 
-        _prevItems = new Dictionary<(Vertex, IItem), VisitedState>();
+        _prevItems = [];
         _visitedStates = new(1024);
         _visitedVertices = new(1024);
         _unvisitedStates = new(1024);
         _visitedItemLocations = new(128);
         _graph = graph;
-        _startStates = new();
+        _startStates = [];
 
         List<(Vertex, VisitedState)> startStates = [startState];
         Search(startStates);
@@ -122,7 +122,7 @@ public class StatefulSearcher : ISearcher
                         }
                         else
                         {
-                            _unvisitedStates[vtx] = (new HashSet<string> { "Backtrack" }, [itemState with {
+                            _unvisitedStates[vtx] = (["Backtrack"], [itemState with {
                             Energy = itemState.Energy + newEnergy,
                             Missiles = itemState.Missiles + newMissiles,
                             SuperMissiles = itemState.SuperMissiles + newSupers,
@@ -251,7 +251,7 @@ public class StatefulSearcher : ISearcher
             // Add the current state to the visited states for this vertex
             if (!_visitedStates.TryGetValue(current, out visitedStates))
             {
-                visitedStates = new();
+                visitedStates = [];
                 _visitedStates[current] = visitedStates;
             }
             else
@@ -467,7 +467,7 @@ public class StatefulSearcher : ISearcher
     {
         if (!_inQueue.TryGetValue(v, out var list))
         {
-            list = new List<VisitedState>();
+            list = [];
             _inQueue[v] = list;
         }
 
@@ -585,7 +585,7 @@ public class StatefulSearcher : ISearcher
             return (!onlyReachable || (_visitedVertices.Contains(vertex) && _visitedItemLocations.ContainsKey((Vertex)vertex))) && vertex.Item == null;
         }).OrderBy(v => v.Name).ToList();
 
-        itemSets ??= new();
+        itemSets ??= [];
         foreach (var (setName, setCount) in itemSets)
         {
             if (setName.World == null)
