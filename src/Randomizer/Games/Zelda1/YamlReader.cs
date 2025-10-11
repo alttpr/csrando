@@ -15,8 +15,8 @@ public class YamlReader
 
     private readonly Config config;
     private YamlData? data;
-    private readonly Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
-    private readonly Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
+    private readonly Dictionary<string, Dictionary<string, object>> vertices = [];
+    private readonly Dictionary<string, DirectedUndirectedPair> edges = [];
 
     public YamlData? Data { get { return data; } }
 

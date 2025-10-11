@@ -152,7 +152,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
     protected override string CreateFileName(IWorld world, PRNG prng, string? worldSuffix)
         => $"combo_{prng.Seed:x08}{worldSuffix}.sfc";
 
-    private static readonly Dictionary<char, byte> charToByteMap = new Dictionary<char, byte>
+    private static readonly Dictionary<char, byte> charToByteMap = new()
     {
         {'A', 0x50}, {'a', 0x50}, {'B', 0x51}, {'b', 0x51}, {'C', 0x52}, {'c', 0x52},
         {'D', 0x53}, {'d', 0x53}, {'E', 0x54}, {'e', 0x54}, {'F', 0x55}, {'f', 0x55},
