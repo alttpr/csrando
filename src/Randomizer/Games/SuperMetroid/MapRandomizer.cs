@@ -65,8 +65,8 @@ public class MapRandomizer
         var connections = new List<Connection>();
         foreach (var door in map.doors)
         {
-            var fromRoom = _reader.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.from.exit_ptr));
-            var toRoom = _reader.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == door.to.exit_ptr));
+            var fromRoom = _reader.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?[2..] ?? "0", System.Globalization.NumberStyles.HexNumber) == door.from.exit_ptr));
+            var toRoom = _reader.Rooms.Find(r => r.Nodes.Any(n => int.Parse(n.NodeAddress?[2..] ?? "0", System.Globalization.NumberStyles.HexNumber) == door.to.exit_ptr));
 
             if (fromRoom == null || toRoom == null)
             {
@@ -97,8 +97,8 @@ public class MapRandomizer
             var fromExitPtr = door.from.exit_ptr.Value;
             var toExitPtr = door.to.exit_ptr.Value;
 
-            var fromNode = fromRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr).FirstOrDefault();
-            var toNode = toRoom.Nodes.Where(n => int.Parse(n.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr).FirstOrDefault();
+            var fromNode = fromRoom.Nodes.Where(n => int.Parse(n.NodeAddress?[2..] ?? "0", System.Globalization.NumberStyles.HexNumber) == fromExitPtr).FirstOrDefault();
+            var toNode = toRoom.Nodes.Where(n => int.Parse(n.NodeAddress?[2..] ?? "0", System.Globalization.NumberStyles.HexNumber) == toExitPtr).FirstOrDefault();
 
             if (toNode == null && door.bidirectional == false)
             {
