@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 internal class PortalWriter
 {
     // TODO: Instead of hardcoding the portal data, we should generate it depending on the graph configuration for portals or something similar
-    private static Dictionary<(string, string), uint[][]> _portalData = new()
+    private static readonly Dictionary<(string, string), uint[][]> _portalData = new()
     {
         [("sm", "alttp")] =
             [

@@ -27,10 +27,10 @@ public class DoorPlmData
 
 public class GraphPreprocessor
 {
-    private JsonReader _reader;
-    private World _world;
-    private SmGraph _graph;
-    private List<string> _allowedTechs;
+    private readonly JsonReader _reader;
+    private readonly World _world;
+    private readonly SmGraph _graph;
+    private readonly List<string> _allowedTechs;
 
     public GraphPreprocessor(JsonReader reader, World world)
     {

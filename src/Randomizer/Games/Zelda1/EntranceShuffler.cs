@@ -7,8 +7,8 @@ using Randomizer.Graph;
 
 internal class EntranceShuffler
 {
-    private YamlReader.YamlData _data;
-    private PRNG _prng;
+    private readonly YamlReader.YamlData _data;
+    private readonly PRNG _prng;
 
     public EntranceShuffler(PRNG prng, YamlReader reader)
     {

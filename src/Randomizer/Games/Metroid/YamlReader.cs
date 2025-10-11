@@ -14,7 +14,7 @@ public class YamlReader
         this.config = config;
     }
 
-    private Config config;
+    private readonly Config config;
     private YamlData? data;
     private readonly Dictionary<string, Dictionary<string, object?>> vertices = [];
     private readonly Dictionary<string, DirectedUndirectedPair> edges = [];

@@ -11,7 +11,7 @@ using BaseVertex = Randomizer.Graph.Vertex;
 
 public class ItemMapper
 {
-    private static Dictionary<string, Dictionary<string, Dictionary<string, byte[]>>> _itemBytes = new()
+    private static readonly Dictionary<string, Dictionary<string, Dictionary<string, byte[]>>> _itemBytes = new()
     {
         ["alttp"] = new()
         {

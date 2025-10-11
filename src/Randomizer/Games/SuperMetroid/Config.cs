@@ -6,7 +6,7 @@ using Randomizer.Graph;
 [TargetGame(Game.SuperMetroid)]
 public class Config
 {
-    private static string[] ImplicitTech = [
+    private static readonly string[] ImplicitTech = [
             "canStopOnADime",
             "canTrivialMidAirMorph",
             "canUseGrapple",
@@ -17,13 +17,13 @@ public class Config
             "canSpecialBeamAttack",
             "canAwakenZebes",
         ];
-    private static string[] BasicTech = [
+    private static readonly string[] BasicTech = [
             "canMidAirMorph",
             "canWalljump",
             "canUseFrozenEnemies",
             "canShinespark",
         ];
-    private static string[] MediumTech = [
+    private static readonly string[] MediumTech = [
             "canHeatRun",
             "canSuitlessMaridia",
             "canSpaceJumpWaterBounce",
@@ -42,7 +42,7 @@ public class Config
             "canHorizontalShinespark",
             "canShinechargeMovement",
         ];
-    private static string[] HardTech = [
+    private static readonly string[] HardTech = [
             "canSuitlessLavaDive",
             "canSunkenTileWideWallClimb",
             "canCrossRoomJumpIntoWater",

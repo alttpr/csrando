@@ -98,9 +98,9 @@ public struct RequirementCost
 
 public class RequirementHandler
 {
-    private static Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
-    private static Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
-    private static Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
+    private static readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
+    private static readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
+    private static readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
 
     public static void Initialize(JsonReader reader, World world)
     {
