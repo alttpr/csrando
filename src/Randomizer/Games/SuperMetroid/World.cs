@@ -1,11 +1,9 @@
 namespace Randomizer.Games.SuperMetroid;
 
-using Randomizer.Graph;
-
-using Graph = Graph.Graph;
-using BaseVertex = Graph.Vertex;
 using Randomizer.Games.SuperMetroid.Model;
-using System.Diagnostics;
+using Randomizer.Graph;
+using BaseVertex = Graph.Vertex;
+using Graph = Graph.Graph;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : Randomizer.Graph.World<Item>

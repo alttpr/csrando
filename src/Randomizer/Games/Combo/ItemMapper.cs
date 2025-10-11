@@ -1,12 +1,7 @@
 ﻿namespace Randomizer.Games.Combo;
 
-using Randomizer.Graph;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Randomizer.Graph;
 using BaseVertex = Randomizer.Graph.Vertex;
 
 public class ItemMapper

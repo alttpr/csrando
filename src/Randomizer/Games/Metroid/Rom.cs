@@ -1,13 +1,8 @@
 ﻿namespace Randomizer.Games.Metroid;
 
-using Randomizer.Games.Alttp;
+using System.Linq;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 public class Rom : GameRom

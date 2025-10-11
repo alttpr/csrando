@@ -1,13 +1,10 @@
 ﻿namespace Randomizer.Games.Zelda1;
 
-using Randomizer.Games.Alttp;
-using Randomizer.Graph;
-using Randomizer.RomModifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Randomizer.Graph;
+using Randomizer.RomModifications;
 
 public static class RomExtensions
 {

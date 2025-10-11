@@ -1,24 +1,11 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
-
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics;
-using Randomizer.Games.Alttp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.PortableExecutable;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using static Randomizer.Games.Metroid.YamlReader;
-using static Randomizer.Games.SuperMetroid.Model.Requirement;
-using System.Diagnostics.Metrics;
 
 
 public class Rom : GameRom

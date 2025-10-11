@@ -1,14 +1,13 @@
 namespace Randomizer.Games.Combo;
 
 using Randomizer.Graph;
-using Graph = Graph.Graph;
-using BaseVertex = Graph.Vertex;
-
+using Randomizer.RomModifications;
 using AlttpWorld = Randomizer.Games.Alttp.World;
+using BaseVertex = Graph.Vertex;
+using Graph = Graph.Graph;
+using M1World = Randomizer.Games.Metroid.World;
 using SMWorld = Randomizer.Games.SuperMetroid.World;
 using Z1World = Randomizer.Games.Zelda1.World;
-using M1World = Randomizer.Games.Metroid.World;
-using Randomizer.RomModifications;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
 public sealed class World : World<Item>

@@ -2,11 +2,11 @@
 
 using Randomizer.Games.Metadata;
 using AlttpConfig = Alttp.Config;
+using ComboConfig = Combo.Config;
 using Goonies2Config = Goonies2.Config;
-using Zelda1Config = Zelda1.Config;
 using MetroidConfig = Metroid.Config;
 using SuperMetroidConfig = SuperMetroid.Config;
-using ComboConfig = Combo.Config;
+using Zelda1Config = Zelda1.Config;
 
 public class WorldConfig
 {

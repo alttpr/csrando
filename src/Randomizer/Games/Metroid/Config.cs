@@ -1,6 +1,5 @@
 ﻿namespace Randomizer.Games.Metroid;
 
-using Microsoft.VisualBasic;
 using Randomizer.Games.Metadata;
 
 [TargetGame(Game.Metroid)]
