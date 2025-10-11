@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.IO;
-using Randomizer.Graph;
 using Randomizer.Games.SuperMetroid;
+using Randomizer.Graph;
 
 public class JsonReader
 {

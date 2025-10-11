@@ -1,17 +1,10 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
-using MathNet.Numerics.Optimization;
-using Randomizer.Games.SuperMetroid.Model;
-using Randomizer.Graph;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Formats.Asn1;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using YamlDotNet.RepresentationModel;
+using Randomizer.Games.SuperMetroid.Model;
+using Randomizer.Graph;
 using ExitCondition = Model.ExitCondition;
 
 public class DoorPlmData

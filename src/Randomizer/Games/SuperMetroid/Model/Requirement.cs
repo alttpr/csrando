@@ -1,14 +1,11 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
 
-using Randomizer.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using Randomizer.Graph;
 
 public record ResourceTypeCount(string Type, int Count);
 public record Drop(string Enemy, int Count);

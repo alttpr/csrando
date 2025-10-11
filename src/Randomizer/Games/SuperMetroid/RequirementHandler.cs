@@ -1,12 +1,10 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
-using Randomizer.Games.SuperMetroid.Model;
-using Randomizer.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Randomizer.Games.SuperMetroid.Model;
+using Randomizer.Graph;
 
 public class RequirementResult
 {

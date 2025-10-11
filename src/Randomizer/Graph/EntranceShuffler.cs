@@ -1,9 +1,7 @@
 namespace Randomizer.Graph;
 
-using Randomizer.Games.Alttp;
 using Microsoft.Extensions.Logging;
-
-using AlttpVertex = Games.Alttp.Vertex;
+using Randomizer.Games.Alttp;
 
 /// <summary>
 /// Modify the edges of the graph to shuffle entrances.

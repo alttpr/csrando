@@ -1,9 +1,9 @@
 ﻿namespace Randomizer.Graph;
 
-using MathNet.Numerics.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MathNet.Numerics.Random;
 
 public class PRNG
 {

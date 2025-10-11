@@ -1,10 +1,8 @@
 namespace Randomizer.Games.Combo;
 
-using Randomizer.Games.Alttp;
+using System.Reflection;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
-using System.Reflection;
-using System.Reflection.Metadata;
 using BaseGameRandomizer = Graph.GameRandomizer;
 
 public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)

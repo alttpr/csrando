@@ -1,7 +1,7 @@
 namespace Randomizer.Games.Goonies2;
-using BaseVertex = Randomizer.Graph.Vertex;
 
 using Randomizer.Graph;
+using BaseVertex = Randomizer.Graph.Vertex;
 
 internal static class DataLoader
 {

@@ -1,15 +1,10 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO.Hashing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YamlDotNet.Core.Tokens;
 
 public class StatefulSearcher : ISearcher
 {
