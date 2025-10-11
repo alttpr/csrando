@@ -228,7 +228,7 @@ internal sealed class RandomAssumedFiller
         {
             var filteredFlatItems = flatItems.Where(f => f.Item3.World.GameId == world.GameId).ToList();
             var bestLocations = GetBestLocationsForItems(world, filteredFlatItems, inventory);
-            if (bestLocations.Count() == 0)
+            if (!bestLocations.Any())
             {
                 throw new Exception("No valid location for any item");
             }
