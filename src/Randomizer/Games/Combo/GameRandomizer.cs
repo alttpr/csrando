@@ -20,8 +20,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
-        var comboWorld = world as World;
-        if (comboWorld == null)
+        if (world is not World comboWorld)
             throw new ArgumentException("Passed world is not for the Combo Randomizer.", nameof(world));
 
         // Use the concrete instance for combo-specific methods

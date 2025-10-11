@@ -917,11 +917,8 @@ public class YamlReader
                 // Find the region on the screen that contains the coordinates of the item
                 // A region has a from [x,y] and a to [x,y] coordinate that defines a rectangle
 
-                var itemRegionNode = screen.nodes.regions.Where(r => r.from[0] <= itemX && r.from[1] <= itemY && r.to[0] >= itemX && r.to[1] >= itemY).FirstOrDefault();
-                if (itemRegionNode == null)
-                {
-                    throw new Exception($"Could not find region for item in room {mapName}");
-                }
+                var itemRegionNode = screen.nodes.regions.Where(r => r.from[0] <= itemX && r.from[1] <= itemY && r.to[0] >= itemX && r.to[1] >= itemY).FirstOrDefault()
+                    ?? throw new Exception($"Could not find region for item in room {mapName}");
                 var itemRegionNodeName = $"{mapName} - {itemRegionNode.name}";
                 var itemRegionNodeNode = FindOrCreateNode(itemRegionNodeName);
 
