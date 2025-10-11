@@ -15,7 +15,7 @@ public class JsonReader
         this.config = config;
     }
 
-    private Config config;
+    private readonly Config config;
 
     private static Lazy<string> _dataRoot = new(() =>
     {
@@ -61,10 +61,10 @@ public class JsonReader
     public List<RoomPLM> RoomPLMs { get; set; } = new();
     public List<DoorPLMMap> DoorPLMMaps { get; set; } = new();
 
-    private Dictionary<string, Dictionary<string, object>> vertices = new();
-    private Dictionary<Requirement, DirectedUndirectedPair> edges = new();
+    private readonly Dictionary<string, Dictionary<string, object>> vertices = new();
+    private readonly Dictionary<Requirement, DirectedUndirectedPair> edges = new();
 
-    private HashSet<(string, string, string)> _edgeExists = new();
+    private readonly HashSet<(string, string, string)> _edgeExists = new();
 
     private Dictionary<string, object> CreateNode(Dictionary<string, object> nodeData)
     {

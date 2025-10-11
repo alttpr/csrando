@@ -13,10 +13,10 @@ public class YamlReader
         this.config = config;
     }
 
-    private Config config;
+    private readonly Config config;
     private YamlData? data;
-    private Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
-    private Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
+    private readonly Dictionary<string, Dictionary<string, object>> vertices = new Dictionary<string, Dictionary<string, object>>();
+    private readonly Dictionary<string, DirectedUndirectedPair> edges = new Dictionary<string, DirectedUndirectedPair>();
 
     public YamlData? Data { get { return data; } }
 
