@@ -1152,9 +1152,9 @@ public class YamlReader
 public class DirectedUndirectedPair
 {
     [YamlMember(Alias = "directed")]
-    public List<List<string>> Directed { get; set; } = new();
+    public List<List<string>> Directed { get; set; } = [];
     [YamlMember(Alias = "undirected")]
-    public List<List<string>> Undirected { get; set; } = new();
+    public List<List<string>> Undirected { get; set; } = [];
 }
 
 public class YamlItem

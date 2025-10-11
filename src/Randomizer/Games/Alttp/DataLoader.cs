@@ -483,19 +483,19 @@ internal static class DataLoader
         {
             case StateOption.Standard:
                 YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
-                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
+                edgeData["fixed"].Directed.Add(["start", "Link's House - Bedroom"]);
                 break;
             case StateOption.Inverted:
                 YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("inverted"));
                 // @todo move these once we have the nodes made
-                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
-                edgeData["fixed"].Directed.Add(new() { "start", "Dark Sanctuary" });
+                edgeData["fixed"].Directed.Add(["start", "Link's House - Bedroom"]);
+                edgeData["fixed"].Directed.Add(["start", "Dark Sanctuary"]);
                 break;
             case StateOption.Open:
             default:
                 YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("normal"));
-                edgeData["fixed"].Directed.Add(new() { "start", "Link's House - Bedroom" });
-                edgeData["fixed"].Directed.Add(new() { "start", "Sanctuary Hall" });
+                edgeData["fixed"].Directed.Add(["start", "Link's House - Bedroom"]);
+                edgeData["fixed"].Directed.Add(["start", "Sanctuary Hall"]);
                 break;
         }
 
