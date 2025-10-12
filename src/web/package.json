@@ -69,7 +69,6 @@
     "yargs": "^18.0.0"
   },
   "dependencies": {
-    "bps": "^2.0.1",
     "@inlang/paraglide-js": "^2.0.0",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@maseya/z3pr": "^1.0.1",
@@ -77,6 +76,7 @@
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "better-sqlite3": "^11.8.0",
+    "bps": "^2.0.1",
     "drizzle-orm": "^0.40.0",
     "flowbite-svelte": "^1.0.5",
     "localforage": "^1.10.0",
@@ -84,6 +84,7 @@
     "nanoid": "^5.1.5",
     "oslo": "^1.2.1",
     "simple-git": "^3.24.0",
+    "yaml": "^2.8.1",
     "zod": "^3.25.76"
   }
 }
