@@ -4,10 +4,10 @@ namespace Randomizer.Games.SuperMetroid.Model
 {
     public class MapRoomData
     {
-        public required List<MapRoom> Rooms { get; set; }
+        public required List<MapTileRoom> Rooms { get; set; }
     }
 
-    public class MapRoom
+    public class MapTileRoom
     {
         public int RoomId { get; set; }
         public required string RoomName { get; set; } = string.Empty;
@@ -191,7 +191,6 @@ namespace Randomizer.Games.SuperMetroid.Model
                                    int priority = 0)
             => new(L, R, T, B, sym, ids, groups, priority);
 
-        // ---------- ONE-LINE DEFINITIONS (converted & consolidated from your switch) ----------
         // Higher priority rows run first.
         private static readonly TileDef[] TileDefs = new[]
         {

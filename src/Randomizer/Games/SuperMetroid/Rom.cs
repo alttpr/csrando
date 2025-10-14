@@ -1,21 +1,27 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
+using Randomizer.Games.SuperMetroid.Model;
+using Randomizer.Graph;
+using Randomizer.RomModifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Randomizer.Games.SuperMetroid.Model;
-using Randomizer.Graph;
-using Randomizer.RomModifications;
 
 
 public class Rom : GameRom
 {
     private int _plmTableOffset;
+    private FreeSpaceManager _fsm;
+
+    private const int MAP_X_OFFSET = 4;
+    private const int MAP_Y_OFFSET = 4;
+
 
     public Rom(IRom rom, int offset) : base(rom, offset)
     {
         _plmTableOffset = 0xf800;
+        _fsm = new FreeSpaceManager();
     }
 
     public void WriteItems(World world)
@@ -392,11 +398,23 @@ public class Rom : GameRom
 
             WriteEscapeRoomModifications(world);
             WriteMiscMapPatches(world);
+            WriteMiniMapPalettes(world);
             WriteMusicOverrides(world);
             WriteBuffedDrops(world);
             WriteQuickBigBoy(world);
 
+            // Converts the tourian save station into a map station
+            WriteTourianMapStation();
         }
+    }
+
+    private void WriteMiniMapPalettes(World world)
+    {
+        // Write new palettes for the minimap for use with map randomization
+        Write((SNES)0xB6F000 + 0x42, [0xCC, 0x5D]); // Light blue
+        Write((SNES)0xB6F000 + 0x82, [0xE5, 0x44]); // Dark blue
+        Write((SNES)0xB6F000 + 0xA2, [0xDE, 0x3A]); // Light orange
+        Write((SNES)0xB6F000 + 0xE2, [0x55, 0x52]); // Light pink
     }
 
     private void WriteBuffedDrops(World world)
@@ -606,15 +624,29 @@ public class Rom : GameRom
                 0x8D, 0x10, 0x0B,
             };
 
-            var door = world.JsonData.RoomGeometries.SelectMany(r => r.doors).Where(d => d.entrance_ptr == toPtr!.Value).FirstOrDefault();
-            if (door?.exit_ptr != null)
+            var exitRoom = world.JsonData.RoomGeometries.Where(r => r.doors.Any(d => d.entrance_ptr == toPtr)).FirstOrDefault();
+            var exitDoorIdx = exitRoom?.doors.Select((d, idx) => (d, idx)).Where(d => d.d.entrance_ptr == toPtr).FirstOrDefault().idx;
+
+            var mapConnIdx = world.Map!.conn_to_room_id
+                .Select((roomId, index) => new { roomId, index })
+                .FirstOrDefault(x => x.roomId == exitRoom?.room_id && world.Map.conn_to_door_id[x.index] == exitDoorIdx)
+                ?.index ?? -1;
+
+            if (mapConnIdx == -1)
             {
-                var exitPtr = door!.exit_ptr!.Value;
-                asmPtr = WriteExtraDoorAsm(world, exitPtr & 0xFFFF, asmPtr, asm.ToArray());
-            } else
-            {
-                Console.WriteLine($"Warning: Could not find door geometry for sand entrance with toPtr {toPtr:X4}, skipping writing clamp ASM.");
+                Console.WriteLine($"Warning: Failed to find map connection for sand entrance door ptr {toPtr:X4}, skipping clamp ASM for this room.");
+                continue;
             }
+
+            var entranceRoomId = world.Map!.conn_from_room_id[mapConnIdx];
+            var entranceDoorId = world.Map!.conn_from_door_id[mapConnIdx];
+
+            var entranceRoom = world.JsonData.RoomGeometries.Where(r => r.room_id == entranceRoomId).FirstOrDefault();
+            var entranceDoorExitPtr = world.JsonData.RoomGeometries.Where(r => r.room_id == entranceRoomId).First().doors[entranceDoorId].exit_ptr;
+
+            Console.WriteLine($"Writing sand entrance clamp ASM to outgoing ptr {entranceDoorExitPtr:X4} for door ptr {toPtr:X4} in room {exitRoom?.name} (room ID {exitRoom?.room_id}) coming from room {entranceRoom?.name} (room ID {entranceRoom?.room_id})");
+
+            asmPtr = WriteExtraDoorAsm(world, entranceDoorExitPtr!.Value & 0xFFFF, asmPtr, asm.ToArray());
 
         }
 
@@ -718,14 +750,14 @@ public class Rom : GameRom
 
                 tileBytes[1] = (byte)((tileBytes[1] | ((palette >> 8) & 0x1F)));
 
-                WriteMapTile(mapArea, (offsetX + tile.Coords[0]), (offsetY + tile.Coords[1]) + 1, tileBytes);
+                WriteMapTile(mapArea, (offsetX + tile.Coords[0]), (offsetY + tile.Coords[1]), tileBytes);
                 if (tile.Interior == TileInterior.MapStation)
                 {
-                    mapStations.Add((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1] + 1));
+                    mapStations.Add((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1]));
                 }
             }
 
-            Write((Address)(roomGeometry.rom_address + 2), [(byte)offsetX, (byte)offsetY]);
+            Write((Address)(roomGeometry.rom_address + 2), [(byte)(offsetX + MAP_X_OFFSET), (byte)(offsetY + MAP_Y_OFFSET - 1)]);
 
             // Write to the new "map area" index what area this room belongs to on the map
             var roomHeader = world.JsonData.RoomHeaders.First(r => (r.Address & 0xFFFF) == (roomGeometry.rom_address & 0xFFFF));
@@ -760,6 +792,9 @@ public class Rom : GameRom
             5 => 0xB5D000,
             _ => throw new Exception("Invalid map area")
         };
+
+        x += MAP_X_OFFSET;
+        y += MAP_Y_OFFSET;
 
         Write((SNES)(areaAddress + (((x % 32) * 2 + y * 64) + (x / 32) * 0x800)), mapTileData);
     }
@@ -886,8 +921,8 @@ public class Rom : GameRom
                 var roomMapArea = world.Map!.room_area[roomMapIdx];
 
                 // Offset by door coordinates
-                var x = roomMapX + (doorGeometry?.x ?? 0);
-                var y = roomMapY + (doorGeometry?.y ?? 0) + 1;
+                var x = roomMapX + (doorGeometry?.x ?? 0) + MAP_X_OFFSET;
+                var y = roomMapY + (doorGeometry?.y ?? 0) + MAP_Y_OFFSET;
 
                 // Offset by door orientation
                 var (dx, dy) = doorGeometry!.direction switch
@@ -923,7 +958,7 @@ public class Rom : GameRom
         {
             foreach (var (a, x, y) in areaGroup)
             {
-                areaDecoInstructions[a].Add((mapInstruction, x, y));
+                areaDecoInstructions[a].Add((mapInstruction, x + MAP_X_OFFSET, y + MAP_Y_OFFSET));
             }
         }
 
@@ -1108,6 +1143,178 @@ public class Rom : GameRom
         Write((SNES)(0x8F0000 + _plmTableOffset), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
     }
 
+    // Builds a door header entry
+    private byte[] BuildDoorData(ushort roomHeader, byte[] doorProps, ushort distance = 0x8000, ushort asmPtr = 0x0000)
+    {
+        if (doorProps == null || doorProps.Length != 6)
+        {
+            throw new ArgumentException("doorProps must be 6 bytes");
+        }
+
+        var buf = new List<byte>(14);
+        buf.AddRange(UshortBytes(roomHeader));
+        buf.AddRange(doorProps);
+        buf.AddRange(UshortBytes(distance));
+        buf.AddRange(UshortBytes(asmPtr));
+        return buf.ToArray();
+    }
+
+    // Builds a door out list entry table
+    private byte[] BuildDoorList(params ushort[] doorPtrs)
+    {
+        var buf = new List<byte>(2 * doorPtrs.Length);
+        foreach (var p in doorPtrs)
+        {
+            buf.AddRange(UshortBytes(p));
+        }
+        return [.. buf];
+    }
+
+
+    // Builds a PLM list entry table
+    private byte[] BuildPlmList(params PlmEntry[] entries)
+    {
+        var buf = new List<byte>(entries.Length * 6 + 2);
+        foreach (var e in entries)
+        {
+            buf.AddRange(UshortBytes(e.Id));
+            buf.Add(e.X); buf.Add(e.Y);
+            buf.AddRange(UshortBytes(e.Var));
+        }
+        buf.AddRange(UshortBytes(0x0000));
+        return [..buf];
+    }
+
+
+    // Default door properties for refill/map/save room door replacement
+    private static byte[] PropsIn(OriginalDoorPosition dir) =>
+        dir == OriginalDoorPosition.Left ? [0x40, 0x05, 0x0E, 0x06, 0x00, 0x00]
+                                         : [0x40, 0x04, 0x01, 0x06, 0x00, 0x00];
+    private static byte[] PropsOut(OriginalDoorPosition dir) =>
+        dir == OriginalDoorPosition.Left ? [0x40, 0x04, 0x0E, 0x06, 0x00, 0x00]
+                                         : [0x40, 0x05, 0x01, 0x06, 0x00, 0x00];
+
+    private void PatchRoomHeader(int roomHeaderLong, ushort doorList, int levelDataPtr, ushort plmList)
+    {
+        Write((SNES)(roomHeaderLong + 0x09), UshortBytes(doorList));
+        Write((SNES)(roomHeaderLong + 0x0D), UlongBytes(levelDataPtr));
+        Write((SNES)(roomHeaderLong + 0x21), UshortBytes(plmList));
+    }
+
+    /// Replace a MAP room
+    public void ReplaceMapRoom(
+        int origRoomHeaderLong, ushort origDoorPtr,
+        OriginalDoorPosition direction, int levelDataPtr = 0xDEE000,
+        byte bank83 = 0x83, byte bank8F = 0x8F)
+    {
+        ushort roomHeader = (ushort)(origRoomHeaderLong);
+
+        // Door data
+        var inBlob = BuildDoorData(roomHeader, PropsIn(direction));
+        var outBlob = BuildDoorData(roomHeader, PropsOut(direction));
+        int doorStart = _fsm.Alloc(bank83, inBlob.Length + outBlob.Length, 2);
+        Write((SNES)(doorStart), inBlob);
+        Write((SNES)(doorStart + inBlob.Length), outBlob);
+        ushort doorPtr = (ushort)(doorStart + inBlob.Length);
+
+        // Door list (order depends on direction)
+        var doorList = direction == OriginalDoorPosition.Left
+            ? BuildDoorList(origDoorPtr, doorPtr)
+            : BuildDoorList(doorPtr, origDoorPtr);
+        int doorListStart = _fsm.Alloc(bank8F, doorList.Length, 2);
+        Write((SNES)(doorListStart), doorList);
+        ushort doorListPtr = (ushort)(doorListStart);
+
+        // PLMs: map station
+        var plms = BuildPlmList(new PlmEntry(0xB6D3, 0x08, 0x0A, 0x8000));
+        int plmStart = _fsm.Alloc(bank8F, plms.Length, 2);
+        Write((SNES)(plmStart), plms);
+        ushort plmList = (ushort)(plmStart);
+
+        PatchRoomHeader(origRoomHeaderLong, doorListPtr, levelDataPtr, plmList);
+    }
+
+    /// Replace a REFILL room (double-door)
+    public void ReplaceRefillRoom(
+        int origRoomHeaderLong, ushort origDoorPtr,
+        OriginalDoorPosition direction, int levelDataPtr = 0xCE8FA6,
+        byte bank83 = 0x83, byte bank8F = 0x8F)
+    {
+        ushort roomHeader = (ushort)(origRoomHeaderLong);
+
+        var inBlob = BuildDoorData(roomHeader, PropsIn(direction));
+        var outBlob = BuildDoorData(roomHeader, PropsOut(direction));
+        int doorStart = _fsm.Alloc(bank83, inBlob.Length + outBlob.Length, 2);
+        Write((SNES)(doorStart), inBlob);
+        Write((SNES)(doorStart + inBlob.Length), outBlob);
+        ushort doorPtr = (ushort)(doorStart + inBlob.Length);
+
+        var doorList = direction == OriginalDoorPosition.Left
+            ? BuildDoorList(origDoorPtr, doorPtr)
+            : BuildDoorList(doorPtr, origDoorPtr);
+        int doorListStart = _fsm.Alloc(bank8F, doorList.Length, 2);
+        Write((SNES)(doorListStart), doorList);
+        ushort doorListPtr = (ushort)(doorListStart);
+
+        // PLMs: refill station
+        var plms = BuildPlmList(new PlmEntry(0xB6DF, 0x07, 0x0A, 0x0048));
+        int plmStart = _fsm.Alloc(bank8F, plms.Length, 2);
+        Write((SNES)(plmStart), plms);
+        ushort plmList = (ushort)(plmStart);
+
+        PatchRoomHeader(origRoomHeaderLong, doorListPtr, levelDataPtr, plmList);
+    }
+
+    /// Replace a SAVE room
+    public void ReplaceSaveRoom(
+        int origRoomHeaderLong, ushort origDoorPtr,
+        OriginalDoorPosition direction, int levelDataPtr = 0xCE9EF6,
+        byte bank83 = 0x83, byte bank8F = 0x8F)
+    {
+        ushort roomHeader = (ushort)(origRoomHeaderLong);
+
+        var inBlob = BuildDoorData(roomHeader, PropsIn(direction));
+        var outBlob = BuildDoorData(roomHeader, PropsOut(direction));
+        int doorStart = _fsm.Alloc(bank83, inBlob.Length + outBlob.Length, 2);
+        Write((SNES)(doorStart), inBlob);
+        Write((SNES)(doorStart + inBlob.Length), outBlob);
+        ushort doorPtr = (ushort)(doorStart + inBlob.Length);
+
+        var doorList = direction == OriginalDoorPosition.Left
+            ? BuildDoorList(origDoorPtr, doorPtr)
+            : BuildDoorList(doorPtr, origDoorPtr);
+        int doorListStart = _fsm.Alloc(bank8F, doorList.Length, 2);
+        Write((SNES)(doorListStart), doorList);
+        ushort doorListPtr = (ushort)(doorListStart);
+
+        // PLMs: save station
+        var plms = BuildPlmList(new PlmEntry(0xB76F, 0x07, 0x0B, 0x0001));
+        int plmStart = _fsm.Alloc(bank8F, plms.Length, 2);
+        Write((SNES)(plmStart), plms);
+        ushort plmList = (ushort)(plmStart);
+
+        PatchRoomHeader(origRoomHeaderLong, doorListPtr, levelDataPtr, plmList);
+    }
+
+    /// Patch the tourian save station into a map station
+    public void WriteTourianMapStation(bool singleDoor = true)
+    {
+        int roomHeaderPtr = 0x8FDF1B;
+        ushort origDoorPtr = 0xAB40;
+
+        if (singleDoor == false)
+        {
+            // Replace this room with a double-door map station
+            ReplaceMapRoom(roomHeaderPtr, origDoorPtr, OriginalDoorPosition.Left);
+        }
+        else
+        {
+            // Switch the level data and PLM to the crateria map station
+            int mapRoomLevelDataPtr = 0xCE86BD;
+            int mapRoomPlmPtr = 0x8444;
+            PatchRoomHeader(roomHeaderPtr, 0xDF42, mapRoomLevelDataPtr, (ushort)mapRoomPlmPtr);
+        }
+    }
 
     static class KeycardPlaque
     {
@@ -1154,10 +1361,110 @@ public class Rom : GameRom
         public const ushort NeverDoor = 0x8000;
     }
 
+    public readonly struct PlmEntry
+    {
+        public readonly ushort Id;
+        public readonly byte X;
+        public readonly byte Y;
+        public readonly ushort Var;
+        public PlmEntry(ushort id, byte x, byte y, ushort var) { Id = id; X = x; Y = y; Var = var; }
+    }
+
+    public enum OriginalDoorPosition : int
+    {
+        Left = 0,
+        Right = 1,
+    }
+
     private static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
+
+    // Gets a 24-bit SNES address in little-endian format
+    private static byte[] UlongBytes(int value) => [ (byte)(value & 0xFF), (byte)((value >> 8) & 0xFF), (byte)((value >> 16) & 0xFF) ];
 
     private static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
 
     private static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
+}
+
+public sealed class FreeSpaceManager
+{
+    private sealed class Segment
+    {
+        public int Start;
+        public int End;
+        public Segment(int s, int e) { Start = s; End = e; }
+    }
+
+    private readonly Dictionary<byte, List<Segment>> _free = new();
+
+    public FreeSpaceManager()
+    {
+        // Default free space configuration
+        AddRange(0x83B100, 0x83B2FF);
+        AddRange(0x8FF000, 0x8FF1FF);
+    }
+
+    public void AddRange(int startLong, int endLong)
+    {
+        if (startLong >= endLong) return;
+        byte b0 = (byte)((startLong >> 16) & 0xFF);
+        byte b1 = (byte)(((endLong - 1) >> 16) & 0xFF);
+        if (b0 != b1) throw new ArgumentException("Free range must be in a single bank.");
+
+        if (!_free.TryGetValue(b0, out var list))
+            _free[b0] = list = new List<Segment>();
+
+        list.Add(new Segment(startLong, endLong));
+        Coalesce(list);
+    }
+
+    public int Alloc(byte bank, int size, int alignment = 2)
+    {
+        if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
+        if (alignment <= 0) alignment = 1;
+
+        if (!_free.TryGetValue(bank, out var list) || list.Count == 0)
+            throw new InvalidOperationException($"No free space configured in bank ${bank:X2}");
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            var seg = list[i];
+            int alignedStart = Align(seg.Start, alignment);
+            if (alignedStart + size <= seg.End)
+            {
+                int allocStart = alignedStart;
+                int allocEnd = allocStart + size;
+
+                var pieces = new List<Segment>();
+                if (seg.Start < allocStart) pieces.Add(new Segment(seg.Start, allocStart));
+                if (allocEnd < seg.End) pieces.Add(new Segment(allocEnd, seg.End));
+
+                list.RemoveAt(i);
+                if (pieces.Count > 0) list.InsertRange(i, pieces);
+                Console.WriteLine($"Allocated {size} bytes (align {alignment}) in bank ${bank:X2} at ${allocStart:X6}");
+                return allocStart;
+            }
+        }
+
+        throw new InvalidOperationException($"Insufficient free space in bank ${bank:X2} for {size} bytes (align {alignment}).");
+    }
+
+    private static int Align(int v, int a) => ((v + (a - 1)) / a) * a;
+
+    private static void Coalesce(List<Segment> list)
+    {
+        list.Sort((a, b) => a.Start.CompareTo(b.Start));
+        for (int i = 1; i < list.Count;)
+        {
+            var prev = list[i - 1];
+            var cur = list[i];
+            if (prev.End >= cur.Start)
+            {
+                prev.End = Math.Max(prev.End, cur.End);
+                list.RemoveAt(i);
+            }
+            else i++;
+        }
+    }
 }

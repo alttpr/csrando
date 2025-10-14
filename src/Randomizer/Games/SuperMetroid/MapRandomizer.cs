@@ -29,6 +29,8 @@ public class MapRandomizer
             return;
         }
 
+        var mapInfo = new MapInfo(map, _reader.RoomGeometries);
+
         var connections = CreateConnections(map);
 
         (string, string)[] keepDoors = [
@@ -56,6 +58,7 @@ public class MapRandomizer
 
         _reader.Connections = [new ConnectionCollection(connections.ToArray())];
         _world.Map = map;
+        _world.MapInfo = mapInfo;
     }
 
     private IEnumerable<Connection> CreateConnections(Map map)
