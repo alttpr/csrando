@@ -93,11 +93,16 @@ DefeatBlind:
     sprite: "Blind"
 DefeatKholdstare:
   - name: "Kholdstare's Shell"
-    position: { x: 0x06, y: 0x04, z: 0x00 }
+    position: { x: 0x07, y: 0x05, z: 0x00 }
     sprite: "KholdstareShell"
-    # kholdstare's shell on the priority upper layer
-    priority_layer: 0x215
+    lower_layer:
+      # Kholdstare's Shell
+      - id: 0x215
+        x: -3
+        y: -2
     blkset: 0x0B
+    bg2prop: 0xE0
+    floor2: 0x0E
   - name: "Falling Ice"
     position: { x: 0x07, y: 0x05, z: 0x00 }
     sprite: "FallingIce"
@@ -112,9 +117,14 @@ DefeatTrinexx:
   - name: "Trinexx"
     position: { x: 0x07, y: 0x05, z: 0x00 }
     sprite: "Trinexx"
-    # trinexx' shell on the priority upper layer
-    priority_layer: 0x272
+    lower_layer:
+      # Trinexx' Shell
+      - id: 0x272
+        x: -3
+        y: -4
     blkset: 0x0D
+    bg2prop: 0x60
+    floor2: 0x0E
   - name: "Trinexx (Fire Head)"
     position: { x: 0x07, y: 0x05, z: 0x00 }
     sprite: "TrinexxHeadFire"

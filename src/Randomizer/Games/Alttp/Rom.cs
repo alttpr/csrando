@@ -1821,7 +1821,7 @@ public sealed class Rom : GameRom
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
     }
 
-    public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets, Dictionary<int, byte> blksetChanges)
+    public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets, RoomHeaderPatches roomHeaderChanges)
     {
         // full room headers (roomheaders.asm)
         // 32 bytes per entry, offset 0x10 for the 4 sprite sheet ids
@@ -1829,8 +1829,19 @@ public sealed class Rom : GameRom
         for (int i = 0; i < spriteSheets.Length / 4; i++)
         {
             Write((SNES)(0xB58000 + (i * 32) + 0x10), [spriteSheets[(i * 4) + 0], spriteSheets[(i * 4) + 1], spriteSheets[(i * 4) + 2], spriteSheets[(i * 4) + 3]]);
-            if (blksetChanges.TryGetValue(i, out byte blkset))
-                Write((SNES)(0xB58000 + (i * 32) + 0x2), [blkset]);
+            if (roomHeaderChanges.TryGet(i, out var roomHeaderPatch))
+            {
+                if (roomHeaderPatch.Background2Properties.HasValue)
+                    Write((SNES)(0xB58000 + (i * 32) + 0x0), [roomHeaderPatch.Background2Properties.Value]);
+                if (roomHeaderPatch.BlockSet.HasValue)
+                    Write((SNES)(0xB58000 + (i * 32) + 0x2), [roomHeaderPatch.BlockSet.Value]);
+                if (roomHeaderPatch.BackgroundMove.HasValue)
+                    Write((SNES)(0xB58000 + (i * 32) + 0x4), [roomHeaderPatch.BackgroundMove.Value]);
+                if (roomHeaderPatch.Effect1.HasValue)
+                    Write((SNES)(0xB58000 + (i * 32) + 0x5), [roomHeaderPatch.Effect1.Value]);
+                if (roomHeaderPatch.Effect2.HasValue)
+                    Write((SNES)(0xB58000 + (i * 32) + 0x6), [roomHeaderPatch.Effect2.Value]);
+            }
         }
 
         // SNES table start _09D62E (RoomData_SpritePointers)
@@ -1896,9 +1907,7 @@ public sealed class Rom : GameRom
         Write((SNES)0x00DB97, spriteSheetSets);
     }
 
-    // TODO: this is currently limited to changing the priority layer (sometimes called layer 3; also background layer 2 to confuse everyone) of the room tile data.
-    //       it might be more useful to rewrite the full rooms at some point, and possibly even relocate them to rando space.
-    public void WriteUnderworldRoomsPriorityLayer(Dictionary<int, byte[]> priorityLayerChanges)
+    public void WriteUnderworldRoomsChanges(RoomObjectPatches roomPatches)
     {
         // RoomData_ObjectDataPointers
         var roomDataTiles = (SNES)0x1F8000;
@@ -1912,7 +1921,7 @@ public sealed class Rom : GameRom
         var unusedData = new List<(int Start, int Length)>();
         var newData = new List<(int RoomId, byte[] Data, int DoorStart)>();
 
-        foreach (var (roomId, priorityLayer) in priorityLayerChanges)
+        foreach (var roomId in roomPatches.Rooms)
         {
             var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId);
             if (roomDataHeader == null)
@@ -1927,14 +1936,27 @@ public sealed class Rom : GameRom
             var oldDataLength = 2 + upperLayer.Length + 2 + lowerLayer.Length + 2 + priorityLayer.Length + 2 + doorData.Length + 2;
             int roomDataStart = roomDataHeader.TilesPtr;
 
-            // we're here to remove lower layer data and replace it with priority data to make Kholdstare/Trinexx shells work.
-            lowerLayer = [];
+            byte layout = roomDataHeader.Layout; // wall layout of the room quad
+            byte floor1 = roomDataHeader.Floor1; // upper/lower floor tile pattern
+            byte floor2 = roomDataHeader.Floor2;
+            if (roomPatches.TryGet(roomId, out var roomPatch))
+            {
+                if (roomPatch.Layout is { } layoutOverride)
+                    layout = layoutOverride;
+                if (roomPatch.Floor1 is { } floor1Override)
+                    floor1 = floor1Override;
+                if (roomPatch.Floor2 is { } floor2Override)
+                    floor2 = floor2Override;
+                if (roomPatch.UpperLayer is { } upperLayerOverride)
+                    upperLayer = upperLayerOverride;
+                if (roomPatch.LowerLayer is { } lowerLayerOverride)
+                    lowerLayer = lowerLayerOverride;
+                if (roomPatch.PriorityLayer is { } priorityLayerOverride)
+                    priorityLayer = priorityLayerOverride;
+            }
 
             var doorStartRel = roomDataHeader.DoorPtr - roomDataHeader.TilesPtr;
-
-            byte floor = (byte)((roomDataHeader.Floor2 << 4) | roomDataHeader.Floor1); // upper/lower floor tile pattern
-            byte layout = (byte)(roomDataHeader.Layout << 2); // wall layout of the room quad
-            byte[] newRoomData = [floor, layout, .. upperLayer, 0xFF, 0xFF, .. lowerLayer, 0xFF, 0xFF, .. priorityLayer, 0xF0, 0xFF, .. doorData, 0xFF, 0xFF];
+            byte[] newRoomData = [(byte)((floor2 << 4) | floor1), (byte)(layout << 2), .. upperLayer, 0xFF, 0xFF, .. lowerLayer, 0xFF, 0xFF, .. priorityLayer, 0xF0, 0xFF, .. doorData, 0xFF, 0xFF];
             int newDoorStartRel = newRoomData.Length - doorData.Length - 2;
 
             if (newRoomData.Length <= oldDataLength)
@@ -1951,7 +1973,7 @@ public sealed class Rom : GameRom
             {
                 _logger.LogDebug("Queuing Room 0x{RoomId:X02} for relocation, doesn't fit 0x{RoomDataAddress:X06} (0x{NewSize:X04} > 0x{AvailableSize:X04} bytes)",
                     roomId, roomDataStart, newRoomData.Length, oldDataLength);
-                // we need more space now (additional layer2 data), queue up for later
+                // we need more space now (additional object data), queue up for later
                 unusedData.Add((roomDataStart, oldDataLength));
                 newData.Add((roomId, newRoomData, newDoorStartRel));
             }

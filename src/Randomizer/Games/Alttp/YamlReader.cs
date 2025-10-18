@@ -367,11 +367,40 @@ public class YamlBossSprite
     public required Position Position { get; set; }
     [YamlMember(Alias = "sprite")]
     public required string Sprite { get; set; }
-    // extra data for the priority upper layer (sometimes called layer 3, or background layer 2)
-    [YamlMember(Alias = "priority_layer")]
-    public ushort? PriorityLayer { get; set; }
+    [YamlMember(Alias = "lower_layer")]
+    public YamlRoomObjectPatch[]? LowerLayer { get; set; }
     [YamlMember(Alias = "blkset")]
     public byte? Blkset { get; set; }
+    [YamlMember(Alias = "bg2prop")]
+    public byte? BG2Prop { get; set; }
+    [YamlMember(Alias = "floor1")]
+    public byte? Floor1 { get; set; }
+    [YamlMember(Alias = "floor2")]
+    public byte? Floor2 { get; set; }
+}
+public class YamlRoomObjectPatch
+{
+    [YamlMember(Alias = "id")]
+    public required ushort ObjectId { get; set; }
+    [YamlMember(Alias = "x")]
+    public int OffsetX { get; set; }
+    [YamlMember(Alias = "y")]
+    public int OffsetY { get; set; }
+
+    [return: NotNullIfNotNull(nameof(left))]
+    [return: NotNullIfNotNull(nameof(right))]
+    public static Position? operator +(Position? left, YamlRoomObjectPatch? right)
+    {
+        if (left is null && right is null)
+            return null;
+
+        return new Position
+        {
+            X = (left?.X).GetValueOrDefault() + (right?.OffsetX).GetValueOrDefault(),
+            Y = (left?.Y).GetValueOrDefault() + (right?.OffsetY).GetValueOrDefault(),
+            Z = left?.Z,
+        };
+    }
 }
 
 public class TileRoomPattern
