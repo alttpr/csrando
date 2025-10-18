@@ -213,10 +213,15 @@ public class YamlReader
         [YamlMember(Alias = "room")] public int Room { get; set; }
         [YamlMember(Alias = "ptr")] public int Ptr { get; set; }
         [YamlMember(Alias = "tiles_ptr")] public int TilesPtr { get; set; }
-        [YamlMember(Alias = "tiles_data")] public List<byte> TilesData { get; set; } = new();
+        [YamlMember(Alias = "floor1")] public byte Floor1 { get; set; }
+        [YamlMember(Alias = "floor2")] public byte Floor2 { get; set; }
+        [YamlMember(Alias = "layout")] public byte Layout { get; set; }
+        [YamlMember(Alias = "upper_layer")] public byte[] UpperLayer { get; set; } = [];
+        [YamlMember(Alias = "lower_layer")] public byte[] LowerLayer { get; set; } = [];
+        [YamlMember(Alias = "priority_layer")] public byte[] PriorityLayer { get; set; } = [];
         [YamlMember(Alias = "door_ptr")] public int DoorPtr { get; set; }
         [YamlMember(Alias = "door_ptr_entry_addr")] public int DoorPtrEntryAddress { get; set; }
-        [YamlMember(Alias = "door_data")] public List<byte> DoorData { get; set; } = new();
+        [YamlMember(Alias = "door_data")] public byte[] DoorData { get; set; } = [];
     }
     public class GameEnemyData
     {

@@ -1,12 +1,15 @@
 ﻿namespace Randomizer.Games.Alttp;
 
 using System.Buffers.Binary;
+using Microsoft.Extensions.Logging;
 using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
 public sealed class Rom : GameRom
 {
+    private static readonly ILogger _logger = ClassLogger.Get();
+
     private const byte NOP = 0xEA;
 
     private readonly Text _text;
@@ -1902,7 +1905,8 @@ public sealed class Rom : GameRom
         // RoomData_DoorDataPointers
         var roomDataDoors = (SNES)0x1F83C0;
         // space used by door rando to store modified rooms that don't fit anywhere else (0x8000)
-        var freeRoomSpace = (SNES)0x378000;
+        var freeRoomSpaceBegin = (SNES)0x378000;
+        var freeRoomSpace = freeRoomSpaceBegin;
 
         Span<byte> data = stackalloc byte[4];
         var unusedData = new List<(int Start, int Length)>();
@@ -1916,24 +1920,27 @@ public sealed class Rom : GameRom
                 throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
             }
 
-            var roomData = roomDataHeader.TilesData.ToArray();
+            var upperLayer = roomDataHeader.UpperLayer; // usually floor/wall data
+            var lowerLayer = roomDataHeader.LowerLayer; // usually background under the floor
+            var priorityLayer = roomDataHeader.PriorityLayer; // upper priority layer, overwrites the upper layer if something draws over both upper/lower
+            var doorData = roomDataHeader.DoorData;
+            var oldDataLength = 2 + upperLayer.Length + 2 + lowerLayer.Length + 2 + priorityLayer.Length + 2 + doorData.Length + 2;
             int roomDataStart = roomDataHeader.TilesPtr;
 
-            int layer2Start = 2;
-            // skip floor layout/upper layer
-            while (layer2Start + 1 < roomData.Length && !(roomData[layer2Start + 0] == 0xFF && roomData[layer2Start + 1] == 0xFF))
-                layer2Start += 3;
-            layer2Start += 2;
+            // we're here to remove lower layer data and replace it with priority data to make Kholdstare/Trinexx shells work.
+            lowerLayer = [];
 
-            var doorData = roomDataHeader.DoorData.ToArray();
-            var dataLength = roomData.Length + doorData.Length;
             var doorStartRel = roomDataHeader.DoorPtr - roomDataHeader.TilesPtr;
 
-            byte[] newRoomData = [.. roomData[..layer2Start], 0xFF, 0xFF, .. priorityLayer, 0xF0, 0xFF, .. doorData];
-            int newDoorStartRel = layer2Start + priorityLayer.Length + 2;
+            byte floor = (byte)((roomDataHeader.Floor2 << 4) | roomDataHeader.Floor1); // upper/lower floor tile pattern
+            byte layout = (byte)(roomDataHeader.Layout << 2); // wall layout of the room quad
+            byte[] newRoomData = [floor, layout, .. upperLayer, 0xFF, 0xFF, .. lowerLayer, 0xFF, 0xFF, .. priorityLayer, 0xF0, 0xFF, .. doorData, 0xFF, 0xFF];
+            int newDoorStartRel = newRoomData.Length - doorData.Length - 2;
 
-            if (newRoomData.Length <= dataLength)
+            if (newRoomData.Length <= oldDataLength)
             {
+                _logger.LogDebug("Updated Room 0x{RoomId:X02} in-place at 0x{RoomDataAddress:X06} (0x{NewSize:X04} <= 0x{AvailableSize:X04} bytes)",
+                    roomId, roomDataStart, newRoomData.Length, oldDataLength);
                 // we got enough space; write back to the old location
                 Write((SNES)roomDataStart, newRoomData);
                 // patch the door data start; it is right after the room data
@@ -1942,8 +1949,10 @@ public sealed class Rom : GameRom
             }
             else
             {
+                _logger.LogDebug("Queuing Room 0x{RoomId:X02} for relocation, doesn't fit 0x{RoomDataAddress:X06} (0x{NewSize:X04} > 0x{AvailableSize:X04} bytes)",
+                    roomId, roomDataStart, newRoomData.Length, oldDataLength);
                 // we need more space now (additional layer2 data), queue up for later
-                unusedData.Add((roomDataStart, dataLength));
+                unusedData.Add((roomDataStart, oldDataLength));
                 newData.Add((roomId, newRoomData, newDoorStartRel));
             }
         }
@@ -1964,6 +1973,9 @@ public sealed class Rom : GameRom
                 freeRoomSpace += newRoomData.Length;
             }
 
+            _logger.LogDebug("Relocated Room 0x{RoomId:X02} to 0x{RoomDataAddress:X06} (0x{NewSize:X04} <= 0x{AvailableSize:X04} bytes)",
+                roomId, roomDataStart, newRoomData.Length,
+                unusedSpot.Length > 0 ? unusedSpot.Length : (0x8000 - (freeRoomSpaceBegin.Value - freeRoomSpace.Value + newRoomData.Length)));
             Write((SNES)roomDataStart, newRoomData);
             // patch the room/tile data start
             BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)ToFastRom(roomDataStart));
