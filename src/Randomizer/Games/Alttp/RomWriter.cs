@@ -1,5 +1,7 @@
 ﻿namespace Randomizer.Games.Alttp;
 
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
@@ -894,6 +896,13 @@ public static class RomWriter
         rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
     }
 
+    private static readonly Dictionary<int /* RoomId */, string /* DontClearIfBossIsThere */> _lowerLayerClear = new()
+    {
+        // Turtle Rock boss room (has Trinexx' shell on lower layer)
+        { 0xA4, "DefeatTrinexx" },
+        // Ice Palace boss room (has Kholdstare's shell on lower layer)
+        { 0xDE, "DefeatKholdstare" },
+    };
     /// <summary>
     /// Write Room headers, and room data for all enemies in game.
     /// </summary>
@@ -941,8 +950,8 @@ public static class RomWriter
             outputBytes.Add(0xFF);
         }
 
-        var priorityLayerChanges = new Dictionary<int, byte[]>();
-        var blksetChanges = new Dictionary<int, byte>();
+        var headerChanges = new RoomHeaderPatches();
+        var roomChanges = new RoomObjectPatches();
         var bossData = YamlReader.LoadBossSprites();
         foreach (var boss in world.GetLocationsOfType(VertexType.Boss))
         {
@@ -953,36 +962,62 @@ public static class RomWriter
             // no need to modify the room if it's the vanilla boss.
             if (bossItem == vanillaBoss)
                 continue;
+
             var bossSprites = bossData[bossItem];
-            var layer2Requirements = bossSprites
-                .Where(s => s.PriorityLayer.HasValue)
-                .SelectMany(s => makePriorityLayerValue(s, boss))
-                .ToArray();
-            priorityLayerChanges[roomId] = layer2Requirements;
-            var blksetRequirements = bossSprites
-                .Where(s => s.Blkset.HasValue)
-                .Select(s => s.Blkset!.Value)
-                .Distinct()
-                .ToArray();
-            if (blksetRequirements is [byte blkset, ..])
+            foreach (var bossSprite in bossSprites)
             {
-                blksetChanges[roomId] = blkset;
+                if (bossSprite.LowerLayer is { } lowerLayerPatches)
+                    roomChanges[roomId].LowerLayer = lowerLayerPatches.SelectMany(patch => makeObjectLayerValue(patch, bossSprite, boss)).ToArray();
+
+                if (bossSprite.BG2Prop is byte bg2Prop)
+                {
 #if DEBUG
-                if (blksetRequirements.Length > 1)
-                    throw new Exception($"Found {blksetRequirements.Length} different BLKSET changes for {bossItem} ({string.Join(", ", blksetRequirements)}), only one is supported.");
+                    if (headerChanges[roomId].Background2Properties.HasValue && headerChanges[roomId].Background2Properties != bg2Prop)
+                        throw new Exception($"Found second {bg2Prop} BG2PROP change for {bossItem} ({headerChanges[roomId].Background2Properties}) currently set), only one is supported.");
 #endif
+                    headerChanges[roomId].Background2Properties = bg2Prop;
+                }
+                if (bossSprite.Blkset is byte blkset)
+                {
+#if DEBUG
+                    if (headerChanges[roomId].BlockSet.HasValue && headerChanges[roomId].BlockSet != blkset)
+                        throw new Exception($"Found second {blkset} BLKSET change for {bossItem} ({headerChanges[roomId].BlockSet}) currently set), only one is supported.");
+#endif
+                    headerChanges[roomId].BlockSet = blkset;
+                }
+                if (bossSprite.Floor1 is byte floor1)
+                {
+#if DEBUG
+                    if (roomChanges[roomId].Floor1.HasValue && roomChanges[roomId].Floor1 != floor1)
+                        throw new Exception($"Found second {floor1} FLOOR1 change for {bossItem} ({roomChanges[roomId].Floor1}) currently set), only one is supported.");
+#endif
+                    roomChanges[roomId].Floor1 = floor1;
+                }
+                if (bossSprite.Floor2 is byte floor2)
+                {
+#if DEBUG
+                    if (roomChanges[roomId].Floor2.HasValue && roomChanges[roomId].Floor2 != floor2)
+                        throw new Exception($"Found second {floor2} FLOOR2 change for {bossItem} ({roomChanges[roomId].Floor2}) currently set), only one is supported.");
+#endif
+                    roomChanges[roomId].Floor2 = floor2;
+                }
             }
+
+            // we might have to clear the lower layer (if it contains things like Kholdstare's/Trinexx' shell).
+            if (vanillaBoss is "DefeatTrinexx" or "DefeatKholdstare" && roomChanges.TryGet(roomId, out var roomPatch) && roomPatch.LowerLayer != null)
+                roomPatch.LowerLayer = [];
         }
-        rom.WriteUnderworldRoomsPriorityLayer(priorityLayerChanges);
-        static byte[] makePriorityLayerValue(YamlBossSprite sprite, Vertex boss)
+        rom.WriteUnderworldRoomsChanges(roomChanges);
+        static byte[] makeObjectLayerValue(YamlRoomObjectPatch roomObject, YamlBossSprite sprite, Vertex boss)
         {
             var position = boss.RoomOffset + sprite.Position;
             // this is a map16 position (so the actual location is *16)...
             position *= 16;
             // ...but objects are laid out differently, on an 8-based grid.
             position /= 8;
-            // FIXME: khold needs an additional offset, he's not quite in the center of the shell
-            ushort objectId = sprite.PriorityLayer!.Value;
+            // ...which is why we need a little offset to fit Kholdstare into the middle of the shell.
+            position += roomObject;
+            ushort objectId = roomObject.ObjectId;
             return [
                 (byte)(((position.X << 2) & 0xFC) | (objectId & 0x3)),
                 (byte)(((position.Y << 2) & 0xFC) | ((objectId >> 2) & 0x3)),
@@ -990,7 +1025,7 @@ public static class RomWriter
             ];
         }
 
-        rom.WriteUnderworldEnemies([.. outputBytes], outputOffsets, world.SpriteSheets.Underworld, blksetChanges);
+        rom.WriteUnderworldEnemies([.. outputBytes], outputOffsets, world.SpriteSheets.Underworld, headerChanges);
 
         // Overworld
         List<ushort>[] owPointerOffsets = [[], [], []];
@@ -1049,4 +1084,37 @@ public static class RomWriter
         // write new sheet sets
         rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
     }
+}
+
+public sealed class RoomHeaderPatches
+{
+    private readonly ConcurrentDictionary<int /* RoomId */, RoomHeaderPatch> _patches = [];
+    public RoomHeaderPatch this[int roomId] => _patches.GetOrAdd(roomId, _ => new());
+    public bool TryGet(int roomId, [MaybeNullWhen(returnValue: false)] out RoomHeaderPatch roomHeaderPatch) => _patches.TryGetValue(roomId, out roomHeaderPatch);
+    public IEnumerable<int> Rooms => _patches.Keys;
+}
+public sealed class RoomHeaderPatch
+{
+    public byte? Background2Properties { get; set; }
+    public byte? BlockSet { get; set; }
+    public byte? BackgroundMove { get; set; }
+    public byte? Effect1 { get; set; }
+    public byte? Effect2 { get; set; }
+}
+
+public sealed class RoomObjectPatches
+{
+    private readonly ConcurrentDictionary<int /* RoomId */, RoomObjectPatch> _patches = [];
+    public RoomObjectPatch this[int roomId] => _patches.GetOrAdd(roomId, _ => new());
+    public bool TryGet(int roomId, [MaybeNullWhen(returnValue: false)] out RoomObjectPatch roomHeaderPatch) => _patches.TryGetValue(roomId, out roomHeaderPatch);
+    public IEnumerable<int> Rooms => _patches.Keys;
+}
+public sealed class RoomObjectPatch
+{
+    public byte? Layout { get; set; }
+    public byte? Floor1 { get; set; }
+    public byte? Floor2 { get; set; }
+    public byte[]? UpperLayer { get; set; }
+    public byte[]? LowerLayer { get; set; }
+    public byte[]? PriorityLayer { get; set; }
 }
