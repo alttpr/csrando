@@ -1,5 +1,6 @@
 ﻿namespace Randomizer.Games.Alttp;
 
+using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
@@ -946,8 +947,12 @@ public static class RomWriter
         foreach (var boss in world.GetLocationsOfType(VertexType.Boss))
         {
             int roomId = boss.RoomId!.Value;
+            var vanillaBoss = BossShuffler.GetVanillaBoss(boss);
             // FIXME: abusing the allow list to remember the boss item is probably a bad idea...
             string bossItem = boss.Allow!.Single();
+            // no need to modify the room if it's the vanilla boss.
+            if (bossItem == vanillaBoss)
+                continue;
             var bossSprites = bossData[bossItem];
             var layer2Requirements = bossSprites
                 .Where(s => s.PriorityLayer.HasValue)

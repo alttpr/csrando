@@ -29,6 +29,25 @@ internal sealed class BossShuffler : IAlttpWorldModifier
         { "Ganon's Tower - Moldorm - Kill Zone", "DefeatMoldorm" },
     };
 
+    public static string? GetVanillaBoss(Vertex? shuffledBoss)
+    {
+        if (shuffledBoss == null)
+            return null;
+
+        string roomName = shuffledBoss.Name;
+        // this is unlikely to match, but you never know...
+        if (VANILLA_BOSSES.TryGetValue(roomName, out var vanillaBoss))
+            return vanillaBoss;
+        // that's our generated vertex name from PlaceBossItemInLocation
+        if (roomName.EndsWith(" - Boss"))
+        {
+            roomName = roomName[..^" - Boss".Length];
+            if (VANILLA_BOSSES.TryGetValue(roomName, out vanillaBoss))
+                return vanillaBoss;
+        }
+
+        return null;
+    }
     /// <summary>Swap Entrances based on world settings.</summary>
     public void AdjustEdges(World world, PRNG prng)
     {
