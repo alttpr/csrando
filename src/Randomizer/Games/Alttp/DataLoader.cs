@@ -487,7 +487,7 @@ internal static class DataLoader
                 break;
             case StateOption.Inverted:
                 YamlReader.MergeEdges(edgeData, YamlReader.LoadEdges("inverted"));
-                // @todo move these once we have the nodes made
+                // TODO: move these once we have the nodes made
                 edgeData["fixed"].Directed.Add(["start", "Link's House - Bedroom"]);
                 edgeData["fixed"].Directed.Add(["start", "Dark Sanctuary"]);
                 break;

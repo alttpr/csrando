@@ -9,6 +9,6 @@ internal sealed class DoorShuffler : IAlttpWorldModifier
 {
     public void AdjustEdges(World world, PRNG prng)
     {
-        /// @todo implement
+        // TODO: implement
     }
 }

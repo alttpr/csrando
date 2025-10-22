@@ -477,7 +477,7 @@ public class LightWorldTest : InvertedNoGlitchesLogicTests
         ["Waterfall Fairy - Right", true, new string[] { "Flippers", "MoonPearl", "TitansMitt" }],
 
         ["Ganon", false, new string[] {  }],
-        // @todo need to update Ganon Reqs
+        // TODO: need to update Ganon Reqs
         // new object[] { "Ganon", true, new string[] { "MoonPearl", "AgahnimDefeated2" } },
     ];
 

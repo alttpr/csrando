@@ -11,7 +11,7 @@ public sealed class LightWorldTest : OpenOverworldGlitchesLogicTests
     }
 
     public static IEnumerable<object[]> TestData => [
-            // @todo figure out where the boots clip drops one off?
+            // TODO: figure out where the boots clip drops one off?
             // new object[] { "Magic Bat Item", false, new string[] {  } },
             // new object[] { "Magic Bat Item", true, new string[] { "Powder", "PegasusBoots" } },
 

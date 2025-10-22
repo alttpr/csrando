@@ -91,7 +91,7 @@ public sealed class Dialog
                 continue;
 
             // command
-            // @TODO: refactor this to use regex
+            // TODO: refactor this to use regex
             if (lineChars[0] == '{')
             {
                 switch (line.Trim())
