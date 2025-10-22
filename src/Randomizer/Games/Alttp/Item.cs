@@ -3,7 +3,7 @@
 using Randomizer.Graph;
 
 /// <summary>
-/// @todo what item type is the hammer?
+/// TODO: what item type is the hammer?
 /// </summary>
 public enum ItemType
 {

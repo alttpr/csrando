@@ -931,7 +931,7 @@ public static class RomWriter
                 outputBytes.Add(sprite.Id);
                 if (enemy.Item is Item enemyDrop)
                 {
-                    // @todo update this when we can place any item
+                    // TODO: update this when we can place any item
                     outputBytes.Add((byte)(enemyDrop.Type == ItemType.BigKey ? 0xFD : 0xFE));
                     outputBytes.Add(0x00);
                     outputBytes.Add(0xE4);

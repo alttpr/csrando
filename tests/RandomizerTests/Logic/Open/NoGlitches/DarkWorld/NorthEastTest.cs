@@ -51,7 +51,7 @@ public class NorthEastTest : OpenNoGlitchesLogicTests
         ["Pyramid Fairy - Right", true, new string[] { "MoonPearl", "Crystal5", "Crystal6", "AgahnimDefeated", "PowerGlove", "Hookshot", "MagicMirror" }],
         ["Pyramid Fairy - Right", true, new string[] { "MoonPearl", "Crystal5", "Crystal6", "AgahnimDefeated", "Flippers", "Hookshot", "MagicMirror" }],
 
-        // @todo update this
+        // TODO: update this
         ["Ganon", false, new string[] {  }],
     ];
 

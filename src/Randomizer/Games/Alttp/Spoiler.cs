@@ -36,7 +36,7 @@ internal static class Spoiler
             }
         }
 
-        // @todo implement shops
+        // TODO: implement shops
 
         if (config.BossShuffle != BossShuffleOption.None)
         {

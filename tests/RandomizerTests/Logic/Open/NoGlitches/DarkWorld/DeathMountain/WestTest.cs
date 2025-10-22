@@ -4,7 +4,7 @@ namespace RandomizerTests.Logic.Open.NoGlitches.DarkWorld.DeathMountain;
 public class WestTest : OpenNoGlitchesLogicTests
 {
     public static IEnumerable<object[]> TestData => [
-        // @todo update this to handle bottle/magic
+        // TODO: update this to handle bottle/magic
         ["Spike Cave", false, new string[] {  }],
         ["Spike Cave", false, new string[] { "Bottle", "Hammer", "ProgressiveGlove", "Lamp", "Cape" }],
         ["Spike Cave", false, new string[] { "Bottle", "MoonPearl", "ProgressiveGlove", "Lamp", "Cape" }],
