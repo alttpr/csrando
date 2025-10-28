@@ -14,6 +14,7 @@ public sealed class World : Randomizer.Graph.World<Item>
     public JsonReader JsonData { get; set; }
     public List<string> AllowedTechs { get; init; }
     public Map? Map { get; set; }
+    public MapInfo ? MapInfo { get; set; }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
