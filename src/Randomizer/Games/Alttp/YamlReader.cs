@@ -341,6 +341,8 @@ public class YamlSprite
     /// <summary>When set, this sprite is the falling sprite for the one returned here.</summary>
     [YamlMember(Alias = "falling")]
     public string? FallingSpriteFor { get; set; }
+    [YamlMember(Alias = "priority")]
+    public int Priority { get; set; }
 }
 [Flags]
 public enum YamlSpriteFlags

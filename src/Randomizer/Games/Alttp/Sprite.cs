@@ -8,6 +8,7 @@ public record class Sprite(string Name, byte Id)
     public YamlSpriteFlags Flags { get; init; }
     public byte SubType { get; init; }
     public string? FallingSpriteFor { get; init; }
+    public int Priority { get; init; }
 
     public static Sprite Get(string name)
         => _sprites.Value.GetValueOrDefault(name)
@@ -26,6 +27,7 @@ public record class Sprite(string Name, byte Id)
                 SubType = sprite.SubType,
                 DefeatName = sprite.AlternativeName ?? name,
                 FallingSpriteFor = sprite.FallingSpriteFor,
+                Priority = sprite.Priority,
             };
         }
     }

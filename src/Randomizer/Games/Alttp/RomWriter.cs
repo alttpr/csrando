@@ -928,7 +928,8 @@ public static class RomWriter
             // TODO: room 0x86 is empty (so we don't have a data file), but it has the flag set in vanilla
             byte roomOAM = enemyRooms[i].Select(r => r.RoomOAM.GetValueOrDefault()).Concat([(byte)0x00]).Max();
             outputBytes.Add(roomOAM);
-            foreach (var enemy in enemyRooms[i])
+            // prioritize enemies (like bosses) since they might need require OAM slots
+            foreach (var enemy in enemyRooms[i].OrderByDescending(e => e.Sprite!.Priority))
             {
                 var sprite = enemy.Sprite!;
                 outputBytes.Add((byte)(((sprite.SubType & 0x18) << 2)

@@ -65,6 +65,7 @@ Moldorm:
   id: 0x09
   flags: NoPlace
   sheets: [null, null, 0x30, null]
+  priority: 100
 Octorok4: #OCTOROK 4WAY
   id: 0x0A
   flags: Challenge
@@ -487,10 +488,13 @@ ArmosKnight: #ARMOS KNIGHT
   id: 0x53
   flags: NoPlace
   sheets: [null, null, null, 0x1D]
+  # Overlord $07 (ArmosCoordinator) is placed with this one, but Armos Knights come first
+  priority: 101
 Lanmolas:
   id: 0x54
   flags: NoPlace
   sheets: [null, null, null, 0x31]
+  priority: 100
 FireballZora: #ZORA / FIREBALL?
   id: 0x55
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
@@ -666,6 +670,7 @@ Agahnim:
   id: 0x7A
   flags: NoPlace
   sheets: [0x55, 0x3D, 0x42, 0x43]
+  priority: 100
 AgahnimBall: #AGAHNIMS BALLS
   id: 0x7B
   flags: NoPlace
@@ -732,6 +737,8 @@ Mothula:
   flags: NoPlace
   # 0x52/0x53 in slot 3 is for the spikes. because moth spawns them, they're not in data and need to be elsewhere
   sheets: [null, null, 0x38, 0x52]
+  # Overlord $07 (MovingFloor) is placed with this one, but Mothula is first
+  priority: 101
 MothulaBeam: #MOTHULA BEAM
   id: 0x89
   flags: NoPlace
@@ -753,10 +760,12 @@ Arrghus:
   id: 0x8C
   flags: NoPlace
   sheets: [null, null, 0x39, null]
+  priority: 101
 ArrghusSpawn: #ARRGHI
   id: 0x8D
   flags: NoPlace
   sheets: [null, null, 0x39, null]
+  priority: 100
 Terrorpin:
   id: 0x8E
   flags: Challenge
@@ -777,6 +786,7 @@ Helmasaur: #KING HELMASAUR
   id: 0x92
   flags: NoPlace
   sheets: [null, null, 0x3A, 0x3E]
+  priority: 100
 Bumper:
   id: 0x93
   flags: NoDrop
@@ -846,13 +856,16 @@ Kholdstare:
   id: 0xA2
   flags: NoPlace
   sheets: [null, null, 0x3C, null]
+  priority: 100
 KholdstareShell: #KHOLDSTARE SHELL
   id: 0xA3
   flags: NoPlace
+  priority: 102
 FallingIce: #FALLING ICE
   id: 0xA4
   flags: NoDrop
   sheets: [null, null, 0x3C, null]
+  priority: 101
 ZazakBlue: #BLUE ZAZAK
   id: 0xA5
   flags: Challenge
@@ -954,6 +967,7 @@ Vitreous:
   id: 0xBD
   flags: NoPlace
   sheets: [null, null, null, 0x3D]
+  priority: 100
 VitreousSmallEyeball: #VITREOUS SMALL EYE
   id: 0xBE
   flags: NoPlace
@@ -970,6 +984,7 @@ AgahnimCutscene: #CUTSCENE AGAHNIM
   id: 0xC1
   flags: NoPlace
   sheets: [0x55, 0x3D, 0x42, 0x43]
+  priority: 100
 # Boulders: #TODO: does this sprite appear without the overlord?
 #   id: 0xC2 # this belongs to overlord 0xF4
 #   flags: NoPlace, OverworldOnly
@@ -1013,19 +1028,23 @@ Trinexx: #TRINEXX ROCK HEAD
   id: 0xCB
   flags: NoPlace
   sheets: [0x40, null, null, 0x3F]
+  priority: 102
 TrinexxHeadFire: #TRINEXX FIRE HEAD
   id: 0xCC
   flags: NoPlace
   sheets: [0x40, null, null, null]
+  priority: 101
 TrinexxHeadIce: #TRINEXX ICE HEAD
   id: 0xCD
   flags: NoPlace
   sheets: [0x40, null, null, null]
+  priority: 100
 Blind:
   id: 0xCE
   flags: NoPlace
   # 0x2C in slot 1 is blind's laser, which is spawned by blind and not in data
   sheets: [null, 0x2C, 0x3B, null]
+  priority: 100
 Swamola:
   id: 0xCF
   flags: Challenge, NoDrop
@@ -1054,6 +1073,7 @@ Ganon:
   id: 0xD6
   flags: NoPlace
   sheets: [0x21, 0x41, 0x45, 0x33]
+  priority: 100
 GanonInvisible:
   id: 0xD7
   flags: NoPlace
@@ -1187,6 +1207,8 @@ BadSwitchSkullRope: #BAD SWITCH SKULL ROPE
 MovingFloor: #MOVING FLOOR
   id: 0x07
   flags: NoPlace, Overlord
+  # Placed together with Sprite $88 (Mothula), but this one is last
+  priority: 100
 BlobSpawner: #BLOB SPAWNER
   id: 0x08
   flags: NoPlace, Overlord
@@ -1281,6 +1303,8 @@ ArmosCoordinator: #ARMOS COORDINATOR
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [0x1F, null, null, null]
+  # Placed together with Sprite $53 (ArmosKnight), but this one is last
+  priority: 100
 BadSwitchBomb: #BAD SWITCH BOMB
   id: 0x1A
   flags: NoPlace, Overlord
