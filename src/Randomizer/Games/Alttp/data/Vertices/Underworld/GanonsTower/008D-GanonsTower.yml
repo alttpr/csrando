@@ -41,7 +41,7 @@ rooms:
               trophy: "GanonsTowerTileRoomTrophy"
             - name: "Ganon's Tower - Tile Room - Wallmaster"
               position: { x: 0x0f, y: 0x0f, z: 0x00 }
-              sprite: "Wallmaster"
+              sprite: "Wallmaster Overlord"
               trophy: "GanonsTowerTileRoomTrophy"
 
         - name: "Ganon's Tower - Long Torch Puzzle"

@@ -27,7 +27,7 @@ rooms:
               sprite: "MiniMoldorm"
             - name: "Skull Woods - Play Pen - Wallmaster"
               position: { x: 0x0f, y: 0x0f, z: 0x00 }
-              sprite: "Wallmaster"
+              sprite: "Wallmaster Overlord"
             - name: "Skull Woods - Play Pen - Mini Helmasaur"
               position: { x: 0x09, y: 0x15, z: 0x00 }
               sprite: "MiniHelmasaur"
