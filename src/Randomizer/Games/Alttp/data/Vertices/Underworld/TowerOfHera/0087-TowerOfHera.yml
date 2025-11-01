@@ -80,9 +80,12 @@ rooms:
               addresses: [0xB08162]
               itemset: ["hera"]
           mobs:
+            # this is required to have the standing item appear
             - name: "Tower Of Hera - Tile Room - Key"
               position: { x: 0x08, y: 0x1a, z: 0x00 }
               sprite: "Key"
+              allow:
+                - "Key"
             - name: "Tower Of Hera - Tile Room - Stalfos 1"
               position: { x: 0x0b, y: 0x17, z: 0x00 }
               sprite: "Stalfos"
