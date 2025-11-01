@@ -64,19 +64,19 @@ rooms:
               type: "chest"
               itemset: ["swamp"]
           pots:
-            - name: "Swamp Palace - West Lever - Pot 1"
+            - name: "Swamp Palace - Money Ledge - Pot 1"
               position: { x: 0x0a, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Swamp Palace - West Lever - Pot 2"
+            - name: "Swamp Palace - Money Ledge - Pot 2"
               position: { x: 0x0c, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Swamp Palace - West Lever - Pot 3"
+            - name: "Swamp Palace - Money Ledge - Pot 3"
               position: { x: 0x0e, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Swamp Palace - West Lever - Pot 4"
+            - name: "Swamp Palace - Money Ledge - Pot 4"
               position: { x: 0x10, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Swamp Palace - West Lever - Pot 5"
+            - name: "Swamp Palace - Money Ledge - Pot 5"
               position: { x: 0x12, y: 0x10, z: 0x00 }
               sprite: "@RupeeBlue"
 
@@ -97,33 +97,33 @@ rooms:
             SwampWater2:
               - "Swamp Palace - West Moat Water Flipper Gate"
           pots:
-            - name: "Swamp Palace - West Lever - Pot 7"
+            - name: "Swamp Palace - West Moat - Pot 7"
               position: { x: 0x38, y: 0x2d, z: 0x00 }
               sprite: "@Heart"
-            - name: "Swamp Palace - West Lever - Pot 8"
+            - name: "Swamp Palace - West Moat - Pot 8"
               position: { x: 0x26, y: 0x38, z: 0x00 }
               sprite: "@Heart"
-            - name: "Swamp Palace - West Lever - Pot 9"
+            - name: "Swamp Palace - West Moat - Pot 9"
               position: { x: 0x2c, y: 0x2e, z: 0x00 }
-            - name: "Swamp Palace - West Lever - Pot 10"
+            - name: "Swamp Palace - West Moat - Pot 10"
               position: { x: 0x26, y: 0x2e, z: 0x00 }
-            - name: "Swamp Palace - West Lever - Pot 11"
+            - name: "Swamp Palace - West Moat - Pot 11"
               position: { x: 0x32, y: 0x36, z: 0x00 }
-            - name: "Swamp Palace - West Lever - Pot 12"
+            - name: "Swamp Palace - West Moat - Pot 12"
               position: { x: 0x39, y: 0x39, z: 0x00 }
           mobs:
-            - name: "Swamp Palace - West Lever - Stalfos 2"
+            - name: "Swamp Palace - West Moat - Stalfos 2"
               position: { x: 0x14, y: 0x18, z: 0x00 }
               sprite: "Stalfos"
               deny:
                 - "RollerHR"
-            - name: "Swamp Palace - West Lever - Fire Snake"
+            - name: "Swamp Palace - West Moat - Fire Snake"
               position: { x: 0x16, y: 0x19, z: 0x00 }
               sprite: "FireSnake"
-            - name: "Swamp Palace - West Lever - Yomo Medusa"
+            - name: "Swamp Palace - West Moat - Yomo Medusa"
               position: { x: 0x17, y: 0x1a, z: 0x00 }
               sprite: "YomoMedusa"
-            - name: "Swamp Palace - West Lever - Blue Bari"
+            - name: "Swamp Palace - West Moat - Blue Bari"
               position: { x: 0x14, y: 0x1b, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -131,7 +131,7 @@ rooms:
                 - "Beamos"
                 - "AntifairyCircle"
                 - "Bumper"
-            - name: "Swamp Palace - West Lever - Stalfos 3"
+            - name: "Swamp Palace - West Moat - Stalfos 3"
               position: { x: 0x1b, y: 0x1c, z: 0x00 }
               sprite: "Stalfos"
 
@@ -142,10 +142,10 @@ rooms:
             SwampWater2:
               - "Swamp Palace - West Moat Water Flipper Gate"
           pots:
-            - name: "Swamp Palace - West Lever - Pot 6"
+            - name: "Swamp Palace - West Moat - Pot 6"
               position: { x: 0x18, y: 0x28, z: 0x00 }
               sprite: "@Heart"
           mobs:
-            - name: "Swamp Palace - West Lever - Zol"
+            - name: "Swamp Palace - West Moat - Zol"
               position: { x: 0x07, y: 0x14, z: 0x00 }
               sprite: "Zol"

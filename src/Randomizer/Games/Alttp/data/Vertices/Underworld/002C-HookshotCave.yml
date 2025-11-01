@@ -28,7 +28,7 @@ rooms:
             UseBomb:
               - "Hookshot Cave Cross"
           mobs:
-            - name: "Hookshot Cave Cross - Fairy Queen"
+            - name: "Hookshot Cave Fairy - Fairy Queen"
               position: { x: 0x17, y: 0x05, z: 0x00 }
               sprite: "FairyBig"
               allow:
@@ -39,14 +39,14 @@ rooms:
             UseBomb:
               - "Hookshot Cave Corner"
           mobs:
-            - name: "Hookshot Cave Cross - Fairy 1"
+            - name: "Hookshot Cave Fairies - Fairy 1"
               position: { x: 0x09, y: 0x04, z: 0x00 }
               sprite: "Fairy"
 
-            - name: "Hookshot Cave Cross - Fairy 2"
+            - name: "Hookshot Cave Fairies - Fairy 2"
               position: { x: 0x06, y: 0x05, z: 0x00 }
               sprite: "Fairy"
 
-            - name: "Hookshot Cave Cross - Fairy 3"
+            - name: "Hookshot Cave Fairies - Fairy 3"
               position: { x: 0x08, y: 0x07, z: 0x00 }
               sprite: "Fairy"

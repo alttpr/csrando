@@ -43,16 +43,16 @@ rooms:
             fixed:
               - "Ganon's Tower - Empty Torch Room"
           mobs:
-            - name: "Ganon's Tower - Ice Room - Fairy 1"
+            - name: "Ganon's Tower - Fairy Pit - Fairy 1"
               position: { x: 0x07, y: 0x07, z: 0x00 }
               sprite: "Fairy"
-            - name: "Ganon's Tower - Ice Room - Fairy 2"
+            - name: "Ganon's Tower - Fairy Pit - Fairy 2"
               position: { x: 0x08, y: 0x07, z: 0x00 }
               sprite: "Fairy"
-            - name: "Ganon's Tower - Ice Room - Fairy 3"
+            - name: "Ganon's Tower - Fairy Pit - Fairy 3"
               position: { x: 0x07, y: 0x08, z: 0x00 }
               sprite: "Fairy"
-            - name: "Ganon's Tower - Ice Room - Fairy 4"
+            - name: "Ganon's Tower - Fairy Pit - Fairy 4"
               position: { x: 0x08, y: 0x08, z: 0x00 }
               sprite: "Fairy"
 

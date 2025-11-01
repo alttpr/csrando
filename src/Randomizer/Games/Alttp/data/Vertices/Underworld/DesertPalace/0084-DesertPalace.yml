@@ -12,38 +12,38 @@ rooms:
               - "Desert Palace - Main Room - Left"
               - "Desert Palace - Main Room - Right"
           pots:
-            - name: "Desert Palace - Main Room - Left - Pot 1"
+            - name: "Desert Palace - Main Room - Center - Pot 1"
               position: { x: 0x0c, y: 0x0e, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Desert Palace - Main Room - Left - Pot 2"
+            - name: "Desert Palace - Main Room - Center - Pot 2"
               position: { x: 0x32, y: 0x0e, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Desert Palace - Main Room - Left - Pot 3"
+            - name: "Desert Palace - Main Room - Center - Pot 3"
               position: { x: 0x0c, y: 0x0c, z: 0x00 }
-            - name: "Desert Palace - Main Room - Left - Pot 4"
+            - name: "Desert Palace - Main Room - Center - Pot 4"
               position: { x: 0x32, y: 0x0c, z: 0x00 }
-            - name: "Desert Palace - Main Room - Left - Pot 5"
+            - name: "Desert Palace - Main Room - Center - Pot 5"
               position: { x: 0x28, y: 0x1c, z: 0x00 }
-            - name: "Desert Palace - Main Room - Left - Pot 6"
+            - name: "Desert Palace - Main Room - Center - Pot 6"
               position: { x: 0x1e, y: 0x22, z: 0x00 }
-            - name: "Desert Palace - Main Room - Left - Pot 7"
+            - name: "Desert Palace - Main Room - Center - Pot 7"
               position: { x: 0x16, y: 0x1c, z: 0x00 }
-            - name: "Desert Palace - Main Room - Left - Pot 8"
+            - name: "Desert Palace - Main Room - Center - Pot 8"
               position: { x: 0x20, y: 0x22, z: 0x00 }
           mobs:
-            - name: "Desert Palace - Main Room - Left - Beamos"
+            - name: "Desert Palace - Main Room - Center - Beamos"
               position: { x: 0x0f, y: 0x07, z: 0x00 }
               sprite: "Beamos"
-            - name: "Desert Palace - Main Room - Left - Leever 3"
+            - name: "Desert Palace - Main Room - Center - Leever 3"
               position: { x: 0x09, y: 0x12, z: 0x00 }
               sprite: "Leever"
-            - name: "Desert Palace - Main Room - Left - Leever 4"
+            - name: "Desert Palace - Main Room - Center - Leever 4"
               position: { x: 0x15, y: 0x12, z: 0x00 }
               sprite: "Leever"
-            - name: "Desert Palace - Main Room - Left - Leever 5"
+            - name: "Desert Palace - Main Room - Center - Leever 5"
               position: { x: 0x09, y: 0x1b, z: 0x00 }
               sprite: "Leever"
-            - name: "Desert Palace - Main Room - Left - Leever 6"
+            - name: "Desert Palace - Main Room - Center - Leever 6"
               position: { x: 0x15, y: 0x1b, z: 0x00 }
               sprite: "Leever"
 
@@ -73,7 +73,7 @@ rooms:
             LiftPot:
               - "Desert Palace - Main Room - Center"
           mobs:
-            - name: "Desert Palace - Main Room - Left - Leever 2"
+            - name: "Desert Palace - Main Room - Right - Leever 2"
               position: { x: 0x1b, y: 0x05, z: 0x00 }
               sprite: "Leever"
               deny:

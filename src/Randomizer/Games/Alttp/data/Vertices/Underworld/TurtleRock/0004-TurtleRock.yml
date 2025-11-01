@@ -14,19 +14,19 @@ rooms:
               - "Turtle Rock - Crystaroller Room"
               - "Turtle Rock - Bomb Ambush"
           pots:
-            - name: "Turtle Rock - Big Money - Pot 3"
+            - name: "Turtle Rock - Pokeys Choice - Pot 3"
               position: { x: 0x06, y: 0x1a, z: 0x00 }
-            - name: "Turtle Rock - Big Money - Pot 4"
+            - name: "Turtle Rock - Pokeys Choice - Pot 4"
               position: { x: 0x08, y: 0x1a, z: 0x00 }
-            - name: "Turtle Rock - Big Money - Pot 5"
+            - name: "Turtle Rock - Pokeys Choice - Pot 5"
               position: { x: 0x06, y: 0x26, z: 0x00 }
-            - name: "Turtle Rock - Big Money - Pot 6"
+            - name: "Turtle Rock - Pokeys Choice - Pot 6"
               position: { x: 0x08, y: 0x26, z: 0x00 }
           mobs:
-            - name: "Turtle Rock - Big Money - Zoro Spawner"
+            - name: "Turtle Rock - Pokeys Choice - Zoro Spawner"
               position: { x: 0x07, y: 0x12, z: 0x00 }
               sprite: "ZoroSpawner"
-            - name: "Turtle Rock - Big Money - Pokey"
+            - name: "Turtle Rock - Pokeys Choice - Pokey"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "Pokey"
 
@@ -58,12 +58,12 @@ rooms:
               type: "chest"
               itemset: ["turtlerock"]
           mobs:
-            - name: "Turtle Rock - Big Money - Crystal Switch"
+            - name: "Turtle Rock - Crystaroller Room - Crystal Switch"
               position: { x: 0x09, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitchAlternative"
               allow:
                 - "CrystalSwitchAlternative"
-            - name: "Turtle Rock - Big Money - Roller (Horizontal, Left) 1"
+            - name: "Turtle Rock - Crystaroller Room - Roller (Horizontal, Left) 1"
               position: { x: 0x05, y: 0x07, z: 0x00 }
               sprite: "RollerHL"
 
@@ -76,24 +76,24 @@ rooms:
             "TurtleRockBombAmbushTrophy|3":
               - "Turtle Rock - Big Money"
           pots:
-            - name: "Turtle Rock - Big Money - Pot 1"
+            - name: "Turtle Rock - Bomb Ambush - Pot 1"
               position: { x: 0x26, y: 0x27, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Turtle Rock - Big Money - Pot 2"
+            - name: "Turtle Rock - Bomb Ambush - Pot 2"
               position: { x: 0x38, y: 0x27, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Turtle Rock - Big Money - Pull Switch (Good)"
+            - name: "Turtle Rock - Bomb Ambush - Pull Switch (Good)"
               position: { x: 0x15, y: 0x15, z: 0x00 }
               sprite: "PullSwitchGoodTongue"
               allow:
                 - "PullSwitchGoodTongue"
-            - name: "Turtle Rock - Big Money - Pull Switch (Bad)"
+            - name: "Turtle Rock - Bomb Ambush - Pull Switch (Bad)"
               position: { x: 0x1a, y: 0x15, z: 0x00 }
               sprite: "PullSwitchBadTongue"
               allow:
                 - "PullSwitchBadTongue"
-            - name: "Turtle Rock - Big Money - Bad Bomb 1"
+            - name: "Turtle Rock - Bomb Ambush - Bad Bomb 1"
               position: { x: 0x18, y: 0x15, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
@@ -104,21 +104,21 @@ rooms:
               position: { x: 0x1c, y: 0x15, z: 0x00 }
               sprite: "Zol"
               trophy: "TurtleRockBombAmbushTrophy"
-            - name: "Turtle Rock - Big Money - Bad Bomb 2"
+            - name: "Turtle Rock - Bomb Ambush - Bad Bomb 2"
               position: { x: 0x16, y: 0x17, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
                 - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
-            - name: "Turtle Rock - Big Money - Bad Bomb 3"
+            - name: "Turtle Rock - Bomb Ambush - Bad Bomb 3"
               position: { x: 0x1a, y: 0x17, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:
                 - "BadSwitchSnake"
                 - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
-            - name: "Turtle Rock - Big Money - Bad Bomb 4"
+            - name: "Turtle Rock - Bomb Ambush - Bad Bomb 4"
               position: { x: 0x18, y: 0x18, z: 0x00 }
               sprite: "BadSwitchBomb"
               allow:

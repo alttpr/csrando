@@ -9,7 +9,7 @@ rooms:
               - "Ganon's Tower - Gauntlet 5"
               - "Ganon's Tower - Lanmolas Boss Room"
           mobs:
-            - name: "Ganon's Tower - Lanmolas - Bunny Beam"
+            - name: "Ganon's Tower - Gauntlet Refill - Bunny Beam"
               position: { x: 0x17, y: 0x18, z: 0x00 }
               sprite: "BunnyBeam"
 
@@ -46,15 +46,15 @@ rooms:
             fixed:
               - "Ganon's Tower - Wizzrobes 1"
           pots:
-            - name: "Ganon's Tower - Lanmolas - Pot 1"
+            - name: "Ganon's Tower - Lame Refill - Pot 1"
               position: { x: 0x0a, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ganon's Tower - Lanmolas - Pot 2"
+            - name: "Ganon's Tower - Lame Refill - Pot 2"
               position: { x: 0x14, y: 0x0c, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Ganon's Tower - Lanmolas - Pot 3"
+            - name: "Ganon's Tower - Lame Refill - Pot 3"
               position: { x: 0x0a, y: 0x14, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Ganon's Tower - Lanmolas - Pot 4"
+            - name: "Ganon's Tower - Lame Refill - Pot 4"
               position: { x: 0x14, y: 0x14, z: 0x00 }
               sprite: "@MagicRefillSmall"

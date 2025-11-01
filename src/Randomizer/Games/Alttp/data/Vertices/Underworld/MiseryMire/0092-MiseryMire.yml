@@ -60,10 +60,10 @@ rooms:
             UseBomb:
               - "Misery Mire - Dark Weave"
           mobs:
-            - name: "Misery Mire - Dark Weave - Medusa 1"
+            - name: "Misery Mire - Room 90 - Medusa 1"
               position: { x: 0x0b, y: 0x05, z: 0x00 }
               sprite: "Medusa"
-            - name: "Misery Mire - Dark Weave - Antifairy 2"
+            - name: "Misery Mire - Room 90 - Antifairy 2"
               position: { x: 0x09, y: 0x08, z: 0x00 }
               sprite: "Antifairy"
 
@@ -73,7 +73,7 @@ rooms:
             UseBomb:
               - "Misery Mire - Air Lock - Center"
           mobs:
-            - name: "Misery Mire - Dark Weave - Crystal Switch 2"
+            - name: "Misery Mire - Room 90 - Crystal Switch 2"
               position: { x: 0x03, y: 0x0c, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
@@ -86,12 +86,12 @@ rooms:
             PegBlue:
               - "Misery Mire - Air Lock - Center"
           mobs:
-            - name: "Misery Mire - Dark Weave - Antifairy 3"
+            - name: "Misery Mire - Air Lock - Antifairy 3"
               position: { x: 0x03, y: 0x14, z: 0x00 }
               sprite: "Antifairy"
               deny:
                 - "RollerHR"
-            - name: "Misery Mire - Dark Weave - Antifairy 4"
+            - name: "Misery Mire - Air Lock - Antifairy 4"
               position: { x: 0x03, y: 0x1b, z: 0x00 }
               sprite: "Antifairy"
 
@@ -104,10 +104,10 @@ rooms:
             PegOrange:
               - "Misery Mire - Air Lock - Right"
           mobs:
-            - name: "Misery Mire - Dark Weave - Zoro Spawner"
+            - name: "Misery Mire - Air Lock - Zoro Spawner"
               position: { x: 0x07, y: 0x12, z: 0x00 }
               sprite: "ZoroSpawner"
-            - name: "Misery Mire - Dark Weave - Stalfos"
+            - name: "Misery Mire - Air Lock - Stalfos"
               position: { x: 0x0a, y: 0x16, z: 0x00 }
               sprite: "Stalfos"
               deny:

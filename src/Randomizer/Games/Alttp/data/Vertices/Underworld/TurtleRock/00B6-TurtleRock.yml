@@ -14,7 +14,7 @@ rooms:
               sprite: "Pokey"
               item: "KeyD7"
               itemset: ["turtlerock"]
-            - name: "Turtle Rock - Tile Room - Zol 1"
+            - name: "Turtle Rock - Pokey Ambush - Zol 1"
               position: { x: 0x07, y: 0x1b, z: 0x00 }
               sprite: "Zol"
               deny:
@@ -26,7 +26,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Turtle Rock - Tile Room - Zol 2"
+            - name: "Turtle Rock - Pokey Ambush - Zol 2"
               position: { x: 0x08, y: 0x1b, z: 0x00 }
               sprite: "Zol"
               deny:
@@ -51,18 +51,18 @@ rooms:
               type: "chest"
               itemset: ["turtlerock"]
           mobs:
-            - name: "Turtle Rock - Tile Room - Chain Chomp 1"
+            - name: "Turtle Rock - Chain Chomps Room - Chain Chomp 1"
               position: { x: 0x06, y: 0x07, z: 0x00 }
               sprite: "ChainChomp"
-            - name: "Turtle Rock - Tile Room - Chain Chomp 2"
+            - name: "Turtle Rock - Chain Chomps Room - Chain Chomp 2"
               position: { x: 0x0a, y: 0x07, z: 0x00 }
               sprite: "ChainChomp"
-            - name: "Turtle Rock - Tile Room - Crystal Switch 1"
+            - name: "Turtle Rock - Chain Chomps Room - Crystal Switch 1"
               position: { x: 0x03, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
-            - name: "Turtle Rock - Tile Room - Crystal Switch 2"
+            - name: "Turtle Rock - Chain Chomps Room - Crystal Switch 2"
               position: { x: 0x0c, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
 
@@ -85,6 +85,6 @@ rooms:
               position: { x: 0x2f, y: 0x12, z: 0x00 }
               sprite: "@MagicRefillFull"
           mobs:
-            - name: "Turtle Rock - Tile Room - Fairy"
+            - name: "Turtle Rock - Refill Room - Fairy"
               position: { x: 0x17, y: 0x07, z: 0x00 }
               sprite: "Fairy"

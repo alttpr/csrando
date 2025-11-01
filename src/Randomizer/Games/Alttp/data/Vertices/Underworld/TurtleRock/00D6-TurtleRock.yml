@@ -38,14 +38,14 @@ rooms:
               type: "chest"
               itemset: ["turtlerock"]
           mobs:
-            - name: "Turtle Rock - Entrance - Laser Eye (Down)"
+            - name: "Turtle Rock - Spike Room - Laser Eye (Down)"
               position: { x: 0x07, y: 0x02, z: 0x00 }
               sprite: "LaserEyeD"
               allow:
                 - "LaserEyeD"
-            - name: "Turtle Rock - Entrance - Medusa 1"
+            - name: "Turtle Rock - Spike Room - Medusa 1"
               position: { x: 0x03, y: 0x16, z: 0x00 }
               sprite: "Medusa"
-            - name: "Turtle Rock - Entrance - Medusa 2"
+            - name: "Turtle Rock - Spike Room - Medusa 2"
               position: { x: 0x0c, y: 0x16, z: 0x00 }
               sprite: "Medusa"

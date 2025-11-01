@@ -69,12 +69,12 @@ rooms:
               itemset: ["pod"]
 
           mobs:
-            - name: "Palace of Darkness - Dark Alley - Antifairy 1"
+            - name: "Palace of Darkness - Dark Basement - Antifairy 1"
               position: { x: 0x14, y: 0x0b, z: 0x00 }
               sprite: "Antifairy"
               deny:
                 - "RollerVU"
                 - "RollerVD"
-            - name: "Palace of Darkness - Dark Alley - Antifairy 2"
+            - name: "Palace of Darkness - Dark Basement - Antifairy 2"
               position: { x: 0x1c, y: 0x0b, z: 0x00 }
               sprite: "Antifairy"

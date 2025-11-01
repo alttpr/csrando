@@ -24,15 +24,15 @@ rooms:
               item: "GanonsTowerFireSnakesBlockPush"
               type: "event"
           pots:
-            - name: "Ganon's Tower - The Zoo - Pot 1"
+            - name: "Ganon's Tower - Fire Snakes - Pot 1"
               position: { x: 0x38, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ganon's Tower - The Zoo - Pot 5"
+            - name: "Ganon's Tower - Fire Snakes - Pot 5"
               position: { x: 0x16, y: 0x18, z: 0x00 }
-            - name: "Ganon's Tower - The Zoo - Pot 6"
+            - name: "Ganon's Tower - Fire Snakes - Pot 6"
               position: { x: 0x16, y: 0x0c, z: 0x00 }
           mobs:
-            - name: "Ganon's Tower - The Zoo - Fire Snake 1"
+            - name: "Ganon's Tower - Fire Snakes - Fire Snake 1"
               position: { x: 0x11, y: 0x06, z: 0x00 }
               sprite: "FireSnake"
               deny:
@@ -43,7 +43,7 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Ganon's Tower - The Zoo - Fire Snake 2"
+            - name: "Ganon's Tower - Fire Snakes - Fire Snake 2"
               position: { x: 0x11, y: 0x08, z: 0x00 }
               sprite: "FireSnake"
               deny:
@@ -54,7 +54,7 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Ganon's Tower - The Zoo - Fire Snake 3"
+            - name: "Ganon's Tower - Fire Snakes - Fire Snake 3"
               position: { x: 0x11, y: 0x0a, z: 0x00 }
               sprite: "FireSnake"
               deny:
@@ -65,7 +65,7 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Ganon's Tower - The Zoo - Fire Snake 4"
+            - name: "Ganon's Tower - Fire Snakes - Fire Snake 4"
               position: { x: 0x11, y: 0x0c, z: 0x00 }
               sprite: "FireSnake"
               deny:
@@ -98,7 +98,7 @@ rooms:
               - "Ganon's Tower - Teleports - 2 Pots"
               - "Ganon's Tower - Beetle Pits Left"
           mobs:
-            - name: "Ganon's Tower - The Zoo - Fire Snake 6"
+            - name: "Ganon's Tower - Teleports - Fire Snake 6"
               position: { x: 0x0a, y: 0x1c, z: 0x00 }
               sprite: "FireSnake"
 

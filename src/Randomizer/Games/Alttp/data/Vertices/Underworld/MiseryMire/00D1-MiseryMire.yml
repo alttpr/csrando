@@ -11,23 +11,23 @@ rooms:
               - "Misery Mire - Drop Chest Overlook"
           pots:
             # TODO: Missing empty pot in lower left corner
-            - name: "Misery Mire - Sluggula - Pot 2"
+            - name: "Misery Mire - Joke Room - Pot 2"
               position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@RupeeGreen"
-            - name: "Misery Mire - Sluggula - Pot 3"
+            - name: "Misery Mire - Joke Room - Pot 3"
               position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Misery Mire - Sluggula - Pot 5"
+            - name: "Misery Mire - Joke Room - Pot 5"
               position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@RupeeGreen"
           mobs:
-            - name: "Misery Mire - Sluggula - Beamos 1"
+            - name: "Misery Mire - Joke Room - Beamos 1"
               position: { x: 0x14, y: 0x06, z: 0x00 }
               sprite: "Beamos"
-            - name: "Misery Mire - Sluggula - Beamos 2"
+            - name: "Misery Mire - Joke Room - Beamos 2"
               position: { x: 0x1b, y: 0x06, z: 0x00 }
               sprite: "Beamos"
-            - name: "Misery Mire - Sluggula - Sluggula 3"
+            - name: "Misery Mire - Joke Room - Sluggula 3"
               position: { x: 0x1b, y: 0x0b, z: 0x00 }
               sprite: "Sluggula"
 

@@ -22,7 +22,7 @@ rooms:
               itemset: ["lw"]
           mobs:
             # this is required to have the standing item appear
-            - name: "Spectacle Rock Cave Top - Heart Piece"
+            - name: "Spectacle Rock Cave Ledge - Heart Piece"
               position: { x: 0x0b, y: 0x0b, z: 0x00 }
               sprite: "HeartPiece"
               allow:

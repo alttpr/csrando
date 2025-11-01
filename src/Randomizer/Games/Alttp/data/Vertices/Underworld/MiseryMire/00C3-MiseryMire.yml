@@ -15,7 +15,7 @@ rooms:
               addresses: [0x01EA6A]
               itemset: ["mire"]
           mobs:
-            - name: "Misery Mire - Falling Bridge - Medusa 1"
+            - name: "Misery Mire - East Wing - Medusa 1"
               position: { x: 0x05, y: 0x06, z: 0x00 }
               sprite: "Medusa"
 
@@ -45,13 +45,13 @@ rooms:
               - "Misery Mire - Main Lobby"
               - "Misery Mire - Falling Bridge South - Bottom Door"
           mobs:
-            - name: "Misery Mire - Falling Bridge - Falling Bridge Overlord"
+            - name: "Misery Mire - East Wing - Falling Bridge Overlord"
               position: { x: 0x17, y: 0x1a, z: 0x00 }
               sprite: "FallingBridge"
-            - name: "Misery Mire - Falling Bridge - Antifairy"
+            - name: "Misery Mire - East Wing - Antifairy"
               position: { x: 0x0a, y: 0x1b, z: 0x00 }
               sprite: "Antifairy"
-            - name: "Misery Mire - Falling Bridge - Medusa 2"
+            - name: "Misery Mire - East Wing - Medusa 2"
               position: { x: 0x07, y: 0x1c, z: 0x00 }
               sprite: "Medusa"
 

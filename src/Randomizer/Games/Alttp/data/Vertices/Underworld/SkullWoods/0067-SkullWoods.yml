@@ -16,31 +16,31 @@ rooms:
               itemset: ["skull"]
           # TODO: Verify pots in room
           pots:
-            - name: "Skull Woods - Firebar Pits - Pot 3"
+            - name: "Skull Woods - Trap Chest Room - Pot 3"
               position: { x: 0x30, y: 0x26, z: 0x00 }
               sprite: "@Heart"
-            - name: "Skull Woods - Firebar Pits - Pot 7"
+            - name: "Skull Woods - Trap Chest Room - Pot 7"
               position: { x: 0x34, y: 0x38, z: 0x00 }
               sprite: "@Heart"
-            - name: "Skull Woods - Firebar Pits - Pot 8"
+            - name: "Skull Woods - Trap Chest Room - Pot 8"
               position: { x: 0x2e, y: 0x12, z: 0x00 }
-            - name: "Skull Woods - Firebar Pits - Pot 9"
+            - name: "Skull Woods - Trap Chest Room - Pot 9"
               position: { x: 0x2a, y: 0x38, z: 0x00 }
-            - name: "Skull Woods - Firebar Pits - Pot 4"
+            - name: "Skull Woods - Trap Chest Room - Pot 4"
               position: { x: 0x25, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
-            - name: "Skull Woods - Firebar Pits - Hardhat Beetle 2"
+            - name: "Skull Woods - Trap Chest Room - Hardhat Beetle 2"
               position: { x: 0x13, y: 0x0f, z: 0x00 }
               sprite: "HardhatBeetle"
-            - name: "Skull Woods - Firebar Pits - Fire Bar (Clockwise)"
+            - name: "Skull Woods - Trap Chest Room - Fire Bar (Clockwise)"
               position: { x: 0x18, y: 0x14, z: 0x00 }
               sprite: "FireBarCW"
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
                 - "Bumper"
-            - name: "Skull Woods - Firebar Pits - Hardhat Beetle 5"
+            - name: "Skull Woods - Trap Chest Room - Hardhat Beetle 5"
               position: { x: 0x18, y: 0x1a, z: 0x00 }
               sprite: "HardhatBeetle"
 

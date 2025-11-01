@@ -55,29 +55,29 @@ rooms:
             FireRod:
               - "Skull Woods - Vine Door Room"
           pots:
-            - name: "Skull Woods - Bari Pits - Pot 1"
+            - name: "Skull Woods - Torch Room - Pot 1"
               position: { x: 0x34, y: 0x1e, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Skull Woods - Bari Pits - Pot 2"
+            - name: "Skull Woods - Torch Room - Pot 2"
               position: { x: 0x34, y: 0x20, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
-            - name: "Skull Woods - Bari Pits - Gibdo 2"
+            - name: "Skull Woods - Torch Room - Gibdo 2"
               position: { x: 0x17, y: 0x0b, z: 0x00 }
               sprite: "Gibdo"
               deny:
                 - "RollerVU"
                 - "RollerVD"
-            - name: "Skull Woods - Bari Pits - Gibdo 3"
+            - name: "Skull Woods - Torch Room - Gibdo 3"
               position: { x: 0x17, y: 0x10, z: 0x00 }
               sprite: "Gibdo"
-            - name: "Skull Woods - Bari Pits - Gibdo 4"
+            - name: "Skull Woods - Torch Room - Gibdo 4"
               position: { x: 0x16, y: 0x14, z: 0x00 }
               sprite: "Gibdo"
               deny:
                 - "RollerVU"
                 - "RollerVD"
-            - name: "Skull Woods - Bari Pits - Gibdo 5"
+            - name: "Skull Woods - Torch Room - Gibdo 5"
               position: { x: 0x1a, y: 0x18, z: 0x00 }
               sprite: "Gibdo"
               deny:
@@ -96,18 +96,18 @@ rooms:
             SwordlessInverted:
               - "Skull Woods - Play Pen"
           mobs:
-            - name: "Skull Woods - Bari Pits - Mini Moldorm 1"
+            - name: "Skull Woods - Vine Door Room - Mini Moldorm 1"
               position: { x: 0x0b, y: 0x05, z: 0x00 }
               sprite: "MiniMoldorm"
-            - name: "Skull Woods - Bari Pits - Mini Moldorm 2"
+            - name: "Skull Woods - Vine Door Room - Mini Moldorm 2"
               position: { x: 0x04, y: 0x0b, z: 0x00 }
               sprite: "MiniMoldorm"
-            - name: "Skull Woods - Bari Pits - Mini Moldorm 3"
+            - name: "Skull Woods - Vine Door Room - Mini Moldorm 3"
               position: { x: 0x09, y: 0x0c, z: 0x00 }
               sprite: "MiniMoldorm"
-            - name: "Skull Woods - Bari Pits - Bunny Beam"
+            - name: "Skull Woods - Vine Door Room - Bunny Beam"
               position: { x: 0x08, y: 0x06, z: 0x00 }
               sprite: "BunnyBeam"
-            - name: "Skull Woods - Bari Pits - Gibdo 1"
+            - name: "Skull Woods - Vine Door Room - Gibdo 1"
               position: { x: 0x07, y: 0x08, z: 0x00 }
               sprite: "Gibdo"

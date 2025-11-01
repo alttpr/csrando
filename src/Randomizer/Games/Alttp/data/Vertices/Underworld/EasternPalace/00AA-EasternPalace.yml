@@ -49,20 +49,20 @@ rooms:
             LiftPot:
               - "Eastern Palace - East Wing - Gap Right"
           pots:
-            - name: "Eastern Palace - East Wing - Top - Pot 1"
+            - name: "Eastern Palace - East Wing - Bottom - Pot 1"
               position: { x: 0x2f, y: 0x10, z: 0x00 }
               sprite: "FloorSwitch"
-            - name: "Eastern Palace - East Wing - Top - Pot 5"
+            - name: "Eastern Palace - East Wing - Bottom - Pot 5"
               position: { x: 0x34, y: 0x0b, z: 0x00 }
               sprite: "@Heart"
-            - name: "Eastern Palace - East Wing - Top - Pot 6"
+            - name: "Eastern Palace - East Wing - Bottom - Pot 6"
               position: { x: 0x34, y: 0x15, z: 0x00 }
-            - name: "Eastern Palace - East Wing - Top - Pot 7"
+            - name: "Eastern Palace - East Wing - Bottom - Pot 7"
               position: { x: 0x2a, y: 0x15, z: 0x00 }
-            - name: "Eastern Palace - East Wing - Top - Pot 8"
+            - name: "Eastern Palace - East Wing - Bottom - Pot 8"
               position: { x: 0x2a, y: 0x0b, z: 0x00 }
           mobs:
-            - name: "Eastern Palace - East Wing - Top - Antifairy"
+            - name: "Eastern Palace - East Wing - Bottom - Antifairy"
               position: { x: 0x18, y: 0x06, z: 0x00 }
               sprite: "Antifairy"
 
@@ -84,12 +84,12 @@ rooms:
             Hookshot:
               - "Eastern Palace - East Wing - Gap Right"
           pots:
-            - name: "Eastern Palace - East Wing - Top - Pot 2"
+            - name: "Eastern Palace - East Wing - Gap Left - Pot 2"
               position: { x: 0x36, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
-            - name: "Eastern Palace - East Wing - Top - Pot 3"
+            - name: "Eastern Palace - East Wing - Gap Left - Pot 3"
               position: { x: 0x36, y: 0x30, z: 0x00 }
               sprite: "@Heart"
-            - name: "Eastern Palace - East Wing - Top - Pot 4"
+            - name: "Eastern Palace - East Wing - Gap Left - Pot 4"
               position: { x: 0x36, y: 0x32, z: 0x00 }
               sprite: "@Heart"

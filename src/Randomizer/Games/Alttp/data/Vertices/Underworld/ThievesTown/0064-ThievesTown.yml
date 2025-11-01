@@ -14,43 +14,43 @@ rooms:
             PegOrange:
               - "Thieves' Town - Attic Gate - Left Corner"
           mobs:
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 1"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 1"
               position: { x: 0x0b, y: 0x13, z: 0x00 }
               sprite: "PullSwitchBad"
               allow:
                 - "PullSwitchBad"
-            - name: "Thieves' Town - Attic Hall Left - Rat 3"
+            - name: "Thieves' Town - Attic Gate - Rat 3"
               position: { x: 0x05, y: 0x1a, z: 0x00 }
               sprite: "Buzz"
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 2"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 2"
               position: { x: 0x09, y: 0x15, z: 0x00 }
               sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
                 - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 3"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 3"
               position: { x: 0x07, y: 0x17, z: 0x00 }
               sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
                 - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 4"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 4"
               position: { x: 0x09, y: 0x17, z: 0x00 }
               sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
                 - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 5"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 5"
               position: { x: 0x0b, y: 0x17, z: 0x00 }
               sprite: "BadSwitchSkullRope"
               allow:
                 - "BadSwitchSnake"
                 - "BadSwitchSkullRope"
                 - "BadSwitchBomb"
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 6"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 6"
               position: { x: 0x09, y: 0x19, z: 0x00 }
               sprite: "BadSwitchSkullRope"
               allow:
@@ -63,27 +63,27 @@ rooms:
             PegOrange:
               - "Thieves' Town - Attic Gate - Center"
           pots:
-            - name: "Thieves' Town - Attic Hall Left - Pot 1"
+            - name: "Thieves' Town - Attic Gate - Pot 1"
               position: { x: 0x06, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Thieves' Town - Attic Hall Left - Pot 2"
+            - name: "Thieves' Town - Attic Gate - Pot 2"
               position: { x: 0x08, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Thieves' Town - Attic Hall Left - Pot 3"
+            - name: "Thieves' Town - Attic Gate - Pot 3"
               position: { x: 0x0a, y: 0x2c, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Thieves' Town - Attic Hall Left - Keese 1"
+            - name: "Thieves' Town - Attic Gate - Keese 1"
               position: { x: 0x05, y: 0x12, z: 0x00 }
               sprite: "Chasupa"
               deny:
                 - "Kodongo"
-            - name: "Thieves' Town - Attic Hall Left - Keese 2"
+            - name: "Thieves' Town - Attic Gate - Keese 2"
               position: { x: 0x05, y: 0x13, z: 0x00 }
               sprite: "Chasupa"
               deny:
                 - "Kodongo"
-            - name: "Thieves' Town - Attic Hall Left - Bunny Beam"
+            - name: "Thieves' Town - Attic Gate - Bunny Beam"
               position: { x: 0x03, y: 0x16, z: 0x00 }
               sprite: "BunnyBeam"
 
@@ -92,21 +92,21 @@ rooms:
             PegBlue:
               - "Thieves' Town - Attic Gate - Center"
           pots:
-            - name: "Thieves' Town - Attic Hall Left - Pot 4"
+            - name: "Thieves' Town - Attic Gate - Pot 4"
               position: { x: 0x12, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Thieves' Town - Attic Hall Left - Pot 5"
+            - name: "Thieves' Town - Attic Gate - Pot 5"
               position: { x: 0x14, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Thieves' Town - Attic Hall Left - Pot 6"
+            - name: "Thieves' Town - Attic Gate - Pot 6"
               position: { x: 0x16, y: 0x38, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Thieves' Town - Attic Hall Left - Pot 7"
+            - name: "Thieves' Town - Attic Gate - Pot 7"
               position: { x: 0x18, y: 0x38, z: 0x00 }
               sprite: "FloorSwitch"
               item: "ThievesTownAtticHallFloorSwitch"
           mobs:
-            - name: "Thieves' Town - Attic Hall Left - Bad Snek 7"
+            - name: "Thieves' Town - Attic Gate - Bad Snek 7"
               position: { x: 0x0c, y: 0x1b, z: 0x00 }
               sprite: "BadSwitchSkullRope"
               allow:

@@ -25,15 +25,15 @@ rooms:
             LiftPot:
               - "Ice Palace - IPBJ - Right"
           pots:
-            - name: "Ice Palace - Blob Alley - Pot 1"
+            - name: "Ice Palace - IPBJ - Pot 1"
               position: { x: 0x06, y: 0x17, z: 0x00 }
               sprite: "FloorSwitch"
-            - name: "Ice Palace - Blob Alley - Pot 2"
+            - name: "Ice Palace - IPBJ - Pot 2"
               position: { x: 0x0e, y: 0x18, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ice Palace - Blob Alley - Pot 4"
+            - name: "Ice Palace - IPBJ - Pot 4"
               position: { x: 0x06, y: 0x0f, z: 0x00 }
-            - name: "Ice Palace - Blob Alley - Pot 5"
+            - name: "Ice Palace - IPBJ - Pot 5"
               position: { x: 0x18, y: 0x14, z: 0x00 }
           mobs:
             - name: "Ice Palace - IPBJ - Fire Bar (Clockwise)"

@@ -70,16 +70,16 @@ rooms:
             PegBlue:
               - "Ice Palace - Bomb Switch Top"
           pots:
-            - name: "Ice Palace - Blob Ambush - Pot"
+            - name: "Ice Palace - Bomb Switch - Pot"
               position: { x: 0x2a, y: 0x12, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Ice Palace - Blob Ambush - Crystal Switch"
+            - name: "Ice Palace - Bomb Switch - Crystal Switch"
               position: { x: 0x1a, y: 0x09, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
-            - name: "Ice Palace - Blob Ambush - Red Bari 3"
+            - name: "Ice Palace - Bomb Switch - Red Bari 3"
               position: { x: 0x16, y: 0x0a, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -89,7 +89,7 @@ rooms:
                 - "RollerHL"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Ice Palace - Blob Ambush - Red Bari 4"
+            - name: "Ice Palace - Bomb Switch - Red Bari 4"
               position: { x: 0x19, y: 0x0a, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -107,9 +107,9 @@ rooms:
             UseBomb:
               - "Ice Palace - Stalfos Ambush"
           mobs:
-            - name: "Ice Palace - Blob Ambush - Red Bari 1"
+            - name: "Ice Palace - Bomb Switch - Red Bari 1"
               position: { x: 0x16, y: 0x05, z: 0x00 }
               sprite: "RedBari"
-            - name: "Ice Palace - Blob Ambush - Red Bari 2"
+            - name: "Ice Palace - Bomb Switch - Red Bari 2"
               position: { x: 0x19, y: 0x05, z: 0x00 }
               sprite: "RedBari"

@@ -25,14 +25,14 @@ rooms:
               - "Eastern Palace - Entrance"
               - "Eastern Palace - Cannonball Room"
           mobs:
-            - name: "Eastern Palace - Entrance - Popo B 1"
+            - name: "Eastern Palace - Popo Switch - Popo B 1"
               position: { x: 0x10, y: 0x05, z: 0x00 }
               sprite: "Popo2"
 
-            - name: "Eastern Palace - Entrance - Popo B 2"
+            - name: "Eastern Palace - Popo Switch - Popo B 2"
               position: { x: 0x0f, y: 0x06, z: 0x00 }
               sprite: "Popo2"
 
-            - name: "Eastern Palace - Entrance - Popo B 3"
+            - name: "Eastern Palace - Popo Switch - Popo B 3"
               position: { x: 0x10, y: 0x07, z: 0x00 }
               sprite: "Popo2"

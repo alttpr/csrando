@@ -9,7 +9,7 @@ rooms:
             Hookshot:
               - "Ice Palace - Bari Pit right"
           mobs:
-            - name: "Ice Palace - Big Spikes - Red Bari 1"
+            - name: "Ice Palace - Bari Pit - Red Bari 1"
               position: { x: 0x06, y: 0x07, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -26,7 +26,7 @@ rooms:
                 - "FireBarCW"
                 - "FireBarCCW"
                 - "SpikeTrap"
-            - name: "Ice Palace - Big Spikes - Red Bari 2"
+            - name: "Ice Palace - Bari Pit - Red Bari 2"
               position: { x: 0x08, y: 0x07, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -43,7 +43,7 @@ rooms:
                 - "FireBarCW"
                 - "FireBarCCW"
                 - "SpikeTrap"
-            - name: "Ice Palace - Big Spikes - Red Bari 3"
+            - name: "Ice Palace - Bari Pit - Red Bari 3"
               position: { x: 0x0a, y: 0x08, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -60,7 +60,7 @@ rooms:
                 - "FireBarCW"
                 - "FireBarCCW"
                 - "SpikeTrap"
-            - name: "Ice Palace - Big Spikes - Red Bari 4"
+            - name: "Ice Palace - Bari Pit - Red Bari 4"
               position: { x: 0x07, y: 0x09, z: 0x00 }
               sprite: "RedBari"
               deny:

@@ -10,7 +10,7 @@ rooms:
             SwampWater3:
               - "Swamp Palace - Toilet Left"
           pots:
-            - name: "Swamp Palace - Toilet Left - Pot 1"
+            - name: "Swamp Palace - Toilet Right - Pot 1"
               position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@Heart"
           mobs:
@@ -42,7 +42,7 @@ rooms:
               - "Swamp Palace - Toilet Bowl"
               - "Swamp Palace - Flooded Room"
           mobs:
-            - name: "Swamp Palace - Toilet Left - Hover 1"
+            - name: "Swamp Palace - Thin Hallway - Hover 1"
               position: { x: 0x07, y: 0x0a, z: 0x00 }
               sprite: "Hover"
               deny:
@@ -52,7 +52,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Toilet Left - Kyameron"
+            - name: "Swamp Palace - Thin Hallway - Kyameron"
               position: { x: 0x07, y: 0x0f, z: 0x00 }
               sprite: "Kyameron"
               deny:
@@ -62,7 +62,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Toilet Left - Hover 2"
+            - name: "Swamp Palace - Thin Hallway - Hover 2"
               position: { x: 0x08, y: 0x11, z: 0x00 }
               sprite: "Hover"
               deny:
@@ -72,7 +72,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Toilet Left - Mini Helmasaur"
+            - name: "Swamp Palace - Thin Hallway - Mini Helmasaur"
               position: { x: 0x08, y: 0x1c, z: 0x00 }
               sprite: "PirogusuSpawnerBottom"
 
@@ -83,7 +83,7 @@ rooms:
             SwampWater3:
               - "Swamp Palace - Flooded Room"
           mobs:
-            - name: "Swamp Palace - Toilet Left - Zol"
+            - name: "Swamp Palace - Flooded Room - Zol"
               position: { x: 0x1b, y: 0x19, z: 0x00 }
               sprite: "Zol"
               deny:
@@ -93,7 +93,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Toilet Left - Blue Bari"
+            - name: "Swamp Palace - Flooded Room - Blue Bari"
               position: { x: 0x1b, y: 0x1c, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -119,9 +119,9 @@ rooms:
               type: "chest"
               itemset: ["swamp"]
           pots:
-            - name: "Swamp Palace - Toilet Left - Pot 2"
+            - name: "Swamp Palace - Flooded Room - Pot 2"
               position: { x: 0x2a, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
-            - name: "Swamp Palace - Toilet Left - Pot 3"
+            - name: "Swamp Palace - Flooded Room - Pot 3"
               position: { x: 0x30, y: 0x2e, z: 0x00 }
               sprite: "@Heart"

@@ -50,16 +50,16 @@ rooms:
             BigKeyD6:
               - "Misery Mire - Lonely Teleport"
           mobs:
-            - name: "Misery Mire - Hourglass - Wizzrobe 1"
+            - name: "Misery Mire - Wizzrobe Ambush - Wizzrobe 1"
               position: { x: 0x0c, y: 0x17, z: 0x00 }
               sprite: "Wizzrobe"
-            - name: "Misery Mire - Hourglass - Yomo Medusa"
+            - name: "Misery Mire - Wizzrobe Ambush - Yomo Medusa"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "YomoMedusa"
-            - name: "Misery Mire - Hourglass - Wizzrobe 2"
+            - name: "Misery Mire - Wizzrobe Ambush - Wizzrobe 2"
               position: { x: 0x03, y: 0x1a, z: 0x00 }
               sprite: "Wizzrobe"
-            - name: "Misery Mire - Hourglass - Wizzrobe 3"
+            - name: "Misery Mire - Wizzrobe Ambush - Wizzrobe 3"
               position: { x: 0x08, y: 0x1c, z: 0x00 }
               sprite: "Wizzrobe"
 

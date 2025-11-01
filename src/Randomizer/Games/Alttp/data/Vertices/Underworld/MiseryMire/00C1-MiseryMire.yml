@@ -12,7 +12,7 @@ rooms:
               - "Misery Mire - Tile Room"
               - "Misery Mire - Main Lobby"
           mobs:
-            - name: "Misery Mire - 4 Rails - Crystal Switch"
+            - name: "Misery Mire - Mire-go-round - Crystal Switch"
               position: { x: 0x15, y: 0x17, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
@@ -22,16 +22,16 @@ rooms:
               sprite: "BlueBari"
               item: "KeyD6"
               itemset: ["mire"]
-            - name: "Misery Mire - 4 Rails - Green Stalfos 1"
+            - name: "Misery Mire - Mire-go-round - Green Stalfos 1"
               position: { x: 0x17, y: 0x15, z: 0x00 }
               sprite: "GreenStalfos"
-            - name: "Misery Mire - 4 Rails - Antifairy"
+            - name: "Misery Mire - Mire-go-round - Antifairy"
               position: { x: 0x14, y: 0x19, z: 0x00 }
               sprite: "Antifairy"
-            - name: "Misery Mire - 4 Rails - Yomo Medusa"
+            - name: "Misery Mire - Mire-go-round - Yomo Medusa"
               position: { x: 0x18, y: 0x1a, z: 0x00 }
               sprite: "YomoMedusa"
-            - name: "Misery Mire - 4 Rails - Green Stalfos 2"
+            - name: "Misery Mire - Mire-go-round - Green Stalfos 2"
               position: { x: 0x1b, y: 0x1b, z: 0x00 }
               sprite: "GreenStalfos"
 
@@ -46,10 +46,10 @@ rooms:
             KeyD6:
               - "Misery Mire - Mire-go-round"
           mobs:
-            - name: "Misery Mire - 4 Rails - Medusa 3"
+            - name: "Misery Mire - Tile Room - Medusa 3"
               position: { x: 0x09, y: 0x16, z: 0x00 }
               sprite: "Medusa"
-            - name: "Misery Mire - 4 Rails - Tiles"
+            - name: "Misery Mire - Tile Room - Tiles"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "TileRoom"
 
@@ -61,7 +61,7 @@ rooms:
             PegBlue:
               - "Misery Mire - Octagon - Chest"
           mobs:
-            - name: "Misery Mire - 4 Rails - Stalfos 1"
+            - name: "Misery Mire - Octagon - Stalfos 1"
               position: { x: 0x06, y: 0x0b, z: 0x00 }
               sprite: "Stalfos"
               deny:

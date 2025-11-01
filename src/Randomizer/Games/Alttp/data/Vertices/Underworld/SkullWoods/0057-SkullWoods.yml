@@ -16,29 +16,29 @@ rooms:
               type: "chest"
               itemset: ["skull"]
           pots:
-            - name: "Skull Woods - Big Key Room - Pot 3"
+            - name: "Skull Woods - Pot Prison Room - Pot 3"
               position: { x: 0x2e, y: 0x2e, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Skull Woods - Big Key Room - Pot 4"
+            - name: "Skull Woods - Pot Prison Room - Pot 4"
               position: { x: 0x32, y: 0x2e, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Skull Woods - Big Key Room - Pot 5"
+            - name: "Skull Woods - Pot Prison Room - Pot 5"
               position: { x: 0x2a, y: 0x32, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Skull Woods - Big Key Room - Pot 6"
+            - name: "Skull Woods - Pot Prison Room - Pot 6"
               position: { x: 0x26, y: 0x36, z: 0x00 }
               sprite: "@Heart"
           mobs:
-            - name: "Skull Woods - Big Key Room - Gibdo 4"
+            - name: "Skull Woods - Pot Prison Room - Gibdo 4"
               position: { x: 0x17, y: 0x14, z: 0x00 }
               sprite: "Gibdo"
-            - name: "Skull Woods - Big Key Room - Gibdo 5"
+            - name: "Skull Woods - Pot Prison Room - Gibdo 5"
               position: { x: 0x19, y: 0x14, z: 0x00 }
               sprite: "Gibdo"
-            - name: "Skull Woods - Big Key Room - Stalfos 3"
+            - name: "Skull Woods - Pot Prison Room - Stalfos 3"
               position: { x: 0x15, y: 0x15, z: 0x00 }
               sprite: "Stalfos"
-            - name: "Skull Woods - Big Key Room - Gibdo 6"
+            - name: "Skull Woods - Pot Prison Room - Gibdo 6"
               position: { x: 0x13, y: 0x17, z: 0x00 }
               sprite: "Gibdo"
               deny:
@@ -53,29 +53,29 @@ rooms:
             LiftPot:
               - "Skull Woods - Statue Puzzle Nook"
           pots:
-            - name: "Skull Woods - Big Key Room - Pot 2"
+            - name: "Skull Woods - Statue Puzzle - Pot 2"
               position: { x: 0x06, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Skull Woods - Big Key Room - Pot 7"
+            - name: "Skull Woods - Statue Puzzle - Pot 7"
               position: { x: 0x18, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Skull Woods - Big Key Room - Pot 8"
+            - name: "Skull Woods - Statue Puzzle - Pot 8"
               position: { x: 0x0f, y: 0x2c, z: 0x00 }
               sprite: "FloorSwitch"
           mobs:
-            - name: "Skull Woods - Big Key Room - Wallmaster"
+            - name: "Skull Woods - Statue Puzzle - Wallmaster"
               position: { x: 0x0f, y: 0x0f, z: 0x00 }
               sprite: "Wallmaster Overlord"
-            - name: "Skull Woods - Big Key Room - Gibdo 3"
+            - name: "Skull Woods - Statue Puzzle - Gibdo 3"
               position: { x: 0x0a, y: 0x14, z: 0x00 }
               sprite: "Gibdo"
-            - name: "Skull Woods - Big Key Room - Gibdo 2"
+            - name: "Skull Woods - Statue Puzzle - Gibdo 2"
               position: { x: 0x05, y: 0x14, z: 0x00 }
               sprite: "Gibdo"
               deny:
                 - "RollerVU"
                 - "RollerVD"
-            - name: "Skull Woods - Big Key Room - Blue Bari 1"
+            - name: "Skull Woods - Statue Puzzle - Blue Bari 1"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -83,7 +83,7 @@ rooms:
                 - "Beamos"
                 - "AntifairyCircle"
                 - "Bumper"
-            - name: "Skull Woods - Big Key Room - Blue Bari 2"
+            - name: "Skull Woods - Statue Puzzle - Blue Bari 2"
               position: { x: 0x08, y: 0x18, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -91,7 +91,7 @@ rooms:
                 - "Beamos"
                 - "AntifairyCircle"
                 - "Bumper"
-            - name: "Skull Woods - Big Key Room - Statue"
+            - name: "Skull Woods - Statue Puzzle - Statue"
               position: { x: 0x0b, y: 0x18, z: 0x00 }
               sprite: "Statue"
               allow:
@@ -143,6 +143,6 @@ rooms:
             UseBomb:
               - "Skull Woods - Big Key Room"
           pots:
-            - name: "Skull Woods - Big Key Room - Pot 1"
+            - name: "Skull Woods - Magic Refill - Pot 1"
               position: { x: 0x2e, y: 0x0e, z: 0x00 }
               sprite: "@MagicRefillFull"

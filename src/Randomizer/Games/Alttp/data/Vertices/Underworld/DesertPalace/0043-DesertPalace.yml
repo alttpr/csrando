@@ -46,7 +46,7 @@ rooms:
               position: { x: 0x27, y: 0x12, z: 0x00 }
               sprite: "@Heart"
           mobs:
-            - name: "Desert Palace - Tiles 2 - Red Eyegore"
+            - name: "Desert Palace - Sliding Wall - Red Eyegore"
               position: { x: 0x0c, y: 0x06, z: 0x00 }
               sprite: "EyegoreRed"
 

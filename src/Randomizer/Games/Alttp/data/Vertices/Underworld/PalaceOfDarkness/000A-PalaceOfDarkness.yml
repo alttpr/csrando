@@ -14,45 +14,45 @@ rooms:
               type: "chest"
               itemset: ["pod"]
           pots:
-            - name: "Palace of Darkness - Basement Ledge - Pot 1"
+            - name: "Palace of Darkness - Stalfos Basement - Pot 1"
               position: { x: 0x30, y: 0x10, z: 0x00 }
               sprite: "@Heart"
-            - name: "Palace of Darkness - Basement Ledge - Pot 2"
+            - name: "Palace of Darkness - Stalfos Basement - Pot 2"
               position: { x: 0x34, y: 0x10, z: 0x00 }
               sprite: "@Heart"
-            - name: "Palace of Darkness - Basement Ledge - Pot 3"
+            - name: "Palace of Darkness - Stalfos Basement - Pot 3"
               position: { x: 0x26, y: 0x17, z: 0x00 }
               sprite: "FloorSwitch"
-            - name: "Palace of Darkness - Basement Ledge - Pot 6"
+            - name: "Palace of Darkness - Stalfos Basement - Pot 6"
               position: { x: 0x32, y: 0x0e, z: 0x00 }
-            - name: "Palace of Darkness - Basement Ledge - Pot 7"
+            - name: "Palace of Darkness - Stalfos Basement - Pot 7"
               position: { x: 0x32, y: 0x12, z: 0x00 }
           mobs:
-            - name: "Palace of Darkness - Basement Ledge - Terrorpin 1"
+            - name: "Palace of Darkness - Stalfos Basement - Terrorpin 1"
               position: { x: 0x17, y: 0x08, z: 0x00 }
               sprite: "Terrorpin"
               deny:
                 - "RollerVD"
                 - "RollerVU"
-            - name: "Palace of Darkness - Basement Ledge - Terrorpin 2"
+            - name: "Palace of Darkness - Stalfos Basement - Terrorpin 2"
               position: { x: 0x17, y: 0x09, z: 0x00 }
               sprite: "Terrorpin"
               deny:
                 - "RollerHR"
                 - "RollerHL"
-            - name: "Palace of Darkness - Basement Ledge - Falling Stalfos 1"
+            - name: "Palace of Darkness - Stalfos Basement - Falling Stalfos 1"
               position: { x: 0x0d, y: 0x09, z: 0x00 }
               sprite: "FallingStalfos"
-            - name: "Palace of Darkness - Basement Ledge - Falling Stalfos 2"
+            - name: "Palace of Darkness - Stalfos Basement - Falling Stalfos 2"
               position: { x: 0x11, y: 0x09, z: 0x00 }
               sprite: "FallingStalfos"
-            - name: "Palace of Darkness - Basement Ledge - Bush Hoarder"
+            - name: "Palace of Darkness - Stalfos Basement - Bush Hoarder"
               position: { x: 0x13, y: 0x0b, z: 0x00 }
               sprite: "PotTrap"
-            - name: "Palace of Darkness - Basement Ledge - Falling Stalfos 3"
+            - name: "Palace of Darkness - Stalfos Basement - Falling Stalfos 3"
               position: { x: 0x0d, y: 0x0e, z: 0x00 }
               sprite: "FallingStalfos"
-            - name: "Palace of Darkness - Basement Ledge - Falling Stalfos 4"
+            - name: "Palace of Darkness - Stalfos Basement - Falling Stalfos 4"
               position: { x: 0x11, y: 0x0e, z: 0x00 }
               sprite: "FallingStalfos"
 

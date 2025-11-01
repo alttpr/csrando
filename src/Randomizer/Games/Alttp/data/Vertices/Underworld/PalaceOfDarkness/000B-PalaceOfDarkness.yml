@@ -18,22 +18,22 @@ rooms:
             KeyD1:
               - "Palace of Darkness - Lonely Turtle"
           pots:
-            - name: "Palace of Darkness - Callback - Pot 1"
+            - name: "Palace of Darkness - Dark Pegs - Pot 1"
               position: { x: 0x25, y: 0x07, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Callback - Pot 2"
+            - name: "Palace of Darkness - Dark Pegs - Pot 2"
               position: { x: 0x25, y: 0x19, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Palace of Darkness - Callback - Crystal Switch"
+            - name: "Palace of Darkness - Dark Pegs - Crystal Switch"
               position: { x: 0x1c, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
-            - name: "Palace of Darkness - Callback - Terrorpin 2"
+            - name: "Palace of Darkness - Dark Pegs - Terrorpin 2"
               position: { x: 0x16, y: 0x0b, z: 0x00 }
               sprite: "Terrorpin"
-            - name: "Palace of Darkness - Callback - Terrorpin 3"
+            - name: "Palace of Darkness - Dark Pegs - Terrorpin 3"
               position: { x: 0x1b, y: 0x0b, z: 0x00 }
               sprite: "Terrorpin"
 
@@ -44,7 +44,7 @@ rooms:
             KeyD1:
               - "Palace of Darkness - Dark Pegs"
           mobs:
-            - name: "Palace of Darkness - Callback - Terrorpin 1"
+            - name: "Palace of Darkness - Lonely Turtle - Terrorpin 1"
               position: { x: 0x07, y: 0x08, z: 0x00 }
               sprite: "Terrorpin"
               deny:

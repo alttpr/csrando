@@ -76,7 +76,7 @@ rooms:
             KeyD1:
               - "Palace of Darkness - Falling Bridge Ledge"
           mobs:
-            - name: "Palace of Darkness - Arena Main - Hardhat Beetle 1"
+            - name: "Palace of Darkness - Arena North - Hardhat Beetle 1"
               position: { x: 0x0d, y: 0x08, z: 0x00 }
               sprite: "HardhatBeetle"
               deny:

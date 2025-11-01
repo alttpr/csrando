@@ -40,7 +40,7 @@ rooms:
             fixed:
               - "Desert Palace - Right Hallway"
           mobs:
-            - name: "Desert Palace - Right Entrance - Beamos"
+            - name: "Desert Palace - East - Beamos"
               position: { x: 0x18, y: 0x18, z: 0x00 }
               sprite: "Beamos"
 

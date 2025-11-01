@@ -13,11 +13,11 @@ rooms:
             CaneOfSomaria:
               - "Ganon's Tower - Gibdo Airlock - Middle - Switch"
           mobs:
-            - name: "Ganon's Tower - Compass Room - Crystal Switch"
+            - name: "Ganon's Tower - Gibdo Airlock - Crystal Switch"
               position: { x: 0x1c, y: 0x06, z: 0x00 }
               sprite: "CrystalSwitch"
               allow: ["CrystalSwitch"]
-            - name: "Ganon's Tower - Compass Room - Gibdo 2"
+            - name: "Ganon's Tower - Gibdo Airlock - Gibdo 2"
               position: { x: 0x18, y: 0x09, z: 0x00 }
               sprite: "Gibdo"
               deny:
@@ -45,7 +45,7 @@ rooms:
             PegOrange:
               - "Ganon's Tower - Gibdo Airlock - Left"
           mobs:
-            - name: "Ganon's Tower - Compass Room - Gibdo 3"
+            - name: "Ganon's Tower - Gibdo Airlock - Gibdo 3"
               position: { x: 0x13, y: 0x0c, z: 0x00 }
               sprite: "Gibdo"
 
@@ -62,14 +62,14 @@ rooms:
             PegOrange:
               - "Ganon's Tower - Gibdo Airlock - Corner"
           pots:
-            - name: "Ganon's Tower - Compass Room - Pot 1"
+            - name: "Ganon's Tower - Gibdo Airlock - Pot 1"
               position: { x: 0x26, y: 0x08, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Ganon's Tower - Compass Room - Pot 2"
+            - name: "Ganon's Tower - Gibdo Airlock - Pot 2"
               position: { x: 0x2a, y: 0x08, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
-            - name: "Ganon's Tower - Compass Room - Gibdo 1"
+            - name: "Ganon's Tower - Gibdo Airlock - Gibdo 1"
               position: { x: 0x14, y: 0x04, z: 0x00 }
               sprite: "Gibdo"
 
@@ -114,13 +114,13 @@ rooms:
             fixed:
               - "Ganon's Tower - Invisible Floor Maze"
           mobs:
-            - name: "Ganon's Tower - Compass Room - Blue Bari 1"
+            - name: "Ganon's Tower - Invisible, E - Blue Bari 1"
               position: { x: 0x10, y: 0x14, z: 0x00 }
               sprite: "BlueBari"
               deny:
                 - "RollerHL"
                 - "RollerHR"
-            - name: "Ganon's Tower - Compass Room - Blue Bari 2"
+            - name: "Ganon's Tower - Invisible, E - Blue Bari 2"
               position: { x: 0x0b, y: 0x18, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -129,7 +129,7 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Ganon's Tower - Compass Room - Blue Bari 3"
+            - name: "Ganon's Tower - Invisible, E - Blue Bari 3"
               position: { x: 0x11, y: 0x1c, z: 0x00 }
               sprite: "BlueBari"
               deny:

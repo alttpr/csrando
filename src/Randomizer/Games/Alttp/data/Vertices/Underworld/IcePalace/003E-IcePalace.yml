@@ -12,16 +12,16 @@ rooms:
             ConfigWorldEnemyShuffleNone:
               - "Ice Palace - Stalfos Ambush - Pot Bypass"
           pots:
-            - name: "Ice Palace - Conveyor - Pot 1"
+            - name: "Ice Palace - Stalfos Ambush - Pot 1"
               position: { x: 0x30, y: 0x0c, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Ice Palace - Conveyor - Pot 2"
+            - name: "Ice Palace - Stalfos Ambush - Pot 2"
               position: { x: 0x32, y: 0x0c, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Ice Palace - Conveyor - Pot 3"
+            - name: "Ice Palace - Stalfos Ambush - Pot 3"
               position: { x: 0x2c, y: 0x14, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ice Palace - Conveyor - Pot 4"
+            - name: "Ice Palace - Stalfos Ambush - Pot 4"
               position: { x: 0x2e, y: 0x14, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:

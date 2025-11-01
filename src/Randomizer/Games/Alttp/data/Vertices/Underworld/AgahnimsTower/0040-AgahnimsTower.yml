@@ -9,21 +9,21 @@ rooms:
               - "Agahnims Tower - Bridge"
               - "Agahnims Tower - Guard Mix"
           mobs:
-            - name: "Agahnims Tower - Bridge - Statue"
+            - name: "Agahnims Tower - Push Statue - Statue"
               position: { x: 0x18, y: 0x15, z: 0x01 }
               sprite: "Statue"
               allow:
                 - "Statue"
 
-            - name: "Agahnims Tower - Bridge - Red Spear Guard"
+            - name: "Agahnims Tower - Push Statue - Red Spear Guard"
               position: { x: 0x1b, y: 0x18, z: 0x01 }
               sprite: "RedSpearGuard"
 
-            - name: "Agahnims Tower - Bridge - Blue Archer 1"
+            - name: "Agahnims Tower - Push Statue - Blue Archer 1"
               position: { x: 0x17, y: 0x1a, z: 0x01 }
               sprite: "BlueArcher"
 
-            - name: "Agahnims Tower - Bridge - Blue Archer 2"
+            - name: "Agahnims Tower - Push Statue - Blue Archer 2"
               position: { x: 0x19, y: 0x1a, z: 0x01 }
               sprite: "BlueArcher"
 

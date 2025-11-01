@@ -13,10 +13,10 @@ rooms:
             BigKeyP1:
               - "Eastern Palace - Main Room"
           pots:
-            - name: "Eastern Palace - Dark Cash - Pot 1"
+            - name: "Eastern Palace - Dark Popos - Pot 1"
               position: { x: 0x14, y: 0x28, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Eastern Palace - Dark Cash - Pot 2"
+            - name: "Eastern Palace - Dark Popos - Pot 2"
               position: { x: 0x2a, y: 0x28, z: 0x00 }
               sprite: "@Heart"
           mobs:

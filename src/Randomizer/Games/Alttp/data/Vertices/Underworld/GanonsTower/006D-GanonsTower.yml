@@ -32,16 +32,16 @@ rooms:
               - "Ganon's Tower - Gauntlet 4"
               - "Ganon's Tower - Gauntlet Refill"
           pots:
-            - name: "Ganon's Tower - Gauntlet 4 - Pot 1"
+            - name: "Ganon's Tower - Gauntlet 5 - Pot 1"
               position: { x: 0x0e, y: 0x34, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ganon's Tower - Gauntlet 4 - Pot 2"
+            - name: "Ganon's Tower - Gauntlet 5 - Pot 2"
               position: { x: 0x10, y: 0x34, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ganon's Tower - Gauntlet 4 - Pot 3"
+            - name: "Ganon's Tower - Gauntlet 5 - Pot 3"
               position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Ganon's Tower - Gauntlet 4 - Pot 4"
+            - name: "Ganon's Tower - Gauntlet 5 - Pot 4"
               position: { x: 0x10, y: 0x36, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:

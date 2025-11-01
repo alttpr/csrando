@@ -22,35 +22,35 @@ rooms:
               - "Turtle Rock - Dark Maze Bottom"
 
           pots:
-            - name: "Turtle Rock - Dark Maze Top - Pot 1"
+            - name: "Turtle Rock - Dark Maze - Pot 1"
               position: { x: 0x38, y: 0x08, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Turtle Rock - Dark Maze Top - Pot 2"
+            - name: "Turtle Rock - Dark Maze - Pot 2"
               position: { x: 0x38, y: 0x1e, z: 0x00 }
               sprite: "@Heart"
-            - name: "Turtle Rock - Dark Maze Top - Pot 3"
+            - name: "Turtle Rock - Dark Maze - Pot 3"
               position: { x: 0x26, y: 0x20, z: 0x00 }
               sprite: "FloorSwitch"
-            - name: "Turtle Rock - Dark Maze Top - Pot 4"
+            - name: "Turtle Rock - Dark Maze - Pot 4"
               position: { x: 0x38, y: 0x20, z: 0x00 }
               sprite: "@MagicRefillFull"
-            - name: "Turtle Rock - Dark Maze Top - Pot 5"
+            - name: "Turtle Rock - Dark Maze - Pot 5"
               position: { x: 0x38, y: 0x22, z: 0x00 }
               sprite: "@Heart"
-            - name: "Turtle Rock - Dark Maze Top - Pot 6"
+            - name: "Turtle Rock - Dark Maze - Pot 6"
               position: { x: 0x38, y: 0x38, z: 0x00 }
               sprite: "@BombRefill1"
 
           mobs:
-            - name: "Turtle Rock - Dark Maze Top - Fire Bar (Clockwise) 1"
+            - name: "Turtle Rock - Dark Maze - Fire Bar (Clockwise) 1"
               position: { x: 0x16, y: 0x0a, z: 0x00 }
               sprite: "FireBarCW"
 
-            - name: "Turtle Rock - Dark Maze Top - Fire Bar (Clockwise) 2"
+            - name: "Turtle Rock - Dark Maze - Fire Bar (Clockwise) 2"
               position: { x: 0x09, y: 0x0f, z: 0x00 }
               sprite: "FireBarCW"
 
-            - name: "Turtle Rock - Dark Maze Top - Fire Bar (Clockwise) 3"
+            - name: "Turtle Rock - Dark Maze - Fire Bar (Clockwise) 3"
               position: { x: 0x16, y: 0x16, z: 0x00 }
               sprite: "FireBarCW"
 

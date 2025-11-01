@@ -11,10 +11,10 @@ rooms:
             KeyA1:
               - "Agahnims Tower - Knife Guards"
           mobs:
-            - name: "Agahnims Tower - Dark Maze - Keese 2"
+            - name: "Agahnims Tower - Keese Statue - Keese 2"
               position: { x: 0x17, y: 0x07, z: 0x00 }
               sprite: "Keese"
-            - name: "Agahnims Tower - Dark Maze - Charging Blue Guard 1"
+            - name: "Agahnims Tower - Keese Statue - Charging Blue Guard 1"
               position: { x: 0x15, y: 0x0b, z: 0x00 }
               sprite: "AssaultSwordGuard"
 
@@ -91,9 +91,9 @@ rooms:
             KeyA1:
               - "Agahnims Tower - Dark Maze"
           mobs:
-            - name: "Agahnims Tower - Dark Maze - Charging Blue Guard 2"
+            - name: "Agahnims Tower - Dark Knife Guards - Charging Blue Guard 2"
               position: { x: 0x1b, y: 0x16, z: 0x00 }
               sprite: "AssaultSwordGuard"
-            - name: "Agahnims Tower - Dark Maze - Charging Blue Guard 3"
+            - name: "Agahnims Tower - Dark Knife Guards - Charging Blue Guard 3"
               position: { x: 0x1a, y: 0x19, z: 0x00 }
               sprite: "AssaultSwordGuard"

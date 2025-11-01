@@ -43,11 +43,11 @@ rooms:
               - "Swamp Palace - Big O Top"
               - "Swamp Palace - Big O Top Left"
           pots:
-            - name: "Swamp Palace - Big O Top - Pot 2"
+            - name: "Swamp Palace - Big O Bottom - Pot 2"
               position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@Heart"
           mobs:
-            - name: "Swamp Palace - Big O Top - Hover 2"
+            - name: "Swamp Palace - Big O Bottom - Hover 2"
               position: { x: 0x09, y: 0x1a, z: 0x00 }
               sprite: "Hover"
               deny:
@@ -56,10 +56,10 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Big O Top - Hinox 2"
+            - name: "Swamp Palace - Big O Bottom - Hinox 2"
               position: { x: 0x1b, y: 0x1a, z: 0x00 }
               sprite: "PirogusuSpawnerRight"
-            - name: "Swamp Palace - Big O Top - Hover 3"
+            - name: "Swamp Palace - Big O Bottom - Hover 3"
               position: { x: 0x11, y: 0x1b, z: 0x00 }
               sprite: "Hover"
               deny:

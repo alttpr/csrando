@@ -9,36 +9,36 @@ rooms:
               - "Ice Palace - Cross Puzzle - Right"
               - "Ice Palace - Big Key View"
           pots:
-            - name: "Ice Palace - Big Key View - Pot 1"
+            - name: "Ice Palace - Penguin Switch - Pot 1"
               position: { x: 0x0e, y: 0x32, z: 0x00 }
               sprite: "FloorSwitch"
-            - name: "Ice Palace - Big Key View - Pot 4"
+            - name: "Ice Palace - Penguin Switch - Pot 4"
               position: { x: 0x0e, y: 0x2e, z: 0x00 }
           mobs:
-            - name: "Ice Palace - Big Key View - Pengator 1"
+            - name: "Ice Palace - Penguin Switch - Pengator 1"
               position: { x: 0x04, y: 0x15, z: 0x00 }
               sprite: "Pengator"
               deny:
                 - "RollerHR"
-            - name: "Ice Palace - Big Key View - Pengator 2"
+            - name: "Ice Palace - Penguin Switch - Pengator 2"
               position: { x: 0x09, y: 0x15, z: 0x00 }
               sprite: "Pengator"
-            - name: "Ice Palace - Big Key View - Antifairy"
+            - name: "Ice Palace - Penguin Switch - Antifairy"
               position: { x: 0x06, y: 0x16, z: 0x00 }
               sprite: "Antifairy"
-            - name: "Ice Palace - Big Key View - Bunny Beam"
+            - name: "Ice Palace - Penguin Switch - Bunny Beam"
               position: { x: 0x07, y: 0x17, z: 0x00 }
               sprite: "BunnyBeam"
-            - name: "Ice Palace - Big Key View - Pengator 3"
+            - name: "Ice Palace - Penguin Switch - Pengator 3"
               position: { x: 0x0a, y: 0x17, z: 0x00 }
               sprite: "Pengator"
-            - name: "Ice Palace - Big Key View - Pengator 4"
+            - name: "Ice Palace - Penguin Switch - Pengator 4"
               position: { x: 0x0a, y: 0x19, z: 0x00 }
               sprite: "Pengator"
-            - name: "Ice Palace - Big Key View - Pengator 5"
+            - name: "Ice Palace - Penguin Switch - Pengator 5"
               position: { x: 0x04, y: 0x1b, z: 0x00 }
               sprite: "Pengator"
-            - name: "Ice Palace - Big Key View - Pengator 6"
+            - name: "Ice Palace - Penguin Switch - Pengator 6"
               position: { x: 0x09, y: 0x1b, z: 0x00 }
               sprite: "Pengator"
 

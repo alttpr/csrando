@@ -55,13 +55,13 @@ rooms:
               type: "chest"
               itemset: ["ice"]
           mobs:
-            - name: "Ice Palace - Vanilla Ice - Freezor 1"
+            - name: "Ice Palace - Freezor Room - Freezor 1"
               position: { x: 0x07, y: 0x12, z: 0x00 }
               sprite: "Freezor"
               allow:
                 - "Freezor"
               trophy: "IcePalaceFreezorRoomTrophy"
-            - name: "Ice Palace - Vanilla Ice - Freezor 2"
+            - name: "Ice Palace - Freezor Room - Freezor 2"
               position: { x: 0x0a, y: 0x12, z: 0x00 }
               sprite: "Freezor"
               allow:

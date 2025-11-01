@@ -17,19 +17,19 @@ rooms:
             LiftPot:
               - "Bumper Cave Top Stairs Ledge"
           pots:
-            - name: "Bumper Cave Top Exit - Pot 1"
+            - name: "Bumper Cave Top Refill - Pot 1"
               position: { x: 0x27, y: 0x11, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Bumper Cave Top Exit - Pot 2"
+            - name: "Bumper Cave Top Refill - Pot 2"
               position: { x: 0x29, y: 0x11, z: 0x00 }
               sprite: "@RupeeBlue"
-            - name: "Bumper Cave Top Exit - Pot 3"
+            - name: "Bumper Cave Top Refill - Pot 3"
               position: { x: 0x2c, y: 0x1c, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Bumper Cave Top Exit - Pot 4"
+            - name: "Bumper Cave Top Refill - Pot 4"
               position: { x: 0x2e, y: 0x1c, z: 0x00 }
               sprite: "@Heart"
-            - name: "Bumper Cave Top Exit - Pot 5"
+            - name: "Bumper Cave Top Refill - Pot 5"
               position: { x: 0x30, y: 0x1c, z: 0x00 }
               sprite: "@MagicRefillSmall"
 

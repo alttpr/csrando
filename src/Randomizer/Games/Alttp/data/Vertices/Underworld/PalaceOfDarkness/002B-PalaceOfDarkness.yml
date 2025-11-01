@@ -10,31 +10,31 @@ rooms:
             LiftPot:
               - "Palace of Darkness - Mimics 2"
           pots:
-            - name: "Palace of Darkness - Fairies - Pot 1"
+            - name: "Palace of Darkness - Sexy Statue - Pot 1"
               position: { x: 0x08, y: 0x0a, z: 0x00 }
               sprite: "@Heart"
-            - name: "Palace of Darkness - Fairies - Pot 2"
+            - name: "Palace of Darkness - Sexy Statue - Pot 2"
               position: { x: 0x16, y: 0x0a, z: 0x00 }
               sprite: "FloorSwitch"
-            - name: "Palace of Darkness - Fairies - Pot 3"
+            - name: "Palace of Darkness - Sexy Statue - Pot 3"
               position: { x: 0x08, y: 0x0c, z: 0x00 }
               sprite: "@Heart"
-            - name: "Palace of Darkness - Fairies - Pot 4"
+            - name: "Palace of Darkness - Sexy Statue - Pot 4"
               position: { x: 0x16, y: 0x0c, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Fairies - Pot 5"
+            - name: "Palace of Darkness - Sexy Statue - Pot 5"
               position: { x: 0x08, y: 0x0e, z: 0x00 }
               sprite: "@Heart"
-            - name: "Palace of Darkness - Fairies - Pot 6"
+            - name: "Palace of Darkness - Sexy Statue - Pot 6"
               position: { x: 0x16, y: 0x0e, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Palace of Darkness - Fairies - Crystal Switch"
+            - name: "Palace of Darkness - Sexy Statue - Crystal Switch"
               position: { x: 0x0a, y: 0x11, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
-            - name: "Palace of Darkness - Fairies - Statue"
+            - name: "Palace of Darkness - Sexy Statue - Statue"
               position: { x: 0x0a, y: 0x0a, z: 0x00 }
               sprite: "Statue"
               allow:
@@ -68,27 +68,27 @@ rooms:
               type: "chest"
               itemset: ["pod"]
           pots:
-            - name: "Palace of Darkness - Fairies - Pot 7"
+            - name: "Palade of Darkness - Map Chest Area - Pot 7"
               position: { x: 0x09, y: 0x2b, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Fairies - Pot 8"
+            - name: "Palade of Darkness - Map Chest Area - Pot 8"
               position: { x: 0x15, y: 0x2b, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Palace of Darkness - Fairies - Pot 9"
+            - name: "Palade of Darkness - Map Chest Area - Pot 9"
               position: { x: 0x09, y: 0x2d, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Fairies - Pot 10"
+            - name: "Palade of Darkness - Map Chest Area - Pot 10"
               position: { x: 0x15, y: 0x2d, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
-            - name: "Palace of Darkness - Fairies - Red Bari 1"
+            - name: "Palade of Darkness - Map Chest Area - Red Bari 1"
               position: { x: 0x07, y: 0x17, z: 0x00 }
               sprite: "RedBari"
-            - name: "Palace of Darkness - Fairies - Red Bari 2"
+            - name: "Palade of Darkness - Map Chest Area - Red Bari 2"
               position: { x: 0x05, y: 0x1a, z: 0x00 }
               sprite: "RedBari"
               deny:
                 - "RollerHR"
-            - name: "Palace of Darkness - Fairies - Red Bari 3"
+            - name: "Palade of Darkness - Map Chest Area - Red Bari 3"
               position: { x: 0x0a, y: 0x1a, z: 0x00 }
               sprite: "RedBari"

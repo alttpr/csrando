@@ -56,14 +56,14 @@ rooms:
               - "Ganon's Tower - Tile Room"
           pots:
             # TODO: Missing empty pot around gibdo
-            - name: "Ganon's Tower - Tile Room - Pot 1"
+            - name: "Ganon's Tower - Long Torch Puzzle - Pot 1"
               position: { x: 0x26, y: 0x1d, z: 0x00 }
               sprite: "@MagicRefillFull"
           mobs:
-            - name: "Ganon's Tower - Tile Room - Gibdo"
+            - name: "Ganon's Tower - Long Torch Puzzle - Gibdo"
               position: { x: 0x13, y: 0x0d, z: 0x00 }
               sprite: "Gibdo"
-            - name: "Ganon's Tower - Tile Room - Spike Trap"
+            - name: "Ganon's Tower - Long Torch Puzzle - Spike Trap"
               position: { x: 0x17, y: 0x10, z: 0x00 }
               sprite: "SpikeTrap"
               deny:
@@ -74,7 +74,7 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Ganon's Tower - Tile Room - Stalfos"
+            - name: "Ganon's Tower - Long Torch Puzzle - Stalfos"
               position: { x: 0x17, y: 0x14, z: 0x00 }
               sprite: "Stalfos"
               deny:
@@ -85,16 +85,16 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Ganon's Tower - Tile Room - Blue Bari 1"
+            - name: "Ganon's Tower - Long Torch Puzzle - Blue Bari 1"
               position: { x: 0x14, y: 0x1b, z: 0x00 }
               sprite: "BlueBari"
               deny:
                 - "RollerVU"
                 - "RollerVD"
-            - name: "Ganon's Tower - Tile Room - Medusa"
+            - name: "Ganon's Tower - Long Torch Puzzle - Medusa"
               position: { x: 0x13, y: 0x1c, z: 0x00 }
               sprite: "Medusa"
-            - name: "Ganon's Tower - Tile Room - Blue Bari 2"
+            - name: "Ganon's Tower - Long Torch Puzzle - Blue Bari 2"
               position: { x: 0x14, y: 0x1c, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -106,17 +106,17 @@ rooms:
             fixed:
               - "Ganon's Tower - Long Torch Puzzle"
           pots:
-            - name: "Ganon's Tower - Tile Room - Pot 2"
+            - name: "Ganon's Tower - Block Puzzle - Pot 2"
               position: { x: 0x0e, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ganon's Tower - Tile Room - Pot 3"
+            - name: "Ganon's Tower - Block Puzzle - Pot 3"
               position: { x: 0x12, y: 0x2e, z: 0x00 }
               sprite: "@Heart"
-            - name: "Ganon's Tower - Tile Room - Pot 4"
+            - name: "Ganon's Tower - Block Puzzle - Pot 4"
               position: { x: 0x10, y: 0x30, z: 0x00 }
               sprite: "@MagicRefillFull"
           mobs:
-            - name: "Ganon's Tower - Tile Room - Fire Bar (Clockwise)"
+            - name: "Ganon's Tower - Block Puzzle - Fire Bar (Clockwise)"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "FireBarCW"
               deny:

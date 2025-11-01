@@ -18,20 +18,20 @@ rooms:
               - "Palace of Darkness - Falling Bridge Ledge"
               - "Palace of Darkness - Falling Bridge Top"
           pots:
-            - name: "Palace of Darkness - Compass Room - Pot 1"
+            - name: "Palace of Darkness - Falling Bridge - Pot 1"
               position: { x: 0x0e, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Compass Room - Pot 2"
+            - name: "Palace of Darkness - Falling Bridge - Pot 2"
               position: { x: 0x10, y: 0x0a, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Compass Room - Pot 3"
+            - name: "Palace of Darkness - Falling Bridge - Pot 3"
               position: { x: 0x0e, y: 0x36, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palace of Darkness - Compass Room - Pot 4"
+            - name: "Palace of Darkness - Falling Bridge - Pot 4"
               position: { x: 0x10, y: 0x36, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Palace of Darkness - Compass Room - Mini Helmasaur 1"
+            - name: "Palace of Darkness - Falling Bridge - Mini Helmasaur 1"
               position: { x: 0x08, y: 0x06, z: 0x00 }
               sprite: "MiniHelmasaur"
               deny:
@@ -48,7 +48,7 @@ rooms:
                 - "FireBarCCW"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Palace of Darkness - Compass Room - Mini Helmasaur 2"
+            - name: "Palace of Darkness - Falling Bridge - Mini Helmasaur 2"
               position: { x: 0x07, y: 0x10, z: 0x00 }
               sprite: "MiniHelmasaur"
               deny:
@@ -65,7 +65,7 @@ rooms:
                 - "FireBarCCW"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Palace of Darkness - Compass Room - Falling Bridge"
+            - name: "Palace of Darkness - Falling Bridge - Falling Bridge"
               position: { x: 0x07, y: 0x1a, z: 0x00 }
               sprite: "FallingBridge"
 
@@ -130,22 +130,22 @@ rooms:
               type: "chest"
               itemset: ["pod"]
           pots:
-            - name: "Palace of Darkness - Compass Room - Pot 5"
+            - name: "Palace of Darkness - Harmless Hellway - Pot 5"
               position: { x: 0x2a, y: 0x27, z: 0x00 }
-            - name: "Palace of Darkness - Compass Room - Pot 6"
+            - name: "Palace of Darkness - Harmless Hellway - Pot 6"
               position: { x: 0x34, y: 0x27, z: 0x00 }
           mobs:
-            - name: "Palace of Darkness - Compass Room - Spike Trap 1"
+            - name: "Palace of Darkness - Harmless Hellway - Spike Trap 1"
               position: { x: 0x16, y: 0x15, z: 0x00 }
               sprite: "SpikeTrap"
-            - name: "Palace of Darkness - Compass Room - Spike Trap 2"
+            - name: "Palace of Darkness - Harmless Hellway - Spike Trap 2"
               position: { x: 0x16, y: 0x17, z: 0x00 }
               sprite: "SpikeTrap"
-            - name: "Palace of Darkness - Compass Room - Statue"
+            - name: "Palace of Darkness - Harmless Hellway - Statue"
               position: { x: 0x15, y: 0x19, z: 0x00 }
               sprite: "Statue"
               allow:
                 - "Statue"
-            - name: "Palace of Darkness - Compass Room - Spike Trap 3"
+            - name: "Palace of Darkness - Harmless Hellway - Spike Trap 3"
               position: { x: 0x16, y: 0x19, z: 0x00 }
               sprite: "SpikeTrap"

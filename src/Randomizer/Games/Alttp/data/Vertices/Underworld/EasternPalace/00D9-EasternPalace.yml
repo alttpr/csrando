@@ -9,22 +9,22 @@ rooms:
               - "Eastern Palace - Dodgeball"
               - "Eastern Palace - Antifairy Playground"
           pots:
-            - name: "Eastern Palace - Dodgeball - Pot 1"
+            - name: "Eastern Palace - Eyegore Switches - Pot 1"
               position: { x: 0x2e, y: 0x28, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Eastern Palace - Dodgeball - Pot 2"
+            - name: "Eastern Palace - Eyegore Switches - Pot 2"
               position: { x: 0x2e, y: 0x38, z: 0x00 }
               sprite: "@Heart"
           mobs:
-            - name: "Eastern Palace - Dodgeball - Green Eyegore 1"
+            - name: "Eastern Palace - Eyegore Switches - Green Eyegore 1"
               position: { x: 0x18, y: 0x15, z: 0x00 }
               sprite: "EyegoreGreen"
               deny:
                 - "RollerHR"
-            - name: "Eastern Palace - Dodgeball - Green Eyegore 2"
+            - name: "Eastern Palace - Eyegore Switches - Green Eyegore 2"
               position: { x: 0x18, y: 0x18, z: 0x00 }
               sprite: "EyegoreGreen"
-            - name: "Eastern Palace - Dodgeball - Green Eyegore 3"
+            - name: "Eastern Palace - Eyegore Switches - Green Eyegore 3"
               position: { x: 0x18, y: 0x1b, z: 0x00 }
               sprite: "EyegoreGreen"
 

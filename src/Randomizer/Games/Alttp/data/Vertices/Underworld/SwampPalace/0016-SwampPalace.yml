@@ -9,7 +9,7 @@ rooms:
               - "Swamp Palace - Waterfall Exit"
               - "Swamp Palace - Pool Right Ledge"
           mobs:
-            - name: "Swamp Palace - Pool - Zol 1"
+            - name: "Swamp Palace - Tic Room C - Zol 1"
               position: { x: 0x15, y: 0x07, z: 0x00 }
               sprite: "Zol"
               deny:
@@ -20,7 +20,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Pool - Zol 2"
+            - name: "Swamp Palace - Tic Room C - Zol 2"
               position: { x: 0x15, y: 0x08, z: 0x00 }
               sprite: "Zol"
               deny:
@@ -33,7 +33,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Pool - Blue Bari"
+            - name: "Swamp Palace - Tic Room C - Blue Bari"
               position: { x: 0x15, y: 0x09, z: 0x00 }
               sprite: "BlueBari"
               deny:
@@ -54,32 +54,32 @@ rooms:
             UseBomb:
               - "Swamp Palace - Pool Center Ledge"
           pots:
-            - name: "Swamp Palace - Pool - Pot 1"
+            - name: "Swamp Palace - Tic Room I - Pot 1"
               position: { x: 0x1e, y: 0x07, z: 0x00 }
               sprite: "@Heart"
-            - name: "Swamp Palace - Pool - Pot 2"
+            - name: "Swamp Palace - Tic Room I - Pot 2"
               position: { x: 0x20, y: 0x07, z: 0x00 }
               sprite: "@Heart"
-            - name: "Swamp Palace - Pool - Pot 3"
+            - name: "Swamp Palace - Tic Room I - Pot 3"
               position: { x: 0x1e, y: 0x09, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Swamp Palace - Pool - Pot 4"
+            - name: "Swamp Palace - Tic Room I - Pot 4"
               position: { x: 0x20, y: 0x09, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Swamp Palace - Pool - Pot 5"
+            - name: "Swamp Palace - Tic Room I - Pot 5"
               position: { x: 0x1e, y: 0x0b, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Swamp Palace - Pool - Pot 6"
+            - name: "Swamp Palace - Tic Room I - Pot 6"
               position: { x: 0x20, y: 0x0b, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Swamp Palace - Pool - Pot 7"
+            - name: "Swamp Palace - Tic Room I - Pot 7"
               position: { x: 0x1e, y: 0x0d, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Swamp Palace - Pool - Pot 8"
+            - name: "Swamp Palace - Tic Room I - Pot 8"
               position: { x: 0x20, y: 0x0d, z: 0x00 }
               sprite: "@BombRefill1"
           mobs:
-            - name: "Swamp Palace - Pool - Zol 3"
+            - name: "Swamp Palace - Tic Room I - Zol 3"
               position: { x: 0x10, y: 0x0a, z: 0x00 }
               sprite: "Zol"
               deny:

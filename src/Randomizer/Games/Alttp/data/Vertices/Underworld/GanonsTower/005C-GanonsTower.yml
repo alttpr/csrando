@@ -12,13 +12,13 @@ rooms:
             PegasusBoots:
               - "Ganon's Tower - Cannonball Z ledge"
           mobs:
-            - name: "Ganon's Tower - Refill Room - Moving Cannon (Down)"
+            - name: "Ganon's Tower - Cannonball Z - Moving Cannon (Down)"
               position: { x: 0x0b, y: 0x02, z: 0x00 }
               sprite: "CannonBallShooterD"
-            - name: "Ganon's Tower - Refill Room - Moving Cannon (Up) 1"
+            - name: "Ganon's Tower - Cannonball Z - Moving Cannon (Up) 1"
               position: { x: 0x05, y: 0x0e, z: 0x00 }
               sprite: "CannonBallShooterU"
-            - name: "Ganon's Tower - Refill Room - Moving Cannon (Up) 2"
+            - name: "Ganon's Tower - Cannonball Z - Moving Cannon (Up) 2"
               position: { x: 0x0e, y: 0x0e, z: 0x00 }
               sprite: "CannonBallShooterU"
 

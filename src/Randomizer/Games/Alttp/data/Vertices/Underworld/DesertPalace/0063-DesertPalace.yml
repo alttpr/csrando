@@ -9,7 +9,7 @@ rooms:
             fixed:
               - "Desert Palace - Tiles 1"
           mobs:
-            - name: "Desert Palace - Tiles 1 - Beamos"
+            - name: "Desert Palace - Beemos 2 - Beamos"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "Beamos"
 

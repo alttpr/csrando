@@ -13,14 +13,14 @@ rooms:
             PowerGlove:
               - "Ice Palace - Over Boss - Right After Rock"
           pots:
-            - name: "Ice Palace - Over Boss - Top - Pot 1"
+            - name: "Ice Palace - Over Boss - Pot 1"
               position: { x: 0x26, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
-            - name: "Ice Palace - Over Boss - Top - Pot 2"
+            - name: "Ice Palace - Over Boss - Pot 2"
               position: { x: 0x28, y: 0x10, z: 0x00 }
               sprite: "@MagicRefillSmall"
           mobs:
-            - name: "Ice Palace - Over Boss - Top - Red Bari 1"
+            - name: "Ice Palace - Over Boss - Red Bari 1"
               position: { x: 0x16, y: 0x05, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -34,7 +34,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "FireBarCCW"
                 - "Bumper"
-            - name: "Ice Palace - Over Boss - Top - Red Bari 2"
+            - name: "Ice Palace - Over Boss - Red Bari 2"
               position: { x: 0x19, y: 0x05, z: 0x00 }
               sprite: "RedBari"
               deny:
@@ -48,7 +48,7 @@ rooms:
                 - "BigSpikeTrap"
                 - "FireBarCW"
                 - "Bumper"
-            - name: "Ice Palace - Over Boss - Top - Pull Switch (Good)"
+            - name: "Ice Palace - Over Boss - Pull Switch (Good)"
               position: { x: 0x1c, y: 0x05, z: 0x00 }
               sprite: "PullSwitchGoodTongue"
               allow:
@@ -60,7 +60,7 @@ rooms:
             Hammer:
               - "Ice Palace - Over Boss - Pit"
           mobs:
-            - name: "Ice Palace - Over Boss - Top - Statue"
+            - name: "Ice Palace - Over Boss - Statue"
               position: { x: 0x14, y: 0x09, z: 0x00 }
               sprite: "StatueAlternative"
               deny:
@@ -92,25 +92,25 @@ rooms:
             Hammer:
               - "Ice Palace - Over Boss - Right After Pegs"
           mobs:
-            - name: "Ice Palace - Over Boss - Top - Blue Bari 1"
+            - name: "Ice Palace - Over Boss - Blue Bari 1"
               position: { x: 0x1b, y: 0x08, z: 0x00 }
               sprite: "BlueBari"
-            - name: "Ice Palace - Over Boss - Top - Blue Bari 2"
+            - name: "Ice Palace - Over Boss - Blue Bari 2"
               position: { x: 0x1c, y: 0x08, z: 0x00 }
               sprite: "BlueBari"
-            - name: "Ice Palace - Over Boss - Top - Blue Bari 3"
+            - name: "Ice Palace - Over Boss - Blue Bari 3"
               position: { x: 0x1b, y: 0x09, z: 0x00 }
               sprite: "BlueBari"
-            - name: "Ice Palace - Over Boss - Top - Blue Bari 4"
+            - name: "Ice Palace - Over Boss - Blue Bari 4"
               position: { x: 0x1c, y: 0x09, z: 0x00 }
               sprite: "BlueBari"
 
         - name: "Ice Palace - Over Boss - Right After Pegs"
           pit: true
           pots:
-            - name: "Ice Palace - Over Boss - Top - Pot 3"
+            - name: "Ice Palace - Over Boss - Pot 3"
               position: { x: 0x36, y: 0x18, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Ice Palace - Over Boss - Top - Pot 4"
+            - name: "Ice Palace - Over Boss - Pot 4"
               position: { x: 0x38, y: 0x18, z: 0x00 }
               sprite: "@ArrowRefill5"
