@@ -297,6 +297,10 @@ MagicBat: #MAGIC BAT
 DashItem: #BONK ITEM
   id: 0x3B
   flags: NoPlace
+LumberjackTree: #BONK ITEM (Post-Agahnim Lumberjack Tree)
+  id: 0x3B
+  flags: NoPlace
+  sheets: [0x0F, null, null, null]
 VillageKid: #KID IN KAK?
   id: 0x3C
   flags: NoPlace

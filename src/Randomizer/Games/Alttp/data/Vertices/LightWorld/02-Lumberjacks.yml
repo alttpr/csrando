@@ -35,7 +35,7 @@ maps:
 
             - name: "Lumberjacks - Bonkable Item"
               position: { x: 0x0d, y: 0x12 }
-              sprite: "DashItem"
+              sprite: "LumberjackTree"
               state: [2]
 
         - name: "Lumberjacks Tree"
