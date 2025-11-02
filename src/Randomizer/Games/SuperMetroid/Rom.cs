@@ -552,6 +552,12 @@ public class Rom : GameRom
         // the behavior of the door appearing immediately closed, but move the spawn location to be in an
         // out-of-the-way off-camera location, in the top-right of the room.
         Write((SNES)0x838CF2, [0x21, 0x06]);
+
+        // Remove the room ASM pointer from tourian elevator room so the map isn't auto-revealed
+        Write((SNES)0x8FDAD3, [0x00, 0x00]);
+
+        // Disable the code that writes the standard elevator destination area markers
+        Write((SNES)0x82BB30, [0x6B]); // RTL
     }
 
 
@@ -1182,7 +1188,7 @@ public class Rom : GameRom
             buf.AddRange(UshortBytes(e.Var));
         }
         buf.AddRange(UshortBytes(0x0000));
-        return [..buf];
+        return [.. buf];
     }
 
 
@@ -1379,7 +1385,7 @@ public class Rom : GameRom
     private static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
 
     // Gets a 24-bit SNES address in little-endian format
-    private static byte[] UlongBytes(int value) => [ (byte)(value & 0xFF), (byte)((value >> 8) & 0xFF), (byte)((value >> 16) & 0xFF) ];
+    private static byte[] UlongBytes(int value) => [(byte)(value & 0xFF), (byte)((value >> 8) & 0xFF), (byte)((value >> 16) & 0xFF)];
 
     private static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
 

@@ -14,7 +14,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     protected override IWorld CreateWorld(int worldId, WorldConfig worldConfig, Graph graph, PRNG prng) => new World(worldId, worldConfig, graph, prng);
 
-    public override void AppendSpoiler(SpoilerLog spoilerLog) { } // FIXME: implement a spoiler log
+    public override void AppendSpoiler(SpoilerLog spoilerLog) => Spoiler.Log(this, spoilerLog);
 
     protected override void WriteWorldToRom(IWorld world, IRom rom, PRNG prng)
     {
