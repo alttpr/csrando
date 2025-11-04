@@ -1,19 +1,19 @@
 <script lang="ts">
-	import Toggle from '$lib/components/ui/Toggle.svelte';
+	import Toggle from "$lib/components/ui/Toggle.svelte";
 	interface Props {
 		id: string;
 		description?: string;
 		value?: boolean;
-		size?: 'sm' | 'md';
+		size?: "sm" | "md";
 		disabled?: boolean;
 	}
 	let {
 		id,
-		description = '',
+		description = "",
 		value = $bindable(false),
-		size = 'sm',
-		disabled = false
+		size = "sm",
+		disabled = false,
 	}: Props = $props();
 </script>
 
-<Toggle {id} bind:checked={value} label={description} {size} {disabled} />
+<Toggle {id} bind:checked={value} {size} {disabled} />

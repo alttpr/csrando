@@ -179,6 +179,8 @@ public sealed partial class MetaController : ControllerBase
             return (MetaSettingsVisibility.Experimental, experimental.Reason);
         if (property.GetCustomAttribute<AdvancedAttribute>() is { } advanced)
             return (MetaSettingsVisibility.Advanced, advanced.Reason);
+        if (property.GetCustomAttribute<WipAttribute>() is { } wip)
+            return (MetaSettingsVisibility.Wip, wip.Reason);
 
         return (MetaSettingsVisibility.Basic, null);
     }
@@ -234,4 +236,4 @@ public sealed record MetaSetting(
 );
 public enum MetaSettingsType { Input, SingleChoice, MultipleChoice, Toggle, Slider };
 public sealed record MetaSettingsRange(int From, int To);
-public enum MetaSettingsVisibility { Basic, Advanced, Experimental };
+public enum MetaSettingsVisibility { Basic, Advanced, Experimental, Wip };

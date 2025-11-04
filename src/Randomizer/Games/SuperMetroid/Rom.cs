@@ -716,6 +716,8 @@ public class Rom : GameRom
             area_y_offsets[i] = world.Map!.room_y.Select((r, idx) => (r, idx)).Where(r => world.Map.room_area[r.idx] == i).Min(r => r.r);
         }
 
+        Dictionary<(int, int, int), bool> mapTileWrites = new Dictionary<(int, int, int), bool>();
+
         for (int i = 0; i < world.Map!.room_id.Count(); i++)
         {
             var mapRoom = world.Map.room_id[i];
@@ -756,7 +758,16 @@ public class Rom : GameRom
 
                 tileBytes[1] = (byte)((tileBytes[1] | ((palette >> 8) & 0x1F)));
 
+                if(mapTileWrites.ContainsKey((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1])))
+                {
+                    // Already wrote a tile here, skip so we don't overwrite already written map tiles
+                    // This can be a problem with for example the toilet
+                    continue;
+                }
+
                 WriteMapTile(mapArea, (offsetX + tile.Coords[0]), (offsetY + tile.Coords[1]), tileBytes);
+                mapTileWrites[(mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1])] = true;
+
                 if (tile.Interior == TileInterior.MapStation)
                 {
                     mapStations.Add((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1]));

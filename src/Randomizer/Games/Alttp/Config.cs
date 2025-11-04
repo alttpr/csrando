@@ -73,7 +73,7 @@ public class Config
 
     private int? _moldormEyeCount;
     [ValueRange(0, 8, Default = DefaultMoldormEyeCount)]
-    [Category("Cosmetic")]
+    [Category("Cosmetic", CategoryDisplay.Collapsed)]
     public int MoldormEyeCount
     {
         get => _moldormEyeCount.GetValueOrDefault(DefaultMoldormEyeCount);
@@ -122,6 +122,7 @@ public class Config
     public StateOption State { get; init; } = StateOption.Open;
 
     [Category("Item Placement")]
+    [Wip("Glitch logic is not yet fully implemented")]
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
     [Ignore("We don't have enough tech options to make this worthwhile.")]
@@ -276,7 +277,8 @@ public enum TechOption
     DungeonBunnyRevival,
 }
 public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
-public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
+//public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
+public enum EntranceShuffleOption { None, Simple, Restricted, Crossed } // TODO: Full and Insanity not implemented yet
 public enum BossShuffleOption { None, Simple, Full, Random }
 public enum ShopSupplyOption { Normal, Shuffled }
 public enum EnemyShuffleOption { None, Shuffled, Random }

@@ -29,8 +29,21 @@
 
 	let { data }: Props = $props();
 
-	let metadata = $state<Metadata | null>(data.metadata);
-	let pageError = $state<string | null>(data.error);
+	const metadata = $derived(data.metadata);
+	const pageError = $derived(data.error);
+
+	let formValues: {
+		global: { [key: string]: unknown };
+		perGame: { [gameKey: string]: { [key: string]: unknown } };
+	} = $state({ global: {}, perGame: {} });
+
+	let availableGames: Array<{
+		id: string;
+		name: string;
+		description?: string;
+	}> = $state([]);
+	let selectedGames: string[] = $state([]);
+	let activeGameTab: string | null = $state(null);
 
 	// Helper function to get default value for an option
 	function getDefaultValue(option: MetadataSetting): unknown {
@@ -137,31 +150,56 @@
 		return result;
 	}
 
-	// Initialize form values immediately with metadata
-	const initData = metadata ? initializeFormValues(metadata) : {
-		availableGames: [],
-		formGlobal: {},
-		formPerGame: {},
-		selectedGames: [],
-		activeTab: null
-	};
+	function resetFormState(newMetadata: Metadata | null) {
+		if (!newMetadata) {
+			formValues = { global: {}, perGame: {} };
+			availableGames = [];
+			selectedGames = [];
+			activeGameTab = null;
+			return;
+		}
 
-	let formValues: {
-		global: { [key: string]: unknown };
-		perGame: { [gameKey: string]: { [key: string]: unknown } };
-	} = $state({ global: { ...initData.formGlobal }, perGame: { ...initData.formPerGame } });
+		const initData = initializeFormValues(newMetadata);
+		formValues = {
+			global: { ...initData.formGlobal },
+			perGame: { ...initData.formPerGame },
+		};
+		availableGames = [...initData.availableGames];
+		selectedGames = [...initData.selectedGames];
+		activeGameTab = initData.activeTab;
+	}
 
-	let availableGames: Array<{
-		id: string;
-		name: string;
-		description?: string;
-	}> = $state([...initData.availableGames]);
-	let selectedGames: string[] = $state([...initData.selectedGames]);
-	let activeGameTab: string | null = $state(initData.activeTab);
+	function getMetadataSignature(meta: Metadata | null): string {
+		if (!meta) return "null";
+		try {
+			return JSON.stringify(meta);
+		} catch (err) {
+			console.warn(
+				"Failed to serialize metadata for change detection",
+				err,
+			);
+			return `${Date.now()}`;
+		}
+	}
+
+	let lastMetadataSignature: string | null = null;
+
 	let generating = $state(false);
 	let formSubmissionError: string | null = $state(null);
+
+	$effect(() => {
+		const meta = metadata ?? null;
+		const signature = getMetadataSignature(meta);
+		if (signature === lastMetadataSignature) return;
+		lastMetadataSignature = signature;
+		resetFormState(meta);
+		generating = false;
+		formSubmissionError = null;
+	});
 	let selectedVisibility = $state(["Basic"]);
-	let visibilitySelection = $state<"basic" | "advanced" | "expert">("basic");
+	let visibilitySelection = $state<"basic" | "advanced" | "expert" | "wip">(
+		"basic",
+	);
 
 	const visibilityLevels = [
 		{ id: "basic", name: "Basic", value: ["Basic"] as const },
@@ -175,6 +213,11 @@
 			name: "Expert",
 			value: ["Basic", "Advanced", "Expert"] as const,
 		},
+		{
+			id: "wip",
+			name: "Work in progress",
+			value: ["Basic", "Advanced", "Expert", "Wip"] as const,
+		},
 	];
 
 	$effect(() => {
@@ -183,6 +226,7 @@
 			basic: ["Basic"],
 			advanced: ["Basic", "Advanced"],
 			expert: ["Basic", "Advanced", "Expert"],
+			wip: ["Basic", "Advanced", "Expert", "Wip"],
 		};
 		selectedVisibility = map[visibilitySelection];
 	});
@@ -265,7 +309,7 @@
 		try {
 			const isRandomSelection = (value: unknown) =>
 				typeof value === "string" &&
-				value.trim().toLowerCase() === "random";
+				value.trim().toLowerCase() === "randompick";
 
 			const filterNonNullValues = (obj: unknown) => {
 				const o = obj as Record<string, unknown> | undefined;
@@ -291,7 +335,10 @@
 
 					if (typeof value === "string") {
 						const trimmed = value.trim();
-						if (!trimmed || trimmed.toLowerCase() === "random") {
+						if (
+							!trimmed ||
+							trimmed.toLowerCase() === "randompick"
+						) {
 							continue;
 						}
 						entries.push([key, trimmed]);

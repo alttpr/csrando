@@ -69,7 +69,15 @@ internal static class Spoiler
             var group = parts.Length > 1 ? parts[0] : "Locations";
             var sectionKey = $"{gameLabel} - {group}";
             var section = GetOrCreateSection(spoiler, sectionKey);
-            section[location.Name] = location.Item?.Name ?? "Nothing";
+            var gameId = location.Item?.World switch
+            {
+                AlttpWorld _ => "Z3",
+                SuperMetroidWorld _ => "SM",
+                Zelda1World _ => "Z1",
+                MetroidWorld _ => "M1",
+                _ => "Unknown"
+            };
+            section[location.Name] = (location.Item?.Name ?? "Nothing") + $" ({gameId})";
         }
     }
 

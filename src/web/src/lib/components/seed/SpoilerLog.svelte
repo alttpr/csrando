@@ -11,9 +11,16 @@
 
     let isExpanded = $state(false);
     const panelId = "seed-spoiler-log-panel";
+    let searchQuery = $state("");
 
     function toggleExpanded() {
         isExpanded = !isExpanded;
+    }
+
+    function handleSearchInput(event: Event) {
+        const target = event.currentTarget as HTMLInputElement | null;
+        if (!target) return;
+        searchQuery = target.value;
     }
 
     // Type guard to check if spoilerLog is valid
@@ -43,6 +50,36 @@
         return metaSection ? [...otherSections, metaSection] : otherSections;
     });
 
+    const normalizedSearch = $derived(() => searchQuery.trim().toLowerCase());
+
+    const filteredSections = $derived(() => {
+        const sections = sortedSections();
+        const query = normalizedSearch();
+
+        if (!query) return sections;
+
+        return sections.reduce(
+            (acc, [sectionName, sectionData]) => {
+                const filteredEntries = Object.entries(sectionData).filter(
+                    ([location, item]) =>
+                        [sectionName, location, item]
+                            .map((text) => text.toLowerCase())
+                            .some((text) => text.includes(query)),
+                );
+
+                if (filteredEntries.length > 0) {
+                    acc.push([
+                        sectionName,
+                        Object.fromEntries(filteredEntries),
+                    ]);
+                }
+
+                return acc;
+            },
+            [] as Array<[string, Record<string, string>]>,
+        );
+    });
+
     // Helper to format keys into more readable names
     function formatKey(key: string): string {
         // Convert camelCase/PascalCase to Title Case with spaces
@@ -54,9 +91,9 @@
 
     // Helper to format location/item names
     function formatValue(value: string): string {
-        // Add spaces before capital letters and convert to Title Case
+        // Add spaces before capital letters when followed by lowercase letters and convert to Title Case
         return value
-            .replace(/([A-Z])/g, " $1")
+            .replace(/([A-Z])(?=[a-z])/g, " $1")
             .replace(/^./, (str) => str.toUpperCase())
             .trim();
     }
@@ -132,7 +169,33 @@
                 class:hidden={!isExpanded}
                 aria-hidden={!isExpanded}
             >
-                {#each sortedSections() as [sectionName, sectionData] (sectionName)}
+                <div
+                    class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                >
+                    <div class="relative w-full sm:max-w-xs">
+                        <label class="sr-only" for="spoiler-log-filter">
+                            Search spoiler log
+                        </label>
+                        <input
+                            id="spoiler-log-filter"
+                            type="search"
+                            class="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/50 dark:border-slate-600 dark:bg-slate-900/60 dark:text-slate-200"
+                            placeholder="Filter locations or items"
+                            value={searchQuery}
+                            oninput={handleSearchInput}
+                        />
+                    </div>
+                </div>
+
+                {#if normalizedSearch() && filteredSections().length === 0}
+                    <p
+                        class="rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-500 dark:bg-slate-800/60 dark:text-slate-300"
+                    >
+                        No results found for "{searchQuery.trim()}".
+                    </p>
+                {/if}
+
+                {#each filteredSections() as [sectionName, sectionData] (sectionName)}
                     <section
                         class="border-t border-slate-200 pt-5 first:border-t-0 first:pt-0 dark:border-slate-700"
                     >

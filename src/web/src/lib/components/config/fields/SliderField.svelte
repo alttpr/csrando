@@ -7,7 +7,13 @@
 		value?: number;
 	}
 
-	let { id, min = 0, max = 100, step = 1, value = $bindable(0) }: Props = $props();
+	let {
+		id,
+		min = 0,
+		max = 100,
+		step = 1,
+		value = $bindable(0),
+	}: Props = $props();
 
 	function onInput(e: Event) {
 		const num = parseFloat((e.target as HTMLInputElement).value);
