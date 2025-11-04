@@ -277,8 +277,7 @@ public enum TechOption
     DungeonBunnyRevival,
 }
 public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
-//public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
-public enum EntranceShuffleOption { None, Simple, Restricted, Crossed } // TODO: Full and Insanity not implemented yet
+public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
 public enum BossShuffleOption { None, Simple, Full, Random }
 public enum ShopSupplyOption { Normal, Shuffled }
 public enum EnemyShuffleOption { None, Shuffled, Random }

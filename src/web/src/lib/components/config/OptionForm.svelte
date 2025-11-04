@@ -272,6 +272,31 @@
 			}))(),
 	);
 
+	// Track collapsible open state so reactive updates do not snap sections shut.
+	const categoryOpen = $state<Record<string, boolean>>({});
+	const subcategoryOpen = $state<Record<string, boolean>>({});
+
+	$effect(() => {
+		for (const category of categories) {
+			if (
+				category.displayMode &&
+				categoryOpen[category.name] === undefined
+			) {
+				categoryOpen[category.name] =
+					category.displayMode === "Expanded";
+			}
+
+			for (const subcategory of category.subcategories) {
+				if (!subcategory.displayMode) continue;
+				const subKey = `${category.name}::${subcategory.name}`;
+				if (subcategoryOpen[subKey] === undefined) {
+					subcategoryOpen[subKey] =
+						subcategory.displayMode === "Expanded";
+				}
+			}
+		}
+	});
+
 	// child relationships handled by OptionField
 </script>
 
@@ -302,7 +327,7 @@
 			{#if category.displayMode}
 				<details
 					class="mb-1 group"
-					open={category.displayMode === "Expanded"}
+					bind:open={categoryOpen[category.name]}
 				>
 					<summary
 						class="cursor-pointer flex items-center gap-3 mb-2 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 rounded"
@@ -339,8 +364,11 @@
 							{#if subcategory.displayMode}
 								<details
 									class="mb-1 group"
-									open={subcategory.displayMode ===
-										"Expanded"}
+									bind:open={
+										subcategoryOpen[
+											`${category.name}::${subcategory.name}`
+										]
+									}
 								>
 									<summary
 										class="cursor-pointer mb-2 flex items-center gap-2 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60 rounded"

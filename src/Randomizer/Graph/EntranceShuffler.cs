@@ -21,9 +21,9 @@ internal sealed class EntranceShuffler : IWorldModifier
         {
             EntranceShuffleOption.Simple => "simple",
             EntranceShuffleOption.Restricted => "restricted",
-            EntranceShuffleOption.Full => "vanilla",
+            EntranceShuffleOption.Full => throw new NotImplementedException("Full entrance shuffle is not implemented"),
             EntranceShuffleOption.Crossed => "crossed",
-            EntranceShuffleOption.Insanity => "insanity",
+            EntranceShuffleOption.Insanity => throw new NotImplementedException("Insanity entrance shuffle is not implemented"),
             EntranceShuffleOption.None => "vanilla",
             _ => throw new ArgumentException("Unknown EntranceShuffle option: " + world.WorldConfig.Alttp.EntranceShuffle)
         };

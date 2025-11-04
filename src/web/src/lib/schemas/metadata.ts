@@ -38,10 +38,16 @@ const SettingBaseSchema = z.object({
 // Accept nullable values from backend (e.g. { "Random": null }) and coerce them to their key or a special value
 export const SingleChoiceSettingSchema = SettingBaseSchema.extend({
   type: z.literal("SingleChoice"),
-  values: z.record(z.string().nullable()).transform((rec) =>
-    Object.fromEntries(
-      Object.entries(rec).map(([k, v]) => [k, (v === null && k === "Random") ? "RandomPick" : v ?? k])),
-  ),
+  values: z
+    .record(z.string().nullable())
+    .transform((rec) =>
+      Object.fromEntries(
+        Object.entries(rec).map(([k, v]) => [
+          k,
+          v === null && k === "Random" ? "RandomPick" : (v ?? k),
+        ]),
+      ),
+    ),
   default: z.union([z.string(), z.number()]).optional(),
 });
 
@@ -50,7 +56,12 @@ export const MultipleChoiceSettingSchema = SettingBaseSchema.extend({
   values: z
     .record(z.string().nullable())
     .transform((rec) =>
-      Object.fromEntries(Object.entries(rec).map(([k, v]) => [k, (v === null && k === "Random") ? "RandomPick" : v ?? k])),
+      Object.fromEntries(
+        Object.entries(rec).map(([k, v]) => [
+          k,
+          v === null && k === "Random" ? "RandomPick" : (v ?? k),
+        ]),
+      ),
     ),
   default: z.string().optional(),
   optionsFor: z.string().optional(),
@@ -135,19 +146,19 @@ function normalizeRawMetadata(raw: unknown): unknown {
       const targetInfo =
         v.target && typeof v.target === "object"
           ? (v.target as {
-            name?: string;
-            description?: string;
-            game?: string;
-          })
+              name?: string;
+              description?: string;
+              game?: string;
+            })
           : undefined;
       const settingsArr = Array.isArray(v.settings) ? v.settings : [];
       gameSettings[gameKey] = {
         game: targetInfo
           ? {
-            name: targetInfo.name,
-            description: targetInfo.description,
-            code: targetInfo.game,
-          }
+              name: targetInfo.name,
+              description: targetInfo.description,
+              code: targetInfo.game,
+            }
           : undefined,
         settings: settingsArr,
       };

@@ -9,7 +9,6 @@
 	}
 	let {
 		id,
-		description = "",
 		value = $bindable(false),
 		size = "sm",
 		disabled = false,
