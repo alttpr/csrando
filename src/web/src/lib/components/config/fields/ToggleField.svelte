@@ -2,7 +2,6 @@
 	import Toggle from "$lib/components/ui/Toggle.svelte";
 	interface Props {
 		id: string;
-		description?: string;
 		value?: boolean;
 		size?: "sm" | "md";
 		disabled?: boolean;

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { MetadataSetting } from '$lib/types';
-	import ToggleField from './fields/ToggleField.svelte';
-	import SelectField from './fields/SelectField.svelte';
-	import SliderField from './fields/SliderField.svelte';
-	import MultiChoiceField from './fields/MultiChoiceField.svelte';
-	import TextInputField from './fields/TextInputField.svelte';
+	import type { MetadataSetting } from "$lib/types";
+	import ToggleField from "./fields/ToggleField.svelte";
+	import SelectField from "./fields/SelectField.svelte";
+	import SliderField from "./fields/SliderField.svelte";
+	import MultiChoiceField from "./fields/MultiChoiceField.svelte";
+	import TextInputField from "./fields/TextInputField.svelte";
 
-	import Self from './OptionField.svelte';
+	import Self from "./OptionField.svelte";
 
 	interface Props {
 		option: MetadataSetting;
@@ -19,27 +19,31 @@
 		option,
 		values = $bindable<Record<string, unknown>>({}),
 		visibleOptions = [],
-		depth = 0
+		depth = 0,
 	}: Props = $props();
 
-	const hasOptionsFor = (o: MetadataSetting): o is MetadataSetting & { optionsFor: string } =>
-		typeof (o as { optionsFor?: unknown }).optionsFor === 'string';
+	const hasOptionsFor = (
+		o: MetadataSetting,
+	): o is MetadataSetting & { optionsFor: string } =>
+		typeof (o as { optionsFor?: unknown }).optionsFor === "string";
 
 	const children = $derived(
 		(visibleOptions || []).filter(
-			(o) => o.dependsOn?.key === option.key || (hasOptionsFor(o) && o.optionsFor === option.key)
-		)
+			(o) =>
+				o.dependsOn?.key === option.key ||
+				(hasOptionsFor(o) && o.optionsFor === option.key),
+		),
 	);
 
 	const labelClass = $derived(
 		depth === 0
-			? 'block text-xs font-medium mb-0.5 text-slate-600 dark:text-slate-300'
-			: 'block text-[11px] font-medium mb-0.5 text-slate-600 dark:text-slate-300'
+			? "block text-xs font-medium mb-0.5 text-slate-600 dark:text-slate-300"
+			: "block text-[11px] font-medium mb-0.5 text-slate-600 dark:text-slate-300",
 	);
 	const descriptionClass = $derived(
 		depth === 0
-			? 'text-xs text-slate-500 dark:text-slate-400 mb-1'
-			: 'text-[11px] text-slate-500 dark:text-slate-400 mb-1'
+			? "text-xs text-slate-500 dark:text-slate-400 mb-1"
+			: "text-[11px] text-slate-500 dark:text-slate-400 mb-1",
 	);
 </script>
 
@@ -49,20 +53,22 @@
 		<p class={descriptionClass}>{option.description}</p>
 	{/if}
 
-	{#if option.type === 'Toggle'}
+	{#if option.type === "Toggle"}
 		<ToggleField
 			id={option.key}
-			description={option.description || ''}
 			bind:value={values[option.key] as boolean | undefined}
 		/>
-	{:else if option.type === 'SingleChoice'}
+	{:else if option.type === "SingleChoice"}
 		<SelectField
 			id={option.key}
 			bind:value={values[option.key] as string | undefined}
 			className="mt-1 text-sm py-1.5"
-			items={Object.entries(option.values).map((opt) => ({ value: String(opt[1]), name: opt[0] }))}
+			items={Object.entries(option.values).map((opt) => ({
+				value: String(opt[1]),
+				name: opt[0],
+			}))}
 		/>
-	{:else if option.type === 'Slider'}
+	{:else if option.type === "Slider"}
 		<SliderField
 			id={option.key}
 			min={option.range.from ?? 0}
@@ -70,7 +76,7 @@
 			step={1}
 			bind:value={values[option.key] as number | undefined}
 		/>
-	{:else if option.type === 'MultipleChoice'}
+	{:else if option.type === "MultipleChoice"}
 		<MultiChoiceField
 			idPrefix={option.key}
 			items={option.values}
@@ -80,7 +86,7 @@
 	{:else}
 		<TextInputField
 			id={option.key}
-			type={(option.type as 'text' | 'number') || 'text'}
+			type={(option.type as "text" | "number") || "text"}
 			bind:value={values[option.key] as string | number | undefined}
 		/>
 	{/if}
