@@ -32,6 +32,10 @@ export const randomizerVersions = sqliteTable("randomizer_version", {
   ipsBasePatchBase64: text("ips_base_patch_base64").notNull(),
   // Optional checksum for integrity/debugging
   basePatchSha256: text("base_patch_sha256"),
+  // Git commit hash capturing the backend build used for this version
+  gitCommitHash: text("git_commit_hash"),
+  // Build timestamp recorded for the stored version artifact
+  buildDate: integer("build_date", { mode: "timestamp" }),
   // Flag to indicate the currently active version (future seeds should use)
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" })

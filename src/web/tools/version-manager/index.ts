@@ -30,6 +30,8 @@ export interface CreateArgs {
   backend?: string;
   activate?: boolean;
   dryRun?: boolean;
+  commit?: string;
+  buildDate?: string;
 }
 
 function describeRandomizer(id: string | null): string {
@@ -88,6 +90,16 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
     .option("metadataUrl", {
       type: "string",
       description: "Full metadata URL to fetch.",
+    })
+    .option("commit", {
+      type: "string",
+      description:
+        "Git commit hash for the backend build associated with this version.",
+    })
+    .option("buildDate", {
+      type: "string",
+      description:
+        "Build date/time for the backend artifact (ISO 8601 or 'now'). Defaults to now.",
     })
     .option("backend", {
       type: "string",
@@ -156,6 +168,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
     patchSha256: sha256,
     activate: argv.activate,
     dryRun: argv.dryRun,
+    gitCommitHash: argv.commit,
+    buildDate: argv.buildDate,
   });
 
   if (argv.dryRun) {
@@ -163,6 +177,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
       `[dryRun] Would create version ${result.versionTag} (${result.versionId}) for ${describeRandomizer(result.randomizerId)} using ${basePatchPath}`,
     );
     console.log(`[dryRun] Patch sha256: ${result.patchSha256}`);
+    if (result.gitCommitHash) {
+      console.log(`[dryRun] Git commit: ${result.gitCommitHash}`);
+    }
+    console.log(`[dryRun] Build date: ${result.buildDate}`);
     console.log(`[dryRun] Metadata source: ${metadata.source}`);
     if (argv.activate) {
       console.log(
@@ -176,6 +194,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
     `Created version ${result.versionTag} (${result.versionId}) for ${describeRandomizer(result.randomizerId)}`,
   );
   console.log(`Base patch: ${basePatchPath} (sha256=${result.patchSha256})`);
+  if (result.gitCommitHash) {
+    console.log(`Git commit: ${result.gitCommitHash}`);
+  }
+  console.log(`Build date: ${result.buildDate}`);
   console.log(`Metadata source: ${metadata.source}`);
   if (argv.activate) {
     console.log(

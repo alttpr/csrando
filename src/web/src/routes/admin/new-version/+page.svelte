@@ -19,6 +19,8 @@
       canonicalMetadataId: string;
       activated: boolean;
       patchSha256: string;
+      gitCommitHash: string | null;
+      buildDate: string;
     };
   };
   type CreateFailureAction = {
@@ -49,13 +51,17 @@
   );
   const createErrorMessage = $derived(createFailure?.message ?? null);
   const createFieldErrors = $derived(createFailure?.fieldErrors ?? {});
-  const createValues = $derived((createFailure?.values ?? {}) as {
-    baseVersion?: string;
-    randomizerId?: string;
-    metadataId?: string;
-    tag?: string;
-    activate?: boolean;
-  });
+  const createValues = $derived(
+    (createFailure?.values ?? {}) as {
+      baseVersion?: string;
+      randomizerId?: string;
+      metadataId?: string;
+      tag?: string;
+      activate?: boolean;
+      gitCommitHash?: string;
+      buildDate?: string;
+    },
+  );
   const authError = $derived(
     form && form.type === "authenticate" && !form.success ? form.message : null,
   );
@@ -161,6 +167,14 @@
           <li>
             <span class="font-semibold">Patch sha256:</span>
             {createSuccess.patchSha256}
+          </li>
+          <li>
+            <span class="font-semibold">Build date:</span>
+            {formatTimestamp(createSuccess.buildDate)}
+          </li>
+          <li>
+            <span class="font-semibold">Git commit:</span>
+            {createSuccess.gitCommitHash ?? "—"}
           </li>
           <li>
             <span class="font-semibold">Activated now:</span>
@@ -289,6 +303,60 @@
             {/if}
           </div>
         </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <div>
+            <label
+              for="gitCommitHash"
+              class="block text-sm font-medium text-slate-700 dark:text-slate-200"
+              >Git commit hash (optional)</label
+            >
+            <input
+              id="gitCommitHash"
+              name="gitCommitHash"
+              type="text"
+              value={createValues.gitCommitHash ?? ""}
+              class="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+            />
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Provide the backend commit associated with this build (7-40 hex
+              characters).
+            </p>
+            {#if createFieldErrors.gitCommitHash}
+              <p
+                class="mt-2 text-xs font-medium text-red-600 dark:text-red-300"
+              >
+                {createFieldErrors.gitCommitHash}
+              </p>
+            {/if}
+          </div>
+          <div>
+            <label
+              for="buildDate"
+              class="block text-sm font-medium text-slate-700 dark:text-slate-200"
+              >Build date (optional)</label
+            >
+            <input
+              id="buildDate"
+              name="buildDate"
+              type="text"
+              value={createValues.buildDate ?? ""}
+              placeholder="now or 2025-11-04T12:34:56Z"
+              class="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+            />
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Leave blank to default to the current time. Accepts <code
+                class="font-mono">now</code
+              > or an ISO 8601 timestamp.
+            </p>
+            {#if createFieldErrors.buildDate}
+              <p
+                class="mt-2 text-xs font-medium text-red-600 dark:text-red-300"
+              >
+                {createFieldErrors.buildDate}
+              </p>
+            {/if}
+          </div>
+        </div>
         <div>
           <label
             for="basePatch"
@@ -361,6 +429,16 @@
                 <th
                   class="px-4 py-2 text-left font-semibold text-slate-600 dark:text-slate-300"
                 >
+                  Build date
+                </th>
+                <th
+                  class="px-4 py-2 text-left font-semibold text-slate-600 dark:text-slate-300"
+                >
+                  Git commit
+                </th>
+                <th
+                  class="px-4 py-2 text-left font-semibold text-slate-600 dark:text-slate-300"
+                >
                   Created
                 </th>
               </tr>
@@ -386,6 +464,14 @@
                         Inactive
                       </span>
                     {/if}
+                  </td>
+                  <td
+                    class="px-4 py-2 text-xs text-slate-600 dark:text-slate-300"
+                  >
+                    {formatTimestamp(version.buildDate)}
+                  </td>
+                  <td class="px-4 py-2 font-mono text-xs">
+                    {version.gitCommitHash ?? "—"}
                   </td>
                   <td
                     class="px-4 py-2 text-xs text-slate-600 dark:text-slate-300"

@@ -28,6 +28,8 @@ interface BatchArgs {
   dryRun?: boolean;
   setActive?: string;
   activateAll?: boolean;
+  commit?: string;
+  buildDate?: string;
 }
 
 interface MetaIndexEntry {
@@ -85,6 +87,16 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
     .option("metadataUrlTemplate", {
       type: "string",
       description: "Optional template URL (use {id}) when fetching metadata.",
+    })
+    .option("commit", {
+      type: "string",
+      description:
+        "Git commit hash for the backend build associated with all created versions.",
+    })
+    .option("buildDate", {
+      type: "string",
+      description:
+        "Build date/time for the backend artifact (ISO 8601 or 'now'). Defaults to now.",
     })
     .option("setActive", {
       type: "string",
@@ -163,6 +175,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
     patchPath: string;
     metadataSource: string;
     activated: boolean;
+    gitCommitHash: string | null;
+    buildDate: string;
   }[] = [];
   const failures: { id: string; error: unknown }[] = [];
 
@@ -206,6 +220,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
         patchSha256: sha256,
         activate,
         dryRun: argv.dryRun,
+        gitCommitHash: argv.commit,
+        buildDate: argv.buildDate,
       });
 
       if (argv.dryRun) {
@@ -213,6 +229,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
           `[dryRun] Would create ${tag} (${result.versionId}) for ${id} from ${basePatchPath}`,
         );
         console.log(`[dryRun] Metadata source: ${metadata.source}`);
+        if (result.gitCommitHash) {
+          console.log(`[dryRun] Git commit: ${result.gitCommitHash}`);
+        }
+        console.log(`[dryRun] Build date: ${result.buildDate}`);
         if (activate) {
           console.log(`[dryRun] Would mark ${id} active with ${tag}`);
         }
@@ -220,6 +240,10 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
         console.log(
           `[batch] Created ${tag} (${result.versionId}) for ${id} sha=${result.patchSha256}`,
         );
+        if (result.gitCommitHash) {
+          console.log(`[batch] Git commit: ${result.gitCommitHash}`);
+        }
+        console.log(`[batch] Build date: ${result.buildDate}`);
         console.log(`[batch] Metadata source: ${metadata.source}`);
         if (activate) {
           console.log(`[batch] Activated ${id} -> ${tag}`);
@@ -234,6 +258,8 @@ export async function main(argvFromNode: string[] = hideBin(process.argv)) {
         patchPath: basePatchPath,
         metadataSource: metadata.source,
         activated: activate && !argv.dryRun,
+        gitCommitHash: result.gitCommitHash,
+        buildDate: result.buildDate,
       });
     } catch (err) {
       console.error(`[batch] Failed to create version for ${id}:`, err);

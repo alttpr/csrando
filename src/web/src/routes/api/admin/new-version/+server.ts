@@ -14,6 +14,8 @@ type CreateVersionPayload = {
   activate?: unknown;
   basePatchBase64?: unknown;
   ipsPatchBase64?: unknown;
+  gitCommitHash?: unknown;
+  buildDate?: unknown;
 };
 
 function extractAdminToken(request: Request): string | null {
@@ -65,6 +67,12 @@ export const POST: RequestHandler = async ({ request }) => {
     typeof payload.metadataId === "string" ? payload.metadataId : undefined;
   const tag = typeof payload.tag === "string" ? payload.tag : undefined;
   const activate = payload.activate === true;
+  const gitCommitHash =
+    typeof payload.gitCommitHash === "string"
+      ? payload.gitCommitHash
+      : undefined;
+  const buildDate =
+    typeof payload.buildDate === "string" ? payload.buildDate : undefined;
   const patchBase64Raw =
     typeof payload.basePatchBase64 === "string"
       ? payload.basePatchBase64
@@ -95,6 +103,8 @@ export const POST: RequestHandler = async ({ request }) => {
       tag,
       activate,
       basePatch: patchBuffer,
+      gitCommitHash,
+      buildDate,
     });
     return json(result);
   } catch (err) {

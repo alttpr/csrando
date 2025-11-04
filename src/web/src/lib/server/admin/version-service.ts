@@ -62,6 +62,8 @@ type CreateVersionInput = {
   tag?: string | null;
   activate?: boolean;
   basePatch: Buffer;
+  gitCommitHash?: string | null;
+  buildDate?: string | Date | null;
 };
 
 export type CreateVersionResult = {
@@ -72,6 +74,8 @@ export type CreateVersionResult = {
   canonicalMetadataId: string;
   activated: boolean;
   patchSha256: string;
+  gitCommitHash: string | null;
+  buildDate: string;
 };
 
 function normalizeRandomizerId(id: string | null | undefined): string | null {
@@ -145,8 +149,13 @@ export async function createRandomizerVersion(
   const tagRaw = input.tag?.trim() ?? "";
   const activate = Boolean(input.activate);
   const patchBuffer = input.basePatch;
+  const gitCommitHashRaw =
+    typeof input.gitCommitHash === "string" ? input.gitCommitHash.trim() : "";
+  const buildDateInput = input.buildDate;
 
   const fieldErrors: Record<string, string> = {};
+  let gitCommitHash: string | null = null;
+  let buildDate: Date | null = null;
 
   if (!baseVersion) {
     fieldErrors.baseVersion = "Base version label is required.";
@@ -156,6 +165,38 @@ export async function createRandomizerVersion(
   }
   if (!patchBuffer || patchBuffer.length === 0) {
     fieldErrors.basePatch = "Provide an IPS or BPS patch file.";
+  }
+
+  if (gitCommitHashRaw.length > 0) {
+    const normalized = gitCommitHashRaw.toLowerCase();
+    if (!/^[0-9a-f]{7,40}$/.test(normalized)) {
+      fieldErrors.gitCommitHash =
+        "Git commit hash must be 7-40 hexadecimal characters.";
+    } else {
+      gitCommitHash = normalized;
+    }
+  }
+
+  if (typeof buildDateInput === "string") {
+    const trimmed = buildDateInput.trim();
+    if (trimmed.length > 0) {
+      if (trimmed.toLowerCase() === "now") {
+        buildDate = new Date();
+      } else {
+        const parsed = new Date(trimmed);
+        if (Number.isNaN(parsed.getTime())) {
+          fieldErrors.buildDate = "Build date must be a valid date/time.";
+        } else {
+          buildDate = parsed;
+        }
+      }
+    }
+  } else if (buildDateInput instanceof Date) {
+    if (Number.isNaN(buildDateInput.getTime())) {
+      fieldErrors.buildDate = "Build date must be a valid date/time.";
+    } else {
+      buildDate = buildDateInput;
+    }
   }
 
   if (Object.keys(fieldErrors).length > 0) {
@@ -168,6 +209,7 @@ export async function createRandomizerVersion(
 
   const randomizerId = normalizeRandomizerId(randomizerIdRaw);
   const metadataLookup = metadataIdRaw || randomizerIdRaw;
+  const resolvedBuildDate = buildDate ?? new Date();
 
   let canonicalMetadataId = metadataLookup;
   try {
@@ -236,6 +278,8 @@ export async function createRandomizerVersion(
       postGenSettings,
       ipsBasePatchBase64: ipsBase64,
       basePatchSha256: patchSha256,
+      gitCommitHash,
+      buildDate: resolvedBuildDate,
       isActive: activate,
       createdAt: new Date(),
     });
@@ -291,5 +335,7 @@ export async function createRandomizerVersion(
     canonicalMetadataId,
     activated: activate,
     patchSha256,
+    gitCommitHash,
+    buildDate: resolvedBuildDate.toISOString(),
   };
 }

@@ -37,6 +37,8 @@ export const load: PageServerLoad = async ({ params }) => {
     let versionTag: string | null = null;
     let versionId: string | null = null;
     let randomizerIdForSeed: string | null = null;
+    let gitCommitHash: string | null = null;
+    let buildDateIso: string | null = null;
     try {
       const v = await getRandomizerVersionBySeedId(seedId);
       if (v?.optionsMetadata) {
@@ -44,6 +46,24 @@ export const load: PageServerLoad = async ({ params }) => {
         versionId = v.id ?? null;
         randomizerIdForSeed =
           (v as { randomizerId?: string })?.randomizerId || null;
+        gitCommitHash =
+          (v as { gitCommitHash?: string | null }).gitCommitHash ?? null;
+        const rawBuildDate = (v as { buildDate?: unknown }).buildDate;
+        if (rawBuildDate instanceof Date) {
+          buildDateIso = Number.isNaN(rawBuildDate.getTime())
+            ? null
+            : rawBuildDate.toISOString();
+        } else if (typeof rawBuildDate === "string") {
+          const parsed = new Date(rawBuildDate);
+          if (!Number.isNaN(parsed.getTime())) {
+            buildDateIso = parsed.toISOString();
+          }
+        } else if (typeof rawBuildDate === "number") {
+          const parsed = new Date(rawBuildDate);
+          if (!Number.isNaN(parsed.getTime())) {
+            buildDateIso = parsed.toISOString();
+          }
+        }
         // Ensure postGenSettings are present from snapshot if not embedded in the metadata
         const meta = v.optionsMetadata as Record<string, unknown>;
         if (
@@ -108,7 +128,14 @@ export const load: PageServerLoad = async ({ params }) => {
     return {
       seedDetails: seedDetails,
       metadata,
-      randomizerVersion: versionTag ? { id: versionId, versionTag } : null,
+      randomizerVersion: versionTag
+        ? {
+            id: versionId,
+            versionTag,
+            gitCommitHash,
+            buildDate: buildDateIso,
+          }
+        : null,
       randomizerId: randomizerIdForSeed,
     };
   } catch (err) {

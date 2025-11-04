@@ -79,6 +79,15 @@
 	};
 	let gameIdToStaticInfo = $state(new Map<string, GameStaticInfo>());
 
+	const formatIsoTimestamp = (value: string | null | undefined) => {
+		if (!value) return null;
+		const parsed = new Date(value);
+		if (Number.isNaN(parsed.getTime())) {
+			return value;
+		}
+		return parsed.toLocaleString();
+	};
+
 	// Sprite Configuration Interfaces
 	import type { GameSpriteConfig, Metadata } from "$lib/types";
 	import { GameSpriteConfigSchema } from "$lib/schemas/sprites";
@@ -697,12 +706,19 @@
 				if (!selectedSpritesByGameId.has(gameId)) {
 					const gameSpriteConfig = gameIdToSpriteInfoMap.get(gameId);
 					let initialSpriteValue = "";
-					if (gameSpriteConfig) {
-						initialSpriteValue =
-							gameSpriteConfig.defaultSpriteValue ||
-							(gameSpriteConfig.sprites.length > 0
-								? gameSpriteConfig.sprites[0].value
-								: "");
+					if (
+						gameSpriteConfig &&
+						gameSpriteConfig.defaultSpriteValue !== undefined
+					) {
+						const candidate = gameSpriteConfig.defaultSpriteValue;
+						if (
+							candidate === "" ||
+							gameSpriteConfig.sprites.some(
+								(sprite) => sprite.value === candidate,
+							)
+						) {
+							initialSpriteValue = candidate;
+						}
 					}
 					selectedSpritesByGameId.set(gameId, initialSpriteValue);
 					spriteSelections[gameId] = initialSpriteValue;
@@ -1256,15 +1272,45 @@
 					>
 					{new Date(seedDetails.createdAt).toLocaleString()}
 				</p>
-				{#if data.randomizerVersion?.versionTag}
-					<p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
-						<strong class="text-slate-700 dark:text-slate-200"
-							>Randomizer version:</strong
+				{#if data.randomizerVersion}
+					{#if data.randomizerVersion.versionTag}
+						<p
+							class="text-xs text-slate-600 dark:text-slate-300 mt-1"
 						>
-						<span class="font-mono"
-							>{data.randomizerVersion.versionTag}</span
+							<strong class="text-slate-700 dark:text-slate-200"
+								>Randomizer version:</strong
+							>
+							<span class="font-mono"
+								>{data.randomizerVersion.versionTag}</span
+							>
+						</p>
+					{/if}
+					{@const formattedBuildDate = formatIsoTimestamp(
+						data.randomizerVersion.buildDate,
+					)}
+					{#if formattedBuildDate || data.randomizerVersion.gitCommitHash}
+						<p
+							class="text-xs text-slate-600 dark:text-slate-300 mt-1"
 						>
-					</p>
+							<strong class="text-slate-700 dark:text-slate-200"
+								>Build info:</strong
+							>
+							{#if formattedBuildDate}
+								{formattedBuildDate}
+							{/if}
+							{#if data.randomizerVersion.gitCommitHash}
+								{#if formattedBuildDate}
+									<span aria-hidden="true"> · </span>
+								{/if}
+								<span>
+									commit
+									<span class="font-mono ml-1">
+										{data.randomizerVersion.gitCommitHash}
+									</span>
+								</span>
+							{/if}
+						</p>
+					{/if}
 				{/if}
 			</div>
 			<div>

@@ -19,6 +19,8 @@ type RecentVersionSummary = {
   randomizerId: string | null;
   isActive: boolean;
   createdAt: string;
+  buildDate: string;
+  gitCommitHash: string | null;
 };
 
 type CreateActionValues = {
@@ -27,6 +29,8 @@ type CreateActionValues = {
   metadataId?: string;
   tag?: string;
   activate?: boolean;
+  gitCommitHash?: string;
+  buildDate?: string;
 };
 
 export type ActionData =
@@ -43,6 +47,8 @@ export type ActionData =
         canonicalMetadataId: string;
         activated: boolean;
         patchSha256: string;
+        gitCommitHash: string | null;
+        buildDate: string;
       };
     }
   | {
@@ -82,6 +88,8 @@ export const load: PageServerLoad = async ({ cookies }) => {
         randomizerId: randomizerVersions.randomizerId,
         isActive: randomizerVersions.isActive,
         createdAt: randomizerVersions.createdAt,
+        buildDate: randomizerVersions.buildDate,
+        gitCommitHash: randomizerVersions.gitCommitHash,
       })
       .from(randomizerVersions)
       .orderBy(desc(randomizerVersions.createdAt))
@@ -93,6 +101,8 @@ export const load: PageServerLoad = async ({ cookies }) => {
       randomizerId: row.randomizerId,
       isActive: Boolean(row.isActive),
       createdAt: serializeDate(row.createdAt),
+      buildDate: serializeDate(row.buildDate ?? row.createdAt),
+      gitCommitHash: row.gitCommitHash ?? null,
     }));
   }
 
@@ -164,6 +174,14 @@ export const actions: Actions = {
     const metadataIdRaw = formData.get("metadataId");
     const tagRaw = formData.get("tag");
     const activateRaw = formData.get("activate");
+    const gitCommitHashRaw = formData.get("gitCommitHash");
+    const buildDateRaw = formData.get("buildDate");
+    const gitCommitHashValue =
+      typeof gitCommitHashRaw === "string"
+        ? gitCommitHashRaw.trim()
+        : undefined;
+    const buildDateValue =
+      typeof buildDateRaw === "string" ? buildDateRaw.trim() : undefined;
     const basePatchFile = formData.get("basePatch") ?? formData.get("ipsPatch");
 
     const values: CreateActionValues = {
@@ -177,6 +195,14 @@ export const actions: Actions = {
         typeof metadataIdRaw === "string" ? metadataIdRaw.trim() : undefined,
       tag: typeof tagRaw === "string" ? tagRaw.trim() : undefined,
       activate: activateRaw === "on",
+      gitCommitHash:
+        gitCommitHashValue && gitCommitHashValue.length > 0
+          ? gitCommitHashValue
+          : undefined,
+      buildDate:
+        buildDateValue && buildDateValue.length > 0
+          ? buildDateValue
+          : undefined,
     };
     let patchBuffer = Buffer.alloc(0);
     if (basePatchFile instanceof File && basePatchFile.size > 0) {
@@ -191,6 +217,8 @@ export const actions: Actions = {
         tag: values.tag,
         activate: values.activate,
         basePatch: patchBuffer,
+        gitCommitHash: values.gitCommitHash,
+        buildDate: values.buildDate,
       });
       return {
         type: "create",

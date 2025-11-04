@@ -86,7 +86,7 @@ The `package.json` includes additional scripts:
 
 ## Randomizer Versions (Snapshots)
 
-Need to add or hotfix a version without redeploying? With `PRIVATE_ADMIN_VERSION_TOKEN` configured you can visit `/admin/new-version` on a running site, upload the IPS or BPS base patch, and fetch the latest metadata directly from the backend to create a new snapshot.
+Need to add or hotfix a version without redeploying? With `PRIVATE_ADMIN_VERSION_TOKEN` configured you can visit `/admin/new-version` on a running site, upload the IPS or BPS base patch, and fetch the latest metadata directly from the backend to create a new snapshot. You can optionally record the backend git commit hash and build timestamp to simplify debugging.
 
 Use the CLI to store immutable snapshots of the randomizer (base IPS/BPS patch + metadata) so old seeds remain compatible even after updates.
 
@@ -139,6 +139,7 @@ Notes
 - Only one snapshot can be active per randomizer; use `--activate`, `--activateAll`, or `--setActive <id>` to control which ones should be marked live.
 - Snapshots now store `randomizerId` (e.g., `alttpr`, `z1r`) to indicate which game the version targets.
 - Active versions are enforced per randomizer: tools only deactivate other versions with the same `randomizerId`, and seed generation picks the active version for the inferred game id in the request.
+- Provide `--commit <hash>` (7-40 hex) to capture the backend git commit and `--buildDate <iso|now>` to stamp the build timestamp (defaults to the current time).
 - Append `--dryRun` to preview the operations without touching the database.
 
 Refer to the `package.json` for a full list and their specific functions.

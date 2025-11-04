@@ -40,6 +40,8 @@ export interface InsertVersionOptions {
   patchSha256: string;
   activate?: boolean;
   dryRun?: boolean;
+  gitCommitHash?: string | null;
+  buildDate?: string | Date | null;
 }
 
 export interface InsertResult {
@@ -48,6 +50,8 @@ export interface InsertResult {
   randomizerId: string | null;
   patchSha256: string;
   inserted: boolean;
+  gitCommitHash: string | null;
+  buildDate: string;
 }
 
 export function parsePathMap(filePath: string): Map<string, string> {
@@ -93,6 +97,45 @@ export function sanitizeBaseUrl(baseUrl?: string | null): string | undefined {
   const trimmed = baseUrl.trim();
   if (!trimmed) return undefined;
   return trimmed.replace(/\/$/, "");
+}
+
+function normalizeGitCommitHash(value?: string | null): string | null {
+  if (value == null) {
+    return null;
+  }
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return null;
+  }
+  const normalized = trimmed.toLowerCase();
+  if (!/^[0-9a-f]{7,40}$/.test(normalized)) {
+    throw new Error("Git commit hash must be 7-40 hexadecimal characters.");
+  }
+  return normalized;
+}
+
+function resolveBuildDate(value?: string | Date | null): Date {
+  if (!value) {
+    return new Date();
+  }
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) {
+      throw new Error("Build date must be a valid date/time.");
+    }
+    return value;
+  }
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return new Date();
+  }
+  if (trimmed.toLowerCase() === "now") {
+    return new Date();
+  }
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error("Build date must be a valid date/time.");
+  }
+  return parsed;
 }
 
 export function computeVersionTag({
@@ -322,9 +365,13 @@ export async function insertVersion({
   patchSha256,
   activate,
   dryRun,
+  gitCommitHash,
+  buildDate,
 }: InsertVersionOptions): Promise<InsertResult> {
   const normalizedId = normalizeRandomizerId(randomizerId);
   const versionId = randomUUID();
+  const normalizedCommit = normalizeGitCommitHash(gitCommitHash ?? null);
+  const resolvedBuildDate = resolveBuildDate(buildDate);
 
   if (dryRun) {
     return {
@@ -333,6 +380,8 @@ export async function insertVersion({
       randomizerId: normalizedId,
       patchSha256,
       inserted: false,
+      gitCommitHash: normalizedCommit,
+      buildDate: resolvedBuildDate.toISOString(),
     };
   }
 
@@ -346,6 +395,8 @@ export async function insertVersion({
     postGenSettings,
     ipsBasePatchBase64: basePatchBase64,
     basePatchSha256: patchSha256,
+    gitCommitHash: normalizedCommit,
+    buildDate: resolvedBuildDate,
     isActive: Boolean(activate),
     createdAt: new Date(),
   });
@@ -384,6 +435,8 @@ export async function insertVersion({
     randomizerId: normalizedId,
     patchSha256,
     inserted: true,
+    gitCommitHash: normalizedCommit,
+    buildDate: resolvedBuildDate.toISOString(),
   };
 }
 
