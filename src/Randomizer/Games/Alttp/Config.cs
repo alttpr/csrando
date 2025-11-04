@@ -73,6 +73,7 @@ public class Config
 
     private int? _moldormEyeCount;
     [ValueRange(0, 8, Default = DefaultMoldormEyeCount)]
+    [Category("Cosmetic")]
     public int MoldormEyeCount
     {
         get => _moldormEyeCount.GetValueOrDefault(DefaultMoldormEyeCount);
@@ -80,6 +81,8 @@ public class Config
     }
     private int? _molderp;
     [ValueRange(1, 8, Default = DefaultMolderp)]
+    [Category("Cosmetic")]
+    [Description("Everyone loves a derpy moldorm. Works best with 2 or more eyes.")]
     public int Molderp
     {
         get => _molderp.GetValueOrDefault(DefaultMolderp);
@@ -99,12 +102,12 @@ public class Config
 
     [Category("Goal")]
     [ValueRange(1, 150, Default = 50)]
-    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
+    [DependsOn(nameof(Goal), GoalOption.TriforceHunt, GoalOption.Trifecta)]
     public ushort TriforcePieces { get; set; } = 50;
 
     [Category("Goal")]
     [ValueRange(1, 150, Default = 30)]
-    [DependsOn("Goal", GoalOption.TriforceHunt, GoalOption.Trifecta)]
+    [DependsOn(nameof(Goal), GoalOption.TriforceHunt, GoalOption.Trifecta)]
     public ushort GoalRequiredCount { get; init; } = 30; // default 30/50 triforce pieces
 
 
@@ -121,6 +124,7 @@ public class Config
     [Category("Item Placement")]
     public GlitchesOption Glitches { get; init; } = GlitchesOption.None;
 
+    [Ignore("We don't have enough tech options to make this worthwhile.")]
     public List<TechOption> Techs { get; init; } = [];
 
     public WeaponOption Weapon { get; init; } = WeaponOption.Randomized;
@@ -138,6 +142,7 @@ public class Config
     [Category("Gameplay")]
     public BossShuffleOption BossShuffle { get; init; } = BossShuffleOption.None;
 
+    [Category("Cosmetic")]
     public TileRoomPatternOption TileRoomPattern { get; init; } = TileRoomPatternOption.Default;
 
     // TODO: Make it a bool? Do we have more planned there?
@@ -146,17 +151,27 @@ public class Config
 
     [Category("Item Placement")]
     [Subcategory("Dungeon Item Shuffle")]
+    [Name("Small Keys shuffled outside dungeon")]
+    [Description("If No, small keys that are randomly placed will be restricted to their respective dungeons. If Yes, they will be able to be randomly placed in any item location. This does not affect manually placed small keys.")]
     public bool RegionWildKeys { get; init; } = false;
     [Category("Item Placement")]
     [Subcategory("Dungeon Item Shuffle")]
+    [Name("Big Keys shuffled outside dungeon")]
+    [Description("If No, big keys that are randomly placed will be restricted to their respective dungeons. If Yes, they will be able to be randomly placed in any item location. This does not affect manually placed big keys.")]
     public bool RegionWildBigKeys { get; init; } = false;
     [Category("Item Placement")]
     [Subcategory("Dungeon Item Shuffle")]
+    [Name("Maps shuffled outside dungeon")]
+    [Description("If No, maps that are randomly placed will be restricted to their respective dungeons. If Yes, they will be able to be randomly placed in any item location. This does not affect manually placed maps.")]
     public bool RegionWildMaps { get; init; } = false;
     [Category("Item Placement")]
     [Subcategory("Dungeon Item Shuffle")]
+    [Name("Compasses shuffled outside dungeon")]
+    [Description("If No, compasses that are randomly placed will be restricted to their respective dungeons. If Yes, they will be able to be randomly placed in any item location. This does not affect manually placed compasses.")]
     public bool RegionWildCompasses { get; init; } = false;
 
+    [Name("Retro bow")]
+    [Description("Zelda 1 style Bow that consumes rupees, will also remove arrows as drops and replace them with blue rupees.")]
     public bool RomRupeeBow { get; init; } = false;
 
     // TODO: Add configuration for custom prize packs
@@ -166,7 +181,11 @@ public class Config
     [Ignore("Starting inventory is too advenced to be represented with simple attributes")]
     public List<string> StartingEquipment { get; init; } = [];
 
+    [Name("Only display Crystals/Pendants on Map Pickup")]
+    [Description("If No, the overworld map will show uncollected crystals and pendants over their respective dungeons. If Yes, the overworld map will only display uncollected crystals and pendants if Link has collected their respective maps.")]
     public bool MapOnPickup { get; init; } = false;
+    [DependsOn(nameof(State), StateOption.Standard)]
+    [Description("Provides unlimited magic, arrows or bombs during escape if Uncle gives you a weapon requiring resources.")]
     public bool EscapeAssist { get; init; } = false;
     public bool PseudoBoots { get; init; } = false;
     [Ignore("Is there even a reason to turn this off?")]
@@ -177,33 +196,44 @@ public class Config
     public bool NoMusic { get; init; } = false;
     [Advanced("Directly provides a ROM value")]
     [Default(0x04)]
+    [Name("Cape magic usage (normal)")]
     public byte CapeMagicUsageNormal { get; init; } = 0x04;
     [Advanced("Directly provides a ROM value")]
     [Default(0x08)]
+    [Name("Cape magic usage (1/2)")]
     public byte CapeMagicUsageHalf { get; init; } = 0x08;
     [Advanced("Directly provides a ROM value")]
     [Default(0x10)]
+    [Name("Cape magic usage (1/4)")]
     public byte CapeMagicUsageQuarter { get; init; } = 0x10;
     [Default(true)]
     public bool CaneOfByrnaInvulnerability { get; init; } = true;
     [Advanced("Directly provides a ROM value")]
     [Default(0xE3)]
+    [Name("Powdered sprite prize")]
+    [Description("Set the sprite that spawns when powdered sprite that usually spawns a faerie is powdered.")]
     public byte PowderedSpriteFairyPrize { get; init; } = 0xE3;
     [Advanced("Directly provides a ROM value")]
     [Default(0xA0)]
+    [Description("How much Health refills from Bottles")]
     public byte BottleFillHealth { get; init; } = 0xA0;
     [Advanced("Directly provides a ROM value")]
     [Default(0x80)]
+    [Description("How much Magic refills from Bottles")]
     public byte BottleFillMagic { get; init; } = 0x80;
     [Default(true)]
     public bool CatchableFairies { get; init; } = true;
     [Default(true)]
     public bool CatchableBees { get; init; } = true;
     [Default(true)]
+    [Name("Hookshot stuns enemies")]
     public bool StunItemsHookshot { get; init; } = true;
     [Default(true)]
+    [Name("Boomerang stuns enemies")]
     public bool StunItemsBoomerang { get; init; } = true;
     public bool SilversOnlyAtGanon { get; init; } = false;
+    [Name("Retro keys")]
+    [Description("All Small keys will be converted to Generic keys.")]
     public bool GenericKeys { get; init; } = false;
     public bool HudItemCounter { get; init; } = false;
     [Ignore("Nobody cares about the goal icon")]
