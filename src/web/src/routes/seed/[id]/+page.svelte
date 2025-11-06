@@ -40,6 +40,7 @@
 		displayName: string;
 		expectedHash?: string;
 		fileExtensions: string;
+		forcedHeaderBytes?: Uint8Array;
 	}
 
 	const normalizeGameId = (value: string) => value.toLowerCase();
@@ -58,6 +59,7 @@
 					displayName: info.displayName,
 					expectedHash: info.expectedHash,
 					fileExtensions: info.fileExtensions ?? "",
+					forcedHeaderBytes: info.forcedHeaderBytes,
 				},
 			];
 		});
@@ -926,6 +928,7 @@
 							file.name,
 							resultBuffer,
 							allowedExtensions,
+							staticInfo.forcedHeaderBytes,
 						);
 						if (
 							resolved.fileName &&

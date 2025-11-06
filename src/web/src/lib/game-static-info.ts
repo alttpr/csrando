@@ -33,6 +33,7 @@ export interface GameStaticInfo {
   id: string;
   displayName: string;
   expectedHash?: string;
+  forcedHeaderBytes?: Uint8Array;
   fileExtensions?: string;
   targetOffsets?: Record<string, number>;
   rdcTargets?: Record<string, Record<string, SpriteTargetVariant>>;
@@ -730,6 +731,10 @@ export const gameStaticInfo: Record<string, GameStaticInfo> = {
     displayName: "The Legend of Zelda (NES)",
     expectedHash:
       "8f72dc2e98572eb4ba7c3a902bca5f69c448fc4391837e5f8f0d4556280440ac",
+    forcedHeaderBytes: new Uint8Array([
+      0x4e, 0x45, 0x53, 0x1a, 0x08, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,
+    ]),
     fileExtensions: ".nes,.zip",
     targetOffsets: { alttpr: -1, combo: 4_325_392 },
     rdcTargets: {
@@ -744,6 +749,10 @@ export const gameStaticInfo: Record<string, GameStaticInfo> = {
     displayName: "Metroid (NES)",
     expectedHash:
       "c5eea06e1e1128b576bd789f1a4f63bb154d6d31579c2f319382fb77a72d34a6",
+    forcedHeaderBytes: new Uint8Array([
+      0x4e, 0x45, 0x53, 0x1a, 0x08, 0x00, 0x11, 0x00, 0x00, 0x00, 0x4e, 0x49,
+      0x20, 0x31, 0x2e, 0x33,
+    ]),
     fileExtensions: ".nes,.zip",
     targetOffsets: { alttpr: -1, combo: 4_194_304 },
     rdcTargets: {

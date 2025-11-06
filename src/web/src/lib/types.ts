@@ -70,6 +70,7 @@ export interface GameStaticInfo {
   displayName: string;
   expectedHash?: string;
   fileExtensions: string;
+  forcedHeaderBytes?: Uint8Array;
 }
 
 export interface OptionChoice {
