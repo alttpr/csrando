@@ -7,10 +7,10 @@ lastUpdated: 2024-09-15
 # Resources
 
 ## Discord servers
-### [A Link to the Past Randomizer Discord]()
+### [A Link to the Past Randomizer Discord](https://discord.gg/alttprandomizer)
 This is the main discord server for the A Link to the Past Randomizer where you can find more information, useful links, ask questions, participate in races and get involved with the community.
 
-### [Quad Randomizer Discord]()
+### [Quad Randomizer Discord](https://discord.gg/K4V6V2B)
 This is the main discord server for the Quad Randomizer where you can find more information, useful links, ask questions, participate in races and get involved with the community.
 
 
