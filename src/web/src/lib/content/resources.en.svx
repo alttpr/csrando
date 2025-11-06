@@ -1,0 +1,35 @@
+---
+title: Resources
+description: Community resources and information
+lastUpdated: 2024-09-15
+---
+
+# Resources
+
+## Discord servers
+### [A Link to the Past Randomizer Discord]()
+This is the main discord server for the A Link to the Past Randomizer where you can find more information, useful links, ask questions, participate in races and get involved with the community.
+
+### [Quad Randomizer Discord]()
+This is the main discord server for the Quad Randomizer where you can find more information, useful links, ask questions, participate in races and get involved with the community.
+
+
+## Useful links
+* [Permastucks](https://www.youtube.com/watch?v=7iVFotNxsIo)
+
+  A guide to where you can possibly get yourself permanently stuck, and how to
+  avoid it. From SMZ3 but relevant here for the combo randomizer as well.
+
+## Report bugs
+Currently during early testing we'd ask that you report bugs in the relevant Discord server
+
+## Contribute
+As of now the codebase for the randomizer is private, but we're expecting to make it public as soon as possible to allow for contributions
+
+## Thanks to
+* The developers of the [A Link to the Past Randomizer](https://alttpr.com/),
+  without them this project would not have been possible.
+* The developers of previous and current Super Metroid randomizers, such as
+  the [Varia Randomizer](http://varia.run) and [Super Metroid Randomizer](https://dessyreqt.github.io/smrandomizer/) and [Map Randomizer](https://maprando.com/).
+* The developers of the [Z1M1 randomizer](https://z1m1.info/) who kindly let me look at their code for help.
+* Everyone working on the SM Json Data project, from where the SM logic data is used.

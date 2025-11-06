@@ -1,11 +1,13 @@
 <script lang="ts">
-	import '../app.css';
-	import Navbar from '$lib/components/ui/Navbar.svelte';
-	import Footer from '$lib/components/ui/Footer.svelte';
-	import { page } from '$app/state';
-	import * as m from '$lib/paraglide/messages';
-	import { onMount } from 'svelte';
-	import type { Snippet } from 'svelte';
+	import "../app.css";
+	import Navbar from "$lib/components/ui/Navbar.svelte";
+	import Footer from "$lib/components/ui/Footer.svelte";
+	import { page } from "$app/state";
+	import * as m from "$lib/paraglide/messages";
+	import { onMount } from "svelte";
+	import type { Snippet } from "svelte";
+	import { siteNameForMode } from "$lib/config/site";
+	import type { SiteMode } from "$lib/config/site";
 
 	interface LayoutProps {
 		children: Snippet;
@@ -22,17 +24,18 @@
 		}
 	});
 
-	const SITE_NAME = 'Game Randomizer';
-
 	function routeTitle(pathname: string): string | null {
-		if (pathname === '/') return null; // homepage -> use just site name
-		if (pathname.startsWith('/login')) return m.login_title();
-		if (pathname.startsWith('/register')) return m.register_title();
-		if (pathname.startsWith('/profile')) return m.profile_title();
-		if (pathname.startsWith('/config')) return m.config_title();
-		if (pathname.startsWith('/seed')) return m.permalink_title();
+		if (pathname === "/") return null; // homepage -> use just site name
+		if (pathname.startsWith("/login")) return m.login_title();
+		if (pathname.startsWith("/register")) return m.register_title();
+		if (pathname.startsWith("/profile")) return m.profile_title();
+		if (pathname.startsWith("/config")) return m.config_title();
+		if (pathname.startsWith("/seed")) return m.permalink_title();
 		return null;
 	}
+	const siteMode = $derived((page.data.siteMode ?? "all") as SiteMode);
+	const siteFeatures = $derived(page.data.siteFeatures);
+	const siteName = $derived(siteNameForMode(siteMode));
 
 	$effect.pre(() => {
 		// ensure reactive dependency on $page
@@ -42,14 +45,18 @@
 
 <svelte:head>
 	{#key page.url.pathname}
-		<title>{routeTitle(page.url.pathname) ? `${routeTitle(page.url.pathname)} — ${SITE_NAME}` : SITE_NAME}</title>
+		<title
+			>{routeTitle(page.url.pathname)
+				? `${routeTitle(page.url.pathname)} — ${siteName}`
+				: siteName}</title
+		>
 	{/key}
 </svelte:head>
 
 <div
 	class="min-h-screen flex flex-col bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
 >
-	<Navbar user={page.data.user} />
+	<Navbar user={page.data.user} {siteFeatures} />
 	<main class="flex-1">
 		{@render children?.()}
 	</main>
