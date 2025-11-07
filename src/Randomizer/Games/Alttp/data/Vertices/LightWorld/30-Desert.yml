@@ -13,7 +13,7 @@ maps:
               - "Checkerboard Ledge"
           entrances:
             - name: "Aginah's Cave"
-              entranceid: 0x4C
+              entranceid: 0x70 # NOTE: there's also 0x4C, but they overlap. DR only patches 0x70.
               outletid: 0x5C
           mobs:
             - name: "Desert - Landmine 1"
