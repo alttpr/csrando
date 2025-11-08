@@ -938,7 +938,10 @@ public static class RomWriter
             {
                 var sprite = enemy.Sprite!;
                 if (sprite.Name == "BlindMaiden" && skipTheMaiden)
+                {
+                    rom.BlindIsNotInThievesTown();
                     continue;
+                }
                 outputBytes.Add((byte)(((sprite.SubType & 0x18) << 2)
                     | (enemy.Position!.Z.GetValueOrDefault() << 7)
                     | enemy.Position.Y));
