@@ -97,11 +97,13 @@ Chicken: #CUCCO
   id: 0x0B
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x50]
+  ignored_by_killrooms: true
 SkullChicken: #SKULL CUCCO
   alternative: Chicken
   id: 0x0B
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x15]
+  ignored_by_killrooms: true
 OctorokStone: #OCTOROK STONE
   id: 0x0C
   flags: NoPlace
@@ -556,6 +558,7 @@ Rabbit: #TOPPO?
   id: 0x4D
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
+  ignored_by_killrooms: true
 Popo:
   id: 0x4E
   flags: Challenge
@@ -1211,6 +1214,7 @@ ChainChomp: #CHAIN CHOMP
   id: 0xCA
   flags: NoDrop
   sheets: [null, null, 0x27, null]
+  ignored_by_killrooms: true
 Trinexx: #TRINEXX ROCK HEAD
   id: 0xCB
   flags: NoPlace
@@ -1252,6 +1256,7 @@ BunnyBeam: #BUNNYBEAM / SMOKE
 FloppingFish: #FLOPPING FISH
   id: 0xD2
   flags: NoDrop
+  ignored_by_killrooms: true
 Stal:
   id: 0xD3
   flags: Challenge
