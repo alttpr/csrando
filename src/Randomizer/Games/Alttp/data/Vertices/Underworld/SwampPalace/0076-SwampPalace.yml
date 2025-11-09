@@ -112,10 +112,12 @@ rooms:
           items:
             - name: "Swamp Palace - Flooded Room - Left"
               addresses: [0x01EAA9]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["swamp"]
             - name: "Swamp Palace - Flooded Room - Right"
               addresses: [0x01EAAC]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["swamp"]
           pots:

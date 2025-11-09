@@ -32,6 +32,7 @@ rooms:
         - name: "Ice Palace - H Room Right - Map Chest"
           items:
             - name: "Ice Palace - Map Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01E9DD]
               type: "chest"
               itemset: ["ice"]

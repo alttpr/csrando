@@ -107,10 +107,12 @@ rooms:
           items:
             - name: "Ganon's Tower - Hope Room - Left"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EAD9]
               itemset: ["gt"]
             - name: "Ganon's Tower - Hope Room - Right"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EADC]
               itemset: ["gt"]
           pots:

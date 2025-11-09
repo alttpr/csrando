@@ -68,6 +68,7 @@ rooms:
           items:
             - name: "Misery Mire - Big Key Chest"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EA6D]
               itemset: ["mire"]
 

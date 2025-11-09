@@ -13,10 +13,12 @@ rooms:
           items:
             - name: "Palace of Darkness - Dark Maze - Top"
               addresses: [0x01EA55]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]
             - name: "Palace of Darkness - Dark Maze - Bottom"
               addresses: [0x01EA58]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]
           mobs:

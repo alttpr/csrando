@@ -113,6 +113,7 @@ rooms:
           items:
             - name: "Thieves' Town - Blind's Cell"
               addresses: [0x01EA13]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["thieves"]
           pots:

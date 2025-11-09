@@ -112,6 +112,7 @@ rooms:
           items:
             - name: "Skull Woods - Big Key Chest"
               addresses: [0x01E99E]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["skull"]
           mobs:

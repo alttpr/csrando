@@ -108,5 +108,6 @@ rooms:
           items:
             - name: "Palace of Darkness - The Arena - Ledge"
               addresses: [0x01EA3A]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]

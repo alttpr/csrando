@@ -65,6 +65,7 @@ rooms:
           items:
             - name: "Palace of Darkness - Map Chest"
               addresses: [0x01EA52]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]
           pots:

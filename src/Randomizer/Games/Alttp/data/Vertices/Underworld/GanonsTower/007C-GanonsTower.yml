@@ -7,18 +7,22 @@ rooms:
           items:
             - name: "Ganon's Tower - Randomizer Room - Top Left"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EAC4]
               itemset: ["gt"]
             - name: "Ganon's Tower - Randomizer Room - Top Right"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EAC7]
               itemset: ["gt"]
             - name: "Ganon's Tower - Randomizer Room - Bottom Left"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EACA]
               itemset: ["gt"]
             - name: "Ganon's Tower - Randomizer Room - Bottom Right"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EACD]
               itemset: ["gt"]
           mobs:

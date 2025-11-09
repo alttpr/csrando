@@ -48,6 +48,7 @@ rooms:
           items:
             - name: "Turtle Rock - Chain Chomps"
               addresses: [0x01EA16]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["turtlerock"]
           mobs:

@@ -34,6 +34,7 @@ rooms:
           items:
             - name: "Swamp Palace - Compass Chest"
               addresses: [0x01EAA0]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["swamp"]
 

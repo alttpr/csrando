@@ -38,6 +38,7 @@ rooms:
               - "Hookshot Cave - Middle Right Pad"
           items:
             - name: "Hookshot Cave - Top Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EB51]
               type: "chest"
               itemset: ["dw"]
@@ -81,6 +82,7 @@ rooms:
               - "Hookshot Cave - Middle Left Pad"
           items:
             - name: "Hookshot Cave - Middle North Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EB54]
               type: "chest"
               itemset: ["dw"]
@@ -93,6 +95,7 @@ rooms:
               - "Hookshot Cave - Middle Right Pad"
           items:
             - name: "Hookshot Cave - Middle South Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EB57]
               type: "chest"
               itemset: ["dw"]
@@ -139,6 +142,7 @@ rooms:
               - "Hookshot Cave - Middle Right Pad"
           items:
             - name: "Hookshot Cave - Bottom Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EB5A]
               type: "chest"
               itemset: ["dw"]

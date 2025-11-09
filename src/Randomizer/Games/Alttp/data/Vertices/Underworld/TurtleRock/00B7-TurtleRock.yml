@@ -10,10 +10,12 @@ rooms:
           items:
             - name: "Turtle Rock - Roller Room - Left"
               addresses: [0x01EA1C]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["turtlerock"]
             - name: "Turtle Rock - Roller Room - Right"
               addresses: [0x01EA1F]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["turtlerock"]
           pots:

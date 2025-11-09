@@ -86,6 +86,7 @@ rooms:
           items:
             - name: "Swamp Palace - West Chest"
               addresses: [0x01EAA3]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["swamp"]
 

@@ -11,6 +11,7 @@ rooms:
               - "Eastern Palace - Popo Switch"
           items:
             - name: "Eastern Palace - Cannonball Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01E9B3]
               type: "chest"
               itemset: ["eastern"]

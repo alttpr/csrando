@@ -35,6 +35,7 @@ rooms:
             - name: "Tower Of Hera - Compass Chest"
               type: "chest"
               addresses: [0x01E9FB]
+              conditions: ["OpenChest"]
               itemset: ["hera"]
           pots:
             - name: "Tower Of Hera - Petting Zoo - Pot 1"

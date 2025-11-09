@@ -51,6 +51,7 @@ rooms:
           items:
             - name: "Skull Woods - Bridge Room Chest"
               addresses: [0x01E9FE]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["skull"]
 

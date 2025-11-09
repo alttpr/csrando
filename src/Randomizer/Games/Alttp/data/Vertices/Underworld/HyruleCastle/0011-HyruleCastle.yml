@@ -53,14 +53,17 @@ rooms:
               - "Sewers - Block Puzzle"
           items:
             - name: "Sewers - Secret Room - Left"
+              conditions: ["OpenChest"]
               addresses: [0x01EB5D]
               type: "chest"
               itemset: ["escape"]
             - name: "Sewers - Secret Room - Middle"
+              conditions: ["OpenChest"]
               addresses: [0x01EB60]
               type: "chest"
               itemset: ["escape"]
             - name: "Sewers - Secret Room - Right"
+              conditions: ["OpenChest"]
               addresses: [0x01EB63]
               type: "chest"
               itemset: ["escape"]

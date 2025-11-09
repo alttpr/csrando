@@ -31,6 +31,7 @@ rooms:
             - name: "Thieves' Town - Attic Chest"
               type: "chest"
               addresses: [0x01EA0D]
+              conditions: ["OpenChest"]
               itemset: ["thieves"]
             - name: "Thieves' Town - Attic Window"
               type: "event"

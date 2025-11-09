@@ -61,10 +61,12 @@ rooms:
           items:
             - name: "Palace of Darkness - Dark Basement - Left"
               addresses: [0x01EA4C]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]
             - name: "Palace of Darkness - Dark Basement - Right"
               addresses: [0x01EA4F]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["pod"]
 

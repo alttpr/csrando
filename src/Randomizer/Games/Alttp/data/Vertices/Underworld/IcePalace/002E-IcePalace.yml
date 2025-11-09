@@ -10,6 +10,7 @@ rooms:
 
           items:
             - name: "Ice Palace - Compass Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01E9D4]
               type: "chest"
               itemset: ["ice"]

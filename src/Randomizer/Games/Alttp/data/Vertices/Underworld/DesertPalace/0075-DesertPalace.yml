@@ -58,6 +58,7 @@ rooms:
               - "Desert Palace - Compass Room"
           items:
             - name: "Desert Palace - Big Key Chest"
+              conditions: ["OpenChest"]
               addresses: [0x01E9C2]
               type: "chest"
               itemset: ["desert"]

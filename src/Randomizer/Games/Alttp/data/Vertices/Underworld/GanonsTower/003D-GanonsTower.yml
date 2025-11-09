@@ -47,10 +47,12 @@ rooms:
               - "Ganon's Tower - Conveyor Spikes"
           items:
             - name: "Ganon's Tower - Mini Helmasaur Room - Left"
+              conditions: ["OpenChest"]
               type: "chest"
               addresses: [0x01EAFD]
               itemset: ["gt"]
             - name: "Ganon's Tower - Mini Helmasaur Room - Right"
+              conditions: ["OpenChest"]
               type: "chest"
               addresses: [0x01EB00]
               itemset: ["gt"]
@@ -100,6 +102,7 @@ rooms:
               - "Ganon's Tower - Moldorm - Top Left Platform"
           items:
             - name: "Ganon's Tower - Pre-Moldorm Chest"
+              conditions: ["OpenChest"]
               type: "chest"
               addresses: [0x01EB03]
               itemset: ["gt"]

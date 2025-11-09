@@ -101,6 +101,7 @@ rooms:
           items:
             - name: "Skull Woods - Map Chest"
               addresses: [0x01E99B]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["skull"]
           mobs:

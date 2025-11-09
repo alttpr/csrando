@@ -12,6 +12,7 @@ rooms:
           items:
             - name: "Thieves' Town - Map Chest"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EA01]
               itemset: ["thieves"]
           pots:
@@ -53,5 +54,6 @@ rooms:
           items:
             - name: "Thieves' Town - Big Key Chest"
               type: "chest"
+              conditions: ["OpenChest"]
               addresses: [0x01EA04]
               itemset: ["thieves"]

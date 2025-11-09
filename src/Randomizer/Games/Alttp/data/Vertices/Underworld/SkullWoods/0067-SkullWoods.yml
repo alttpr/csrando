@@ -12,6 +12,7 @@ rooms:
           items:
             - name: "Skull Woods - Compass Chest"
               addresses: [0x01E992]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["skull"]
           # TODO: Verify pots in room

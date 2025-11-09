@@ -124,6 +124,7 @@ rooms:
               - "Ganon's Tower - Bonk Pits - Bottom Upper"
           items:
             - name: "Ganon's Tower - Map Chest"
+              conditions: ["OpenChest"]
               type: "chest"
               addresses: [0x01EAD3]
               itemset: ["gt"]

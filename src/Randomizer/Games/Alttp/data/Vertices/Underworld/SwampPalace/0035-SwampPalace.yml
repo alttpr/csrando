@@ -61,6 +61,7 @@ rooms:
           items:
             - name: "Swamp Palace - Big Key Chest"
               addresses: [0x01EAA6]
+              conditions: ["OpenChest"]
               type: "chest"
               itemset: ["swamp"]
           pots:

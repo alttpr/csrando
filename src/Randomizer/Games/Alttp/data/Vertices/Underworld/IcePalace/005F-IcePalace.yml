@@ -13,6 +13,7 @@ rooms:
 
           items:
             - name: "Ice Palace - Spike Room"
+              conditions: ["OpenChest"]
               addresses: [0x01E9E0]
               type: "chest"
               itemset: ["ice"]

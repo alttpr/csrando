@@ -26,6 +26,7 @@ rooms:
               - "Secret Passage Uncle"
           items:
             - name: "Secret Passage"
+              conditions: ["OpenChest"]
               addresses: [0x01E971]
               type: "chest"
               itemset: ["lw"]

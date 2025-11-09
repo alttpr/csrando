@@ -14,6 +14,7 @@ rooms:
 
           items:
             - name: "Thieves' Town - Ambush Chest"
+              conditions: ["OpenChest"]
               type: "chest"
               addresses: [0x01EA0A]
               itemset: ["thieves"]
