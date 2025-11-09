@@ -1470,7 +1470,7 @@ public sealed class Rom : GameRom
         if (moldormEyeCount == 0)
         {
             // special case: no eyes means we can just skip the drawing routine.
-            Write((SNES)0x1DD889, [NOP, NOP, NOP]); // JSR SpriteDraw_Moldorm_Eyeballs
+            SkipOver((SNES)0x1DD889, count: 3); // JSR SpriteDraw_Moldorm_Eyeballs
         }
         else
         {
@@ -1821,6 +1821,14 @@ public sealed class Rom : GameRom
         Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
     }
 
+    public void BlindIsNotInThievesTown()
+    {
+        // TODO: DR has hooks in the base rom, we should probably do that too (or just use their code).
+        // patch out the part that checks for the follower to spawn blind.
+        SkipTo((SNES)0x1DA081, (SNES)0x1DA090);
+        // patch out the door check leaving it open if Blind can't spawn.
+        SkipTo((SNES)0x028AB8, (SNES)0x028ACC);
+    }
     public void WriteUnderworldEnemies(byte[] table, ushort[] offsets, byte[] spriteSheets, RoomHeaderPatches roomHeaderChanges)
     {
         // full room headers (roomheaders.asm)
@@ -2017,4 +2025,20 @@ public sealed class Rom : GameRom
     }
     private static int FromFastRom(int fastRomAddress) => fastRomAddress & 0x007F_FFFF;
     private static int ToFastRom(int slowRomAddress) => slowRomAddress | 0x0080_0000;
+
+    private void SkipTo(Address at, Address to) => SkipOver(at, to.Value - at.Value);
+    private void SkipOver(Address address, int count = 1)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, 1);
+        int target = SNES.FromPC(address.Value + count);
+        if ((address.Value & 0xFFFF) + count - 1 > 0xFFFF)
+            throw new ArgumentOutOfRangeException(nameof(count), count, $"{count}x NOP patch at ${address.Value:x06} would cross bank boundary.");
+
+        if (count == 1)
+            Write(address, [0xEA]); // NOP
+        else if (count == 2)
+            Write(address, [0x80, 0x00]); // BRA + : +
+        else
+            Write(address, [0x4C, (byte)target, (byte)(target >> 8)]); // JMP target
+    }
 }

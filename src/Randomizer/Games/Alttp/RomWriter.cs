@@ -913,6 +913,11 @@ public static class RomWriter
         var enemies = world.GetLocationsOfType(VertexType.Mob);
         var enemyRooms = enemies.ToLookup(enemy => enemy.RoomId);
 
+        // remove the maiden if blind isn't in thieves town.
+        var thievesTownBoss = world.GetLocation("Thieves' Town - Boss Room - Blind Active");
+        var blindBossEdge = thievesTownBoss.Edges.FirstOrDefault(e => e.Condition.Item?.Name == "DefeatBlind");
+        bool skipTheMaiden = blindBossEdge == null;
+
         var outputOffsets = new ushort[0x140];
         // empty room ;)
         List<byte> outputBytes = [0x00, 0xFF];
@@ -932,6 +937,11 @@ public static class RomWriter
             foreach (var enemy in enemyRooms[i].OrderByDescending(e => e.Sprite!.Priority))
             {
                 var sprite = enemy.Sprite!;
+                if (sprite.Name == "BlindMaiden" && skipTheMaiden)
+                {
+                    rom.BlindIsNotInThievesTown();
+                    continue;
+                }
                 outputBytes.Add((byte)(((sprite.SubType & 0x18) << 2)
                     | (enemy.Position!.Z.GetValueOrDefault() << 7)
                     | enemy.Position.Y));
