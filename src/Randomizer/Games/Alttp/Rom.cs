@@ -1899,6 +1899,14 @@ public sealed class Rom : GameRom
         Write((SNES)0x02E575, specialSpriteSheets);
     }
 
+    public void WriteSpriteFlags(byte[] spriteHitboxFlags)
+    {
+        if (spriteHitboxFlags.Length > 0xF3)
+            throw new Exception($"Trying to write too many sprite hitbox flags (got 0x{spriteHitboxFlags.Length:X02} which exceeds 0xF3)");
+
+        // SpriteData_HitBox
+        Write((SNES)0x0DB44C, spriteHitboxFlags);
+    }
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)

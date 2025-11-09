@@ -1084,6 +1084,59 @@ public static class RomWriter
         rom.WriteOverworldEnemies([.. outputBytes], [.. owOutputOffsets], owPointerOffsets, world.SpriteSheets.Overworld, world.SpriteSheets.Special);
         // write new sheet sets
         rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
+
+        // write sprite flags (hitbox)
+        var spriteData = YamlReader.LoadSprites().Values.Where(s => !s.Flags.HasFlag(YamlSpriteFlags.Overlord) && !s.Flags.HasFlag(YamlSpriteFlags.UnderPots)).ToLookup(s => s.Id);
+        byte[] spriteHitboxFlags = new byte[0xF3];
+        for (byte spriteId = 0; spriteId < spriteHitboxFlags.Length; spriteId++)
+        {
+            // isph hhhh
+            //   i - run collision on a single layer
+            //   s - kill room validity (0: sprite counts | 1: ignored by kill rooms)
+            //   p - overworld activeness (0: die off screen | 1: persists)
+            //   h - hitbox
+            bool collisionOnSingleLayer = false;
+            bool killRoomValidity = false;
+            bool overworldActiveness = false;
+            byte hitbox = 0x00;
+
+            var collisionOnSingleLayerEntries = spriteData[spriteId].ToLookup(s => s.SingleLayerCollision);
+            if (collisionOnSingleLayerEntries.Count == 1)
+                collisionOnSingleLayer = collisionOnSingleLayerEntries.First().Key;
+#if DEBUG
+            else if(collisionOnSingleLayerEntries.Count > 1)
+                throw new Exception($"Mismatched SingleLayerCollision for sprite 0x{spriteId:x02}: {string.Join(", ", collisionOnSingleLayerEntries.Select(k => k.Key))}");
+#endif
+            var killRoomValidityEntries = spriteData[spriteId].ToLookup(s => s.IgnoredByKillRooms);
+            if (killRoomValidityEntries.Count == 1)
+                killRoomValidity = killRoomValidityEntries.First().Key;
+#if DEBUG
+            else if (killRoomValidityEntries.Count > 1)
+                throw new Exception($"Mismatched IgnoredByKillRooms for sprite 0x{spriteId:x02}: {string.Join(", ", killRoomValidityEntries.Select(k => k.Key))}");
+#endif
+            var overworldActivenessEntries = spriteData[spriteId].ToLookup(s => s.PersistOffScreenOW);
+            if (overworldActivenessEntries.Count == 1)
+                overworldActiveness = overworldActivenessEntries.First().Key;
+#if DEBUG
+            else if (overworldActivenessEntries.Count > 1)
+                throw new Exception($"Mismatched PersistOffScreenOW for sprite 0x{spriteId:x02}: {string.Join(", ", overworldActivenessEntries.Select(k => k.Key))}");
+#endif
+            var hitboxEntries = spriteData[spriteId].ToLookup(s => s.Hitbox);
+            if (hitboxEntries.Count == 1)
+                hitbox = hitboxEntries.First().Key;
+#if DEBUG
+            else if (hitboxEntries.Count > 1)
+                throw new Exception($"Mismatched Hitbox for sprite 0x{spriteId:x02}: {string.Join(", ", hitboxEntries.Select(k => k.Key))}");
+#endif
+
+            spriteHitboxFlags[spriteId] = (byte)(
+                (collisionOnSingleLayer ? 0b1000_0000 : 0) |
+                (killRoomValidity ? 0b0100_0000 : 0) |
+                (overworldActiveness ? 0b0010_0000 : 0) |
+                hitbox
+            );
+        }
+        rom.WriteSpriteFlags(spriteHitboxFlags);
     }
 }
 

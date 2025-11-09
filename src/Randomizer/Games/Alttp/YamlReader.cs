@@ -343,6 +343,14 @@ public class YamlSprite
     public string? FallingSpriteFor { get; set; }
     [YamlMember(Alias = "priority")]
     public int Priority { get; set; }
+    [YamlMember(Alias = "single_layer_collision")]
+    public bool SingleLayerCollision { get; set; }
+    [YamlMember(Alias = "ignored_by_killrooms")]
+    public bool IgnoredByKillRooms { get; set; }
+    [YamlMember(Alias = "persist_offscreen")]
+    public bool PersistOffScreenOW { get; set; }
+    [YamlMember(Alias = "hitbox")]
+    public byte Hitbox { get; set; }
 }
 [Flags]
 public enum YamlSpriteFlags
@@ -359,6 +367,8 @@ public enum YamlSpriteFlags
     Challenge = 1 << 3,
     /// <summary>This sprite shouldn't hold item drops that might affect progression.</summary>
     NoDrop = 1 << 4,
+    /// <summary>This sprite only appears under a pot.</summary>
+    UnderPots = 1 << 5,
 }
 
 public class YamlBossSprite
