@@ -915,7 +915,7 @@ public static class RomWriter
 
         // remove the maiden if blind isn't in thieves town.
         var thievesTownBoss = world.GetLocation("Thieves' Town - Boss Room - Blind Active");
-        var blindBossEdge = thievesTownBoss.Edges.FirstOrDefault(e => e.Condition.Item?.Name == "DefeatBlind");
+        var blindBossEdge = thievesTownBoss.Edges.FirstOrDefault(e => e.Condition.Item?.Name is "DefeatBlind" or "DarkDefeatBlind");
         bool skipTheMaiden = blindBossEdge == null;
 
         var outputOffsets = new ushort[0x140];
