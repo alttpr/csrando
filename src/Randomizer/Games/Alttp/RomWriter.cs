@@ -1015,8 +1015,8 @@ public static class RomWriter
             }
 
             // we might have to clear the lower layer (if it contains things like Kholdstare's/Trinexx' shell).
-            if (vanillaBoss is "DefeatTrinexx" or "DefeatKholdstare" && roomChanges.TryGet(roomId, out var roomPatch) && roomPatch.LowerLayer != null)
-                roomPatch.LowerLayer = [];
+            if (vanillaBoss is "DefeatTrinexx" or "DefeatKholdstare" && (!roomChanges.TryGet(roomId, out var roomPatch) || roomPatch.LowerLayer == null))
+                roomChanges[roomId].LowerLayer = [];
         }
         rom.WriteUnderworldRoomsChanges(roomChanges);
         static byte[] makeObjectLayerValue(YamlRoomObjectPatch roomObject, YamlBossSprite sprite, Vertex boss)
