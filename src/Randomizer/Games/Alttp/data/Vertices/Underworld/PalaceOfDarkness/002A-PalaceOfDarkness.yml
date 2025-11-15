@@ -104,7 +104,7 @@ rooms:
         - name: "Palace of Darkness - The Arena - Balcony"
           connections:
             UseBomb:
-              - "Palade of Darkness - Map Chest Area"
+              - "Palace of Darkness - Map Chest Area"
           items:
             - name: "Palace of Darkness - The Arena - Ledge"
               addresses: [0x01EA3A]
