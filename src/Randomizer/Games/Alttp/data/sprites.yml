@@ -4,81 +4,101 @@ Raven:
   id: 0x00
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
+  limited_interaction: true
+  prize_pack: 0x03
 Dacto:
   alternative: Raven
   id: 0x00
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x19]
+  limited_interaction: true
+  prize_pack: 0x03
 Vulture:
   id: 0x01
   flags: Challenge, NoDrop
   sheets: [null, null, 0x12, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x06
 FlyingStalfosHead: #STALFOS HEAD
   id: 0x02
   flags: Challenge
   sheets: [0x1F, null, null, null]
+  limited_interaction: true
+  prize_pack: 0x04
 Empty: #NULL
   id: 0x03
   flags: NoPlace
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchGood: #CORRECT PULL SWITCH (BAR)
   id: 0x04
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchGoodTongue: #CORRECT PULL SWITCH (TONGUE)
   id: 0x04
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH (BAR)
   id: 0x05
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchGoodUnusedTongue: #UNUSED CORRECT PULL SWITCH (TONGUE)
   id: 0x05
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchBad: #WRONG PULL SWITCH (BAR)
   id: 0x06
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchBadTongue: #WRONG PULL SWITCH (TONGUE)
   id: 0x06
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH (BAR)
   id: 0x07
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 PullSwitchBadUnusedTongue: #UNUSED WRONG PULL SWITCH (TONGUE)
   id: 0x07
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   ignored_by_killrooms: true
   hitbox: 0x03
+  limited_interaction: true
 Octorok1: #OKTOROK
   id: 0x08
   flags: Challenge
   sheets: [null, null, 0x0C, null]
+  prize_pack: 0x02
 Slarok1: #SLAROK
   alternative: Octorok1
   id: 0x08
   flags: Challenge
   sheets: [null, null, 0x18, null]
+  prize_pack: 0x02
 Moldorm:
   id: 0x09
   flags: NoPlace
@@ -88,64 +108,86 @@ Octorok4: #OCTOROK 4WAY
   id: 0x0A
   flags: Challenge
   sheets: [null, null, 0x0C, null]
+  prize_pack: 0x02
 Slarok4: #SLAROK 4WAY
   alternative: Octorok4
   id: 0x0A
   flags: Challenge
   sheets: [null, null, 0x18, null]
+  prize_pack: 0x02
 Chicken: #CUCCO
   id: 0x0B
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x50]
   ignored_by_killrooms: true
+  limited_interaction: true
 SkullChicken: #SKULL CUCCO
   alternative: Chicken
   id: 0x0B
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x15]
   ignored_by_killrooms: true
+  limited_interaction: true
 OctorokStone: #OCTOROK STONE
   id: 0x0C
   flags: NoPlace
   sheets: [null, null, 0x0C, null]
   hitbox: 0x1C
+  limited_interaction: true
+  shield_blockable: true
 SlarokStone: #SLAROK STONE
   alternative: OctorokStone
   id: 0x0C
   flags: NoPlace
   sheets: [null, null, 0x18, null]
   hitbox: 0x1C
+  limited_interaction: true
+  shield_blockable: true
 Buzzblob:
   id: 0x0D
   flags: Challenge
   sheets: [null, null, null, 0x11]
+  limited_interaction: true
+  prize_pack: 0x03
 Snapdragon:
   id: 0x0E
   flags: Challenge
   sheets: [0x16, null, 0x17, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x07
 Octoballoon:
   id: 0x0F
   flags: Challenge, NoDrop
   sheets: [null, null, 0x0C, null]
   hitbox: 0x02
+  limited_interaction: true
 Octobaby: #OCTOBALLOON BABY
   id: 0x10
   flags: NoPlace
   sheets: [null, null, 0x0C, null]
   hitbox: 0x01
+  limited_interaction: true
 Hinox:
   id: 0x11
   flags: Challenge
   sheets: [0x16, null, null, null]
   hitbox: 0x03
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x04
 Moblin:
   id: 0x12
   flags: Challenge
   sheets: [null, null, 0x17, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 MiniHelmasaur: #MINI HELMASAUR
   id: 0x13
   flags: Challenge
   sheets: [null, 0x1E, null, null]
+  prize_pack: 0x07
 ForkGate: #THIEVES TOWN GRATE?
   id: 0x14
   flags: NoPlace
@@ -156,6 +198,7 @@ Antifairy:
   sheets: [null, null, null, 0x52]
   single_layer_collision: true
   ignored_by_killrooms: true
+  limited_interaction: true
 Sahasrahla: #SAHASRAHLA / AGINAH
   id: 0x16
   flags: NoPlace
@@ -165,34 +208,48 @@ BushHoarder: #HOARDER
   id: 0x17
   flags: Challenge
   sheets: [null, null, null, 0x11]
+  limited_interaction: true
 BushHoarderAlternative:
   alternative: BushHoarder
   id: 0x17
   flags: Challenge
   sheets: [null, null, null, 0x10]
+  limited_interaction: true
 MiniMoldorm: #MINI MOLDORM
   id: 0x18
   flags: Challenge
   sheets: [null, 0x1E, null, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x02
 Poe:
   id: 0x19
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x0E]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x06
 Hyu:
   alternative: Poe
   id: 0x19
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x15]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x06
 DwarfSmith: #SMITHY
   id: 0x1A
   flags: NoPlace
   sheets: [null, 0x4D, null, 0x15]
   hitbox: 0x07
+  limited_interaction: true
 SpriteArrow: #ARROW
   id: 0x1B
   flags: NoPlace
   ignored_by_killrooms: true
   hitbox: 0x05
+  limited_interaction: true
+  shield_blockable: true
 Statue:
   id: 0x1C
   flags: NoDrop
@@ -225,26 +282,33 @@ SickKid: #SICK KID
   flags: NoPlace
   sheets: [0x51, null, null, null]
   hitbox: 0x0D
+  limited_interaction: true
 Sluggula:
   id: 0x20
   flags: Challenge
   sheets: [null, null, 0x25, null]
+  prize_pack: 0x04
 PushSwitch: #WATER SWITCH
   id: 0x21
   flags: NoPlace
   sheets: [null, null, null, 0x53]
+  limited_interaction: true
 Ropa:
   id: 0x22
   flags: Challenge
   sheets: [0x16, null, null, null]
+  limited_interaction: true
+  prize_pack: 0x02
 RedBari: #RED BARI
   id: 0x23
   flags: Challenge, NoDrop #DR allows them to drop items with fire
   sheets: [0x1F, null, null, null]
+  prize_pack: 0x06
 BlueBari: #BLUE BARI
   id: 0x24
   flags: Challenge
   sheets: [0x1F, null, null, null]
+  prize_pack: 0x06
 TalkingTree: #TALKING TREE
   id: 0x25
   flags: NoPlace
@@ -257,102 +321,123 @@ Deadrock:
   id: 0x27
   flags: Challenge
   sheets: [null, null, null, 0x10]
+  limited_interaction: true
 Storyteller: #DARK WORLD HINT NPC
   id: 0x28
   flags: NoPlace
   sheets: [0x4B, 0x4D, null, null]
   hitbox: 0x07
+  limited_interaction: true
 AdultThief:
   id: 0x29
   flags: NoPlace
   sheets: [0x0E, null, 0x4A, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 Adult:
   id: 0x29
   flags: NoPlace
   sheets: [0x4F, null, 0x4A, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 SweepingLady: #SWEEPING LADY
   id: 0x2A
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
   hitbox: 0x07
+  limited_interaction: true
 Hobo:
   id: 0x2B
   flags: NoPlace
   sheets: [null, null, 0x37, null]
   hitbox: 0x07
+  limited_interaction: true
 Lumberjack: #LUMBERJACKS
   id: 0x2C
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
   hitbox: 0x07
+  limited_interaction: true
 NecklessMan: #used to be TelepathyTile, for its message
   id: 0x2D
   flags: NoPlace
   hitbox: 0x07
+  limited_interaction: true
 FluteKid: #FLUTE KID
   id: 0x2E
   flags: NoPlace
   sheets: [null, null, 0x4E, 0x4C]
   hitbox: 0x0D
+  limited_interaction: true
 RaceGameLady: #RACE GAME LADY
   id: 0x2F
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 RaceGameBoy: #RACE GAME GUY?
   id: 0x30
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 FortuneTeller: #FORTUNE TELLER
   id: 0x31
   flags: NoPlace
   sheets: [0x4B, 0x4D, null, null]
   hitbox: 0x07
+  limited_interaction: true
 AngryBrother: #ARGUE BROS?
   id: 0x32
   flags: NoPlace
   sheets: [0x4F, null, null, null]
   hitbox: 0x07
+  limited_interaction: true
 PullForRupees: #RUPEE PULL?
   id: 0x33
   flags: NoPlace
   hitbox: 0x03
+  limited_interaction: true
 YoungSnitch: #YOUNG SNITCH
   id: 0x34
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 Innkeeper:
   id: 0x35
   flags: NoPlace
   sheets: [null, null, null, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 Witch:
   id: 0x36
   flags: NoPlace
   sheets: [null, null, 0x4C, null]
   hitbox: 0x07
+  limited_interaction: true
 Waterfall:
   id: 0x37
   flags: NoPlace
   ignored_by_killrooms: true
+  limited_interaction: true
 ArrowTarget: #EYE STATUE
   id: 0x38
   flags: NoPlace
   hitbox: 0x03
+  limited_interaction: true
 AverageMan: #LOCKSMITH?
   id: 0x39
   flags: NoPlace
   sheets: [null, null, null, 0x11]
   hitbox: 0x07
+  limited_interaction: true
 MagicBat: #MAGIC BAT
   id: 0x3A
   flags: NoPlace
   sheets: [null, null, null, 0x1D]
   hitbox: 0x0D
+  limited_interaction: true
 DashItem: #BONK ITEM
   id: 0x3B
   flags: NoPlace
@@ -370,35 +455,47 @@ OldSnitch: #OLD SNITCH
   flags: NoPlace
   sheets: [null, null, null, 0x50]
   hitbox: 0x07
+  limited_interaction: true
 RockHoarder: #HOARDER?
   id: 0x3E
   flags: Challenge
   sheets: [null, null, null, 0x11]
+  limited_interaction: true
 RockHoarderAlternative: #HOARDER?
   alternative: RockHoarder
   id: 0x3E
   flags: Challenge
   sheets: [null, null, null, 0x10]
+  limited_interaction: true
 TutorialGuard: #TUTORIAL GUARD
   id: 0x3F
   flags: NoPlace
   sheets: [0x48, 0x49, null, null]
+  limited_interaction: true
+  boss_damage_sfx: true
 LightningLock: #LIGHTNING GATE
   id: 0x40
   flags: NoPlace
   sheets: [null, null, null, 0x3F]
   hitbox: 0x09
+  limited_interaction: true
 BlueSwordGuard: #BLUE GUARD
   id: 0x41
   flags: Challenge
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard01: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x01
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard01Falling: #BLUE GUARD
   alternative: BlueSwordGuard
   falling: BlueSwordGuard01
@@ -406,18 +503,27 @@ BlueSwordGuard01Falling: #BLUE GUARD
   subtype: 0x01
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard02: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x02
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard03: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x03
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard03Falling: #BLUE GUARD
   alternative: BlueSwordGuard
   falling: BlueSwordGuard03
@@ -425,24 +531,36 @@ BlueSwordGuard03Falling: #BLUE GUARD
   subtype: 0x03
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard05: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x05
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard13: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x13
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard15: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x15
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueSwordGuard1B: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
@@ -450,12 +568,18 @@ BlueSwordGuard1B: #BLUE GUARD
   # this sprite is used in pit rooms in vanilla
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueTaros: #BLUE TAROS
   alternative: BlueSwordGuard
   id: 0x41
   flags: Challenge
   sheets: [null, 0x0D, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueTarosFalling: #BLUE TAROS
   alternative: BlueSwordGuard
   falling: BlueTaros
@@ -463,11 +587,17 @@ BlueTarosFalling: #BLUE TAROS
   flags: Challenge
   sheets: [null, 0x0D, 0x29, null] # 0x29 in slot 2 is the falling taros sprite
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 GreenSwordGuard: #GREEN GUARD
   id: 0x42
   flags: Challenge
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 GreenSwordGuardFalling: #GREEN GUARD
   alternative: GreenSwordGuard
   falling: GreenSwordGuard
@@ -475,113 +605,170 @@ GreenSwordGuardFalling: #GREEN GUARD
   flags: Challenge
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 GreenSwordGuard01: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x01
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 GreenSwordGuard03: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x03
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 GreenSwordGuard1B: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x1B
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 RedTaros: #RED TAROS?
   alternative: RedSpearGuard
   id: 0x43
   flags: Challenge
   sheets: [null, 0x0D, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 RedSpearGuard: #RED SPEAR GUARD
   id: 0x43
   flags: Challenge
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 AssaultSwordGuard: #BLUESAIN BOLT
   id: 0x44
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x07
 FastRedSpearGuard: #USAIN BOLT
   id: 0x45
   flags: Challenge
   sheets: [null, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 FastRedTaros: #USAIN BOLT but dark world?
   alternative: FastRedSpearGuard
   id: 0x45
   flags: Challenge
   sheets: [null, 0x0D, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 BlueArcher: #BLUE ARCHER
   id: 0x46
   flags: Challenge
   sheets: [0x48, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x05
 GreenArcher: #GREEN BUSH GUARD?
   id: 0x47
   flags: Challenge
   sheets: [0x48, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x05
 RedJavelinGuard: #RED JAVELIN GUARD
   id: 0x48
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x03
 RedJavelinGuard2: #RED BUSH GUARD?
   id: 0x49
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x07
 RedBombGuard: #BOMB GUARD
   id: 0x4A
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
   hitbox: 0x12
+  boss_damage_sfx: true
+  prize_pack: 0x04
 GreenGuardRecruit: #GREEN KNIFE GUARD
   id: 0x4B
   flags: Challenge
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the knife guard legs and the falling guard sprite
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 Geldman:
   id: 0x4C
   flags: Challenge
   sheets: [null, null, 0x12, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x02
 Rabbit: #TOPPO?
   id: 0x4D
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
   ignored_by_killrooms: true
+  limited_interaction: true
+  prize_pack: 0x01
 Popo:
   id: 0x4E
   flags: Challenge
   sheets: [null, 0x2C, null, null]
+  limited_interaction: true
+  prize_pack: 0x02
 Popo2: #POPO?
   id: 0x4F
   flags: Challenge
   sheets: [null, 0x2C, null, null]
+  limited_interaction: true
+  prize_pack: 0x02
 Cannonball:
   id: 0x50
   flags: NoPlace
   sheets: [null, null, 0x2E, null]
   single_layer_collision: true
+  limited_interaction: true
 Armos: #ARMOS STATUE
   id: 0x51
   flags: Challenge
   sheets: [null, null, null, 0x10]
   hitbox: 0x12
+  limited_interaction: true
+  prize_pack: 0x05
 KingZora: #KING ZORA
   id: 0x52
   flags: NoPlace
   sheets: [null, null, null, 0x44]
   hitbox: 0x09
+  limited_interaction: true
 ArmosKnight: #ARMOS KNIGHT
   id: 0x53
   flags: NoPlace
@@ -589,80 +776,98 @@ ArmosKnight: #ARMOS KNIGHT
   # Overlord $07 (ArmosCoordinator) is placed with this one, but Armos Knights come first
   priority: 101
   hitbox: 0x09
+  limited_interaction: true
 Lanmolas:
   id: 0x54
   flags: NoPlace
   sheets: [null, null, null, 0x31]
   priority: 100
+  limited_interaction: true
 FireballZora: #ZORA / FIREBALL?
   id: 0x55
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, 0x0C, null]
   ignored_by_killrooms: true
+  prize_pack: 0x04
 FireballKu: #KU / FIREBALL?
   alternative: FireballZora
   id: 0x55
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, 0x18, null]
   ignored_by_killrooms: true
+  prize_pack: 0x04
 WalkingZora: #ZORA?
   id: 0x56
   flags: Challenge
   sheets: [null, null, 0x0C, 0x44]
+  prize_pack: 0x04
 WalkingKu: #KU?
   alternative: WalkingZora
   id: 0x56
   flags: Challenge
   sheets: [null, null, 0x18, 0x44]
+  prize_pack: 0x04
 DesertPalaceBarrier: #DESERT STATUE?
   id: 0x57
   flags: NoPlace
   sheets: [null, null, 0x12, null]
   hitbox: 0x0C
+  limited_interaction: true
 Crab:
   id: 0x58
   flags: Challenge
   sheets: [null, null, 0x0C, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 Bird: #LOST WOODS BIRD
   id: 0x59
   flags: NoDrop
   sheets: [null, null, null, 0x36]
+  limited_interaction: true
 Squirrel: #LOST WOODS SQUIRREL?
   id: 0x5A
   flags: NoDrop
   sheets: [null, null, null, 0x36]
+  limited_interaction: true
 SparkCW: #SPARK CLOCKWISE
   id: 0x5B
   flags: NoDrop
   sheets: [0x1F, null, null, null]
   ignored_by_killrooms: true
+  limited_interaction: true
 SparkCCW: #SPARK COUNTERCLOCKWISE
   id: 0x5C
   flags: NoDrop
   sheets: [0x1F, null, null, null]
   ignored_by_killrooms: true
+  limited_interaction: true
 RollerVU: #ROLLER VERTICAL UP (placed high, moving downwards first)
   id: 0x5D
   flags: NoDrop
   sheets: [null, null, 0x27, null]
   hitbox: 0x10
+  limited_interaction: true
 RollerVD: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   id: 0x5E
   flags: NoDrop
   sheets: [null, null, 0x27, null]
   hitbox: 0x10
+  limited_interaction: true
 RollerHL: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   id: 0x5F
   flags: NoDrop
   sheets: [null, null, 0x27, null]
   persist_offscreen: true
   hitbox: 0x0E
+  limited_interaction: true
 RollerHR: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   id: 0x60
   flags: NoDrop
   sheets: [null, null, 0x27, null]
   persist_offscreen: true
   hitbox: 0x0E
+  limited_interaction: true
 Beamos:
   id: 0x61
   flags: NoDrop
@@ -673,198 +878,264 @@ MasterSword:
   flags: NoPlace
   sheets: [null, null, 0x37, 0x36]
   hitbox: 0x1E
+  limited_interaction: true
 DevalantBlue: #DEBIRANDO PIT
   id: 0x63
   sheets: [0x2F, null, null, null]
   ignored_by_killrooms: true
   hitbox: 0x13
+  limited_interaction: true
 DevalantRed: #DEBIRANDO
   id: 0x64
   flags: Challenge
   sheets: [0x2F, null, null, null]
+  limited_interaction: true
+  prize_pack: 0x02
 ShootingGalleryNPC: #ARCHERY GUY
   id: 0x65
   flags: NoPlace
   sheets: [0x4B, null, null, null]
   hitbox: 0x0A
+  limited_interaction: true
+  prize_pack: 0x0A
 CannonBallShooterR: #WALL CANNON VERTICAL RIGHT (placed left, shooting right)
   id: 0x66
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  limited_interaction: true
 CannonBallShooterL: #WALL CANNON VERTICAL LEFT (placed right, shooting left)
   id: 0x67
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  limited_interaction: true
 CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM (placed high, shooting downwards)
   id: 0x68
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  limited_interaction: true
 CannonBallShooterU: #WALL CANNON HORIZONTAL TOP (placed low, shooting upwards)
   id: 0x69
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  limited_interaction: true
 BallNChainTrooper: #BALL N CHAIN
   id: 0x6A
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x02
 CannonGuard: #CANNONBALL / CANNON TROOPER
   id: 0x6B
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
   hitbox: 0x12
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x01
 MirrorPortal: #MIRROR PORTAL
   id: 0x6C
   flags: NoPlace
   ignored_by_killrooms: true
+  limited_interaction: true
 Rat: #RAT / CRICKET
   id: 0x6D
   flags: Challenge
   sheets: [null, null, 0x1C, null]
+  limited_interaction: true
+  prize_pack: 0x02
 Buzz: #BUZZ / CRICKET
   alternative: Rat
   id: 0x6D
   flags: Challenge
   sheets: [null, null, 0x24, null]
+  limited_interaction: true
+  prize_pack: 0x02
 Rope: #SNAKE? ROPE?
   id: 0x6E
   flags: Challenge
   sheets: [null, null, 0x1C, null]
+  limited_interaction: true
+  prize_pack: 0x01
 Skullrope: #SKULL ROPE?
   alternative: Rope
   id: 0x6E
   flags: Challenge
   sheets: [null, null, 0x24, null]
+  limited_interaction: true
+  prize_pack: 0x01
 Keese:
   id: 0x6F
   flags: NoDrop
   sheets: [null, null, 0x1C, null]
   ignored_by_killrooms: true
+  limited_interaction: true
+  prize_pack: 0x01
 Chasupa:
   alternative: Keese
   id: 0x6F
   flags: NoDrop
   sheets: [null, null, 0x24, null]
   ignored_by_killrooms: true
+  limited_interaction: true
+  prize_pack: 0x01
 HelmasaurFireball: #KING HELMASAUR FIREBALL
   id: 0x70
   flags: NoPlace
   sheets: [null, null, null, 0x3E]
   hitbox: 0x19
+  limited_interaction: true
 Leever:
   id: 0x71
   flags: Challenge
   sheets: [0x2F, null, null, null]
+  limited_interaction: true
+  prize_pack: 0x01
 PondActivation: #FAIRY POND TRIGGER?
   id: 0x72
   flags: NoPlace
   sheets: [null, null, null, 0x36]
+  limited_interaction: true
 Uncle: #UNCLE / PRIEST / MANTLE
   id: 0x73
   flags: NoPlace
   sheets: [0x51, null, null, null]
   hitbox: 0x0A
+  limited_interaction: true
 Priest: #UNCLE / PRIEST / MANTLE
   id: 0x73
   flags: NoPlace
   sheets: [0x47, null, null, null]
   hitbox: 0x0A
+  limited_interaction: true
 RunningMan: #RUNNING MAN
   id: 0x74
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
   hitbox: 0x0D
+  limited_interaction: true
 BottleSalesman: #BOTTLE MERCHANT
   id: 0x75
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
   hitbox: 0x0A
+  limited_interaction: true
 Zelda:
   id: 0x76
   flags: NoPlace
   hitbox: 0x0A
-#UNUSED ANTIFAIRY: (probably from the AntifairyCircle, they change id when separating?)
-#  id: 0x77
-#  single_layer_collision: true
+  limited_interaction: true
+SeparatedAntifairy: # probably from the AntifairyCircle, they change id when separating?
+  id: 0x77
+  flags: NoPlace
+  single_layer_collision: true
+  limited_interaction: true
 SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
   id: 0x78
   flags: NoPlace
   sheets: [0x4B, null, 0x4A, null]
   hitbox: 0x0A
+  limited_interaction: true
 Bee:
   id: 0x79
   flags: NoPlace
   ignored_by_killrooms: true
   hitbox: 0x01
+  limited_interaction: true
 Agahnim:
   id: 0x7A
   flags: NoPlace
   sheets: [0x55, 0x1A, 0x42, 0x43]
   priority: 100
+  limited_interaction: true
 AgahnimBall: #AGAHNIMS BALLS
   id: 0x7B
   flags: NoPlace
   sheets: [null, null, null, 0x43]
   ignored_by_killrooms: true
+  limited_interaction: true
 GreenStalfos: #GREEN STALFOS, DR: Floating Skull
   id: 0x7C
   flags: Challenge
   sheets: [0x1F, null, null, null]
+  limited_interaction: true
+  boss_damage_sfx: true
+  prize_pack: 0x07
 BigSpikeTrap: #BIG SPIKE?
   id: 0x7D
   flags: NoDrop
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   hitbox: 0x09
+  limited_interaction: true
 FireBarCW: #FIREBAR CLOCKWISE
   id: 0x7E
   flags: NoDrop
   sheets: [0x1F, null, null, null]
+  limited_interaction: true
 FireBarCCW: #FIREBAR COUNTERCLOCKWISE
   id: 0x7F
   flags: NoDrop
   sheets: [0x1F, null, null, null]
+  limited_interaction: true
 FireSnake:
   id: 0x80
   flags: NoDrop
   sheets: [0x1F, null, null, null]
   single_layer_collision: true
   ignored_by_killrooms: true
+  limited_interaction: true
 Hover:
   id: 0x81
   flags: Challenge
   sheets: [null, null, 0x22, null]
+  limited_interaction: true
+  water_check: true
+  prize_pack: 0x02
 AntifairyCircle: #ANTIFAIRY CIRCLE
   id: 0x82
   flags: NoDrop
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
+  limited_interaction: true
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   id: 0x83
   flags: Challenge
   sheets: [null, null, 0x2E, null]
+  boss_damage_sfx: true
+  prize_pack: 0x05
 MimicGreen: #GREEN EYEGORE / GREEN MIMIC
   alternative: EyegoreGreen
   id: 0x83 #DR uses the unused somaria platform 0xEF
   flags: Challenge
   sheets: [null, null, 0x2E, null]
+  boss_damage_sfx: true
+  prize_pack: 0x05
 EyegoreRed: #RED EYEGORE / RED MIMIC
   id: 0x84
   flags: Challenge
   sheets: [null, null, 0x2E, null]
+  boss_damage_sfx: true
+  prize_pack: 0x05
 MimicRed: #RED EYEGORE / RED MIMIC
   alternative: EyegoreRed
   id: 0x84 #DR uses the unused somaria platform 0xF0
   flags: Challenge
   sheets: [null, null, 0x2E, null]
+  boss_damage_sfx: true
+  prize_pack: 0x05
 StalfosYellow: #YELLOW STALFOS, DR says it doesnt spawn
   id: 0x85
   sheets: [0x1F, null, null, null]
   ignored_by_killrooms: true
+  boss_damage_sfx: true
+  prize_pack: 0x07
 Kodongo:
   id: 0x86
   flags: Challenge
   sheets: [null, null, 0x2A, null]
+  prize_pack: 0x06
 Flames: #KONDONGO FIRE
   id: 0x87
   flags: NoPlace
@@ -877,6 +1148,7 @@ Mothula:
   # Overlord $07 (MovingFloor) is placed with this one, but Mothula is first
   priority: 101
   hitbox: 0x09
+  limited_interaction: true
 MothulaBeam: #MOTHULA BEAM
   id: 0x89
   flags: NoPlace
@@ -888,6 +1160,8 @@ SpikeTrap: #SPIKE BLOCK
   sheets: [null, null, null, 0x52]
   single_layer_collision: true
   ignored_by_killrooms: true
+  limited_interaction: true
+  water_check: true
 SpikeTrapAlternative: #SPIKE BLOCK
   alternative: SpikeTrap
   id: 0x8A
@@ -895,16 +1169,21 @@ SpikeTrapAlternative: #SPIKE BLOCK
   sheets: [null, null, null, 0x53]
   single_layer_collision: true
   ignored_by_killrooms: true
+  limited_interaction: true
+  water_check: true
 Gibdo:
   id: 0x8B
   flags: Challenge
   sheets: [null, null, 0x23, null]
+  boss_damage_sfx: true
+  prize_pack: 0x03
 Arrghus:
   id: 0x8C
   flags: NoPlace
   sheets: [null, null, 0x39, null]
   priority: 101
   ignored_by_killrooms: true
+  water_check: true
 ArrghusSpawn: #ARRGHI
   id: 0x8D
   flags: NoPlace
@@ -914,19 +1193,24 @@ Terrorpin:
   id: 0x8E
   flags: Challenge
   sheets: [null, null, 0x2A, null]
+  prize_pack: 0x02
 Zol: #BLOB?
   id: 0x8F
   flags: Challenge
   sheets: [null, 0x20, null, null]
   single_layer_collision: true
+  prize_pack: 0x06
 Wallmaster:
   id: 0x90
   flags: NoPlace
   sheets: [null, null, 0x23, null]
+  boss_damage_sfx: true
 StalfosKnight: #STALFOS KNIGHT
   id: 0x91
   flags: Challenge
   sheets: [null, 0x20, null, null]
+  boss_damage_sfx: true
+  prize_pack: 0x04
 Helmasaur: #KING HELMASAUR
   id: 0x92
   flags: NoPlace
@@ -943,6 +1227,7 @@ Pirogusu: #PIROGUSU / TILE ROOM TILE?
   id: 0x94
   flags: NoPlace
   sheets: [null, null, 0x22, null]
+  water_check: true
 LaserEyeR: #LASER EYE RIGHT (placed left, shooting right)
   id: 0x95
   flags: NoPlace
@@ -975,30 +1260,40 @@ Pengator:
   id: 0x99
   flags: Challenge
   sheets: [null, null, 0x26, null]
+  boss_damage_sfx: true
+  prize_pack: 0x03
 Kyameron:
   id: 0x9A
   flags: NoDrop
   sheets: [null, null, 0x22, null]
   ignored_by_killrooms: true
+  water_check: true
+  prize_pack: 0x06
 Wizzrobe:
   id: 0x9B
   flags: Challenge
   sheets: [null, null, 0x25, null]
+  boss_damage_sfx: true
+  prize_pack: 0x01
 SkullWizzrobe:
   alternative: Wizzrobe
   id: 0x9B
   flags: Challenge
   sheets: [null, null, 0x29, null]
+  boss_damage_sfx: true
+  prize_pack: 0x01
 Zoro:
   id: 0x9C
   flags: NoPlace
   sheets: [null, 0x20, null, null]
   single_layer_collision: true
+  limited_interaction: true
 Babasu:
   id: 0x9D
   flags: Challenge
   sheets: [null, 0x20, null, null]
   single_layer_collision: true
+  limited_interaction: true
 OstrichHG: #HAUNTED GROVE OSTRITCH
   id: 0x9E
   flags: NoDrop
@@ -1018,6 +1313,7 @@ Freezor:
   id: 0xA1
   flags: NoPlace
   sheets: [null, null, 0x26, null]
+  boss_damage_sfx: true
 Kholdstare:
   id: 0xA2
   flags: NoPlace
@@ -1038,37 +1334,51 @@ ZazakBlue: #BLUE ZAZAK
   id: 0xA5
   flags: Challenge
   sheets: [null, null, 0x28, null]
+  boss_damage_sfx: true
+  prize_pack: 0x06
 ZazakRed: #RED ZAZAK
   id: 0xA6
   flags: Challenge
   sheets: [null, null, 0x28, null]
+  boss_damage_sfx: true
+  prize_pack: 0x06
 Stalfos:
   id: 0xA7
   flags: Challenge
   sheets: [0x1F, null, null, null]
+  boss_damage_sfx: true
+  prize_pack: 0x06
 ZirroGreen: #GREEN ZIRRO
   id: 0xA8
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x1B]
+  limited_interaction: true
+  prize_pack: 0x01
 ZirroBlue: #BLUE ZIRRO
   id: 0xA9
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x1B]
+  limited_interaction: true
+  prize_pack: 0x07
 Pikit:
   id: 0xAA
   flags: Challenge
   sheets: [null, null, null, 0x1B]
+  limited_interaction: true
+  prize_pack: 0x02
 Maiden: #CRYSTAL MAIDEN?
   id: 0xAB
   flags: NoPlace
 Apple:
   id: 0xAC
   flags: NoPlace
+  limited_interaction: true
 LostOldMan: #OLD MAN
   id: 0xAD
   flags: NoPlace
   sheets: [null, null, 0x1C, null]
   hitbox: 0x0A
+  limited_interaction: true
 PipeD: #PIPE DOWN
   id: 0xAE
   flags: NoPlace
@@ -1090,9 +1400,11 @@ BeeGood: #GOOD BEE
   flags: NoPlace
   ignored_by_killrooms: true
   hitbox: 0x01
+  limited_interaction: true
 HylianPlaque: #PEDESTAL PLAQUE?
   id: 0xB3
   flags: NoPlace
+  limited_interaction: true
 PurpleChest: #PURPLE CHEST
   id: 0xB4
   flags: NoPlace
@@ -1172,15 +1484,16 @@ AgahnimCutscene: #CUTSCENE AGAHNIM
   flags: NoPlace
   sheets: [0x55, 0x3D, 0x42, 0x43]
   priority: 100
-# Boulders: #TODO: does this sprite appear without the overlord?
-#   id: 0xC2 # this belongs to overlord 0xF4
-#   flags: NoPlace, OverworldOnly
-#   sheets: [null, null, null, 0x10]
-#   hitbox: 0x09
+SingleBoulder: #TODO: does this sprite appear without the overlord?
+  id: 0xC2 # this belongs to overlord 0x02
+  flags: NoPlace, OverworldOnly
+  sheets: [null, null, null, 0x10]
+  hitbox: 0x09
 Gibo:
   id: 0xC3
   flags: Challenge
   sheets: [null, null, 0x28, null]
+  limited_interaction: true
 Thief:
   id: 0xC4
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
@@ -1202,6 +1515,8 @@ Pokey:
   id: 0xC7
   flags: Challenge
   sheets: [null, null, 0x27, null]
+  boss_damage_sfx: true
+  prize_pack: 0x07
 FairyBig: #BIG FAIRY
   id: 0xC8
   flags: NoPlace
@@ -1210,6 +1525,8 @@ Tektite: #TEKTITE / FIREBAT
   id: 0xC9
   flags: Challenge
   sheets: [null, null, null, 0x10]
+  boss_damage_sfx: true
+  prize_pack: 0x02
 ChainChomp: #CHAIN CHOMP
   id: 0xCA
   flags: NoDrop
@@ -1245,10 +1562,13 @@ Swamola:
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x19]
   hitbox: 0x1C
+  boss_damage_sfx: true
 Lynel:
   id: 0xD0
   flags: Challenge
   sheets: [null, null, null, 0x14]
+  boss_damage_sfx: true
+  prize_pack: 0x07
 BunnyBeam: #BUNNYBEAM / SMOKE
   id: 0xD1
   flags: NoPlace
@@ -1257,9 +1577,11 @@ FloppingFish: #FLOPPING FISH
   id: 0xD2
   flags: NoDrop
   ignored_by_killrooms: true
+  water_check: true
 Stal:
   id: 0xD3
   flags: Challenge
+  prize_pack: 0x01
 Landmine:
   id: 0xD4
   flags: OverworldOnly
@@ -1340,6 +1662,7 @@ Fairy:
   flags: NoPlace
   ignored_by_killrooms: true
   hitbox: 0x03
+  water_check: true
 Key: #SMALL KEY
   id: 0xE4
   flags: NoPlace
@@ -1390,6 +1713,7 @@ Throwable: #THROWN ITEM
   flags: NoPlace
   single_layer_collision: true
   ignored_by_killrooms: true
+  limited_interaction: true
 SomariaPlatform: #SOMARIA PLATFORM
   id: 0xED
   flags: NoPlace
