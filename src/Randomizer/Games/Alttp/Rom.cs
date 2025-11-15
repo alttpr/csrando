@@ -1861,6 +1861,9 @@ public sealed class Rom : GameRom
             Write((SNES)(0x09D62E + roomId * 2), data);
         }
         Write((SNES)(0x09D62E + offsets.Length * 2), table);
+
+        // disable shallow water collision to allow enemies moving in it (GeneralizedSpriteTileInteraction)
+        Write((SNES)(0x1DF6CF + 0x09), [0x00]);
     }
     public void WriteOverworldEnemies(byte[] table, ushort[] offsets, List<ushort>[] statePointerOffsets, byte[] spriteSheets, byte[] specialSpriteSheets)
     {
