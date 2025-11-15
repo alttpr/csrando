@@ -13,14 +13,15 @@ internal static class Spoiler
             return;
 
         var spoiler = spoilerLog.Spoiler;
+        string g = groupPrefix == "" ? "" : $"{groupPrefix} - ";
 
         foreach (var (index, item) in config.StartingEquipment.Indexed())
-            spoiler[(groupPrefix == "" ? "" : $"{groupPrefix} - ") + "Equipped"][$"Equipment Slot {index}"] = item;
+            spoiler[g + "Equipped"][$"Equipment Slot {index}"] = item;
 
         foreach (var location in world.GetLocationsOfType(VertexType.Item))
         {
             var parts = location.Name.Split(" - ", 2);
-            var group = (groupPrefix == "" ? "" : $"{groupPrefix} - ") + (parts.Length > 1 ? parts[0] : "Locations");
+            var group = g + (parts.Length > 1 ? parts[0] : "Locations");
             spoiler.TryAdd(group, []);
             spoiler[group][location.Name] = location.Item?.Name ?? "Nothing";
         }
@@ -30,7 +31,7 @@ internal static class Spoiler
             foreach (var enemy in world.GetLocationsOfType(VertexType.Mob))
             {
                 var parts = enemy.Name.Split(" - ", 2);
-                var group = (groupPrefix == "" ? "" : $"{groupPrefix} - ") + (parts.Length > 1 ? parts[0] : "Enemies");
+                var group = g + (parts.Length > 1 ? parts[0] : "Enemies");
                 spoiler.TryAdd(group, []);
                 spoiler[group][enemy.Name] = enemy.Sprite?.Name ?? "Nothing";
             }
@@ -40,7 +41,7 @@ internal static class Spoiler
 
         if (config.BossShuffle != BossShuffleOption.None)
         {
-            spoiler[(groupPrefix == "" ? "" : $"{groupPrefix} - ") + "Bosses"] = new Dictionary<string, string>()
+            spoiler[g + "Bosses"] = new Dictionary<string, string>()
             {
                 { "Eastern Palace", GetBossAt(world, "Eastern Palace - Boss Room") },
                 { "Desert Palace", GetBossAt(world, "Desert Palace - Boss Room") },
@@ -61,6 +62,38 @@ internal static class Spoiler
                 { "Ganon's Tower", "Agahnim 2" },
                 { "Ganon", "Ganon" },
             };
+        }
+
+        if (config.EntranceShuffle != EntranceShuffleOption.None)
+        {
+            var connections = new SortedDictionary<string /* From */, string /* To */>();
+            foreach (var entrance in world.GetLocationsOfType(VertexType.Entrance))
+            {
+                if (entrance.Edges is not [{ To: { } target }])
+                {
+                    Console.WriteLine("Entrance {0} doesn't have a single target ({1} edges: {2})",
+                        entrance.Name,
+                        entrance.Edges.Count,
+                        string.Join(", ", entrance.Edges.Select(e => e.To.Name)));
+                    continue;
+                }
+                if (target.Type is VertexType.Outlet or VertexType.Meta && target.Edges is [{ To: { } outletTarget }])
+                    target = outletTarget;
+                connections[entrance.Name] = target.Name;
+            }
+            foreach (var hole in world.GetLocationsOfType(VertexType.Hole))
+            {
+                if (hole.Edges is not [{ To: { } target }])
+                {
+                    Console.WriteLine("Hole {0} doesn't have a single target ({1} edges: {2})",
+                        hole.Name,
+                        hole.Edges.Count,
+                        string.Join(", ", hole.Edges.Select(e => e.To.Name)));
+                    continue;
+                }
+                connections[hole.Name] = target.Name;
+            }
+            spoiler[g + "Entrances"] = connections.ToDictionary();
         }
 
         spoiler["meta"] = new Dictionary<string, string>()
