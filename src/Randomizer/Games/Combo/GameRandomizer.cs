@@ -39,9 +39,34 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
         // Use the concrete instance for combo-specific methods
         PortalWriter.WritePortals(rom, comboWorld);
+        SetComboSpecificGameFlags(comboWorld, rom);
         WriteGameFlags(comboWorld, rom);
         WriteSeed(comboWorld, rom);
         WriteComboVersionStrings(rom);
+    }
+
+
+    private void SetComboSpecificGameFlags(World world, IRom rom)
+    {
+        // Make sure the Keycard flag is written to the ALTTP free text config area if both games are present and SM keycards are set to All
+        if (world.AlttpWorld != null && world.SMWorld != null && world.SMWorld.Config.Keycards == SuperMetroid.Keycards.All)
+        {
+            byte bitField = 0;
+            if (world.SMWorld.Config.Keycards == SuperMetroid.Keycards.All)
+                bitField |= 0b1000_0000;
+            if (world.AlttpWorld.Config.RegionWildKeys)
+                bitField |= 0b0001_0000;
+            if (world.AlttpWorld.Config.RegionWildBigKeys)
+                bitField |= 0b0000_1000;
+            if (world.AlttpWorld.Config.RegionWildMaps)
+                bitField |= 0b0000_0100;
+            if (world.AlttpWorld.Config.RegionWildCompasses)
+                bitField |= 0b0000_0010;
+            if (world.AlttpWorld.Config.RegionWildKeys)
+                bitField |= 0b0000_0001;
+
+            rom.Write((Address)0x58016A, [bitField]);
+        }
     }
 
     private void WriteSeed(World world, IRom rom)
