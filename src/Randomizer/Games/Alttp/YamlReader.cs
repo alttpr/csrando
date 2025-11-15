@@ -351,6 +351,16 @@ public class YamlSprite
     public bool PersistOffScreenOW { get; set; }
     [YamlMember(Alias = "hitbox")]
     public byte Hitbox { get; set; }
+    [YamlMember(Alias = "limited_interaction")]
+    public bool LimitedPitConveyorInteraction { get; set; }
+    [YamlMember(Alias = "water_check")]
+    public bool WaterCheck { get; set; }
+    [YamlMember(Alias = "shield_blockable")]
+    public bool ShieldBlockable { get; set; }
+    [YamlMember(Alias = "boss_damage_sfx")]
+    public bool BossDamageSFX { get; set; }
+    [YamlMember(Alias = "prize_pack")]
+    public byte PrizePack { get; set; }
 }
 [Flags]
 public enum YamlSpriteFlags
