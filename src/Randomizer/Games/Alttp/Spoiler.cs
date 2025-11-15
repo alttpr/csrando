@@ -5,7 +5,7 @@ using BaseSpoilerLog = Graph.SpoilerLog;
 
 internal static class Spoiler
 {
-    public static void Log(IWorld[] worlds, BaseSpoilerLog spoilerLog)
+    public static void Log(IWorld[] worlds, BaseSpoilerLog spoilerLog, string groupPrefix = "")
     {
         if (worlds[0] is not World world)
             return;
@@ -15,12 +15,12 @@ internal static class Spoiler
         var spoiler = spoilerLog.Spoiler;
 
         foreach (var (index, item) in config.StartingEquipment.Indexed())
-            spoiler["Equipped"][$"Equipment Slot {index}"] = item;
+            spoiler[(groupPrefix == "" ? "" : $"{groupPrefix} - ") + "Equipped"][$"Equipment Slot {index}"] = item;
 
         foreach (var location in world.GetLocationsOfType(VertexType.Item))
         {
             var parts = location.Name.Split(" - ", 2);
-            var group = parts.Length > 1 ? parts[0] : "Locations";
+            var group = (groupPrefix == "" ? "" : $"{groupPrefix} - ") + (parts.Length > 1 ? parts[0] : "Locations");
             spoiler.TryAdd(group, []);
             spoiler[group][location.Name] = location.Item?.Name ?? "Nothing";
         }
@@ -30,7 +30,7 @@ internal static class Spoiler
             foreach (var enemy in world.GetLocationsOfType(VertexType.Mob))
             {
                 var parts = enemy.Name.Split(" - ", 2);
-                var group = parts.Length > 1 ? parts[0] : "Enemies";
+                var group = (groupPrefix == "" ? "" : $"{groupPrefix} - ") + (parts.Length > 1 ? parts[0] : "Enemies");
                 spoiler.TryAdd(group, []);
                 spoiler[group][enemy.Name] = enemy.Sprite?.Name ?? "Nothing";
             }
@@ -40,7 +40,7 @@ internal static class Spoiler
 
         if (config.BossShuffle != BossShuffleOption.None)
         {
-            spoiler["Bosses"] = new Dictionary<string, string>()
+            spoiler[(groupPrefix == "" ? "" : $"{groupPrefix} - ") + "Bosses"] = new Dictionary<string, string>()
             {
                 { "Eastern Palace", GetBossAt(world, "Eastern Palace - Boss Room") },
                 { "Desert Palace", GetBossAt(world, "Desert Palace - Boss Room") },

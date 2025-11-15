@@ -16,8 +16,6 @@ internal static class Spoiler
         ArgumentNullException.ThrowIfNull(spoilerLog);
 
         var spoiler = spoilerLog.Spoiler;
-        var metaSection = GetOrCreateSection(spoiler, "meta");
-        metaSection.TryAdd("seed", randomizer.PRNG.Seed.ToString("X8", CultureInfo.InvariantCulture));
 
         if (randomizer.Worlds[0] is not World comboWorld)
             return;
@@ -27,8 +25,7 @@ internal static class Spoiler
         if (comboWorld.AlttpWorld is AlttpWorld alttpWorld)
         {
             includedGames.Add("A Link to the Past");
-            AppendLocationsForWorld(spoiler, alttpWorld, "A Link to the Past");
-            AppendStartingEquipment(spoiler, alttpWorld.Config.StartingEquipment, "A Link to the Past");
+            Alttp.Spoiler.Log([alttpWorld], spoilerLog, "A Link to the Past");
         }
 
         if (comboWorld.SMWorld is SuperMetroidWorld superMetroidWorld)
@@ -52,6 +49,8 @@ internal static class Spoiler
             AppendStartingEquipment(spoiler, metroidWorld.Config.StartingEquipment, "Metroid");
         }
 
+        var metaSection = GetOrCreateSection(spoiler, "meta");
+        metaSection.TryAdd("seed", randomizer.PRNG.Seed.ToString("X8", CultureInfo.InvariantCulture));
         AppendWorldMeta(metaSection, comboWorld, includedGames);
 
         PruneEmptySection(spoiler, "Equipped");
