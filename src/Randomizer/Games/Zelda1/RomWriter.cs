@@ -10,6 +10,7 @@ public static class RomWriter
         var rom = new Rom(baseRom, offset);
         var data = world.YamlData!;
 
+        rom.WriteTriforceGoal(world);
         rom.WriteItems(world);
 
         if (world.Config.EntranceShuffle != EntranceShuffleOption.None)

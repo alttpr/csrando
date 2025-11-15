@@ -13,6 +13,7 @@ public static class RomWriter
         rom.WriteBossesNeeded(world);
         rom.WriteKeycardFlag(world);
         rom.WritePlms(world);
+        rom.WriteMiscPatches(world);
         rom.WriteMap(world);
     }
 }

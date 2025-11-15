@@ -99,6 +99,15 @@ public class RequirementHandler
     private static readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
     private static readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
     private static readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
+    private static readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
+    private const decimal DropRateDenominator = 102m;
+    private static readonly EnemyDrops ZeroEnemyDrops = new EnemyDrops(0, 0, 0, 0, 0, 0);
+    // Vanilla SM drop contents per pickup; used to convert expected drop counts to resources.
+    private const int SmallEnergyDropValue = 5;
+    private const int BigEnergyDropValue = 20;
+    private const int MissileDropValue = 1;
+    private const int SuperMissileDropValue = 2;
+    private const int PowerBombDropValue = 1;
 
     public static void Initialize(JsonReader reader, World world)
     {
@@ -118,6 +127,7 @@ public class RequirementHandler
         foreach(var enemy in reader.Enemies.SelectMany(e => e.Enemies))
         {
             Enemies[enemy.Name] = enemy;
+            EnemyDropExpectations[enemy.Name] = CalculatePerEnemyDropExpectation(enemy);
             foreach (var attack in enemy.Attacks)
             {
                 EnemyDamage[(enemy.Name, attack.Name)] = attack;
@@ -509,11 +519,27 @@ public class RequirementHandler
                     PowerBombs = 0
                 });
 
-            // TODO: Add drops into this
             case Requirement.HeatFramesWithEnergyDrops heatFramesWithEnergyDrops:
+                var hasVariaHf = inventory.Has(world.GetItem("Varia"));
+                var canHellrunHf = HelperTechs.ContainsKey("canHeatRun");
+
+                if (!hasVariaHf && !canHellrunHf)
+                {
+                    return RequirementResult.Fail("Varia");
+                }               
+
+                var baseHeatDamage = hasVariaHf ? 0 : (int)((heatFramesWithEnergyDrops.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier);
+                if (state.Energy < baseHeatDamage)
+                {
+                    return RequirementResult.Fail();
+                }
+
+                var dropEnergy = GetResourceGainFromDrops(GetExpectedDrops(heatFramesWithEnergyDrops.Drops)).Energy;
+                var netHeatDamage = Math.Max(0, baseHeatDamage - dropEnergy);
+
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = inventory.Has(world.GetItem("Varia")) ? 0 : (int)((heatFramesWithEnergyDrops.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
+                    Energy = netHeatDamage,
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -728,5 +754,99 @@ public class RequirementHandler
             mask |= 1 << (obstacle[0] - 'A');
         }
         return mask;
+    }
+
+    private static EnemyDrops CalculatePerEnemyDropExpectation(Enemy enemy)
+    {
+        if (enemy.AmountOfDrops <= 0)
+        {
+            return ZeroEnemyDrops;
+        }
+
+        var perDropMultiplier = enemy.AmountOfDrops / DropRateDenominator;
+        var dropRates = enemy.Drops;
+
+        return new EnemyDrops(
+            dropRates.NoDrop * perDropMultiplier,
+            dropRates.SmallEnergy * perDropMultiplier,
+            dropRates.BigEnergy * perDropMultiplier,
+            dropRates.Missile * perDropMultiplier,
+            dropRates.Super * perDropMultiplier,
+            dropRates.PowerBomb * perDropMultiplier);
+    }
+
+    private static EnemyDrops GetExpectedDrops(Drop drop)
+    {
+        if (drop.Count <= 0)
+        {
+            return ZeroEnemyDrops;
+        }
+
+        if (!EnemyDropExpectations.TryGetValue(drop.Enemy, out var perEnemyDrops))
+        {
+            perEnemyDrops = Enemies.TryGetValue(drop.Enemy, out var enemy)
+                ? CalculatePerEnemyDropExpectation(enemy)
+                : ZeroEnemyDrops;
+
+            EnemyDropExpectations[drop.Enemy] = perEnemyDrops;
+        }
+
+        return ScaleDrops(perEnemyDrops, drop.Count);
+    }
+
+    private static EnemyDrops GetExpectedDrops(IEnumerable<Drop> drops)
+    {
+        if (drops == null)
+        {
+            return ZeroEnemyDrops;
+        }
+
+        var total = ZeroEnemyDrops;
+        foreach (var drop in drops)
+        {
+            total = AddDrops(total, GetExpectedDrops(drop));
+        }
+
+        return total;
+    }
+
+    private static EnemyDrops AddDrops(EnemyDrops first, EnemyDrops second) => new EnemyDrops(
+        first.NoDrop + second.NoDrop,
+        first.SmallEnergy + second.SmallEnergy,
+        first.BigEnergy + second.BigEnergy,
+        first.Missile + second.Missile,
+        first.Super + second.Super,
+        first.PowerBomb + second.PowerBomb);
+
+    private static EnemyDrops ScaleDrops(EnemyDrops drops, decimal multiplier)
+    {
+        if (multiplier == 1m)
+        {
+            return drops;
+        }
+
+        return new EnemyDrops(
+            drops.NoDrop * multiplier,
+            drops.SmallEnergy * multiplier,
+            drops.BigEnergy * multiplier,
+            drops.Missile * multiplier,
+            drops.Super * multiplier,
+            drops.PowerBomb * multiplier);
+    }
+
+    private static RequirementCost GetResourceGainFromDrops(EnemyDrops drops)
+    {
+        var energyGain = (int)Math.Floor(drops.SmallEnergy * SmallEnergyDropValue + drops.BigEnergy * BigEnergyDropValue);
+        var missileGain = (int)Math.Floor(drops.Missile * MissileDropValue);
+        var superGain = (int)Math.Floor(drops.Super * SuperMissileDropValue);
+        var powerBombGain = (int)Math.Floor(drops.PowerBomb * PowerBombDropValue);
+
+        return new RequirementCost
+        {
+            Energy = energyGain,
+            Missiles = missileGain,
+            SuperMissiles = superGain,
+            PowerBombs = powerBombGain
+        };
     }
 }

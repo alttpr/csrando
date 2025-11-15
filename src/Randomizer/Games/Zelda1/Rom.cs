@@ -35,6 +35,12 @@ public class Rom : GameRom
         }
     }
 
+    public void WriteTriforceGoal(World world)
+    {
+        var triforceGoal = int.Parse(world.Config.Triforces);
+        Write(0x657000, [(byte)triforceGoal]);
+    }
+
     public void WriteSpecial(World world, PRNG prng, Zelda1.YamlReader.YamlData data)
     {
         var special = data.special;

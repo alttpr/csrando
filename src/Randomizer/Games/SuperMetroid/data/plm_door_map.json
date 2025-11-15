@@ -2601,33 +2601,22 @@
   },
   {
     "RoomAddress": 37886,
-    "DoorAddress": 101098,
+    "DoorAddress": 101158,
     "RoomId": 32,
     "NodeId": 7,
-    "XPosition": 1,
-    "YPosition": 70,
+    "XPosition": 81,
+    "YPosition": 38,
     "PLMs": [
     ]
   },
   {
     "RoomAddress": 37886,
-    "DoorAddress": 106928,
+    "DoorAddress": 101170,
     "RoomId": 32,
     "NodeId": 8,
-    "XPosition": 126,
-    "YPosition": 70,
+    "XPosition": 94,
+    "YPosition": 38,
     "PLMs": [
-      {
-        "room": "0x93FE",
-        "state": "0x940B",
-        "address": "0x8F81DC",
-        "plm_index": "0x1",
-        "plm_id": "0xC872",
-        "x_position": "0x7E",
-        "y_position": "0x46",
-        "main_plm_variable": "0xC",
-        "DoorType": 51314
-      }
     ]
   },
   {

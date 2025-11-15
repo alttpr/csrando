@@ -524,13 +524,16 @@ public class Rom : GameRom
         Write((SNES)0x8FDCE1, [0x45, 0x06]);
     }
 
+    public void WriteMiscPatches(World world)
+    {
+        // In Shaktool room, skip setting screens to red scroll (so that it won't glitch out when entering from the right):
+        Write((SNES)0x84B8DC, [0x60]); // RTS
+    }
+
     private void WriteMiscMapPatches(World world)
     {
         // In Kraid's room, no longer restrict Samus X position to left screen:
         Write((SNES)0xA7C9EE, [0x60]); // RTS
-
-        // In Shaktool room, skip setting screens to red scroll (so that it won't glitch out when entering from the right):
-        Write((SNES)0x84B8DC, [0x60]); // RTS
 
         // Remove fake gray door that gets drawn in Phantoon's Room:
         Write((SNES)0xA7D4E5, [0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA, 0xEA]);
