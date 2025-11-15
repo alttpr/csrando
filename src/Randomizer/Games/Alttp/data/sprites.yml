@@ -1091,7 +1091,7 @@ Hover:
   flags: Challenge
   sheets: [null, null, 0x22, null]
   limited_interaction: true
-  water_check: true
+  water_check: false # allow Hovers to move on land (DR does this too)
   prize_pack: 0x02
 AntifairyCircle: #ANTIFAIRY CIRCLE
   id: 0x82
@@ -1183,7 +1183,7 @@ Arrghus:
   sheets: [null, null, 0x39, null]
   priority: 101
   ignored_by_killrooms: true
-  water_check: true
+  water_check: false # enemized Arrghus is allowed on land
 ArrghusSpawn: #ARRGHI
   id: 0x8D
   flags: NoPlace
