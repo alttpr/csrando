@@ -24,7 +24,7 @@ internal sealed class DarknessGraphifier : IAlttpWorldModifier
                 var darkRoom = (Vertex)edge.To;
                 var transition = new Vertex
                 {
-                    Type = VertexType.Region,
+                    Type = VertexType.Meta,
                     Name = $"{darkRoom.Name} - Transition from {lightRoom.Name}",
                     World = world,
                 };
