@@ -43,7 +43,7 @@ rooms:
         - name: "Palace of Darkness - Fairies"
           connections:
             UseBomb:
-              - "Palade of Darkness - Map Chest Area"
+              - "Palace of Darkness - Map Chest Area"
           mobs:
             - name: "Palace of Darkness - Fairies - Fairy 1"
               position: { x: 0x16, y: 0x17, z: 0x00 }
@@ -55,7 +55,7 @@ rooms:
               position: { x: 0x17, y: 0x1a, z: 0x00 }
               sprite: "Fairy"
 
-        - name: "Palade of Darkness - Map Chest Area"
+        - name: "Palace of Darkness - Map Chest Area"
           connections:
             Hammer:
               - "Palace of Darkness - Sexy Statue"
@@ -69,27 +69,27 @@ rooms:
               type: "chest"
               itemset: ["pod"]
           pots:
-            - name: "Palade of Darkness - Map Chest Area - Pot 7"
+            - name: "Palace of Darkness - Map Chest Area - Pot 7"
               position: { x: 0x09, y: 0x2b, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palade of Darkness - Map Chest Area - Pot 8"
+            - name: "Palace of Darkness - Map Chest Area - Pot 8"
               position: { x: 0x15, y: 0x2b, z: 0x00 }
               sprite: "@ArrowRefill5"
-            - name: "Palade of Darkness - Map Chest Area - Pot 9"
+            - name: "Palace of Darkness - Map Chest Area - Pot 9"
               position: { x: 0x09, y: 0x2d, z: 0x00 }
               sprite: "@BombRefill1"
-            - name: "Palade of Darkness - Map Chest Area - Pot 10"
+            - name: "Palace of Darkness - Map Chest Area - Pot 10"
               position: { x: 0x15, y: 0x2d, z: 0x00 }
               sprite: "@ArrowRefill5"
           mobs:
-            - name: "Palade of Darkness - Map Chest Area - Red Bari 1"
+            - name: "Palace of Darkness - Map Chest Area - Red Bari 1"
               position: { x: 0x07, y: 0x17, z: 0x00 }
               sprite: "RedBari"
-            - name: "Palade of Darkness - Map Chest Area - Red Bari 2"
+            - name: "Palace of Darkness - Map Chest Area - Red Bari 2"
               position: { x: 0x05, y: 0x1a, z: 0x00 }
               sprite: "RedBari"
               deny:
                 - "RollerHR"
-            - name: "Palade of Darkness - Map Chest Area - Red Bari 3"
+            - name: "Palace of Darkness - Map Chest Area - Red Bari 3"
               position: { x: 0x0a, y: 0x1a, z: 0x00 }
               sprite: "RedBari"

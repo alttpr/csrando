@@ -6,7 +6,7 @@ rooms:
         - name: "Palace of Darkness - Conveyor"
           connections:
             fixed:
-              - "Palade of Darkness - Map Chest Area"
+              - "Palace of Darkness - Map Chest Area"
               - "Palace of Darkness - Mimics 1"
           mobs:
             - name: "Palace of Darkness - Conveyor - Spike Trap 1"
