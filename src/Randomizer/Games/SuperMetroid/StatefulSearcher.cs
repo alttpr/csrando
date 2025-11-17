@@ -24,6 +24,7 @@ public class StatefulSearcher : ISearcher
     private readonly SetLocations? _setLocations;
     private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = [];
     private readonly HashSet<Weapon> _currentWeapons = [];
+    private readonly RequirementHandler _requirementHandler;
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
@@ -33,6 +34,7 @@ public class StatefulSearcher : ISearcher
         _target = target;
         _start = start;
         _setLocations = setLocations;
+        _requirementHandler = ((World)start.World).RequirementHandler;
         _otherWorldLocations.Clear();
 
         var startState = (start, visitedState ?? new VisitedState
@@ -223,7 +225,7 @@ public class StatefulSearcher : ISearcher
         _inQueue.Clear();
         _currentWeapons.Clear();
         _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
-            .Where(w => RequirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met));
+            .Where(w => _requirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met));
 
         foreach (var start in starts)
         {
@@ -374,7 +376,7 @@ public class StatefulSearcher : ISearcher
                 foreach (var strat in ((Edge)edge).Strats ?? [])
                 {
                     //Console.WriteLine($"Checking strat {strat.Name} at {current.Name} with state {state}");
-                    var result = RequirementHandler.HandleRequirement(strat.Requires, state, inventory, (World)current.World, _currentWeapons);
+                    var result = _requirementHandler.HandleRequirement(strat.Requires, state, inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
                         //Console.WriteLine($"Failed to handle strat {strat.Name} at {current.Name} with state {state}");
@@ -503,7 +505,7 @@ public class StatefulSearcher : ISearcher
                 // Check if this lock requires a specific item or flag to be locked, and if we don't fullfill the lock requirements, skip it
                 if (lck.Lock != null)
                 {
-                    var lockResult = RequirementHandler.HandleRequirement(lck.Lock, lockState, inventory, (World)current.World, _currentWeapons);
+                    var lockResult = _requirementHandler.HandleRequirement(lck.Lock, lockState, inventory, (World)current.World, _currentWeapons);
                     if (!lockResult.Met)
                     {
                         AddUnvisited(current, lockState, lockResult.Missing ?? []);
@@ -516,7 +518,7 @@ public class StatefulSearcher : ISearcher
 
                 foreach (var unlockStrat in lck.UnlockStrats ?? [])
                 {
-                    var result = RequirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
+                    var result = _requirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
                         AddUnvisited(current, lockState, result.Missing ?? []);

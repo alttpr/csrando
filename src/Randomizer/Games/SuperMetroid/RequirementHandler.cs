@@ -96,10 +96,10 @@ public struct RequirementCost
 
 public class RequirementHandler
 {
-    private static readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
-    private static readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
-    private static readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
-    private static readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
+    private readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
+    private readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
+    private readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
+    private readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
     private const decimal DropRateDenominator = 102m;
     private static readonly EnemyDrops ZeroEnemyDrops = new EnemyDrops(0, 0, 0, 0, 0, 0);
     // Vanilla SM drop contents per pickup; used to convert expected drop counts to resources.
@@ -109,7 +109,7 @@ public class RequirementHandler
     private const int SuperMissileDropValue = 2;
     private const int PowerBombDropValue = 1;
 
-    public static void Initialize(JsonReader reader, World world)
+    public void Initialize(JsonReader reader, World world)
     {
         var preprocessor = new GraphPreprocessor(reader, world);
 
@@ -135,7 +135,7 @@ public class RequirementHandler
         }
     }
 
-    private static void AddTech(Tech tech, List<string> allowedTechs, GraphPreprocessor preprocessor, bool techOnly = false)
+    private void AddTech(Tech tech, List<string> allowedTechs, GraphPreprocessor preprocessor, bool techOnly = false)
     {
         if (allowedTechs.Contains(tech.Name))
         {
@@ -152,7 +152,7 @@ public class RequirementHandler
         }
     }
 
-    public static RequirementResult HandleRequirement(Requirement req, VisitedState state, Inventory inventory, World world, HashSet<Weapon> weapons)
+    public RequirementResult HandleRequirement(Requirement req, VisitedState state, Inventory inventory, World world, HashSet<Weapon> weapons)
     {
         switch (req)
         {
@@ -775,7 +775,7 @@ public class RequirementHandler
             dropRates.PowerBomb * perDropMultiplier);
     }
 
-    private static EnemyDrops GetExpectedDrops(Drop drop)
+    private EnemyDrops GetExpectedDrops(Drop drop)
     {
         if (drop.Count <= 0)
         {
@@ -794,7 +794,7 @@ public class RequirementHandler
         return ScaleDrops(perEnemyDrops, drop.Count);
     }
 
-    private static EnemyDrops GetExpectedDrops(IEnumerable<Drop> drops)
+    private EnemyDrops GetExpectedDrops(IEnumerable<Drop> drops)
     {
         if (drops == null)
         {
