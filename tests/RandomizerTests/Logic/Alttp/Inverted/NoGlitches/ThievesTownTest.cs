@@ -1,0 +1,42 @@
+namespace RandomizerTests.Logic.Alttp.Inverted.NoGlitches;
+
+using RandomizerTests.Logic.Alttp;
+
+[TestClass]
+public class ThievesTownTest : InvertedNoGlitchesLogicTests
+{
+    public static IEnumerable<object[]> TestData => [
+        ["Thieves' Town - Attic Chest", false, new string[] {  }],
+        ["Thieves' Town - Attic Chest", false, new string[] { "BigKeyD4" }],
+        ["Thieves' Town - Attic Chest", false, new string[] { "KeyD4" }],
+        ["Thieves' Town - Attic Chest", true, new string[] { "BigKeyD4", "KeyD4" }],
+
+        ["Thieves' Town - Big Key Chest", true, new string[] {  }],
+
+        ["Thieves' Town - Map Chest", true, new string[] {  }],
+
+        ["Thieves' Town - Compass Chest", true, new string[] {  }],
+
+        ["Thieves' Town - Ambush Chest", true, new string[] {  }],
+
+        ["Thieves' Town - Big Chest", false, new string[] {  }],
+        ["Thieves' Town - Big Chest", false, new string[] { "KeyD4", "BigKeyD4" }],
+        ["Thieves' Town - Big Chest", false, new string[] { "Hammer", "KeyD4" }],
+        ["Thieves' Town - Big Chest", true, new string[] { "Hammer", "KeyD4", "BigKeyD4" }],
+
+        ["Thieves' Town - Blind's Cell", false, new string[] {  }],
+        ["Thieves' Town - Blind's Cell", true, new string[] { "BigKeyD4" }],
+
+        ["Thieves' Town - Boss", false, new string[] {  }],
+        ["Thieves' Town - Boss", false, new string[] { "KeyD4" }],
+        ["Thieves' Town - Boss", false, new string[] { "BigKeyD4" }],
+        ["Thieves' Town - Boss", true, new string[] { "L1Sword", "KeyD4", "BigKeyD4" }],
+    ];
+
+    [TestMethod]
+    [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
+    public override void TestLogic(string location, bool expected, string[] inventory)
+    {
+        base.TestLogic(location, expected, inventory);
+    }
+}
