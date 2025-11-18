@@ -8,6 +8,7 @@
 		className?: string;
 		required?: boolean;
 		disabled?: boolean;
+		placeholder?: string;
 	}
 
 	let {
@@ -20,6 +21,7 @@
 		required = false,
 		disabled = false,
 		class: classAttr = '',
+		placeholder = undefined,
 		...otherProps
 	}: SelectProps & { class?: string } = $props<SelectProps & { class?: string }>();
 
@@ -46,6 +48,9 @@
 		class="custom-select bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 pr-10 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-slate-100 dark:focus:ring-primary-500 dark:focus:border-primary-500 {className} {classAttr}"
 		{...otherProps}
 	>
+		{#if placeholder}
+			<option value="">{placeholder}</option>
+		{/if}
 		{#each items as item (item.value)}
 			<option value={item.value}>{item.name}</option>
 		{/each}

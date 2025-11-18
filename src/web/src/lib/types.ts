@@ -39,15 +39,34 @@ export interface Seed {
   id: string;
   options: {
     games: string[];
-    settings: {
-      global: Record<string, unknown>;
-      perGame: Record<string, Record<string, unknown>>;
-    };
+    settings: ConfigOptions;
   };
   patchData: unknown;
   placementInfo: unknown;
   spoilerLog?: Record<string, Record<string, string>> | null;
   createdAt: string;
+}
+
+export interface ConfigOptions {
+  global: Record<string, unknown>;
+  perGame: Record<string, Record<string, unknown>>;
+}
+
+export interface PresetOptions {
+  global?: Record<string, unknown>;
+  perGame?: Record<string, Record<string, unknown>>;
+  selectedGames?: string[];
+}
+
+export interface ConfigPreset {
+  id: string;
+  name: string;
+  description?: string | null;
+  isSystem: boolean;
+  userId?: string | null;
+  options: PresetOptions;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface RomFileData {

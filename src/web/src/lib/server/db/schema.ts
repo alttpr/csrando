@@ -6,6 +6,9 @@ export const users = sqliteTable("user", {
   username: text("username").notNull().unique(),
   githubId: integer("github_id").unique(), // Assuming you might want GitHub OAuth later
   hashedPassword: text("hashed_password"), // For username/password auth
+  role: text("role", { enum: ["user", "admin"] })
+    .notNull()
+    .default("user"),
 });
 
 export const sessions = sqliteTable("session", {
@@ -66,6 +69,21 @@ export const userSeeds = sqliteTable("user_seed", {
     .notNull()
     .references(() => seeds.id, { onDelete: "cascade" }),
   createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(current_timestamp)`),
+});
+
+export const presets = sqliteTable("preset", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  options: text("options", { mode: "json" }).notNull(),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
+  isSystem: integer("is_system", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(current_timestamp)`),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .default(sql`(current_timestamp)`),
 });

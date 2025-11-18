@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as m from "$lib/paraglide/messages";
 	import { goto } from "$app/navigation";
+	import PresetManager from "$lib/components/config/PresetManager.svelte";
 	import GameSelector from "$lib/components/config/GameSelector.svelte";
 	import OptionForm from "$lib/components/config/OptionForm.svelte";
 	import GameTabs from "$lib/components/config/GameTabs.svelte";
@@ -8,6 +9,7 @@
 	import Select from "$lib/components/ui/Select.svelte";
 	import { createSeed } from "$lib/services/data";
 	import type {
+		ConfigOptions,
 		Metadata,
 		MetadataSetting,
 		SingleChoiceSetting,
@@ -16,6 +18,7 @@
 		ToggleSetting,
 		GenericSetting,
 		InputSetting,
+		PresetOptions,
 	} from "$lib/types";
 
 	interface PageData {
@@ -32,10 +35,7 @@
 	const metadata = $derived(data.metadata);
 	const pageError = $derived(data.error);
 
-	let formValues: {
-		global: { [key: string]: unknown };
-		perGame: { [gameKey: string]: { [key: string]: unknown } };
-	} = $state({ global: {}, perGame: {} });
+	let formValues: ConfigOptions = $state({ global: {}, perGame: {} });
 
 	let availableGames: Array<{
 		id: string;
@@ -44,6 +44,25 @@
 	}> = $state([]);
 	let selectedGames: string[] = $state([]);
 	let activeGameTab: string | null = $state(null);
+
+	function applyPreset(options: PresetOptions) {
+		if (options.global) {
+			formValues.global = { ...options.global };
+		}
+		if (options.perGame) {
+			formValues.perGame = { ...options.perGame };
+		}
+		if (options.selectedGames) {
+			selectedGames = [...options.selectedGames];
+			// Also set active tab if needed
+			if (
+				selectedGames.length > 0 &&
+				(!activeGameTab || !selectedGames.includes(activeGameTab))
+			) {
+				activeGameTab = selectedGames[0];
+			}
+		}
+	}
 
 	// Helper function to get default value for an option
 	function getDefaultValue(option: MetadataSetting): unknown {
@@ -535,23 +554,34 @@
 		{/if}
 
 		<!-- Compact visibility selector -->
-		<div class="mb-2 flex justify-end items-center gap-2">
-			<label
-				for="visibility-select"
-				class="text-xs text-slate-600 dark:text-slate-400"
-			>
-				Options detail
-			</label>
-			<div class="w-44">
-				<Select
-					id="visibility-select"
-					bind:value={visibilitySelection}
-					items={visibilityLevels.map((l) => ({
-						value: l.id,
-						name: l.name,
-					}))}
-					className="text-xs py-1.5"
-				/>
+		<!-- Top controls bar -->
+		<div
+			class="mb-4 flex flex-col sm:flex-row justify-between items-end gap-4"
+		>
+			<PresetManager
+				onApply={applyPreset}
+				currentOptions={formValues}
+				{selectedGames}
+			/>
+
+			<div class="flex items-center gap-2">
+				<label
+					for="visibility-select"
+					class="text-xs text-slate-600 dark:text-slate-400"
+				>
+					Options detail
+				</label>
+				<div class="w-44">
+					<Select
+						id="visibility-select"
+						bind:value={visibilitySelection}
+						items={visibilityLevels.map((l) => ({
+							value: l.id,
+							name: l.name,
+						}))}
+						className="text-xs py-1.5"
+					/>
+				</div>
 			</div>
 		</div>
 

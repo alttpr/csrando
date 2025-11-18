@@ -23,7 +23,10 @@
     "test:run": "vitest run",
     "coverage": "vitest run --coverage",
     "rando:version:create": "npx tsx tools/version-manager/index.ts",
-    "rando:version:create:all": "npx tsx tools/version-manager/batch.ts"
+    "rando:version:create:all": "npx tsx tools/version-manager/batch.ts",
+    "user:admin": "npx tsx tools/user-admin/index.ts set-admin",
+    "user:set-role": "npx tsx tools/user-admin/index.ts",
+    "user:list": "npx tsx tools/user-admin/index.ts list"
   },
   "bin": {},
   "engines": {

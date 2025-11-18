@@ -83,6 +83,25 @@ The `package.json` includes additional scripts:
 - `npm run db:migrate` / `npm run db:push` – manage Drizzle migrations.
 - `npm run db:studio` – open Drizzle Studio for inspecting the SQLite database.
 - `npm run import-sprites` – CLI for the remote sprite workflow.
+- `npm run user:admin <username>` – set a user's role to admin.
+- `npm run user:list` – list all users and their roles.
+
+## User Administration
+
+The project includes a CLI tool for managing user roles. See [tools/user-admin/README.md](./tools/user-admin/README.md) for full documentation.
+
+Quick usage:
+
+```bash
+# Set a user as admin
+npm run user:admin john_doe
+
+# List all users and their roles
+npm run user:list
+
+# Set a user back to regular user role
+npm run user:set-role set-user john_doe
+```
 
 ## Randomizer Versions (Snapshots)
 
