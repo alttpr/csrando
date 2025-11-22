@@ -910,6 +910,7 @@ CannonBallShooterR: #WALL CANNON VERTICAL RIGHT (placed left, shooting right)
   id: 0x66
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  ignored_by_killrooms: true
   limited_interaction: true
 CannonBallShooterL: #WALL CANNON VERTICAL LEFT (placed right, shooting left)
   id: 0x67
