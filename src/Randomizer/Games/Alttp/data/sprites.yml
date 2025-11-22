@@ -292,6 +292,7 @@ PushSwitch: #WATER SWITCH
   id: 0x21
   flags: NoPlace
   sheets: [null, null, null, 0x53]
+  ignored_by_killrooms: true
   limited_interaction: true
 Ropa:
   id: 0x22
@@ -441,10 +442,12 @@ MagicBat: #MAGIC BAT
 DashItem: #BONK ITEM
   id: 0x3B
   flags: NoPlace
+  ignored_by_killrooms: true
 LumberjackTree: #BONK ITEM (Post-Agahnim Lumberjack Tree)
   id: 0x3B
   flags: NoPlace
   sheets: [0x0F, null, null, null]
+  ignored_by_killrooms: true
 VillageKid: #KID IN KAK?
   id: 0x3C
   flags: NoPlace
@@ -755,6 +758,7 @@ Cannonball:
   flags: NoPlace
   sheets: [null, null, 0x2E, null]
   single_layer_collision: true
+  ignored_by_killrooms: true
   limited_interaction: true
 Armos: #ARMOS STATUE
   id: 0x51
@@ -846,12 +850,14 @@ RollerVU: #ROLLER VERTICAL UP (placed high, moving downwards first)
   id: 0x5D
   flags: NoDrop
   sheets: [null, null, 0x27, null]
+  ignored_by_killrooms: true
   hitbox: 0x10
   limited_interaction: true
 RollerVD: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   id: 0x5E
   flags: NoDrop
   sheets: [null, null, 0x27, null]
+  ignored_by_killrooms: true
   hitbox: 0x10
   limited_interaction: true
 RollerHL: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
@@ -859,6 +865,7 @@ RollerHL: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   flags: NoDrop
   sheets: [null, null, 0x27, null]
   persist_offscreen: true
+  ignored_by_killrooms: true
   hitbox: 0x0E
   limited_interaction: true
 RollerHR: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
@@ -866,6 +873,7 @@ RollerHR: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   flags: NoDrop
   sheets: [null, null, 0x27, null]
   persist_offscreen: true
+  ignored_by_killrooms: true
   hitbox: 0x0E
   limited_interaction: true
 Beamos:
@@ -907,16 +915,19 @@ CannonBallShooterL: #WALL CANNON VERTICAL LEFT (placed right, shooting left)
   id: 0x67
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  ignored_by_killrooms: true
   limited_interaction: true
 CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM (placed high, shooting downwards)
   id: 0x68
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  ignored_by_killrooms: true
   limited_interaction: true
 CannonBallShooterU: #WALL CANNON HORIZONTAL TOP (placed low, shooting upwards)
   id: 0x69
   flags: NoDrop
   sheets: [0x2F, null, null, null]
+  ignored_by_killrooms: true
   limited_interaction: true
 BallNChainTrooper: #BALL N CHAIN
   id: 0x6A
@@ -1029,6 +1040,7 @@ Zelda:
 SeparatedAntifairy: # probably from the AntifairyCircle, they change id when separating?
   id: 0x77
   flags: NoPlace
+  ignored_by_killrooms: true
   single_layer_collision: true
   limited_interaction: true
 SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
@@ -1073,11 +1085,13 @@ FireBarCW: #FIREBAR CLOCKWISE
   id: 0x7E
   flags: NoDrop
   sheets: [0x1F, null, null, null]
+  ignored_by_killrooms: true
   limited_interaction: true
 FireBarCCW: #FIREBAR COUNTERCLOCKWISE
   id: 0x7F
   flags: NoDrop
   sheets: [0x1F, null, null, null]
+  ignored_by_killrooms: true
   limited_interaction: true
 FireSnake:
   id: 0x80
@@ -1372,6 +1386,7 @@ Maiden: #CRYSTAL MAIDEN?
 Apple:
   id: 0xAC
   flags: NoPlace
+  ignored_by_killrooms: true
   limited_interaction: true
 LostOldMan: #OLD MAN
   id: 0xAD
@@ -1498,11 +1513,13 @@ Thief:
   id: 0xC4
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [0x0E, null, null, null]
+  ignored_by_killrooms: true #TODO: we should revert this if we make them killable
 Pikku:
   alternative: Thief
   id: 0xC4
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [0x15, null, null, null]
+  ignored_by_killrooms: true #TODO: we should revert this if we make them killable
 Medusa:
   id: 0xC5
   flags: NoPlace
