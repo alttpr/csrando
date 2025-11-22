@@ -1149,6 +1149,7 @@ Kodongo:
   id: 0x86
   flags: Challenge
   sheets: [null, null, 0x2A, null]
+  single_layer_collision: true # fixes their interaction in multi-layer rooms (which would hang the game)
   prize_pack: 0x06
 Flames: #KONDONGO FIRE
   id: 0x87
