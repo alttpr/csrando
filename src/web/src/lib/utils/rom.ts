@@ -11,7 +11,7 @@ export function applyForcedHeaderBytes(
   }
   if (buffer.byteLength < forcedHeaderBytes.length) {
     throw new Error(
-      `Uploaded ROM is too small (${buffer.byteLength} bytes) for the required header length (${forcedHeaderBytes.length} bytes).`,
+      `Selected ROM is too small (${buffer.byteLength} bytes) for the required header length (${forcedHeaderBytes.length} bytes).`,
     );
   }
   const normalized = buffer.slice(0);
@@ -48,7 +48,7 @@ export async function resolveUploadedRomBuffer(
   if (extension === ".zip") {
     const innerAllowed = normalized.filter((ext) => ext !== ".zip");
     if (innerAllowed.length === 0) {
-      throw new Error("ZIP uploads are not supported for this game.");
+      throw new Error("ZIP files are not supported for this game.");
     }
     const extracted = await extractFirstFileByExtensions(buffer, innerAllowed);
     return {

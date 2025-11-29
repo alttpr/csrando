@@ -58,7 +58,7 @@
 			<code>localStorage</code> and IndexedDB.
 		</li>
 		<li>
-			<strong>Uploaded ROMs</strong> — key <code>rom_global_&lt;gameId&gt;</code> in IndexedDB via LocalForage.
+			<strong>Selected ROMs</strong> — key <code>rom_global_&lt;gameId&gt;</code> in IndexedDB via LocalForage.
 		</li>
 	</ul>
 	<p class="text-slate-700 dark:text-slate-300">
