@@ -1142,6 +1142,7 @@ MimicRed: #RED EYEGORE / RED MIMIC
   prize_pack: 0x05
 StalfosYellow: #YELLOW STALFOS, DR says it doesnt spawn
   id: 0x85
+  flags: NoDrop
   sheets: [0x1F, null, null, null]
   ignored_by_killrooms: true
   boss_damage_sfx: true
