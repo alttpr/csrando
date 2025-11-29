@@ -263,7 +263,7 @@ public enum TileRoomPatternOption
 
 public enum GoalOption { Ganon, FastGanon, Dungeons, Pedestal, TriforceHunt, Trifecta }
 public enum AccessibilityOption { Items, Locations, None }
-public enum StateOption { Standard, Inverted, Open, Retro }
+public enum StateOption { Standard, Inverted, Open, /*Retro*/ }
 public enum GlitchesOption
 {
     None,
