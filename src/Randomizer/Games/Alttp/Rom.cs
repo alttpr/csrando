@@ -2,7 +2,6 @@
 
 using System.Buffers.Binary;
 using Microsoft.Extensions.Logging;
-using Randomizer.Games;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 
@@ -18,7 +17,7 @@ public sealed class Rom : GameRom
 
     internal InitialSram InitialSram { get; }
 
-    public Rom(RomModifications.IRom rom, string language, int offset)
+    public Rom(IRom rom, string language, int offset)
         : base(rom, offset)
     {
         InitialSram = new();
@@ -1642,32 +1641,6 @@ public sealed class Rom : GameRom
             Write((SNES)address, [itemByte.Value]);
         }
     }
-    public void WriteCreditsText(WorldConfig config, Vertex location, Item? item)
-    {
-        var (creditsKey, creditsTextMap) = location.Name switch
-        {
-            "Master Sword Pedestal" => ("pedestal", YamlReader.LoadCreditsForPedestal(config.Language)),
-            "Link's Uncle" => ("house", YamlReader.LoadCreditsForUncle(config.Language)),
-            "King Zora" => ("zora", YamlReader.LoadCreditsForZora(config.Language)),
-            "Potion Shop Item" => ("witch", YamlReader.LoadCreditsForWitchHut(config.Language)),
-            "Sick Kid Item" => ("kakariko2", YamlReader.LoadCreditsForSickKid(config.Language)),
-            "Flute Spot" => ("grove", YamlReader.LoadCreditsForFluteSpot(config.Language)),
-            _ => (null, null),
-        };
-
-        if (string.IsNullOrEmpty(creditsKey))
-            return;
-
-        string creditsText = "simply nothing";
-        if (creditsTextMap != null && item != null)
-        {
-            if (creditsTextMap.TryGetValue(item.Name, out var specificItemText))
-                creditsText = specificItemText;
-            else if (creditsTextMap.TryGetValue("default", out var fallbackText))
-                creditsText = fallbackText;
-        }
-        SetCredit(creditsKey, creditsText);
-    }
 
     private static readonly byte[] _musicChoices =
     [
@@ -1691,30 +1664,6 @@ public sealed class Rom : GameRom
 
         foreach (int address in musicAddresses)
             Write((SNES)address, [music]);
-    }
-
-    public void WriteHintText(WorldConfig config, Vertex location, Item? item)
-    {
-        var (hintKey, hintTextMap) = location.Name switch
-        {
-            "Master Sword Pedestal" => ("mastersword_pedestal_translated", YamlReader.LoadHintsForPedestal(config.Language)),
-            "Ether Tablet" => ("tablet_ether_book", YamlReader.LoadHintsForEtherTablet(config.Language)),
-            "Bombos Tablet" => ("tablet_bombos_book", YamlReader.LoadHintsForBombosTablet(config.Language)),
-            _ => (null, null),
-        };
-
-        if (string.IsNullOrEmpty(hintKey))
-            return;
-
-        string hintText = "Don't waste\nyour time!";
-        if (hintTextMap != null && item != null)
-        {
-            if (hintTextMap.TryGetValue(item.Name, out var specificItemText))
-                hintText = specificItemText;
-            else if (hintTextMap.TryGetValue("default", out var fallbackText))
-                hintText = fallbackText;
-        }
-        SetText(hintKey, hintText);
     }
 
     public void WriteLocationSpecificData(Vertex location, Item? item)

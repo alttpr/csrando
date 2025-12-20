@@ -15,6 +15,7 @@ internal static class Spoiler
         var spoiler = spoilerLog.Spoiler;
         string g = groupPrefix == "" ? "" : $"{groupPrefix} - ";
 
+        _ = spoiler.TryAdd(g + "Equipped", []);
         foreach (var (index, item) in config.StartingEquipment.Indexed())
             spoiler[g + "Equipped"][$"Equipment Slot {index}"] = item;
 
@@ -93,6 +94,7 @@ internal static class Spoiler
                 }
                 connections[hole.Name] = target.Name;
             }
+            _ = spoiler.TryAdd(g + "Entrances", []);
             spoiler[g + "Entrances"] = connections.ToDictionary();
         }
 

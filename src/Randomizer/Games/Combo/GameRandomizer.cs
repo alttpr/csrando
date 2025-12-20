@@ -4,6 +4,7 @@ using System.Reflection;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Graph.GameRandomizer;
+using BaseVertex = Graph.Vertex;
 
 public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
     : BaseGameRandomizer(randomizerConfigs, prng)
@@ -26,7 +27,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
         // Pass the original IRom (could be Rom or LoggedRom) to individual game writers
         if (comboWorld.AlttpWorld != null)
-            Alttp.RomWriter.Write(rom, comboWorld.AlttpWorld, prng, 0x400000);
+            Alttp.RomWriter.Write(rom, comboWorld.AlttpWorld, prng, 0x400000, ProvideNonZ3Text);
 
         if (comboWorld.Z1World != null)
             Zelda1.RomWriter.Write(rom, comboWorld.Z1World, prng);
@@ -45,6 +46,24 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         WriteComboVersionStrings(rom);
     }
 
+    private static string? ProvideNonZ3Text(IItem? item, WorldConfig config)
+    {
+        // Z3 hopefully knows how to handle its own items.
+        if (item?.World.GameId == GameIds.Zelda3)
+            return null;
+
+        string fallbackHint = item?.World?.GameId switch
+        {
+            "m1" => "Looks futuristic,\nbut 8-bit?",
+            "z1" => "Something Ancient,\nyet familiar?",
+            "sm" => "Seems futuristic,\nnot sure?",
+            _ => "Don't waste\nyour time!",
+        };
+        // TODO: return something specific for items; or ask the other RomWriters to provide one.
+        _ = config.Language;
+
+        return fallbackHint;
+    }
 
     private void SetComboSpecificGameFlags(World world, IRom rom)
     {

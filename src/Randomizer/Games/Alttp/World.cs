@@ -21,7 +21,7 @@ public sealed class World : World<Item>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
     public World(int id, WorldConfig randomizerConfig, Graph graph, PRNG prng)
-        : base("alttp", id, graph, randomizerConfig)
+        : base(GameIds.Zelda3, id, graph, randomizerConfig)
     {
         Config = randomizerConfig.Alttp ?? throw new ArgumentException("This world requires valid settings for The Legend of Zelda: A Link to the Past");
         Config.SelectRandomValues(prng);
