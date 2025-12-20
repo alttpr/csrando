@@ -2,6 +2,11 @@ namespace Randomizer.Graph;
 
 using Randomizer.Games;
 
+public static class GameIds
+{
+    public const string Zelda3 = "alttp";
+}
+
 public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConfig worldConfig) : IWorld
     where TItem : IItem
 {

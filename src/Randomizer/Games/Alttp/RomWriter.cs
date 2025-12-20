@@ -5,11 +5,13 @@ using System.Diagnostics.CodeAnalysis;
 using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
+using BaseVertex = Randomizer.Graph.Vertex;
 
+public delegate string? GetItemTextOverride(IItem? item, WorldConfig worldConfig);
 public static class RomWriter
 {
     private static readonly HeartColorOption[] _heartColorOptions = [HeartColorOption.Blue, HeartColorOption.Green, HeartColorOption.Yellow, HeartColorOption.Red];
-    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
+    public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0, GetItemTextOverride? getText = null)
     {
         var rom = new Rom(baseRom, world.WorldConfig.Language, offset);
 
@@ -22,7 +24,7 @@ public static class RomWriter
 
         rom.SetQuickSwap(config.QuickSwap);
 
-        WriteWorld(world, rom, prng);
+        WriteWorld(world, rom, prng, getText);
 
         rom.MuteMusic(config.NoMusic);
         rom.SetMenuSpeed(config.MenuSpeed);
@@ -31,7 +33,7 @@ public static class RomWriter
         // TODO: tournament mode
     }
 
-    private static void WriteWorld(World world, Rom rom, PRNG prng)
+    private static void WriteWorld(World world, Rom rom, PRNG prng, GetItemTextOverride? getText)
     {
         var config = world.Config;
 
@@ -52,9 +54,9 @@ public static class RomWriter
                 var itemToWrite = location.Item as Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
-                SetCreditsText(rom, world.WorldConfig, location, itemToWrite);
+                SetCreditsText(rom, world.WorldConfig, location, itemToWrite, getText);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
-                SetHintText(rom, world.WorldConfig, location, itemToWrite);
+                SetHintText(rom, world.WorldConfig, location, itemToWrite, getText);
                 rom.WriteLocationSpecificData(location, itemToWrite);
             }
         }
@@ -192,7 +194,7 @@ public static class RomWriter
         }
 
         SetProgressionText(world, rom, prng);
-        SetHintText(world, rom, prng);
+        SetHintText(world, rom, prng, getText);
         SetCreditsText(world, rom, prng);
 
         rom.SetMapMode(config.MapOnPickup);
@@ -502,7 +504,7 @@ public static class RomWriter
         return text;
     }
 
-    private static void SetHintText(Rom rom, WorldConfig config, Vertex location, Item? item)
+    private static void SetHintText(Rom rom, WorldConfig config, Vertex location, Item? item, GetItemTextOverride? getText)
     {
         var (hintKey, hintTextMap) = location.Name switch
         {
@@ -515,7 +517,7 @@ public static class RomWriter
         if (string.IsNullOrEmpty(hintKey))
             return;
 
-        string hintText = "Don't waste\nyour time!";
+        string hintText = getText?.Invoke(item, config) ?? "Don't waste\nyour time!";
         if (hintTextMap != null && item != null)
         {
             if (hintTextMap.TryGetValue(item.Name, out var specificItemText))
@@ -525,7 +527,7 @@ public static class RomWriter
         }
         rom.SetText(hintKey, hintText);
     }
-    private static void SetHintText(World world, Rom rom, PRNG prng)
+    private static void SetHintText(World world, Rom rom, PRNG prng, GetItemTextOverride? getText)
     {
         var config = world.Config;
         if (!config.EnableHints)
@@ -538,7 +540,7 @@ public static class RomWriter
         var tiles = prng.Shuffle([.. YamlReader.LoadHintLocations(language)]);
         var hints = new Queue<(string Location, string[] Items)>();
         var locationByItem = world.GetLocationsOfType(VertexType.Item)
-            .Where(v => v.Item != null)
+            .Where(v => v.Item?.Bytes != null) // some locations have meta-items (which don't have bytes to write)
             .ToLookup(v => v.Item!.Name);
         var jokeHints = YamlReader.LoadJokeHints(language);
         var itemHints = YamlReader.LoadHintsForItems(language);
@@ -547,19 +549,11 @@ public static class RomWriter
 
         // keysanity: hint for GT big key
         if (config.RegionWildBigKeys)
-        {
-            var gtbkLocation = locationByItem["BigKeyA2"].FirstOrDefault();
-            if (gtbkLocation != null)
-                hints.Enqueue((prng.GetRandomElement(locationHints[gtbkLocation.Name]), [prng.GetRandomElement(itemHints[gtbkLocation.Item!.Name])]));
-        }
+            addLocationHint(locationByItem["BigKeyA2"].FirstOrDefault());
 
         // don't waste a hint on boots if we already revealed them
         if (!config.RevealBootsLocation)
-        {
-            var bootsLocation = locationByItem["PegasusBoots"].FirstOrDefault();
-            if (bootsLocation != null)
-                hints.Enqueue((prng.GetRandomElement(locationHints[bootsLocation.Name]), [prng.GetRandomElement(itemHints[bootsLocation.Item!.Name])]));
-        }
+            addLocationHint(locationByItem["PegasusBoots"].FirstOrDefault());
 
         // add 5 location hints
         var hintableLocations = prng.GetRandomElements(YamlReader.LoadHintableLocations(language), 5);
@@ -567,12 +561,10 @@ public static class RomWriter
         {
             // location is either an artificial location (group) that consists of many sub-locations;
             // or, when no sub-locations exist, the key is a specific single location
-            var locationsToCheck = (subLocations ?? []).DefaultIfEmpty(location);
-            string[] items = [.. locationsToCheck.Select(l => world.GetLocation(l)?.Item?.Name).Where(i => !string.IsNullOrWhiteSpace(i))!];
-
-            // no usable items? leave the spot empty for a joke hint later.
-            if (items.Length > 0)
-                hints.Enqueue((location, items));
+            if (subLocations is { Length: > 0 } locationsToCheck)
+                addLocationHints(location, locationsToCheck.Select(l => world.GetLocation(l)?.Item!).Where(i => i is not null));
+            else
+                addLocationHint(world.GetLocation(location));
         }
 
         // add at most 4 item hints (progression items, including big keys if keysanity)
@@ -581,7 +573,7 @@ public static class RomWriter
         foreach (var itemAtLocations in progressionLocations)
         {
             // TODO: this biases hints to max one location per item; ie. no two different hints for different swords.
-            hints.Enqueue((prng.GetRandomElement(itemAtLocations).Name, [itemAtLocations.Key]));
+            addLocationHint(prng.GetRandomElement(itemAtLocations));
         }
 
         // add [remainingTiles/2, remainingTiles) item hints (anything)
@@ -590,7 +582,7 @@ public static class RomWriter
         foreach (var itemAtLocations in randomItemLocations)
         {
             // TODO: this biases hints to max one location per item; ie. no two different hints for different swords.
-            hints.Enqueue((prng.GetRandomElement(itemAtLocations).Name, [itemAtLocations.Key]));
+            addLocationHint(prng.GetRandomElement(itemAtLocations));
         }
 
         for (int i = 0; i < tiles.Length; i++)
@@ -632,9 +624,39 @@ public static class RomWriter
             }
             rom.SetText(tiles[i], text);
         }
+
+        void addHints(string? location, params string[] items)
+        {
+            if (string.IsNullOrEmpty(location))
+                return;
+            // no usable items? leave the spot empty for a joke hint later.
+            if (items.Length == 0)
+                return;
+
+            hints.Enqueue((location, items));
+        }
+        void addLocationHint(BaseVertex? location)
+        {
+            addLocationHints(location?.Name, location?.Item);
+        }
+        void addLocationHints(string? location, params IEnumerable<IItem?> items)
+        {
+            if (string.IsNullOrEmpty(location))
+                return;
+            var nnItems = items.Where(item => item != null).Select(item => item!).ToArray();
+            if (nnItems.Length == 0)
+                return;
+
+            string[] itemHintList = [.. nnItems.Select(item => getText?.Invoke(item, world.WorldConfig) ?? prng.GetRandomElement(itemHints[item.Name]))];
+            string locationHint = location;
+            if (locationHints.TryGetValue(location, out var locs))
+                locationHint = prng.GetRandomElement(locs);
+
+            addHints(locationHint, itemHintList);
+        }
     }
 
-    private static void SetCreditsText(Rom rom, WorldConfig config, Vertex location, Item? item)
+    private static void SetCreditsText(Rom rom, WorldConfig config, Vertex location, Item? item, GetItemTextOverride? getText)
     {
         var (creditsKey, creditsTextMap) = location.Name switch
         {
@@ -650,7 +672,7 @@ public static class RomWriter
         if (string.IsNullOrEmpty(creditsKey))
             return;
 
-        string creditsText = "simply nothing";
+        string creditsText = getText?.Invoke(item, config) ?? "simply nothing";
         if (creditsTextMap != null && item != null)
         {
             if (creditsTextMap.TryGetValue(item.Name, out var specificItemText))
