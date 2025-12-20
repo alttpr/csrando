@@ -46,15 +46,15 @@ public static class RomWriter
             if (alternateBowLocation != null)
                 alternateBowLocation.Item = world.GetItem("ProgressiveBowAlternate");
 
-            var nothing = (Item)world.GetItem("Nothing");
+            var nothing = world.GetItem("Nothing");
             foreach (var location in itemLocations.OfType<Vertex>())
             {
                 var itemToWrite = location.Item as Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
-                rom.WriteCreditsText(world.WorldConfig, location, itemToWrite);
+                SetCreditsText(rom, world.WorldConfig, location, itemToWrite);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
-                rom.WriteHintText(world.WorldConfig, location, itemToWrite);
+                SetHintText(rom, world.WorldConfig, location, itemToWrite);
                 rom.WriteLocationSpecificData(location, itemToWrite);
             }
         }
@@ -502,6 +502,29 @@ public static class RomWriter
         return text;
     }
 
+    private static void SetHintText(Rom rom, WorldConfig config, Vertex location, Item? item)
+    {
+        var (hintKey, hintTextMap) = location.Name switch
+        {
+            "Master Sword Pedestal" => ("mastersword_pedestal_translated", YamlReader.LoadHintsForPedestal(config.Language)),
+            "Ether Tablet" => ("tablet_ether_book", YamlReader.LoadHintsForEtherTablet(config.Language)),
+            "Bombos Tablet" => ("tablet_bombos_book", YamlReader.LoadHintsForBombosTablet(config.Language)),
+            _ => (null, null),
+        };
+
+        if (string.IsNullOrEmpty(hintKey))
+            return;
+
+        string hintText = "Don't waste\nyour time!";
+        if (hintTextMap != null && item != null)
+        {
+            if (hintTextMap.TryGetValue(item.Name, out var specificItemText))
+                hintText = specificItemText;
+            else if (hintTextMap.TryGetValue("default", out var fallbackText))
+                hintText = fallbackText;
+        }
+        rom.SetText(hintKey, hintText);
+    }
     private static void SetHintText(World world, Rom rom, PRNG prng)
     {
         var config = world.Config;
@@ -609,6 +632,33 @@ public static class RomWriter
             }
             rom.SetText(tiles[i], text);
         }
+    }
+
+    private static void SetCreditsText(Rom rom, WorldConfig config, Vertex location, Item? item)
+    {
+        var (creditsKey, creditsTextMap) = location.Name switch
+        {
+            "Master Sword Pedestal" => ("pedestal", YamlReader.LoadCreditsForPedestal(config.Language)),
+            "Link's Uncle" => ("house", YamlReader.LoadCreditsForUncle(config.Language)),
+            "King Zora" => ("zora", YamlReader.LoadCreditsForZora(config.Language)),
+            "Potion Shop Item" => ("witch", YamlReader.LoadCreditsForWitchHut(config.Language)),
+            "Sick Kid Item" => ("kakariko2", YamlReader.LoadCreditsForSickKid(config.Language)),
+            "Flute Spot" => ("grove", YamlReader.LoadCreditsForFluteSpot(config.Language)),
+            _ => (null, null),
+        };
+
+        if (string.IsNullOrEmpty(creditsKey))
+            return;
+
+        string creditsText = "simply nothing";
+        if (creditsTextMap != null && item != null)
+        {
+            if (creditsTextMap.TryGetValue(item.Name, out var specificItemText))
+                creditsText = specificItemText;
+            else if (creditsTextMap.TryGetValue("default", out var fallbackText))
+                creditsText = fallbackText;
+        }
+        rom.SetCredit(creditsKey, creditsText);
     }
     private static void SetCreditsText(World world, Rom rom, PRNG prng)
     {
