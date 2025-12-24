@@ -564,73 +564,66 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         {
             // this cannot be a VertexHashSet, since the world isn't fully built yet at this point.
             var alreadyRandomized = new HashSet<Vertex>();
-            for (int owIdx = 0; owIdx < owSheets.Length; owIdx++)
+
+            void place(
+                SheetSet[] sheets,
+                Func<int, IEnumerable<Vertex>> enemiesAtIndex,
+                Func<IEnumerable<EnemySprite>, IEnumerable<EnemySprite>> adjustCandidates,
+                Func<int, Vertex, string> buildFailureMessage)
             {
-                var (mapId, state) = IndexToMapState(owIdx);
-                var enemiesToPlace = enemyOWs[mapId]
-                    .Where(e =>
-                        (e.State is null || e.State.Contains(state)) &&
-                        e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
-
-                // trophy enemies first, they need to be there and we want variance.
-                // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
-                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null).ThenByDescending(e => e.Allow?.Length > 0).ThenByDescending(e => e.Deny?.Length > 0))
+                for (int idx = 0; idx < sheets.Length; idx++)
                 {
-                    if (!alreadyRandomized.Add(enemy))
+                    var enemiesToPlace = enemiesAtIndex(idx).Where(e => e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
+
+                    // trophy enemies first, they need to be there and we want variance.
+                    // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
+                    foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null).ThenByDescending(e => e.Allow?.Length > 0).ThenByDescending(e => e.Deny?.Length > 0))
                     {
-                        owSheets[owIdx].Merge(enemy.Sprite!.Sheets);
-                        continue;
+                        if (!alreadyRandomized.Add(enemy))
+                        {
+                            sheets[idx].Merge(enemy.Sprite!.Sheets);
+                            continue;
+                        }
+
+                        // 2. build a list of suitable sprites based on what the room currently has in the sheet set
+                        IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                        if (enemy.Item != null)
+                            spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
+                        if (enemy.MightFall)
+                            spriteSource = spriteSource.Select(e => fallingSprites.GetValueOrDefault(e, e));
+                        spriteSource = adjustCandidates(spriteSource);
+
+                        var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && sheets[idx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
+                        if (viableSprites.Length == 0)
+                            throw new Exception(buildFailureMessage(idx, enemy));
+
+                        // 3. pick possible enemies from that list
+                        var newEnemy = prng.GetRandomElement(viableSprites);
+                        sheets[idx] = sheets[idx].Merge(newEnemy.Sheets);
+                        _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
+                        enemy.Sprite = newEnemy.Sprite;
                     }
-
-                    // 2. build a list of suitable sprites based on what the room currently has in the sheet set
-                    IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
-                    if (enemy.Item != null)
-                        spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
-                    if (enemy.MightFall)
-                        spriteSource = spriteSource.Select(e => fallingSprites.GetValueOrDefault(e, e));
-                    var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && owSheets[owIdx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
-                    if (viableSprites.Length == 0)
-                        throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}");
-
-                    // 3. pick possible enemies from that list
-                    var newEnemy = prng.GetRandomElement(viableSprites);
-                    owSheets[owIdx] = owSheets[owIdx].Merge(newEnemy.Sheets);
-                    _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
-                    enemy.Sprite = newEnemy.Sprite;
                 }
             }
-            for (int roomId = 0; roomId < roomSheets.Length; roomId++)
-            {
-                var enemiesToPlace = enemyRooms[roomId].Where(e =>
-                        e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
 
-                // trophy enemies first, they need to be there and we want variance.
-                // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
-                foreach (var enemy in enemiesToPlace.OrderByDescending(e => e.Trophy != null).ThenByDescending(e => e.Allow?.Length > 0).ThenByDescending(e => e.Deny?.Length > 0))
+            place(
+                owSheets,
+                owIdx =>
                 {
-                    if (!alreadyRandomized.Add(enemy))
-                    {
-                        roomSheets[roomId].Merge(enemy.Sprite!.Sheets);
-                        continue;
-                    }
-
-                    // 2. build a list of suitable sprites based on what the room currently has in the sheet set
-                    IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
-                    if (enemy.Item != null)
-                        spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
-                    if (enemy.MightFall)
-                        spriteSource = spriteSource.Select(e => fallingSprites.GetValueOrDefault(e, e));
-                    var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && !e.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly) && roomSheets[roomId].CanMergeWith(e.Sprite?.Sheets)).ToArray();
-                    if (viableSprites.Length == 0)
-                        throw new Exception($"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{roomId:x04}");
-
-                    // 3. pick possible enemies from that list
-                    var newEnemy = prng.GetRandomElement(viableSprites);
-                    roomSheets[roomId] = roomSheets[roomId].Merge(newEnemy.Sheets);
-                    _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
-                    enemy.Sprite = newEnemy.Sprite;
-                }
-            }
+                    var (mapId, state) = IndexToMapState(owIdx);
+                    return enemyOWs[mapId].Where(e => e.State is null || e.State.Contains(state));
+                },
+                candidates => candidates,
+                (idx, enemy) =>
+                {
+                    var (mapId, _) = IndexToMapState(idx);
+                    return $"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}";
+                });
+            place(
+                roomSheets,
+                roomId => enemyRooms[roomId],
+                candidates => candidates.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly)),
+                (idx, enemy) => $"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{idx:x04}");
         }
 
         // sprite sheets have 3 major locations:
