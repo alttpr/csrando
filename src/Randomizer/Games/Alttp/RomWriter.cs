@@ -540,6 +540,7 @@ public static class RomWriter
         var tiles = prng.Shuffle([.. YamlReader.LoadHintLocations(language)]);
         var hints = new Queue<(string Location, string[] Items)>();
         var locationByItem = world.GetLocationsOfType(VertexType.Item)
+            // FIXME: this returns meta items that have bytes, but aren't used as items (MM/TR entry)
             .Where(v => v.Item?.Bytes != null) // some locations have meta-items (which don't have bytes to write)
             .ToLookup(v => v.Item!.Name);
         var jokeHints = YamlReader.LoadJokeHints(language);
@@ -647,7 +648,7 @@ public static class RomWriter
             if (nnItems.Length == 0)
                 return;
 
-            string[] itemHintList = [.. nnItems.Select(item => getText?.Invoke(item, world.WorldConfig) ?? prng.GetRandomElement(itemHints[item.Name]))];
+            string[] itemHintList = [.. nnItems.Select(item => getText?.Invoke(item, world.WorldConfig) ?? prng.GetRandomElement(itemHints.GetValueOrDefault(item.Name, [item.Name])))];
             string locationHint = location;
             if (locationHints.TryGetValue(location, out var locs))
                 locationHint = prng.GetRandomElement(locs);
