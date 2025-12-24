@@ -6,6 +6,7 @@ public record class Sprite(string Name, byte Id)
     public string DefeatName { get; init; } = Name;
     public byte?[] Sheets { get; init; } = [null, null, null, null];
     public YamlSpriteFlags Flags { get; init; }
+    public string[]? NotWith { get; init; }
     public byte SubType { get; init; }
     public string? FallingSpriteFor { get; init; }
     public int Priority { get; init; }
@@ -28,6 +29,7 @@ public record class Sprite(string Name, byte Id)
                 DefeatName = sprite.AlternativeName ?? name,
                 FallingSpriteFor = sprite.FallingSpriteFor,
                 Priority = sprite.Priority,
+                NotWith = sprite.NotWith,
             };
         }
     }

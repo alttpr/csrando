@@ -271,12 +271,16 @@ CrystalSwitch: #CRYSTAL SWITCH
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
+  not_with:
+    - FallingIce
 CrystalSwitchAlternative: #CRYSTAL SWITCH
   alternative: CrystalSwitch
   id: 0x1E
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   ignored_by_killrooms: true
+  not_with:
+    - FallingIce
 SickKid: #SICK KID
   id: 0x1F
   flags: NoPlace

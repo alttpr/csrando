@@ -574,6 +574,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                 for (int idx = 0; idx < sheets.Length; idx++)
                 {
                     var enemiesToPlace = enemiesAtIndex(idx).Where(e => e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
+                    var roomDeny = enemiesAtIndex(idx).Select(e => e.Sprite?.NotWith).Where(a => a is not null).SelectMany(a => a!).ToHashSet();
 
                     // trophy enemies first, they need to be there and we want variance.
                     // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
@@ -592,6 +593,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                         if (enemy.MightFall)
                             spriteSource = spriteSource.Select(e => fallingSprites.GetValueOrDefault(e, e));
                         spriteSource = adjustCandidates(spriteSource);
+                        if (roomDeny.Count > 0)
+                            spriteSource = spriteSource.Where(e => !roomDeny.Contains(e.Sprite.Name));
 
                         var viableSprites = spriteSource.Where(e => isAllowed(enemy, e) && !isDenied(enemy, e) && sheets[idx].CanMergeWith(e.Sprite?.Sheets)).ToArray();
                         if (viableSprites.Length == 0)
@@ -602,6 +605,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                         sheets[idx] = sheets[idx].Merge(newEnemy.Sheets);
                         _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
                         enemy.Sprite = newEnemy.Sprite;
+                        if (newEnemy.Sprite.NotWith is { } denies)
+                            roomDeny.UnionWith(denies);
                     }
                 }
             }
