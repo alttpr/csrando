@@ -1344,17 +1344,19 @@ public sealed class Rom : GameRom
     }
 
     /// <summary>Enable free items to show up in menu</summary>
-    public void SetFreeItemMenu(bool smallKeys = false, bool bigKey = false, bool map = false, bool compass = false)
+    public void SetFreeItemMenu(bool smallKeys = false, bool bigKey = false, bool map = false, bool compass = false, bool bosses = false)
     {
         byte flags = 0;
         if (smallKeys)
-            flags |= 0b1000;
+            flags |= 0b0000_0001;
         if (bigKey)
-            flags |= 0b0100;
+            flags |= 0b0000_0010;
         if (map)
-            flags |= 0b0010;
+            flags |= 0b0000_0100;
         if (compass)
-            flags |= 0b0001;
+            flags |= 0b0000_1000;
+        if (bosses)
+            flags |= 0b0001_0000;
 
         Write((SNES)0xB08045, [flags]);
     }
