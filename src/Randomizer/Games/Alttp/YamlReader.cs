@@ -361,6 +361,8 @@ public class YamlSprite
     public bool BossDamageSFX { get; set; }
     [YamlMember(Alias = "prize_pack")]
     public byte PrizePack { get; set; }
+    [YamlMember(Alias = "not_with")]
+    public string[]? NotWith { get; set; }
 }
 [Flags]
 public enum YamlSpriteFlags
