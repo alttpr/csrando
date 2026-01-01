@@ -564,17 +564,29 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         {
             // this cannot be a VertexHashSet, since the world isn't fully built yet at this point.
             var alreadyRandomized = new HashSet<Vertex>();
+            // rooms that have sprites we need to account for. commonly, that's pots/skulls but also large blocks.
+            // they affect the available room budget and reduce it, attempting to stay within the underworld sprite limit.
+            var roomsWithExtraSprites = world.GetLocationsOfType(VertexType.Pot).Where(v => v.RoomId.HasValue).Select(v => v.RoomId!.Value).ToHashSet();
+            roomsWithExtraSprites.UnionWith([0x3f, 0x44, 0x45, 0x93, 0xce, 0x117]); // large blocks
 
             void place(
                 SheetSet[] sheets,
                 Func<int, IEnumerable<Vertex>> enemiesAtIndex,
                 Func<IEnumerable<EnemySprite>, IEnumerable<EnemySprite>> adjustCandidates,
-                Func<int, Vertex, string> buildFailureMessage)
+                Func<int, Vertex, string> buildFailureMessage,
+                Func<int, int> roomBudgetReduction,
+                int roomBudget = 0xFF)
             {
                 for (int idx = 0; idx < sheets.Length; idx++)
                 {
-                    var enemiesToPlace = enemiesAtIndex(idx).Where(e => e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
-                    var roomDeny = enemiesAtIndex(idx).Select(e => e.Sprite?.NotWith).Where(a => a is not null).SelectMany(a => a!).ToHashSet();
+                    var enemiesInRoom = enemiesAtIndex(idx).ToArray();
+                    var enemiesToPlace = enemiesInRoom.Where(e => e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
+                    var roomDeny = enemiesInRoom.Select(e => e.Sprite?.NotWith).Where(a => a is not null).SelectMany(a => a!).ToHashSet();
+
+                    // things go wrong if more than 16 sprites are on screen at the same time (at least for underworld).
+                    int budget = roomBudget - enemiesInRoom.Except(enemiesToPlace).Sum(e => e.Sprite!.Weight) - roomBudgetReduction(idx);
+                    // assume we place regular weighted enemies to get the minimum required budget.
+                    int minimumBudgetRequired = enemiesToPlace.Count();
 
                     // trophy enemies first, they need to be there and we want variance.
                     // after that, limited locations first (allow/deny lists) to make sure we don't fill the sheet with incompatible stuff.
@@ -588,6 +600,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
 
                         // 2. build a list of suitable sprites based on what the room currently has in the sheet set
                         IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                        int availableBudget = budget - minimumBudgetRequired + 1;
+                        spriteSource = spriteSource.Where(s => s.Sprite.Weight <= availableBudget);
                         if (enemy.Item != null)
                             spriteSource = spriteSource.Where(e => !e.Sprite.Flags.HasFlag(YamlSpriteFlags.NoDrop));
                         if (enemy.MightFall)
@@ -603,8 +617,10 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                         // 3. pick possible enemies from that list
                         var newEnemy = prng.GetRandomElement(viableSprites);
                         sheets[idx] = sheets[idx].Merge(newEnemy.Sheets);
-                        _logger.LogInformation("{Location}: Placing {NewEnemy}", enemy.Name, newEnemy.Sprite.Name);
+                        _logger.LogInformation("{Location}: Placing {NewEnemy} (budget {RemainingBudget}, minimum {MinimumBudgetRequired}, weight {BudgetDeduction})", enemy.Name, newEnemy.Sprite.Name, budget, minimumBudgetRequired, newEnemy.Sprite.Weight);
                         enemy.Sprite = newEnemy.Sprite;
+                        budget -= newEnemy.Sprite.Weight;
+                        minimumBudgetRequired--;
                         if (newEnemy.Sprite.NotWith is { } denies)
                             roomDeny.UnionWith(denies);
                     }
@@ -623,12 +639,17 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                 {
                     var (mapId, _) = IndexToMapState(idx);
                     return $"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits on map 0x{mapId:x02}";
-                });
+                },
+                // overworld has a lot more forgiving limits due to how it spawns sprites, so we can skip most of this.
+                idx => 0);
             place(
                 roomSheets,
                 roomId => enemyRooms[roomId],
                 candidates => candidates.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.OverworldOnly)),
-                (idx, enemy) => $"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{idx:x04}");
+                (idx, enemy) => $"Cannot find a replacement for '{enemy.Sprite?.Name}' that fits in room 0x{idx:x04}",
+                idx => roomsWithExtraSprites.Contains(idx) ? 1 : 0,
+                // underworld has a sprite limit of about 16, we should try to stay below that.
+                roomBudget: 16);
         }
 
         // sprite sheets have 3 major locations:

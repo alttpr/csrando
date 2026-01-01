@@ -162,6 +162,7 @@ Octoballoon:
   sheets: [null, null, 0x0C, null]
   hitbox: 0x02
   limited_interaction: true
+  weight: 2
 Octobaby: #OCTOBALLOON BABY
   id: 0x10
   flags: NoPlace
@@ -292,6 +293,7 @@ Sluggula:
   flags: Challenge
   sheets: [null, null, 0x25, null]
   prize_pack: 0x04
+  weight: 2
 PushSwitch: #WATER SWITCH
   id: 0x21
   flags: NoPlace
@@ -309,6 +311,7 @@ RedBari: #RED BARI
   flags: Challenge, NoDrop #DR allows them to drop items with fire
   sheets: [0x1F, null, null, null]
   prize_pack: 0x06
+  weight: 2
 BlueBari: #BLUE BARI
   id: 0x24
   flags: Challenge
@@ -318,6 +321,7 @@ TalkingTree: #TALKING TREE
   id: 0x25
   flags: NoPlace
   sheets: [null, null, null, 0x15]
+  weight: 3
 HardhatBeetle: #HARDHAT BEETLE
   id: 0x26
   flags: Challenge
@@ -885,6 +889,7 @@ Beamos:
   flags: NoDrop
   sheets: [null, 0x2C, null, null]
   ignored_by_killrooms: true
+  weight: 2
 MasterSword:
   id: 0x62
   flags: NoPlace
@@ -897,12 +902,14 @@ DevalantBlue: #DEBIRANDO PIT
   ignored_by_killrooms: true
   hitbox: 0x13
   limited_interaction: true
+  weight: 2
 DevalantRed: #DEBIRANDO
   id: 0x64
   flags: Challenge
   sheets: [0x2F, null, null, null]
   limited_interaction: true
   prize_pack: 0x02
+  weight: 2
 ShootingGalleryNPC: #ARCHERY GUY
   id: 0x65
   flags: NoPlace
@@ -916,24 +923,28 @@ CannonBallShooterR: #WALL CANNON VERTICAL RIGHT (placed left, shooting right)
   sheets: [0x2F, null, null, null]
   ignored_by_killrooms: true
   limited_interaction: true
+  weight: 3
 CannonBallShooterL: #WALL CANNON VERTICAL LEFT (placed right, shooting left)
   id: 0x67
   flags: NoDrop
   sheets: [0x2F, null, null, null]
   ignored_by_killrooms: true
   limited_interaction: true
+  weight: 3
 CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM (placed high, shooting downwards)
   id: 0x68
   flags: NoDrop
   sheets: [0x2F, null, null, null]
   ignored_by_killrooms: true
   limited_interaction: true
+  weight: 3
 CannonBallShooterU: #WALL CANNON HORIZONTAL TOP (placed low, shooting upwards)
   id: 0x69
   flags: NoDrop
   sheets: [0x2F, null, null, null]
   ignored_by_killrooms: true
   limited_interaction: true
+  weight: 3
 BallNChainTrooper: #BALL N CHAIN
   id: 0x6A
   flags: Challenge
@@ -950,6 +961,7 @@ CannonGuard: #CANNONBALL / CANNON TROOPER
   limited_interaction: true
   boss_damage_sfx: true
   prize_pack: 0x01
+  weight: 2
 MirrorPortal: #MIRROR PORTAL
   id: 0x6C
   flags: NoPlace
@@ -1118,6 +1130,7 @@ AntifairyCircle: #ANTIFAIRY CIRCLE
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   limited_interaction: true
+  weight: 4
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   id: 0x83
   flags: Challenge
@@ -1516,6 +1529,7 @@ Gibo:
   flags: Challenge
   sheets: [null, null, 0x28, null]
   limited_interaction: true
+  weight: 2
 Thief:
   id: 0xC4
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
@@ -1799,11 +1813,13 @@ BadSwitchSnake: #BAD SWITCH SNAKE
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x1C, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 BadSwitchSkullRope: #BAD SWITCH SKULL ROPE
   id: 0x06
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x24, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 MovingFloor: #MOVING FLOOR
   id: 0x07
   flags: NoPlace, Overlord
@@ -1814,11 +1830,13 @@ BlobSpawner: #BLOB SPAWNER
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, 0x20, null, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 Wallmaster Overlord: #WALLMASTER
   id: 0x09
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x23, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 FallingSquare: #FALLING SQUARE
   id: 0x0A
   flags: NoPlace, Overlord
@@ -1859,16 +1877,19 @@ PirogusuSpawnerRight: #PIROGUSU SPAWNER RIGHT
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 PirogusuSpawnerTop: #PIROGUSU SPAWNER TOP
   id: 0x12
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 PirogusuSpawnerBottom: #PIROGUSU SPAWNER BOTTOM
   id: 0x13
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 TileRoom: #TILE ROOM
   id: 0x14
   flags: NoPlace, Overlord
@@ -1879,16 +1900,19 @@ WizzrobeSpawner: #WIZZROBE SPAWNER
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x25, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 SkullWizzrobeSpawner: #SKULL WIZZROBE SPAWNER
   id: 0x15
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x29, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 ZoroSpawner: #ZORO SPAWNER
   id: 0x16
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, 0x20, null, null]
+  weight: 0 # Not visible by default, ignore for the room budget
 PotTrap: #POT TRAP
   id: 0x17
   flags: NoPlace, Overlord
@@ -1909,6 +1933,7 @@ BadSwitchBomb: #BAD SWITCH BOMB
   id: 0x1A
   flags: NoPlace, Overlord
   subtype: 0x07
+  weight: 0 # Not visible by default, ignore for the room budget
 
 # other sprites that appear in code, for example for use under pots
 # id might not correspond to actual sprite bytes, and is specific to under-pot usage.

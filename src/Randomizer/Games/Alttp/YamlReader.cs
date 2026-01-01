@@ -363,6 +363,8 @@ public class YamlSprite
     public byte PrizePack { get; set; }
     [YamlMember(Alias = "not_with")]
     public string[]? NotWith { get; set; }
+    [YamlMember(Alias = "weight")]
+    public int Weight { get; set; } = 1;
 }
 [Flags]
 public enum YamlSpriteFlags

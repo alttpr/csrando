@@ -10,6 +10,7 @@ public record class Sprite(string Name, byte Id)
     public byte SubType { get; init; }
     public string? FallingSpriteFor { get; init; }
     public int Priority { get; init; }
+    public int Weight { get; init; }
 
     public static Sprite Get(string name)
         => _sprites.Value.GetValueOrDefault(name)
@@ -30,6 +31,7 @@ public record class Sprite(string Name, byte Id)
                 FallingSpriteFor = sprite.FallingSpriteFor,
                 Priority = sprite.Priority,
                 NotWith = sprite.NotWith,
+                Weight = sprite.Weight,
             };
         }
     }
