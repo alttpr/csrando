@@ -1364,6 +1364,7 @@ FallingIce: #FALLING ICE
   flags: NoDrop
   sheets: [null, null, 0x3C, null]
   priority: 101
+  weight: 3
 ZazakBlue: #BLUE ZAZAK
   id: 0xA5
   flags: Challenge
@@ -1418,18 +1419,26 @@ PipeD: #PIPE DOWN
   id: 0xAE
   flags: NoPlace
   hitbox: 0x1B
+  not_with:
+    - FallingIce
 PipeU: #PIPE UP
   id: 0xAF
   flags: NoPlace
   hitbox: 0x1B
+  not_with:
+    - FallingIce
 PipeR: #PIPE RIGHT
   id: 0xB0
   flags: NoPlace
   hitbox: 0x1B
+  not_with:
+    - FallingIce
 PipeL: #PIPE LEFT
   id: 0xB1
   flags: NoPlace
   hitbox: 0x1B
+  not_with:
+    - FallingIce
 BeeGood: #GOOD BEE
   id: 0xB2
   flags: NoPlace
