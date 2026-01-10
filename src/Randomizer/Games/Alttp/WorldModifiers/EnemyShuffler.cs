@@ -581,7 +581,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                 {
                     var enemiesInRoom = enemiesAtIndex(idx).ToArray();
                     var enemiesToPlace = enemiesInRoom.Where(e => e.Sprite?.Flags.HasFlag(YamlSpriteFlags.NoPlace) == false);
-                    var roomDeny = enemiesInRoom.Select(e => e.Sprite?.NotWith).Where(a => a is not null).SelectMany(a => a!).ToHashSet();
+                    var roomDeny = enemiesInRoom.Except(enemiesToPlace).Select(e => e.Sprite?.NotWith).Where(a => a is not null).SelectMany(a => a!).ToHashSet();
 
                     // things go wrong if more than 16 sprites are on screen at the same time (at least for underworld).
                     int budget = roomBudget - enemiesInRoom.Except(enemiesToPlace).Sum(e => e.Sprite!.Weight) - roomBudgetReduction(idx);

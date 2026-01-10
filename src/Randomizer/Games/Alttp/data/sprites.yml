@@ -257,6 +257,10 @@ Statue:
   sheets: [null, null, null, 0x52]
   ignored_by_killrooms: true
   hitbox: 0x03
+  not_with:
+    - PushSwitch
+    - Statue
+    - StatueAlternative
 StatueAlternative:
   alternative: Statue
   id: 0x1C
@@ -264,6 +268,10 @@ StatueAlternative:
   sheets: [null, null, null, 0x53]
   ignored_by_killrooms: true
   hitbox: 0x03
+  not_with:
+    - PushSwitch
+    - Statue
+    - StatueAlternative
 FluteQuest:
   id: 0x1D
   flags: NoPlace
@@ -1365,6 +1373,8 @@ FallingIce: #FALLING ICE
   sheets: [null, null, 0x3C, null]
   priority: 101
   weight: 3
+  not_with:
+    - FallingIce
 ZazakBlue: #BLUE ZAZAK
   id: 0xA5
   flags: Challenge
