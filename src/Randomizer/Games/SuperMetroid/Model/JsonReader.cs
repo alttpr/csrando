@@ -60,6 +60,7 @@ public class JsonReader
     public List<RoomHeader> RoomHeaders { get; set; } = new();
     public List<RoomPLM> RoomPLMs { get; set; } = new();
     public List<DoorPLMMap> DoorPLMMaps { get; set; } = new();
+    public List<NotableStrategy> NotableStrategies { get; set; } = new();
 
     private readonly Dictionary<string, Dictionary<string, object>> vertices = new();
     private readonly Dictionary<Requirement, DirectedUndirectedPair> edges = new();
@@ -220,6 +221,7 @@ public class JsonReader
         RoomHeaders = LoadFile<List<RoomHeader>>(Path.Combine(path, "room_headers.json")) ?? new List<RoomHeader>();
         RoomPLMs = LoadFile<List<RoomPLM>>(Path.Combine(path, "plm_data.json")) ?? new List<RoomPLM>();
         DoorPLMMaps = LoadFile<List<DoorPLMMap>>(Path.Combine(path, "plm_door_map.json")) ?? new List<DoorPLMMap>();
+        NotableStrategies = LoadFile<List<NotableStrategy>>(Path.Combine(path, "notable_data.json")) ?? new List<NotableStrategy>();
 
         RoomById = Rooms.ToDictionary(r => r.Id);
         NodeById = Rooms

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Games.Metadata;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 
@@ -17,7 +18,7 @@ public class RequirementResult
 
     public void MergeFail(RequirementResult other)
     {
-        if(other.Missing == null || other.Missing.Count == 0)
+        if (other.Missing == null || other.Missing.Count == 0)
             return;
 
         if (Missing == null)
@@ -100,6 +101,7 @@ public class RequirementHandler
     private readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
     private readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
     private readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
+    private readonly HashSet<string> AllowedNotableStrategies = new HashSet<string>();
     private const decimal DropRateDenominator = 102m;
     private static readonly EnemyDrops ZeroEnemyDrops = new EnemyDrops(0, 0, 0, 0, 0, 0);
     // Vanilla SM drop contents per pickup; used to convert expected drop counts to resources.
@@ -118,19 +120,27 @@ public class RequirementHandler
             HelperTechs[helper.Name] = preprocessor.OptimizeRequirement(helper.Requires);
         }
 
-        foreach(var tech in reader.Techs.TechCategories.SelectMany(t => t.Techs))
+        foreach (var tech in reader.Techs.TechCategories.SelectMany(t => t.Techs))
         {
             AddTech(tech, world.AllowedTechs, preprocessor);
             AddTech(tech, world.AllowedTechs, preprocessor, true);
         }
 
-        foreach(var enemy in reader.Enemies.SelectMany(e => e.Enemies))
+        foreach (var enemy in reader.Enemies.SelectMany(e => e.Enemies))
         {
             Enemies[enemy.Name] = enemy;
             EnemyDropExpectations[enemy.Name] = CalculatePerEnemyDropExpectation(enemy);
             foreach (var attack in enemy.Attacks)
             {
                 EnemyDamage[(enemy.Name, attack.Name)] = attack;
+            }
+        }
+
+        foreach (var strategy in reader.NotableStrategies)
+        {
+            if (IsStrategyAllowed(strategy, world.Config.Logic))
+            {
+                AllowedNotableStrategies.Add(strategy.Name);
             }
         }
     }
@@ -163,7 +173,7 @@ public class RequirementHandler
                 return RequirementResult.Fail();
 
             case Requirement.Single single:
-                if(HelperTechs.TryGetValue(single.Req, out var helper))
+                if (HelperTechs.TryGetValue(single.Req, out var helper))
                 {
                     return HandleRequirement(helper, state, inventory, world, weapons);
                 }
@@ -283,7 +293,8 @@ public class RequirementHandler
                         SuperMissiles = ammo.Type == "Super" ? ammo.Count : 0,
                         PowerBombs = ammo.Type == "PowerBomb" ? ammo.Count : 0
                     });
-                } else
+                }
+                else
                 {
                     return RequirementResult.Fail(ammo.Type);
                 }
@@ -315,29 +326,29 @@ public class RequirementHandler
                     PowerBombs = refill.Resources.Contains("PowerBomb") ? -99999 : 0
                 });
 
-/*
- *           "enemyKill": {
-            "type": "object",
-            "title": "Enemy Kill",
-            "description": "Describes the need to be able to kill a set of enemies. By default, allows all non-situational weapons (provided they can damage the enemies)",
-            "required": ["enemies"],
-            "additionalProperties": false,
-            "properties": {
-              "enemies": {
-                "type": "array",
-                "title": "Enemy Groups",
-                "description": "An array of enemy groups that must be killed. All enemies in each group can be hit by the same attack from an area of effect weapon.",
-                "items": {
-                  "type": "array",
-                  "title": "Enemy Group",
-                  "description": "A single group of enemies that can be hit by the same attack from an area of effect weapon.",
-                  "items": {
-                    "type": "string",
-                    "title": "Enemy Name",
-                    "description": "The name of an enemy, as found in the enemies file or the boss file."
-                  }
-                }
-              },*/
+            /*
+             *           "enemyKill": {
+                        "type": "object",
+                        "title": "Enemy Kill",
+                        "description": "Describes the need to be able to kill a set of enemies. By default, allows all non-situational weapons (provided they can damage the enemies)",
+                        "required": ["enemies"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "enemies": {
+                            "type": "array",
+                            "title": "Enemy Groups",
+                            "description": "An array of enemy groups that must be killed. All enemies in each group can be hit by the same attack from an area of effect weapon.",
+                            "items": {
+                              "type": "array",
+                              "title": "Enemy Group",
+                              "description": "A single group of enemies that can be hit by the same attack from an area of effect weapon.",
+                              "items": {
+                                "type": "string",
+                                "title": "Enemy Name",
+                                "description": "The name of an enemy, as found in the enemies file or the boss file."
+                              }
+                            }
+                          },*/
 
             case Requirement.EnemyKill enemyKill:
                 var candidateWeapons = new List<Weapon>();
@@ -486,10 +497,11 @@ public class RequirementHandler
                 }
 
                 var attackDamage = attack.BaseDamage * enemyDamage.Hits;
-                if(attack.AffectedByVaria ?? true == true && inventory.Has(world.GetItem("Varia")))
+                if (attack.AffectedByVaria ?? true == true && inventory.Has(world.GetItem("Varia")))
                 {
                     attackDamage /= 2;
-                } else if (attack.AffectedByGravity ?? true == true && inventory.Has(world.GetItem("Gravity")))
+                }
+                else if (attack.AffectedByGravity ?? true == true && inventory.Has(world.GetItem("Gravity")))
                 {
                     attackDamage /= 4;
                 }
@@ -506,14 +518,14 @@ public class RequirementHandler
                 var hasVaria = inventory.Has(world.GetItem("Varia"));
                 var canHellrun = HelperTechs.ContainsKey("canHeatRun");
 
-                if(!hasVaria && !canHellrun)
+                if (!hasVaria && !canHellrun)
                 {
                     return RequirementResult.Fail("Varia");
                 }
 
                 return RequirementResult.Success(new RequirementCost
                 {
-                    Energy = hasVaria ? 0 :(int)((heatFrames.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
+                    Energy = hasVaria ? 0 : (int)((heatFrames.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier),
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
@@ -526,7 +538,7 @@ public class RequirementHandler
                 if (!hasVariaHf && !canHellrunHf)
                 {
                     return RequirementResult.Fail("Varia");
-                }               
+                }
 
                 var baseHeatDamage = hasVariaHf ? 0 : (int)((heatFramesWithEnergyDrops.Frames / 4) * world.Config.LogicSkillConfigs[world.Config.Logic].HeatDamageMultiplier);
                 if (state.Energy < baseHeatDamage)
@@ -574,7 +586,7 @@ public class RequirementHandler
                 {
                     var (hasResource, resourceName) = resource.Type switch
                     {
-                        // TODO: fix reserve 
+                        // TODO: fix reserve
                         "ReserveEnergy" => (false, "ReserveTank"),
                         "Energy" => (state.Energy >= resource.Count, "ETank"),
                         "RegularEnergy" => (state.Energy >= resource.Count, "ETank"),
@@ -584,7 +596,7 @@ public class RequirementHandler
                         _ => (false, "")
                     };
 
-                    if(!hasResource)
+                    if (!hasResource)
                     {
                         failed = true;
                         if (resourceName != "")
@@ -594,10 +606,10 @@ public class RequirementHandler
                     }
                 }
 
-                if(failed)
+                if (failed)
                 {
                     return failedResource;
-                } 
+                }
                 else
                 {
                     return RequirementResult.Success(RequirementCost.ZeroCost);
@@ -672,7 +684,7 @@ public class RequirementHandler
                 if (inventory.Has(world.GetItem("SpeedBooster")))
                 {
                     var requiredEnergy = shinespark.Frames - shinespark.ExcessFrames;
-                    if(state.Energy - requiredEnergy <= 29)
+                    if (state.Energy - requiredEnergy <= 29)
                     {
                         return RequirementResult.Fail("ETank");
                     }
@@ -705,10 +717,10 @@ public class RequirementHandler
                 return failedCap ? failedCapacity : RequirementResult.Success(RequirementCost.ZeroCost);
 
             case Requirement.CanShineCharge canShineCharge:
-                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster")); 
+                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
 
             case Requirement.GetBlueSpeed blueSpeed:
-                if(blueSpeed.UsedTiles < world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles)
+                if (blueSpeed.UsedTiles < world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles)
                 {
                     return RequirementResult.Fail();
                 }
@@ -725,13 +737,17 @@ public class RequirementHandler
                 }
 
             case Requirement.Notable notable:
-                return RequirementResult.Success(RequirementCost.ZeroCost);
+                if (AllowedNotableStrategies.Contains(notable.NotableName))
+                {
+                    return RequirementResult.Success(RequirementCost.ZeroCost);
+                }
+                return RequirementResult.Fail(notable.NotableName);
 
             case Requirement.DoorUnlockedAtNode doorUnlockedAtNode:
                 return state.HasDoorUnlocked(doorUnlockedAtNode.Node) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
 
             case Requirement.SpeedBall speedBall:
-                if(speedBall.Length < world.Config.LogicSkillConfigs[world.Config.Logic].SpeedballTiles)
+                if (speedBall.Length < world.Config.LogicSkillConfigs[world.Config.Logic].SpeedballTiles)
                 {
                     return RequirementResult.Fail();
                 }
@@ -849,4 +865,13 @@ public class RequirementHandler
             PowerBombs = powerBombGain
         };
     }
+
+    private bool IsStrategyAllowed(NotableStrategy strategy, Logic logic) =>
+        strategy.Difficulty switch
+        {
+            "Basic" => logic == Logic.Basic,
+            "Medium" => logic == Logic.Basic || logic == Logic.Medium,
+            "Hard" => logic == Logic.Basic || logic == Logic.Medium || logic == Logic.Hard,
+            _ => false,
+        };
 }
