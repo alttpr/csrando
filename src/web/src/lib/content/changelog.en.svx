@@ -9,6 +9,7 @@ lastUpdated: 2024-09-15
 ## 2025-11-06
 ### Alttpr - Version 32.0
 * Initial release
+
 ### Quad Randomizer - Version 0.3.0
 * Systems Changes
   * New website with more configuration options and better integration with the alttpr randomizer
@@ -20,6 +21,34 @@ lastUpdated: 2024-09-15
   * Massively improved SM Map randomization support with newer maps and better map rendering and a lot of bug fixes
   * Added a soft-reset into SM that reloads the last save (Sel+Start+R+L)
   * Map Rando: In SM the game is now autosaved to the portal room when entering through a portal
+
+* Hotfix: 0.3.0d
+  * Some chests in light world dungeons/entrances didn't properly account for bunny status in entrance shuffle when placed in the dark world.
+  * Friendly/Unkillable enemies placed in "challenge"-rooms could make it impossible to progress.
+  * Aga2 bat not showing the correct sprite
+  * Aginah's cave not being shuffled in entrance rando
+  * Issues with Blind in TT when boss shuffle is used
+
+* Hotfix: 0.3.0e
+  * Fixed issues with Blind when place in dark world
+  * Fixed boss shuffle issues with Kholdstare and Trinexx rooms
+  * Fixed invalid door data in West Ocean causing the MB door lock to possibly appear on the wrong door
+  * Fixed Shaktool scroll issue
+  * Fixed a potential heat run issue in SM
+  * Changed the escape timer to 5 minutes and added an automatic refill when defating MB in SM to make map rando escapes better
+  * Fixed Z1 Triforce goal not being written
+
+* Hotfix: 0.3.0f
+  * Fixes issues with enemies and bosses related to shallow water
+  * Fixes incorrect item text for SM keys in ALTTP
+
+* Hotfix: 0.3.0g
+  * Fixed water physics bug when entering certain rooms suitless from an underwater room
+  * Fixed Z3 progressive item state not being set correct after a reset out of another game after a save
+  * Added better support for notable strategies in SM to make sure they're coupled with the correct logic levels
+  * Added an option to spawn all item in SM directly, independent of event states such as boss kills
+  * Further Z3 enemizer fixes and adjustments
+  * NOTE: Z3 boss shuffle is still broken in some cases and can lead to broken seeds for now
 
 
 ## Old Quad Randomizer Changes
