@@ -61,7 +61,7 @@
 			>).
 		</li>
 		<li>
-			Uploaded ROM data in IndexedDB via LocalForage (<code>rom_global_&lt;gameId&gt;</code>).
+			Selected ROM data in IndexedDB via LocalForage (<code>rom_global_&lt;gameId&gt;</code>).
 		</li>
 	</ul>
 
