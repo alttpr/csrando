@@ -15,5 +15,6 @@ public static class RomWriter
         rom.WritePlms(world);
         rom.WriteMiscPatches(world);
         rom.WriteMap(world);
+        rom.WriteSpawnAllItems(world);
     }
 }

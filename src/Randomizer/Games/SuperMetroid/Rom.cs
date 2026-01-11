@@ -84,14 +84,17 @@ public class Rom : GameRom
 
     public void WriteSpawnAllItems(World world)
     {
-        Write((SNES)0x8F9EC5, [0xE6, 0x86]);
-        Write((SNES)0x8F9AB6, [0x86, 0x84]);
-        Write((SNES)0x8FCDCE, [0x57, 0xC3]);
-        Write((SNES)0x8FCE17, [0x5F, 0xC3]);
-        Write((SNES)0x8FCC4D, [0x37, 0xC3]);
-        Write((SNES)0x8FCAD4, [0x19, 0xC3]);
-        Write((SNES)0x8FC9B4, [0xD1, 0xC2]);
-        Write((SNES)0x8FCE66, [0x6D, 0xC3]);
+        if (world.Config.SpawnAllItems)
+        {
+            Write((SNES)0x8F9EC5, [0xE6, 0x86]);
+            Write((SNES)0x8F9AB6, [0x86, 0x84]);
+            Write((SNES)0x8FCDCE, [0x57, 0xC3]);
+            Write((SNES)0x8FCE17, [0x5F, 0xC3]);
+            Write((SNES)0x8FCC4D, [0x37, 0xC3]);
+            Write((SNES)0x8FCAD4, [0x19, 0xC3]);
+            Write((SNES)0x8FC9B4, [0xD1, 0xC2]);
+            Write((SNES)0x8FCE66, [0x6D, 0xC3]);
+        }
     }
 
     public void WritePlms(World world)

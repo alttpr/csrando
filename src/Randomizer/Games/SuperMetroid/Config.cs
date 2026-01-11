@@ -155,11 +155,17 @@ public class Config
     [Category("Goal")]
     public Keycards Keycards { get; init; } = Keycards.None;
 
-    [Category("Gameplay")]
+    [Category("Goal")]
+    [DependsOn(nameof(Keycards), Keycards.All)]
+    [Description("If enabled, the key door before G4 is not placed")]
     public bool FastG4 { get; init; } = false;
 
     [Category("Gameplay")]
     public MapRandomizerSetting MapRandomizer { get; init; } = MapRandomizerSetting.None;
+
+    [Category("Gameplay")]
+    [Description("Spawn all items directly no matter the state of events. (For example killing bosses like Phantoon)")]
+    public bool SpawnAllItems { get; init; } = false;
 
     [RandomizedOptionsFor(nameof(Bosses))]
     [Values("0", "1", "2", "3", "4")]

@@ -35,8 +35,23 @@ public sealed class World : Randomizer.Graph.World<Item>
         JsonData = new JsonReader(Config);
         JsonData.Load();
 
-        AllowedTechs = Config.LogicTechs[Config.Logic].Concat(Config.CustomTech).ToList();
+        var randomizerDependent = JsonData.Helpers.HelperCategories
+            .First(c => c.Name == "Randomizer Dependent");
 
+        if (Config.SpawnAllItems)
+        {
+            foreach (ref var helper in randomizerDependent.Helpers.AsSpan())
+            {
+                if (helper.Name == "h_AllItemsSpawned")
+                {
+                    helper = helper with { Requires = new Requirement.Always() };
+                    break;
+                }
+            }
+        }
+
+
+        AllowedTechs = Config.LogicTechs[Config.Logic].Concat(Config.CustomTech).ToList();
         RequirementHandler.Initialize(JsonData, this);
 
         if (Config.MapRandomizer == MapRandomizerSetting.Standard)
