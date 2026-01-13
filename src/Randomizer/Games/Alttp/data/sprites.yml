@@ -22,7 +22,7 @@ Vulture:
   prize_pack: 0x06
 FlyingStalfosHead: #STALFOS HEAD
   id: 0x02
-  flags: Challenge
+  flags: NoDrop
   sheets: [0x1F, null, null, null]
   limited_interaction: true
   prize_pack: 0x04
