@@ -60,8 +60,8 @@ maps:
           holes:
             - name: "Skull Woods First Section North - Hole"
               entranceids: [0x00]
-            - name: "Skull Woods First Section East - Hole"
               conditions: ["LiftBush"]
+            - name: "Skull Woods First Section East - Hole"
               entranceids: [0x03, 0x04]
             - name: "Skull Woods First Section West - Hole"
               entranceids: [0x01, 0x02]
