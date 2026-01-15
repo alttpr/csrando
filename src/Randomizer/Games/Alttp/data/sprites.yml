@@ -1369,7 +1369,7 @@ KholdstareShell: #KHOLDSTARE SHELL
   hitbox: 0x1D
 FallingIce: #FALLING ICE
   id: 0xA4
-  flags: NoDrop
+  flags: NoPlace
   sheets: [null, null, 0x3C, null]
   priority: 101
   weight: 3
