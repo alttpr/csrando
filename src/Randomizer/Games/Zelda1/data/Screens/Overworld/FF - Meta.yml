@@ -37,6 +37,14 @@ nodes:
     - name: "Can Defeat Digdogger"
       type: Meta
       item: CanDefeatDigdogger
+
+    - name: "Can Shoot Ganon"
+      type: Meta
+      item: CanShootGanon
+
+    - name: "Can Defeat Ganon"
+      type: Meta
+      item: CanDefeatGanon
       
 edges:
   directed:
@@ -62,7 +70,10 @@ edges:
       - ["Meta", "Can Hurt Enemies"]
     Bow:
       - ["Can Hurt Enemies", "Can Defeat Gohma"]
+      - ["Can Hurt Enemies", "Can Shoot Ganon"]
     Recorder:
       - ["Can Hurt Enemies", "Can Defeat Digdogger"]
+    SilverArrows:
+      - ["Can Shoot Ganon", "Can Defeat Ganon"]
       
           

@@ -874,7 +874,7 @@ public class YamlReader
                     {
                         { "name", $"{mapName} - {meta.name} - Ganon" },
                         { "type", VertexType.Meta },
-                        { "item", "Triforce" },
+                        { "item", "GanonTriforce" },
                         { "itemset", (string[])["zelda"] },
                     });
 

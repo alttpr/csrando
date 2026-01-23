@@ -28,15 +28,17 @@ nodes:
   meta:
     - name: "Ganon"
       type: Meta
+    - name: "Defeat Ganon"
+      type: Meta
 
 edges:
   undirected:
+    CanDefeatGanon:
+      - ["Ganon", "Defeat Ganon"]
     fixed:
+      - ["Defeat Ganon", "Top edge"]
       - ["Left edge", "Right edge"]
-      - ["Left edge", "Top edge"]
       - ["Left edge", "Bottom edge"]
-      - ["Right edge", "Top edge"]
       - ["Right edge", "Bottom edge"]
-      - ["Top edge", "Bottom edge"]
       - ["Left edge", "Middle"]
       - ["Middle", "Ganon"]
