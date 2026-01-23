@@ -417,7 +417,7 @@ public class YamlReader
                         _ => false
                     };
 
-                    if (basicRoom && screen.edges.directed is null && (screen.edges.undirected?.Count ?? 0) == 1)
+                    if (basicRoom && screen.edges.directed is null && (screen.edges.undirected?.Count ?? 0) == 1 && (screen.edges.undirected?.All(e => e.Key == "fixed") ?? true))
                     {
                         continue;
                     }
