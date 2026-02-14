@@ -14,6 +14,7 @@ public sealed class Rom : GameRom
     private readonly Text _text;
     private readonly Credits _credits;
     private readonly YamlReader.GameData _gameData;
+    private readonly Dictionary<int, YamlOutletData> _outletOverrides;
 
     internal InitialSram InitialSram { get; }
 
@@ -25,6 +26,7 @@ public sealed class Rom : GameRom
         _text.RemoveUnwanted();
         _credits = new();
         _gameData = YamlReader.LoadGameData();
+        _outletOverrides = YamlReader.LoadOutletData();
     }
 
     /// <summary>Write subsitutions</summary>
@@ -1691,7 +1693,8 @@ public sealed class Rom : GameRom
     /// <param name="outlets">RoomId to OutletId map</param>
     /// <param name="entrances">EntranceId to InletId map</param>
     /// <param name="holes">EntranceId to InletId map</param>
-    public void WriteEntrances(IDictionary<int, int> outlets, IDictionary<int, int> entrances, IDictionary<int, int> holes)
+    /// <param name="outletToMap">Reverse-map from the Outlet ID to its overworld Map ID</param>
+    public void WriteEntrances(IDictionary<int, int> outlets, IDictionary<int, int> entrances, IDictionary<int, int> holes, IDictionary<int, int> outletToMap)
     {
         // RoomToOutlet (tables.asm), offset is the room id pointing towards the related outlet id
         foreach (var (roomId, outletId) in outlets)
@@ -1702,6 +1705,61 @@ public sealed class Rom : GameRom
         // Overworld_GetPitDestination_entrance (Vanilla, bank_1B.asm)
         foreach (var (entranceId, inletId) in holes)
             Write((SNES)(0x1BB84C + entranceId), [(byte)inletId]);
+
+        // NewOutletData (overworldoutlets.asm)
+        Span<byte> data = stackalloc byte[2];
+        foreach (var (outletId, outletOverrides) in _outletOverrides)
+        {
+            if (!outletToMap.TryGetValue(outletId, out int mapId))
+                mapId = 0;
+            // strip the world state...
+            mapId %= 0x40;
+            // ...get the map tile coordinate...
+            int mapY = mapId / 8;
+            int mapX = mapId - (mapY * 8);
+            // ...then map it onto its screen coordinate
+            int pixelMapX = mapX * 512;
+            int pixelMapY = mapY * 512;
+
+            // NewOutletData_x_coordinate
+            if (outletOverrides.X.HasValue)
+            {
+                BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.X.Value + pixelMapX));
+                Write((SNES)(0xAB893A + (outletId * 2)), data);
+            }
+            // NewOutletData_y_coordinate
+            if (outletOverrides.Y.HasValue)
+            {
+                BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.Y.Value + pixelMapY));
+                Write((SNES)(0xAB873C + (outletId * 2)), data);
+            }
+
+            // NewOutletData_camera_trigger_x
+            if (outletOverrides.CameraX.HasValue)
+            {
+                BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.CameraX.Value + pixelMapX));
+                Write((SNES)(0xAB8D36 + (outletId * 2)), data);
+            }
+            // NewOutletData_camera_trigger_y
+            if (outletOverrides.CameraY.HasValue)
+            {
+                BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.CameraY.Value + pixelMapY));
+                Write((SNES)(0xAB8B38 + (outletId * 2)), data);
+            }
+
+            // NewOutletData_horizontal_scroll
+            if (outletOverrides.ScrollX.HasValue)
+            {
+                BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.ScrollX.Value + pixelMapX));
+                Write((SNES)(0xAB853E + (outletId * 2)), data);
+            }
+            // NewOutletData_vertical_scroll
+            if (outletOverrides.ScrollY.HasValue)
+            {
+                BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.ScrollY.Value + pixelMapY));
+                Write((SNES)(0xAB8340 + (outletId * 2)), data);
+            }
+        }
     }
 
     /// <summary>

@@ -237,6 +237,15 @@ public class YamlReader
     });
     public static GameData LoadGameData() => _gameData.Value;
 
+    private static readonly Lazy<Dictionary<int /* OutletId */, YamlOutletData>> _outletData = new(() =>
+    {
+        var path = Path.Combine(DataRoot, "outlet_overrides.yml");
+        using var reader = File.OpenText(path);
+        var deserializer = new DeserializerBuilder().Build();
+        return deserializer.Deserialize<Dictionary<int, YamlOutletData>>(reader) ?? new();
+    });
+    public static Dictionary<int, YamlOutletData> LoadOutletData() => _outletData.Value;
+
     public static Dictionary<string, List<string>> LoadBosses() => _cachedBosses.Value;
     public static Dictionary<string, List<string>> LoadEnemies() => _cachedEnemies.Value;
 
@@ -318,6 +327,23 @@ public class YamlReader
         return deserializer.Deserialize<List<string>>(reader) ?? [];
     }
 }
+
+public class YamlOutletData
+{
+    [YamlMember(Alias = "x")]
+    public short? X { get; set; }
+    [YamlMember(Alias = "y")]
+    public short? Y { get; set; }
+    [YamlMember(Alias = "camera_x")]
+    public short? CameraX { get; set; }
+    [YamlMember(Alias = "camera_y")]
+    public short? CameraY { get; set; }
+    [YamlMember(Alias = "scroll_x")]
+    public short? ScrollX { get; set; }
+    [YamlMember(Alias = "scroll_y")]
+    public short? ScrollY { get; set; }
+}
+
 public class YamlItem
 {
     [YamlMember(Alias = "bytes")]

@@ -16,7 +16,6 @@ maps:
               - "East Dark World Maze"
               - "Dark Lake Hylia Northeast Ledge"
           entrances:
-            # outlet may be wrong here
             - name: "Dark Lake Hylia River Bend Fairy"
               entranceid: 0x6C
               outletid: 0x73

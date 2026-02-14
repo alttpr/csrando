@@ -1,0 +1,32 @@
+# This file contains overrides for outlet data, for cases that aren't optimal during randomization (usually entrance rando).
+# Anything that's not set is simply left as-is.
+# Most of this goes to Randomizer data in NewOutletData (overworldoutlets.asm)
+
+# 0x27: Palace of Darkness
+0x27:
+  y: 0x3C
+  camera_y: 0x73
+  scroll_y: 0x04
+# 0x28: Misery Mire
+0x28:
+  y: 0xE0
+  camera_y: 0xFF
+  scroll_y: 0x90
+# 0x2C: Skull Woods (Final Section)
+0x2C:
+  x: 0x80
+  y: 0xF8
+  camera_x: 0x87
+  camera_y: 0x117
+  scroll_x: 0x08
+  scroll_y: 0xA8
+# 0x34: Turtle Rock
+0x34:
+  y: 0x150
+  camera_y: 0x16F
+  scroll_y: 0x100
+# 0x38: Ganon's Tower
+0x38:
+  y: 0xA6
+  camera_y: 0xC5
+  scroll_y: 0x56

@@ -842,6 +842,7 @@ public static class RomWriter
             .ToLookup(k => k.Target, v => v.Source);
 
         var outletVertices = world.GetLocationsOfType(VertexType.Outlet).OfType<Vertex>().Where(v => v.OutletId.HasValue);
+        var outletToMap = new Dictionary<int, int>();
         var outlets = new Dictionary<int, int>();
         foreach (var outletVertex in outletVertices)
         {
@@ -853,6 +854,7 @@ public static class RomWriter
             // the rom will take care of that and send the player back to where they came from.
             // however: if we start in there, we need a place to go. this is what we write here.
             outlets.TryAdd(source!.RoomId!.Value, outletVertex.OutletId!.Value);
+            outletToMap[outletVertex.OutletId.Value] = outletVertex.Map!.Value;
         }
 
         // we also tag exits as Entrance, so we have to look for the ones that have an EntranceId set.
@@ -888,7 +890,7 @@ public static class RomWriter
                 holes.Add(entranceId, target.InletId!.Value);
         }
 
-        rom.WriteEntrances(outlets, entrances, holes);
+        rom.WriteEntrances(outlets, entrances, holes, outletToMap);
     }
 
 
@@ -969,13 +971,6 @@ public static class RomWriter
         rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
     }
 
-    private static readonly Dictionary<int /* RoomId */, string /* DontClearIfBossIsThere */> _lowerLayerClear = new()
-    {
-        // Turtle Rock boss room (has Trinexx' shell on lower layer)
-        { 0xA4, "DefeatTrinexx" },
-        // Ice Palace boss room (has Kholdstare's shell on lower layer)
-        { 0xDE, "DefeatKholdstare" },
-    };
     /// <summary>
     /// Write Room headers, and room data for all enemies in game.
     /// </summary>
