@@ -9,7 +9,6 @@ rooms:
           connections:
             fixed:
               - "Sewers - Dark Rope Corridor"
-              - "Hyrule Castle - Mantle"
           pots:
             - name: "Sewers - Dark Cactus - Pot 1"
               position: { x: 0x32, y: 0x14, z: 0x00 }
