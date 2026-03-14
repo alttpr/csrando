@@ -672,6 +672,9 @@ public partial class InventoryEntry
     [YamlMember(Alias = "cost")]
     public int Cost { get; set; }
 
+    [YamlMember(Alias = "count")]
+    public int Count { get; set; } = 1;
+
     [YamlMember(Alias = "itemset")]
     public List<string> ItemSet { get; set; } = new();
 }
@@ -774,10 +777,14 @@ public partial class Region
     public VertexType? Type { get; set; }
 
     [YamlMember(Alias = "shopkeeper")]
-    public int? Shopkeeper { get; set; }
+    public byte? Shopkeeper { get; set; }
+    [YamlMember(Alias = "palette")]
+    public byte? ShopPalette { get; set; }
 
-    [YamlMember(Alias = "shopstyle")]
-    public int? Shopstyle { get; set; }
+    [YamlMember(Alias = "infinite_stock")]
+    public bool InfiniteStock { get; set; }
+    [YamlMember(Alias = "alt_vram")]
+    public bool AlternativeVRAM { get; set; }
 
     [YamlMember(Alias = "switch")]
     public bool? Switch { get; set; }
