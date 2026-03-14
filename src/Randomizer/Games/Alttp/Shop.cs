@@ -11,19 +11,19 @@ public sealed class Shop
     public ushort RoomId { get; init; }
     public byte InletId { get; init; }
 
-    public bool IsTakeAny { get; init; }
+    public bool InfiniteStock { get; init; }
     public bool SkipDoorCheck { get; init; }
     public bool IsTakeAll { get; init; }
     public bool AltVram { get; init; }
 
     // shop_config - tdav --qq
-    // t - 0=Shop, 1=TakeAny
+    // t - 0=Shop (buy it once, it's gone), 1=InfiniteStock (keep buying as much as you want)
     // d - 0=Check Door, 1=Skip Door Check
     // a - 0=Shop/TakeAny, 1=TakeAll
     // v - 0=normal vram, 1=alt vram
     // qq - # of items for sale
     public byte ShopConfig => (byte)(
-        (IsTakeAny ? 0b1000_0000 : 0) |
+        (InfiniteStock ? 0b1000_0000 : 0) |
         (SkipDoorCheck ? 0b0100_0000 : 0) |
         (IsTakeAll ? 0b0010_0000 : 0) |
         (AltVram ? 0b0001_0000 : 0) |

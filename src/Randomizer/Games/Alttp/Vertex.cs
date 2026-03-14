@@ -24,8 +24,11 @@ public sealed class Vertex : BaseVertex
     public int? OutletId { get; init; }
     public int? InletId { get; init; }
     public int[]? EntranceIds { get; init; }
-    public int? ShopStyle { get; init; }
-    public int? Shopkeeper { get; init; }
+    public bool InfiniteStock { get; init; }
+    public ShopItem[]? ShopInventory { get; init; }
+    public bool AlternativeVRAM { get; init; }
+    public byte? Shopkeeper { get; init; }
+    public byte? ShopPalette { get; init; }
     public string[]? Allow { get; init; }
     public string[]? Deny { get; init; }
     public int? Group { get; init; }

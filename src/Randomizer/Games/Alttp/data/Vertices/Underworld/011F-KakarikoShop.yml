@@ -4,8 +4,8 @@ rooms:
       regions:
         - name: "Kakariko Shop"
           type: "shop"
-          shopkeeper: 0xA0
-          shopstyle: 0x03
+          shopkeeper: 0x00
+          palette: 0x05
           inletid: 0x46
           inventory:
             - name: "Kakariko Shop - Left"
