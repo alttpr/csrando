@@ -371,14 +371,27 @@ internal sealed class ItemPooler : IItemPooler
 
         return
         [
-            // TODO verify these counts, they are definitely wrong
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedPotion")), 6),
+            // we include the potion shop in the shuffle, one of each potion
+            // TODO: we might choose to not include the potion shop. remove these if that's the case.
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BluePotion")), 1),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("GreenPotion")), 1),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BluePotion")), 6),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("Heart")), 10),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TenBombs")), 10),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BlueShield")), 2),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedShield")), 1)
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedPotion")), 1),
+            // almost all shops carry the red potion and 10 bombs
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedPotion")), 8),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TenBombs")), 8),
+            // half the shops have a recovery heart, while the other half has a blue shield
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("Heart")), 4),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BlueShield")), 4),
+            // special case: the Orchard shop has a red shield for sale
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TenArrows")), 1),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("Bee")), 1),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedShield")), 1),
+            // upgrade shop has 7 each
+            // TODO: adding 14 total means 12 extra items in the shuffle.
+            //       the fast fill at the end will then discard 12 random items.
+            //       do we just add 1 each? or do we let the garbage fill do its job leaving 12 unobtainable garbage items?
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("ArrowUpgrade5")), 7),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BombUpgrade5")), 7)
         ];
     }
 }
