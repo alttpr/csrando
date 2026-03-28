@@ -352,6 +352,10 @@ public class YamlItem
     public string Type { get; set; } = string.Empty;
     [YamlMember(Alias = "tier")]
     public string? Tier { get; set; }
+    [YamlMember(Alias = "price")]
+    public ushort? Price { get; set; }
+    [YamlMember(Alias = "progression")]
+    public bool IsProgression { get; set; }
 }
 
 public class YamlSprite

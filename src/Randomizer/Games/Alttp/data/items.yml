@@ -2,47 +2,85 @@ Nothing:
   tier: minor
   bytes: [0x5A]
   type: Meta
+  price: 0
 L1Sword:
   bytes: [0x49]
+  price: 50
+  progression: true
 L1SwordAndShield:
   bytes: [0x00]
+  price: 100
+  progression: true
 L2Sword:
   bytes: [0x01]
+  price: 100
+  progression: true
 MasterSword:
   bytes: [0x50]
+  price: 100
+  progression: true
 L3Sword:
   bytes: [0x02]
+  price: 150
+  progression: true
 L4Sword:
   bytes: [0x03]
+  price: 200
+  progression: true
 BlueShield:
   bytes: [0x04]
+  price: 50
 RedShield:
   bytes: [0x05]
+  price: 500
 MirrorShield:
   bytes: [0x06]
+  price: 200
+  progression: true
 FireRod:
   bytes: [0x07]
+  price: 250
+  progression: true
 IceRod:
   bytes: [0x08]
+  price: 250
+  progression: true
 Hammer:
   bytes: [0x09]
+  price: 250
+  progression: true
 Hookshot:
   bytes: [0x0A]
+  price: 250
+  progression: true
 Bow:
   bytes: [0x0B]
+  price: 200
+  progression: true
 Boomerang:
   bytes: [0x0C]
+  price: 50
+  progression: true
 Powder:
   bytes: [0x0D]
+  price: 50
+  progression: true
 Bee:
   tier: minor
   bytes: [0x0E]
+  price: 10
 Bombos:
   bytes: [0x0F]
+  price: 100
+  progression: true
 Ether:
   bytes: [0x10]
+  price: 100
+  progression: true
 Quake:
   bytes: [0x11]
+  price: 100
+  progression: true
 MireEntryBombos:
   tier: minor
   bytes: [0x00, 0x31, 0x80, 0x00]
@@ -69,99 +107,162 @@ TurtleRockEntryQuake:
   type: Meta
 Lamp:
   bytes: [0x12]
+  price: 150
+  progression: true
 Shovel:
   bytes: [0x13]
+  price: 50
+  progression: true
 OcarinaInactive:
   bytes: [0x14]
+  price: 250
+  progression: true
 CaneOfSomaria:
   bytes: [0x15]
+  price: 250
+  progression: true
 Bottle:
   bytes: [0x16]
+  price: 50
+  progression: true
 FairyBottle:
   bytes: [0x16]
+  price: 50
+  progression: true
 PieceOfHeart:
   tier: medium
   bytes: [0x17]
+  price: 10
 CaneOfByrna:
   bytes: [0x18]
+  price: 50
+  progression: true
 Cape:
   bytes: [0x19]
+  price: 50
+  progression: true
 MagicMirror:
   bytes: [0x1A]
+  price: 250
+  progression: true
 PowerGlove:
   bytes: [0x1B]
+  price: 100
+  progression: true
 TitansMitt:
   bytes: [0x1C]
+  price: 200
+  progression: true
 BookOfMudora:
   bytes: [0x1D]
+  price: 150
+  progression: true
 Flippers:
   bytes: [0x1E]
+  price: 250
+  progression: true
 MoonPearl:
   bytes: [0x1F]
+  price: 200
+  progression: true
 BugCatchingNet:
   bytes: [0x21]
+  price: 50
+  progression: true
 BlueMail:
   bytes: [0x22]
+  price: 50
 RedMail:
   bytes: [0x23]
+  price: 100
 Key:
   tier: minor
   bytes: [0x24]
   type: SmallKey
+  price: 40
 Compass:
   tier: minor
   bytes: [0x25]
   type: Compass
+  price: 10
 HeartContainerNoAnimation:
   tier: medium
   bytes: [0x26]
+  price: 50
 Bomb:
   tier: minor
   bytes: [0x27]
+  price: 5
 ThreeBombs:
   tier: minor
   bytes: [0x28]
+  price: 15
 Mushroom:
   bytes: [0x29]
+  price: 50
+  progression: true
 RedBoomerang:
   bytes: [0x2A]
+  price: 50
+  progression: true
 BottleWithRedPotion:
   bytes: [0x2B]
+  price: 70
+  progression: true
 FairyBottleWithRedPotion:
   bytes: [0x2B]
+  price: 70
+  progression: true
 BottleWithGreenPotion:
   bytes: [0x2C]
+  price: 60
+  progression: true
 FairyBottleWithGreenPotion:
   bytes: [0x2C]
+  price: 60
+  progression: true
 BottleWithBluePotion:
   bytes: [0x2D]
+  price: 80
+  progression: true
 FairyBottleWithBluePotion:
   bytes: [0x2D]
+  price: 80
+  progression: true
 RedPotion:
   bytes: [0x2E]
+  price: 150
 GreenPotion:
   bytes: [0x2F]
+  price: 60
 BluePotion:
   bytes: [0x30]
+  price: 160
 TenBombs:
   tier: minor
   bytes: [0x31]
+  price: 50
 BigKey:
   bytes: [0x32]
   type: BigKey
+  price: 60
 Map:
   tier: minor
   bytes: [0x33]
   type: Map
+  price: 10
 OneRupee:
   tier: minor
   bytes: [0x34]
+  price: 0
 FiveRupees:
   tier: minor
   bytes: [0x35]
+  price: 2
 TwentyRupees:
   tier: minor
   bytes: [0x36]
+  price: 10
 PendantOfCourage:
   bytes: [0x04, 0x38, 0x62, 0x00, 0x69, 0x37]
 PendantOfWisdom:
@@ -170,79 +271,118 @@ PendantOfPower:
   bytes: [0x02, 0x34, 0x60, 0x00, 0x69, 0x39]
 BowAndArrows:
   bytes: [0x3A]
+  price: 150
 BowAndSilverArrows:
   bytes: [0x3B]
+  price: 200
 BottleWithBee:
   bytes: [0x3C]
+  price: 50
+  progression: true
 FairyBottleWithBee:
   bytes: [0x3C]
+  price: 50
+  progression: true
 BottleWithFairy:
   bytes: [0x3D]
+  price: 70
+  progression: true
 FairyBottleWithFairy:
   bytes: [0x3D]
+  price: 70
+  progression: true
 BossHeartContainer:
   tier: medium
   bytes: [0x3E]
+  price: 40
 HeartContainer:
   tier: medium
   bytes: [0x3F]
+  price: 50
 OneHundredRupees:
   tier: minor
   bytes: [0x40]
+  price: 50
 FiftyRupees:
   tier: minor
   bytes: [0x41]
+  price: 25
 Heart:
   tier: medium
   bytes: [0x42]
+  price: 10
 Arrow:
   tier: minor
   bytes: [0x43]
+  price: 3
 ShopArrow:
   tier: minor
   bytes: [0x43]
+  price: 3
 TenArrows:
   tier: minor
   bytes: [0x44]
+  price: 30
 SmallMagic:
   tier: minor
   bytes: [0x45]
+  price: 5
 ThreeHundredRupees:
   tier: minor
   bytes: [0x46]
+  price: 150
 TwentyRupees2:
   tier: minor
   bytes: [0x47]
+  price: 10
 BottleWithGoldBee:
   bytes: [0x48]
+  price: 60
+  progression: true
 FairyBottleWithGoldBee:
   bytes: [0x48]
+  price: 60
+  progression: true
 OcarinaActive:
   bytes: [0x4A]
+  price: 250
+  progression: true
 PegasusBoots:
   bytes: [0x4B]
+  price: 250
+  progression: true
 BombUpgrade5:
   tier: minor
   bytes: [0x51]
+  price: 100
 BombUpgrade10:
   tier: minor
   bytes: [0x52]
+  price: 100
 BombUpgrade50:
   tier: minor
   bytes: [0x4C]
+  price: 200
 ArrowUpgrade5:
   tier: minor
   bytes: [0x53]
+  price: 100
 ArrowUpgrade10:
   tier: minor
   bytes: [0x54]
+  price: 100
 ArrowUpgrade70:
   tier: minor
   bytes: [0x4D]
+  price: 200
 HalfMagic:
   bytes: [0x4E]
+  price: 50
+  progression: true
 QuarterMagic:
   bytes: [0x4F]
+  price: 100
+  progression: true
 Programmable1:
   tier: minor
   bytes: [0x55]
@@ -254,268 +394,355 @@ Programmable3:
   bytes: [0x57]
 SilverArrowUpgrade:
   bytes: [0x58]
+  price: 100
+  progression: true
 Rupoor:
   tier: minor
   bytes: [0x59]
+  price: 0
 RedClock:
   tier: minor
   bytes: [0x5B]
+  price: 0
 BlueClock:
   tier: minor
   bytes: [0x5C]
+  price: 50
 GreenClock:
   tier: minor
   bytes: [0x5D]
+  price: 200
 ProgressiveSword:
   bytes: [0x5E]
+  price: 150
+  progression: true
 UncleSword:
   bytes: [0x5E]
+  price: 150
+  progression: true
 ProgressiveShield:
   bytes: [0x5F]
+  price: 50
+  progression: true
 ProgressiveArmor:
   bytes: [0x60]
+  price: 50
 ProgressiveGlove:
   bytes: [0x61]
+  price: 150
+  progression: true
 singleRNG:
   bytes: [0x62]
+  price: 300
 multiRNG:
   bytes: [0x63]
+  price: 100
 ProgressiveBow:
   bytes: [0x64]
+  price: 150
+  progression: true
 ProgressiveBowAlternate:
   bytes: [0x65]
+  price: 150
+  progression: true
 Triforce:
   bytes: [0x6A]
+  price: 777
+  progression: true
 PowerStar:
   bytes: [0x6B]
+  price: 100
+  progression: true
 TriforcePiece:
   bytes: [0x6C]
+  price: 100
+  progression: true
 MapLW:
   tier: minor
   bytes: [0x70]
   type: Map
+  price: 10
 MapDW:
   tier: minor
   bytes: [0x71]
   type: Map
+  price: 20
 MapA2:
   tier: minor
   bytes: [0x72]
   type: Map
+  price: 10
 MapD7:
   tier: minor
   bytes: [0x73]
   type: Map
+  price: 20
 MapD4:
   tier: minor
   bytes: [0x74]
   type: Map
+  price: 20
 MapP3:
   tier: minor
   bytes: [0x75]
   type: Map
+  price: 20
 MapD5:
   tier: minor
   bytes: [0x76]
   type: Map
+  price: 20
 MapD3:
   tier: minor
   bytes: [0x77]
   type: Map
+  price: 20
 MapD6:
   tier: minor
   bytes: [0x78]
   type: Map
+  price: 20
 MapD1:
   tier: minor
   bytes: [0x79]
   type: Map
+  price: 20
 MapD2:
   tier: minor
   bytes: [0x7A]
   type: Map
+  price: 20
 MapA1:
   tier: minor
   bytes: [0x7B]
   type: Map
+  price: 10
 MapP2:
   tier: minor
   bytes: [0x7C]
   type: Map
+  price: 20
 MapP1:
   tier: minor
   bytes: [0x7D]
   type: Map
+  price: 20
 MapH1:
   tier: minor
   bytes: [0x7E]
   type: Map
+  price: 10
 MapH2:
   tier: minor
   bytes: [0x7F]
   type: Map
+  price: 10
 CompassA2:
   tier: minor
   bytes: [0x82]
   type: Compass
+  price: 10
 CompassD7:
   tier: minor
   bytes: [0x83]
   type: Compass
+  price: 10
 CompassD4:
   tier: minor
   bytes: [0x84]
   type: Compass
+  price: 10
 CompassP3:
   tier: minor
   bytes: [0x85]
   type: Compass
+  price: 10
 CompassD5:
   tier: minor
   bytes: [0x86]
   type: Compass
+  price: 10
 CompassD3:
   tier: minor
   bytes: [0x87]
   type: Compass
+  price: 10
 CompassD6:
   tier: minor
   bytes: [0x88]
   type: Compass
+  price: 10
 CompassD1:
   tier: minor
   bytes: [0x89]
   type: Compass
+  price: 10
 CompassD2:
   tier: minor
   bytes: [0x8A]
   type: Compass
+  price: 10
 CompassA1:
   tier: minor
   bytes: [0x8B]
   type: Compass
+  price: 10
 CompassP2:
   tier: minor
   bytes: [0x8C]
   type: Compass
+  price: 10
 CompassP1:
   tier: minor
   bytes: [0x8D]
   type: Compass
+  price: 10
 CompassH1:
   tier: minor
   bytes: [0x8E]
   type: Compass
+  price: 10
 CompassH2:
   tier: minor
   bytes: [0x8F]
   type: Compass
+  price: 10
 BigKeyA2:
   bytes: [0x92]
   type: BigKey
+  price: 60
 BigKeyD7:
   bytes: [0x93]
   type: BigKey
+  price: 60
 BigKeyD4:
   bytes: [0x94]
   type: BigKey
+  price: 60
 BigKeyP3:
   bytes: [0x95]
   type: BigKey
+  price: 60
 BigKeyD5:
   bytes: [0x96]
   type: BigKey
+  price: 60
 BigKeyD3:
   bytes: [0x97]
   type: BigKey
+  price: 60
 BigKeyD6:
   bytes: [0x98]
   type: BigKey
+  price: 60
 BigKeyD1:
   bytes: [0x99]
   type: BigKey
+  price: 60
 BigKeyD2:
   bytes: [0x9A]
   type: BigKey
+  price: 60
 BigKeyA1:
   bytes: [0x9B]
   type: BigKey
+  price: 60
 BigKeyP2:
   bytes: [0x9C]
   type: BigKey
+  price: 60
 BigKeyP1:
   bytes: [0x9D]
   type: BigKey
+  price: 60
 BigKeyH1:
   bytes: [0x9E]
   type: BigKey
+  price: 60
 BigKeyH2:
   bytes: [0x9F]
   type: BigKey
+  price: 60
 KeyH2:
   tier: minor
   bytes: [0xA0]
   type: SmallKey
+  price: 40
 KeyH1:
   tier: minor
   bytes: [0xA1]
   type: SmallKey
+  price: 40
 KeyP1:
   tier: minor
   bytes: [0xA2]
   type: SmallKey
+  price: 40
 KeyP2:
   tier: minor
   bytes: [0xA3]
   type: SmallKey
+  price: 40
 KeyA1:
   tier: minor
   bytes: [0xA4]
   type: SmallKey
+  price: 40
 KeyD2:
   tier: minor
   bytes: [0xA5]
   type: SmallKey
+  price: 40
 KeyD1:
   tier: minor
   bytes: [0xA6]
   type: SmallKey
+  price: 40
 KeyD6:
   tier: minor
   bytes: [0xA7]
   type: SmallKey
+  price: 40
 KeyD3:
   tier: minor
   bytes: [0xA8]
   type: SmallKey
+  price: 40
 KeyD5:
   tier: minor
   bytes: [0xA9]
   type: SmallKey
+  price: 40
 KeyP3:
   tier: minor
   bytes: [0xAA]
   type: SmallKey
+  price: 40
 KeyD4:
   tier: minor
   bytes: [0xAB]
   type: SmallKey
+  price: 40
 KeyD7:
   tier: minor
   bytes: [0xAC]
   type: SmallKey
+  price: 40
 KeyA2:
   tier: minor
   bytes: [0xAD]
   type: SmallKey
+  price: 40
 KeyGK:
   tier: minor
   bytes: [0xAF]
   type: SmallKey
+  price: 100
 ShopKey:
   tier: minor
   bytes: [0xAF]
   type: SmallKey
+  price: 100
 # these bytes correspond to the addresses held by type: "prize" items.
 # all of them are ROM/file addresses, not SNES adresses.
 # they map to the following base rom locations (tables.asm unless otherwise noted):
