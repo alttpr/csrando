@@ -7,7 +7,7 @@ namespace Randomizer.Games.Alttp;
 internal sealed class ItemPooler : IItemPooler
 {
     // these are item locations that will ALWAYS receive items, regardless of randomizer options.
-    // TODO: this isn't true at the moment; things like ShopItem should probably only be here during Shop randomizer.
+    // TODO: there's probably a few types in here that shouldn't be, like Event?
     private static readonly HashSet<VertexType> ITEM_LOCATIONS =
     [
         VertexType.BigChest,
@@ -21,7 +21,6 @@ internal sealed class ItemPooler : IItemPooler
         VertexType.Pedestal,
         VertexType.Prize,
         VertexType.Refill,
-        VertexType.ShopItem,
         VertexType.Standing,
     ];
 
@@ -30,10 +29,21 @@ internal sealed class ItemPooler : IItemPooler
 
     public ItemPooler(IWorld[] worlds, PRNG prng)
     {
+        var z3Worlds = worlds.OfType<World>().ToArray();
         _prng = prng;
-        _itemLocationTypes = worlds.ToDictionary(k => k, v => new HashSet<VertexType>(ITEM_LOCATIONS));
-        Pool = [.. worlds.OfType<World>().SelectMany(GetPoolForWorld)];
+        _itemLocationTypes = z3Worlds.ToDictionary(k => (IWorld)k, GetLocationTypesForWorld);
+        Pool = [.. z3Worlds.SelectMany(GetPoolForWorld)];
         SetLocations = BuildLocations(worlds);
+    }
+
+    private static HashSet<VertexType> GetLocationTypesForWorld(World world)
+    {
+        var locationTypes = new HashSet<VertexType>(ITEM_LOCATIONS);
+        // TODO: there's a certain value in randomizing (or not randomizing) the potion shop.
+        //       if we make this an option, this would need to be smart enough to add/remove it.
+        if (world.Config.RegionShopSupply != ShopSupplyOption.Normal)
+            locationTypes.Add(VertexType.ShopItem);
+        return locationTypes;
     }
 
     private SetLocations BuildLocations(IWorld[] worlds)
