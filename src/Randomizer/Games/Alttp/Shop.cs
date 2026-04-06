@@ -2,8 +2,10 @@
 
 namespace Randomizer.Games.Alttp;
 
-public sealed class Shop
+public sealed class Shop(Vertex shop)
 {
+    public Vertex ShopVertex { get; } = shop;
+
     public List<ShopItem> Inventory { get; } = [];
 
     // 1 for TakeAny caves (can only get one item, not both), 3 for regular shops
@@ -56,6 +58,7 @@ public sealed class ShopItem
     public byte Max { get; init; }
     public byte ReplaceId { get; init; } = 0xFF;
     public ushort ReplacePrice { get; init; }
+    public Item? Item { get; init; }
 
     public byte[] GetBytes(byte shopId)
     {

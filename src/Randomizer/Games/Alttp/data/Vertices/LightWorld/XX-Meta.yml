@@ -14,6 +14,8 @@ maps:
               - "Enemies"
               - "Tower Entry - Check"
               - "Ganon Vulnerable - Check"
+              # FIXME: this should be tied to having money.
+              - "BuyItem"
             ConfigWorldWeaponSwordless:
               - "Swordless - Check"
             OcarinaActive:
@@ -92,6 +94,9 @@ maps:
               - "RescueZelda"
             ConfigMirrorBlockRemoval:
               - "MirrorBlockRemoval"
+
+        - name: "BuyItem"
+          items: ["BuyItem"]
 
         - name: "MirrorBlockRemoval"
           items: ["MirrorBlockRemoval"]

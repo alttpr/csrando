@@ -1,6 +1,7 @@
 namespace Randomizer.Games.Alttp;
 
 using Randomizer.Games;
+using Randomizer.Games.Alttp.WorldModifiers;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
 using BaseGameRandomizer = Graph.GameRandomizer;
@@ -15,6 +16,13 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng) :
     protected override IWorld CreateWorld(int worldId, WorldConfig worldConfig, Graph graph, PRNG prng) => new World(worldId, worldConfig, graph, prng);
 
     public override void AppendSpoiler(BaseSpoilerLog spoilerLog) => Spoiler.Log(Worlds, spoilerLog);
+
+    protected override void AfterRandomize()
+    {
+        base.AfterRandomize();
+        foreach (var world in Worlds.OfType<World>())
+            ShopFiller.Update(world, PRNG);
+    }
 
     public override void ApplyPatch(IRom rom, FileInfo baseBPS)
     {

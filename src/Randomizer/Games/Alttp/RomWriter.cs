@@ -99,7 +99,10 @@ public static class RomWriter
 
         // testing features
         rom.SetGenericKeys(config.GenericKeys);
-        //rom.SetupCustomShops(getShops());
+
+        if (world.RandomizedShops is { } shops)
+            rom.SetupCustomShops(shops);
+
         rom.SetRupeeArrow(config.RomRupeeBow);
         rom.SetWishingWellChests(true);
         rom.SetWishingWellUpgrade(false);

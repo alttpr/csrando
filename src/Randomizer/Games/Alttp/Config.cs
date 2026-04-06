@@ -146,8 +146,9 @@ public class Config
     [Category("Cosmetic")]
     public TileRoomPatternOption TileRoomPattern { get; init; } = TileRoomPatternOption.Default;
 
-    // TODO: Make it a bool? Do we have more planned there?
-    [Ignore("No shop randomization yet")]
+    [Category("Item Placement")]
+    [Name("Shop inventory")]
+    [Wip("Has no logical regard for money, and might require excessive rupee farming.")]
     public ShopSupplyOption RegionShopSupply { get; init; } = ShopSupplyOption.Normal;
 
     [Category("Item Placement")]
