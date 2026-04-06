@@ -18,6 +18,8 @@ public enum ItemType
 public sealed class Item : Randomizer.Graph.Item
 {
     public ItemType Type { get; }
+    public ushort Price { get; }
+    public bool IsProgression { get; }
 
     /// <summary>
     /// Create a new Item.
@@ -36,6 +38,8 @@ public sealed class Item : Randomizer.Graph.Item
         Type = itemType;
         Bytes = yamlItem?.Bytes.ToArray();
         Tier = ItemTiers.ParseDeclaration(yamlItem?.Tier);
+        Price = yamlItem?.Price ?? 999;
+        IsProgression = yamlItem?.IsProgression ?? false;
 
         if (Name.StartsWith("HeartContainer"))
             HealthValue = 1f;

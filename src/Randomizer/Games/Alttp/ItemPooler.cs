@@ -54,6 +54,13 @@ internal sealed class ItemPooler : IItemPooler
             var itemType = vertex.SubType ?? vertex.Type;
             if (_itemLocationTypes[vertex.World].Contains(itemType))
             {
+                // FIXME: shops have item in data, but we don't use them yet.
+                //        leaving them in means we don't place another item.
+                //        blindly deleting everything (not limited to shop items) breaks randomization because it deletes placed keys.
+                //        it might be time to rework how the pooler determines locations where items can go
+                //        (and maybe even place all vanilla items, then let it pick them up for the pooled items).
+                if (vertex.Type == VertexType.ShopItem)
+                    vertex.Item = null;
                 setLocations.Add(vertex, [ItemSetName.DefaultSet, .. vertex.ItemSet]);
             }
         }

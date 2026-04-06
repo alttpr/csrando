@@ -25,6 +25,7 @@ public sealed class Vertex : BaseVertex
     public int? InletId { get; init; }
     public int[]? EntranceIds { get; init; }
     public bool InfiniteStock { get; init; }
+    // TODO: do we even need this? nothing uses the vanilla inventory at this point.
     public ShopItem[]? ShopInventory { get; init; }
     public bool AlternativeVRAM { get; init; }
     public byte? Shopkeeper { get; init; }
