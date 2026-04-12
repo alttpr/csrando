@@ -57,7 +57,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
             "m1" => "Looks futuristic,\nbut 8-bit?",
             "z1" => "Something Ancient,\nyet familiar?",
             "sm" => "Seems futuristic,\nnot sure?",
-            _ => "Don't waste\nyour time!",
+            _ => "What IS\nthis thing?!",
         };
         // TODO: return something specific for items; or ask the other RomWriters to provide one.
         _ = config.Language;
