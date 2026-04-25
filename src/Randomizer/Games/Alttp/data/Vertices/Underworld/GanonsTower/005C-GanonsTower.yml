@@ -15,12 +15,18 @@ rooms:
             - name: "Ganon's Tower - Cannonball Z - Moving Cannon (Down)"
               position: { x: 0x0b, y: 0x02, z: 0x00 }
               sprite: "CannonBallShooterD"
+              deny:
+                - "Kodongo"
             - name: "Ganon's Tower - Cannonball Z - Moving Cannon (Up) 1"
               position: { x: 0x05, y: 0x0e, z: 0x00 }
               sprite: "CannonBallShooterU"
+              deny:
+                - "Kodongo"
             - name: "Ganon's Tower - Cannonball Z - Moving Cannon (Up) 2"
               position: { x: 0x0e, y: 0x0e, z: 0x00 }
               sprite: "CannonBallShooterU"
+              deny:
+                - "Kodongo"
 
         - name: "Ganon's Tower - Cannonball Z ledge"
           pit: true

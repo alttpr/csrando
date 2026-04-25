@@ -17,9 +17,17 @@ rooms:
             - name: "Swamp Palace - Map Chest Overlook - Zol 1"
               position: { x: 0x17, y: 0x08, z: 0x00 }
               sprite: "Zol"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
             - name: "Swamp Palace - Map Chest Overlook - Zol 2"
               position: { x: 0x1a, y: 0x08, z: 0x00 }
               sprite: "Zol"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
 
         # Intermediate node to prevent accessing the water after flipping the switch
         # without the flippers
@@ -47,20 +55,39 @@ rooms:
             - name: "Swamp Palace - East Moat - Fire Snake"
               position: { x: 0x15, y: 0x14, z: 0x00 }
               sprite: "FireSnake"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
             - name: "Swamp Palace - East Moat - Stalfos 3"
               position: { x: 0x17, y: 0x17, z: 0x00 }
               sprite: "Stalfos"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
             - name: "Swamp Palace - East Moat - Blue Bari"
               position: { x: 0x13, y: 0x19, z: 0x00 }
               sprite: "BlueBari"
               deny:
                 - "RollerHR"
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
             - name: "Swamp Palace - East Moat - Yomo Medusa"
               position: { x: 0x17, y: 0x1a, z: 0x00 }
               sprite: "YomoMedusa"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
             - name: "Swamp Palace - East Moat - Red Bari"
               position: { x: 0x15, y: 0x1c, z: 0x00 }
               sprite: "RedBari"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
 
         - name: "Swamp Palace - East Moat Top"
           connections:
@@ -101,9 +128,17 @@ rooms:
             - name: "Swamp Palace - Hammer Switch - Stalfos 1"
               position: { x: 0x05, y: 0x06, z: 0x00 }
               sprite: "Stalfos"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
             - name: "Swamp Palace - Hammer Switch - Stalfos 2"
               position: { x: 0x0c, y: 0x09, z: 0x00 }
               sprite: "Stalfos"
+              deny:
+                # Statues seem to mess with the push switch
+                - "Statue"
+                - "StatueAlternative"
 
         - name: "Swamp Palace - Hammer Switch Lever"
           connections:

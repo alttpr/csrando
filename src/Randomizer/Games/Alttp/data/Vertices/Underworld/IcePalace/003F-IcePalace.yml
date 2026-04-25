@@ -28,6 +28,9 @@ rooms:
                 - "FireBarCCW"
                 - "SpikeTrap"
                 - "Bumper"
+                # Statues seem to mess with the pull switch
+                - "Statue"
+                - "StatueAlternative"
 
         - name: "Ice Palace - H Room Right - Map Chest"
           items:
@@ -58,6 +61,10 @@ rooms:
             - name: "Ice Palace - H Room - Bunny Beam"
               position: { x: 0x08, y: 0x18, z: 0x00 }
               sprite: "BunnyBeam"
+              deny:
+                # Statues seem to mess with the pull switch
+                - "Statue"
+                - "StatueAlternative"
 
         - name: "Ice Palace - H Room Left"
           connections:
@@ -102,6 +109,9 @@ rooms:
                 - "BigSpikeTrap"
                 - "SpikeTrap"
                 - "Bumper"
+                # Statues seem to mess with the pull switch
+                - "Statue"
+                - "StatueAlternative"
 
         - name: "Ice Palace - P Room"
           connections:

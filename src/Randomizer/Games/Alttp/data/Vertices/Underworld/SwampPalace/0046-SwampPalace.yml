@@ -22,7 +22,9 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Big O Top - Hinox 1"
+                - "Statue"
+                - "StatueAlternative"
+            - name: "Swamp Palace - Big O Top - Pirogusu 1"
               position: { x: 0x1b, y: 0x06, z: 0x00 }
               sprite: "PirogusuSpawnerRight"
 
@@ -57,7 +59,9 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
-            - name: "Swamp Palace - Big O Bottom - Hinox 2"
+                - "Statue"
+                - "StatueAlternative"
+            - name: "Swamp Palace - Big O Bottom - Pirogusu 2"
               position: { x: 0x1b, y: 0x1a, z: 0x00 }
               sprite: "PirogusuSpawnerRight"
             - name: "Swamp Palace - Big O Bottom - Hover 3"
@@ -69,3 +73,5 @@ rooms:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
                 - "Bumper"
+                - "Statue"
+                - "StatueAlternative"
