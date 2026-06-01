@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.Combo;
 
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Randomizer.Graph;
 using BaseSpoilerLog = Graph.SpoilerLog;
 using AlttpWorld = Alttp.World;
@@ -8,7 +9,7 @@ using MetroidWorld = Metroid.World;
 using SuperMetroidWorld = SuperMetroid.World;
 using Zelda1World = Zelda1.World;
 
-internal static class Spoiler
+internal static partial class Spoiler
 {
     public static void Log(GameRandomizer randomizer, BaseSpoilerLog spoilerLog)
     {
@@ -40,6 +41,11 @@ internal static class Spoiler
             includedGames.Add("The Legend of Zelda");
             AppendLocationsForWorld(spoiler, zelda1World, "The Legend of Zelda");
             AppendStartingEquipment(spoiler, zelda1World.Config.StartingEquipment, "The Legend of Zelda");
+            if (zelda1World.DungeonSpoilers.Count > 0)
+            {
+                PopulateDungeonItemPlacements(zelda1World);
+                Zelda1.Spoiler.AppendDungeonMaps(spoiler, zelda1World.DungeonSpoilers);
+            }
         }
 
         if (comboWorld.M1World is MetroidWorld metroidWorld)
@@ -122,6 +128,27 @@ internal static class Spoiler
 
         return section;
     }
+
+    private static void PopulateDungeonItemPlacements(Zelda1World zelda1World)
+    {
+        var dungeonsByLevel = zelda1World.DungeonSpoilers.ToDictionary(d => d.Level);
+        foreach (var location in zelda1World.GetLocationsOfType(VertexType.Item))
+        {
+            if (location.Item is null) continue;
+            var match = RoomCoordRegex().Match(location.Name);
+            if (!match.Success) continue;
+
+            int level = int.Parse(match.Groups[1].Value);
+            int x = int.Parse(match.Groups[2].Value);
+            int y = int.Parse(match.Groups[3].Value);
+
+            if (dungeonsByLevel.TryGetValue(level, out var dungeon))
+                dungeon.ItemPlacements[$"{x},{y}"] = location.Item.Name;
+        }
+    }
+
+    [GeneratedRegex(@"Dungeon L(\d+) (?:R|Cellar)\((\d+),(\d+)\)")]
+    private static partial Regex RoomCoordRegex();
 
     private static void PruneEmptySection(Dictionary<string, Dictionary<string, string>> spoiler, string key)
     {

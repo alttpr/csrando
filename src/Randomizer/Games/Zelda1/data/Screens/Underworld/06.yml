@@ -6,15 +6,15 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
@@ -24,11 +24,13 @@ nodes:
       type: Region
       from: [0, 0]
       to: [11, 6]
-      
-  meta:    
+
+  meta:
     - name: "Push block"
       type: Push
-      
+
+  blocks: [[0, 6], [1, 3], [3, 5], [11, 6], [10, 3], [8, 5]]
+
 edges:
   undirected:
     fixed:

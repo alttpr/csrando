@@ -6,15 +6,15 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
@@ -24,12 +24,14 @@ nodes:
       type: Region
       from: [0, 0]
       to: [11, 6]
-      
+
   meta:
     - name: "Ganon"
       type: Meta
     - name: "Defeat Ganon"
       type: Meta
+
+  blocks: [[0, 0], [11, 0], [0, 6], [11, 6]]
 
 edges:
   undirected:

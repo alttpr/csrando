@@ -1,0 +1,469 @@
+enemies:
+  - id: 0x00
+    name: "Nothing"
+    allowed_levels: []
+  - id: 0x01
+    name: "Blue Lynel"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod"]
+  - id: 0x02
+    name: "Red Lynel"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod"]
+  - id: 0x03
+    name: "Blue Moblin"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x04
+    name: "Red Moblin"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x05
+    name: "Blue Goriya"
+    allowed_levels: [7]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x06
+    name: "Red Goriya"
+    allowed_levels: [2]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x07
+    name: "Red Octorok 1"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x08
+    name: "Red Octorok 2"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x09
+    name: "Blue Octorok 1"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x0A
+    name: "Blue Octorok 2"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x0B
+    name: "Red Darknut"
+    allowed_levels: [3, 8]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x0C
+    name: "Blue Darknut"
+    allowed_levels: [5, 8]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x0D
+    name: "Blue Tektite"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x0E
+    name: "Red Tektite"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x0F
+    name: "Blue Leever"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x10
+    name: "Red Leever"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x11
+    name: "Unknown 0x11"
+    allowed_levels: []
+  - id: 0x12
+    name: "Vire"
+    allowed_levels: [4, 6, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x13
+    name: "Zol"
+    allowed_levels: [3, 4, 5, 6, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x14
+    name: "Gel 1"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x15
+    name: "Gel 2"
+    allowed_levels: [1, 2, 4, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x16
+    name: "Pols Voice"
+    allowed_levels: [5, 8]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x17
+    name: "Like Like"
+    allowed_levels: [9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x18
+    name: "Unknown 0x18"
+    allowed_levels: []
+  - id: 0x19
+    name: "Unknown 0x19"
+    allowed_levels: []
+  - id: 0x1A
+    name: "Peahat"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x1B
+    name: "Blue Keese"
+    allowed_levels: [1, 3, 4, 5, 6, 7, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x1C
+    name: "Red Keese"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x1D
+    name: "Dark Keese"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "Boomerang", "MagicBoomerang", "BowAndArrows"]
+  - id: 0x1E
+    name: "Armos Knight"
+    allowed_levels: []
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows", "Boomerang", "MagicBoomerang"]
+  - id: 0x1F
+    name: "Boulder Set"
+    allowed_levels: [0]
+  - id: 0x20
+    name: "Boulder"
+    allowed_levels: [0]
+  - id: 0x21
+    name: "Ghini"
+    allowed_levels: [0]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x22
+    name: "Flying Ghini"
+    allowed_levels: [0]
+  - id: 0x23
+    name: "Red Wizzrobe"
+    allowed_levels: [9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x24
+    name: "Blue Wizzrobe"
+    allowed_levels: [6, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x25
+    name: "Patra Child"
+    allowed_levels: []
+  - id: 0x26
+    name: "Patra Child"
+    allowed_levels: []
+  - id: 0x27
+    name: "Wallmaster"
+    allowed_levels: [1]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x28
+    name: "Rope"
+    allowed_levels: [2, 7]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x29
+    name: "Unknown 0x29"
+    allowed_levels: []
+  - id: 0x2A
+    name: "Stalfos"
+    allowed_levels: [1, 7]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x2B
+    name: "Bubble 1"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 0x2C
+    name: "Bubble 2"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 0x2D
+    name: "Bubble 3"
+    allowed_levels: [3]
+  - id: 0x2E
+    name: "Whirlwind"
+    allowed_levels: []
+  - id: 0x2F
+    name: "Pond Fairy"
+    allowed_levels: []
+  - id: 0x30
+    name: "Gibdo"
+    allowed_levels: [5, 8]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x31
+    name: "Triple Dodongo"
+    allowed_levels: [9]
+    kill_items: ["Bombs"]
+  - id: 0x32
+    name: "Single Dodongo"
+    allowed_levels: [4, 6]
+    kill_items: ["Bombs"]
+  - id: 0x33
+    name: "Blue Gohma"
+    allowed_levels: [4, 6, 9]
+    kill_items: ["BowAndArrows"]
+  - id: 0x34
+    name: "Red Gohma"
+    allowed_levels: [8]
+    kill_items: ["BowAndArrows"]
+  - id: 0x35
+    name: "Rupee Boss"
+    allowed_levels: []
+  - id: 0x36
+    name: "Hungry Goriya"
+    allowed_levels: []
+  - id: 0x37
+    name: "Zelda"
+    allowed_levels: []
+  - id: 0x38
+    name: "Single Digdogger"
+    allowed_levels: [8]
+    kill_items: ["Recorder"]
+  - id: 0x39
+    name: "Triple Digdogger"
+    allowed_levels: [7]
+    kill_items: ["Recorder"]
+  - id: 0x3A
+    name: "Red Lanmola"
+    allowed_levels: [7]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x3B
+    name: "Blue Lanmola"
+    allowed_levels: [6, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x3C
+    name: "Manhandala"
+    allowed_levels: [6, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x3D
+    name: "Aquamentus"
+    allowed_levels: [1, 7]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle", "BowAndArrows"]
+  - id: 0x3E
+    name: "The Beast"
+    allowed_levels: []
+  - id: 0x3F
+    name: "Guard Fire"
+    allowed_levels: []
+  - id: 0x40
+    name: "Standing Fire"
+    allowed_levels: []
+  - id: 0x41
+    name: "Moldorm"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x42
+    name: "Gleeok 1"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Rod"]
+  - id: 0x43
+    name: "Gleeok 2"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Rod"]
+  - id: 0x44
+    name: "Gleeok 3"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Rod"]
+  - id: 0x45
+    name: "Gleeok 4"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Rod"]
+  - id: 0x46
+    name: "Gleeok Head"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 0x47
+    name: "Patra 1"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x48
+    name: "Patra 2"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    kill_items: ["SwordL1", "SwordL2", "SwordL3", "Bombs", "Rod", "BlueCandle", "RedCandle"]
+  - id: 0x49
+    name: "Three Pairs Of Traps"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 0x4A
+    name: "Corner Traps"
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 0x4B
+    name: "Old Man"
+    allowed_levels: []
+  - id: 0x4C
+    name: "Old Man 2"
+    allowed_levels: []
+  - id: 0x4D
+    name: "Old Man 3"
+    allowed_levels: []
+  - id: 0x4E
+    name: "Old Man 4"
+    allowed_levels: []
+  - id: 0x4F
+    name: "Bomb Upgrader"
+    allowed_levels: []
+  - id: 0x50
+    name: "Old Man 5"
+    allowed_levels: []
+  - id: 0x51
+    name: "Mugger"
+    allowed_levels: []
+  - id: 0x52
+    name: "Old Man 6"
+    allowed_levels: []
+  - id: 0x53
+    name: "Unknown 0x53"
+    allowed_levels: []
+  - id: 0x54
+    name: "Unknown 0x54"
+    allowed_levels: []
+  - id: 0x55
+    name: "Unknown 0x55"
+    allowed_levels: []
+  - id: 0x56
+    name: "Unknown 0x56"
+    allowed_levels: []
+  - id: 0x57
+    name: "Unknown 0x57"
+    allowed_levels: []
+  - id: 0x58
+    name: "Unknown 0x58"
+    allowed_levels: []
+  - id: 0x59
+    name: "Unknown 0x59"
+    allowed_levels: []
+  - id: 0x5A
+    name: "Unknown 0x5A"
+    allowed_levels: []
+  - id: 0x5B
+    name: "Unknown 0x5B"
+    allowed_levels: []
+  - id: 0x5C
+    name: "Unknown 0x5C"
+    allowed_levels: []
+  - id: 0x5D
+    name: "Unknown 0x5D"
+    allowed_levels: []
+  - id: 0x5E
+    name: "Unknown 0x5E"
+    allowed_levels: []
+  - id: 0x5F
+    name: "Unknown 0x5F"
+    allowed_levels: []
+  - id: 0x60
+    name: "Unknown 0x60"
+    allowed_levels: []
+  - id: 0x61
+    name: "Unknown 0x61"
+    allowed_levels: []
+
+
+enemy_lists:
+  - id: 0
+    address: 0x8676
+    data: [0x03, 0x03, 0x04, 0x03, 0x04]
+    allowed_levels: [0]
+  - id: 1
+    address: 0x867B
+    data: [0x03, 0x04, 0x03, 0x04]
+    allowed_levels: [0]
+  - id: 2
+    address: 0x867F
+    data: [0x1A, 0x1A, 0x02, 0x01, 0x02, 0x01]
+    allowed_levels: [0]
+  - id: 3
+    address: 0x8685
+    data: [0x01, 0x02, 0x01, 0x02]
+    allowed_levels: [0]
+  - id: 4
+    address: 0x8689
+    data: [0x01, 0x0F, 0x02, 0x01, 0x10, 0x02]
+    allowed_levels: [0]
+  - id: 5
+    address: 0x868F
+    data: [0x0F, 0x1A, 0x10, 0x1A, 0x0F, 0x1A]
+    allowed_levels: [0]
+  - id: 6
+    address: 0x8695
+    data: [0x09, 0x08, 0x08, 0x08, 0x08]
+    allowed_levels: [0]
+  - id: 7
+    address: 0x869A
+    data: [0x08, 0x07, 0x08, 0x07]
+    allowed_levels: [0]
+  - id: 8
+    address: 0x869E
+    data: [0x08, 0x09, 0x08, 0x09, 0x08]
+    allowed_levels: [0]
+  - id: 9
+    address: 0x86A3
+    data: [0x0A, 0x07, 0x0A, 0x07, 0x07]
+    allowed_levels: [0]
+  - id: 10
+    address: 0x86A8
+    data: [0x03, 0x0A, 0x04, 0x0A, 0x04, 0x04]
+    allowed_levels: [0]
+  - id: 11
+    address: 0x86AE
+    data: [0x4A, 0x00, 0x00, 0x00, 0x13, 0x13, 0x00, 0x13]
+    allowed_levels: [3]
+  - id: 12
+    address: 0x86B6
+    data: [0x4A, 0x00, 0x00, 0x00, 0x1B, 0x1B, 0x1B, 0x1B]
+    allowed_levels: [2, 3, 7]
+  - id: 13
+    address: 0x86BE
+    data: [0x2B, 0x2B, 0x2B, 0x13, 0x13, 0x1B, 0x1B, 0x1B]
+    allowed_levels: [3, 8, 9]
+  - id: 14
+    address: 0x86C6
+    data: [0x16, 0x30, 0x30, 0x1B, 0x1B, 0x16, 0x00, 0x00]
+    allowed_levels: [5, 8]
+  - id: 15
+    address: 0x86CE
+    data: [0x2B, 0x2B, 0x2B, 0x23, 0x23, 0x24, 0x23, 0x24]
+    allowed_levels: [9]
+  - id: 16
+    address: 0x86D6
+    data: [0x2B, 0x2B, 0x12, 0x12, 0x12, 0x00, 0x00, 0x00]
+    allowed_levels: [4, 6]
+  - id: 17
+    address: 0x86DE
+    data: [0x2B, 0x2B, 0x13, 0x13, 0x17, 0x17]
+    allowed_levels: [4, 6, 9]
+  - id: 18
+    address: 0x86E4
+    data: [0x2B, 0x2B, 0x0C, 0x0B, 0x0B, 0x30, 0x30, 0x30]
+    allowed_levels: [8]
+  - id: 19
+    address: 0x86EC
+    data: [0x2B, 0x2B, 0x05, 0x05, 0x05, 0x1B, 0x1B, 0x1B]
+    allowed_levels: [7]
+  - id: 20
+    address: 0x86F4
+    data: [0x4A, 0x00, 0x00, 0x00, 0x17, 0x17, 0x17, 0x17]
+    allowed_levels: [9]
+  - id: 21
+    address: 0x86FC
+    data: [0x4A, 0x00, 0x00, 0x00, 0x23, 0x24, 0x23, 0x24]
+    allowed_levels: [6, 9]
+  - id: 22
+    address: 0x8704
+    data: [0x16, 0x0C, 0x0B, 0x0C, 0x0B, 0x16]
+    allowed_levels: [8]
+  - id: 23
+    address: 0x870A
+    data: [0x2B, 0x2B, 0x2B, 0x27, 0x27, 0x27, 0x27, 0x27]
+    allowed_levels: [7]
+  - id: 24
+    address: 0x8712
+    data: [0x05, 0x06, 0x06, 0x05, 0x06, 0x05, 0x00, 0x00]
+    allowed_levels: [7]
+  - id: 25
+    address: 0x871A
+    data: [0x23, 0x23, 0x24, 0x23, 0x24]
+    allowed_levels: [6, 9]
+  - id: 26
+    address: 0x871F
+    data: [0x2B, 0x17, 0x23, 0x23, 0x17, 0x24, 0x17, 0x24]
+    allowed_levels: [6, 9]
+  - id: 27
+    address: 0x8727
+    data: [0x2D, 0x2D, 0x2D, 0x2C, 0x23, 0x24, 0x23, 0x24]
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 28
+    address: 0x872F
+    data: [0x2D, 0x2D, 0x2D, 0x2C, 0x0C, 0x0B, 0x0C, 0x0B]
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  - id: 29
+    address: 0x8737
+    data: [0x2D, 0x2D, 0x2D, 0x2C, 0x27, 0x27, 0x27, 0x27]
+    allowed_levels: [1, 2, 3, 4, 5, 6, 7, 8, 9]

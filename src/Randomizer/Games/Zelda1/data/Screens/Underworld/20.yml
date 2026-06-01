@@ -3,20 +3,36 @@ area: Underworld
 screen: 0x20
 nodes:
   exits:
-    - name: "Left edge"
-      type: Scroll
+    - name: "Left edge - Entrance"
+      type: Entrance
       direction: Left
-      
-    - name: "Right edge"
-      type: Scroll
+
+    - name: "Left edge - Exit"
+      type: Exit
+      direction: Left
+
+    - name: "Right edge - Entrance"
+      type: Entrance
       direction: Right
-      
-    - name: "Top edge"
-      type: Scroll
+
+    - name: "Right edge - Exit"
+      type: Exit
+      direction: Right
+
+    - name: "Top edge - Entrance"
+      type: Entrance
       direction: Up
-      
-    - name: "Bottom edge"
-      type: Scroll
+
+    - name: "Top edge - Exit"
+      type: Exit
+      direction: Up
+
+    - name: "Bottom edge - Entrance"
+      type: Entrance
+      direction: Down
+
+    - name: "Bottom edge - Exit"
+      type: Exit
       direction: Down
 
   regions:
@@ -43,34 +59,35 @@ nodes:
   meta:
     - name: "Push block"
       type: Push
-      
+
+  blocks: [[5, 1], [5, 2], [5, 4], [5, 5], [6, 3]]
+
 edges:
   undirected:
-    fixed:
-      - ["Left edge", "Left path"]
-      - ["Right edge", "Right path"]
-      - ["Top edge", "Top path"]
-      - ["Bottom edge", "Bottom path"]
+    fixed: []
+
   directed:
     fixed:
+      # Each entrance leads into its own path region; from that region the push block
+      # (centre) can be pushed away from you, opening the two perpendicular exits but not
+      # the opposite edge. Routing through the region (rather than straight entrance->exit)
+      # is what lets kill/clear logic, which hooks the room's regions, see the room as entered.
+      - ["Left edge - Entrance", "Left path"]
+      - ["Left path", "Top edge - Exit"]
+      - ["Left path", "Bottom edge - Exit"]
       - ["Left path", "Push block"]
+
+      - ["Right edge - Entrance", "Right path"]
+      - ["Right path", "Top edge - Exit"]
+      - ["Right path", "Bottom edge - Exit"]
       - ["Right path", "Push block"]
+
+      - ["Top edge - Entrance", "Top path"]
+      - ["Top path", "Left edge - Exit"]
+      - ["Top path", "Right edge - Exit"]
       - ["Top path", "Push block"]
-      - ["Bottom path", "Push block"]  
-      
-      - ["Left path", "Top path"]
-      - ["Left path", "Bottom path"]
 
-      - ["Right path", "Top path"]
-      - ["Right path", "Bottom path"]
-
-      - ["Top path", "Left path"]
-      - ["Top path", "Right path"]
-
-      - ["Bottom path", "Left path"]
-      - ["Bottom path", "Right path"] 
-
-
-      
-       
-
+      - ["Bottom edge - Entrance", "Bottom path"]
+      - ["Bottom path", "Left edge - Exit"]
+      - ["Bottom path", "Right edge - Exit"]
+      - ["Bottom path", "Push block"]

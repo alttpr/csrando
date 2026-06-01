@@ -19,6 +19,43 @@ internal static class DataLoader
             entranceShuffler.Shuffle();
         }
 
+        // Generate randomized dungeons if enabled
+        if (world.Config.DungeonShuffle)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var levelRnd = new Random(world.Prng.GetRandomInt(int.MaxValue));
+                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd);
+
+                // Generate() throws InvalidOperationException for layouts it can't finish (e.g. a
+                // connector below the start, L9 isolation orphaning rooms, or item positions that
+                // don't fit the engine's slots). Retry with a fresh builder so a rejected layout
+                // leaves no partial state; only Write() once we have a valid one.
+                const int maxDungeonAttempts = 50;
+                DungeonBuilder? builder = null;
+                for (int attempt = 0; attempt < maxDungeonAttempts; attempt++)
+                {
+                    var candidate = new DungeonBuilder(cfg, yamlReader.Data!, level, world.Prng);
+                    try
+                    {
+                        candidate.Generate();
+                        builder = candidate;
+                        break;
+                    }
+                    catch (InvalidOperationException) when (attempt < maxDungeonAttempts - 1)
+                    {
+                        // Layout was unusable; try again with the next PRNG draw.
+                    }
+                }
+
+                if (builder == null)
+                    throw new Exception($"Failed to generate a valid layout for level {level}");
+
+                builder.Write();
+                world.DungeonSpoilers.Add(builder.GetSpoilerData());
+            }
+        }
+
         // Build the graph from the yaml data, this will parse the data and create vertices and edges according to the
         // current world data configuration
         yamlReader.BuildGraph();

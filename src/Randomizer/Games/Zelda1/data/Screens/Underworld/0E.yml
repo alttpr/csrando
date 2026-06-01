@@ -6,15 +6,15 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
@@ -33,12 +33,22 @@ nodes:
     - name: "Right side"
       type: Region
       from: [8, 0]
-      to: [11, 6]  
-      
+      to: [11, 6]
+
+    - name: "Left block column"
+      type: NoPlace
+      from: [4, 0]
+      to: [4, 6]
+
+    - name: "Right block column"
+      type: NoPlace
+      from: [7, 0]
+      to: [7, 6]
+
   meta:
     - name: "Push block"
       type: Push
-      
+
 edges:
   undirected:
     fixed:
@@ -47,7 +57,6 @@ edges:
       - ["Left edge", "Left side"]
       - ["Right edge", "Right side"]
   directed:
-    fixed:  
+    fixed:
       - ["Left side", "Push block"]
       - ["Middle path", "Push block"]
-

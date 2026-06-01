@@ -6,15 +6,15 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
@@ -38,8 +38,18 @@ nodes:
     - name: "Middle T"
       type: Region
       from: [3, 3]
-      to: [8, 6]    
-      
+      to: [8, 6]
+
+    - name: "Left water"
+      type: NoPlace
+      from: [3, 5]
+      to: [4, 6]
+
+    - name: "Right water"
+      type: NoPlace
+      from: [7, 5]
+      to: [8, 6]
+
 edges:
   undirected:
     fixed:

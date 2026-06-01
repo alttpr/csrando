@@ -63,6 +63,7 @@ public class YamlReader
         public required List<Cave> caves;
         public required List<Region> regions;
         public required List<Meta> meta;
+        public List<int[]>? blocks;
     }
 
     public class EdgeCollection
@@ -127,12 +128,15 @@ public class YamlReader
 
     public enum ExitType
     {
-        Scroll
+        Scroll,
+        Entrance,
+        Exit
     }
 
     public enum RegionType
     {
-        Region
+        Region,
+        NoPlace,
     }
 
     public enum Direction
@@ -184,6 +188,10 @@ public class YamlReader
         public required int item_pos;
         public required int behaviour;
         public bool? level_nine_check;
+        public bool generated;
+        public int generated_level;
+        public int local_room_id;
+        public Dictionary<Direction, int>? neighbor_map_ids;
     }
 
     public enum DoorType : int
@@ -287,6 +295,30 @@ public class YamlReader
         public required List<Level> levels;
         public required List<CaveData> caves;
         public required Special special;
+        public required EnemyData enemies;
+    }
+
+    public class EnemyData
+    {
+        public required List<Enemy> enemies;
+        public required List<EnemyList> enemy_lists;
+    }
+
+    public class Enemy
+    {
+        public required int id;
+        public required string name;
+        public required List<int> allowed_levels;
+        [YamlMember(Alias = "kill_items")]
+        public List<string> kill_items { get; set; } = new();
+    }
+
+    public class EnemyList
+    {
+        public required int id;
+        public required int address;
+        public required List<int> data;
+        public required List<int> allowed_levels;
     }
 
     private List<T> LoadFiles<T>(string path)
@@ -416,10 +448,11 @@ public class YamlReader
         var underworldMaps = LoadFiles<UnderworldMap>(Path.Combine(path, "Maps/Underworld"));
 
         var overworldScreens = LoadFiles<Screen>(Path.Combine(path, "Screens/Overworld"));
-        var underworldScreens = LoadFiles<Screen>(Path.Combine(path, "Screens/Underworld"));
+        var underworldScreens = ConvertUnderworldExits(LoadFiles<Screen>(Path.Combine(path, "Screens/Underworld")));
 
         var caves = LoadFile<List<CaveData>>(Path.Combine(path, "Caves.yml"));
         var special = LoadFile<Special>(Path.Combine(path, "Special.yml"));
+        var enemies = LoadFile<EnemyData>(Path.Combine(path, "Enemies.yaml"));
 
         data = new YamlData()
         {
@@ -429,9 +462,80 @@ public class YamlReader
             overworld_screens = overworldScreens,
             underworld_screens = underworldScreens,
             special = special,
-            caves = caves
+            caves = caves,
+            enemies = enemies
         };
 
+    }
+
+    // Convert "Scroll" exits in underworld screens into entrance/exit node pairs so that
+    // room-to-room connections can be modelled as directed edges (enter one room, leave another).
+    private List<Screen> ConvertUnderworldExits(IEnumerable<Screen> screens)
+    {
+        return screens.Select(ConvertScrollNodes).ToList();
+    }
+
+    private Screen ConvertScrollNodes(Screen screen)
+    {
+        var convertedScreen = new Screen
+        {
+            name = screen.name,
+            area = screen.area,
+            screen = screen.screen,
+            nodes = new NodeCollection
+            {
+                caves = screen.nodes.caves,
+                meta = screen.nodes.meta,
+                regions = screen.nodes.regions,
+                blocks = screen.nodes.blocks,
+                exits = new List<Exit>(screen.nodes.exits.Where(e => e.type != ExitType.Scroll))
+            },
+            edges = screen.edges
+        };
+
+        foreach (var node in screen.nodes.exits.Where(e => e.type == ExitType.Scroll).ToList())
+        {
+            // Create entrance/exit pair for this direction
+            var entranceNode = new Exit
+            {
+                name = $"{node.name} - Entrance",
+                type = ExitType.Entrance,
+                direction = node.direction
+            };
+
+            var exitNode = new Exit
+            {
+                name = $"{node.name} - Exit",
+                type = ExitType.Exit,
+                direction = node.direction
+            };
+
+            // Replace the scroll node with the entrance node, and add the exit node to the list
+            convertedScreen.nodes.exits.Add(entranceNode);
+            convertedScreen.nodes.exits.Add(exitNode);
+
+            // Create a new meta node for the old scroll node that links to both exit/entrance nodes
+            convertedScreen.nodes.meta ??= new List<Meta>();
+            convertedScreen.nodes.meta.Add(new Meta
+            {
+                name = node.name,
+                type = MetaType.Meta,
+                position = ""
+            });
+
+            // Route the entrance through the meta node and on to the exit (entrance -> meta -> exit)
+            convertedScreen.edges.directed ??= new Dictionary<string, List<object>>();
+            if (!convertedScreen.edges.directed.TryGetValue("fixed", out var directedEdges))
+            {
+                directedEdges = [];
+                convertedScreen.edges.directed["fixed"] = directedEdges;
+            }
+
+            directedEdges.Add(new List<object> { entranceNode.name, node.name });
+            directedEdges.Add(new List<object> { node.name, exitNode.name });
+        }
+
+        return convertedScreen;
     }
 
     public int GetStartMap()
@@ -456,6 +560,8 @@ public class YamlReader
             throw new Exception("Data not loaded");
         }
 
+        BuildEnemyGraph();
+
         foreach (var map in data.overworld_maps)
         {
             BuildOverworldMap(map);
@@ -474,23 +580,18 @@ public class YamlReader
             // Get start room from map
             var startMap = data.underworld_maps.Where(m => m.area == Area.Underworld && m.map == level.start_room_id).First();
             var startScreen = data.underworld_screens.Where(s => s.area == startMap.area && s.screen == startMap.screen).First();
-            var startNode = startScreen.nodes.exits.Where(e => e.direction == Direction.Down).First();
 
-            // Connect level entrance to start room
-            // TODO: Temporary sword requirement for dungeons, remove this
-            // TODO: These dungeon entrance logical restrictions are way too restrictive and neds to be fixed so that the restrictions are on the actual places
-            //       where the sword, bow and recorder are required, not the entrance to the dungeon
+            var startNode = startScreen.nodes.exits.Where(e => e.direction == Direction.Down && e.type == ExitType.Entrance).First();
+            var startExitNode = startScreen.nodes.exits.Where(e => e.direction == Direction.Down && e.type == ExitType.Exit).First();
+
             var levelRequirement = level.level switch
             {
-                5 => "CanDefeatDigdogger",
-                6 => "CanDefeatGohma",
-                7 => "CanDefeatDigdogger",
-                8 => "CanDefeatGohma",
                 9 => "Triforce|" + config.Triforces.ToString(),
-                _ => "CanHurtEnemies"
+                _ => "fixed"
             };
 
-            AddUndirectedEdge(levelEntranceNode, FindOrCreateNode($"{startMap.area} - {level.name} - {startMap.name} - {startNode.name}"), levelRequirement);
+            AddDirectedEdge(levelEntranceNode, FindOrCreateNode($"{startMap.area} - {level.name} - {startMap.name} - {startNode.name}"), levelRequirement);
+            AddDirectedEdge(FindOrCreateNode($"{startMap.area} - {level.name} - {startMap.name} - {startExitNode.name}"), levelEntranceNode, "fixed");
         }
 
         foreach (var cave in data.caves)
@@ -568,7 +669,7 @@ public class YamlReader
         }
 
         var level = data.levels.First();
-        var screen = data.overworld_screens.Where(s => s.area == map.area && s.screen == map.screen).First();
+        var screen = data.overworld_screens.First(s => s.area == map.area && s.screen == map.screen);
         var mapName = $"{map.area} - {map.name}";
 
         var exits = new List<Direction>();
@@ -681,7 +782,7 @@ public class YamlReader
         // Connect stairs
         if (data.special.armos_stairs.Contains(map.map))
         {
-            var armosScreenNode = screen.nodes.meta!.Where(m => m.type == MetaType.Armos).First();
+            var armosScreenNode = screen.nodes.meta!.First(m => m.type == MetaType.Armos);
             var armosNode = FindOrCreateNode($"{mapName} - {armosScreenNode.name}");
             var caveNodeName = map.cave switch
             {
@@ -701,7 +802,7 @@ public class YamlReader
         // Connect armos item
         if (data.special.armos_item_room == map.map)
         {
-            var armosScreenNode = screen.nodes.meta!.Where(m => m.type == MetaType.Armos).First();
+            var armosScreenNode = screen.nodes.meta!.First(m => m.type == MetaType.Armos);
             var armosNode = FindOrCreateNode($"{mapName} - {armosScreenNode.name}");
 
             var itemNode = CreateNode(new()
@@ -719,7 +820,7 @@ public class YamlReader
         // Connect overworld item
         if (data.special.overworld_item_room == map.map)
         {
-            var itemScreenNode = screen.nodes.meta!.Where(m => m.type == MetaType.Item).First();
+            var itemScreenNode = screen.nodes.meta!.First(m => m.type == MetaType.Item);
             var itemNode = FindOrCreateNode($"{mapName} - {itemScreenNode.name}");
 
             var overworldNode = CreateNode(new()
@@ -769,7 +870,7 @@ public class YamlReader
                 _ => throw new Exception("Invalid exit direction")
             };
 
-            var targetMap = data.overworld_maps.Where(m => m.area == map.area && m.map == map.map + offset).FirstOrDefault();
+            var targetMap = data.overworld_maps.FirstOrDefault(m => m.area == map.area && m.map == map.map + offset);
             if (targetMap != null)
             {
                 ConnectOWMaps(map, targetMap, exit);
@@ -788,10 +889,10 @@ public class YamlReader
             _ => throw new Exception("Invalid exit direction")
         };
 
-        var currentScreen = data!.overworld_screens.Where(s => s.area == from.area && s.screen == from.screen).First();
+        var currentScreen = data!.overworld_screens.First(s => s.area == from.area && s.screen == from.screen);
         var currentExits = currentScreen.nodes.exits.Where(e => e.direction == direction).ToList();
 
-        var targetScreen = data.overworld_screens.Where(s => s.area == to.area && s.screen == to.screen).First();
+        var targetScreen = data.overworld_screens.First(s => s.area == to.area && s.screen == to.screen);
         var targetExits = targetScreen.nodes.exits.Where(e => e.direction == oppositeDirection).ToList();
 
         // Create undirected connections between all these exits
@@ -813,7 +914,7 @@ public class YamlReader
 
         if (!map.passage)
         {
-            var screen = data!.underworld_screens.Where(s => s.area == map.area && s.screen == map.screen).First();
+            var screen = data!.underworld_screens.First(s => s.area == map.area && s.screen == map.screen);
 
             // Go through doors and create nodes for them
             for (int i = 0; i <= 3; i++)
@@ -821,8 +922,21 @@ public class YamlReader
                 var door = (DoorType)map.doors[i];
                 var direction = (Direction)i;
 
-                // Find an exit node that matches this doors
-                var exit = screen.nodes.exits.Where(e => e.direction == direction).First();
+                // Pre-create the entrance node so the screen's intra-room edges (wired below
+                // with FindNode) can reference it, and so neighbouring rooms can connect to it.
+                var entrance = screen.nodes.exits.FirstOrDefault(e => e.direction == direction && e.type == ExitType.Entrance);
+                if (entrance != null)
+                {
+                    FindOrCreateNode($"{mapName} - {entrance.name}");
+                }
+
+                // Find an exit node that matches this door
+                var exit = screen.nodes.exits.FirstOrDefault(e => e.direction == direction && e.type == ExitType.Exit);
+                if (exit == null)
+                {
+                    continue;
+                }
+
                 var exitName = $"{mapName} - {exit.name}";
                 var exitNode = FindOrCreateNode(exitName);
 
@@ -832,7 +946,13 @@ public class YamlReader
                 }
 
                 // Connect this exit to the other room
-                ConnectUWMaps(map, exitNode, door, direction, level);
+                string? doorKillRequirement = null;
+                if (door == DoorType.Shutter && (map.behaviour == (int)RoomBehaviour.KillForItemShutter || map.behaviour == (int)RoomBehaviour.KillForItemShutterBoss))
+                {
+                    doorKillRequirement = CreateRoomClearLogic(map, mapName);
+                }
+
+                ConnectUWMaps(map, exitNode, door, direction, level, doorKillRequirement);
             }
 
             foreach (var meta in screen.nodes.meta ?? [])
@@ -904,7 +1024,7 @@ public class YamlReader
                     { "name", itemName },
                     { "type", VertexType.Item },
                     { "item", null! },
-                    { "address", 0x650000 + map.map },
+                    { "address", map.generated ? 0x651000 + map.generated_level * 0x80 + map.local_room_id : 0x650000 + map.map },
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 
@@ -917,15 +1037,15 @@ public class YamlReader
                 // Find the region on the screen that contains the coordinates of the item
                 // A region has a from [x,y] and a to [x,y] coordinate that defines a rectangle
 
-                var itemRegionNode = screen.nodes.regions.Where(r => r.from[0] <= itemX && r.from[1] <= itemY && r.to[0] >= itemX && r.to[1] >= itemY).FirstOrDefault()
+                var itemRegionNode = screen.nodes.regions.FirstOrDefault(r => r.from[0] <= itemX && r.from[1] <= itemY && r.to[0] >= itemX && r.to[1] >= itemY)
                     ?? throw new Exception($"Could not find region for item in room {mapName}");
                 var itemRegionNodeName = $"{mapName} - {itemRegionNode.name}";
                 var itemRegionNodeNode = FindOrCreateNode(itemRegionNodeName);
 
                 var roomItemRequirement = (RoomBehaviour)map.behaviour switch
                 {
-                    RoomBehaviour.KillForItemShutter => "UseSword",
-                    RoomBehaviour.KillForItemShutterBoss => "UseSword",
+                    RoomBehaviour.KillForItemShutter => CreateRoomClearLogic(map, mapName),
+                    RoomBehaviour.KillForItemShutterBoss => CreateRoomClearLogic(map, mapName),
                     _ => "fixed"
                 };
 
@@ -983,8 +1103,9 @@ public class YamlReader
             if (map.screen == 0x3E)
             {
                 // This is a passage
-                var left_room = map.passage_left + (level.level >= 7 ? 0x80 : 0x00);
-                var right_room = map.passage_right + (level.level >= 7 ? 0x80 : 0x00);
+                // For generated maps, passage_left/right already contain full map IDs; skip +0x80 adjustment
+                var left_room = map.generated ? map.passage_left : map.passage_left + (level.level >= 7 ? 0x80 : 0x00);
+                var right_room = map.generated ? map.passage_right : map.passage_right + (level.level >= 7 ? 0x80 : 0x00);
 
                 // Create nodes for left and right
                 var leftNode = FindOrCreateNode($"{mapName} - Passage - Left");
@@ -992,39 +1113,16 @@ public class YamlReader
 
                 // Connect the left and right nodes to the left and right room stairs
                 var leftRoom = data!.underworld_maps.Where(m => m.area == map.area && m.map == left_room).First();
-                var leftScreen = data.underworld_screens.Where(s => s.area == leftRoom.area && s.screen == leftRoom.screen).First();
-                var leftStairs = leftScreen.nodes.meta.Where(m => m.type == MetaType.Stairs).FirstOrDefault();
-                var leftStairsName = "";
-
-                if (leftStairs == null)
-                {
-                    // Connect to the region that has the top right coordinate (11,0) defined in its from and to coordinates
-                    var leftStairsRegion = leftScreen.nodes.regions.Where(r => r.from[0] <= 11 && r.from[1] >= 0 && r.to[0] >= 11 && r.to[1] >= 0).First();
-                    leftStairsName = leftStairsRegion.name;
-                }
-                else
-                {
-                    leftStairsName = leftStairs.name;
-                }
+                var leftStairsName = FindStairsOrRegionName(leftRoom, level);
+                var leftStairsRequirement = GetStairsAccessRequirement(leftRoom, level);
 
                 var rightRoom = data.underworld_maps.Where(m => m.area == map.area && m.map == right_room).First();
-                var rightScreen = data.underworld_screens.Where(s => s.area == rightRoom.area && s.screen == rightRoom.screen).First();
-                var rightStairs = rightScreen.nodes.meta.Where(m => m.type == MetaType.Stairs).FirstOrDefault();
-                var rightStairsName = "";
+                var rightStairsName = FindStairsOrRegionName(rightRoom, level);
+                var rightStairsRequirement = GetStairsAccessRequirement(rightRoom, level);
 
-                if (rightStairs == null)
-                {
-                    var rightStairsRegion = leftScreen.nodes.regions.Where(r => r.from[0] <= 11 && r.from[1] >= 0 && r.to[0] >= 11 && r.to[1] >= 0).First();
-                    rightStairsName = rightStairsRegion.name;
-                }
-                else
-                {
-                    rightStairsName = rightStairs.name;
-                }
-
-                // Connect the left and right nodes to the left and right room stairs
-                AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairsName}"), "fixed");
-                AddUndirectedEdge(rightNode, FindOrCreateNode($"{map.area} - {level.name} - {rightRoom.name} - {rightStairsName}"), "fixed");
+                // Going into a hidden-stairs room may require a push block, but leaving the passage never should.
+                ConnectPassageToRoom(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairsName}"), leftStairsRequirement);
+                ConnectPassageToRoom(rightNode, FindOrCreateNode($"{map.area} - {level.name} - {rightRoom.name} - {rightStairsName}"), rightStairsRequirement);
 
                 // Connect the passage nodes
                 AddUndirectedEdge(leftNode, rightNode, "fixed");
@@ -1033,7 +1131,7 @@ public class YamlReader
             else
             {
                 // This is an item room
-                var left_room = map.passage_left + (level.level >= 7 ? 0x80 : 0x00);
+                var left_room = map.generated ? map.passage_left : map.passage_left + (level.level >= 7 ? 0x80 : 0x00);
 
                 // Create nodes for left and the item in the room
                 var leftNode = FindOrCreateNode($"{mapName} - Passage - Left");
@@ -1042,28 +1140,15 @@ public class YamlReader
                     { "name", $"{mapName} - Passage - Item" },
                     { "type", VertexType.Item },
                     { "item", null! },
-                    { "address", 0x650000 + map.map },
+                    { "address", map.generated ? 0x651000 + map.generated_level * 0x80 + map.local_room_id : 0x650000 + map.map },
                     { "itemset", (string[])["zelda", $"z1d{level.level}"] },
                 });
 
                 // Connect the left and right nodes to the left
                 var leftRoom = data!.underworld_maps.Where(m => m.area == map.area && m.map == left_room).First();
-                var leftScreen = data.underworld_screens.Where(s => s.area == leftRoom.area && s.screen == leftRoom.screen).First();
-                var leftStairs = leftScreen.nodes.meta.Where(m => m.type == MetaType.Stairs).FirstOrDefault();
-
-                if (leftStairs == null)
-                {
-                    // Connect to the region that has the top right coordinate (11,0) defined in its from and to coordinates
-                    var topRightRegionNode = leftScreen.nodes.regions.Where(r => r.from[0] <= 11 && r.from[1] >= 0 && r.to[0] >= 11 && r.to[1] >= 0).First();
-
-                    // Connect the left node to the top right region
-                    AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {topRightRegionNode.name}"), "fixed");
-                }
-                else
-                {
-                    // Connect the left nodes to the left stairs
-                    AddUndirectedEdge(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairs.name}"), "fixed");
-                }
+                var leftStairsName = FindStairsOrRegionName(leftRoom, level);
+                var leftStairsRequirement = GetStairsAccessRequirement(leftRoom, level);
+                ConnectPassageToRoom(leftNode, FindOrCreateNode($"{map.area} - {level.name} - {leftRoom.name} - {leftStairsName}"), leftStairsRequirement);
 
                 // Connect the left node to the item
                 AddUndirectedEdge(leftNode, itemNode, "fixed");
@@ -1073,7 +1158,62 @@ public class YamlReader
         }
     }
 
-    private void ConnectUWMaps(UnderworldMap from, Dictionary<string, object> exitNode, DoorType door, Direction direction, Level level)
+    /// <summary>
+    /// Finds the Stairs meta node name on a room's screen, or falls back to a region name.
+    /// Used when connecting passage/cellar rooms to their parent rooms.
+    /// </summary>
+    private string FindStairsOrRegionName(UnderworldMap room, Level level)
+    {
+        var screen = data!.underworld_screens.First(s => s.area == room.area && s.screen == room.screen);
+        var behaviour = (RoomBehaviour)room.behaviour;
+
+        // Try to find a Stairs meta node
+        var stairs = (screen.nodes.meta ?? []).FirstOrDefault(m => m.type == MetaType.Stairs);
+        if (stairs != null)
+            return stairs.name;
+
+        if (behaviour == RoomBehaviour.PushBlockStairs)
+        {
+            var itemPosition = level.shortcut_or_item_pos_array[room.item_pos];
+            var itemX = (itemPosition >> 4) - 2;
+            var itemY = (itemPosition & 0x0F) - 6;
+
+            var hiddenStairsRegion = screen.nodes.regions
+                .FirstOrDefault(r => r.from[0] <= itemX && r.from[1] <= itemY && r.to[0] >= itemX && r.to[1] >= itemY);
+            if (hiddenStairsRegion != null)
+                return hiddenStairsRegion.name;
+        }
+
+        // Fallback: find a region covering the top-right area (11,0)
+        var region = screen.nodes.regions
+            .FirstOrDefault(r => r.from[0] <= 11 && r.from[1] <= 0 && r.to[0] >= 11 && r.to[1] >= 0);
+        if (region != null)
+            return region.name;
+
+        // Final fallback: use the first region
+        if (screen.nodes.regions.Count > 0)
+            return screen.nodes.regions[0].name;
+
+        throw new Exception($"No stairs or regions found on screen {room.screen:X2} for room {room.name}");
+    }
+
+    private string GetStairsAccessRequirement(UnderworldMap room, Level level)
+    {
+        var behaviour = (RoomBehaviour)room.behaviour;
+        if (behaviour != RoomBehaviour.PushBlockStairs)
+            return "fixed";
+
+        var roomName = $"{room.area} - {level.name} - {room.name}";
+        return CreatePushBlockLogic(room, roomName);
+    }
+
+    private void ConnectPassageToRoom(Dictionary<string, object> passageNode, Dictionary<string, object> roomNode, string requirement)
+    {
+        AddDirectedEdge(roomNode, passageNode, requirement);
+        AddDirectedEdge(passageNode, roomNode, "fixed");
+    }
+
+    private void ConnectUWMaps(UnderworldMap from, Dictionary<string, object> exitNode, DoorType door, Direction direction, Level level, string? killRequirement = null)
     {
         var offset = direction switch
         {
@@ -1094,20 +1234,28 @@ public class YamlReader
         };
 
         var sourceBehaviour = (RoomBehaviour)from.behaviour;
+        var fromMapName = $"{from.area} - {level.name} - {from.name}";
 
-        var target = data!.underworld_maps.Where(m => m.area == from.area && m.map == from.map + offset && level.rooms.Contains(m.map)).FirstOrDefault();
+        // Use neighbor_map_ids for generated maps, otherwise fall back to offset-based calculation
+        UnderworldMap? target;
+        if (from.neighbor_map_ids != null && from.neighbor_map_ids.TryGetValue(direction, out int neighborMapId))
+        {
+            target = data!.underworld_maps.FirstOrDefault(m => m.area == from.area && m.map == neighborMapId && level.rooms.Contains(m.map));
+        }
+        else
+        {
+            target = data!.underworld_maps.FirstOrDefault(m => m.area == from.area && m.map == from.map + offset && level.rooms.Contains(m.map));
+        }
         if (target != null)
         {
-            var targetBehaviour = (RoomBehaviour)target.behaviour;
             var targetMapName = $"{target.area} - {level.name} - {target.name}";
 
-            var targetDoor = (DoorType)target.doors[(int)oppositeDirection];
+            // Find the entrance node on the target room that this door leads into
+            var targetScreen = data.underworld_screens.First(s => s.area == target.area && s.screen == target.screen);
 
-            // Find the exit node that matches this door
-            var targetScreen = data.underworld_screens.Where(s => s.area == target.area && s.screen == target.screen).First();
-            var targetExit = targetScreen.nodes.exits.Where(e => e.direction == oppositeDirection).First();
-            var targetExitName = $"{targetMapName} - {targetExit.name}";
-            var targetExitNode = FindOrCreateNode(targetExitName);
+            var targetEntrance = targetScreen.nodes.exits.First(e => e.direction == oppositeDirection && e.type == ExitType.Entrance);
+            var targetEntranceName = $"{targetMapName} - {targetEntrance.name}";
+            var targetEntranceNode = FindOrCreateNode(targetEntranceName);
 
             var sourceRequirement = door switch
             {
@@ -1120,32 +1268,161 @@ public class YamlReader
                 DoorType.Locked2 => "Key",
                 DoorType d when d == DoorType.Shutter && (from.level_nine_check ?? false) => "Triforce|" + config.Triforces.ToString(),
                 DoorType d when d == DoorType.Shutter && sourceBehaviour == RoomBehaviour.None => "Never",
-                DoorType d when d == DoorType.Shutter && sourceBehaviour > RoomBehaviour.None => "fixed",
+                DoorType d when d == DoorType.Shutter && sourceBehaviour == RoomBehaviour.PushBlockShutter => CreatePushBlockLogic(from, fromMapName),
+                DoorType d when d == DoorType.Shutter && sourceBehaviour > RoomBehaviour.None => killRequirement ?? "fixed",
                 _ => throw new Exception("Unknown door type")
             };
 
-            var targetRequirement = targetDoor switch
-            {
-                DoorType.Open => "fixed",
-                DoorType.Wall => "Never",
-                DoorType.PassThrough => "fixed",
-                DoorType.PassThroughNoSound => "fixed",
-                DoorType.Bombable => "UseBombs",
-                DoorType.Locked => "Key",
-                DoorType.Locked2 => "Key",
-                DoorType d when d == DoorType.Shutter && targetBehaviour == RoomBehaviour.None => "Never",
-                DoorType d when d == DoorType.Shutter && targetBehaviour > RoomBehaviour.None => "fixed",
-                _ => throw new Exception("Unknown door type")
-            };
+            // Connect the source exit to the target entrance
+            AddDirectedEdge(exitNode, targetEntranceNode, sourceRequirement);
+        }
+    }
 
-            // Connect the source exit to the target exit
-            AddDirectedEdge(exitNode, targetExitNode, sourceRequirement);
+    private string CreatePushBlockLogic(UnderworldMap map, string mapName)
+    {
+        var pushBlockItem = $"Map{map.map:X2}Push";
+        if (FindNode($"{mapName} - Push - Final") != null)
+            return pushBlockItem;
 
-            if (door != DoorType.Wall)
+        var screen = data!.underworld_screens.First(s => s.area == map.area && s.screen == map.screen);
+        var pushMeta = (screen.nodes.meta ?? []).FirstOrDefault(m => m.type == MetaType.Push)
+            ?? throw new Exception($"Room {mapName} requires push-block logic but screen {map.screen:X2} has no push block meta");
+
+        var pushNode = FindOrCreateNode($"{mapName} - {pushMeta.name}");
+        var pushItemNode = FindOrCreateNode($"{mapName} - Push - Final", pushBlockItem);
+        AddDirectedEdge(pushNode, pushItemNode, "fixed");
+        return pushBlockItem;
+    }
+
+    private string CreateRoomClearLogic(UnderworldMap map, string mapName)
+    {        
+        var enemies = GetEnemiesInRoom(map).Distinct().ToList();
+        if (enemies.Count == 0)
+        {
+            return "fixed";
+        }
+
+        var killableEnemies = new List<string>();
+        foreach (var enemyName in enemies)
+        {
+             var enemy = data!.enemies.enemies.FirstOrDefault(e => e.name == enemyName);
+             if (enemy != null && enemy.kill_items != null && enemy.kill_items.Count > 0)
+             {
+                 killableEnemies.Add(enemyName);
+             }
+        }
+
+        // If there are enemies but none can be killed (e.g., Bubbles, Traps),
+        // treat as auto-clear for generated dungeons since these rooms shouldn't
+        // have shutter doors in vanilla. For vanilla rooms this shouldn't occur.
+        if (killableEnemies.Count == 0)
+        {
+            return "fixed";
+        }
+
+        var roomClearItem = $"Map{map.map:X2}Clear";
+
+        // Check if we already created this logic
+        if (FindNode($"{mapName} - Clear - Final") != null)
+        {
+            return roomClearItem;
+        }
+
+        var chainStart = FindOrCreateNode($"{mapName} - Clear");
+
+        // Connect all regions to chain start
+        var screen = data!.underworld_screens.Where(s => s.area == map.area && s.screen == map.screen).First();
+        foreach (var region in screen.nodes.regions)
+        {
+            var regionNode = FindOrCreateNode($"{mapName} - {region.name}");
+            AddDirectedEdge(regionNode, chainStart, "fixed");
+        }
+
+        var currentNode = chainStart;
+        foreach (var enemyName in killableEnemies)
+        {
+            var nextNode = FindOrCreateNode($"{mapName} - Clear - Defeated {enemyName}");
+            AddDirectedEdge(currentNode, nextNode, $"Defeat{enemyName}");
+            currentNode = nextNode;
+        }
+
+        // The last node provides the item
+        var clearItemNode = FindOrCreateNode($"{mapName} - Clear - Final", roomClearItem);
+
+        AddDirectedEdge(currentNode, clearItemNode, "fixed");
+
+        return roomClearItem;
+    }
+
+    private void BuildEnemyGraph()
+    {
+        var enemiesNode = FindOrCreateNode("Enemies");
+        var metaNode = FindOrCreateNode("Overworld - Meta - Meta");
+        AddDirectedEdge(metaNode, enemiesNode, "fixed");
+
+        foreach (var enemy in data!.enemies.enemies)
+        {
+            if (enemy.kill_items != null && enemy.kill_items.Count > 0)
             {
-                AddDirectedEdge(targetExitNode, exitNode, targetRequirement);
+                var fightNodeName = $"Fight{enemy.name}";
+                var fightNode = FindOrCreateNode(fightNodeName);
+                AddDirectedEdge(enemiesNode, fightNode, "fixed");
+
+                var defeatNodeName = $"Defeat{enemy.name}";
+                var defeatNode = FindOrCreateNode(defeatNodeName, defeatNodeName);
+
+                foreach (var item in enemy.kill_items)
+                {
+                    AddDirectedEdge(fightNode, defeatNode, item);
+                }
             }
         }
+    }
+
+    private List<string> GetEnemiesInRoom(UnderworldMap map)
+    {
+        var enemies = new List<string>();
+
+        // Find the level for this map to get enemy counts
+        var level = data!.levels.FirstOrDefault(l => l.rooms.Contains(map.map));
+        if (level == null) return enemies;
+
+        int effectiveId = (map.enemy_mode << 6) | map.enemy_id;
+
+        // Get the actual number of enemies
+        int countIndex = map.enemies;
+        if (countIndex < 0 || countIndex >= level.enemy_counts.Length) return enemies;
+        int enemyCount = level.enemy_counts[countIndex];
+
+        if (effectiveId >= 0x62)
+        {
+             int listId = effectiveId - 0x62;
+             var list = data!.enemies.enemy_lists.FirstOrDefault(l => l.id == listId);
+             if (list != null)
+             {
+                 // Take the first N enemies from the list
+                 for (int i = 0; i < enemyCount && i < list.data.Count; i++)
+                 {
+                     var enemyId = list.data[i];
+                     var enemy = data.enemies.enemies.FirstOrDefault(e => e.id == enemyId);
+                     if (enemy != null && enemy.name != "Nothing") enemies.Add(enemy.name);
+                 }
+             }
+        }
+        else
+        {
+             var enemy = data!.enemies.enemies.FirstOrDefault(e => e.id == effectiveId);
+             if (enemy != null && enemy.name != "Nothing")
+             {
+                 // Add N copies of the enemy
+                 for(int i = 0; i < enemyCount; i++)
+                 {
+                    enemies.Add(enemy.name);
+                 }
+             }
+        }
+
+        return enemies;
     }
 }
 

@@ -6,25 +6,60 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
-      
+
   regions:
     - name: "Middle"
       type: Region
       from: [0, 0]
       to: [11, 6]
-      
+
+    - name: "Left water column"
+      type: NoPlace
+      from: [1, 1]
+      to: [1, 5]
+
+    - name: "Left top water"
+      type: NoPlace
+      from: [2, 1]
+      to: [3, 1]
+
+    - name: "Left bottom water"
+      type: NoPlace
+      from: [2, 5]
+      to: [3, 5]
+
+    - name: "Middle water row"
+      type: NoPlace
+      from: [3, 3]
+      to: [8, 3]
+
+    - name: "Right top water"
+      type: NoPlace
+      from: [8, 1]
+      to: [9, 1]
+
+    - name: "Right bottom water"
+      type: NoPlace
+      from: [8, 5]
+      to: [9, 5]
+
+    - name: "Right water column"
+      type: NoPlace
+      from: [10, 1]
+      to: [10, 5]
+
 edges:
   undirected:
     fixed:

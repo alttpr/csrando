@@ -11,6 +11,7 @@ public sealed class World : World<Item>
     public Config Config { get; }
     public PRNG Prng { get; }
     public YamlReader.YamlData? YamlData { get; set; }
+    internal List<DungeonSpoilerData> DungeonSpoilers { get; } = [];
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
