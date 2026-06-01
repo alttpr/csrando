@@ -22,7 +22,7 @@ lastUpdated: 2024-09-15
     * Enemy Placement option (Vanilla, Progressive, Random) controls how enemies are chosen for generated dungeons
     * Hidden Items option (Off, Sometimes, Always) controls whether dungeon items are hidden until the room is cleared
   * Improved ALTTP entrance shuffle by overriding certain outlet locations so players can no longer get stuck
-  * Fixed an ALTTP logic issue where you could not walk back from the cactus area to the throne room
+  * Fixed an ALTTP logic issue where the logic wrongly assumed that you could walk back from cactus to throne room
   * Added a few more enemy bans in ALTTP that could cause issues (Ganon's Tower, Ice Palace, Swamp Palace)
 
 ## 2025-11-06
