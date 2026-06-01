@@ -6,6 +6,25 @@ lastUpdated: 2024-09-15
 
 # Randomizer Changes
 
+## 2026-06-01
+### Quad Randomizer - Version 0.4.0
+* Systems Changes
+  * Added a "Settings" help page describing every setting available in the Basic options view
+  * Added a dungeon map viewer to the spoiler log for Zelda 1 generated dungeons
+  * Made the Combo hint fallback more obvious when no specific hint is available
+  * Overhauled the NES audio engine used by Zelda 1 and Metroid 1 to emulate the NES APU at a much lower level (Andypro)
+    * More accurate length counters, DMC sample length and register write handling, fixing short sounds, mid-playback sample switching and incorrectly silenced channels
+    * Added a noise complement channel for better white noise, reduced audio latency and optimized CPU/SPC communication
+
+* Gameplay Changes
+  * Added Zelda 1 Dungeon Shuffle - generates brand-new randomized dungeon layouts instead of the vanilla ones (NOTE: this is in early testing, so expect potential bugs and balance issues)
+    * Dungeon Style option (Progressive, Wild, Megadungeon, Nightmare, Minimal) controls overall size and complexity
+    * Enemy Placement option (Vanilla, Progressive, Random) controls how enemies are chosen for generated dungeons
+    * Hidden Items option (Off, Sometimes, Always) controls whether dungeon items are hidden until the room is cleared
+  * Improved ALTTP entrance shuffle by overriding certain outlet locations so players can no longer get stuck
+  * Fixed an ALTTP logic issue where you could not walk back from the cactus area to the throne room
+  * Added a few more enemy bans in ALTTP that could cause issues (Ganon's Tower, Ice Palace, Swamp Palace)
+
 ## 2025-11-06
 ### Alttpr - Version 32.0
 * Initial release

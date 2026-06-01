@@ -16,6 +16,7 @@ public class Config
     public EntranceShuffleOption EntranceShuffle { get; init; } = EntranceShuffleOption.None;
 
     [Category("Gameplay")]
+    [Description("This is in early testing, be aware of potential bugs and balance issues!")]
     public bool DungeonShuffle { get; init; } = false;
 
     // Sub-options below only have an effect when DungeonShuffle is enabled, so they are grouped
