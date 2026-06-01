@@ -27,6 +27,9 @@ internal record DungeonConfig
     /// <summary>Controls how enemies are filtered for placement in generated dungeons.</summary>
     public EnemyPlacementOption EnemyPlacement { get; init; } = EnemyPlacementOption.Progressive;
 
+    /// <summary>Controls whether generated dungeon items are hidden behind clearing the room.</summary>
+    public HiddenItemsOption HiddenItems { get; init; } = HiddenItemsOption.Sometimes;
+
     // Baseline configs per level (Progressive style, no fuzz)
 
     private static readonly DungeonConfig[] BaseConfigs =
@@ -45,7 +48,7 @@ internal record DungeonConfig
     /// <summary>
     /// Generates a DungeonConfig for the given level and style, with optional random fuzz.
     /// </summary>
-    public static DungeonConfig GetConfigForLevel(int level, DungeonStyleOption style, EnemyPlacementOption enemyPlacement, Random rnd)
+    public static DungeonConfig GetConfigForLevel(int level, DungeonStyleOption style, EnemyPlacementOption enemyPlacement, Random rnd, HiddenItemsOption hiddenItems = HiddenItemsOption.Sometimes)
     {
         var config = style switch
         {
@@ -59,7 +62,7 @@ internal record DungeonConfig
         // Nightmare defaults to Random enemies, but the explicit setting takes priority for other styles
         if (style != DungeonStyleOption.Nightmare)
             config = config with { EnemyPlacement = enemyPlacement };
-        return config;
+        return config with { HiddenItems = hiddenItems };
     }
 
     private static DungeonConfig ApplyFuzz(DungeonConfig baseConfig, Random rnd,
@@ -365,7 +368,7 @@ internal class DungeonBuilder
             .Where(s => s.area == YamlReader.Area.Underworld)
             .GroupBy(s => s.screen)
             .ToDictionary(g => g.Key, g => g.First());
-        _killShutterScreens = GetVanillaScreensForBehaviours(YamlReader.RoomBehaviour.KillForItemShutter, YamlReader.RoomBehaviour.KillForItemShutterBoss);
+        _killShutterScreens = GetVanillaScreensForBehaviours(YamlReader.RoomBehaviour.KillForShutter, YamlReader.RoomBehaviour.KillForItem);
         _pushBlockShutterScreens = GetVanillaScreensForBehaviours(YamlReader.RoomBehaviour.PushBlockShutter);
         _pushBlockStairsScreens = GetVanillaScreensForBehaviours(YamlReader.RoomBehaviour.PushBlockStairs);
     }
@@ -1154,9 +1157,9 @@ internal class DungeonBuilder
         if (room.HasAnyRole(RoomRole.Boss) && _level == 9)
             return YamlReader.RoomBehaviour.GetTriforceShutter;
         if (room.HasAnyRole(RoomRole.Boss))
-            return YamlReader.RoomBehaviour.KillForItemShutterBoss;
+            return YamlReader.RoomBehaviour.KillForItem;
         if (room.HasAnyRole(RoomRole.End))
-            return _level == 9 ? YamlReader.RoomBehaviour.KillForItemShutter : YamlReader.RoomBehaviour.None;
+            return _level == 9 ? YamlReader.RoomBehaviour.KillForShutter : YamlReader.RoomBehaviour.None;
         if (room.HasAnyRole(RoomRole.LevelNineCheck))
             return YamlReader.RoomBehaviour.None;
 
@@ -1173,8 +1176,12 @@ internal class DungeonBuilder
         {
             if (room.HasAnyRole(RoomRole.Item))
             {
-                if (CanUseClearTrigger(room))
-                    return YamlReader.RoomBehaviour.KillForItemShutter;
+                // KillForItem (trigger 7) both opens the shutters and keeps the item hidden
+                // until the room is cleared, so the item is genuinely earned by killing.
+                // When hidden items are enabled and the room can use a clear trigger, hide it;
+                // otherwise just open the shutters so the visible item is reachable.
+                if (CanUseClearTrigger(room) && ShouldHideItemBehindClear(forced: true))
+                    return YamlReader.RoomBehaviour.KillForItem;
 
                 ReplaceShutters(room, YamlReader.DoorType.Open);
                 return YamlReader.RoomBehaviour.None;
@@ -1183,18 +1190,33 @@ internal class DungeonBuilder
             if (RoomSupportsPushBlockShutters(room) && (!CanUseClearTrigger(room) || _rnd.NextDouble() < 0.50))
                 return YamlReader.RoomBehaviour.PushBlockShutter;
 
+            // No item to hide here; the kill trigger only needs to open the shutters.
             if (CanUseClearTrigger(room))
-                return YamlReader.RoomBehaviour.KillForItemShutter;
+                return YamlReader.RoomBehaviour.KillForShutter;
 
             ReplaceShutters(room, YamlReader.DoorType.Open);
             return YamlReader.RoomBehaviour.None;
         }
 
-        if (room.HasAnyRole(RoomRole.Item) && CanUseClearTrigger(room) && _rnd.NextDouble() < 0.35)
-            return YamlReader.RoomBehaviour.KillForItemShutter;
+        if (room.HasAnyRole(RoomRole.Item) && CanUseClearTrigger(room) && ShouldHideItemBehindClear(forced: false))
+            return YamlReader.RoomBehaviour.KillForItem;
 
         return YamlReader.RoomBehaviour.None;
     }
+
+    /// <summary>
+    /// Decides whether an item room (that can use a kill trigger) should hide its item until cleared.
+    /// <paramref name="forced"/> is true when the room already has shutters that a kill trigger would
+    /// open anyway, so the only choice is "hidden item" vs "opened shutters with a visible item" —
+    /// in that case Sometimes also hides, since the room has to be cleared to progress regardless.
+    /// </summary>
+    private bool ShouldHideItemBehindClear(bool forced) => _config.HiddenItems switch
+    {
+        HiddenItemsOption.Off => false,
+        HiddenItemsOption.Always => true,
+        HiddenItemsOption.Sometimes => forced || _rnd.NextDouble() < 0.35,
+        _ => false,
+    };
 
     private void ReplaceShutters(Room room, YamlReader.DoorType replacement)
     {

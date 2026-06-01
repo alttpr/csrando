@@ -209,13 +209,18 @@ public class YamlReader
     public enum RoomBehaviour : int
     {
         None = 0,
-        KillForItemShutter = 1,
+        // Secret trigger "all dead": opens shutters when every enemy is killed, but the
+        // room item (if any) stays visible from the moment you enter. Use for pure shutter gates.
+        KillForShutter = 1,
         Leader = 2,
         GetTriforceShutter = 3,
         PushBlockShutter = 4,
         PushBlockStairs = 5,
         LeaderShutters = 6,
-        KillForItemShutterBoss = 7
+        // Secret trigger "foes for item": opens shutters AND keeps the room item hidden until
+        // every enemy is killed. This is the only non-boss trigger that actually hides an item.
+        // (Engine also uses this for the boss-drop item.) See CreateRoomObjects in the Z1 disasm.
+        KillForItem = 7
     }
 
     public class Level
@@ -947,7 +952,7 @@ public class YamlReader
 
                 // Connect this exit to the other room
                 string? doorKillRequirement = null;
-                if (door == DoorType.Shutter && (map.behaviour == (int)RoomBehaviour.KillForItemShutter || map.behaviour == (int)RoomBehaviour.KillForItemShutterBoss))
+                if (door == DoorType.Shutter && (map.behaviour == (int)RoomBehaviour.KillForShutter || map.behaviour == (int)RoomBehaviour.KillForItem))
                 {
                     doorKillRequirement = CreateRoomClearLogic(map, mapName);
                 }
@@ -1014,8 +1019,7 @@ public class YamlReader
             {
                 var itemName = (RoomBehaviour)map.behaviour switch
                 {
-                    RoomBehaviour.KillForItemShutter => $"{mapName} - Kill - Item",
-                    RoomBehaviour.KillForItemShutterBoss => (level.boss_room_id == map.map) ? $"{mapName} - Boss - Item" : $"{mapName} - Kill - Item",
+                    RoomBehaviour.KillForItem => (level.boss_room_id == map.map) ? $"{mapName} - Boss - Item" : $"{mapName} - Kill - Item",
                     _ => $"{mapName} - Item"
                 };
 
@@ -1044,8 +1048,7 @@ public class YamlReader
 
                 var roomItemRequirement = (RoomBehaviour)map.behaviour switch
                 {
-                    RoomBehaviour.KillForItemShutter => CreateRoomClearLogic(map, mapName),
-                    RoomBehaviour.KillForItemShutterBoss => CreateRoomClearLogic(map, mapName),
+                    RoomBehaviour.KillForItem => CreateRoomClearLogic(map, mapName),
                     _ => "fixed"
                 };
 

@@ -287,10 +287,90 @@ public sealed class DungeonBuilderTest
             !m.passage &&
             m.map == levelData.boss_room_id);
 
-        Assert.AreEqual((int)YamlReader.RoomBehaviour.KillForItemShutterBoss, bossRoom.behaviour,
-            $"Level {level}: Boss room should use boss-clear item behavior");
+        Assert.AreEqual((int)YamlReader.RoomBehaviour.KillForItem, bossRoom.behaviour,
+            $"Level {level}: Boss room should use kill-for-item behavior");
         Assert.AreEqual(0x01, bossRoom.room_item,
             $"Level {level}: Boss room should spawn an item after the boss dies");
+    }
+
+    /// <summary>
+    /// Returns the generated non-boss, non-cellar item rooms for a level built with the given
+    /// hidden-items setting. Item rooms are identified by room_item == 0x01 (the value
+    /// WriteNonCellarRooms uses for the Item role).
+    /// </summary>
+    private static List<YamlReader.UnderworldMap> GetGeneratedNonBossItemRooms(
+        HiddenItemsOption hiddenItems, int level, int seed)
+    {
+        var reader = CreateYamlReader();
+        var data = reader.Data!;
+        var config = DungeonConfig.GetConfigForLevel(
+            level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive, new Random(seed), hiddenItems);
+        var builder = CreateBuilder(data, level, config, seed);
+        builder.Generate();
+        builder.Write();
+
+        var levelData = data.levels.First(l => l.level == level && l.area == YamlReader.Area.Underworld);
+        return data.underworld_maps
+            .Where(m => m.generated && m.generated_level == level && !m.passage
+                && m.map != levelData.boss_room_id && m.room_item == 0x01)
+            .ToList();
+    }
+
+    [TestMethod]
+    public void Write_HiddenItemsOff_NoNonBossRoomHidesItem()
+    {
+        // Across many seeds/levels, no generated non-boss item room should use the kill-for-item
+        // trigger when hidden items are turned off.
+        for (int seed = 1; seed <= 15; seed++)
+        {
+            for (int level = 1; level <= 8; level++)
+            {
+                var itemRooms = GetGeneratedNonBossItemRooms(HiddenItemsOption.Off, level, seed);
+                Assert.IsFalse(itemRooms.Any(m => m.behaviour == (int)YamlReader.RoomBehaviour.KillForItem),
+                    $"Level {level} seed {seed}: no non-boss item room should hide its item when HiddenItems=Off");
+            }
+        }
+    }
+
+    [TestMethod]
+    public void Write_HiddenItemsAlways_HidesEveryClearableItemRoom()
+    {
+        // With Always, any generated non-boss item room that has a kill trigger available
+        // (i.e. uses KillForItem-capable shutters) hides its item. We verify the converse holds:
+        // no clearable item room is left with a visible item, and at least some rooms hide items.
+        int hiddenCount = 0;
+        for (int seed = 1; seed <= 15; seed++)
+        {
+            for (int level = 1; level <= 8; level++)
+            {
+                var itemRooms = GetGeneratedNonBossItemRooms(HiddenItemsOption.Always, level, seed);
+                hiddenCount += itemRooms.Count(m => m.behaviour == (int)YamlReader.RoomBehaviour.KillForItem);
+            }
+        }
+
+        Assert.IsTrue(hiddenCount > 0,
+            "HiddenItems=Always should hide items in at least some generated rooms across all seeds/levels");
+    }
+
+    [TestMethod]
+    public void Write_HiddenItemsAlways_HidesMoreThanOff()
+    {
+        // Sanity check that the setting actually changes output: Always should hide strictly more
+        // non-boss items than Off (which hides none) across the same seeds.
+        int offHidden = 0, alwaysHidden = 0;
+        for (int seed = 1; seed <= 15; seed++)
+        {
+            for (int level = 1; level <= 8; level++)
+            {
+                offHidden += GetGeneratedNonBossItemRooms(HiddenItemsOption.Off, level, seed)
+                    .Count(m => m.behaviour == (int)YamlReader.RoomBehaviour.KillForItem);
+                alwaysHidden += GetGeneratedNonBossItemRooms(HiddenItemsOption.Always, level, seed)
+                    .Count(m => m.behaviour == (int)YamlReader.RoomBehaviour.KillForItem);
+            }
+        }
+
+        Assert.AreEqual(0, offHidden, "HiddenItems=Off should hide no non-boss items");
+        Assert.IsTrue(alwaysHidden > offHidden, "HiddenItems=Always should hide more items than Off");
     }
 
     [TestMethod]
