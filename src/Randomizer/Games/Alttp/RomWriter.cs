@@ -54,9 +54,9 @@ public static class RomWriter
                 var itemToWrite = location.Item as Item ?? nothing;
 
                 rom.WriteItem(location, itemToWrite);
-                SetCreditsText(rom, world.WorldConfig, location, itemToWrite, getText);
+                SetCreditsText(rom, world.WorldConfig, location, location.Item, getText);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
-                SetHintText(rom, world.WorldConfig, location, itemToWrite, getText);
+                SetHintText(rom, world.WorldConfig, location, location.Item, getText);
                 rom.WriteLocationSpecificData(location, itemToWrite);
             }
         }
@@ -504,7 +504,7 @@ public static class RomWriter
         return text;
     }
 
-    private static void SetHintText(Rom rom, WorldConfig config, Vertex location, Item? item, GetItemTextOverride? getText)
+    private static void SetHintText(Rom rom, WorldConfig config, Vertex location, IItem? item, GetItemTextOverride? getText)
     {
         var (hintKey, hintTextMap) = location.Name switch
         {
@@ -657,7 +657,7 @@ public static class RomWriter
         }
     }
 
-    private static void SetCreditsText(Rom rom, WorldConfig config, Vertex location, Item? item, GetItemTextOverride? getText)
+    private static void SetCreditsText(Rom rom, WorldConfig config, Vertex location, IItem? item, GetItemTextOverride? getText)
     {
         var (creditsKey, creditsTextMap) = location.Name switch
         {
