@@ -209,7 +209,7 @@
                             />
 
                             <!-- Cellar connection lines -->
-                            {#each getCellarConnections(dungeon.rooms) as conn}
+                            {#each getCellarConnections(dungeon.rooms) as conn (`${conn.cellar.x},${conn.cellar.y}->${conn.target[0]},${conn.target[1]}`)}
                                 {@const cx =
                                     pad +
                                     conn.cellar.x * cellW +
@@ -330,7 +330,7 @@
                                 {/if}
 
                                 <!-- Doors -->
-                                {#each Object.entries(room.doors) as [dir, type]}
+                                {#each Object.entries(room.doors) as [dir, type] (dir)}
                                     {@const dSize = 14}
                                     {@const dHalf = dSize / 2}
                                     {@const dx =
