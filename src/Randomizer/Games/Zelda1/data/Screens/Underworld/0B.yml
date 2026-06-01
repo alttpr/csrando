@@ -6,15 +6,15 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
@@ -39,6 +39,21 @@ nodes:
       type: Region
       from: [11, 0]
       to: [11, 6]
+
+    - name: "Left water"
+      type: NoPlace
+      from: [1, 0]
+      to: [2, 6]
+
+    - name: "Top water"
+      type: NoPlace
+      from: [3, 1]
+      to: [10, 2]
+
+    - name: "Right water"
+      type: NoPlace
+      from: [9, 3]
+      to: [10, 6]
 
 edges:
   undirected:

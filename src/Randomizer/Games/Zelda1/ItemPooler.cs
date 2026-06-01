@@ -34,46 +34,38 @@ internal sealed class ItemPooler : IItemPooler
     /// <summary>Get list of all items in their weighted sets.</summary>
     public PooledItem[] Pool { get; }
 
+    private static readonly int[] VanillaKeyCounts = [4, 3, 4, 3, 5, 4, 3, 4, 2];
+
+    private int GetKeyCountForLevel(World world, int level)
+    {
+        if (!world.Config.DungeonShuffle || world.YamlData == null)
+            return VanillaKeyCounts[level - 1];
+
+        var levelData = world.YamlData.levels.First(l => l.level == level);
+        var lockedDoors = world.YamlData.underworld_maps
+            .Where(m => levelData.rooms.Contains(m.map))
+            .Sum(m => m.doors.Count(d => d == (int)YamlReader.DoorType.Locked || d == (int)YamlReader.DoorType.Locked2));
+
+        // Each locked door is counted from both sides, so divide by 2; add 1 extra for safety
+        return Math.Max(1, lockedDoors / 2 + 1);
+    }
+
     /// <summary>Get list of all items for <paramref name="world"/> in their weighted sets.</summary>
     private List<PooledItem> GetPoolForWorld(World world)
     {
-        List<PooledItem> worldSet =
-        [
-            new PooledItem(new ItemSetName("z1d1", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d1", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d1", world), 1, world.GetItem("Key")), 4),
+        List<PooledItem> worldSet = [];
 
-            new PooledItem(new ItemSetName("z1d2", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d2", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d2", world), 1, world.GetItem("Key")), 3),
+        for (int level = 1; level <= 9; level++)
+        {
+            var setName = new ItemSetName($"z1d{level}", world);
+            int keyCount = GetKeyCountForLevel(world, level);
 
-            new PooledItem(new ItemSetName("z1d3", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d3", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d3", world), 1, world.GetItem("Key")), 4),
+            worldSet.Add(new PooledItem(setName, 1, world.GetItem("Map")));
+            worldSet.Add(new PooledItem(setName, 1, world.GetItem("Compass")));
+            worldSet.AddRange(Enumerable.Repeat(new PooledItem(setName, 1, world.GetItem("Key")), keyCount));
+        }
 
-            new PooledItem(new ItemSetName("z1d4", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d4", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d4", world), 1, world.GetItem("Key")), 3),
-
-            new PooledItem(new ItemSetName("z1d5", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d5", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d5", world), 1, world.GetItem("Key")), 5),
-
-            new PooledItem(new ItemSetName("z1d6", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d6", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d6", world), 1, world.GetItem("Key")), 4),
-
-            new PooledItem(new ItemSetName("z1d7", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d7", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d7", world), 1, world.GetItem("Key")), 3),
-
-            new PooledItem(new ItemSetName("z1d8", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d8", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d8", world), 1, world.GetItem("Key")), 4),
-
-            new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Map")),
-            new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Compass")),
-            .. Enumerable.Repeat(new PooledItem(new ItemSetName("z1d9", world), 1, world.GetItem("Key")), 2),
+        worldSet.AddRange([
 
             new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("SwordL1")),
 
@@ -99,14 +91,56 @@ internal sealed class ItemPooler : IItemPooler
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Boomerang")),
             new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("MagicBoomerang")),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("HeartContainer")), 9),
+        ]);
 
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("HeartContainer")), 4),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Bombs")), 20),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Key")), 8),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Rupee")), 5),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Rupee5")), 12),
-        ];
+        // Fill the remaining empty locations with filler. The number of generated locations
+        // varies per seed (especially with DungeonShuffle), so size the filler to exactly fill
+        // what's left after the logic items above — otherwise we either run short (empty
+        // locations get "Nothing") or overflow (surplus filler is silently dropped).
+        worldSet.AddRange(BuildFiller(world, emptyLocationCount: CountEmptyLocations(world), nonFillerCount: worldSet.Count));
 
         return worldSet;
+    }
+
+    // Filler distribution: weights are relative proportions of the leftover locations.
+    private static readonly (string Item, int Weight)[] FillerRatio =
+    [
+        ("HeartContainer", 4),
+        ("Bombs", 20),
+        ("Key", 8),
+        ("Rupee", 5),
+        ("Rupee5", 12),
+    ];
+
+    private static int CountEmptyLocations(World world) =>
+        world.GetLocationsOfType(VertexType.Item).Count(v => v.Item == null);
+
+    /// <summary>
+    /// Generate exactly <c>emptyLocationCount - nonFillerCount</c> filler items, distributed
+    /// across the filler item types according to <see cref="FillerRatio"/>.
+    /// </summary>
+    private static IEnumerable<PooledItem> BuildFiller(World world, int emptyLocationCount, int nonFillerCount)
+    {
+        int fillerNeeded = emptyLocationCount - nonFillerCount;
+        if (fillerNeeded <= 0)
+            yield break;
+
+        int ratioTotal = FillerRatio.Sum(f => f.Weight);
+
+        // Distribute proportionally, tracking the running total so rounding never leaves us
+        // short or over: the last filler type takes whatever remains.
+        int placed = 0;
+        for (int i = 0; i < FillerRatio.Length; i++)
+        {
+            var (itemName, ratioWeight) = FillerRatio[i];
+            int count = i == FillerRatio.Length - 1
+                ? fillerNeeded - placed
+                : (int)((long)fillerNeeded * ratioWeight / ratioTotal);
+
+            for (int n = 0; n < count; n++)
+                yield return new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem(itemName));
+
+            placed += count;
+        }
     }
 }

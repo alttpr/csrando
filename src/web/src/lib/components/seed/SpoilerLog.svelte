@@ -1,4 +1,6 @@
 <script lang="ts">
+    import DungeonMapViewer from "./DungeonMapViewer.svelte";
+
     interface Props {
         spoilerLog:
             | Record<string, Record<string, string>>
@@ -37,11 +39,44 @@
         isValidSpoilerLog(spoilerLog) ? spoilerLog : null,
     );
 
+    // Extract dungeon map data if present
+    const dungeonMaps = $derived(() => {
+        if (!validSpoilerLog) return [];
+        const mapSection = validSpoilerLog["z1DungeonMaps"];
+        if (!mapSection?.data) return [];
+        try {
+            return JSON.parse(mapSection.data) as Array<{
+                level: number;
+                width: number;
+                height: number;
+                rooms: Array<{
+                    x: number;
+                    y: number;
+                    roles: string[];
+                    doors: Record<string, string>;
+                    enemy: string | null;
+                    enemyCount: number;
+                    segment: number;
+                    screen: string;
+                    connectedTo: number[][] | null;
+                }>;
+                itemPlacements: Record<string, string>;
+            }>;
+        } catch {
+            return [];
+        }
+    });
+
+    // Special section keys that are rendered separately (not as key-value pairs)
+    const specialSections = new Set(["z1DungeonMaps"]);
+
     // Sort sections to put "meta" at the end and keep the rest alphabetically sorted
     const sortedSections = $derived(() => {
         if (!validSpoilerLog) return [];
 
-        const entries = Object.entries(validSpoilerLog);
+        const entries = Object.entries(validSpoilerLog).filter(
+            ([key]) => !specialSections.has(key),
+        );
         const metaSection = entries.find(([key]) => key === "meta");
         const otherSections = entries
             .filter(([key]) => key !== "meta")
@@ -169,6 +204,10 @@
                 class:hidden={!isExpanded}
                 aria-hidden={!isExpanded}
             >
+                {#if dungeonMaps().length > 0}
+                    <DungeonMapViewer dungeons={dungeonMaps()} />
+                {/if}
+
                 <div
                     class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
                 >

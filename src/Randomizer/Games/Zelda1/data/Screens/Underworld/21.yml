@@ -6,25 +6,31 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
-      
+
   regions:
     - name: "Middle"
       type: Region
       from: [0, 0]
       to: [11, 6]
-      
+
+  blocks: [
+    [1, 1], [4, 1], [7, 1], [10, 1],
+    [1, 3], [4, 3], [7, 3], [10, 3],
+    [1, 5], [4, 5], [7, 5], [10, 5]
+  ]
+
 edges:
   undirected:
     fixed:

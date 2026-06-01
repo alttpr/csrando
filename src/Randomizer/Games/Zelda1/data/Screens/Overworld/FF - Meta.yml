@@ -22,6 +22,14 @@ nodes:
       type: Meta
       item: UseSword
 
+    - name: "Use Bow"
+      type: Meta
+      item: UseBow
+
+    - name: "Bow And Arrows"
+      type: Meta
+      item: BowAndArrows
+
     - name: "Push Blocks"
       type: Meta
       item: PushBlocks
@@ -71,9 +79,14 @@ edges:
     Bow:
       - ["Can Hurt Enemies", "Can Defeat Gohma"]
       - ["Can Hurt Enemies", "Can Shoot Ganon"]
+      - ["Meta", "Use Bow"]
     Recorder:
       - ["Can Hurt Enemies", "Can Defeat Digdogger"]
     SilverArrows:
       - ["Can Shoot Ganon", "Can Defeat Ganon"]
+      - ["Use Bow", "Bow And Arrows"]
+    Arrows:
+      - ["Use Bow", "Bow And Arrows"]
+    
       
           

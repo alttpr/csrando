@@ -6,15 +6,15 @@ nodes:
     - name: "Left edge"
       type: Scroll
       direction: Left
-      
+
     - name: "Right edge"
       type: Scroll
       direction: Right
-      
+
     - name: "Top edge"
       type: Scroll
       direction: Up
-      
+
     - name: "Bottom edge"
       type: Scroll
       direction: Down
@@ -24,14 +24,36 @@ nodes:
       type: Region
       from: [0, 0]
       to: [11, 6]
-      
+
+    - name: "Left block column"
+      type: NoPlace
+      from: [1, 1]
+      to: [1, 5]
+
+    - name: "Right block column"
+      type: NoPlace
+      from: [10, 0]
+      to: [10, 5]
+
+    - name: "Top block row"
+      type: NoPlace
+      from: [2, 1]
+      to: [8, 1]
+
+    - name: "Bottom block row"
+      type: NoPlace
+      from: [2, 5]
+      to: [9, 5]
+
   meta:
     - name: "Push block"
       type: Push
-      
+
     - name: "Stairs"
       type: Stairs
-      
+
+  blocks: [[2, 8], [3, 5], [3, 6], [3, 7], [3, 8]]
+
 edges:
   undirected:
     fixed:

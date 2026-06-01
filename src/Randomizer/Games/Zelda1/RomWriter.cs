@@ -18,5 +18,11 @@ public static class RomWriter
             rom.WriteOverworldMapData(world, prng, data);
             rom.WriteSpecial(world, prng, data);
         }
+
+        if (world.Config.DungeonShuffle)
+        {
+            rom.WriteUnderworldMapData(data);
+            rom.WriteLevelData(data);
+        }
     }
 }

@@ -15,6 +15,31 @@ public class Config
     [Category("Gameplay")]
     public EntranceShuffleOption EntranceShuffle { get; init; } = EntranceShuffleOption.None;
 
+    [Category("Gameplay")]
+    [Description("This is in early testing, be aware of potential bugs and balance issues!")]
+    public bool DungeonShuffle { get; init; } = false;
+
+    // Sub-options below only have an effect when DungeonShuffle is enabled, so they are grouped
+    // under a "Dungeon Shuffle" subcategory and hidden in the UI until it is turned on.
+
+    [Category("Gameplay")]
+    [Subcategory("Dungeon Shuffle")]
+    [DependsOn(nameof(DungeonShuffle), true)]
+    [Default(DungeonStyleOption.Progressive)]
+    public DungeonStyleOption DungeonStyle { get; init; } = DungeonStyleOption.Progressive;
+
+    [Category("Gameplay")]
+    [Subcategory("Dungeon Shuffle")]
+    [DependsOn(nameof(DungeonShuffle), true)]
+    [Default(EnemyPlacementOption.Progressive)]
+    public EnemyPlacementOption EnemyPlacement { get; init; } = EnemyPlacementOption.Progressive;
+
+    [Category("Gameplay")]
+    [Subcategory("Dungeon Shuffle")]
+    [DependsOn(nameof(DungeonShuffle), true)]
+    [Default(HiddenItemsOption.Sometimes)]
+    public HiddenItemsOption HiddenItems { get; init; } = HiddenItemsOption.Sometimes;
+
     [Ignore("Starting inventory is too advenced to be represented with simple attributes")]
     public List<string> StartingEquipment { get; init; } = [];
 
@@ -34,3 +59,33 @@ public class Config
 }
 
 public enum EntranceShuffleOption { None, Overworld }
+
+/// <summary>
+/// Controls overall dungeon generation style.
+/// Progressive: vanilla-like scaling (small early, large late) with slight fuzz.
+/// Wild: each dungeon gets randomized parameters independent of level order.
+/// Megadungeon: all dungeons are large and complex with more segments and cellars.
+/// Nightmare: maximum size, maximum complexity, maximum pain.
+/// Minimal: smallest possible dungeons for quick testing (6 rooms, no locked doors, no cellars).
+/// </summary>
+public enum DungeonStyleOption { Progressive, Wild, Megadungeon, Nightmare, Minimal }
+
+/// <summary>
+/// Controls how enemies are placed in generated dungeons.
+/// Vanilla: each dungeon only uses enemies from its matching vanilla level.
+/// Progressive: enemies are bucketed by difficulty tier (1–3, 4–5, 6–8, 9) —
+///   a dungeon can draw from any level in the same tier.
+/// Random: any dungeon-valid enemy can appear in any dungeon.
+/// </summary>
+public enum EnemyPlacementOption { Vanilla, Progressive, Random }
+
+/// <summary>
+/// Controls whether generated dungeon items are hidden until the room is cleared of enemies.
+/// (Boss rooms always reveal their item on the boss's death regardless of this setting.)
+/// Off: every item is visible on entry; rooms that would have needed a kill trigger get their
+///   shutters opened instead, so nothing has to be cleared for the item.
+/// Sometimes: item rooms that gate shutters behind a kill hide their item, plus a moderate chance
+///   for open (non-shutter) item rooms with killable enemies.
+/// Always: every item room that can use a kill trigger hides its item until the room is cleared.
+/// </summary>
+public enum HiddenItemsOption { Off, Sometimes, Always }

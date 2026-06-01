@@ -1,0 +1,189 @@
+---
+title: Settings
+description: A reference for every setting available in the Basic options view, and what each choice does.
+lastUpdated: 2026-06-01
+---
+
+# Settings
+
+This page describes the settings available in the **Basic** options view of the seed
+generator. Each setting has an "Options detail" selector at the top of the config page
+(Basic / Advanced / Expert / Work in progress) — switching to a higher level reveals
+additional, more niche settings that are not covered here.
+
+Settings are grouped by the randomizer they apply to. The **A Link to the Past**
+randomizer is available on its own, and is also part of the **Combo (Quad)** randomizer
+together with Zelda 1, Super Metroid and Metroid 1.
+
+---
+
+## A Link to the Past
+
+### Goal
+
+* **Goal** — The victory condition for the seed.
+  * *Ganon* — Defeat Agahnim's tower, then defeat Ganon. The standard goal.
+  * *Fast Ganon* — Like Ganon, but you can reach and defeat Ganon as soon as the crystal
+    requirement is met, without first clearing the rest of the game.
+  * *Dungeons* — All dungeons must be cleared before Ganon can be beaten.
+  * *Pedestal* — Pull the Triforce from the Master Sword pedestal in the Lost Woods.
+  * *Triforce Hunt* — Collect a number of scattered Triforce pieces, then turn them in.
+  * *Trifecta* — A Triforce-hunt variant requiring all three goals.
+* **Crystals Ganon** — How many crystals are required to make Ganon vulnerable (0–7, or
+  *Dungeons* to tie it to clearing all dungeons). Default 7.
+* **Crystals Tower** — How many crystals are required to open the entrance to Ganon's
+  Tower (0–7). Default 7.
+* **Triforce Pieces** — When the goal is *Triforce Hunt* / *Trifecta*, the total number of
+  Triforce pieces placed in the world.
+* **Goal Required Count** — When the goal is *Triforce Hunt* / *Trifecta*, how many of
+  those pieces you must collect to win.
+
+### Gameplay
+
+* **State** — The starting state of the world.
+  * *Standard* — Begins with the rain/uncle intro sequence in Hyrule Castle.
+  * *Open* — Skips the intro; you start free to explore. (Default.)
+  * *Inverted* — The Light World and Dark World are swapped; you begin in the Dark World.
+* **Weapon** — How your sword is handled.
+  * *Randomized* — Swords are shuffled into the item pool like any other item.
+  * *Assured* — You are guaranteed to start with a sword.
+  * *Vanilla* — Swords stay in their original locations.
+  * *Swordless* — No swords at all; the game is balanced to be completable without one.
+* **Entrance Shuffle** — Randomizes which doors/entrances connect to which interiors.
+  * *None* — Vanilla connections.
+  * *Simple* / *Restricted* / *Full* / *Crossed* / *Insanity* — Progressively more chaotic
+    shuffling of entrances, from light reshuffling up to fully scrambled connections.
+* **Enemy Shuffle** — Randomizes which enemies appear in rooms.
+  * *None* — Vanilla enemies. *Shuffled* — enemies reshuffled within sensible limits.
+    *Random* — fully random enemy placement.
+* **Boss Shuffle** — Randomizes dungeon bosses.
+  * *None* — Vanilla bosses. *Simple* — bosses shuffled among their dungeons. *Full* —
+    bosses placed more freely. *Random* — fully randomized.
+* **Enable Hints** — Adds in-game hint tiles/telepathy tiles that give clues about item
+  locations.
+
+### Item Placement
+
+* **Accessibility** — How reachable item locations must be.
+  * *Items* — Every item location must be reachable (100% accessibility). (Default.)
+  * *Locations* — Only the items needed to beat the game must be reachable; some chests
+    may be logically unreachable.
+* **Small Keys shuffled outside dungeon** — If off, randomly-placed small keys stay inside
+  their own dungeon. If on, they can land anywhere in the world.
+* **Big Keys shuffled outside dungeon** — Same as above, for big keys.
+* **Maps shuffled outside dungeon** — Same as above, for dungeon maps.
+* **Compasses shuffled outside dungeon** — Same as above, for dungeon compasses.
+
+### Items / quality of life
+
+* **Retro bow** — A Zelda 1-style bow that consumes rupees; arrow drops are replaced with
+  blue rupees.
+* **Retro keys** — All small keys become generic keys that work in any door.
+* **Silvers Only At Ganon** — Restricts silver arrows so they only function in the Ganon
+  fight.
+* **Reveal Boots Location** — Marks the Pegasus Boots location on the map from the start.
+* **Map On Pickup** — Only show uncollected crystals/pendants on the overworld map once you
+  have picked up the matching dungeon map.
+* **Compass Counter** — Adds a HUD counter of remaining items in a dungeon (*Off* / on map
+  *Pickup* / always *On*).
+* **HUD Item Counter** — Shows a count of certain items on the HUD.
+* **Escape Assist** — In *Standard* state, grants unlimited magic/arrows/bombs during the
+  Hyrule Castle escape if your starting weapon needs them.
+* **Pseudo Boots** — Lets you dash without the Pegasus Boots (a quality-of-life/practice
+  option).
+* **Catchable Fairies** — Allow catching fairies in a bottle. (Default on.)
+* **Catchable Bees** — Allow catching bees in a bottle. (Default on.)
+* **Hookshot stuns enemies** — Whether the hookshot stuns enemies. (Default on.)
+* **Boomerang stuns enemies** — Whether the boomerang stuns enemies. (Default on.)
+* **Cane Of Byrna Invulnerability** — Whether the Cane of Byrna grants invulnerability.
+  (Default on.)
+* **Silvers Auto Equip** — When silver arrows are auto-equipped (*Off* / on *Collection* /
+  at *Ganon* / *Both*).
+* **Ganon Agahnim RNG** — Controls the RNG pattern Ganon and Agahnim use for their attacks
+  (*Table* uses the vanilla pattern; *None* removes it).
+
+### Cosmetic
+
+* **Tile Room Pattern** — Whether the falling-tile room trap layouts are *Default* or
+  *Random*.
+* **Moldorm Eye Count** — A cosmetic tweak to how many eyes Moldorm has (0–8).
+* **Molderp** — "Everyone loves a derpy Moldorm." A cosmetic Moldorm tweak; works best with
+  2 or more eyes.
+
+> Post-patch cosmetic options such as music, menu speed, heart color, heart-beep speed,
+> quick swap and reduced flashing are applied **after** generation, on the seed/patch page,
+> rather than on the config form.
+
+---
+
+## Zelda 1 *(Combo only)*
+
+### Gameplay
+
+* **Entrance Shuffle** — *None* keeps vanilla overworld connections; *Overworld* shuffles
+  overworld entrances.
+* **Dungeon Shuffle** — Generates brand-new randomized dungeon layouts instead of the
+  vanilla ones. *(Early testing — expect possible bugs and balance quirks.)* The three
+  options below only take effect when this is enabled:
+  * **Dungeon Style** — Overall generation style.
+    * *Progressive* — Vanilla-like scaling: small early dungeons, larger late ones. (Default.)
+    * *Wild* — Each dungeon gets randomized size/complexity independent of level order.
+    * *Megadungeon* — All dungeons are large and complex.
+    * *Nightmare* — Maximum size and complexity.
+    * *Minimal* — Smallest possible dungeons (quick to clear).
+  * **Enemy Placement** — How enemies are chosen for generated dungeons.
+    * *Vanilla* — Each dungeon only uses enemies from its matching vanilla level.
+    * *Progressive* — Enemies are drawn from a matching difficulty tier. (Default.)
+    * *Random* — Any dungeon-valid enemy can appear in any dungeon.
+  * **Hidden Items** — Whether dungeon items are hidden until the room is cleared.
+    * *Off* — Items are always visible on entry.
+    * *Sometimes* — Item rooms that gate shutters behind a kill hide their item, plus a
+      moderate chance for other killable rooms. (Default.)
+    * *Always* — Every eligible item room hides its item until cleared.
+
+### Goal
+
+* **Triforces** — How many Triforce pieces (dungeon completions) are required (0–8).
+  Default 8.
+
+---
+
+## Super Metroid *(Combo only)*
+
+### Gameplay
+
+* **Logic** — The difficulty/skill level assumed by item placement.
+  * *Basic* — Only fundamental techniques are required.
+  * *Medium* — Adds intermediate tricks (heat runs, suitless Maridia, mid-air morph, etc.).
+  * *Hard* — Adds advanced/precise tricks.
+  * *Custom* — Use a custom technique set (configured elsewhere).
+* **Map Randomizer** — *None* uses the vanilla map; *Standard* enables map randomization.
+* **Spawn All Items** — Spawn every item immediately regardless of game state (e.g. without
+  needing to kill bosses such as Phantoon).
+
+### Goal
+
+* **Keycards** — Whether boss keycards are required. *None* removes them; *All* requires
+  keycards for the relevant doors.
+* **Fast G4** — When *Keycards = All*, removes the extra key door before the Golden Four,
+  shortening the path. (Only relevant with keycards enabled.)
+* **Bosses** — How many major bosses must be defeated for the goal (0–4). Default 4.
+
+---
+
+## Metroid 1 *(Combo only)*
+
+### Gameplay
+
+* **Logic** — The skill level assumed by item placement. Currently only *Basic* is
+  available.
+
+---
+
+## Notes
+
+* The **Language** option is currently English-only.
+* The chosen randomizer (A Link to the Past or Combo/Quad) is determined by which "Create
+  New … Seed" page you're on, not by a setting on the form.
+* Many settings show a **Random** choice in the dropdown — picking it lets the generator
+  roll that setting for you when the seed is created.
