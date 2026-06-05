@@ -174,8 +174,15 @@ public sealed class RomTest
 
         Assert.AreEqual((int)YamlReader.DoorType.Shutter, bossRoom.doors[bossDoorIndex],
             $"Level {level}: Boss-room exit into the end room should be shuttered.");
-        Assert.AreEqual((int)YamlReader.DoorType.Shutter, zeldaRoom.doors[endDoorIndex],
-            $"Level {level}: End-room entrance from the boss room should be shuttered.");
+
+        // The end-room side stays open for levels 1-8 so the exit isn't trapped shut on entry
+        // (its behaviour is None, so a shutter there would never reopen). Only level 9's end room
+        // uses a kill-trigger that reopens its shutter, so it keeps the shutter.
+        int expectedEndDoor = level == 9
+            ? (int)YamlReader.DoorType.Shutter
+            : (int)YamlReader.DoorType.Open;
+        Assert.AreEqual(expectedEndDoor, zeldaRoom.doors[endDoorIndex],
+            $"Level {level}: End-room entrance from the boss room has the expected door type.");
 
         int nonWallDoorsOnEndRoom = zeldaRoom.doors.Count(d => d != (int)YamlReader.DoorType.Wall);
         Assert.AreEqual(1, nonWallDoorsOnEndRoom,

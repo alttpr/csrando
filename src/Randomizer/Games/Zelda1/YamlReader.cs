@@ -1352,7 +1352,17 @@ public class YamlReader
         // The last node provides the item
         var clearItemNode = FindOrCreateNode($"{mapName} - Clear - Final", roomClearItem);
 
-        AddDirectedEdge(currentNode, clearItemNode, "fixed");
+        // A screen with a stepladder-gated path can spawn kill-required enemies across the gap.
+        // The item drop may sit on the accessible side, but you can't clear the room (and thus
+        // spawn the item / open the shutters) without reaching every enemy, so the clear requires
+        // the ladder. Ranged weapons (arrows, sword beams) could in theory reach across, but the
+        // logic models neither enemy positions nor ranged kills, so we require the ladder for now.
+        // TODO: allow ranged kills to satisfy this once enemy-position/ranged logic exists.
+        bool needsLadder = screen.edges.undirected != null
+            && screen.edges.undirected.TryGetValue("StepLadder", out var ladderEdges)
+            && ladderEdges.Count > 0;
+
+        AddDirectedEdge(currentNode, clearItemNode, needsLadder ? "StepLadder" : "fixed");
 
         return roomClearItem;
     }

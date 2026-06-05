@@ -179,6 +179,46 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    public void Generate_Level9_CheckRoomGatesEveryExit()
+    {
+        // The check room gates level 9 behind the triforces. The only ungated way out is the south
+        // door back to the start; every other exit must be a shutter (the triforce gate) and no
+        // cellar may touch it. Two bypasses are guarded here:
+        //  - A cellar (stair passage) attached to the check room bypasses doors entirely. Level 9
+        //    has multiple segments, whose connector cellars are created before the check room is
+        //    chosen, so a naive selection can land it on a connector endpoint.
+        //  - A non-south door that is anything other than a shutter (Open/Bombable/Locked) lets the
+        //    player leave without the triforces. ReplaceShutters used to reopen the gate when a
+        //    neighbouring room resolved its own shutters open.
+        const int southDoorIndex = 1;
+        for (int seed = 1; seed <= 40; seed++)
+        {
+            var reader = CreateYamlReader();
+            var data = reader.Data!;
+            var builder = CreateBuilder(data, 9, seed: seed);
+            builder.Generate();
+            builder.Write();
+
+            var levelMaps = data.underworld_maps.Where(m => m.generated && m.generated_level == 9).ToList();
+            var checkRoom = levelMaps.Single(m => !m.passage && m.level_nine_check == true);
+
+            bool cellarTouchesCheckRoom = levelMaps.Any(m =>
+                m.passage && (m.passage_left == checkRoom.map || m.passage_right == checkRoom.map));
+            Assert.IsFalse(cellarTouchesCheckRoom,
+                $"Seed {seed}: Level 9 check room must not have a cellar passage that bypasses its triforce shutters.");
+
+            for (int dir = 0; dir < checkRoom.doors.Length; dir++)
+            {
+                if (dir == southDoorIndex)
+                    continue;
+                var door = (YamlReader.DoorType)checkRoom.doors[dir];
+                Assert.IsTrue(door is YamlReader.DoorType.Shutter or YamlReader.DoorType.Wall,
+                    $"Seed {seed}: Level 9 check room exit {dir} is {door}; non-south exits must be Shutter or Wall so the triforce gate cannot be bypassed.");
+            }
+        }
+    }
+
+    [TestMethod]
     public void Generate_NonLevel9_NoLevelNineCheckRoom()
     {
         var reader = CreateYamlReader();
@@ -244,6 +284,78 @@ public sealed class DungeonBuilderTest
             Assert.IsTrue(int.TryParse(room.Screen, System.Globalization.NumberStyles.HexNumber, null, out int screenId),
                 $"Level {level} Room({room.X},{room.Y}): Screen '{room.Screen}' is not valid hex");
             Assert.IsTrue(screenId >= 0, $"Level {level} Room({room.X},{room.Y}): Screen should be assigned (>= 0)");
+        }
+    }
+
+    [TestMethod]
+    public void Generate_BlockedPassageScreens_AlwaysReachable()
+    {
+        // Screens 0x0E (vertical) and 0x0F (horizontal) have a walled-off central passage that
+        // nothing bridges to the side regions; it's reachable only through its perpendicular
+        // doors. The engine still drops the room item / spawns enemies there, so a room placed on
+        // one of these screens must have a door opening onto the passage or it looks broken.
+        // Door indices: N=0, S=1, W=2, E=3.
+        for (int seed = 1; seed <= 40; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var data = CreateYamlReader().Data!;
+                var builder = CreateBuilder(data, level, seed: seed);
+                builder.Generate();
+                builder.Write();
+
+                foreach (var room in data.underworld_maps.Where(m =>
+                    m.generated && m.generated_level == level && !m.passage))
+                {
+                    bool Open(int i) => (YamlReader.DoorType)room.doors[i] != YamlReader.DoorType.Wall;
+
+                    if (room.screen == 0x0E)
+                        Assert.IsTrue(Open(0) || Open(1),
+                            $"Seed {seed} L{level} room {room.local_room_id:X2}: screen 0x0E needs a N/S door to reach its central passage.");
+                    else if (room.screen == 0x0F)
+                        Assert.IsTrue(Open(2) || Open(3),
+                            $"Seed {seed} L{level} room {room.local_room_id:X2}: screen 0x0F needs a W/E door to reach its central passage.");
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    public void Generate_ItemLocations_AreNeverOrphaned()
+    {
+        // Every generated item drop must be reachable from one of its room's doors, even assuming
+        // the player owns every item (the reachability walk includes conditional edges such as the
+        // stepladder). FixOrphanedItemLocations swaps a room's screen when the initial pick strands
+        // the item; this guards that no orphan survives across many seeds and levels.
+        for (int seed = 1; seed <= 40; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var data = CreateYamlReader().Data!;
+                var builder = CreateBuilder(data, level, seed: seed);
+                builder.Generate();
+                builder.Write();
+
+                var levelData = data.levels.First(l => l.level == level && l.area == YamlReader.Area.Underworld);
+
+                foreach (var room in data.underworld_maps.Where(m =>
+                    m.generated && m.generated_level == level && !m.passage && m.room_item == 0x01))
+                {
+                    // Boss/end rooms use forced screens that aren't swapped; their drop is at the
+                    // boss/NPC and handled separately, so exclude them from this invariant.
+                    if (room.map == levelData.boss_room_id || room.map == levelData.triforce_room_id)
+                        continue;
+
+                    var screen = data.underworld_screens.First(s =>
+                        s.area == YamlReader.Area.Underworld && s.screen == room.screen);
+                    int encodedPos = levelData.shortcut_or_item_pos_array[room.item_pos];
+
+                    Assert.IsTrue(
+                        DungeonBuilder.IsItemPositionReachable(screen, room.doors, encodedPos),
+                        $"Seed {seed} L{level} room {room.local_room_id:X2} (screen {room.screen:X2}): " +
+                        $"item at pos {encodedPos:X2} is orphaned — no door reaches its region.");
+                }
+            }
         }
     }
 

@@ -77,8 +77,11 @@ internal record DungeonConfig
         if (rnd.NextDouble() < 0.2)
             cellars = Math.Clamp(cellars + rnd.Next(-1, 2), 0, 3);
 
+        // Reserve enough free grid slots for every cellar that will be created after layout:
+        // (segments - 1) connector cellars + item cellars + 1 spare.
         int maxRooms = baseConfig.Width * baseConfig.Height;
-        rooms = Math.Clamp(rooms, 6, maxRooms - 2);
+        int reserved = (segments - 1) + cellars + 1;
+        rooms = Math.Clamp(rooms, 6, maxRooms - reserved);
 
         return baseConfig with
         {
@@ -93,9 +96,10 @@ internal record DungeonConfig
     private static DungeonConfig GenerateWild(Random rnd)
     {
         int size = rnd.Next(5, 9);
-        int rooms = rnd.Next(10, size * size - 2);
-        int segments = rooms >= 20 ? rnd.Next(1, 4) : rnd.Next(1, 3);
+        int segments = rnd.Next(1, 4);
         int cellars = rnd.Next(0, 3);
+        int reserved = (segments - 1) + cellars + 1;
+        int rooms = rnd.Next(10, size * size - reserved);
         double emptyChance = 0.05 + rnd.NextDouble() * 0.15;
         double doorComplexity = 0.7 + rnd.NextDouble() * 0.8;
 
@@ -721,6 +725,12 @@ internal class DungeonBuilder
             return null;
         if (!northNeighbor.Neighbors.Any(n => !n.HasAnyRole(RoomRole.Cellar) && n != startRoom))
             return null;
+        // The check room gates the dungeon via triforce shutters on its (non-south) doors. A cellar
+        // stair passage is a separate connection that bypasses doors entirely, so a check room with
+        // one would let the player descend straight into the rest of level 9 without the triforces
+        // (multi-segment connectors are assigned before the check room is chosen). Reject it.
+        if (northNeighbor.Neighbors.Any(n => n.HasAnyRole(RoomRole.Cellar)))
+            return null;
 
         return northNeighbor;
     }
@@ -969,8 +979,14 @@ internal class DungeonBuilder
         if (string.IsNullOrEmpty(bossToEndDirection))
             throw new InvalidOperationException("Boss room must be directly adjacent to the end room.");
 
+        // The boss-side shutter stays closed until the boss is killed, gating entry to the
+        // triforce room (vanilla behaviour). The triforce-room side, however, must stay open:
+        // a shutter there has no trigger to reopen (the End room's behaviour is None for levels
+        // 1-8), so the engine would close it on entry and trap the exit shut. Level 9's end room
+        // (the Zelda room) uses KillForShutter and reopens on clear, so it keeps the shutter.
         bossRoom.Doors[bossToEndDirection] = YamlReader.DoorType.Shutter;
-        endRoom.Doors[OppositeDirection(bossToEndDirection)] = YamlReader.DoorType.Shutter;
+        endRoom.Doors[OppositeDirection(bossToEndDirection)] =
+            _level == 9 ? YamlReader.DoorType.Shutter : YamlReader.DoorType.Open;
 
         // Level 9: force special door configurations
         if (_level == 9)
@@ -1000,6 +1016,7 @@ internal class DungeonBuilder
         AssignItems(criticalPath, criticalPathDistances);
         ResolveRoomBehaviours();
         SelectItemPositionSlots();
+        FixOrphanedItemLocations();
 
     }
 
@@ -1229,6 +1246,13 @@ internal class DungeonBuilder
 
             var neighbor = room.Neighbors.FirstOrDefault(n => GetDirection(room, n) == direction);
             if (neighbor == null)
+                continue;
+
+            // Never reopen the level-9 check room's gate shutters. They are a deliberate triforce
+            // gate forced on after door assignment; this room (a neighbor of the check room) only
+            // has a shutter here because that gating put one on its side too. Opening our own side
+            // is fine, but propagating it would drag the gate open and let the player bypass it.
+            if (neighbor.HasAnyRole(RoomRole.LevelNineCheck))
                 continue;
 
             var opposite = OppositeDirection(direction);
@@ -2061,6 +2085,201 @@ internal class DungeonBuilder
         return false;
     }
 
+    /// <summary>
+    /// Screens with a walled-off central passage that no item or NoPlace tile bridges to the
+    /// side regions, so it's reachable only through the listed door directions. The engine still
+    /// drops the room item / spawns enemies there, so a room without one of these doors strands
+    /// the passage and looks broken. 0x0E is vertical (N/S), 0x0F horizontal (W/E).
+    /// </summary>
+    private static readonly Dictionary<int, string[]> BlockedPassageScreenDoors = new()
+    {
+        [0x0E] = ["N", "S"],
+        [0x0F] = ["W", "E"],
+    };
+
+    /// <summary>
+    /// Returns the cardinal directions ("N"/"S"/"W"/"E") in which the room has a neighbour. Every
+    /// neighbour becomes a passable door (open/locked/bombable/shutter — never a wall), so this is
+    /// the set of edges the player can actually enter and leave the room through.
+    /// </summary>
+    private static HashSet<string> GetRoomDoorDirections(Room room)
+    {
+        var directions = new HashSet<string>();
+        foreach (var neighbor in room.Neighbors)
+        {
+            string dir = GetDirection(room, neighbor);
+            if (!string.IsNullOrEmpty(dir))
+                directions.Add(dir);
+        }
+        return directions;
+    }
+
+    // Orphaned item recovery
+
+    /// <summary>
+    /// Last line of defence against item locations the player could never reach. After screens,
+    /// doors, items and item-position slots are all decided, a room's item can still land in a
+    /// walkable region that no door connects to — even assuming every item in the game (the
+    /// reachability search below walks all edges, including conditional ones like the stepladder).
+    /// The graph filler already refuses to put progression there, but a stranded location still
+    /// looks like a bug to players. For each such room, swap to a drop-in compatible screen where
+    /// the item is reachable; if none exists, leave it (best effort — no worse than before).
+    /// </summary>
+    private void FixOrphanedItemLocations()
+    {
+        var connectivity = PrecalculateScreenConnectivity();
+        var slots = _itemPositionSlots;
+
+        // Plain item rooms only: start/end/boss/check rooms and cellars use fixed special screens
+        // (and boss enemy placement is screen-coupled), so they're not candidates for a free swap.
+        var itemRooms = _map.UsedNonCellarRooms
+            .Where(r => r.HasAnyRole(RoomRole.Item)
+                     && !r.HasAnyRole(RoomRole.Boss | RoomRole.End | RoomRole.Start
+                                      | RoomRole.LevelNineCheck | RoomRole.Connector | RoomRole.Stairs))
+            .ToList();
+
+        foreach (var room in itemRooms)
+        {
+            var doorDirs = GetRoomDoorDirections(room);
+            var currentScreen = GetUnderworldScreen(room.Screen);
+            if (currentScreen == null || ItemReachableOnScreen(currentScreen, room, doorDirs, slots))
+                continue;
+
+            // Prefer the simplest compatible screen (fewest regions) — those have the least chance
+            // of stranding the item or the room's enemies somewhere else.
+            var replacement = _data.underworld_screens
+                .Where(s => s.screen != room.Screen)
+                .Where(s => ScreenFitsRoom(s, room, connectivity[s.screen]))
+                .Where(s => SwapKeepsEnemyValid(room, s))
+                .Where(s => SwapKeepsBehaviourValid(room, s))
+                .Where(s => ItemReachableOnScreen(s, room, doorDirs, slots))
+                .OrderBy(s => s.nodes.regions.Count(r => r.type == YamlReader.RegionType.Region))
+                .ToList();
+
+            if (replacement.Count == 0)
+                continue;
+
+            int fewestRegions = replacement[0].nodes.regions.Count(r => r.type == YamlReader.RegionType.Region);
+            var best = replacement
+                .Where(s => s.nodes.regions.Count(r => r.type == YamlReader.RegionType.Region) == fewestRegions)
+                .ToList();
+
+            room.Screen = best[_rnd.Next(best.Count)].screen;
+            room.PushBlock = room.Behaviour is YamlReader.RoomBehaviour.PushBlockShutter or YamlReader.RoomBehaviour.PushBlockStairs
+                || room.Screen == ScreenId.PushCross || room.Screen == ScreenId.PushStairs;
+        }
+    }
+
+    /// <summary>True if the room's item position on the given screen sits in a region reachable
+    /// from one of the room's doors (walking all edges, i.e. assuming every item is owned).</summary>
+    private bool ItemReachableOnScreen(YamlReader.Screen screen, Room room, HashSet<string> doorDirs, IReadOnlyList<int> slots)
+    {
+        if (!TryGetItemPosition(slots, screen, out int pos))
+            return false; // no slot is even walkable here — Write would throw, so this screen is unusable
+        var region = GetItemRegion(screen, pos);
+        return region != null && IsRegionReachableFromDoors(screen, doorDirs, region);
+    }
+
+    /// <summary>Resolves the encoded item position a room would use on a screen (first walkable
+    /// slot, matching <see cref="GetItemPositionSlot"/>), without throwing when none fits.</summary>
+    private static bool TryGetItemPosition(IReadOnlyList<int> slots, YamlReader.Screen? screen, out int encodedPos)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (IsValidItemPosition(screen, slots[i]))
+            {
+                encodedPos = slots[i];
+                return true;
+            }
+        }
+        encodedPos = 0;
+        return false;
+    }
+
+    private static YamlReader.Region? GetItemRegion(YamlReader.Screen screen, int encodedPos)
+    {
+        int x = (encodedPos >> 4) - 2, y = (encodedPos & 0x0F) - 6;
+        return screen.nodes.regions.FirstOrDefault(r =>
+            r.type == YamlReader.RegionType.Region &&
+            r.from[0] <= x && r.from[1] <= y && r.to[0] >= x && r.to[1] >= y);
+    }
+
+    private static bool IsRegionReachableFromDoors(YamlReader.Screen screen, HashSet<string> doorDirs, YamlReader.Region region)
+    {
+        var entranceByDir = screen.nodes.exits
+            .Where(e => e.type == YamlReader.ExitType.Entrance)
+            .GroupBy(e => YamlDirectionToString(e.direction))
+            .ToDictionary(g => g.Key, g => g.First().name);
+
+        return doorDirs.Any(d => entranceByDir.TryGetValue(d, out var entrance)
+            && HasPathBetween(screen, entrance, region.name));
+    }
+
+    /// <summary>
+    /// True if an item at <paramref name="encodedItemPos"/> on the screen can be reached from at
+    /// least one of the room's open doors, walking every edge (i.e. assuming all items are owned).
+    /// <paramref name="doorTypes"/> is indexed N, S, W, E as in <c>UnderworldMap.doors</c>. Exposed
+    /// for tests so they can assert generated item locations are never orphaned.
+    /// </summary>
+    internal static bool IsItemPositionReachable(YamlReader.Screen screen, IReadOnlyList<int> doorTypes, int encodedItemPos)
+    {
+        var doorDirs = new HashSet<string>();
+        if ((YamlReader.DoorType)doorTypes[0] != YamlReader.DoorType.Wall) doorDirs.Add("N");
+        if ((YamlReader.DoorType)doorTypes[1] != YamlReader.DoorType.Wall) doorDirs.Add("S");
+        if ((YamlReader.DoorType)doorTypes[2] != YamlReader.DoorType.Wall) doorDirs.Add("W");
+        if ((YamlReader.DoorType)doorTypes[3] != YamlReader.DoorType.Wall) doorDirs.Add("E");
+
+        var region = GetItemRegion(screen, encodedItemPos);
+        return region != null && IsRegionReachableFromDoors(screen, doorDirs, region);
+    }
+
+    /// <summary>True if the room's already-assigned enemy still fits a candidate screen, so the
+    /// swap doesn't need to re-roll enemies. Evaluated with the room temporarily on that screen.</summary>
+    private bool SwapKeepsEnemyValid(Room room, YamlReader.Screen screen)
+    {
+        if (room.EnemyId < 0)
+            return true;
+
+        int original = room.Screen;
+        room.Screen = screen.screen;
+        try
+        {
+            if (!EnemyFitsRoom((room.EnemyCount, room.EnemyId, room.EnemyMode), room, _level))
+                return false;
+            // If shutters can only open by clearing the room, the enemy must stay killable there.
+            bool needsClear = room.Doors.Values.Any(d => d == YamlReader.DoorType.Shutter)
+                && !RoomSupportsPushBlockShutters(room);
+            return !needsClear || RoomHasKillableEnemies(room);
+        }
+        finally
+        {
+            room.Screen = original;
+        }
+    }
+
+    /// <summary>True if the candidate screen still supports whatever trigger the room's resolved
+    /// behaviour relies on, so the swap doesn't have to re-resolve behaviours.</summary>
+    private bool SwapKeepsBehaviourValid(Room room, YamlReader.Screen screen)
+    {
+        int original = room.Screen;
+        room.Screen = screen.screen;
+        try
+        {
+            return room.Behaviour switch
+            {
+                YamlReader.RoomBehaviour.KillForItem or YamlReader.RoomBehaviour.KillForShutter
+                    => RoomSupportsKillShutters(room) && RoomHasKillableEnemies(room),
+                YamlReader.RoomBehaviour.PushBlockShutter => RoomSupportsPushBlockShutters(room),
+                YamlReader.RoomBehaviour.PushBlockStairs => RoomSupportsHiddenStairs(room),
+                _ => true,
+            };
+        }
+        finally
+        {
+            room.Screen = original;
+        }
+    }
+
     private bool ScreenFitsRoom(YamlReader.Screen screen, Room room, HashSet<(string, string)> connectivity)
     {
         if (screen.screen == ScreenId.ZeldaRoom || screen.screen == ScreenId.GanonRoom || screen.screen == ScreenId.TriforceRoom)
@@ -2092,13 +2311,13 @@ internal class DungeonBuilder
         if (screen.screen == 0x1B && room.Neighbors.Any(n => n.X == room.X + 1 && n.Y == room.Y))
             return false;
 
-        var directions = new HashSet<string>();
-        foreach (var neighbor in room.Neighbors)
-        {
-            string dir = GetDirection(room, neighbor);
-            if (!string.IsNullOrEmpty(dir))
-                directions.Add(dir);
-        }
+        var directions = GetRoomDoorDirections(room);
+
+        // Don't use a blocked-passage screen unless a door actually opens onto the passage,
+        // otherwise the walled-off middle (and its item/enemies) is unreachable.
+        if (BlockedPassageScreenDoors.TryGetValue(screen.screen, out var passageDoors)
+            && !passageDoors.Any(directions.Contains))
+            return false;
 
         // A dead-end room (single connection) is only usable on a screen that lets you enter
         // and leave through that same edge. Without this check, push-style screens (which only
