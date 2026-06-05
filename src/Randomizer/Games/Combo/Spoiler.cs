@@ -26,7 +26,7 @@ internal static partial class Spoiler
         if (comboWorld.AlttpWorld is AlttpWorld alttpWorld)
         {
             includedGames.Add("A Link to the Past");
-            Alttp.Spoiler.Log([alttpWorld], spoilerLog, "A Link to the Past");
+            Alttp.Spoiler.Log([alttpWorld], spoilerLog, "A Link to the Past", itemName: ItemWithGame);
         }
 
         if (comboWorld.SMWorld is SuperMetroidWorld superMetroidWorld)
@@ -63,6 +63,8 @@ internal static partial class Spoiler
         PruneEmptySection(spoiler, "Locations");
     }
 
+    private static string ItemWithGame(IItem item) => item.Name + $" ({GetGameId(item.World)})";
+
     private static void AppendLocationsForWorld(
         Dictionary<string, Dictionary<string, string>> spoiler,
         IWorld world,
@@ -74,17 +76,18 @@ internal static partial class Spoiler
             var group = parts.Length > 1 ? parts[0] : "Locations";
             var sectionKey = $"{gameLabel} - {group}";
             var section = GetOrCreateSection(spoiler, sectionKey);
-            var gameId = location.Item?.World switch
-            {
-                AlttpWorld _ => "Z3",
-                SuperMetroidWorld _ => "SM",
-                Zelda1World _ => "Z1",
-                MetroidWorld _ => "M1",
-                _ => "Unknown"
-            };
-            section[location.Name] = (location.Item?.Name ?? "Nothing") + $" ({gameId})";
+            section[location.Name] = location.Item is { } item ? ItemWithGame(item) : "Nothing";
         }
     }
+
+    private static string GetGameId(IWorld? world) => world switch
+    {
+        AlttpWorld _ => "Z3",
+        SuperMetroidWorld _ => "SM",
+        Zelda1World _ => "Z1",
+        MetroidWorld _ => "M1",
+        _ => "Unknown"
+    };
 
     private static void AppendStartingEquipment(
         Dictionary<string, Dictionary<string, string>> spoiler,
@@ -143,7 +146,7 @@ internal static partial class Spoiler
             int y = int.Parse(match.Groups[3].Value);
 
             if (dungeonsByLevel.TryGetValue(level, out var dungeon))
-                dungeon.ItemPlacements[$"{x},{y}"] = location.Item.Name;
+                dungeon.ItemPlacements[$"{x},{y}"] = ItemWithGame(location.Item);
         }
     }
 

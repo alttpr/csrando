@@ -5,12 +5,14 @@ using BaseSpoilerLog = Graph.SpoilerLog;
 
 internal static class Spoiler
 {
-    public static void Log(IWorld[] worlds, BaseSpoilerLog spoilerLog, string groupPrefix = "")
+    public static void Log(IWorld[] worlds, BaseSpoilerLog spoilerLog, string groupPrefix = "", GetItemName? itemName = null)
     {
         if (worlds[0] is not World world)
             return;
         if (world.WorldConfig.Alttp is not { } config)
             return;
+
+        itemName ??= static item => item.Name;
 
         var spoiler = spoilerLog.Spoiler;
         string g = groupPrefix == "" ? "" : $"{groupPrefix} - ";
@@ -24,7 +26,7 @@ internal static class Spoiler
             var parts = location.Name.Split(" - ", 2);
             var group = g + (parts.Length > 1 ? parts[0] : "Locations");
             spoiler.TryAdd(group, []);
-            spoiler[group][location.Name] = location.Item?.Name ?? "Nothing";
+            spoiler[group][location.Name] = location.Item is { } item ? itemName(item) : "Nothing";
         }
 
         if (config.EnemyShuffle != EnemyShuffleOption.None)
@@ -124,3 +126,5 @@ internal static class Spoiler
         return defeatCondition.Condition.Item.Name.Replace("DarkDefeat", "").Replace("Defeat", "");
     }
 }
+
+public delegate string GetItemName(IItem item);
