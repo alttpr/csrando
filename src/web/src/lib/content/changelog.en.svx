@@ -31,6 +31,8 @@ lastUpdated: 2024-09-15
   * Fixed Zelda 1 generated level 9 dungeons where the triforce gate could be bypassed - a cellar stairway connected to the entry check room, or shutters being reopened by an adjacent room, could let players into the rest of the dungeon without the required triforces
   * Fixed Zelda 1 generated dungeons placing item locations inside walled-off "chute" rooms (the screens with a sealed middle passage) where the item could be impossible to reach; rooms whose layout would strand an item are now rejected, and as a safety net any item still left unreachable swaps the room to a layout that can be picked up
   * Fixed Zelda 1 generated dungeon logic not requiring the Stepladder to clear a room whose kill-required enemies can only be reached across a water gap, which could leave a kill-gated door or item unobtainable
+  * Fixed a Zelda 1 bug where enabling both Overworld shuffle and Dungeon Shuffle would cause "Take any road" stairs to freeze the game
+  * Fixed Zelda 1 generated Minimal dungeon size to generate properly
   * Improved Zelda 1 dungeon generation reliability by reserving grid space for cellar and stairway rooms, preventing occasional generation failures
   * The spoiler log for quad combo seeds now properly shows the game which an item is from
 

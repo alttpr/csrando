@@ -44,9 +44,10 @@ internal class EntranceShuffler
             throw new Exception("Expected 4 any roads");
         }
 
+        var overworldLevel = _data.levels.Single(l => l.level == 0);
         for (int i = 0; i < anyRoads.Count; i++)
         {
-            _data.levels[0].cellar_room_id_array[i] = anyRoads[i].map;
+            overworldLevel.cellar_room_id_array[i] = anyRoads[i].map;
         }
 
         // Find all dungeons and write the recorder data

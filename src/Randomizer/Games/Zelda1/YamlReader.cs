@@ -673,7 +673,7 @@ public class YamlReader
             throw new Exception("Data not loaded");
         }
 
-        var level = data.levels.First();
+        var level = data.levels.Single(l => l.level == 0 && l.area == Area.Overworld);
         var screen = data.overworld_screens.First(s => s.area == map.area && s.screen == map.screen);
         var mapName = $"{map.area} - {map.name}";
 
@@ -1298,7 +1298,7 @@ public class YamlReader
     }
 
     private string CreateRoomClearLogic(UnderworldMap map, string mapName)
-    {        
+    {
         var enemies = GetEnemiesInRoom(map).Distinct().ToList();
         if (enemies.Count == 0)
         {
@@ -1308,11 +1308,11 @@ public class YamlReader
         var killableEnemies = new List<string>();
         foreach (var enemyName in enemies)
         {
-             var enemy = data!.enemies.enemies.FirstOrDefault(e => e.name == enemyName);
-             if (enemy != null && enemy.kill_items != null && enemy.kill_items.Count > 0)
-             {
-                 killableEnemies.Add(enemyName);
-             }
+            var enemy = data!.enemies.enemies.FirstOrDefault(e => e.name == enemyName);
+            if (enemy != null && enemy.kill_items != null && enemy.kill_items.Count > 0)
+            {
+                killableEnemies.Add(enemyName);
+            }
         }
 
         // If there are enemies but none can be killed (e.g., Bubbles, Traps),
@@ -1409,30 +1409,30 @@ public class YamlReader
 
         if (effectiveId >= 0x62)
         {
-             int listId = effectiveId - 0x62;
-             var list = data!.enemies.enemy_lists.FirstOrDefault(l => l.id == listId);
-             if (list != null)
-             {
-                 // Take the first N enemies from the list
-                 for (int i = 0; i < enemyCount && i < list.data.Count; i++)
-                 {
-                     var enemyId = list.data[i];
-                     var enemy = data.enemies.enemies.FirstOrDefault(e => e.id == enemyId);
-                     if (enemy != null && enemy.name != "Nothing") enemies.Add(enemy.name);
-                 }
-             }
+            int listId = effectiveId - 0x62;
+            var list = data!.enemies.enemy_lists.FirstOrDefault(l => l.id == listId);
+            if (list != null)
+            {
+                // Take the first N enemies from the list
+                for (int i = 0; i < enemyCount && i < list.data.Count; i++)
+                {
+                    var enemyId = list.data[i];
+                    var enemy = data.enemies.enemies.FirstOrDefault(e => e.id == enemyId);
+                    if (enemy != null && enemy.name != "Nothing") enemies.Add(enemy.name);
+                }
+            }
         }
         else
         {
-             var enemy = data!.enemies.enemies.FirstOrDefault(e => e.id == effectiveId);
-             if (enemy != null && enemy.name != "Nothing")
-             {
-                 // Add N copies of the enemy
-                 for(int i = 0; i < enemyCount; i++)
-                 {
+            var enemy = data!.enemies.enemies.FirstOrDefault(e => e.id == effectiveId);
+            if (enemy != null && enemy.name != "Nothing")
+            {
+                // Add N copies of the enemy
+                for (int i = 0; i < enemyCount; i++)
+                {
                     enemies.Add(enemy.name);
-                 }
-             }
+                }
+            }
         }
 
         return enemies;

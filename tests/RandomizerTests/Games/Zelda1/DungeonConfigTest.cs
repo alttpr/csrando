@@ -113,7 +113,7 @@ public sealed class DungeonConfigTest
             var config = DungeonConfig.GetConfigForLevel(level, DungeonStyleOption.Minimal, EnemyPlacementOption.Progressive, rnd);
             Assert.AreEqual(4, config.Width, $"Level {level}: Minimal width should be 4");
             Assert.AreEqual(4, config.Height, $"Level {level}: Minimal height should be 4");
-            Assert.AreEqual(6, config.Rooms, $"Level {level}: Minimal rooms should be 6");
+            Assert.AreEqual(8, config.Rooms, $"Level {level}: Minimal rooms should be 8");
             Assert.AreEqual(1, config.Segments, $"Level {level}: Minimal should have 1 segment");
             Assert.AreEqual(0, config.ItemCellars, $"Level {level}: Minimal should have 0 item cellars");
             Assert.AreEqual(0.0, config.DoorComplexity, $"Level {level}: Minimal should have 0 door complexity");

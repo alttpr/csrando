@@ -154,7 +154,10 @@ internal record DungeonConfig
         {
             Width = 4,
             Height = 4,
-            Rooms = 6,
+            // Needs enough item-eligible rooms (non start/boss/end/connector) to host every
+            // dungeon's Map + Compass + key(s); 8 leaves headroom even for L9, whose boss room
+            // doesn't double as an item room. See AssignItems' requiredItems check.
+            Rooms = 8,
             Segments = 1,
             ItemCellars = 0,
             ExtraItemSlots = -1,
@@ -1120,7 +1123,14 @@ internal class DungeonBuilder
         int extraItems = _config.ExtraItemSlots >= 0
             ? _config.ExtraItemSlots
             : Math.Max(5, roomCount / 4);
-        int totalItems = lockedDoorsCount + extraItems;
+
+        // The item pool (ItemPooler) always assigns Map + Compass + keys to this dungeon's
+        // z1d{level} set, where keys = Max(1, lockedDoorsCount + 1). Every dungeon must therefore
+        // generate at least that many item rooms, or item placement later fails globally with
+        // "Not enough set locations available: z1d{level}". Keep this in sync with
+        // ItemPooler.GetKeyCountForLevel.
+        int requiredItems = 2 + Math.Max(1, lockedDoorsCount + 1);
+        int totalItems = Math.Max(lockedDoorsCount + extraItems, requiredItems);
         int itemsPlaced = 0;
 
         // Reserve one dungeon item slot for the boss room so defeating the boss always
@@ -1158,6 +1168,13 @@ internal class DungeonBuilder
             itemsPlaced++;
             candidates.Remove(room);
         }
+
+        // If this layout couldn't host enough item rooms for the dungeon's item pool, reject it
+        // so DataLoader retries with a fresh layout instead of failing globally during item
+        // placement. (Small configs like Minimal can run out of eligible rooms on unlucky seeds.)
+        if (itemsPlaced < requiredItems)
+            throw new InvalidOperationException(
+                $"Level {_level}: only {itemsPlaced} item rooms could be placed, but the item pool needs {requiredItems}.");
     }
 
     private void ResolveRoomBehaviours()
@@ -1694,8 +1711,13 @@ internal class DungeonBuilder
         const double shutterBase = 0.15;
         double baseNonOpen = (lockedBase + bombableBase + shutterBase) * _config.DoorComplexity;
 
-        double lockedShare = lockedBase / baseNonOpen;
-        double bombableShare = bombableBase / baseNonOpen;
+        // DoorComplexity == 0 means every door is Open. Without this guard the share divisions
+        // below are x/0 = +Infinity, which makes lockedProb infinite and turns *every* door into
+        // a locked door (the opposite of the intent, and far too many keys for the item pool).
+        bool allDoorsOpen = baseNonOpen <= 0.0;
+
+        double lockedShare = allDoorsOpen ? 0.0 : lockedBase / baseNonOpen;
+        double bombableShare = allDoorsOpen ? 0.0 : bombableBase / baseNonOpen;
 
         foreach (var room in _map.UsedRooms)
         {
@@ -1709,33 +1731,40 @@ internal class DungeonBuilder
                 if (neighbor.X < room.X || (neighbor.X == room.X && neighbor.Y < room.Y))
                     continue;
 
-                bool onCritical = criticalSet.Contains(room) && criticalSet.Contains(neighbor);
-
-                double modifier = 0.0;
-                if (onCritical)
-                    modifier = -0.2;
-                else if (criticalPathDistances.TryGetValue(room, out int distRoom) &&
-                         criticalPathDistances.TryGetValue(neighbor, out int distNeighbor))
-                    modifier = (distRoom + distNeighbor) * 0.05;
-
-                double nonOpen = Math.Clamp(baseNonOpen + modifier, 0.05, 0.90);
-                double lockedProb = nonOpen * lockedShare;
-                double bombableProb = nonOpen * bombableShare;
-                double shutterProb = nonOpen * (1.0 - lockedShare - bombableShare);
-
-                if (!RoomCanUseAnyShutterTrigger(room) || !RoomCanUseAnyShutterTrigger(neighbor))
-                    shutterProb = 0.0;
-
-                double roll = _rnd.NextDouble();
                 YamlReader.DoorType doorType;
-                if (roll < lockedProb)
-                    doorType = YamlReader.DoorType.Locked;
-                else if (roll < lockedProb + bombableProb)
-                    doorType = YamlReader.DoorType.Bombable;
-                else if (roll < lockedProb + bombableProb + shutterProb)
-                    doorType = YamlReader.DoorType.Shutter;
-                else
+                if (allDoorsOpen)
+                {
                     doorType = YamlReader.DoorType.Open;
+                }
+                else
+                {
+                    bool onCritical = criticalSet.Contains(room) && criticalSet.Contains(neighbor);
+
+                    double modifier = 0.0;
+                    if (onCritical)
+                        modifier = -0.2;
+                    else if (criticalPathDistances.TryGetValue(room, out int distRoom) &&
+                             criticalPathDistances.TryGetValue(neighbor, out int distNeighbor))
+                        modifier = (distRoom + distNeighbor) * 0.05;
+
+                    double nonOpen = Math.Clamp(baseNonOpen + modifier, 0.05, 0.90);
+                    double lockedProb = nonOpen * lockedShare;
+                    double bombableProb = nonOpen * bombableShare;
+                    double shutterProb = nonOpen * (1.0 - lockedShare - bombableShare);
+
+                    if (!RoomCanUseAnyShutterTrigger(room) || !RoomCanUseAnyShutterTrigger(neighbor))
+                        shutterProb = 0.0;
+
+                    double roll = _rnd.NextDouble();
+                    if (roll < lockedProb)
+                        doorType = YamlReader.DoorType.Locked;
+                    else if (roll < lockedProb + bombableProb)
+                        doorType = YamlReader.DoorType.Bombable;
+                    else if (roll < lockedProb + bombableProb + shutterProb)
+                        doorType = YamlReader.DoorType.Shutter;
+                    else
+                        doorType = YamlReader.DoorType.Open;
+                }
 
                 string dirToNeighbor = GetDirection(room, neighbor);
                 string dirToRoom = OppositeDirection(dirToNeighbor);

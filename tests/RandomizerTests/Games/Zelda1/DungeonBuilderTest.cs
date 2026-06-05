@@ -375,6 +375,51 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    public void Generate_Minimal_AllLevelsHostEnoughItemRoomsForPool()
+    {
+        // ItemPooler always assigns Map + Compass + key(s) to each dungeon's z1d{level} set, so
+        // every generated dungeon must host at least that many item rooms. Minimal is the tightest
+        // style and previously failed item placement globally ("Not enough set locations
+        // available: z1d{level}"). Mirror DataLoader's retry and confirm every level finds a valid
+        // layout. Minimal has no locked doors, so the floor is Map + Compass + 1 key = 3.
+        const int requiredItemRooms = 3;
+
+        for (int level = 1; level <= 9; level++)
+        {
+            for (int seed = 0; seed < 30; seed++)
+            {
+                var reader = CreateYamlReader();
+                var config = DungeonConfig.GetConfigForLevel(
+                    level, DungeonStyleOption.Minimal, EnemyPlacementOption.Progressive, new Random(seed));
+
+                DungeonBuilder? builder = null;
+                string? lastError = null;
+                for (int attempt = 0; attempt < 50 && builder is null; attempt++)
+                {
+                    var candidate = CreateBuilder(reader.Data!, level, config, seed * 50 + attempt);
+                    try
+                    {
+                        candidate.Generate();
+                        builder = candidate;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        // Unusable layout; retry with a fresh draw, exactly like DataLoader.
+                        lastError = ex.Message;
+                    }
+                }
+
+                Assert.IsNotNull(builder,
+                    $"Level {level} seed {seed}: no valid Minimal layout within the retry budget. Last error: {lastError}");
+
+                int itemRoomCount = builder.GetSpoilerData().Rooms.Count(r => r.Roles.Contains("Item"));
+                Assert.IsTrue(itemRoomCount >= requiredItemRooms,
+                    $"Level {level} seed {seed}: {itemRoomCount} item rooms, pool needs {requiredItemRooms}.");
+            }
+        }
+    }
+
+    [TestMethod]
     [DataRow(1)]
     [DataRow(2)]
     [DataRow(3)]

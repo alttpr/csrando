@@ -63,8 +63,9 @@ public class Rom : GameRom
 
 
         // This should probably go into its own WriteLevelData later when it's complete
-        // Write the any road targets back to the ROM
-        Write(0x631334, data.levels[0].cellar_room_id_array.ToBytes());
+        // Write the any road targets back to the ROM.
+        var overworldLevel = data.levels.Single(l => l.level == 0 && l.area == Zelda1.YamlReader.Area.Overworld);
+        Write(0x631334, overworldLevel.cellar_room_id_array.ToBytes());
     }
 
     public void WriteOverworldMapData(World world, PRNG prng, Zelda1.YamlReader.YamlData data)

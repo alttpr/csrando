@@ -66,7 +66,7 @@ public enum EntranceShuffleOption { None, Overworld }
 /// Wild: each dungeon gets randomized parameters independent of level order.
 /// Megadungeon: all dungeons are large and complex with more segments and cellars.
 /// Nightmare: maximum size, maximum complexity, maximum pain.
-/// Minimal: smallest possible dungeons for quick testing (6 rooms, no locked doors, no cellars).
+/// Minimal: smallest practical dungeons for quick testing (8 rooms, no locked doors, no cellars).
 /// </summary>
 public enum DungeonStyleOption { Progressive, Wild, Megadungeon, Nightmare, Minimal }
 
