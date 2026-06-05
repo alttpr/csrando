@@ -25,6 +25,14 @@ lastUpdated: 2024-09-15
   * Fixed an ALTTP logic issue where the logic wrongly assumed that you could walk back from cactus to throne room
   * Added a few more enemy bans in ALTTP that could cause issues (Ganon's Tower, Ice Palace, Swamp Palace)
 
+* Hotfix: 0.4.0a
+  * Fixed Zelda 1 dungeon progress (collected items, explored rooms on the map, defeated bosses and the triforce) resetting in level 1 and the bottom row of level 9 after returning from another game - the dungeon state region was being overwritten during the transition by the restored routine data and the temporary stack
+  * Fixed a Zelda 1 generated dungeon softlock where the shutter behind the triforce room (levels 1-8) closed on entry with no way to reopen it, trapping the player after defeating the boss
+  * Fixed Zelda 1 generated level 9 dungeons where the triforce gate could be bypassed - a cellar stairway connected to the entry check room, or shutters being reopened by an adjacent room, could let players into the rest of the dungeon without the required triforces
+  * Fixed Zelda 1 generated dungeons placing item locations inside walled-off "chute" rooms (the screens with a sealed middle passage) where the item could be impossible to reach; rooms whose layout would strand an item are now rejected, and as a safety net any item still left unreachable swaps the room to a layout that can be picked up
+  * Fixed Zelda 1 generated dungeon logic not requiring the Stepladder to clear a room whose kill-required enemies can only be reached across a water gap, which could leave a kill-gated door or item unobtainable
+  * Improved Zelda 1 dungeon generation reliability by reserving grid space for cellar and stairway rooms, preventing occasional generation failures
+
 ## 2025-11-06
 ### Alttpr - Version 32.0
 * Initial release
