@@ -1556,7 +1556,7 @@ internal class DungeonBuilder
         int minDistance = (int)(criticalPathDistances.Values.Max() * distanceFactor);
 
         var candidates = _map.UsedRooms
-            .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.Cellar | RoomRole.Connector) &&
+            .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.Cellar | RoomRole.Connector | RoomRole.LevelNineCheck) &&
                         criticalPathDistances[r] >= minDistance)
             .ToArray();
 
