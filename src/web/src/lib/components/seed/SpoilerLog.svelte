@@ -1,5 +1,6 @@
 <script lang="ts">
     import DungeonMapViewer from "./DungeonMapViewer.svelte";
+    import M1MapViewer from "./M1MapViewer.svelte";
 
     interface Props {
         spoilerLog:
@@ -67,8 +68,31 @@
         }
     });
 
+    // Extract the M1 generated map if present
+    const m1Map = $derived(() => {
+        if (!validSpoilerLog) return null;
+        const mapSection = validSpoilerLog["m1Map"];
+        if (!mapSection?.data) return null;
+        try {
+            return JSON.parse(mapSection.data) as {
+                cells: Array<{
+                    x: number;
+                    y: number;
+                    area: string;
+                    role?: string | null;
+                    screen: string;
+                    edges: Record<string, string>;
+                }>;
+                itemPlacements: Record<string, string>;
+                landmarks: Record<string, string>;
+            };
+        } catch {
+            return null;
+        }
+    });
+
     // Special section keys that are rendered separately (not as key-value pairs)
-    const specialSections = new Set(["z1DungeonMaps"]);
+    const specialSections = new Set(["z1DungeonMaps", "m1Map"]);
 
     // Sort sections to put "meta" at the end and keep the rest alphabetically sorted
     const sortedSections = $derived(() => {
@@ -206,6 +230,10 @@
             >
                 {#if dungeonMaps().length > 0}
                     <DungeonMapViewer dungeons={dungeonMaps()} />
+                {/if}
+
+                {#if m1Map()}
+                    <M1MapViewer map={m1Map()!} />
                 {/if}
 
                 <div

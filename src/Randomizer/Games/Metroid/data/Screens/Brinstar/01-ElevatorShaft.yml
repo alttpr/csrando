@@ -5,11 +5,11 @@ scroll: Vertical
 nodes:
   exits:
       - name: "Top"
-        type: Scroll
+        type: Elevator
         direction: Up
 
       - name: "Bottom"
-        type: Scroll
+        type: Elevator
         direction: Down
 
 edges:
