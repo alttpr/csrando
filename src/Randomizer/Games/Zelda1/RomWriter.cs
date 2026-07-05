@@ -11,6 +11,7 @@ public static class RomWriter
         var data = world.YamlData!;
 
         rom.WriteTriforceGoal(world);
+        rom.WriteBookRevealsMaps(world);
         rom.WriteItems(world);
         rom.WriteCavePrices(world, prng);
         rom.WriteShuffledCaveData(world, data);

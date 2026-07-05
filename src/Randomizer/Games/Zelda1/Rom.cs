@@ -41,6 +41,13 @@ public partial class Rom : GameRom
         Write(0x657000, [(byte)triforceGoal]);
     }
 
+    // config_book_reveals_maps lives immediately after config_triforce in config.asm
+    // ($8AF000 -> PC 0x657000), so this byte is at $8AF001 -> PC 0x657001.
+    public void WriteBookRevealsMaps(World world)
+    {
+        Write(0x657001, [(byte)(world.Config.BookRevealsMaps ? 1 : 0)]);
+    }
+
     // The extended cave tables (48 entries = cave IDs 0x10-0x3F, 3 bytes each) live contiguously at
     // an explicit org in the ASM ($8A9600+). SNES->PC for this
     // bank is PC = SNES - 0x258000, so $8A9600 -> 0x651600.

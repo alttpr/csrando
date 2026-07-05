@@ -60,7 +60,16 @@ internal sealed class ItemPooler : IItemPooler
             var setName = new ItemSetName($"z1d{level}", world);
             int keyCount = GetKeyCountForLevel(world, level);
 
-            worldSet.Add(new PooledItem(setName, 1, world.GetItem("Map")));
+            // With MapPlacement enabled, the Map is constrained to the tighter z1d{level}m set,
+            // which DungeonBuilder/YamlReader attach only to item rooms near the dungeon entrance.
+            // It is also placed first (weight 0, before keys/compass) so the assumed filler still
+            // sees the keys in its inventory and can reach an entrance room that sits behind a
+            // locked door; once keys are placed elsewhere such a room could become unreachable.
+            bool constrainMap = world.Config.DungeonShuffle && world.Config.MapPlacement != MapPlacementOption.Off;
+            var mapSetName = constrainMap ? new ItemSetName($"z1d{level}m", world) : setName;
+            int mapWeight = constrainMap ? 0 : 1;
+
+            worldSet.Add(new PooledItem(mapSetName, mapWeight, world.GetItem("Map")));
             worldSet.Add(new PooledItem(setName, 1, world.GetItem("Compass")));
             worldSet.AddRange(Enumerable.Repeat(new PooledItem(setName, 1, world.GetItem("Key")), keyCount));
         }

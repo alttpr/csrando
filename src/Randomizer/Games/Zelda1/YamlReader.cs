@@ -203,6 +203,9 @@ public class YamlReader
         public int generated_level;
         public int local_room_id;
         public Dictionary<Direction, int>? neighbor_map_ids;
+        // When true, this room's item location also joins the tighter z1d{level}m set so the
+        // dungeon Map is forced here (MapPlacement Early/Closest). See DungeonBuilder.MarkMapEarlyRoom.
+        public bool map_early;
     }
 
     public enum DoorType : int
@@ -1138,7 +1141,7 @@ public class YamlReader
                     { "type", VertexType.Item },
                     { "item", null! },
                     { "address", map.generated ? 0x651000 + map.generated_level * 0x80 + map.local_room_id : 0x650000 + map.map },
-                    { "itemset", (string[])["zelda", $"z1d{level.level}"] },
+                    { "itemset", BuildDungeonItemSet(level.level, map.map_early) },
                 });
 
 
@@ -1253,7 +1256,7 @@ public class YamlReader
                     { "type", VertexType.Item },
                     { "item", null! },
                     { "address", map.generated ? 0x651000 + map.generated_level * 0x80 + map.local_room_id : 0x650000 + map.map },
-                    { "itemset", (string[])["zelda", $"z1d{level.level}"] },
+                    { "itemset", BuildDungeonItemSet(level.level, map.map_early) },
                 });
 
                 // Connect the left and right nodes to the left
@@ -1269,6 +1272,16 @@ public class YamlReader
             }
         }
     }
+
+    /// <summary>
+    /// Item-set names for a dungeon item location. Every dungeon location carries z1d{level};
+    /// "map early" locations additionally carry z1d{level}m, the tighter set the Map is pooled
+    /// into when MapPlacement is enabled (see ItemPooler and DungeonBuilder.MarkMapEarlyRoom).
+    /// </summary>
+    private static string[] BuildDungeonItemSet(int level, bool mapEarly) =>
+        mapEarly
+            ? ["zelda", $"z1d{level}", $"z1d{level}m"]
+            : ["zelda", $"z1d{level}"];
 
     /// <summary>
     /// Finds the Stairs meta node name on a room's screen, or falls back to a region name.

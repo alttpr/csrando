@@ -33,7 +33,7 @@ internal static class DataLoader
             for (int level = 1; level <= 9; level++)
             {
                 var levelRnd = new Random(world.Prng.GetRandomInt(int.MaxValue));
-                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd, world.Config.HiddenItems);
+                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd, world.Config.HiddenItems, world.Config.MapPlacement);
 
                 // Generate() throws InvalidOperationException for layouts it can't finish (e.g. a
                 // connector below the start, L9 isolation orphaning rooms, or item positions that
