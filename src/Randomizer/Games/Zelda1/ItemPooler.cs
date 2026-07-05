@@ -93,6 +93,14 @@ internal sealed class ItemPooler : IItemPooler
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("HeartContainer")), 9),
         ]);
 
+        // Consumables-only caves (take-anys, Junk shops, Full-mode repeatable shops): stock each
+        // cave's per-cave "z1c{cave}" set with distinct consumables. The set reservation keeps
+        // progression out and the distinct draw avoids duplicate items within a cave. Full-mode
+        // buy-once shops use "z1shop" and are left unconstrained, so they can hold progression.
+        // Only runs with shop shuffle on; off, take-anys stay ordinary DefaultSet filler locations.
+        if (world.Config.ShopShuffle != ShopShuffleOption.Off)
+            AddConsumableCaveItems(world, worldSet, ["z1takeany", "z1shopjunk", "z1shoprepeat"]);
+
         // Fill the remaining empty locations with filler. The number of generated locations
         // varies per seed (especially with DungeonShuffle), so size the filler to exactly fill
         // what's left after the logic items above — otherwise we either run short (empty
@@ -114,6 +122,37 @@ internal sealed class ItemPooler : IItemPooler
 
     private static int CountEmptyLocations(World world) =>
         world.GetLocationsOfType(VertexType.Item).Count(v => v.Item == null);
+
+    // Consumables sold in junk-mode shops and other consumable caves. Never gate progression.
+    private static readonly string[] ShopJunkItems =
+        ["RedPotion", "BluePotion", "BlueRing", "Bombs", "Arrows", "Rupee", "Rupee5", "Heart", "Key", "MagicShield"];
+
+    /// <summary>
+    /// Stock each consumable cave with distinct consumables drawn into its per-cave "z1c{cave}" set.
+    /// A cave qualifies if its locations carry one of <paramref name="markerSets"/>.
+    /// </summary>
+    private void AddConsumableCaveItems(World world, List<PooledItem> worldSet, string[] markerSets)
+    {
+        var caveGroups = world.GetLocationsOfType(VertexType.Item)
+            .OfType<Vertex>()
+            .Where(v => v.ItemSet.Any(s => markerSets.Contains(s.Name) && s.World == world))
+            .GroupBy(v => v.ItemSet.First(s => s.Name.StartsWith("z1c") && s.World == world).Name);
+
+        foreach (var group in caveGroups)
+        {
+            int slots = group.Count();
+            var caveSet = new ItemSetName(group.Key, world);
+
+            // Distinct draw per cave; fall back to repeats only if a cave somehow has more slots
+            // than the consumable list (it won't, with 3 slots and 10 items).
+            var picks = _prng.Shuffle(ShopJunkItems).Take(slots).ToList();
+            while (picks.Count < slots)
+                picks.Add(_prng.GetRandomElement(ShopJunkItems));
+
+            foreach (var itemName in picks)
+                worldSet.Add(new PooledItem(caveSet, 9001, world.GetItem(itemName)));
+        }
+    }
 
     /// <summary>
     /// Generate exactly <c>emptyLocationCount - nonFillerCount</c> filler items, distributed

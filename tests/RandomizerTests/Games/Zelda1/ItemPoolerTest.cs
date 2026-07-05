@@ -8,13 +8,14 @@ using Graph = Randomizer.Graph.Graph;
 [TestClass]
 public sealed class ItemPoolerTest
 {
-    private static World CreateWorld(bool shuffle, int seed)
+    private static World CreateWorld(bool shuffle, int seed, ShopShuffleOption shop = ShopShuffleOption.Off)
     {
         var z1Config = new Config
         {
             DungeonShuffle = shuffle,
             DungeonStyle = DungeonStyleOption.Progressive,
             EnemyPlacement = EnemyPlacementOption.Progressive,
+            ShopShuffle = shop,
             Triforces = "8",
         };
         z1Config.SelectRandomValues(new PRNG(seed));
@@ -42,5 +43,25 @@ public sealed class ItemPoolerTest
         Assert.AreEqual(emptyLocations, pooler.Pool.Length,
             $"Pool size ({pooler.Pool.Length}) must equal the number of empty item locations " +
             $"({emptyLocations}) so every location is filled and no item is dropped.");
+    }
+
+    // Shop shuffle adds shop slots as empty locations; the pool sizing must still match exactly so
+    // every slot (shop or not) is filled. Junk mode additionally constrains its slots to a
+    // consumables-only set, which must be sized to exactly cover those slots.
+    [DataTestMethod]
+    [DataRow(ShopShuffleOption.Junk, 42)]
+    [DataRow(ShopShuffleOption.Junk, 7)]
+    [DataRow(ShopShuffleOption.Full, 42)]
+    [DataRow(ShopShuffleOption.Full, 7)]
+    public void Pool_ExactlyMatchesEmptyLocations_WithShopShuffle(ShopShuffleOption shop, int seed)
+    {
+        var world = CreateWorld(shuffle: false, seed, shop);
+        var pooler = new ItemPooler([world], new PRNG(seed));
+
+        int emptyLocations = world.GetLocationsOfType(VertexType.Item).Count(v => v.Item == null);
+
+        Assert.AreEqual(emptyLocations, pooler.Pool.Length,
+            $"Pool size ({pooler.Pool.Length}) must equal the number of empty item locations " +
+            $"({emptyLocations}) with shop shuffle {shop}.");
     }
 }

@@ -55,6 +55,17 @@ public class YamlReader
         public int screen;
         public required NodeCollection nodes;
         public required EdgeCollection edges;
+
+        // Overworld walkability, generated offline from the vanilla ROM (decoded by
+        // OverworldTilemap, emitted by the OverworldWalkabilityGenerator test). 11 rows of
+        // 16 chars each: '.' = Link can stand here, '#' = blocked. Null for underworld
+        // screens (which use the region model instead).
+        public List<string>? walkable;
+
+        // Square positions [col,row] where an entrance (stairs/cave/dungeon) is or
+        // can be drawn on this overworld screen. Used to align cave/any-road exit
+        // positions with the visible entrance.
+        public List<int[]>? entrances;
     }
 
     public class NodeCollection
@@ -272,6 +283,11 @@ public class YamlReader
         public required int[] flags;
         public required int[] prices;
         public required int text;
+
+        // Set by ShopShuffler: a single-purchase shop that sells exactly one item (the middle slot)
+        // and empties after purchase, so it can safely hold count/progression items without a
+        // "wrong choice" softlock. Repeatable shops leave this false.
+        public bool buyOnce;
 
         public CaveFlags Flag => (CaveFlags)((text & 0xC0) >> 6 | flags[2] >> 4 | flags[1] >> 2 | flags[0]);
     }
@@ -599,6 +615,14 @@ public class YamlReader
             AddDirectedEdge(FindOrCreateNode($"{startMap.area} - {level.name} - {startMap.name} - {startExitNode.name}"), levelEntranceNode, "fixed");
         }
 
+        var farmingWeapons = GetFarmingWeapons();
+
+        // Base PC address of the relocated extended cave items table ($8A9600). The ASM cave-load
+        // hook reads every cave's wares from here, so all cave item locations (take-one/take-any and
+        // shop) write their item byte at CaveShopItemsBase + (cave - 0x10) * 3 + slot. Keep in sync
+        // with Rom.CaveShopItemsBase.
+        const int caveShopItemsBase = 0x651600;
+
         foreach (var cave in data.caves)
         {
             var caveEntranceNode = FindNode($"Cave {cave.cave:X2} - Entrance");
@@ -606,17 +630,21 @@ public class YamlReader
 
             if (caveEntranceNode == null)
             {
+                // With shop shuffle, a cave can be left without an entrance (a synthesized shop, or a
+                // vanilla shop ID whose only screen got reassigned) — just skip it. With it off, every
+                // vanilla cave must have an entrance, so a missing one is a real data error.
+                if (config.ShopShuffle != ShopShuffleOption.Off)
+                    continue;
                 throw new Exception($"Cave {cave.cave:X2} entrance not found");
             }
 
             AddDirectedEdge(caveEntranceNode, caveNode, "fixed");
 
-            // We don't mess with shops for now, just the take item things, and let's remove the "heart requirement" flag for now
-            // TODO: Fix Heart requirement flag
-
+            // Take-one / take-any caves: pick up an item for free (no rupee cost).
+            // (Heart-requirement caves like the white/magical sword still gate on heart count.)
             if (cave.Flag.HasFlag(CaveFlags.PickItem) && cave.Flag.HasFlag(CaveFlags.ShowItems) && !cave.Flag.HasFlag(CaveFlags.Shop) && !cave.Flag.HasFlag(CaveFlags.MoneyGame) && !cave.Flag.HasFlag(CaveFlags.Hint))
             {
-                bool takeAny = cave.items.Where(i => i != 0x2F).Count() > 1;
+                bool takeAny = cave.items.Count(i => i != 0x2F) > 1;
                 var caveTypeName = takeAny ? "Take Any Item" : "Take One Item";
                 var caveItemSet = takeAny ? "z1takeany" : "z1takeone";
                 int caveItemIndex = 0;
@@ -624,22 +652,13 @@ public class YamlReader
                 {
                     if (item != 0x2F)
                     {
-                        string junkItem = null!;
-                        if (takeAny)
-                        {
-                            // TODO: Fix this
-                            // Pre-fill this take-any with a junk item
-                            List<string> junkItems = ["Rupee", "Rupee5", "Heart", "Key", "Bombs", "Arrows"];
-                            junkItem = junkItems[new Random().Next(0, junkItems.Count)];
-                        }
-
-                        // This is an item we want to add to the cave
+                        // Leave the item unset; the ItemPooler fills these (PRNG-seeded) so the
+                        // contents vary between caves and are reproducible per seed.
                         var itemNode = CreateNode(new()
                         {
                             { "name", $"Cave {cave.cave:X2} - {caveTypeName} - Item {caveItemIndex:X2}" },
                             { "type", VertexType.Item },
-                            { "item", junkItem },
-                            { "address", 0x650100 + ((cave.cave-0x10)*3) + caveItemIndex },
+                            { "address", caveShopItemsBase + ((cave.cave - 0x10) * 3) + caveItemIndex },
                             { "itemset", (string[])["zelda", $"z1c{cave.cave:X2}", caveItemSet] },
                         });
 
@@ -657,13 +676,94 @@ public class YamlReader
                         {
                             AddDirectedEdge(caveNode, itemNode, "fixed");
                         }
-
-
                     }
                     caveItemIndex++;
                 }
             }
+            // Shop caves (built as logical locations only under shop shuffle). Rupees are infinitely
+            // farmable, so the price gates nothing — the real requirement is a farming weapon to earn
+            // rupees, expressed as parallel edges (any one weapon satisfies the OR).
+            else if (config.ShopShuffle != ShopShuffleOption.Off
+                     && cave.Flag.HasFlag(CaveFlags.Shop)
+                     && cave.Flag.HasFlag(CaveFlags.ShowItems)
+                     && !cave.Flag.HasFlag(CaveFlags.MoneyGame)
+                     && !cave.Flag.HasFlag(CaveFlags.Hint))
+            {
+                if (cave.buyOnce)
+                {
+                    // Single-purchase shop: exactly one item (the middle slot, index 1) so the player
+                    // can't take a "wrong" item and strand progression, and the cave empties after one
+                    // buy. Safe to hold count/progression items. Full -> main pool; Junk -> consumables.
+                    const int buyOnceSlot = 1;
+                    var shopItemSet = config.ShopShuffle == ShopShuffleOption.Full ? "z1shop" : "z1shopjunk";
+                    var itemNode = CreateNode(new()
+                    {
+                        { "name", $"Cave {cave.cave:X2} - Shop - Item {buyOnceSlot:X2}" },
+                        { "type", VertexType.Item },
+                        { "address", caveShopItemsBase + ((cave.cave - 0x10) * 3) + buyOnceSlot },
+                        { "itemset", (string[])["zelda", $"z1c{cave.cave:X2}", shopItemSet] },
+                    });
+                    foreach (var weapon in farmingWeapons)
+                    {
+                        AddDirectedEdge(caveNode, itemNode, weapon);
+                    }
+                }
+                else
+                {
+                    // Repeatable shop: each non-empty slot is an independent purchasable location.
+                    // Because purchases repeat, the stock is restricted to repeatable-safe items
+                    // (uniques + consumables, no count items) via the z1shoprepeat set; Junk uses the
+                    // consumables-only set.
+                    var shopItemSet = config.ShopShuffle == ShopShuffleOption.Full ? "z1shoprepeat" : "z1shopjunk";
+                    int caveItemIndex = 0;
+                    foreach (var item in cave.items)
+                    {
+                        if (item != 0x2F)
+                        {
+                            var itemNode = CreateNode(new()
+                            {
+                                { "name", $"Cave {cave.cave:X2} - Shop - Item {caveItemIndex:X2}" },
+                                { "type", VertexType.Item },
+                                { "address", caveShopItemsBase + ((cave.cave - 0x10) * 3) + caveItemIndex },
+                                { "itemset", (string[])["zelda", $"z1c{cave.cave:X2}", shopItemSet] },
+                            });
+                            foreach (var weapon in farmingWeapons)
+                            {
+                                AddDirectedEdge(caveNode, itemNode, weapon);
+                            }
+                        }
+                        caveItemIndex++;
+                    }
+                }
+            }
         }
+    }
+
+    // Weapons that can farm rupees indefinitely: free to use (unlike arrows), reusable (unlike bombs),
+    // and able to kill the common overworld enemies. GetFarmingWeapons further filters this by the
+    // enemy kill-item data.
+    private static readonly HashSet<string> FreeInfiniteWeapons =
+        ["SwordL1", "SwordL2", "SwordL3", "Rod", "RedCandle"];
+
+    private List<string> GetFarmingWeapons()
+    {
+        if (data == null)
+            throw new Exception("Data not loaded");
+
+        // Overworld enemies that reliably drop rupees and appear in farmable spots.
+        var overworldEnemies = data.enemies.enemies
+            .Where(e => e.allowed_levels.Contains(0) && e.kill_items.Count > 0)
+            .ToList();
+
+        // A weapon qualifies if it is in the free+infinite allow-list AND can kill at least most of
+        // the overworld enemies (so the player isn't stuck farming a single rare spawn).
+        var candidates = FreeInfiniteWeapons
+            .Where(w => overworldEnemies.Count(e => e.kill_items.Contains(w)) >= overworldEnemies.Count / 2)
+            .ToList();
+
+        // Fall back to the allow-list if the data ever fails to yield anything, so shops never become
+        // unreachable in logic by accident.
+        return candidates.Count > 0 ? candidates : FreeInfiniteWeapons.ToList();
     }
 
     private void BuildOverworldMap(OverworldMap map)
@@ -685,9 +785,18 @@ public class YamlReader
             exits.Add(exit.direction);
         }
 
+        // Level-info F bits 0x80 (secret[1]) and 0x40 (secret[0]) are the quest "secret detection"
+        // flags. An entrance present ONLY in second quest is secret[1] == 1 with secret[0] == 0; the
+        // overworld level-info table is shared between quests, so these screens still carry a cave
+        // node (e.g. the burn-bush Level 8 entrance on screen 0x67), but in first quest the engine
+        // never reveals them and the player cannot enter. Skip wiring those into the logic graph so
+        // they don't become phantom dungeon/cave entrances. A screen flagged for BOTH quests
+        // (secret[1] == 1 AND secret[0] == 1) is reachable in first quest, so it is kept.
+        bool isSecondQuestOnlyEntrance = map.secret[1] == 1 && map.secret[0] == 0;
+
         foreach (var cave in screen.nodes.caves ?? [])
         {
-            if (map.cave > 0 && (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || cave.type == CaveType.Tree || cave.type == CaveType.Grave || map.secret[0] == 1))
+            if (!isSecondQuestOnlyEntrance && map.cave > 0 && (cave.type == CaveType.Open || cave.type == CaveType.Push || cave.type == CaveType.Bomb || cave.type == CaveType.Tree || cave.type == CaveType.Grave || map.secret[0] == 1))
             {
                 var caveName = $"{mapName} - {cave.name}";
                 var caveNode = FindOrCreateNode(caveName);
@@ -757,8 +866,8 @@ public class YamlReader
             }
         }
 
-        // Connect caves
-        if (map.cave > 0)
+        // Connect caves (skip second-quest-only hidden entrances; see isSecondQuestOnlyEntrance above)
+        if (map.cave > 0 && !isSecondQuestOnlyEntrance)
         {
             var cave = screen.nodes.caves?.FirstOrDefault() ?? null;
             if (cave != null)

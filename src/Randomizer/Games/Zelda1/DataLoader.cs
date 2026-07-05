@@ -19,6 +19,14 @@ internal static class DataLoader
             entranceShuffler.Shuffle();
         }
 
+        // Assign unique per-screen cave IDs for shops (and synthesize single-purchase shops) so they
+        // don't all share the same backing data. Runs after entrance shuffle so it sees final
+        // screen->cave assignments, and before BuildGraph so the new caves become graph locations.
+        if (world.Config.ShopShuffle != ShopShuffleOption.Off)
+        {
+            new ShopShuffler(world.Prng, yamlReader.Data!).Shuffle();
+        }
+
         // Generate randomized dungeons if enabled
         if (world.Config.DungeonShuffle)
         {

@@ -36,6 +36,35 @@ public sealed class DungeonBuilderTest
         return buffer;
     }
 
+    private static int CellarExitPosition(YamlReader.UnderworldMap map)
+        => ((map.enemies & 0x03) << 6) | (map.enemy_id & 0x3F);
+
+    // Decode a cellar's table-3 exit byte (ExitX[7:4] | ExitY[3:0]) into the room tile Link
+    // lands on. ExitX/ExitY share EncodeItemPosition's nibble layout: ExitX = col + 2,
+    // ExitY = row + 6.
+    private static (int Col, int Row) DecodeCellarExitTile(YamlReader.UnderworldMap cellar)
+    {
+        int b = CellarExitPosition(cellar);
+        return (((b >> 4) & 0x0F) - 2, (b & 0x0F) - 6);
+    }
+
+    // Whether a tile is somewhere Link can stand: inside a walkable Region, not inside a
+    // NoPlace region, and not on a solid block. Mirrors DungeonBuilder.IsValidItemPosition.
+    private static bool TileIsWalkable(YamlReader.Screen screen, int col, int row)
+    {
+        bool inWalkable = screen.nodes.regions.Any(r =>
+            r.type == YamlReader.RegionType.Region &&
+            r.from[0] <= col && r.from[1] <= row && r.to[0] >= col && r.to[1] >= row);
+        if (!inWalkable) return false;
+
+        bool blockedRegion = screen.nodes.regions.Any(r =>
+            r.type == YamlReader.RegionType.NoPlace &&
+            r.from[0] <= col && r.from[1] <= row && r.to[0] >= col && r.to[1] >= row);
+        if (blockedRegion) return false;
+
+        return screen.nodes.blocks?.Any(b => b[0] == col && b[1] == row) != true;
+    }
+
     [TestMethod]
     [DataRow(1)]
     [DataRow(2)]
@@ -179,6 +208,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_Level9_CheckRoomGatesEveryExit()
     {
         // The check room gates level 9 behind the triforces. The only ungated way out is the south
@@ -288,6 +318,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_BlockedPassageScreens_AlwaysReachable()
     {
         // Screens 0x0E (vertical) and 0x0F (horizontal) have a walled-off central passage that
@@ -321,6 +352,51 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    public void Generate_CellarReturnCoordinates_AreWalkableInEveryEndpointRoom()
+    {
+        // When Link walks out of a cellar's stairs the engine drops him at the cellar's table-3
+        // exit coordinate, in whichever room he is returning to. A single coordinate serves
+        // every endpoint room, so it must land on a walkable tile in all of them; otherwise the
+        // player materialises inside a wall/block and gets stuck. (Copying the coordinate from a
+        // vanilla template, the previous behaviour, did not guarantee this for shuffled rooms.)
+        for (int seed = 1; seed <= 40; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var data = CreateYamlReader().Data!;
+                var builder = CreateBuilder(data, level, seed: seed);
+                builder.Generate();
+                builder.Write();
+
+                var levelMaps = data.underworld_maps
+                    .Where(m => m.generated && m.generated_level == level)
+                    .ToDictionary(m => m.map);
+
+                foreach (var cellar in levelMaps.Values.Where(m => m.passage))
+                {
+                    var (col, row) = DecodeCellarExitTile(cellar);
+
+                    var endpointRooms = new[] { cellar.passage_left, cellar.passage_right }
+                        .Distinct()
+                        .Select(id => levelMaps[id]);
+
+                    foreach (var endpoint in endpointRooms)
+                    {
+                        var screen = data.underworld_screens.First(s =>
+                            s.area == YamlReader.Area.Underworld && s.screen == endpoint.screen);
+
+                        Assert.IsTrue(TileIsWalkable(screen, col, row),
+                            $"Seed {seed} L{level} cellar {cellar.local_room_id:X2}: exit tile ({col},{row}) " +
+                            $"is not walkable in endpoint room {endpoint.local_room_id:X2} (screen {endpoint.screen:X2}).");
+                    }
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_ItemLocations_AreNeverOrphaned()
     {
         // Every generated item drop must be reachable from one of its room's doors, even assuming
@@ -375,6 +451,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_Minimal_AllLevelsHostEnoughItemRoomsForPool()
     {
         // ItemPooler always assigns Map + Compass + key(s) to each dungeon's z1d{level} set, so
@@ -474,6 +551,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Write_HiddenItemsOff_NoNonBossRoomHidesItem()
     {
         // Across many seeds/levels, no generated non-boss item room should use the kill-for-item
@@ -490,6 +568,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Write_HiddenItemsAlways_HidesEveryClearableItemRoom()
     {
         // With Always, any generated non-boss item room that has a kill trigger available
@@ -510,6 +589,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Write_HiddenItemsAlways_HidesMoreThanOff()
     {
         // Sanity check that the setting actually changes output: Always should hide strictly more
@@ -759,6 +839,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_MultipleSeeds_NoCrashes()
     {
         // Stress test: run 10 different seeds for each level

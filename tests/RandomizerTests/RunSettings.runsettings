@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!--
+    Default test run filter. Excludes tests tagged [TestCategory("Slow")] (multi-seed full-world
+    generators) so the normal test run stays fast, locally and in CI.
+
+    This file is auto-applied via RunSettingsFilePath in RandomizerTests.csproj.
+
+    To run the slow tests, override the filter on the command line. See TestCategories.cs.
+  -->
+  <RunConfiguration>
+    <TestCaseFilter>TestCategory!=Slow</TestCaseFilter>
+  </RunConfiguration>
+</RunSettings>

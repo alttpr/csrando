@@ -19,6 +19,11 @@ public class Config
     [Description("This is in early testing, be aware of potential bugs and balance issues!")]
     public bool DungeonShuffle { get; init; } = false;
 
+    [Category("Gameplay")]
+    [Description("Randomize the contents of shop caves. Junk: shops sell random consumables at random prices. Full: shop slots join the item pool and can hold progression (gated in logic behind a farmable weapon).")]
+    [Default(ShopShuffleOption.Off)]
+    public ShopShuffleOption ShopShuffle { get; init; } = ShopShuffleOption.Off;
+
     // Sub-options below only have an effect when DungeonShuffle is enabled, so they are grouped
     // under a "Dungeon Shuffle" subcategory and hidden in the UI until it is turned on.
 
@@ -59,6 +64,16 @@ public class Config
 }
 
 public enum EntranceShuffleOption { None, Overworld }
+
+/// <summary>
+/// Controls randomization of shop cave contents.
+/// Off: vanilla shop items and prices.
+/// Junk: shops sell randomized consumables/filler at randomized prices; never gates progression.
+/// Full: shop slots become real item locations in the main pool (progression eligible), gated in
+///   logic behind cave reachability AND possession of a farmable weapon (since rupees are infinitely
+///   farmable, the price itself is flavor, not a logic gate).
+/// </summary>
+public enum ShopShuffleOption { Off, Junk, Full }
 
 /// <summary>
 /// Controls overall dungeon generation style.

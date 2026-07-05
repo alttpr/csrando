@@ -14,7 +14,7 @@ public static class RomExtensions
     }
 }
 
-public class Rom : GameRom
+public partial class Rom : GameRom
 {
     public Rom(IRom rom, int offset) : base(rom, offset)
     {
@@ -40,6 +40,133 @@ public class Rom : GameRom
         var triforceGoal = int.Parse(world.Config.Triforces);
         Write(0x657000, [(byte)triforceGoal]);
     }
+
+    // The extended cave tables (48 entries = cave IDs 0x10-0x3F, 3 bytes each) live contiguously at
+    // an explicit org in the ASM ($8A9600+). SNES->PC for this
+    // bank is PC = SNES - 0x258000, so $8A9600 -> 0x651600.
+    //   items  @ 0x651600  ($8A9600)
+    //   flags  @ 0x651690  ($8A9690)
+    //   prices @ 0x651720  ($8A9720)
+    //   text   @ 0x6517B0  ($8A97B0)  (1 byte per cave: high 2 bits = PickItem/Shop, low 6 = text)
+    // The byte for cave C (0x10..0x3F), slot S (0..2) is at <base> + (C - 0x10) * 3 + S.
+    private const int CaveShopItemsBase = 0x651600;
+    private const int CaveShopFlagsBase = 0x651690;
+    private const int CaveShopPricesBase = 0x651720;
+    private const int CaveShopTextBase = 0x6517B0;
+
+    // Price ranges (rupees) by item tier. Prices are flavor only — rupees are infinitely farmable,
+    // so the price never gates logic. The one-byte price field caps at 255.
+    private static readonly (int Min, int Max)[] PriceTierRanges =
+    [
+        (10, 40),    // Tier 0: cheap consumables / junk
+        (40, 90),    // Tier 1: useful consumables
+        (90, 160),   // Tier 2: notable / upgrade items
+        (160, 255),  // Tier 3: progression / unique items
+    ];
+
+    /// <summary>
+    /// Write randomized prices for shuffled shop caves (items and flags are written elsewhere).
+    /// The price address comes from the cave/slot in the location name, not <c>location.Addresses</c>,
+    /// which the combo item writer clears before this runs. Tier is keyed on the placed item's source
+    /// game so cross-game items (e.g. an ALttP item in a Z1 shop) are still priced sensibly.
+    /// </summary>
+    public void WriteCavePrices(World world, PRNG prng)
+    {
+        if (world.Config.ShopShuffle == ShopShuffleOption.Off)
+            return;
+
+        foreach (var location in world.GetLocationsOfType(VertexType.Item))
+        {
+            if (location.Item == null)
+                continue;
+            if (!TryParseShopSlot(location.Name, out int cave, out int slot))
+                continue;
+
+            int tier = PriceTier(location.Item.World.GameId, location.Item.Name);
+            var (min, max) = PriceTierRanges[tier];
+            byte price = (byte)prng.GetRandomInt(min, max + 1);
+
+            long priceAddress = CaveShopPricesBase + (cave - 0x10) * 3 + slot;
+            Write((Address)priceAddress, [price]);
+        }
+    }
+
+    // First cave ID synthesized by ShopShuffler (matches ShopShuffler.FirstFreeCaveId). Lower IDs
+    // keep their vanilla flags/text; these new IDs need flags + text written to act as charging shops.
+    private const int FirstSynthesizedCaveId = 0x24;
+
+    /// <summary>
+    /// Write flags and the text/flag byte for cave IDs synthesized by <see cref="ShopShuffler"/>,
+    /// whose ASM table entries default to empty. Items and prices are written elsewhere.
+    /// </summary>
+    public void WriteShuffledCaveData(World world, Zelda1.YamlReader.YamlData data)
+    {
+        if (world.Config.ShopShuffle == ShopShuffleOption.Off)
+            return;
+
+        foreach (var cave in data.caves.Where(c => c.cave >= FirstSynthesizedCaveId))
+        {
+            int caveOffset = (cave.cave - 0x10) * 3;
+            // Flags and text only — never item bytes. This runs after WriteItems, so writing the
+            // synthesized 0x2F placeholders here would clobber the placed item.
+            for (int slot = 0; slot < 3; slot++)
+                Write((Address)(CaveShopFlagsBase + caveOffset + slot), [(byte)cave.flags[slot]]);
+
+            Write((Address)(CaveShopTextBase + (cave.cave - 0x10)), [(byte)cave.text]);
+        }
+    }
+
+    // Parse "Cave {cave:X2} - Shop - Item {slot:X2}" into its cave id and slot index.
+    private static bool TryParseShopSlot(string name, out int cave, out int slot)
+    {
+        cave = 0;
+        slot = 0;
+        var match = ShopLocationRegex().Match(name);
+        if (!match.Success)
+            return false;
+        cave = Convert.ToInt32(match.Groups[1].Value, 16);
+        slot = Convert.ToInt32(match.Groups[2].Value, 16);
+        return true;
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"^Cave ([0-9A-Fa-f]{2}) - Shop - Item ([0-9A-Fa-f]{2})$")]
+    private static partial System.Text.RegularExpressions.Regex ShopLocationRegex();
+
+    // Map a placed item to a price tier (see PriceTierRanges), keyed by source game so cross-game
+    // (combo) items are recognized. Cheap = consumables/rupees/ammo; anything unlisted falls to the
+    // top tier, since unrecognized shop stock is more likely to be meaningful.
+    private static int PriceTier(string? gameId, string itemName) => gameId switch
+    {
+        "z1" => itemName switch
+        {
+            "Rupee" or "Rupee5" or "Heart" or "Fairy" or "Bombs" or "Arrows" => 0,
+            "Key" or "BlueCandle" or "BluePotion" or "RedPotion" or "MagicShield" => 1,
+            "BlueRing" or "RedCandle" or "Boomerang" or "Map" or "Compass" => 2,
+            _ => 3, // swords, rings, bow, wand, ladder, raft, recorder, bracelet, key items, etc.
+        },
+        "alttp" => itemName switch
+        {
+            "OneRupee" or "FiveRupees" or "Heart" or "Arrow" or "ShopArrow" or "Bomb"
+                or "ThreeBombs" or "SmallMagic" or "Nothing" or "Rupoor" => 0,
+            "TwentyRupees" or "TwentyRupees2" or "TenArrows" or "TenBombs" or "Key" or "ShopKey"
+                or "BottleWithRedPotion" or "BottleWithGreenPotion" or "BottleWithBluePotion"
+                or "RedPotion" or "GreenPotion" or "BluePotion" or "Mushroom" or "Powder" => 1,
+            "FiftyRupees" or "OneHundredRupees" or "Bottle" or "Map" or "Compass"
+                or "PieceOfHeart" or "BossHeartContainer" or "HeartContainer" => 2,
+            _ => 3, // swords, rods, gloves, mail, hookshot, boots, capes, pendants, crystals, etc.
+        },
+        "m1" => itemName switch
+        {
+            "Missile" or "EnergyTank" => 1, // ammo / tank expansions
+            _ => 3, // Morph, beams, suits, boots, etc.
+        },
+        "sm" => itemName switch
+        {
+            "Missile" or "Super" or "PowerBomb" or "ETank" or "ReserveTank" => 1, // ammo / tanks
+            _ => 3, // beams, suits, movement upgrades, etc.
+        },
+        _ => 3,
+    };
 
     public void WriteSpecial(World world, PRNG prng, Zelda1.YamlReader.YamlData data)
     {
@@ -125,6 +252,15 @@ public class Rom : GameRom
     //   Table 4: base + 0x180  EnemyMode[7] | MovableBlock[6] | ScreenNum[5:0]
     //   Table 5: base + 0x200  DarkRoom[7] | BossCry[6:5] | RoomItem[4:0]
     //   Table 6: base + 0x280  Unused[7:6] | ItemPos[5:4] | Unused[3] | Behavior[2:0]
+    //
+    // Passage (cellar) rooms reinterpret tables 1-3 (verified against the NES
+    // disassembly, CheckSubroom / Z_05.asm):
+    //   Table 1: destination room ID reached via the LEFT  stairs (Link's X < $80)
+    //   Table 2: destination room ID reached via the RIGHT stairs (Link's X >= $80)
+    //   Table 3: exit position in the destination room: ExitX[7:4] | ExitY[3:0]
+    //            (ObjX = ExitX << 4; ObjY = (ExitY << 4) | $0D)
+    // The vanilla YAML stores that exit byte split across the enemies/enemy_id
+    // fields, because the loader parses table 3 as enemy data for every room.
     //
     // We place all 9 levels' data starting at $8C8000, 0x300 bytes per level.
     // Bank byte for level N = $8B, address = N * 0x300 within the bank.
@@ -230,10 +366,15 @@ public class Rom : GameRom
                     byte table2 = (byte)GetLocalRoomId(data, map.passage_right);
                     Write(levelBase + 0x80 + roomId, [table2]);
 
-                    // Table 3: EnemyQuant[7:6] | EnemyCode[5:0]
-                    // FIXME: (Not correct, this should be ExitXPos (top 4 bits) | ExitYPos (bottom 4 bits))
-                    byte table3 = (byte)(((map.enemies & 0x03) << 6) | (Math.Max(0, map.enemy_id) & 0x3F));
-                    Write(levelBase + 0x100 + roomId, [table3]);
+                    // Table 3 is NOT enemy data for a passage room: it is the position Link
+                    // occupies in the destination room after walking out of the cellar stairs
+                    // (ExitX[7:4] | ExitY[3:0]). That byte lives in the enemies/enemy_id fields
+                    // because the loader parses table 3 as enemy data for every room, so
+                    // reassemble it exactly as the loader would have. For generated cellars the
+                    // dungeon builder fills those fields with a tile that is walkable in every
+                    // connected room (see ComputeCellarExitByte) so the player can't get stuck.
+                    byte exitPosition = (byte)(((map.enemies & 0x03) << 6) | (Math.Max(0, map.enemy_id) & 0x3F));
+                    Write(levelBase + 0x100 + roomId, [exitPosition]);
                 }
 
                 // Table 4: EnemyMode[7] | MovableBlock[6] | ScreenNum[5:0]

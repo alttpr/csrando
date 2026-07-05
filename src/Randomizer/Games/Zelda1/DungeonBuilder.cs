@@ -587,6 +587,43 @@ internal class DungeonBuilder
 
     private static int EncodeItemPosition(int x, int y) => ((x + 2) << 4) | (y + 6);
 
+    // When Link walks out of a cellar's stairs, the engine drops him at the position
+    // encoded in the cellar room's table-3 byte (ExitX[7:4] | ExitY[3:0]; verified against
+    // CheckSubroom in Z_05.asm). One byte serves every room the cellar connects to, so the
+    // chosen tile must be walkable in ALL of them or the player lands inside a block and gets
+    // stuck. The exit byte shares its nibble layout with EncodeItemPosition, so we reuse the
+    // item-placement walkability check (regions / NoPlace / blocks) to pick a safe tile,
+    // preferring the room centre and spiralling outward.
+    private int ComputeCellarExitByte(IReadOnlyList<Room> connectedRooms)
+    {
+        var screens = connectedRooms
+            .Select(r => GetUnderworldScreen(r.Screen))
+            .ToList();
+
+        foreach (var (x, y) in CellarExitTileCandidates())
+        {
+            int encoded = EncodeItemPosition(x, y);
+            if (screens.All(s => IsValidItemPosition(s, encoded)))
+                return encoded & 0xFF;
+        }
+
+        // No tile is walkable in every connected room (extremely unlikely). Fall back to the
+        // room centre; the template-matching pass still tries to pick a sane cellar.
+        return EncodeItemPosition(6, 3) & 0xFF;
+    }
+
+    // Candidate tiles for a cellar exit, ordered by distance from the room centre (6, 3) so
+    // Link lands as close to the middle as the connected rooms' layouts allow.
+    private static IEnumerable<(int X, int Y)> CellarExitTileCandidates()
+    {
+        const int centerX = 6, centerY = 3;
+        return
+            from x in Enumerable.Range(0, 12)
+            from y in Enumerable.Range(0, 7)
+            orderby Math.Abs(x - centerX) + Math.Abs(y - centerY)
+            select (x, y);
+    }
+
     private static bool IsValidItemPosition(YamlReader.Screen? screen, int encoded)
     {
         if (screen?.nodes?.regions == null) return false;
@@ -770,7 +807,7 @@ internal class DungeonBuilder
         var vanillaLevelMaps = GetVanillaLevelMaps();
         var itemPositionSlots = new List<int>(_itemPositionSlots);
         WriteNonCellarRooms(vanillaLevelMaps, itemPositionSlots);
-        WriteCellarRooms(vanillaLevelMaps);
+        WriteCellarRooms();
         UpdateLevelData(itemPositionSlots);
     }
 
@@ -841,7 +878,7 @@ internal class DungeonBuilder
         }
     }
 
-    private void WriteCellarRooms(List<YamlReader.UnderworldMap> vanillaLevelMaps)
+    private void WriteCellarRooms()
     {
         foreach (var room in _map.FindRooms(RoomRole.Cellar))
         {
@@ -862,38 +899,41 @@ internal class DungeonBuilder
             {
                 screen = ScreenId.ItemCellar;
                 passageLeft = GetMapId(connectedRooms[0]);
-            }
-
-            var cellarTemplate = (vanillaLevelMaps.FirstOrDefault(m => m.passage && m.screen == screen)
-                ?? _data.underworld_maps.FirstOrDefault(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && m.passage && m.screen == screen))
-                ?? throw new Exception($"No vanilla cellar template found for screen {screen:X2}");
-
-            if (!isConnectorCellar)
-            {
                 itemPos = FixedCenterPosSlot;
                 passageRight = passageLeft;
             }
 
+            // Table 3 of a cellar holds the position Link returns to when he walks out of the
+            // stairs, not enemy data. Compute a tile that is walkable in every connected room
+            // and stash it in the enemies/enemy_id fields, which is the byte the ROM writer
+            // reassembles into table 3.
+            int exitByte = ComputeCellarExitByte(connectedRooms);
+
+            // A cellar is a single fixed-layout screen. For passage rooms the ROM writer
+            // overwrites tables 1-3 with passage/exit data (see Rom.cs), so palettes/doors are
+            // never emitted; the remaining flags are 0 in every vanilla cellar. room_item just
+            // needs to mark "has item" (any non-0x03 value) vs "no item" (0x03) — the actual
+            // item is placed by the graph randomizer.
             _data.underworld_maps.Add(new YamlReader.UnderworldMap
             {
                 map = mapId,
                 screen = screen,
                 name = $"Dungeon L{_level} Cellar({room.X},{room.Y})",
                 area = YamlReader.Area.Underworld,
-                palettes = [.. cellarTemplate.palettes],
-                doors = [.. cellarTemplate.doors],
+                palettes = [0, 0],
+                doors = [0, 0, 0, 0],
                 passage = true,
                 passage_left = passageLeft,
                 passage_right = passageRight,
-                enemies = cellarTemplate.enemies,
-                enemy_id = cellarTemplate.enemy_id,
-                enemy_mode = cellarTemplate.enemy_mode,
-                push_block = cellarTemplate.push_block,
-                dark_room = cellarTemplate.dark_room,
-                boss_sfx = cellarTemplate.boss_sfx,
-                room_item = room.HasAnyRole(RoomRole.Item) ? cellarTemplate.room_item : 0x03,
+                enemies = (exitByte >> 6) & 0x03,
+                enemy_id = exitByte & 0x3F,
+                enemy_mode = 0,
+                push_block = false,
+                dark_room = false,
+                boss_sfx = 0,
+                room_item = room.HasAnyRole(RoomRole.Item) ? 0x01 : 0x03,
                 item_pos = itemPos,
-                behaviour = cellarTemplate.behaviour,
+                behaviour = 0,
                 level_nine_check = null,
                 generated = true,
                 generated_level = _level,
