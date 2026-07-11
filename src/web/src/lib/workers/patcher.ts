@@ -542,6 +542,12 @@ function hashSeedToU32(s: string): number {
   return h >>> 0; // unsigned
 }
 
+// The generated ROM is always a patched SNES image, so the output extension may only
+// ever be an SNES one. We preserve the base ROM's extension when it is itself an SNES
+// extension (so uploading a .smc keeps a .smc), but fall back otherwise - e.g. for the
+// NES games (Zelda 1 / Metroid 1) whose base ROM is a .nes file.
+const SNES_OUTPUT_EXTENSIONS = new Set([".sfc", ".smc"]);
+
 function resolveFileExtension(
   baseName: string | null | undefined,
   fallback: string,
@@ -549,7 +555,8 @@ function resolveFileExtension(
   if (!baseName) return fallback;
   const dotIndex = baseName.lastIndexOf(".");
   if (dotIndex <= 0 || dotIndex >= baseName.length - 1) return fallback;
-  return baseName.slice(dotIndex);
+  const ext = baseName.slice(dotIndex);
+  return SNES_OUTPUT_EXTENSIONS.has(ext.toLowerCase()) ? ext : fallback;
 }
 
 function compactSeedIdentifier(seedSlug: string): string {

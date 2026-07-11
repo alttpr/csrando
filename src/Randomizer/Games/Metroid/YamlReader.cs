@@ -9,6 +9,11 @@ using YamlDotNet.Serialization;
 
 public class YamlReader
 {
+    // M1 transition-in args: bit $20 selects the alternate area palette. The
+    // vanilla Norfair portal needs this because its arrival room uses the
+    // alternate Norfair palette; generated map-shuffle portal rooms do not.
+    private const int M1EntryArgsAlternatePalette = 0x0020;
+
     public YamlReader(Config config)
     {
         this.config = config;
@@ -563,6 +568,35 @@ public class YamlReader
         return null;
     }
 
+    /// <param name="CapScreenId">Solid cap screen to add one cell above the door cell,
+    /// when the door screen replaces the shaft's own top cap: the door screens all
+    /// scroll open at the top, and an open shaft top against an empty map cell lets
+    /// Samus scroll out of bounds. Null when the door screen sits mid-shaft.</param>
+    private sealed record PortalRoomSpec(Area Area, string RoomName, string ShaftRoomName,
+        int DoorCellX, int DoorCellY, int DoorScreenIndex, int DoorScreenId,
+        int PortalScreenId, string PortalScreenName, int? CapScreenId = null);
+
+    // Vanilla map cells that can host one area-local portal room east of a shaft cell.
+    // The cell east of the portal is empty too, matching the map randomizer's
+    // sealed-scroll arrangement (horizontal openings seal against empty; vertical ones
+    // do NOT — see CapScreenId).
+    private static readonly Dictionary<Area, PortalRoomSpec> PortalRoomSpecs = new()
+    {
+        [Area.Brinstar] = new(Area.Brinstar, "Brinstar Portal", "Left Vertical Shaft",
+            DoorCellX: 0x0B, DoorCellY: 0x0C, DoorScreenIndex: 0x0B,
+            DoorScreenId: 0x03, PortalScreenId: 0x1F, PortalScreenName: "Left Door Wavers"),
+        [Area.Norfair] = new(Area.Norfair, "Norfair Portal", "Middle Eye Shaft",
+            DoorCellX: 0x15, DoorCellY: 0x15, DoorScreenIndex: 0x01,
+            DoorScreenId: 0x03, PortalScreenId: 0x12, PortalScreenName: "Left Door Eyes"),
+        // The door screen replaces this shaft's solid top cap (the only cell with a free
+        // east neighbor), so the shaft is re-capped one cell higher — the same 0x0B-over-
+        // 0x07 arrangement the shaft's vanilla top had.
+        [Area.Kraid] = new(Area.Kraid, "Kraid Portal", "Top Middle Shaft",
+            DoorCellX: 0x08, DoorCellY: 0x10, DoorScreenIndex: 0x00,
+            DoorScreenId: 0x07, PortalScreenId: 0x17, PortalScreenName: "Left Door Blue Geegas",
+            CapScreenId: 0x0B),
+    };
+
     public Dictionary<int, byte[]> BuildPortalRooms(World world)
     {
         if (data is null)
@@ -570,31 +604,62 @@ public class YamlReader
             throw new Exception("Data not loaded");
         }
 
-        // This will create new rooms for the portals, add it to the graph by patching the room/screen definitions and return a list of patch data to write to the ROM
+        // This will create new rooms for the portals, add them to the graph by patching the
+        // room/screen definitions and return the patch data to write to the ROM
         var patchData = new Dictionary<int, byte[]>();
 
-        // Portal 1 (New door in brinstar shaft)
-
-        // Patch the shaft data so the logic knows there's a door there
-        var brinstarShaft = data.rooms.Find(r => r.area == Area.Brinstar && r.name == "Left Vertical Shaft")!;
-        brinstarShaft.screens[11] = 0x03;
-
-        // Create a new dummy room behind this door
-        var newRoom = new Room
+        foreach (var area in DataLoader.PortalRoomAreas)
         {
-            name = "Brinstar Portal",
-            area = Area.Brinstar,
-            position = new int[] { 0x0C, 0x0C },
-            screens = new int[] { 0x1F },
-            scroll = Scrolling.Horizontal,
-            sprites = []
-        };
+            if (!PortalRoomSpecs.TryGetValue(area, out var spec))
+                throw new Exception($"The vanilla Metroid map cannot host a {area} portal");
 
-        data.rooms.Add(newRoom);
+            var shaft = data.rooms.Find(r => r.area == spec.Area && r.name == spec.ShaftRoomName)
+                ?? throw new Exception($"{spec.Area} portal shaft '{spec.ShaftRoomName}' not found");
 
-        // This should take care of the logic implications of this new door, now add the patch data
-        patchData.Add(0x68253E + (0x20 * 0x0C) + 0x0B, new byte[] { 0x03, 0x1F });
+            // Patch the shaft data so the logic knows there's a door there.
+            shaft.screens[spec.DoorScreenIndex] = spec.DoorScreenId;
 
+            if (spec.CapScreenId is { } capScreenId)
+            {
+                // The door screen replaced the shaft's solid top cap and scrolls open at
+                // the top; re-cap the shaft one cell higher so Samus cannot scroll out
+                // of bounds. The cap screen has no nodes, so logic is unaffected.
+                shaft.position[1] -= 1;
+                shaft.screens = [capScreenId, .. shaft.screens];
+                patchData.Add(0x68253E + (0x20 * (spec.DoorCellY - 1)) + spec.DoorCellX,
+                    [(byte)capScreenId]);
+            }
+
+            // Create a new dummy room behind this door
+            data.rooms.Add(new Room
+            {
+                name = spec.RoomName,
+                area = spec.Area,
+                position = new int[] { spec.DoorCellX + 1, spec.DoorCellY },
+                screens = new int[] { spec.PortalScreenId },
+                scroll = Scrolling.Horizontal,
+                sprites = []
+            });
+
+            // Map grid: shaft cell gets the door variant, the cell east of it the portal room.
+            patchData.Add(0x68253E + (0x20 * spec.DoorCellY) + spec.DoorCellX,
+                new byte[] { (byte)spec.DoorScreenId, (byte)spec.PortalScreenId });
+
+            // Portal room behind an east-side door on the shaft cell. Leaving fires on
+            // entering the shaft's right-hand door; arrivals scroll into the shaft
+            // itself through that door. The portal room is only a safety net in case
+            // the outgoing transition ever fails to fire.
+            world.PortalRooms.Add(new World.PortalRoom(
+                spec.RoomName,
+                $"{spec.Area} - {spec.RoomName} - {spec.PortalScreenName} (0) - Left door",
+                spec.Area,
+                RoomWord: spec.DoorCellX << 8 | spec.DoorCellY,
+                Direction: 0x0001,
+                DestinationId: spec.DoorCellX << 8 | spec.DoorCellY,
+                DestinationArgs: (shaft.scroll == Scrolling.Vertical ? 0x0040 : 0x0000)
+                    | (spec.Area == Area.Norfair ? M1EntryArgsAlternatePalette : 0x0000)
+                    | (int)spec.Area));
+        }
 
         return patchData;
     }

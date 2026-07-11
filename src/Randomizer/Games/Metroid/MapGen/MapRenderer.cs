@@ -68,7 +68,7 @@ public static class MapRenderer
             svg.AppendLine($"<rect x=\"{x + 1}\" y=\"{y + 1}\" width=\"{CellSize - 2}\" height=\"{CellSize - 2}\" fill=\"{fill}\" opacity=\"0.85\"/>");
 
             // Walls: thick edge lines where the cell requires a wall.
-            foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+            foreach (var dir in Directions.All)
             {
                 var (x1, y1, x2, y2) = dir switch
                 {

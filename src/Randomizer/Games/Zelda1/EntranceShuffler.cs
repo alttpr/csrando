@@ -9,18 +9,19 @@ internal class EntranceShuffler
 {
     private readonly YamlReader.YamlData _data;
     private readonly PRNG _prng;
+    private readonly List<int> _portalMapIds;
 
-    public EntranceShuffler(PRNG prng, YamlReader reader)
+    public EntranceShuffler(PRNG prng, YamlReader reader, List<int> portalMapIds)
     {
         _data = reader.Data!;
         _prng = prng;
+        _portalMapIds = portalMapIds;
     }
 
     public void Shuffle()
     {
-        /* Disallow shuffling the portal caves for now */
-        /* TODO: Make this configurable */
-        List<int> portalMapIds = [0x66];
+        /* Portal caves keep their vanilla entrances */
+        List<int> portalMapIds = _portalMapIds;
 
         /* Find all caves and dungeon levels */
         var caveIds = _data.overworld_maps.Where(m => !portalMapIds.Contains(m.map) && m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).Select(m => m.cave).ToList();

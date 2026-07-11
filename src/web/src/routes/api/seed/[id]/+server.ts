@@ -2,6 +2,7 @@ import { json, error as svelteError } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { db } from "$lib/server/db";
 import { seeds } from "$lib/server/db/schema";
+import { shouldHideSpoiler } from "$lib/server/seed-visibility";
 import { eq } from "drizzle-orm";
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -22,7 +23,10 @@ export const GET: RequestHandler = async ({ params }) => {
       throw svelteError(404, { message: "Seed not found" });
     }
 
-    return json(seedResult[0]);
+    const seed = seedResult[0];
+    return json(
+      shouldHideSpoiler(seed.options) ? { ...seed, spoilerLog: null } : seed,
+    );
   } catch (dbError: unknown) {
     console.error("Database error while fetching seed:", dbError);
     if ((dbError as { status?: number }).status === 404) throw dbError; // Re-throw SvelteKit errors

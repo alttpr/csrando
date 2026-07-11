@@ -143,17 +143,19 @@ export const actions: Actions = {
     }
 
     cookies.set(ADMIN_VERSION_COOKIE_NAME, configured, {
-      path: "/admin",
+      path: "/",
       httpOnly: true,
       sameSite: "lax",
       secure: !dev,
       maxAge: 60 * 60 * 12, // 12 hours
     });
+    cookies.delete(ADMIN_VERSION_COOKIE_NAME, { path: "/admin" });
 
     return { type: "authenticate", success: true } satisfies ActionData;
   },
 
   logout: async ({ cookies }) => {
+    cookies.delete(ADMIN_VERSION_COOKIE_NAME, { path: "/" });
     cookies.delete(ADMIN_VERSION_COOKIE_NAME, { path: "/admin" });
     return { type: "logout", success: true } satisfies ActionData;
   },

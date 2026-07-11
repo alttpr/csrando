@@ -574,9 +574,10 @@ public class ScreenCatalog
 
         static bool EdgeOk(EdgeConnector actual, EdgeRequirement required) => required switch
         {
-            // Scroll/door openings on Wall edges are sealed by the engine; an elevator
-            // shaft hole is not (mirrors WorldGrid.FitsStrict for unforced cells).
-            EdgeRequirement.Wall => actual.Type != ConnectorType.Elevator,
+            // Only scroll openings on Wall edges are sealed by the engine; a door still
+            // scrolls Samus out of bounds and an elevator hole has no platform (mirrors
+            // WorldGrid.FitsStrict for unforced cells).
+            EdgeRequirement.Wall => actual.Type is not (ConnectorType.Door or ConnectorType.Elevator),
             EdgeRequirement.Scroll => actual.Type == ConnectorType.Scroll,
             EdgeRequirement.Door => actual.Type == ConnectorType.Door,
             EdgeRequirement.Elevator => actual.Type == ConnectorType.Elevator,

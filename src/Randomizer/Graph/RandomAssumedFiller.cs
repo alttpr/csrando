@@ -34,7 +34,7 @@ internal sealed class RandomAssumedFiller
         // Do special things for SM in combo
         if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
         {
-            if (comboWorld.Config.InitialGame == "sm")
+            if (comboWorld.EffectiveInitialGame == "sm")
             {
                 for (int i = 0; i < _randomizer.Worlds.Length; ++i)
                 {
@@ -52,10 +52,11 @@ internal sealed class RandomAssumedFiller
                         {
                             SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
 
-                            // If we didn't fill morph, then fill it
-                            if (flatItems.Any(f => f.Item.Name == "Morph"))
+                            // If we didn't fill SM's Morph, then fill it. Other games can also
+                            // have a Morph item, so the lookup has to stay scoped to SM.
+                            var flatMorph = flatItems.FirstOrDefault(i => i.Item == smWorld.GetItem("Morph"));
+                            if (flatMorph != default)
                             {
-                                var flatMorph = flatItems.First(i => i.Item == smWorld.GetItem("Morph"));
                                 SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
                                 flatItems.Remove(flatMorph);
                             }

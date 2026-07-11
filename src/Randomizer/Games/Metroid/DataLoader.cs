@@ -5,6 +5,20 @@ using Randomizer.Graph;
 
 internal static class DataLoader
 {
+    /// <summary>
+    /// Areas that get a portal room. Portal rooms are physical map content and must
+    /// exist before the graph does — the one thing about portals that cannot resolve
+    /// lazily on demand — so all of them are always built regardless of which partner
+    /// games are present: the default portal layout reassigns endpoints when a partner
+    /// is missing, and rooms never connected stay inert dead ends.
+    /// </summary>
+    internal static readonly YamlReader.Area[] PortalRoomAreas =
+    [
+        YamlReader.Area.Brinstar,
+        YamlReader.Area.Norfair,
+        YamlReader.Area.Kraid,
+    ];
+
     // Vanilla start location vertex name; map shuffle overrides this with its generated name.
     private const string VanillaStartLocation = "Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform";
 
@@ -26,15 +40,9 @@ internal static class DataLoader
         }
         else
         {
+            // The vanilla fixed anchors created by BuildPortalRooms: portal rooms behind
+            // east-side doors in the areas requested by the combo portal layout.
             world.PatchData = yamlReader.BuildPortalRooms(world);
-
-            // The vanilla fixed anchor created by BuildPortalRooms: portal room (0x0C,0x0C)
-            // behind an east-side door on the Left Vertical Shaft cell (0x0B,0x0C).
-            world.PortalAnchors.Add(new PortalAnchor(
-                "Brinstar Portal",
-                "Brinstar - Brinstar Portal - Left Door Wavers (0) - Left door",
-                RoomWord: 0x0B0C, Direction: 0x0004,
-                DestinationId: 0x0C0C, DestinationArgs: 0x0000));
         }
 
         yamlReader.BuildGraph();
@@ -55,7 +63,6 @@ internal static class DataLoader
         graph.AddVertex(startingVertex);
         world.Graph.AddDirected(startingVertex, world.GetLocation(startLocationName), world.GetItem("fixed"));
         world.Graph.AddDirected(startingVertex, world.GetLocation("Meta - Metroid Meta Locations - Meta (0) - Meta"), world.GetItem("fixed"));
-
 
         return startingVertex;
     }
@@ -78,6 +85,7 @@ internal static class DataLoader
                 _ => 1.0,
             },
             Saturate = world.Config.MapSize == MapSizeOption.Nightmare,
+            PortalAreas = PortalRoomAreas,
         };
 
         var generated = generator.Generate(mapSeed);
@@ -95,17 +103,23 @@ internal static class DataLoader
         var rooms = RoomBuilder.Build(generated);
         RoomBuilder.ApplyTo(data, rooms);
 
-        // Each generated portal room becomes an anchor; the door cell is always directly
-        // west of it (the vanilla combo arrangement the transition code expects).
+        // Record each generated portal room; the host door cell is always directly west
+        // of it (the vanilla combo arrangement the transition code expects). Leaving
+        // fires on entering the host cell's right-hand door; arrivals scroll into the
+        // host room through that door — the portal room is only a safety net.
         foreach (var portal in rooms.Portals)
         {
-            world.PortalAnchors.Add(new PortalAnchor(
+            var doorCell = new Point(portal.Cell.X - 1, portal.Cell.Y);
+            var hostRoom = rooms.CellToRoom[doorCell].Room;
+            world.PortalRooms.Add(new World.PortalRoom(
                 $"{portal.Area} Portal {portal.Cell.X:X2}{portal.Cell.Y:X2}",
                 portal.DoorVertexName,
-                RoomWord: (portal.Cell.X - 1) << 8 | portal.Cell.Y,
-                Direction: 0x0004,
-                DestinationId: portal.Cell.X << 8 | portal.Cell.Y,
-                DestinationArgs: (int)portal.Area));
+                portal.Area,
+                RoomWord: doorCell.X << 8 | doorCell.Y,
+                Direction: 0x0001,
+                DestinationId: doorCell.X << 8 | doorCell.Y,
+                DestinationArgs: (hostRoom.scroll == YamlReader.Scrolling.Vertical ? 0x0040 : 0x0000)
+                    | (int)portal.Area));
         }
 
         world.GeneratedMap = generated;

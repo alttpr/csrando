@@ -17,18 +17,6 @@ public sealed class TopologyGeneratorTest
     private static GeneratedWorld Generate(int seed) =>
         new TopologyGenerator(Catalog.Value).Generate(seed);
 
-    /// <summary>Repo-root TestResults/m1maps folder for rendered maps.</summary>
-    private static string OutputDir()
-    {
-        var dir = new DirectoryInfo(YamlReader.DataRoot);
-        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "ALttPR.sln")))
-            dir = dir.Parent;
-
-        var output = Path.Combine(dir?.FullName ?? Path.GetTempPath(), "TestResults", "m1maps");
-        Directory.CreateDirectory(output);
-        return output;
-    }
-
     [TestMethod]
     public void Generate_ManySeeds_Succeeds()
     {
@@ -59,6 +47,33 @@ public sealed class TopologyGeneratorTest
             Assert.IsTrue(world.Grid.HasLink(doorCell.Position, portalPos), $"seed {seed}: portal door link missing");
             Assert.IsTrue(world.Grid.ReservedEmpty.Contains(portalPos.Step(Direction.Right)),
                 $"seed {seed}: cell east of the portal must stay empty for the sealed scroll opening");
+        }
+    }
+
+    [TestMethod]
+    public void Generate_PlacesRequestedPortalAreas()
+    {
+        var requested = new[] { Area.Brinstar, Area.Norfair, Area.Kraid };
+
+        for (int seed = 1; seed <= 20; seed++)
+        {
+            var world = new TopologyGenerator(Catalog.Value) { PortalAreas = requested }.Generate(seed);
+
+            for (int i = 0; i < requested.Length; i++)
+            {
+                Assert.IsTrue(world.Landmarks.TryGetValue($"Portal{i}", out var portalPos),
+                    $"seed {seed}: no portal {i} landmark");
+
+                var portal = world.Grid.Cell(portalPos)!;
+                Assert.AreEqual(CellRole.Portal, portal.Role, $"seed {seed}: portal {i}");
+                Assert.AreEqual(requested[i], portal.Area, $"seed {seed}: portal {i} area");
+
+                var doorCell = world.Grid.Cell(portalPos.Step(Direction.Left))!;
+                Assert.AreEqual(requested[i], doorCell.Area, $"seed {seed}: portal {i} door area");
+                Assert.AreEqual(EdgeRequirement.Door, doorCell.Right, $"seed {seed}: portal {i} door cell");
+                Assert.IsTrue(world.Grid.HasLink(doorCell.Position, portalPos),
+                    $"seed {seed}: portal {i} door link missing");
+            }
         }
     }
 
@@ -307,13 +322,36 @@ public sealed class TopologyGeneratorTest
             Assert.IsTrue(world.Landmarks.TryGetValue("VariaShaft", out var pos),
                 $"seed {seed}: no Varia tower landmark");
 
-            // Tower bottom 0x1E: breakable ceiling, entry door east, sealed door west.
+            // Tower bottom 0x1E: breakable ceiling, entry door east, corridor west.
             var bottom = world.Grid.Cell(pos)!;
             Assert.AreEqual(0x1E, bottom.ForcedScreenId, $"seed {seed}");
             Assert.AreEqual(EdgeRequirement.Scroll, bottom.Up, $"seed {seed}");
             Assert.IsTrue(world.Grid.HasLink(pos, pos.Step(Direction.Right)), $"seed {seed}");
-            Assert.IsTrue(world.Grid.ReservedEmpty.Contains(pos.Step(Direction.Left)),
-                $"seed {seed}: cell behind 0x1E's sealed door must stay empty");
+
+            // 0x1E's west door always opens onto a real horizontal corridor, never empty
+            // space, with the tower sitting mid-corridor like vanilla.
+            var west = world.Grid.Cell(pos.Step(Direction.Left))!;
+            Assert.IsNotNull(west, $"seed {seed}: no corridor west of 0x1E");
+            Assert.AreEqual(EdgeRequirement.Door, bottom.Left, $"seed {seed}: 0x1E west edge must be a real door link");
+            Assert.AreEqual(EdgeRequirement.Door, west.Right, $"seed {seed}: west corridor must face 0x1E with a door");
+            Assert.IsTrue(world.Grid.HasLink(pos, west.Position), $"seed {seed}: 0x1E west door link missing");
+            Assert.AreEqual(Scrolling.Horizontal, west.Run.Axis, $"seed {seed}: west neighbor must be a horizontal corridor");
+
+            // The corridor's far (west) end is either a solid cap (dead end) or a door into a
+            // fresh vertical shaft that growth can sprawl off — both are OOB-safe. If it is a
+            // door, the neighbor must be a shaft registered so later growth uses it.
+            var westEnd = west.Run.Cells[0];
+            if (westEnd.Left == EdgeRequirement.Door)
+            {
+                var westShaftCell = world.Grid.Cell(westEnd.Position.Step(Direction.Left))!;
+                Assert.IsNotNull(westShaftCell, $"seed {seed}: west door with no shaft behind it");
+                Assert.AreEqual(Scrolling.Vertical, westShaftCell.Run.Axis, $"seed {seed}: west terminator must be a shaft");
+                Assert.IsTrue(world.Grid.HasLink(westEnd.Position, westShaftCell.Position), $"seed {seed}: west shaft link missing");
+            }
+            else
+            {
+                Assert.AreEqual(CellRole.Cap, westEnd.Role, $"seed {seed}: west corridor end must be a cap when not a door");
+            }
 
             // 0x2E above with the chozo pre-item corridor on its left, capped above.
             var middle = world.Grid.Cell(pos.Step(Direction.Up))!;
@@ -323,6 +361,25 @@ public sealed class TopologyGeneratorTest
 
             var preEast = world.Grid.Cell(middle.Position.Step(Direction.Left))!;
             Assert.AreEqual(0x28, preEast.ForcedScreenId, $"seed {seed}: pre-item corridor east end");
+        }
+    }
+
+    [TestMethod]
+    public void Generate_KraidLairSealsItsWestSide()
+    {
+        // Kraid's Lair (0x1D) is a single horizontally-scrolling screen with no real transition
+        // on its west side. The engine scrolls along a room's axis regardless of exit tiles and
+        // only refuses at a $FF map cell, so an occupiable room west of it would scroll Samus
+        // straight in. The cell must stay reserved-empty (vanilla keeps it $FF).
+        for (int seed = 1; seed <= 40; seed++)
+        {
+            var world = Generate(seed);
+            var kraid = world.Landmarks["Kraid"];
+            var west = new Point(kraid.X - 1, kraid.Y);
+
+            Assert.IsNull(world.Grid.Cell(west), $"seed {seed}: a room occupies the cell west of Kraid at {west}");
+            Assert.IsTrue(world.Grid.ReservedEmpty.Contains(west),
+                $"seed {seed}: cell west of Kraid at {west} must be reserved empty");
         }
     }
 
@@ -353,23 +410,5 @@ public sealed class TopologyGeneratorTest
                     $"seed {seed}: {name} screen 0x{profile.ScreenId:X2} not passable with full inventory");
             }
         }
-    }
-
-    [TestMethod]
-    public void Render_DumpSampleMaps()
-    {
-        var dir = OutputDir();
-        for (int seed = 1; seed <= 8; seed++)
-        {
-            var world = Generate(seed);
-            File.WriteAllText(Path.Combine(dir, $"seed-{seed}.svg"), MapRenderer.ToSvg(world));
-            File.WriteAllText(Path.Combine(dir, $"seed-{seed}.txt"),
-                MapRenderer.ToAscii(world) + "\n" + string.Join("\n", world.Diagnostics));
-        }
-
-        var sample = Generate(1);
-        Console.WriteLine(MapRenderer.ToAscii(sample));
-        Console.WriteLine(string.Join("\n", sample.Diagnostics));
-        Console.WriteLine($"maps written to {dir}");
     }
 }

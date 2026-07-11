@@ -12,7 +12,6 @@
     interface M1MapData {
         cells: MapCell[];
         itemPlacements: Record<string, string>;
-        landmarks: Record<string, string>;
     }
 
     interface Props {

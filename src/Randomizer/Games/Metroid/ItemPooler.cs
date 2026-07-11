@@ -41,8 +41,8 @@ internal sealed class ItemPooler : IItemPooler
         // still rich; the items placed last must land in locations reachable with almost
         // nothing. So the heaviest progression gates (Morph, Missile for red doors, Bombs)
         // go first and the situational upgrades go last. Generated map-shuffle worlds have
-        // a small "reachable with nothing" sphere, which made the old order (Morph and
-        // Bombs placed last) fail with "no locations".
+        // a small "reachable with nothing" sphere, so placing Morph or Bombs last would
+        // leave them with no legal location.
         List<PooledItem> worldSet =
         [
             new PooledItem(ItemSetName.DefaultSet, 1, world.GetItem("Morph")),

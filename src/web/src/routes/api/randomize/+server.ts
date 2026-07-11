@@ -5,6 +5,7 @@ import { db } from "$lib/server/db";
 import { seeds, userSeeds } from "$lib/server/db/schema";
 import { getActiveRandomizerVersionFor } from "$lib/server/db/randomizer";
 import { generateId } from "$lib/utils/id";
+import { shouldHideSpoiler } from "$lib/server/seed-visibility";
 import {
   RandomizerResponseSchema,
   RandomizeRequestSchema,
@@ -19,11 +20,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   try {
-    // The .NET API expects a root object with a `request` property. If the client
-    // forgot to wrap it, wrap here defensively.
-
-    // Forward body directly; backend expects root object with Seed, IncludeSpoiler, Configs
-    const randomizeResponseRaw = await randomizeApi.create(optionsFromRequest);
     const parsedRequest = RandomizeRequestSchema.safeParse(optionsFromRequest);
     if (!parsedRequest.success) {
       console.error(
@@ -32,6 +28,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       );
       throw svelteError(400, { message: "Invalid configuration data" });
     }
+
+    const {
+      IncludeSpoiler: includeSpoiler,
+      Seed,
+      Configs,
+    } = parsedRequest.data;
+    // Race mode controls public visibility only. Always retain spoilers for admin diagnostics.
+    const generatorRequest = { Seed, IncludeSpoiler: true, Configs };
+    const randomizeResponseRaw = await randomizeApi.create(generatorRequest);
 
     const parsedResponse =
       RandomizerResponseSchema.safeParse(randomizeResponseRaw);
@@ -79,7 +84,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     // Save the seed to the database
     await db.insert(seeds).values({
       id: uniqueId,
-      options: optionsFromRequest,
+      options: {
+        ...generatorRequest,
+        IncludeSpoiler: includeSpoiler,
+      },
       patchData: returnedPatchData,
       placementInfo: [],
       spoilerLog: randomizeResponse.spoilerLog || null,
@@ -101,7 +109,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       id: uniqueId,
       seed: randomizeResponse.seed,
       worlds: randomizeResponse.worlds,
-      spoilerLog: randomizeResponse.spoilerLog,
+      spoilerLog: shouldHideSpoiler({ IncludeSpoiler: includeSpoiler })
+        ? undefined
+        : randomizeResponse.spoilerLog,
     };
     return json(response);
   } catch (err: unknown) {

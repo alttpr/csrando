@@ -49,6 +49,22 @@ public readonly record struct Point(int X, int Y)
     public override string ToString() => $"({X},{Y})";
 }
 
+/// <summary>Shared helpers over the four grid directions.</summary>
+public static class Directions
+{
+    /// <summary>The four directions, in Up/Down/Left/Right order.</summary>
+    public static readonly Direction[] All = [Direction.Up, Direction.Down, Direction.Left, Direction.Right];
+
+    public static Direction Opposite(Direction dir) => dir switch
+    {
+        Direction.Up => Direction.Down,
+        Direction.Down => Direction.Up,
+        Direction.Left => Direction.Right,
+        Direction.Right => Direction.Left,
+        _ => throw new ArgumentOutOfRangeException(nameof(dir))
+    };
+}
+
 /// <summary>
 /// One cell of the abstract 32x32 world layout. Stores everything screen fitting will need:
 /// area, axis, role, the required connector on each edge, and door colors where they matter.
@@ -325,7 +341,7 @@ public class WorldGrid
         if (cell.ForcedScreenId.HasValue && profile.ScreenId != cell.ForcedScreenId.Value)
             return false;
 
-        foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+        foreach (var dir in Directions.All)
         {
             var required = cell.Edge(dir);
             var actual = profile.Connector(dir);
@@ -352,17 +368,17 @@ public class WorldGrid
                     break;
 
                 case EdgeRequirement.Wall:
-                    // An elevator opening is never acceptable on a Wall edge: the engine
-                    // seals scroll and door openings against empty cells, but an elevator
-                    // shaft hole is a real gap in the screen with no platform spawned.
-                    // Forced template cells are exempt (the escape shaft top 0x0E rides
-                    // into a reserved-empty cell, exactly like vanilla).
-                    if (actual.Type == ConnectorType.Elevator && !cell.ForcedScreenId.HasValue)
+                    // The engine only seals *scroll* openings against empty cells. A door or
+                    // elevator opening on a Wall edge is never safe: a door still scrolls Samus
+                    // out of bounds against an empty cell, and an elevator opening is a real
+                    // gap in the floor with no platform. Forced template cells are exempt, since
+                    // they replicate hand-validated vanilla arrangements (e.g. the escape shaft
+                    // top 0x0E riding into a reserved cell).
+                    if (actual.Type is ConnectorType.Door or ConnectorType.Elevator && !cell.ForcedScreenId.HasValue)
                         return false;
-                    // A scroll/door opening on a Wall edge is fine when it faces an empty
-                    // cell (the engine seals it) or a cap cell (solid wall, cannot create a
-                    // transition). Facing any other occupied cell it would create an
-                    // unintended transition.
+                    // A scroll opening on a Wall edge is fine when it faces an empty cell (the
+                    // engine seals it) or a cap cell (solid wall, cannot create a transition).
+                    // Facing any other occupied cell it would create an unintended transition.
                     var facing = Cell(cell.Position.Step(dir));
                     if (facing != null && facing.Role != CellRole.Cap
                         && actual.Type is ConnectorType.Scroll or ConnectorType.Door)
@@ -379,7 +395,7 @@ public class WorldGrid
         if (!cell.ForcedScreenId.HasValue)
         {
             var committed = new List<Direction>(4);
-            foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+            foreach (var dir in Directions.All)
                 if (cell.Edge(dir) != EdgeRequirement.Wall)
                     committed.Add(dir);
 

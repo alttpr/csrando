@@ -41,11 +41,13 @@ internal sealed class ShopShuffler
 
     private readonly PRNG _prng;
     private readonly YamlData _data;
+    private readonly IReadOnlySet<int> _reservedPortalMaps;
 
-    public ShopShuffler(PRNG prng, YamlData data)
+    public ShopShuffler(PRNG prng, YamlData data, IReadOnlySet<int>? reservedPortalMaps = null)
     {
         _prng = prng;
         _data = data;
+        _reservedPortalMaps = reservedPortalMaps ?? new HashSet<int>();
     }
 
     /// <summary>
@@ -64,6 +66,7 @@ internal sealed class ShopShuffler
         // shared; they're junk-only and harmless.)
         var shopScreens = _data.overworld_maps
             .Where(m => m.name != "Meta"
+                        && !_reservedPortalMaps.Contains(m.map)
                         && cavesById.TryGetValue(m.cave, out var c) && IsShop(c)
                         && ScreenHasCaveEntrance(m))
             .OrderBy(m => m.map) // deterministic order; PRNG decides the buy-once/repeatable split

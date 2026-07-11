@@ -6,7 +6,7 @@ using BaseVertex = Graph.Vertex;
 using Graph = Graph.Graph;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World : Randomizer.Graph.World<Item>
+public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
 {
 
     public Config Config { get; }
@@ -16,6 +16,26 @@ public sealed class World : Randomizer.Graph.World<Item>
     public Map? Map { get; set; }
     public MapInfo ? MapInfo { get; set; }
     public RequirementHandler RequirementHandler { get; } = new();
+
+    /// <summary>
+    /// A room converted into a portal room by <see cref="Portals.ConvertRoom"/>: a second
+    /// (portal) door was added so linking a portal here does not consume the room's real
+    /// doorway. The patches apply the conversion and ride along when the room is linked.
+    /// </summary>
+    public record PortalRoom(string Name, string RoomName, string VertexName,
+        ushort DoorOutPointer, ushort DoorInPointer, bool PortalOnLeft, int SaveStationSlot,
+        IReadOnlyList<RomPatch> Patches);
+
+    /// <summary>Portal rooms created for this world (creation is separate from linking;
+    /// unlinked conversions write nothing to the ROM).</summary>
+    public List<PortalRoom> PortalRooms { get; } = [];
+
+    /// <summary>Cross-game portal anchors (see <see cref="Games.PortalAnchor"/>),
+    /// materialized on demand by <see cref="Portals"/> from portal rooms — or from any
+    /// plain door, which consumes that doorway's outgoing passage.</summary>
+    public List<PortalAnchor> PortalAnchors { get; } = [];
+
+    public PortalAnchor ResolvePortalAnchor(BaseVertex vertex) => Portals.ResolveVertexAnchor(this, vertex);
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>

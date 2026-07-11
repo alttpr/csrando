@@ -64,7 +64,7 @@ public static class ScreenFitter
     private static int GatedTraversal(AbstractCell cell, ScreenProfile profile)
     {
         var committed = new List<Direction>(4);
-        foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+        foreach (var dir in Directions.All)
             if (cell.Edge(dir) != EdgeRequirement.Wall)
                 committed.Add(dir);
 
@@ -86,7 +86,7 @@ public static class ScreenFitter
     private static int ExtraOpenings(WorldGrid grid, AbstractCell cell, ScreenProfile profile)
     {
         int count = 0;
-        foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+        foreach (var dir in Directions.All)
         {
             if (cell.Edge(dir) != EdgeRequirement.Wall)
                 continue;

@@ -102,13 +102,12 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     private void WriteGameFlags(World world, IRom rom)
     {
-        byte startingGame = world.Config.InitialGame switch
+        byte startingGame = world.EffectiveInitialGame switch
         {
             "sm" => 0x00,
             "alttp" => 0x01,
             "z1" => 0x02,
             "m1" => 0x03,
-            "" => (byte)(world.SMWorld != null ? 0x00 : world.AlttpWorld != null ? 0x01 : world.Z1World != null ? 0x02 : world.M1World != null ? 0x03 : 0x00),
             _ => throw new ArgumentException("Invalid initial game", nameof(world.Config.InitialGame))
         };
 

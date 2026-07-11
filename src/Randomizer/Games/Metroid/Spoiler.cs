@@ -71,7 +71,7 @@ public static class Spoiler
     private static MapSpoilerCell BuildCell(AbstractCell cell)
     {
         var edges = new Dictionary<string, string>();
-        foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+        foreach (var dir in Directions.All)
         {
             var edge = cell.Edge(dir);
             if (edge == EdgeRequirement.Wall)

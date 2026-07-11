@@ -23,13 +23,6 @@ public sealed class ScreenCatalogTest
     }
 
     [TestMethod]
-    public void Build_DumpCatalog()
-    {
-        var catalog = Load();
-        Console.WriteLine(catalog.Dump());
-    }
-
-    [TestMethod]
     public void Landmarks_ClassifyAsExpected()
     {
         var catalog = Load();

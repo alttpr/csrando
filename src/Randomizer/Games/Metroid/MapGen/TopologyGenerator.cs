@@ -51,10 +51,10 @@ public class TopologyGenerator(ScreenCatalog catalog)
     public double SizeScale { get; init; } = 1.0;
 
     /// <summary>
-    /// Number of cross-game portal anchors to place (combo mode transitions). Standalone
-    /// seeds keep the rooms as inert dead ends, so anchors are always generated.
+    /// Areas that get a cross-game portal room (see <see cref="DataLoader.PortalRoomAreas"/>
+    /// — always all built; rooms never connected to a portal stay inert dead ends).
     /// </summary>
-    public int PortalCount { get; init; } = 1;
+    public IReadOnlyList<Area> PortalAreas { get; init; } = [Area.Brinstar];
 
     /// <summary>
     /// Nightmare mode: ignore the size targets and keep growing every area until nothing
@@ -99,7 +99,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     {
         // Minimums never scale above 1.0: targets past vanilla size are best-effort, and
         // raising the hard floor with them converts every growth stall into a whole-world
-        // retry (at 1.2 that used to fail half of all seeds outright).
+        // retry, which fails a large fraction of seeds outright at above-vanilla scales.
         var (min, target) = BaseSizeGoals[area];
         return (Math.Max(10, (int)(min * Math.Min(1.0, SizeScale))), Math.Max(12, (int)(target * SizeScale)));
     }
@@ -719,11 +719,16 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 var needed = new List<Point> { new(lairX, y), new(miniX, y), new(miniX, y - 1) };
                 needed.AddRange(Enumerable.Range(miniX + 1, corrLen).Select(x => new Point(x, y)));
 
-                if (lairX < 0 || !needed.All(grid.CanPlace))
+                // 0x1D (Kraid's Lair) has no real transition on its west side; the engine still
+                // scrolls Samus off the screen boundary there regardless of exit tiles, so the
+                // cell west of it must stay reserved-empty (matches vanilla's $FF map cell).
+                int westX = lairX - 1;
+                if (lairX < 0 || westX < 0 || !grid.CanPlace(new Point(westX, y)) || !needed.All(grid.CanPlace))
                     continue;
 
                 var lair = grid.PlaceRun(Area.Kraid, Scrolling.Horizontal, new Point(lairX, y), 1, CellRole.Boss);
                 lair.Cells[0].ForcedScreenId = 0x1D;
+                grid.ReservedEmpty.Add(new Point(westX, y));
 
                 // Two-cell shaft: cap on top, 0x1B 'Kraid Hallway' with doors on both sides below.
                 var mini = grid.PlaceRun(Area.Kraid, Scrolling.Vertical, new Point(miniX, y - 1), 2, CellRole.Shaft, capStart: true);
@@ -847,11 +852,13 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// chozo corridor's door, exactly the vanilla Varia climb:
     ///
     ///   [cap, chozo] - red doors - [0x1A .. 0x28] - blue door - 0x2E   &lt;- cap above 0x2E
-    ///                                  entry corridor - blue door - 0x1E   &lt;- below 0x2E
+    ///           west corridor - blue door - 0x1E - blue door - entry corridor   &lt;- below 0x2E
     ///
-    /// 0x1E's other door is sealed against a reserved-empty cell, like vanilla's unused
-    /// openings. Both 0x1E doors faced multi-screen horizontal rooms in vanilla, so the
-    /// entry corridor is always at least two cells.
+    /// 0x1E has doors on both sides, like vanilla, with the tower sitting mid-corridor. The
+    /// east door is the entry from the anchor shaft; the west door opens a corridor that
+    /// terminates in a fresh shaft, so later growth sprawls Brinstar west off it like any
+    /// other shaft. A door must always be linked to a real room — unlike a scroll opening,
+    /// it is not sealed by the engine against an empty cell.
     /// </summary>
     private bool TryPlaceVariaComplex((int Chozo, int PreWest, int PreEast) spec, AbstractCell shaftCell)
     {
@@ -859,7 +866,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
             return false;
 
         int y = shaftCell.Position.Y;
-        var (_, _, minY, _) = bounds[Area.Brinstar];
+        var (minX, _, minY, maxY) = bounds[Area.Brinstar];
         if (y - 2 < minY)
             return false;
 
@@ -868,12 +875,19 @@ public class TopologyGenerator(ScreenCatalog catalog)
         int preLen = Rand(2, 4);
         int capX = tx - preLen - 2;                   // chozo item room cap column
 
-        var needed = new List<Point> { new(tx - 1, y) }; // sealed-door cell, must stay free
-        needed.AddRange(Enumerable.Range(0, 3).Select(i => new Point(tx, y - 2 + i)));
+        // West of 0x1E: a corridor (its vanilla left-door context is MultiHorizontal), always
+        // placed so the door never seals against empty space. The mandatory footprint is a
+        // short 2-cell stub, kept small so it rarely blocks an anchor row; a longer westward
+        // shaft is optionally appended off its far end below, when there is room past the chozo.
+        int westLen = 2;
+        int westCorrStartX = tx - westLen;            // corridor spans [westCorrStartX, tx-1]
+
+        var needed = Enumerable.Range(0, 3).Select(i => new Point(tx, y - 2 + i)).ToList();
         needed.AddRange(Enumerable.Range(tx + 1, entryLen).Select(x => new Point(x, y)));
         needed.AddRange(Enumerable.Range(capX, preLen + 2).Select(x => new Point(x, y - 1)));
+        needed.AddRange(Enumerable.Range(westCorrStartX, westLen).Select(x => new Point(x, y))); // west corridor stub
 
-        if (capX < 0 || !needed.All(grid.CanPlace)
+        if (capX < 0 || westCorrStartX < minX || !needed.All(grid.CanPlace)
             || !CorridorEndExists(Area.Brinstar, Direction.Left, RunKind.MultiVertical)
             || !CorridorEndExists(Area.Brinstar, Direction.Right, RunKind.MultiVertical))
             return false;
@@ -881,12 +895,13 @@ public class TopologyGenerator(ScreenCatalog catalog)
         var tower = grid.PlaceRun(Area.Brinstar, Scrolling.Vertical, new Point(tx, y - 2), 3, CellRole.Shaft, capStart: true);
         tower.Cells[1].ForcedScreenId = 0x2E; // Left Door Empty Shaft: HiJump to the door
         tower.Cells[2].ForcedScreenId = 0x1E; // Breakable Top Shaft: shoot up, bomb back down
-        grid.ReservedEmpty.Add(new Point(tx - 1, y));
 
         var entry = grid.PlaceRun(Area.Brinstar, Scrolling.Horizontal, new Point(tx + 1, y), entryLen, CellRole.Corridor);
         grid.LinkDoor(tower.Cells[2], entry.Cells[0]);
         grid.LinkDoor(entry.Cells[^1], shaftCell);
 
+        // Chozo complex at row y-1, placed before the west shaft so its footprint is committed
+        // and visible to the west shaft's CanPlace probe (the shaft column may fall under it).
         var pre = grid.PlaceRun(Area.Brinstar, Scrolling.Horizontal, new Point(tx - preLen, y - 1), preLen, CellRole.Corridor);
         pre.Cells[0].ForcedScreenId = spec.PreWest;
         pre.Cells[^1].ForcedScreenId = spec.PreEast;
@@ -896,8 +911,79 @@ public class TopologyGenerator(ScreenCatalog catalog)
         itemRoom.Cells[1].ForcedScreenId = spec.Chozo;
         grid.LinkDoor(itemRoom.Cells[1], pre.Cells[0], DoorType.Red, DoorType.Red);
 
+        // West side: try a corridor running past the chozo into a fresh vertical shaft that
+        // growth can sprawl off; otherwise fall back to the mandatory short stub, capped at
+        // its west end.
+        if (!TryPlaceVariaWestGrowth(tower.Cells[2], capX))
+        {
+            var stub = grid.PlaceRun(Area.Brinstar, Scrolling.Horizontal, new Point(westCorrStartX, y), westLen,
+                CellRole.Corridor, capStart: true);
+            grid.LinkDoor(stub.Cells[^1], tower.Cells[2]);
+            MaybePlaceItem(stub);
+        }
+
         MaybePlaceItem(entry);
         landmarks["VariaShaft"] = tower.Cells[2].Position;
+        return true;
+    }
+
+    /// <summary>
+    /// Best-effort westward growth for the Varia tower: a corridor running from 0x1E (at
+    /// <paramref name="tower1E"/>) west past the chozo complex (columns capX..) into a fresh
+    /// two-way vertical shaft, which is registered so <see cref="GrowAreas"/> sprawls Brinstar
+    /// west off it — the tower sitting mid-corridor like vanilla. All-or-nothing: places nothing
+    /// and returns false if the footprint does not fit (the caller then lays a short capped
+    /// stub instead). The chozo must already be committed so the shaft column clears it.
+    /// </summary>
+    private bool TryPlaceVariaWestGrowth(AbstractCell tower1E, int capX)
+    {
+        var (minX, _, minY, maxY) = bounds[Area.Brinstar];
+        int tx = tower1E.Position.X;
+        int y = tower1E.Position.Y;
+
+        int shaftX = capX - 2;                  // one clear column west of the chozo cap (capX-1)
+        int corrStartX = shaftX + 1;            // corridor body starts east of the shaft
+        int corrLen = tx - corrStartX;          // corridor spans [corrStartX, tx-1]
+        if (shaftX < minX || corrLen < 2)
+            return false;
+
+        // A two-way shaft body with a right door facing the corridor must exist for the area.
+        if (!catalog.HasPiece(Area.Brinstar, Scrolling.Vertical,
+                EdgeRequirement.Scroll, EdgeRequirement.Scroll, EdgeRequirement.Wall, EdgeRequirement.Door,
+                rightNeighbor: RunKind.MultiHorizontal))
+            return false;
+
+        // The shaft's top cap sits one row above the door row (column < capX, so it clears the
+        // chozo). Try a deep shaft first, then shorter ones so it can still squeeze into a tight
+        // band instead of falling back to a bare stub.
+        int top = y - 1;
+        if (top < Math.Max(1, minY - 4))
+            return false;
+
+        var corridorCells = Enumerable.Range(corrStartX, corrLen).Select(x => new Point(x, y)).ToList();
+        if (!corridorCells.All(grid.CanPlace))
+            return false;
+
+        int total = 0;
+        foreach (int candidate in Enumerable.Range(0, 4).Select(i => Rand(2, 5) + 3 - i).Where(t => t >= 5))
+        {
+            if (top + candidate - 1 <= maxY
+                && Enumerable.Range(0, candidate).Select(i => new Point(shaftX, top + i)).All(grid.CanPlace))
+            {
+                total = candidate;
+                break;
+            }
+        }
+        if (total == 0)
+            return false;
+
+        var corridor = grid.PlaceRun(Area.Brinstar, Scrolling.Horizontal, new Point(corrStartX, y), corrLen, CellRole.Corridor);
+        grid.LinkDoor(corridor.Cells[^1], tower1E);
+        var shaft = grid.PlaceRun(Area.Brinstar, Scrolling.Vertical, new Point(shaftX, top), total,
+            CellRole.Shaft, capStart: true, capEnd: true);
+        grid.LinkDoor(shaft.Cells[1], corridor.Cells[0]); // Cells[0]=top cap, Cells[1]=row-y body
+        ShaftsOf(Area.Brinstar).Add(shaft);
+        MaybePlaceItem(corridor);
         return true;
     }
 
@@ -928,38 +1014,47 @@ public class TopologyGenerator(ScreenCatalog catalog)
     }
 
     /// <summary>
-    /// Places the cross-game portal anchors: a single-cell portal room (Brinstar 0x1F,
-    /// blue left door, sealed right scroll) hanging east off a Brinstar shaft cell —
-    /// the exact arrangement vanilla combo creates for its portal, so the engine-side
-    /// transition code works unchanged. The cell east of the portal room is reserved
-    /// empty because 0x1F's right scroll opening relies on the engine's seal-against-
-    /// empty behavior. The combo layer decides what each portal connects to.
+    /// Places the cross-game portal anchors: a single-cell left-door portal room hanging
+    /// east off a same-area shaft cell. The cell east of the portal room is reserved
+    /// empty because these rooms' right scroll openings rely on the engine's
+    /// seal-against-empty behavior. The combo layer decides what each portal connects to.
     /// </summary>
     private void PlacePortalAnchors()
     {
         int placed = 0;
-        foreach (var shaftCell in Shuffled(ShaftsOf(Area.Brinstar).SelectMany(InteriorCells)))
+        foreach (var area in PortalAreas)
         {
-            if (placed >= PortalCount)
+            bool areaPlaced = false;
+            foreach (var shaftCell in Shuffled(ShaftsOf(area).SelectMany(InteriorCells)))
+            {
+                var portalPos = shaftCell.Position.Step(Direction.Right);
+                if (!grid.CanPlace(portalPos) || !grid.CanPlace(portalPos.Step(Direction.Right))
+                    || !CanAddDoor(shaftCell, Direction.Right, RunKind.SingleCell))
+                    continue;
+
+                var portalRun = grid.PlaceRun(area, Scrolling.Horizontal, portalPos, 1, CellRole.Portal);
+                portalRun.Cells[0].ForcedScreenId = PortalScreenFor(area);
+                grid.LinkDoor(shaftCell, portalRun.Cells[0]);
+                grid.ReservedEmpty.Add(portalPos.Step(Direction.Right));
+
+                landmarks[$"Portal{placed}"] = portalPos;
+                placed++;
+                areaPlaced = true;
                 break;
+            }
 
-            var portalPos = shaftCell.Position.Step(Direction.Right);
-            if (!grid.CanPlace(portalPos) || !grid.CanPlace(portalPos.Step(Direction.Right))
-                || !CanAddDoor(shaftCell, Direction.Right, RunKind.SingleCell))
-                continue;
-
-            var portalRun = grid.PlaceRun(Area.Brinstar, Scrolling.Horizontal, portalPos, 1, CellRole.Portal);
-            portalRun.Cells[0].ForcedScreenId = 0x1F;
-            grid.LinkDoor(shaftCell, portalRun.Cells[0]);
-            grid.ReservedEmpty.Add(portalPos.Step(Direction.Right));
-
-            landmarks[$"Portal{placed}"] = portalPos;
-            placed++;
+            if (!areaPlaced)
+                throw new GenerationException($"could not place {area} portal anchor");
         }
-
-        if (placed < PortalCount)
-            throw new GenerationException($"only placed {placed}/{PortalCount} portal anchors");
     }
+
+    private static int PortalScreenFor(Area area) => area switch
+    {
+        Area.Brinstar => 0x1F, // Left Door Wavers
+        Area.Norfair => 0x12,  // Left Door Eyes
+        Area.Kraid => 0x17,    // Left Door Blue Geegas
+        _ => throw new GenerationException($"{area} cannot host an M1 portal anchor"),
+    };
 
     // ---------------------------------------------------------------- filler growth
 
@@ -1004,8 +1099,8 @@ public class TopologyGenerator(ScreenCatalog catalog)
         {
             var (min, target) = GoalFor(area);
             // Goals are aspirational (growth stops when space runs out; only min is hard),
-            // so the floor sits at two thirds of the target — a low roll used to produce
-            // areas hugging their minimum, which read as starved.
+            // so the floor sits at two thirds of the target — otherwise a low roll leaves an
+            // area hugging its minimum, which reads as starved.
             int floor = Math.Max(min + 5, target * 2 / 3);
             GrowArea(area, Rand(floor, Math.Max(floor + 1, target)));
 

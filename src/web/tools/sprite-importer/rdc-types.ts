@@ -351,13 +351,15 @@ export class Zelda1SpriteDataBlock extends DataBlock {
           0x631bf0,
           0x631cec,
           0x3d3804,
+          0x793804,
+          0x7cb804,
         ),
         3,
         DataBlock.single(),
       ], // $BASE_COLORS
       [DataBlock.addr(0x631cf0), 3, DataBlock.single()], // $LEVEL2_COLORS
       [DataBlock.addr(0x631cf4), 3, DataBlock.single()], // $LEVEL3_COLORS
-      [DataBlock.addr(0x612287), 3, DataBlock.single()], // $TUNIC_COLORS
+      [DataBlock.addr(0x612287, 0x794325, 0x7cc325), 3, DataBlock.single()], // $TUNIC_COLORS
     ];
   }
 }

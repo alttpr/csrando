@@ -352,17 +352,21 @@ public sealed class RomEmitterTest
             }
         }
 
-        // The generated portal anchor must be wired into the graph and into both games'
-        // transition tables (M1's table sits at the anchor's door cell; ALttP's row
-        // targets the generated portal room).
-        var anchor = comboWorld.M1World!.PortalAnchors.Single();
-        Assert.IsNotNull(comboWorld.M1World.GetLocation(anchor.VertexName), "portal vertex missing");
+        // The generated portal anchors must be wired into the graph and into both games'
+        // transition tables. M1 now builds the full default endpoint pool for combo, so
+        // reduced game sets can reassign endpoints whose original partner is absent.
+        var portalEdges = comboWorld.DerivePortalEdges();
+        var m1Edges = portalEdges.Where(e => e.From.GameId == "m1").ToList();
+        var alttpEdges = portalEdges.Where(e => e.From.GameId == "alttp" && e.To.GameId == "m1").ToList();
+        Assert.AreEqual(3, m1Edges.Count, "M1 should use all three default portal rooms");
+        foreach (var anchor in comboWorld.M1World!.PortalAnchors)
+            Assert.IsNotNull(comboWorld.M1World.GetLocation(anchor.EntryVertexName), "portal vertex missing");
 
         AssertWords(written, Randomizer.Games.Metroid.RomWriter.TransitionTableAddress,
-            [(ushort)anchor.RoomWord, (ushort)anchor.Direction, 0x0001, 0x0210, 0x0000, 0x0000],
+            [.. m1Edges.SelectMany(e => e.From.RowTo(e.To).Select(word => (ushort)word)), 0x0000],
             "M1 transition table");
         AssertWords(written, 0x550000,
-            [0x011F, 0x0002, 0x0003, (ushort)anchor.DestinationId, (ushort)anchor.DestinationArgs, 0x0000],
+            [.. alttpEdges.SelectMany(e => e.From.RowTo(e.To).Select(word => (ushort)word)), 0x0000],
             "ALttP transition table");
 
         Assert.IsTrue(randomizer.SpoilerLog!.Spoiler.ContainsKey("m1Map"),
@@ -401,7 +405,7 @@ public sealed class RomEmitterTest
     [TestMethod]
     public void Combo_Vanilla_PortalTablesMatchLegacyLayout()
     {
-        // The PortalSide/PortalConnection model must reproduce the original hardcoded
+        // The graph-derived portal model must reproduce the frozen vanilla-layout
         // transition tables byte for byte on a vanilla quad seed.
         var config = new WorldConfig
         {
@@ -420,31 +424,45 @@ public sealed class RomEmitterTest
         randomizer.Write(broker);
         var written = ParseIps(broker.Worlds.Single().Value.IpsPatch);
 
+        // SM door pointers are the C#-generated portal room conversions in the
+        // reserved slots ($83B100 + slot*0x18; in at +0, out at +12).
         AssertWords(written, 0x300000,
         [
-            0xAE0C, 0x0001, 0x0200, 0x0000,
-            0xAF0C, 0x0001, 0x0201, 0x0000,
-            0xAF8C, 0x0001, 0x0202, 0x0040,
-            0xB00C, 0x0001, 0x0203, 0x0040,
+            0xB10C, 0x0001, 0x0200, 0x0000,
+            0xB124, 0x0001, 0x0201, 0x0000,
+            0xB13C, 0x0001, 0x0202, 0x0040,
+            0xB154, 0x0001, 0x0203, 0x0040,
+            0xB184, 0x0002, 0x000C, 0x0003,
+            0xB16C, 0x0003, 0x1515, 0x0061,
             0x0000
         ], "SM transition table");
 
         AssertWords(written, 0x550000,
         [
-            0x0122, 0x0035, 0x0000, 0xAE00, 0x0000,
-            0x00E5, 0x0003, 0x0000, 0xAF00, 0x0000,
-            0x010E, 0x0077, 0x0000, 0xAF80, 0x0000,
-            0x0115, 0x0070, 0x0000, 0xB000, 0x0000,
+            0x0122, 0x0035, 0x0000, 0xB100, 0x0000,
+            0x00E5, 0x0003, 0x0000, 0xB118, 0x0000,
+            0x010E, 0x0077, 0x0000, 0xB130, 0x0000,
+            0x0115, 0x0070, 0x0000, 0xB148, 0x0000,
             0x0122, 0x0011, 0x0002, 0x0066, 0x0003,
-            0x011F, 0x0002, 0x0003, 0x0C0C, 0x0000,
+            0x011F, 0x0002, 0x0003, 0x0B0C, 0x0040,
             0x0000
         ], "ALttP transition table");
 
         AssertWords(written, 0x63A000,
-            [0x0066, 0x0001, 0x0220, 0x0000, 0x0000], "Z1 transition table");
+        [
+            0x0066, 0x0001, 0x0220, 0x0000,
+            0x000C, 0x0000, 0xB178, 0x0000,
+            0x0070, 0x0003, 0x0810, 0x0042,
+            0x0000
+        ], "Z1 transition table");
 
         AssertWords(written, Randomizer.Games.Metroid.RomWriter.TransitionTableAddress,
-            [0x0B0C, 0x0004, 0x0001, 0x0210, 0x0000, 0x0000], "M1 transition table");
+        [
+            0x0B0C, 0x0001, 0x0001, 0x0210, 0x0000,
+            0x1515, 0x0001, 0x0000, 0xB160, 0x0000,
+            0x0810, 0x0001, 0x0002, 0x0070, 0x0003,
+            0x0000
+        ], "M1 transition table");
     }
 
     [TestMethod]

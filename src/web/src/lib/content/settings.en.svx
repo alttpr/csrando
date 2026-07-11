@@ -1,7 +1,7 @@
 ---
 title: Settings
 description: A reference for every setting available in the Basic options view, and what each choice does.
-lastUpdated: 2026-06-01
+lastUpdated: 2026-07-11
 ---
 
 # Settings
@@ -140,6 +140,22 @@ together with Zelda 1, Super Metroid and Metroid 1.
     * *Sometimes* — Item rooms that gate shutters behind a kill hide their item, plus a
       moderate chance for other killable rooms. (Default.)
     * *Always* — Every eligible item room hides its item until cleared.
+  * **Map Placement** — Controls where each generated dungeon's Map ends up.
+    * *Off* — The Map is freely shuffled anywhere in its dungeon, like any other item.
+      (Default.)
+    * *Early* — Forces the Map into an item room within roughly the first 30% of the
+      dungeon (scaled to dungeon size). It may sit behind a locked door but avoids being
+      hidden behind a bombable wall when possible.
+    * *Closest* — Forces the Map into the item room nearest the dungeon entrance.
+* **Shop Shuffle** — Randomizes the contents of shop caves.
+  * *Off* — Vanilla shop items and prices. (Default.)
+  * *Junk* — Shops sell randomized consumables at randomized prices; they never gate
+    progression.
+  * *Full* — Shop slots join the main item pool and can hold progression items, gated in
+    logic behind cave reachability and possession of a farmable weapon (since rupees are
+    infinitely farmable, the price is flavor rather than a logic gate).
+* **Book reveals maps** — Makes the Magical Book reveal every dungeon map instead of its
+  normal function. Handy when playing with shuffled dungeons.
 
 ### Goal
 
@@ -177,6 +193,14 @@ together with Zelda 1, Super Metroid and Metroid 1.
 
 * **Logic** — The skill level assumed by item placement. Currently only *Basic* is
   available.
+* **Map Shuffle** — Generates a completely new randomized world map instead of the vanilla
+  one. *(Early testing — expect possible bugs and balance quirks.)* The option below only
+  takes effect when this is enabled:
+  * **Map Size** — How large and dense the generated world is.
+    * *Small* — A compact world.
+    * *Standard* — A vanilla-sized world. (Default.)
+    * *Large* — A bigger, more sprawling world.
+    * *Nightmare* — Saturates the grid, growing every area until nothing more fits.
 
 ---
 

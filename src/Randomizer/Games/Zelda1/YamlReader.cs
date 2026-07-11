@@ -577,18 +577,20 @@ public class YamlReader
         return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
     }
 
-    public void BuildGraph()
+    public void BuildGraph(IReadOnlySet<int>? reservedPortalCaveMaps = null)
     {
         if (data == null)
         {
             throw new Exception("Data not loaded");
         }
 
+        reservedPortalCaveMaps ??= new HashSet<int>();
+
         BuildEnemyGraph();
 
         foreach (var map in data.overworld_maps)
         {
-            BuildOverworldMap(map);
+            BuildOverworldMap(map, reservedPortalCaveMaps);
         }
 
         foreach (var level in data.levels.Where(l => l.level > 0))
@@ -769,7 +771,7 @@ public class YamlReader
         return candidates.Count > 0 ? candidates : FreeInfiniteWeapons.ToList();
     }
 
-    private void BuildOverworldMap(OverworldMap map)
+    private void BuildOverworldMap(OverworldMap map, IReadOnlySet<int> reservedPortalCaveMaps)
     {
         if (data == null)
         {
@@ -796,6 +798,8 @@ public class YamlReader
         // they don't become phantom dungeon/cave entrances. A screen flagged for BOTH quests
         // (secret[1] == 1 AND secret[0] == 1) is reachable in first quest, so it is kept.
         bool isSecondQuestOnlyEntrance = map.secret[1] == 1 && map.secret[0] == 0;
+        bool suppressCaveContents = config.ShopShuffle != ShopShuffleOption.Off
+            && reservedPortalCaveMaps.Contains(map.map);
 
         foreach (var cave in screen.nodes.caves ?? [])
         {
@@ -869,8 +873,11 @@ public class YamlReader
             }
         }
 
-        // Connect caves (skip second-quest-only hidden entrances; see isSecondQuestOnlyEntrance above)
-        if (map.cave > 0 && !isSecondQuestOnlyEntrance)
+        // Connect caves (skip second-quest-only hidden entrances; see isSecondQuestOnlyEntrance above).
+        // Combo portal caves are also skipped when shop shuffle is active: the cave-entry hook sends
+        // the player through the portal instead of into the cave, so exposing a shuffled shop here
+        // would create a logical item location that cannot be collected in-game.
+        if (map.cave > 0 && !isSecondQuestOnlyEntrance && !suppressCaveContents)
         {
             var cave = screen.nodes.caves?.FirstOrDefault() ?? null;
             if (cave != null)

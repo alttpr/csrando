@@ -6,6 +6,7 @@
 	import GameTabs from "$lib/components/config/GameTabs.svelte";
 	import Button from "$lib/components/ui/Button.svelte";
 	import Select from "$lib/components/ui/Select.svelte";
+	import Toggle from "$lib/components/ui/Toggle.svelte";
 	import { createSeed } from "$lib/services/data";
 	import type {
 		Metadata,
@@ -186,6 +187,7 @@
 
 	let generating = $state(false);
 	let formSubmissionError: string | null = $state(null);
+	let includeSpoiler = $state(true);
 
 	$effect(() => {
 		const meta = metadata ?? null;
@@ -263,28 +265,7 @@
 
 	const hasSelectedGames = $derived(selectedGames.length > 0);
 
-	// Hotfix: when global target is "Combo", require Alttp to be selected and lock it
-	let requiredGames: string[] = $state([]);
-
-	$effect(() => {
-		// Determine current global target (RandomizerTarget)
-		const currentTarget =
-			(formValues.global?.["Game"] as string) ||
-			"" ||
-			((
-				metadata?.settings?.find((s) => s.key === "Game") as
-					| { default?: string }
-					| undefined
-			)?.default ??
-				"");
-		const isCombo = (currentTarget || "").toLowerCase() === "combo";
-		requiredGames = isCombo ? ["Alttp"] : [];
-
-		// Ensure Alttp remains selected when Combo target is active
-		if (isCombo && !selectedGames.includes("Alttp")) {
-			selectedGames = ["Alttp", ...selectedGames];
-		}
-	});
+	const requiredGames: string[] = [];
 
 	$effect(() => {
 		// Check if there's only one game available and the activeGameTab is not set or the wrong game, and reset it
@@ -366,23 +347,6 @@
 				}
 			}
 
-			// If there's a "default" game in metadata, always include it if it's not already in gameSettings
-			if (metadata && metadata.settings) {
-				const gameSetting = metadata.settings.find(
-					(opt) => opt.key === "Game",
-				);
-				if (
-					gameSetting &&
-					gameSetting.default &&
-					!gameSettings[gameSetting.default as string]
-				) {
-					gameSettings[gameSetting.default as string] =
-						filterNonNullValues(
-							formValues.perGame[gameSetting.default as string],
-						);
-				}
-			}
-
 			// Transform per-game settings for sliders that provide options (optionsFor)
 			if (metadata?.gameSettings) {
 				for (const [gameKey, gameMeta] of Object.entries(
@@ -443,29 +407,6 @@
 			for (const gameKey of selectedGames) {
 				worldGameKeys.add(gameKey);
 			}
-			if (metadata?.settings) {
-				const defaultGame = metadata.settings.find(
-					(opt) =>
-						opt.key === "Game" &&
-						typeof (opt as { default?: unknown }).default ===
-							"string",
-				) as
-					| {
-							default?: string;
-					  }
-					| undefined;
-				if (
-					defaultGame?.default &&
-					metadata?.gameSettings?.[defaultGame.default]
-				) {
-					worldGameKeys.add(defaultGame.default);
-				}
-			}
-
-			// Hotfix enforcement: if Combo target, ensure Alttp is always included
-			if ((globalGameTarget || "").toLowerCase() === "combo") {
-				worldGameKeys.add("Alttp");
-			}
 
 			for (const gameKey of worldGameKeys) {
 				const perGame =
@@ -474,14 +415,14 @@
 				worldConfig[gameKey] = perGame || {};
 			}
 
-			if (worldGameKeys.size === 0) {
-				worldConfig["Alttp"] =
-					filterNonNullValues(formValues.perGame["Alttp"]) || {};
+			if ((globalGameTarget || "").toLowerCase() === "combo") {
+				worldConfig["Combo"] =
+					filterNonNullValues(formValues.perGame["Combo"]) || {};
 			}
 
 			const payload = {
 				Seed: 0,
-				IncludeSpoiler: true,
+				IncludeSpoiler: includeSpoiler,
 				Configs: [worldConfig],
 			};
 
@@ -589,6 +530,27 @@
 					visibility={selectedVisibility}
 				/>
 			{/if}
+
+			<div class="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3">
+				<div class="flex items-center justify-between gap-3">
+					<label
+						for="include-spoiler"
+						class="text-sm font-medium text-slate-900 dark:text-slate-100"
+					>
+						Include spoiler log
+						<span
+							class="ml-2 hidden text-xs font-normal text-slate-600 dark:text-slate-400 sm:inline"
+						>
+							Turn off for a race seed.
+						</span>
+					</label>
+					<Toggle
+						id="include-spoiler"
+						bind:checked={includeSpoiler}
+						size="sm"
+					/>
+				</div>
+			</div>
 
 			<!-- Generate Button -->
 			<div class="mt-3 flex justify-center">

@@ -47,7 +47,7 @@ public static class AxisSolver
             var pos = queue.Dequeue();
             var cell = grid.Cell(pos)!;
 
-            foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
+            foreach (var dir in Directions.All)
             {
                 var neighborPos = pos.Step(dir);
                 var neighbor = grid.Cell(neighborPos);
@@ -63,9 +63,9 @@ public static class AxisSolver
                         break;
 
                     // Doors and elevator pairs must be committed links with matching back edges.
-                    case EdgeRequirement.Door when neighbor.Edge(Opposite(dir)) == EdgeRequirement.Door
+                    case EdgeRequirement.Door when neighbor.Edge(Directions.Opposite(dir)) == EdgeRequirement.Door
                                                    && grid.HasLink(pos, neighborPos):
-                    case EdgeRequirement.Elevator when neighbor.Edge(Opposite(dir)) == EdgeRequirement.Elevator
+                    case EdgeRequirement.Elevator when neighbor.Edge(Directions.Opposite(dir)) == EdgeRequirement.Elevator
                                                        && grid.HasLink(pos, neighborPos):
                         Enqueue(neighborPos);
                         break;
@@ -95,13 +95,4 @@ public static class AxisSolver
 
         return problems;
     }
-
-    private static Direction Opposite(Direction dir) => dir switch
-    {
-        Direction.Up => Direction.Down,
-        Direction.Down => Direction.Up,
-        Direction.Left => Direction.Right,
-        Direction.Right => Direction.Left,
-        _ => throw new ArgumentOutOfRangeException(nameof(dir))
-    };
 }

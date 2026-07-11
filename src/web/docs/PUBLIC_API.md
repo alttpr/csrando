@@ -30,7 +30,7 @@ Request body:
 Fields:
 
 - `Seed`: non-negative integer. Use `0` to let the server choose a seed.
-- `IncludeSpoiler`: boolean. When `true`, the response includes `spoilerLog` if the randomizer produced one.
+- `IncludeSpoiler`: boolean. When `false`, the response and public seed permalink omit `spoilerLog`. The server still generates and securely stores the spoiler for admin diagnostics.
 - `Configs`: array with at least one world config object. The website currently generates one world config.
 - `Configs[].Language`: language code, normally `en`.
 - `Configs[].Game`: randomizer target, such as `Alttpr` or `Combo`. Use the `randomizer` value returned by `GET /api/metadata`.
@@ -80,7 +80,7 @@ Use the returned `id` to build the public permalink:
 https://example.com/seed/abc123
 ```
 
-The `worlds` object contains base64-encoded patch data. Bots that only need to announce the generated seed can ignore it and only use `id` and `seed`.
+The `worlds` object contains base64-encoded patch data. Bots that only need to announce the generated seed can ignore it and only use `id` and `seed`. Bots generating a race seed should set `IncludeSpoiler` to `false`; the generated seed can still be shared through its public permalink without exposing its spoiler log.
 
 For a Discord bot, the common flow is:
 
@@ -131,7 +131,7 @@ Each setting includes a `key`, `name`, `type`, and usually either `default`, `va
 GET /api/seed/{id}
 ```
 
-Returns the stored seed row for a generated seed. This is useful if a bot needs to look up a previously generated seed by permalink id.
+Returns the stored seed row for a generated seed. This is useful if a bot needs to look up a previously generated seed by permalink id. Seeds created with `IncludeSpoiler: false` never include their spoiler log in this public response.
 
 Example:
 

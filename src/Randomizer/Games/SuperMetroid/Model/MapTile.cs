@@ -507,12 +507,31 @@ namespace Randomizer.Games.SuperMetroid.Model
         }
 
         /// <summary>
+        /// Returns the map tile for a station room converted to host a portal. Non-station
+        /// tiles retain their normal map tile.
+        /// </summary>
+        public ushort GetPortalTileValue(bool portalOnLeft) => Interior switch
+        {
+            TileInterior.MapStation => (ushort)(0x001D | (portalOnLeft ? 0 : HFlip)),
+            TileInterior.AmmoRefill or TileInterior.EnergyRefill or TileInterior.DoubleRefill =>
+                (ushort)(0x001E | (portalOnLeft ? 0 : HFlip)),
+            TileInterior.SaveStation => portalOnLeft ? (ushort)0x0176 : (ushort)0x0177,
+            _ => GetTileValue(),
+        };
+
+        /// <summary>
         /// If you absolutely need a byte[] in little-endian form right here,
         /// you can convert the ushort to two bytes: low byte then high byte.
         /// </summary>
         public byte[] GetBytes()
         {
             ushort v = GetTileValue();
+            return new byte[] { (byte)(v & 0xFF), (byte)(v >> 8) };
+        }
+
+        public byte[] GetPortalBytes(bool portalOnLeft)
+        {
+            ushort v = GetPortalTileValue(portalOnLeft);
             return new byte[] { (byte)(v & 0xFF), (byte)(v >> 8) };
         }
     }

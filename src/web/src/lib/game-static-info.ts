@@ -88,6 +88,8 @@ const zelda1ManifestSegments: RdcManifestSegment[] = [
       { mapping: "default", address: 0x631bf0 },
       { mapping: "default", address: 0x631cec },
       { mapping: "default", address: 0x3d3804 },
+      { mapping: "default", address: 0x793804 },
+      { mapping: "default", address: 0x7cb804 },
     ],
   },
   {
@@ -103,7 +105,12 @@ const zelda1ManifestSegments: RdcManifestSegment[] = [
   {
     length: 3,
     addressType: "pc",
-    addresses: [{ mapping: "default", address: 0x612287 }],
+    // Tunic colors replicated to the Brinstar/Norfair portal-loaded copies
+    addresses: [
+      { mapping: "default", address: 0x612287 },
+      { mapping: "default", address: 0x794325 },
+      { mapping: "default", address: 0x7cc325 },
+    ],
   }, // TUNIC_COLORS
 ];
 

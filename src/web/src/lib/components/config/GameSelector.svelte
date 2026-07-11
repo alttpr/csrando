@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as m from '$lib/paraglide/messages';
+	import * as m from "$lib/paraglide/messages";
 	interface Props {
 		games?: Array<{ id: string; name: string; description?: string }>;
 		selectedGames?: string[];
@@ -11,7 +11,7 @@
 		games = [],
 		selectedGames = $bindable([]),
 		loading = false,
-		requiredGames = []
+		requiredGames = [],
 	}: Props = $props();
 
 	function toggleGameSelection(gameId: string) {
@@ -24,7 +24,9 @@
 
 {#if games.length >= 2}
 	<div class="bg-white dark:bg-slate-800 rounded-lg shadow-md p-3 mb-3">
-		<h2 class="text-lg font-bold mb-1.5">{m.config_game_selection_title()}</h2>
+		<h2 class="text-lg font-bold mb-1.5">
+			{m.config_game_selection_title()}
+		</h2>
 		<p class="mb-2 text-xs text-slate-600 dark:text-slate-400">
 			{m.config_game_selection_description()}
 		</p>
@@ -36,7 +38,9 @@
 				></div>
 			</div>
 		{:else}
-			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 mb-2">
+			<div
+				class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 mb-2"
+			>
 				{#each games as game (game.id)}
 					{@const isSelected = selectedGames.includes(game.id)}
 					<button
@@ -57,9 +61,13 @@
 								aria-hidden="true"
 							/>
 							<div>
-								<span class="font-medium block text-xs">{game.name}</span>
+								<span class="font-medium block text-xs"
+									>{game.name}</span
+								>
 								{#if game.description}
-									<p class="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">
+									<p
+										class="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5"
+									>
 										{game.description}
 									</p>
 								{/if}
