@@ -34,7 +34,7 @@ internal sealed class RandomAssumedFiller
         // Do special things for SM in combo
         if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
         {
-            if (comboWorld.Config.InitialGame == "sm")
+            if (comboWorld.EffectiveInitialGame == "sm")
             {
                 for (int i = 0; i < _randomizer.Worlds.Length; ++i)
                 {
@@ -52,10 +52,11 @@ internal sealed class RandomAssumedFiller
                         {
                             SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
 
-                            // If we didn't fill morph, then fill it
-                            if (flatItems.Any(f => f.Item.Name == "Morph"))
+                            // If we didn't fill SM's Morph, then fill it. Other games can also
+                            // have a Morph item, so the lookup has to stay scoped to SM.
+                            var flatMorph = flatItems.FirstOrDefault(i => i.Item == smWorld.GetItem("Morph"));
+                            if (flatMorph != default)
                             {
-                                var flatMorph = flatItems.First(i => i.Item == smWorld.GetItem("Morph"));
                                 SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
                                 flatItems.Remove(flatMorph);
                             }
@@ -65,14 +66,51 @@ internal sealed class RandomAssumedFiller
             }
             else
             {
+                // SM's Morph specifically: M1's Morph shares the name and sorts first
+                // (lowest pool weight), so an unfiltered lookup would grab it instead and
+                // leave SM's Morph to land anywhere; M1's is front-filled separately below.
                 string[] frontFillItemNames = ["Morph"];
                 foreach (var frontFillItemName in frontFillItemNames)
                 {
-                    var flatItemToPlace = flatItems.FirstOrDefault(i => i.Item.Name == frontFillItemName);
+                    var flatItemToPlace = flatItems.FirstOrDefault(i =>
+                        i.Item.Name == frontFillItemName && i.Item.World == comboWorld.SMWorld);
                     FrontFillCrossWorld(_randomizer.Worlds[0], _randomizer.Worlds[0].StartingItems, _randomizer.Graph, flatItemToPlace);
                     flatItems.Remove(flatItemToPlace);
                 }
 
+            }
+        }
+
+        // Combo seeds front-fill M1's Morph for the same reason the standalone loop below
+        // does: nearly every M1 corridor is morph-gated, and with the lowest pool weight it
+        // is otherwise placed first — into the deepest locations — instead of early where
+        // it plays well.
+        foreach (var world in _randomizer.Worlds)
+        {
+            if (world is not Games.Combo.World { M1World: { } m1World })
+                continue;
+
+            var comboM1Morph = flatItems.FirstOrDefault(i => i.Item.Name == "Morph" && i.Item.World == m1World);
+            if (comboM1Morph != default)
+            {
+                FrontFillCrossWorld(world, world.StartingItems, _randomizer.Graph, comboM1Morph);
+                flatItems.Remove(comboM1Morph);
+            }
+        }
+
+        // Standalone Metroid worlds also front-fill Morph: nearly every corridor has
+        // morph-gated passages, so a world without Morph in the starting sphere can
+        // deadlock the assumed fill.
+        foreach (var world in _randomizer.Worlds)
+        {
+            if (world is not Games.Metroid.World)
+                continue;
+
+            var flatMorph = flatItems.FirstOrDefault(i => i.Item.Name == "Morph" && i.Item.World == world);
+            if (flatMorph != default)
+            {
+                FrontFillCrossWorld(world, world.StartingItems, _randomizer.Graph, flatMorph);
+                flatItems.Remove(flatMorph);
             }
         }
 

@@ -1,244 +1,104 @@
-﻿namespace Randomizer.Games.Combo;
+namespace Randomizer.Games.Combo;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Games;
 using Randomizer.RomModifications;
 
+/// <summary>
+/// Writes every game's cross-game transition tables from the portal layout derived from
+/// the graph (see <see cref="World.DerivePortalEdges"/>). Each portal edge contributes
+/// one row to its source game's table (see <see cref="PortalAnchor.RowTo"/> for the row
+/// shape); each present game's table ends with a $0000 terminator. Rows are grouped by
+/// partner game in a fixed order to match the layout the original hardcoded tables used.
+/// OnExit anchors go to their game's "out" table (the portal fires when leaving the
+/// interior) instead of the "in" table. Connected anchors' ROM patches (portal room
+/// data, arrival spawn rows, save stations) are written last.
+/// </summary>
 internal class PortalWriter
 {
-    // TODO: Instead of hardcoding the portal data, we should generate it depending on the graph configuration for portals or something similar
-    private static readonly Dictionary<(string, string), uint[][]> _portalData = new()
-    {
-        [("sm", "alttp")] =
-            [
-            //   door    game    dest    args
-                [0xae0c, 0x0001, 0x0200, 0x0000],
-                [0xaf0c, 0x0001, 0x0201, 0x0000],
-                [0xaf8c, 0x0001, 0x0202, 0x0040],
-                [0xb00c, 0x0001, 0x0203, 0x0040]
-            ],
-        [("sm", "z1")] = [],
-        [("sm", "m1")] = [],
-        [("alttp", "sm")] =
-            [
-            //   room    owscrl  game    dest    args
-                [0x0122, 0x0035, 0x0000, 0xae00, 0x0000],
-                [0x00e5, 0x0003, 0x0000, 0xaf00, 0x0000],
-                [0x010e, 0x0077, 0x0000, 0xaf80, 0x0000],
-                [0x0115, 0x0070, 0x0000, 0xb000, 0x0000]
-            ],
-        [("alttp", "m1")] =
-            [
-            //   room    owscrl  game    dest    args
-                [0x011f, 0x0002, 0x0003, 0x0c0c, 0x0000]
-            ],
-        [("alttp", "z1")] =
-            [
-            //   room    owscrl  game    dest    args
-                [0x0122, 0x0011, 0x0002, 0x0066, 0x0003]
-            ],
-        [("z1", "alttp")] =
-            [
-            //   room    game    dest    args
-                [0x0066, 0x0001, 0x0220, 0x0000]
-            ],
-        [("z1", "sm")] = [],
-        [("z1", "m1")] = [],
-        [("m1", "alttp")] =
-            [
-            //   room    dir     game    dest    args
-                [0x0b0c, 0x0004, 0x0001, 0x0210, 0x0000]
-            ],
-        [("m1", "sm")] = [],
-        [("m1", "z1")] = [],
-
-    };
+    private static readonly (string GameId, int TableAddress, int? OutTableAddress, string[] PartnerOrder)[] Tables =
+    [
+        // SM/M1 door transitions have no separate exit concept; Z1's out table has no
+        // reserved ROM space yet (code follows the terminator at PC 0x63B002).
+        ("sm",    0x300000, null, ["alttp", "z1", "m1"]),
+        ("alttp", 0x550000, 0x542000, ["sm", "z1", "m1"]),
+        ("z1",    0x63A000, null, ["alttp", "sm", "m1"]),
+        ("m1",    Metroid.RomWriter.TransitionTableAddress, null, ["alttp", "sm", "z1"]),
+    ];
 
     public static void WritePortals(IRom rom, World world)
     {
-        // sm = 0x300000
-        // alttp (in) = 0x550000
-        // alttp (out) = 0x552000
-        // z1 (int) = 0x63A000
-        // z1 (out) = 0x63B000
-        // m1 = 0x6C7000
+        var portalEdges = world.DerivePortalEdges();
 
-        if (world.WorldConfig!.SuperMetroid != null)
+        foreach (var (gameId, tableAddress, outTableAddress, partnerOrder) in Tables)
         {
-            int address = 0x300000;
-            if (world.WorldConfig.Alttp != null)
-            {
-                address = WritePortals(rom, address, _portalData[("sm", "alttp")]);
-                //address = WriteDynamicsPortals(rom, address, world, ("sm", "alttp"));
-            }
+            if (world.GameWorld(gameId) == null)
+                continue;
 
-            if (world.WorldConfig.Zelda1 != null)
-            {
-                address = WritePortals(rom, address, _portalData[("sm", "z1")]);
-            }
+            WriteTable(rom, portalEdges, gameId, tableAddress, partnerOrder, PortalTrigger.OnEnter);
 
-            if (world.WorldConfig.Metroid != null)
-            {
-                address = WritePortals(rom, address, _portalData[("sm", "m1")]);
-            }
-            rom.Write(address, [0x00, 0x00]);
+            if (outTableAddress != null)
+                WriteTable(rom, portalEdges, gameId, outTableAddress.Value, partnerOrder, PortalTrigger.OnExit);
+            else if (portalEdges.Any(e => e.From.GameId == gameId && e.From.Trigger == PortalTrigger.OnExit))
+                throw new NotSupportedException($"Game '{gameId}' has no on-exit transition table");
         }
 
-        if (world.WorldConfig.Alttp != null)
-        {
-            int address = 0x550000;
-            if (world.WorldConfig.SuperMetroid != null)
-            {
-                address = WritePortals(rom, address, _portalData[("alttp", "sm")]);
-                //address = WriteDynamicsPortals(rom, address, world, ("alttp", "sm"));
-            }
-            if (world.WorldConfig.Zelda1 != null)
-            {
-                address = WritePortals(rom, address, _portalData[("alttp", "z1")]);
-            }
-            if (world.WorldConfig.Metroid != null)
-            {
-                address = WritePortals(rom, address, _portalData[("alttp", "m1")]);
-            }
-            rom.Write(address, [0x00, 0x00]);
-        }
+        WriteAnchorPatches(rom, portalEdges);
 
-        if (world.WorldConfig.Zelda1 != null)
+        // The base patch pre-converts four SM rooms into portal rooms. Any of them the
+        // layout did not link (e.g. no ALttP present) still carries an unused portal door
+        // that loops back into the room; revert those to plain rooms. A room is linked
+        // when a connected SM anchor names its converted portal room.
+        if (world.SMWorld is { } sm)
         {
-            int address = 0x63A000;
-            if (world.WorldConfig.Alttp != null)
-            {
-                address = WritePortals(rom, address, _portalData[("z1", "alttp")]);
-            }
-            if (world.WorldConfig.SuperMetroid != null)
-            {
-                address = WritePortals(rom, address, _portalData[("z1", "sm")]);
-            }
-            if (world.WorldConfig.Metroid != null)
-            {
-                address = WritePortals(rom, address, _portalData[("z1", "m1")]);
-            }
-            rom.Write(address, [0x00, 0x00]);
-        }
-
-        if (world.WorldConfig.Metroid != null)
-        {
-            int address = 0x6C7000;
-            if (world.WorldConfig.Alttp != null)
-            {
-                address = WritePortals(rom, address, _portalData[("m1", "alttp")]);
-            }
-            if (world.WorldConfig.SuperMetroid != null)
-            {
-                address = WritePortals(rom, address, _portalData[("m1", "sm")]);
-            }
-            if (world.WorldConfig.Zelda1 != null)
-            {
-                address = WritePortals(rom, address, _portalData[("m1", "z1")]);
-            }
-            rom.Write(address, [0x00, 0x00]);
+            var connectedNames = portalEdges
+                .SelectMany(edge => new[] { edge.From, edge.To })
+                .Where(anchor => anchor.GameId == "sm")
+                .Select(anchor => anchor.Name)
+                .ToHashSet();
+            var linkedRoomNames = sm.PortalRooms
+                .Where(room => connectedNames.Contains(room.Name))
+                .Select(room => room.RoomName)
+                .ToHashSet();
+            SuperMetroid.Portals.RevertUnusedBaseConversions(rom, linkedRoomNames);
         }
     }
 
-    private static int WritePortals(IRom rom, int address, uint[][] portalData)
+    private static void WriteTable(IRom rom, IReadOnlyList<PortalEdge> portalEdges, string gameId,
+        int tableAddress, string[] partnerOrder, PortalTrigger trigger)
     {
-        if (portalData.Length == 0)
+        int address = tableAddress;
+        foreach (var partner in partnerOrder)
         {
-            return address;
-        }
-
-        foreach (var portal in portalData)
-        {
-            foreach (var portalValue in portal)
+            foreach (var (from, to) in portalEdges)
             {
-                rom.Write(address, BitConverter.GetBytes((UInt16)portalValue));
-                address += 2;
-            }
-        }
-
-        return address;
-    }
-
-    //TODO: This is broken, we need to fix it later
-    private static int WriteDynamicsPortals(IRom rom, int address, World world, (string from, string to) gamePair)
-    {
-        if (gamePair.from == "sm" && gamePair.to == "alttp")
-        {
-            int index = 0;
-            foreach ((var portalFrom, var portalTo) in world.Portals)
-            {
-                SuperMetroid.Vertex smPortal;
-                Randomizer.Graph.Vertex otherPortal;
-
-                if (portalFrom.World.GameId == "sm")
-                {
-                    smPortal = (SuperMetroid.Vertex)portalFrom;
-                    otherPortal = portalTo;
-                }
-                else
-                {
+                if (from.GameId != gameId || from.Trigger != trigger || to.GameId != partner)
                     continue;
-                }
 
-                //   door    game    dest    args
-                //uint doorPtrIn = uint.Parse(smPortal.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
-                //var otherDoor = (SuperMetroid.Vertex)smPortal.Edges.First(x => ((SuperMetroid.Vertex)x.From).RoomId != ((SuperMetroid.Vertex)x.To).RoomId).To;
-                //uint doorPtrOut = uint.Parse(otherDoor.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
-
-                long doorPtr = portalFrom.Addresses![0];
-
-                //var orginalData = _portalData[gamePair][index];
-                //var newData = new uint[] { (uint)(doorPtr & 0xFFFF), 1, orginalData[2], orginalData[3] };
-
-
-
-                //foreach (var portalValue in newData)
-                //{
-                //    rom.Write(address, BitConverter.GetBytes(portalValue));
-                //    address += 2;
-                //}
-
-                index++;
-            }
-        }
-        else if (gamePair.from == "alttp" && gamePair.to == "sm")
-        {
-            int index = 0;
-            foreach ((var portalFrom, var portalTo) in world.Portals)
-            {
-                SuperMetroid.Vertex smPortal;
-                Randomizer.Graph.Vertex otherPortal;
-
-                if (portalFrom.World.GameId == "sm")
+                foreach (var value in from.RowTo(to))
                 {
-                    smPortal = (SuperMetroid.Vertex)portalFrom;
-                    otherPortal = portalTo;
-                }
-                else
-                {
-                    smPortal = (SuperMetroid.Vertex)portalTo;
-                    otherPortal = portalFrom;
-                }
-
-                // door    game dest    args
-                uint doorPtrIn = uint.Parse(smPortal.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
-                var otherDoor = (SuperMetroid.Vertex)smPortal.Edges.First(x => ((SuperMetroid.Vertex)x.From).RoomId != ((SuperMetroid.Vertex)x.To).RoomId).To;
-                uint doorPtrOut = uint.Parse(otherDoor.Node?.NodeAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF;
-
-                var orginalData = _portalData[gamePair][index];
-                var newData = new uint[] { orginalData[0], orginalData[1], orginalData[2], doorPtrOut & 0xFFFF, orginalData[4] };
-
-                foreach (var portalValue in newData)
-                {
-                    rom.Write(address, BitConverter.GetBytes(portalValue));
+                    rom.Write(address, BitConverter.GetBytes((ushort)value));
                     address += 2;
                 }
-
-                index++;
             }
         }
 
-        return address;
+        rom.Write(address, [0x00, 0x00]);
+    }
+
+    private static void WriteAnchorPatches(IRom rom, IReadOnlyList<PortalEdge> portalEdges)
+    {
+        var written = new HashSet<PortalAnchor>(ReferenceEqualityComparer.Instance);
+        foreach (var (from, to) in portalEdges)
+        {
+            foreach (var anchor in new[] { from, to })
+            {
+                if (!written.Add(anchor))
+                    continue;
+                foreach (var patch in anchor.RomPatches)
+                    rom.Write(patch.Address, patch.Data);
+            }
+        }
     }
 }

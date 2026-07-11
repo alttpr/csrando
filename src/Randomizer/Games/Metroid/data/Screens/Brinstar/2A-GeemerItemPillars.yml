@@ -2,6 +2,9 @@ name: "Geemer Item Pillars"
 area: Brinstar
 screen: 0x2A
 scroll: Horizontal
+# The item pillars/orb are drawn into this screen's room structure, so it always shows the
+# orb -- keep it on item cells only (else a corridor placement renders a phantom empty orb).
+structuralItem: true
 nodes:
   exits:
       - name: "Left"

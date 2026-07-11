@@ -15,7 +15,7 @@ nodes:
   locations:
       - name: "Pillar"
         type: Item
-        position: [0x0E, 0x06]
+        position: [0x0D, 0x06]
 
 edges:
   undirected:

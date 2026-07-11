@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!--
+    Opt-in filter for the slow, multi-seed full-world generator tests. Run them by passing this
+    file as the test settings (see TestCategories.cs for the exact command).
+
+    A command-line settings file takes precedence over the RunSettingsFilePath default wired in
+    RandomizerTests.csproj, so only the Slow tests run.
+  -->
+  <RunConfiguration>
+    <TestCaseFilter>TestCategory=Slow</TestCaseFilter>
+  </RunConfiguration>
+</RunSettings>

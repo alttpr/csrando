@@ -11,6 +11,21 @@ using System.Text;
 
 public class Rom : GameRom
 {
+    private static readonly byte[] VanillaMapPreopenedDoorFlagCode =
+    [
+        0xAF, 0xB2, 0xD8, 0x7E,       // LDA.l $7ED8B2
+        0x09, 0x01, 0x00,             // ORA.w #$0001: Red Tower elevator yellow door
+        0x8F, 0xB2, 0xD8, 0x7E,       // STA.l $7ED8B2
+
+        0xAF, 0xB8, 0xD8, 0x7E,       // LDA.l $7ED8B8
+        0x09, 0x00, 0x10,             // ORA.w #$1000: Norfair Map Station yellow door
+        0x8F, 0xB8, 0xD8, 0x7E,       // STA.l $7ED8B8
+
+        0xAF, 0xB6, 0xD8, 0x7E,       // LDA.l $7ED8B6
+        0x09, 0x04, 0x00,             // ORA.w #$0004: Blue Brinstar E-Tank red door
+        0x8F, 0xB6, 0xD8, 0x7E,       // STA.l $7ED8B6
+    ];
+
     private int _plmTableOffset;
     private FreeSpaceManager _fsm;
 
@@ -355,43 +370,9 @@ public class Rom : GameRom
                 Write((Address)((ptr + 2)), BitConverter.GetBytes((ushort)(entranceDoorPtr & 0xFFFF)));
             }
 
-            // Write new save stations for the cross-game transition rooms (stations 6/7/10/11 per area)
-            // TODO: Hardcoded, fix later
-            (int, int, int)[] transitionRooms = [
-                (0, 0x9994, 0x8BDA), // Crateria Map Room
-                //(1, 0x8C35, 0x8D36), // Brinstar Map Room (no portal yet)
-                (2, 0xB0B4, 0x9306), // Norfair Map Room
-                (2, 0xB305, 0x9A7A), // Lower norfair energy station
-                (4, 0xD845, 0xA8F4), // Maridia Missile Station
-            ];
-
-            // Group by area (first value) and write new stations
-            var roomsByArea = transitionRooms.GroupBy(t => t.Item1);
-            int[] areaOffsets = [0x44C5, 0x45CF, 0x46D9, 0x481B, 0x4917, 0xCA2F];
-            foreach (var areaRooms in roomsByArea)
-            {
-                int saveIndex = 6;
-                foreach (var room in areaRooms)
-                {
-                    int area = room.Item1;
-                    int roomPtr = room.Item2;
-                    int entrancePtr = room.Item3;
-                    int ptr = areaOffsets[area] + (saveIndex * 14);
-                    saveIndex++;
-                    if (saveIndex == 8) { saveIndex = 0x10; }
-
-                    // Calculate the full original entrance door pointer.
-                    int origEntranceDoorPtr = entrancePtr + 0x10000;
-                    // Lookup the corresponding exit pointer and then the new entrance pointer.
-                    int exitDoorPtr = origDoorMap[origEntranceDoorPtr];
-                    int entranceDoorPtr = newDoorMap[exitDoorPtr];
-
-                    Write((Address)ptr, BitConverter.GetBytes((ushort)(roomPtr & 0xFFFF)));
-                    Write((Address)(ptr + 2), BitConverter.GetBytes((ushort)(entranceDoorPtr & 0xFFFF)));
-                    Write((Address)(ptr + 4), [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0x00, 0x00, 0x00]);
-                    Console.WriteLine($"Writing new save station at area {area} ptr {ptr:X4} to point to room {roomPtr:X4} at door ptr {entranceDoorPtr:X4}");
-                }
-            }
+            // Portal room save stations are written by the portal room conversions
+            // (SuperMetroid.Portals.ConvertRoom carries them as anchor patches, with the
+            // shuffled entrance door already applied).
 
             // Write extra door asm for toilet and boss rooms
             int asmPtr = WriteMapDoorAsm(world);
@@ -531,6 +512,36 @@ public class Rom : GameRom
     {
         // In Shaktool room, skip setting screens to red scroll (so that it won't glitch out when entering from the right):
         Write((SNES)0x84B8DC, [0x60]); // RTS
+
+        WriteVanillaMapPreopenedDoors(world);
+    }
+
+    private void WriteVanillaMapPreopenedDoors(World world)
+    {
+        if (world.Map != null)
+            return;
+
+        // Extend the new-game initialization routine after its map-construction JSL.
+        // These are the same persistent door bits pre-opened by SMZ3. Setting the bits
+        // leaves any replacement PLMs (such as keycard doors) intact, while the vanilla
+        // colored door PLMs remove themselves and expose their underlying blue doors.
+        Write((SNES)0x80D004,
+        [
+            .. VanillaMapPreopenedDoorFlagCode,
+            0xA9, 0x00, 0x00,             // LDA.w #$0000 (original return value)
+            0x6B,                         // RTL
+        ]);
+
+        // Entering SM from another game bypasses the new-game initialization above and
+        // restores SM SRAM directly. Replace the HUD redraw call immediately after that
+        // load with a trampoline which sets the flags, then performs the original redraw.
+        Write(0x30405A, [0x40, 0xD0, 0x80]); // JSL operand: $809A79 -> $80D040
+        Write((SNES)0x80D040,
+        [
+            .. VanillaMapPreopenedDoorFlagCode,
+            0x22, 0x79, 0x9A, 0x80,       // JSL $809A79 (redraw HUD)
+            0x6B,                         // RTL
+        ]);
     }
 
     private void WriteMiscMapPatches(World world)
@@ -706,8 +717,14 @@ public class Rom : GameRom
 
     private void WriteMiniMapData(World world)
     {
-        var mapStations = new List<(int, int, int)>(); // area, x, y
+        var mapStations = new List<(int Area, int X, int Y, bool? PortalOnLeft)>();
         var bossIcons = new List<(int, int, int)>(); // area, x, y
+        // A converted room is only emitted when its vertex participates in a cross-game
+        // edge. Merely preparing or resolving an unused conversion must not alter its map.
+        var activePortalRooms = world.PortalRooms
+            .Where(room => world.GetLocation(room.VertexName).Edges
+                .Any(edge => !ReferenceEquals(edge.To.World, world)))
+            .ToDictionary(room => room.RoomName);
 
         for (int i = 0; i < 0x8000; i += 2)
         {
@@ -747,10 +764,13 @@ public class Rom : GameRom
             }
 
             var (offsetX, offsetY) = (mapRoomX - area_x_offsets[mapArea], mapRoomY - area_y_offsets[mapArea]);
+            activePortalRooms.TryGetValue(roomGeometry.name, out var portalRoom);
 
             foreach (var tile in mapTiles.MapTiles)
             {
-                var tileBytes = tile.GetBytes();
+                var tileBytes = portalRoom == null
+                    ? tile.GetBytes()
+                    : tile.GetPortalBytes(portalRoom.PortalOnLeft);
 
                 ushort palette = MapTile.Red;
                 if (mapTiles.Heated == true)
@@ -764,7 +784,7 @@ public class Rom : GameRom
 
                 tileBytes[1] = (byte)((tileBytes[1] | ((palette >> 8) & 0x1F)));
 
-                if(mapTileWrites.ContainsKey((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1])))
+                if (mapTileWrites.ContainsKey((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1])))
                 {
                     // Already wrote a tile here, skip so we don't overwrite already written map tiles
                     // This can be a problem with for example the toilet
@@ -776,7 +796,8 @@ public class Rom : GameRom
 
                 if (tile.Interior == TileInterior.MapStation)
                 {
-                    mapStations.Add((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1]));
+                    mapStations.Add((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1],
+                        portalRoom?.PortalOnLeft));
                 }
             }
 
@@ -865,12 +886,19 @@ public class Rom : GameRom
 		           c = palette
 		           t = tile ID (must be $100 and above to be considered as a deco tile)
     */
-    private void WriteDecoTiles(World world, List<(int, int, int)> mapStations, int[] areaXOffsets, int[] areaYOffsets)
+    private void WriteDecoTiles(World world,
+        List<(int Area, int X, int Y, bool? PortalOnLeft)> mapStations,
+        int[] areaXOffsets, int[] areaYOffsets)
     {
         int decoTilePtr = 0x89E000;
         int decoInstructionPtr = 0x89E020;
 
-        (var mapInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x081C, decoInstructionPtr);
+        (var mapInstruction, decoInstructionPtr) = CreateDecoTileInstruction(
+            GetMapStationDecoTileValue(null), decoInstructionPtr);
+        (var mapPortalLeftInstruction, decoInstructionPtr) = CreateDecoTileInstruction(
+            GetMapStationDecoTileValue(true), decoInstructionPtr);
+        (var mapPortalRightInstruction, decoInstructionPtr) = CreateDecoTileInstruction(
+            GetMapStationDecoTileValue(false), decoInstructionPtr);
 
         (var createriaInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x0832, decoInstructionPtr); // "C"
         (var brinstarInstruction, decoInstructionPtr) = CreateDecoTileInstruction(0x0831, decoInstructionPtr); // "B"
@@ -976,12 +1004,18 @@ public class Rom : GameRom
         }
 
         // Add map stations
-        var stationsByArea = mapStations.GroupBy(s => s.Item1);
+        var stationsByArea = mapStations.GroupBy(station => station.Area);
         foreach (var areaGroup in stationsByArea)
         {
-            foreach (var (a, x, y) in areaGroup)
+            foreach (var (area, x, y, portalOnLeft) in areaGroup)
             {
-                areaDecoInstructions[a].Add((mapInstruction, x + MAP_X_OFFSET, y + MAP_Y_OFFSET));
+                int instruction = portalOnLeft switch
+                {
+                    true => mapPortalLeftInstruction,
+                    false => mapPortalRightInstruction,
+                    null => mapInstruction,
+                };
+                areaDecoInstructions[area].Add((instruction, x + MAP_X_OFFSET, y + MAP_Y_OFFSET));
             }
         }
 
@@ -1005,6 +1039,13 @@ public class Rom : GameRom
         }
 
     }
+
+    internal static ushort GetMapStationDecoTileValue(bool? portalOnLeft) => portalOnLeft switch
+    {
+        true => 0x081D,
+        false => 0x481D,
+        null => 0x081C,
+    };
 
     private (int, int) CreateDecoTileInstruction(ushort tileMask, int instructionPtr)
     {

@@ -23,3 +23,15 @@ describe("RandomizerResponseSchema", () => {
     expect(parsed.success).toBe(false);
   });
 });
+
+describe("RandomizeRequestSchema", () => {
+  it("requires callers to specify whether to include the spoiler", async () => {
+    const { RandomizeRequestSchema } = await import("../backend");
+    const parsed = RandomizeRequestSchema.safeParse({
+      Seed: 0,
+      Configs: [{}],
+    });
+
+    expect(parsed.success).toBe(false);
+  });
+});

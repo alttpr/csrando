@@ -1174,8 +1174,10 @@
 				seedId: data.seedDetails.id,
 				baseName: primaryRomData.fileName,
 				defaultDisplayName: primaryGameInfo?.displayName || "rom",
-				defaultExtension:
-					primaryGameInfo?.fileExtensions.split(",")[0] || ".sfc",
+				// The generated ROM is always a patched SNES image regardless of which
+				// game was selected, so the output is always .sfc (the base ROM for the
+				// NES games is a .nes file, but the patched output must not be).
+				defaultExtension: ".sfc",
 				randomizerVersion: data.randomizerVersion?.versionTag ?? null,
 				optionSummary: {
 					tokens: optionSummaryTokens,

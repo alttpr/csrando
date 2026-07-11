@@ -7,6 +7,7 @@ import { metadataApi } from "$lib/services/api";
 import { parseMetadata } from "$lib/schemas/metadata";
 import type { Metadata } from "$lib/types";
 import { getRandomizerVersionBySeedId } from "$lib/server/db/randomizer";
+import { shouldHideSpoiler } from "$lib/server/seed-visibility";
 
 // Define a type for the seed details, inferring from the Drizzle schema
 type SeedDetails = typeof seeds.$inferSelect;
@@ -126,7 +127,9 @@ export const load: PageServerLoad = async ({ params }) => {
     }
 
     return {
-      seedDetails: seedDetails,
+      seedDetails: shouldHideSpoiler(seedDetails.options)
+        ? { ...seedDetails, spoilerLog: null }
+        : seedDetails,
       metadata,
       randomizerVersion: versionTag
         ? {

@@ -22,7 +22,12 @@ edges:
       Morph:
           - ["Left", "Right"]
   directed:
-      IceBeam:
+      # Vanilla freezes a Rio that flies in from the ADJACENT screen to platform up to
+      # the ceiling tank. Map shuffle can't guarantee that enemy next door, so this route
+      # is :NoShuffle (dropped when MapShuffle is on). CanIBJ remains the only logical
+      # route under shuffle (dead until the future AllowIBJ logic option grants it, so the
+      # filler just leaves a non-required item here).
+      IceBeam:NoShuffle:
           - ["Left", "Ceiling Energy Tank"]
       CanIBJ:
           - ["Left", "Ceiling Energy Tank"]

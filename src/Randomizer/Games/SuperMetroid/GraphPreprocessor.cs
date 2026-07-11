@@ -36,6 +36,7 @@ public class GraphPreprocessor
     public void Preprocess()
     {
         PatchKeycards();
+        PatchVanillaMapPreopenedDoors();
 
         // Patch morph PLM
         var morphRoom = _reader.Rooms.First(r => r.Name == "Morph Ball Room");
@@ -52,10 +53,10 @@ public class GraphPreprocessor
             foreach(var edge in _graph.GetEdges(vtx))
             {
                 vtx.Edges.Add(edge);
-            }
         }
+    }
 
-        //// Find all doors that are not blue
+    //// Find all doors that are not blue
         //var doors = _graph.Vertices.OfType<SuperMetroid.Vertex>().Where(v => v.Node!.NodeType == "door" && v.Node!.NodeSubType != "elevator");
         //var doorData = DoorReader.ReadDoorData();
 
@@ -124,6 +125,32 @@ public class GraphPreprocessor
 
         //var doorPLM = _reader.RoomPLMs.First(r => r.Room == doorHeader.room && r.XPosition == doorHeader.x_low && r.YPosition == doorHeader.y_low);
 
+    }
+
+    private void PatchVanillaMapPreopenedDoors()
+    {
+        if (_world.Map != null)
+            return;
+
+        (string Room, string Door)[] preopenedDoors =
+        [
+            ("Red Brinstar Elevator Room", "Top Door"),
+            ("Business Center", "Middle Left Door"),
+            ("Construction Zone", "Right Door"),
+        ];
+
+        foreach (var (roomName, doorName) in preopenedDoors)
+        {
+            var door = _reader.Rooms.First(r => r.Name == roomName).Nodes.First(n => n.Name == doorName);
+
+            // Keycard mode may already have replaced one of these doors; preserve that
+            // replacement rather than turning it into a free blue door.
+            if (door.NodeSubType.StartsWith("keycard:"))
+                continue;
+
+            door.NodeSubType = "blue";
+            door.Locks = null;
+        }
     }
 
     private void PatchKeycards()

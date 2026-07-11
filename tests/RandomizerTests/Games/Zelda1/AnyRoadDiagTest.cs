@@ -8,6 +8,7 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 
 [TestClass]
+[TestCategory(TestCategories.Slow)]
 public sealed class AnyRoadDiagTest
 {
     private static (int[] arrayScreens, int[] caveScreens) RunFill(int seed, bool dungeon)
@@ -30,8 +31,11 @@ public sealed class AnyRoadDiagTest
     [TestMethod]
     public void CompareEntranceOnly_vs_EntrancePlusDungeon()
     {
-        int reported = 0;
-        for (int seed = 0; seed < 400 && reported < 10; seed++)
+        // The any-road cave-14 screens must exactly match the level's cellar_room_id_array,
+        // in both entrance-only and entrance+dungeon-shuffle modes. A mismatch is the
+        // any-road/overworld-lookup desync bug; assert none occurs across the seed sweep.
+        int mismatches = 0;
+        for (int seed = 0; seed < 400; seed++)
         {
             (int[] arr, int[] cave) e, d;
             try { e = RunFill(seed, dungeon: false); }
@@ -44,14 +48,17 @@ public sealed class AnyRoadDiagTest
 
             if (eBad || dBad)
             {
-                reported++;
-                Console.WriteLine($"SEED {seed}:");
-                Console.WriteLine($"  entrance-only : arr=[{Hex(e.arr)}] cave14=[{Hex(e.cave)}] {(eBad ? "BAD" : "ok")}");
-                Console.WriteLine($"  ent+dungeon   : arr=[{Hex(d.arr)}] cave14=[{Hex(d.cave)}] {(dBad ? "BAD" : "ok")}");
+                mismatches++;
+                if (mismatches <= 10)
+                {
+                    Console.WriteLine($"SEED {seed}:");
+                    Console.WriteLine($"  entrance-only : arr=[{Hex(e.arr)}] cave14=[{Hex(e.cave)}] {(eBad ? "BAD" : "ok")}");
+                    Console.WriteLine($"  ent+dungeon   : arr=[{Hex(d.arr)}] cave14=[{Hex(d.cave)}] {(dBad ? "BAD" : "ok")}");
+                }
             }
         }
-        if (reported == 0)
-            Console.WriteLine("No mismatch in 400 seeds (either mode).");
+
+        Assert.AreEqual(0, mismatches, $"{mismatches} seeds had an any-road cave-14 mismatch");
     }
 
     private static string Hex(int[] v) => string.Join(",", v.Select(x => x.ToString("X2")));

@@ -29,31 +29,7 @@ public class ComboSearcher : ISearcher
         HashSet<Randomizer.Graph.Vertex> otherWorldVertices = new();
 
 
-        var initialGame = _world.Config.InitialGame;
-        if (initialGame == "")
-        {
-            // Set the initial game if the config exists in the order of sm, alttp, z1, m1
-            if (_world.SMWorld != null)
-            {
-                initialGame = "sm";
-            }
-            else if (_world.AlttpWorld != null)
-            {
-                initialGame = "alttp";
-            }
-            else if (_world.Z1World != null)
-            {
-                initialGame = "z1";
-            }
-            else if (_world.M1World != null)
-            {
-                initialGame = "m1";
-            }
-            else
-            {
-                throw new ArgumentException("No games to play");
-            }
-        }
+        var initialGame = _world.EffectiveInitialGame;
 
         switch (initialGame)
         {
@@ -80,51 +56,30 @@ public class ComboSearcher : ISearcher
         do
         {
             prevInventory = inventory.Clone();
-            if (_world.GameConfig.Alttp != null)
-            {
-                var starts = otherWorldVertices.Where(v => v.World == _world.AlttpWorld).ToList();
-                if (_alttpSearcher == null)
-                {
-                    _alttpSearcher = _world.AlttpWorld!.GetSearcherForWorld(graph, starts[0], inventory, setLocations);
-                }
-                _alttpSearcher.ResumeSearch(starts, prevInventory);
-                otherWorldVertices.UnionWith(_alttpSearcher.GetOtherWorld().ToHashSet());
-            }
-
-            if (_world.GameConfig.Zelda1 != null)
-            {
-                var starts = otherWorldVertices.Where(v => v.World == _world.Z1World).ToList();
-                if (_z1Searcher == null)
-                {
-                    _z1Searcher = _world.Z1World!.GetSearcherForWorld(graph, starts[0], inventory, setLocations);
-                }
-                _z1Searcher.ResumeSearch(starts, prevInventory);
-                otherWorldVertices.UnionWith(_z1Searcher.GetOtherWorld().ToHashSet());
-            }
-
-            if (_world.GameConfig.Metroid != null)
-            {
-                var starts = otherWorldVertices.Where(v => v.World == _world.M1World).ToList();
-                if (_m1Searcher == null)
-                {
-                    _m1Searcher = _world.M1World!.GetSearcherForWorld(graph, starts[0], inventory, setLocations);
-                }
-                _m1Searcher.ResumeSearch(starts, prevInventory);
-                otherWorldVertices.UnionWith(_m1Searcher.GetOtherWorld().ToHashSet());
-            }
-
-            if (_world.GameConfig.SuperMetroid != null)
-            {
-                var starts = otherWorldVertices.Where(v => v.World == _world.SMWorld).ToList();
-                if (_smSearcher == null)
-                {
-                    _smSearcher = _world.SMWorld!.GetSearcherForWorld(graph, starts[0], inventory, setLocations);
-                }
-                _smSearcher.ResumeSearch(starts, prevInventory);
-                otherWorldVertices.UnionWith(_smSearcher.GetOtherWorld().ToHashSet());
-            }
+            // A game's searcher can only be created once another game has reached one of
+            // its vertices; until then there is nothing to resume.
+            _alttpSearcher = ResumeGame(_world.AlttpWorld, _alttpSearcher, otherWorldVertices, inventory, prevInventory, setLocations);
+            _z1Searcher = ResumeGame(_world.Z1World, _z1Searcher, otherWorldVertices, inventory, prevInventory, setLocations);
+            _m1Searcher = ResumeGame(_world.M1World, _m1Searcher, otherWorldVertices, inventory, prevInventory, setLocations);
+            _smSearcher = ResumeGame(_world.SMWorld, _smSearcher, otherWorldVertices, inventory, prevInventory, setLocations);
         } while (prevInventory.All().Count() != inventory.All().Count());
 
+    }
+
+    private ISearcher? ResumeGame(IWorld? world, ISearcher? searcher, HashSet<Randomizer.Graph.Vertex> otherWorldVertices,
+        Inventory inventory, Inventory prevInventory, SetLocations? setLocations)
+    {
+        if (world == null)
+            return searcher;
+
+        var starts = otherWorldVertices.Where(v => v.World == world).ToList();
+        if (starts.Count == 0 && searcher == null)
+            return null;
+
+        searcher ??= world.GetSearcherForWorld(_graph, starts[0], inventory, setLocations);
+        searcher.ResumeSearch(starts, prevInventory);
+        otherWorldVertices.UnionWith(searcher.GetOtherWorld().ToHashSet());
+        return searcher;
     }
 
     public bool HasFound(IItem item)

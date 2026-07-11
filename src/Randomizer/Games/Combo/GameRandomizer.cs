@@ -22,6 +22,13 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         if (world is not World comboWorld)
             throw new ArgumentException("Passed world is not for the Combo Randomizer.", nameof(world));
 
+        // M1's patch data must precede every item write: under map shuffle it contains the
+        // generated special-items tables (with placeholder item ids) that the item bytes
+        // below land in. Written here instead of with the other game writers because
+        // WriteItemsToRom clears the location addresses it handles.
+        if (comboWorld.M1World != null)
+            Metroid.RomWriter.WritePatchData(rom, comboWorld.M1World);
+
         // Use the concrete instance for combo-specific methods
         WriteItemsToRom(comboWorld, rom);
 
@@ -33,7 +40,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
             Zelda1.RomWriter.Write(rom, comboWorld.Z1World, prng);
 
         if (comboWorld.M1World != null)
-            Metroid.RomWriter.Write(rom, comboWorld.M1World, prng);
+            Metroid.RomWriter.WriteItems(rom, comboWorld.M1World);
 
         if (comboWorld.SMWorld != null)
             SuperMetroid.RomWriter.Write(rom, comboWorld.SMWorld, prng);
@@ -95,13 +102,12 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     private void WriteGameFlags(World world, IRom rom)
     {
-        byte startingGame = world.Config.InitialGame switch
+        byte startingGame = world.EffectiveInitialGame switch
         {
             "sm" => 0x00,
             "alttp" => 0x01,
             "z1" => 0x02,
             "m1" => 0x03,
-            "" => (byte)(world.SMWorld != null ? 0x00 : world.AlttpWorld != null ? 0x01 : world.Z1World != null ? 0x02 : world.M1World != null ? 0x03 : 0x00),
             _ => throw new ArgumentException("Invalid initial game", nameof(world.Config.InitialGame))
         };
 

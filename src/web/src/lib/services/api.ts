@@ -14,6 +14,33 @@ type RequestOptions = {
   headers?: HeadersInit;
 };
 
+const mockGameIdsByConfigKey: Record<string, string> = {
+  Alttp: "alttp",
+  SuperMetroid: "supermetroid",
+  Zelda1: "zelda1",
+  Metroid: "metroid",
+  Goonies2: "goonies2",
+};
+
+function deriveMockGameIds(options: unknown): string[] {
+  const configs = (options as { Configs?: unknown } | undefined)?.Configs;
+  const config =
+    Array.isArray(configs) &&
+    configs[0] !== null &&
+    typeof configs[0] === "object"
+      ? (configs[0] as Record<string, unknown>)
+      : null;
+
+  if (!config) return [];
+
+  return Object.entries(mockGameIdsByConfigKey)
+    .filter(([configKey]) => {
+      const value = config[configKey];
+      return value !== null && typeof value === "object";
+    })
+    .map(([, gameId]) => gameId);
+}
+
 /**
  * Handles API requests to the .NET backend, with error handling and response processing
  */
@@ -188,6 +215,7 @@ export const randomizeApi = {
   create: async (options: unknown) => {
     // Check if we're in local test mode
     if (privateEnv.LOCAL_TEST_MODE === "true") {
+      const games = deriveMockGameIds(options);
       // Return a mock randomization response
       return {
         id: "mock-seed-" + Date.now(),
@@ -195,7 +223,7 @@ export const randomizeApi = {
           // Mock patch data structure
           patches: [],
           metadata: {
-            games: ["alttp"],
+            games: games.length > 0 ? games : ["alttp"],
             version: "1.0.0-mock",
             generated: new Date().toISOString(),
           },

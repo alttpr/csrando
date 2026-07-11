@@ -617,7 +617,12 @@ public class StatefulSearcher : ISearcher
 
     public bool BacktrackLocation(Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace)
     {
-        var (startState, startFlags) = _visitedItemLocations[vertex];
+        // A location this searcher never reached (e.g. one only reachable with items
+        // found in other games) has no state to backtrack from.
+        if (!_visitedItemLocations.TryGetValue(vertex, out var visited))
+            return false;
+
+        var (startState, startFlags) = visited;
 
         foreach (var flag in startFlags.All())
         {

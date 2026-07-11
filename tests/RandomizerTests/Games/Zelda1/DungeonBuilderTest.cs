@@ -36,6 +36,35 @@ public sealed class DungeonBuilderTest
         return buffer;
     }
 
+    private static int CellarExitPosition(YamlReader.UnderworldMap map)
+        => ((map.enemies & 0x03) << 6) | (map.enemy_id & 0x3F);
+
+    // Decode a cellar's table-3 exit byte (ExitX[7:4] | ExitY[3:0]) into the room tile Link
+    // lands on. ExitX/ExitY share EncodeItemPosition's nibble layout: ExitX = col + 2,
+    // ExitY = row + 6.
+    private static (int Col, int Row) DecodeCellarExitTile(YamlReader.UnderworldMap cellar)
+    {
+        int b = CellarExitPosition(cellar);
+        return (((b >> 4) & 0x0F) - 2, (b & 0x0F) - 6);
+    }
+
+    // Whether a tile is somewhere Link can stand: inside a walkable Region, not inside a
+    // NoPlace region, and not on a solid block. Mirrors DungeonBuilder.IsValidItemPosition.
+    private static bool TileIsWalkable(YamlReader.Screen screen, int col, int row)
+    {
+        bool inWalkable = screen.nodes.regions.Any(r =>
+            r.type == YamlReader.RegionType.Region &&
+            r.from[0] <= col && r.from[1] <= row && r.to[0] >= col && r.to[1] >= row);
+        if (!inWalkable) return false;
+
+        bool blockedRegion = screen.nodes.regions.Any(r =>
+            r.type == YamlReader.RegionType.NoPlace &&
+            r.from[0] <= col && r.from[1] <= row && r.to[0] >= col && r.to[1] >= row);
+        if (blockedRegion) return false;
+
+        return screen.nodes.blocks?.Any(b => b[0] == col && b[1] == row) != true;
+    }
+
     [TestMethod]
     [DataRow(1)]
     [DataRow(2)]
@@ -179,6 +208,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_Level9_CheckRoomGatesEveryExit()
     {
         // The check room gates level 9 behind the triforces. The only ungated way out is the south
@@ -288,6 +318,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_BlockedPassageScreens_AlwaysReachable()
     {
         // Screens 0x0E (vertical) and 0x0F (horizontal) have a walled-off central passage that
@@ -321,6 +352,51 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    public void Generate_CellarReturnCoordinates_AreWalkableInEveryEndpointRoom()
+    {
+        // When Link walks out of a cellar's stairs the engine drops him at the cellar's table-3
+        // exit coordinate, in whichever room he is returning to. A single coordinate serves
+        // every endpoint room, so it must land on a walkable tile in all of them; otherwise the
+        // player materialises inside a wall/block and gets stuck. (Copying the coordinate from a
+        // vanilla template, the previous behaviour, did not guarantee this for shuffled rooms.)
+        for (int seed = 1; seed <= 40; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var data = CreateYamlReader().Data!;
+                var builder = CreateBuilder(data, level, seed: seed);
+                builder.Generate();
+                builder.Write();
+
+                var levelMaps = data.underworld_maps
+                    .Where(m => m.generated && m.generated_level == level)
+                    .ToDictionary(m => m.map);
+
+                foreach (var cellar in levelMaps.Values.Where(m => m.passage))
+                {
+                    var (col, row) = DecodeCellarExitTile(cellar);
+
+                    var endpointRooms = new[] { cellar.passage_left, cellar.passage_right }
+                        .Distinct()
+                        .Select(id => levelMaps[id]);
+
+                    foreach (var endpoint in endpointRooms)
+                    {
+                        var screen = data.underworld_screens.First(s =>
+                            s.area == YamlReader.Area.Underworld && s.screen == endpoint.screen);
+
+                        Assert.IsTrue(TileIsWalkable(screen, col, row),
+                            $"Seed {seed} L{level} cellar {cellar.local_room_id:X2}: exit tile ({col},{row}) " +
+                            $"is not walkable in endpoint room {endpoint.local_room_id:X2} (screen {endpoint.screen:X2}).");
+                    }
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_ItemLocations_AreNeverOrphaned()
     {
         // Every generated item drop must be reachable from one of its room's doors, even assuming
@@ -375,6 +451,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_Minimal_AllLevelsHostEnoughItemRoomsForPool()
     {
         // ItemPooler always assigns Map + Compass + key(s) to each dungeon's z1d{level} set, so
@@ -474,6 +551,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Write_HiddenItemsOff_NoNonBossRoomHidesItem()
     {
         // Across many seeds/levels, no generated non-boss item room should use the kill-for-item
@@ -490,6 +568,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Write_HiddenItemsAlways_HidesEveryClearableItemRoom()
     {
         // With Always, any generated non-boss item room that has a kill trigger available
@@ -510,6 +589,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Write_HiddenItemsAlways_HidesMoreThanOff()
     {
         // Sanity check that the setting actually changes output: Always should hide strictly more
@@ -759,6 +839,7 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
     public void Generate_MultipleSeeds_NoCrashes()
     {
         // Stress test: run 10 different seeds for each level
@@ -771,6 +852,185 @@ public sealed class DungeonBuilderTest
                 var config = DungeonConfig.GetConfigForLevel(level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive, rnd);
                 var builder = CreateBuilder(reader.Data!, level, config, seed);
                 builder.Generate();
+            }
+        }
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    public void Generate_MapPlacementOff_MarksNoMapEarlyRoom()
+    {
+        for (int seed = 1; seed <= 10; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var config = DungeonConfig.GetConfigForLevel(
+                    level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive,
+                    new Random(seed), mapPlacement: MapPlacementOption.Off);
+                var builder = CreateBuilder(CreateYamlReader().Data!, level, config, seed);
+                builder.Generate();
+
+                Assert.AreEqual(0, builder.GetSpoilerData().Rooms.Count(r => r.Roles.Contains("MapEarly")),
+                    $"L{level} seed {seed}: MapPlacement=Off must not mark any MapEarly room.");
+            }
+        }
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    [DataRow(MapPlacementOption.Early)]
+    [DataRow(MapPlacementOption.Closest)]
+    public void Generate_MapPlacementOn_MarksAtLeastOneItemRoom(MapPlacementOption placement)
+    {
+        // The builder tags one or more entrance-area item rooms as MapEarly (Early tags the whole
+        // depth band; Closest tags the nearest). Every tagged room must be an Item room.
+        for (int seed = 1; seed <= 10; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var config = DungeonConfig.GetConfigForLevel(
+                    level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive,
+                    new Random(seed), mapPlacement: placement);
+                var builder = CreateBuilder(CreateYamlReader().Data!, level, config, seed);
+                builder.Generate();
+
+                var mapEarlyRooms = builder.GetSpoilerData().Rooms.Where(r => r.Roles.Contains("MapEarly")).ToList();
+                Assert.IsTrue(mapEarlyRooms.Count >= 1,
+                    $"L{level} seed {seed}: MapPlacement={placement} must mark at least one MapEarly room.");
+                Assert.IsTrue(mapEarlyRooms.All(r => r.Roles.Contains("Item")),
+                    $"L{level} seed {seed}: every MapEarly room must also be an Item room.");
+            }
+        }
+    }
+
+    private static readonly Dictionary<string, (int dx, int dy)> DoorOffsets = new()
+    {
+        ["N"] = (0, -1), ["S"] = (0, 1), ["W"] = (-1, 0), ["E"] = (1, 0)
+    };
+
+    /// <summary>
+    /// Door-step distances from the start room over spoiler data, treating any door type in
+    /// <paramref name="blockedDoors"/> as impassable. Cellar/stair links (ConnectedTo) are always
+    /// traversable. Mirrors DungeonBuilder.DoorReachableDistances.
+    /// </summary>
+    private static Dictionary<(int, int), int> SpoilerDoorDistances(
+        IReadOnlyList<RoomSpoilerData> rooms, params string[] blockedDoors)
+    {
+        var blocked = new HashSet<string>(blockedDoors);
+        var roomByPos = rooms.ToDictionary(r => (r.X, r.Y));
+        var adjacency = rooms.ToDictionary(r => (r.X, r.Y), _ => new HashSet<(int, int)>());
+
+        foreach (var room in rooms.Where(r => !r.Roles.Contains("Cellar")))
+            foreach (var (dir, doorType) in room.Doors)
+            {
+                if (blocked.Contains(doorType) || !DoorOffsets.TryGetValue(dir, out var off)) continue;
+                var n = (room.X + off.dx, room.Y + off.dy);
+                if (roomByPos.ContainsKey(n)) adjacency[(room.X, room.Y)].Add(n);
+            }
+        foreach (var cellar in rooms.Where(r => r.Roles.Contains("Cellar") && r.ConnectedTo != null))
+            foreach (var c in cellar.ConnectedTo!.Select(c => (c[0], c[1])))
+            {
+                adjacency[(cellar.X, cellar.Y)].Add(c);
+                adjacency[c].Add((cellar.X, cellar.Y));
+            }
+
+        var start = rooms.First(r => r.Roles.Contains("Start"));
+        var dist = new Dictionary<(int, int), int> { [(start.X, start.Y)] = 0 };
+        var queue = new Queue<(int, int)>();
+        queue.Enqueue((start.X, start.Y));
+        while (queue.Count > 0)
+        {
+            var cur = queue.Dequeue();
+            foreach (var n in adjacency[cur])
+                if (!dist.ContainsKey(n)) { dist[n] = dist[cur] + 1; queue.Enqueue(n); }
+        }
+        return dist;
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    public void Generate_MapPlacementEarly_WithinDepthFractionOfDungeon()
+    {
+        // Early should scale with dungeon size: each tagged Map room's door-distance from the
+        // entrance (walls block, locked doors allowed) must be within ~30% of the dungeon's depth,
+        // or no farther than the nearest item room when that floor is higher. Allows +1 rounding
+        // slack. The one exception is the bomb/key-free fallback room the builder adds when the
+        // depth band has no freely-reachable room, so we permit a single tagged room to exceed it.
+        const double depthFraction = 0.30;
+
+        for (int seed = 1; seed <= 12; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var config = DungeonConfig.GetConfigForLevel(
+                    level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive,
+                    new Random(seed), mapPlacement: MapPlacementOption.Early);
+                var builder = CreateBuilder(CreateYamlReader().Data!, level, config, seed);
+                builder.Generate();
+                var rooms = builder.GetSpoilerData().Rooms;
+
+                var dist = SpoilerDoorDistances(rooms, "Wall");
+                int DistOf(RoomSpoilerData r) => dist.GetValueOrDefault((r.X, r.Y), int.MaxValue);
+
+                int maxDepth = dist.Values.Max();
+                int nearestItem = rooms.Where(r => r.Roles.Contains("Item")).Min(DistOf);
+                int allowed = Math.Max(nearestItem, (int)Math.Ceiling(maxDepth * depthFraction)) + 1;
+
+                var mapEarlyRooms = rooms.Where(r => r.Roles.Contains("MapEarly")).ToList();
+                int beyond = mapEarlyRooms.Count(r => DistOf(r) > allowed);
+                Assert.IsTrue(beyond <= 1,
+                    $"L{level} seed {seed}: {beyond} MapEarly rooms exceed the early threshold {allowed} " +
+                    $"(dungeon depth {maxDepth}); at most the single free fallback may.");
+            }
+        }
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    [DataRow(MapPlacementOption.Early)]
+    [DataRow(MapPlacementOption.Closest)]
+    public void Generate_MapPlacementOn_PrefersRoomNotBehindBombableWall(MapPlacementOption placement)
+    {
+        // The Map must always have a tagged home reachable without bombs or keys when one exists
+        // anywhere in the dungeon (so it can't be hidden behind a bomb-only secret / be unplaceable).
+        // Stronger guarantee: when the entrance depth band itself has a bomb/key-free item room,
+        // every tagged room should be bomb/key-free (the builder only widens to gated rooms when the
+        // band has no free option).
+        const double depthFraction = 0.30;
+
+        for (int seed = 1; seed <= 12; seed++)
+        {
+            for (int level = 1; level <= 9; level++)
+            {
+                var config = DungeonConfig.GetConfigForLevel(
+                    level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive,
+                    new Random(seed), mapPlacement: placement);
+                var builder = CreateBuilder(CreateYamlReader().Data!, level, config, seed);
+                builder.Generate();
+                var rooms = builder.GetSpoilerData().Rooms;
+
+                var dist = SpoilerDoorDistances(rooms, "Wall");
+                var free = SpoilerDoorDistances(rooms, "Wall", "Bombable", "Locked", "Locked2");
+                int DistOf(RoomSpoilerData r) => dist.GetValueOrDefault((r.X, r.Y), int.MaxValue);
+                bool Free(RoomSpoilerData r) => free.ContainsKey((r.X, r.Y));
+
+                var itemRooms = rooms.Where(r => r.Roles.Contains("Item") && dist.ContainsKey((r.X, r.Y))).ToList();
+                int nearest = itemRooms.Min(DistOf);
+                int threshold = placement == MapPlacementOption.Closest
+                    ? nearest
+                    : Math.Max(nearest, (int)Math.Ceiling(dist.Values.Max() * depthFraction));
+                var bandCandidates = itemRooms.Where(r => DistOf(r) <= threshold).ToList();
+                var tagged = rooms.Where(r => r.Roles.Contains("MapEarly")).ToList();
+
+                if (itemRooms.Any(Free))
+                    Assert.IsTrue(tagged.Any(Free),
+                        $"L{level} seed {seed} ({placement}): a bomb/key-free item room exists, so at least one " +
+                        "tagged MapEarly room must be bomb/key-free (a reachable home for the Map).");
+
+                if (bandCandidates.Any(Free))
+                    Assert.IsTrue(tagged.All(Free),
+                        $"L{level} seed {seed} ({placement}): the entrance band has a bomb/key-free room, so no " +
+                        "tagged MapEarly room should be gated behind a bombable wall or locked door.");
             }
         }
     }

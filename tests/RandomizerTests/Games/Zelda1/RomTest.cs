@@ -1,5 +1,7 @@
 namespace RandomizerTests.Games.Zelda1;
 
+using System.Collections.Generic;
+using Randomizer.Games;
 using Randomizer.Games.Zelda1;
 using Randomizer.Graph;
 using Randomizer.RomModifications;
@@ -20,6 +22,115 @@ public sealed class RomTest
         config ??= DungeonConfig.GetConfigForLevel(level, DungeonStyleOption.Progressive, EnemyPlacementOption.Progressive, new Random(seed));
         var prng = new PRNG(seed);
         return new DungeonBuilder(config, data, level, prng);
+    }
+
+    private static World CreateWorld(ShopShuffleOption shop, int seed = 42)
+    {
+        var z1Config = new Config { ShopShuffle = shop, Triforces = "8" };
+        z1Config.SelectRandomValues(new PRNG(seed));
+        var worldConfig = new WorldConfig { Zelda1 = z1Config };
+        return new World(1, worldConfig, new Randomizer.Graph.Graph(), new PRNG(seed));
+    }
+
+    [TestMethod]
+    public void WriteCavePrices_WritesPriceBytesAtPriceTable()
+    {
+        // Must match Rom.cs CaveShopPricesBase: relocated cave tables, prices at PC 0x651720.
+        const int caveShopPricesBase = 0x651720;
+
+        var world = CreateWorld(ShopShuffleOption.Full);
+        var shopLocations = world.GetLocationsOfType(VertexType.Item)
+            .Where(v => v.Name.Contains(" - Shop - "))
+            .ToList();
+        Assert.IsTrue(shopLocations.Count > 0, "Expected shop locations to write prices for.");
+
+        // Place a known item in each shop slot so prices are written for them.
+        foreach (var loc in shopLocations)
+            loc.Item = world.GetItem("SwordL1");
+
+        using var loggedRom = new LoggedRom();
+        var rom = new Rom(loggedRom, 0);
+        rom.WriteCavePrices(world, new PRNG(42));
+
+        foreach (var loc in shopLocations)
+        {
+            // Parse "Cave XX - Shop - Item YY" to compute the price address the same way Rom does.
+            var parts = loc.Name.Split(' ');
+            int cave = System.Convert.ToInt32(parts[1], 16);
+            int slot = System.Convert.ToInt32(parts[^1], 16);
+            int priceAddress = caveShopPricesBase + (cave - 0x10) * 3 + slot;
+
+            byte price = loggedRom.Read(priceAddress, 1)[0];
+            // SwordL1 is a tier-3 item: price range 160-255.
+            Assert.IsTrue(price >= 160 && price <= 255,
+                $"{loc.Name}: tier-3 item price {price} should be in 160-255.");
+        }
+    }
+
+    [TestMethod]
+    public void WriteCavePrices_WritesEvenWhenAddressesCleared()
+    {
+        // The combo item writer nulls location.Addresses before the Z1 writer runs. Pricing must
+        // not depend on Addresses; it derives the price address from the cave/slot in the name.
+        var world = CreateWorld(ShopShuffleOption.Full);
+        var shopLocations = world.GetLocationsOfType(VertexType.Item)
+            .Where(v => v.Name.Contains(" - Shop - "))
+            .ToList();
+        Assert.IsTrue(shopLocations.Count > 0, "Expected shop locations.");
+
+        foreach (var loc in shopLocations)
+        {
+            loc.Item = world.GetItem("SwordL1");
+            loc.Addresses = null; // combo writer clears these before the Z1 writer runs
+        }
+
+        using var loggedRom = new LoggedRom();
+        var rom = new Rom(loggedRom, 0);
+        rom.WriteCavePrices(world, new PRNG(42));
+
+        Assert.IsTrue(loggedRom.Writes.Count > 0,
+            "Prices should still be written for shop slots even after addresses are cleared.");
+    }
+
+    [TestMethod]
+    public void WriteShuffledCaveData_DoesNotClobberPlacedItem()
+    {
+        // WriteShuffledCaveData must write flags/text only, never item bytes: it runs after
+        // WriteItems, so writing the synthesized 0x2F placeholder would erase the placed item.
+        const int itemsBase = 0x651600;
+
+        var world = CreateWorld(ShopShuffleOption.Full);
+        var data = world.YamlData!;
+
+        // Find a synthesized buy-once cave (id >= 0x24) and its single shop location (middle slot).
+        var buyOnceCave = data.caves.FirstOrDefault(c => c.cave >= 0x24);
+        Assert.IsNotNull(buyOnceCave, "Expected at least one synthesized buy-once cave.");
+
+        var loc = world.GetLocationsOfType(VertexType.Item)
+            .First(v => v.Name == $"Cave {buyOnceCave!.cave:X2} - Shop - Item 01");
+        loc.Item = world.GetItem("Raft"); // a progression/count-style item
+
+        using var loggedRom = new LoggedRom();
+        var rom = new Rom(loggedRom, 0);
+        rom.WriteItems(world);
+        rom.WriteShuffledCaveData(world, data); // must not overwrite the item
+
+        int slot1Address = itemsBase + (buyOnceCave!.cave - 0x10) * 3 + 1;
+        byte writtenItem = loggedRom.Read(slot1Address, 1)[0];
+        Assert.AreEqual((byte)0x0C, writtenItem, // Raft = 0x0C
+            "Buy-once shop's active slot must keep the placed item, not be reset to empty.");
+    }
+
+    [TestMethod]
+    public void WriteCavePrices_Off_WritesNothing()
+    {
+        var world = CreateWorld(ShopShuffleOption.Off);
+        using var loggedRom = new LoggedRom();
+        var rom = new Rom(loggedRom, 0);
+        rom.WriteCavePrices(world, new PRNG(42));
+
+        Assert.AreEqual(0, loggedRom.Writes.Count,
+            "With shop shuffle off, no shop prices should be written.");
     }
 
     [TestMethod]
@@ -233,6 +344,7 @@ public sealed class RomTest
             int roomId = passage.local_room_id;
             byte writtenLeft = loggedRom.Read(levelBase + 0x00 + roomId, 1)[0];
             byte writtenRight = loggedRom.Read(levelBase + 0x80 + roomId, 1)[0];
+            byte writtenExitPosition = loggedRom.Read(levelBase + 0x100 + roomId, 1)[0];
 
             Assert.IsTrue(writtenLeft < 0x80,
                 $"Level {level}: Passage at local_room_id=0x{roomId:X2} has left exit 0x{writtenLeft:X2} which is >= 0x80 (invalid local room ID)");
@@ -243,6 +355,10 @@ public sealed class RomTest
                 $"Level {level}: Passage at local_room_id=0x{roomId:X2} has left exit 0x{writtenLeft:X2} which doesn't match any non-passage room");
             Assert.IsTrue(nonPassageLocalIds.Contains(writtenRight),
                 $"Level {level}: Passage at local_room_id=0x{roomId:X2} has right exit 0x{writtenRight:X2} which doesn't match any non-passage room");
+
+            byte expectedExitPosition = (byte)(((passage.enemies & 0x03) << 6) | (passage.enemy_id & 0x3F));
+            Assert.AreEqual(expectedExitPosition, writtenExitPosition,
+                $"Level {level}: Passage at local_room_id=0x{roomId:X2} should write its selected cellar return coordinate.");
         }
     }
 }

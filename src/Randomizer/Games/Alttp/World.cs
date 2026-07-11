@@ -11,11 +11,20 @@ using Graph = Graph.Graph;
 ///
 /// Walk thru walls: 7E037F01
 /// </summary>
-public sealed class World : World<Item>
+public sealed class World : World<Item>, IPortalHost
 {
     public Config Config { get; }
     public (byte[] Underworld, byte[] Overworld, byte[] Special, byte[] Sets) SpriteSheets { get; set; } = ([], [], [], []);
     public Dictionary<IItem /* actualKey */, List<(BaseVertex Chest, List<BaseVertex> Regions)>> KeyForKeys { get; } = [];
+
+    /// <summary>
+    /// Cross-game portal anchors (see <see cref="Games.PortalAnchor"/>), materialized on
+    /// demand by <see cref="Portals"/> when a cross-game edge touches an entrance's
+    /// In/Out vertex — any entrance can host a portal.
+    /// </summary>
+    public List<PortalAnchor> PortalAnchors { get; } = [];
+
+    public PortalAnchor ResolvePortalAnchor(BaseVertex vertex) => Portals.ResolveVertexAnchor(this, vertex.Name);
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>

@@ -1,7 +1,6 @@
 namespace Randomizer.Games.Combo;
 
 using Randomizer.Graph;
-using Randomizer.RomModifications;
 using AlttpWorld = Randomizer.Games.Alttp.World;
 using BaseVertex = Graph.Vertex;
 using Graph = Graph.Graph;
@@ -21,8 +20,6 @@ public sealed class World : World<Item>
     public SMWorld? SMWorld { get; init; }
     public Z1World? Z1World { get; init; }
     public M1World? M1World { get; init; }
-
-    public List<(BaseVertex, BaseVertex)> Portals { get; } = new();
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
@@ -64,129 +61,157 @@ public sealed class World : World<Item>
             StartingItems = StartingItems.Merge(M1World.StartingItems);
         }
 
-        if (WorldConfig.Alttp != null && WorldConfig.Zelda1 != null)
+        // Apply the default portal layout: create the portal rooms it needs, then wire
+        // its cross-game graph edges. The graph is the source of truth from here:
+        // PortalWriter derives every transition table row from the cross-game edges
+        // (see DerivePortalEdges).
+        DefaultPortalLayout.Apply(this);
+
+        // Fail at graph-build time if any cross-game edge cannot become a portal.
+        DerivePortalEdges();
+    }
+
+    /// <summary>
+    /// Connects two portal-capable vertices into one bidirectional portal by adding the
+    /// two cross-game graph edges. The vertices' anchors are resolved (and, where the
+    /// game supports it, created on demand — any ALttP entrance vertex works); the
+    /// transition table rows and the anchors' ROM patches are derived from the graph
+    /// when the ROM is written.
+    /// </summary>
+    public void ConnectPortal(BaseVertex a, BaseVertex b) =>
+        ConnectPortal(ResolveAnchor(a), ResolveAnchor(b));
+
+    /// <summary>Connects two games' portal anchors into one bidirectional portal.</summary>
+    public void ConnectPortal(PortalAnchor a, PortalAnchor b)
+    {
+        var worldA = WorldFor(a.GameId);
+        var worldB = WorldFor(b.GameId);
+
+        var aExit = worldA.GetLocation(a.ExitVertexName);
+        var aEntry = worldA.GetLocation(a.EntryVertexName);
+        var bExit = worldB.GetLocation(b.ExitVertexName);
+        var bEntry = worldB.GetLocation(b.EntryVertexName);
+
+        Graph.AddDirected(aExit, bEntry, worldA.GetItem("fixed"));
+        Graph.AddDirected(bExit, aEntry, worldB.GetItem("fixed"));
+    }
+
+    /// <summary>
+    /// The portal anchor behind a graph vertex, resolved by the vertex's own game world
+    /// (see <see cref="IPortalHost"/>). Throws when the vertex cannot host a portal.
+    /// </summary>
+    public PortalAnchor ResolveAnchor(BaseVertex vertex)
+    {
+        if (!IsGameWorld(vertex.World) || vertex.World is not IPortalHost host)
+            throw new ArgumentException($"Vertex '{vertex.Name}' is not part of a portal-capable game world");
+
+        return host.ResolvePortalAnchor(vertex);
+    }
+
+    /// <summary>
+    /// Derives the portal layout from the graph: every edge between two of this world's
+    /// games must connect two portal-capable vertices (resolving anchors on demand) and
+    /// becomes one transition table row. Throws when a cross-game edge cannot become a
+    /// portal.
+    /// </summary>
+    public IReadOnlyList<PortalEdge> DerivePortalEdges()
+    {
+        var crossGameEdges = CrossGameEdges().ToList();
+
+        // The graph is the source of truth: each cross-game edge must leave a portal
+        // exit vertex and arrive at a portal entry vertex. Resolving the endpoints gives
+        // the ROM metadata needed by the writer, but the connection itself is still the
+        // edge being inspected here.
+        var edges = new List<PortalEdge>();
+        foreach (var (from, to) in crossGameEdges)
         {
-            Graph.AddDirected(AlttpWorld!.GetLocation("start"), Z1World!.Start, AlttpWorld!.GetItem("fixed"));
+            var fromAnchor = ResolveAnchor(from);
+            var toAnchor = ResolveAnchor(to);
+            var fromWorld = WorldFor(fromAnchor.GameId);
+            var toWorld = WorldFor(toAnchor.GameId);
+
+            var exit = fromWorld.GetLocation(fromAnchor.ExitVertexName);
+            if (!ReferenceEquals(exit, from))
+                throw new Exception(
+                    $"Cross-game edge '{from.Name}' -> '{to.Name}' does not start at portal exit vertex '{exit.Name}'");
+
+            var entry = toWorld.GetLocation(toAnchor.EntryVertexName);
+            if (!ReferenceEquals(entry, to))
+                throw new Exception(
+                    $"Cross-game edge '{from.Name}' -> '{to.Name}' does not lead to portal entry vertex '{entry.Name}'");
+
+            edges.Add(new PortalEdge(fromAnchor, toAnchor));
         }
 
-        if (WorldConfig.Alttp != null && WorldConfig.Metroid != null)
+        return edges.OrderBy(e => PortalOrder(e.From)).ToList();
+    }
+
+    private IEnumerable<IWorld> GameWorlds()
+    {
+        if (SMWorld != null)
+            yield return SMWorld;
+        if (AlttpWorld != null)
+            yield return AlttpWorld;
+        if (Z1World != null)
+            yield return Z1World;
+        if (M1World != null)
+            yield return M1World;
+    }
+
+    private IEnumerable<(BaseVertex From, BaseVertex To)> CrossGameEdges()
+    {
+        foreach (var gameWorld in GameWorlds())
         {
-            Graph.AddDirected(AlttpWorld!.GetLocation("start"), M1World!.Start, AlttpWorld!.GetItem("fixed"));
-        }
-
-        if (WorldConfig.SuperMetroid != null && WorldConfig.Alttp != null)
-        {
-            // Create the portal entrances for the cross-game portals in the four rooms we need to connect for SM
-            var crateriaMapStationPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
+            foreach (var vertex in gameWorld.GetLocations())
             {
-                Name = "Crateria - Crateria Map Room - Portal - In",
-                Type = VertexType.Entrance,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83AE00).Value],
-            });
-
-            var crateriaMapStationPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Crateria - Crateria Map Room - Portal - Out",
-                Type = VertexType.Outlet,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83AE0A).Value]
-            });
-
-            var crateriaMapStation = (SuperMetroid.Vertex)SMWorld!.GetLocation("Crateria - Crateria Map Room - Left Door");
-            Graph.AddDirected(crateriaMapStationPortalIn, crateriaMapStation, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(crateriaMapStation, crateriaMapStationPortalOut, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(crateriaMapStationPortalOut, crateriaMapStationPortalIn, SMWorld!.GetItem("fixed"));
-
-            Graph.AddDirected(crateriaMapStationPortalOut, AlttpWorld!.GetLocation("start"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("start"), crateriaMapStationPortalIn, AlttpWorld!.GetItem("fixed"));
-
-            //Portals.Add((crateriaMapStationPortalOut, AlttpWorld!.GetLocation("start")));
-            //Portals.Add((AlttpWorld!.GetLocation("start"), crateriaMapStationPortalIn));
-
-            var norfairMapPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Norfair - Norfair Map Room - Portal - In",
-                Type = VertexType.Entrance,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83AF00).Value]
-            });
-
-            var norfairMapPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Norfair - Norfair Map Room - Portal - Out",
-                Type = VertexType.Outlet,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83AF0A).Value]
-            });
-
-            var norfairMap = (SuperMetroid.Vertex)SMWorld!.GetLocation("Norfair - Norfair Map Room - Right Door");
-            Graph.AddDirected(norfairMapPortalIn, norfairMap, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(norfairMap, norfairMapPortalOut, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(norfairMapPortalOut, norfairMapPortalIn, SMWorld!.GetItem("fixed"));
-
-            Graph.AddDirected(norfairMapPortalOut, AlttpWorld!.GetLocation("West Death Mountain"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("West Death Mountain"), norfairMapPortalIn, AlttpWorld!.GetItem("fixed"));
-
-            //Portals.Add((norfairMapPortalOut, AlttpWorld!.GetLocation("West Death Mountain")));
-            //Portals.Add((AlttpWorld!.GetLocation("West Death Mountain"), norfairMapPortalIn));
-
-            var maridiaMissileRefillPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Maridia - Maridia Missile Refill Room - Portal - In",
-                Type = VertexType.Entrance,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83AF80).Value]
-            });
-
-            var maridiaMissileRefillPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Maridia - Maridia Missile Refill Room - Portal - Out",
-                Type = VertexType.Outlet,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83AF8A).Value]
-            });
-
-            var maridiaMissileRefill = (SuperMetroid.Vertex)SMWorld!.GetLocation("Maridia - Maridia Missile Refill Room - Left Door");
-            Graph.AddDirected(maridiaMissileRefillPortalIn, maridiaMissileRefill, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(maridiaMissileRefill, maridiaMissileRefillPortalOut, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(maridiaMissileRefillPortalOut, maridiaMissileRefillPortalIn, GetItem("fixed"));
-
-            Graph.AddDirected(maridiaMissileRefillPortalOut, AlttpWorld!.GetLocation("Dark Shopping Mall"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("Dark Shopping Mall"), maridiaMissileRefillPortalIn, AlttpWorld!.GetItem("fixed"));
-
-            //Portals.Add((maridiaMissileRefillPortalOut, AlttpWorld!.GetLocation("Dark Shopping Mall")));
-            //Portals.Add((AlttpWorld!.GetLocation("Dark Shopping Mall"), maridiaMissileRefillPortalIn));
-
-
-            var lowerNorfairRefillPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Norfair - Golden Torizo Energy Recharge - Portal - In",
-                Type = VertexType.Entrance,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83B000).Value]
-            });
-
-            var lowerNorfairRefillPortalOut = graph.AddVertex(new SuperMetroid.Vertex()
-            {
-                Name = "Norfair - Golden Torizo Energy Recharge - Portal - Out",
-                Type = VertexType.Outlet,
-                World = SMWorld!,
-                Addresses = [((SNES)0x83B00A).Value]
-            });
-
-            var lowerNorfairRefill = (SuperMetroid.Vertex)SMWorld!.GetLocation("Norfair - Golden Torizo Energy Recharge - Left Door");
-            Graph.AddDirected(lowerNorfairRefillPortalIn, lowerNorfairRefill, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(lowerNorfairRefill, lowerNorfairRefillPortalOut, SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(lowerNorfairRefillPortalOut, lowerNorfairRefillPortalIn, SMWorld!.GetItem("fixed"));
-
-            Graph.AddDirected(lowerNorfairRefillPortalOut, AlttpWorld!.GetLocation("Mire"), SMWorld!.GetItem("fixed"));
-            Graph.AddDirected(AlttpWorld!.GetLocation("Mire"), lowerNorfairRefillPortalIn, AlttpWorld!.GetItem("fixed"));
-
-            //Portals.Add((lowerNorfairRefillPortalOut, AlttpWorld!.GetLocation("Mire")));
-            //Portals.Add((AlttpWorld!.GetLocation("Mire"), lowerNorfairRefillPortalIn));
+                foreach (var edge in vertex.Edges)
+                {
+                    if (edge.To.World != vertex.World && IsGameWorld(edge.To.World))
+                        yield return (vertex, edge.To);
+                }
+            }
         }
     }
+
+    private bool IsGameWorld(IWorld world) => GameWorlds().Contains(world);
+
+    /// <summary>The present game world with this game id, or null when the game is not
+    /// part of this seed.</summary>
+    internal IWorld? GameWorld(string gameId) => GameWorlds().FirstOrDefault(w => w.GameId == gameId);
+
+    private IWorld WorldFor(string gameId) => GameWorld(gameId)
+        ?? throw new ArgumentException($"Unknown portal game id '{gameId}'");
+
+    private int PortalOrder(PortalAnchor anchor)
+    {
+        var anchors = ((IPortalHost)WorldFor(anchor.GameId)).PortalAnchors;
+        int index = anchors.FindIndex(a => ReferenceEquals(a, anchor));
+        if (index < 0)
+            throw new Exception($"Portal anchor '{anchor.Name}' is not registered in its world");
+        return index;
+    }
+
+    /// <summary>
+    /// The game the seed starts in: the configured initial game when that game is
+    /// present, otherwise the first present game in sm, alttp, z1, m1 order.
+    /// </summary>
+    public string EffectiveInitialGame => Config.InitialGame switch
+    {
+        "" => FirstPresentGame(),
+        "sm" when SMWorld != null => "sm",
+        "alttp" when AlttpWorld != null => "alttp",
+        "z1" when Z1World != null => "z1",
+        "m1" when M1World != null => "m1",
+        "sm" or "alttp" or "z1" or "m1" => FirstPresentGame(),
+        _ => throw new ArgumentException("Invalid initial game", nameof(Config.InitialGame)),
+    };
+
+    private string FirstPresentGame() =>
+        SMWorld != null ? "sm"
+        : AlttpWorld != null ? "alttp"
+        : Z1World != null ? "z1"
+        : M1World != null ? "m1"
+        : throw new ArgumentException("No games to play");
 
     public Inventory ComputeStartingItems()
     {

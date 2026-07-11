@@ -53,6 +53,7 @@ internal static partial class Spoiler
             includedGames.Add("Metroid");
             AppendLocationsForWorld(spoiler, metroidWorld, "Metroid");
             AppendStartingEquipment(spoiler, metroidWorld.Config.StartingEquipment, "Metroid");
+            Metroid.Spoiler.AppendMap(spoiler, metroidWorld, ItemWithGame);
         }
 
         var metaSection = GetOrCreateSection(spoiler, "meta");
@@ -111,7 +112,7 @@ internal static partial class Spoiler
     {
         string prefix = $"world_";
         metaSection[$"{prefix}id"] = comboWorld.Id.ToString(CultureInfo.InvariantCulture);
-        metaSection[$"{prefix}initial_game"] = comboWorld.Config.InitialGame;
+        metaSection[$"{prefix}initial_game"] = comboWorld.EffectiveInitialGame;
         metaSection[$"{prefix}game_count"] = includedGames.Count.ToString(CultureInfo.InvariantCulture);
         if (includedGames.Count > 0)
         {

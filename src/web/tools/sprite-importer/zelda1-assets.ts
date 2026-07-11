@@ -47,13 +47,13 @@ const DEFAULT_ZELDA1_SEGMENT_LAYOUT: Zelda1SegmentLayout[] = [
   {
     addresses: [
       0x631314, 0x631410, 0x63150c, 0x631608, 0x631704, 0x631800, 0x6318fc,
-      0x6319f8, 0x631af4, 0x631bf0, 0x631cec, 0x3d3804,
+      0x6319f8, 0x631af4, 0x631bf0, 0x631cec, 0x3d3804, 0x793804, 0x7cb804,
     ],
     length: 3,
   },
   { addresses: [0x631cf0], length: 3 },
   { addresses: [0x631cf4], length: 3 },
-  { addresses: [0x612287], length: 3 },
+  { addresses: [0x612287, 0x794325, 0x7cc325], length: 3 },
 ];
 
 function buildZeldaSegmentLayout(): Zelda1SegmentLayout[] {

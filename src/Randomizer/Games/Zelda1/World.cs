@@ -6,12 +6,44 @@ using BaseVertex = Graph.Vertex;
 using Graph = Graph.Graph;
 
 /// <summary>Model of a world in which a player would be playing.</summary>
-public sealed class World : World<Item>
+public sealed class World : World<Item>, IPortalHost
 {
     public Config Config { get; }
     public PRNG Prng { get; }
     public YamlReader.YamlData? YamlData { get; set; }
     internal List<DungeonSpoilerData> DungeonSpoilers { get; } = [];
+
+    /// <summary>Cross-game portal anchors (see <see cref="Games.PortalAnchor"/>),
+    /// materialized on demand from overworld cave vertices.</summary>
+    public List<PortalAnchor> PortalAnchors { get; } = [];
+
+    /// <summary>Any overworld cave vertex ("Overworld - Map XX - ...") can host a portal:
+    /// the transition row keys on the map id alone. Caves outside the always-reserved
+    /// candidates (see <see cref="DataLoader.PortalCaveCandidates"/>) keep their possibly
+    /// shuffled cave, which becomes unreachable behind the portal.</summary>
+    public PortalAnchor ResolvePortalAnchor(BaseVertex vertex)
+    {
+        if (this.FindPortalAnchor(vertex) is { } existing)
+            return existing;
+
+        var match = System.Text.RegularExpressions.Regex.Match(vertex.Name, @"^Overworld - Map ([0-9A-Fa-f]{2}) - ");
+        if (!match.Success)
+            throw new Exception($"Z1 vertex '{vertex.Name}' is not an overworld cave and cannot host a portal");
+
+        int map = Convert.ToInt32(match.Groups[1].Value, 16);
+        if (YamlData?.overworld_maps.Find(m => m.map == map) is not { cave: > 0 })
+            throw new Exception($"Z1 map {map:X2} has no cave and cannot host a portal");
+
+        var anchor = PortalAnchor.Z1($"Portal Cave {map:X2}", (uint)map,
+            destinationArgs: 0x0003, vertexName: vertex.Name);
+        PortalAnchors.Add(anchor);
+
+        // Portal arrivals bypass the start vertex, so the Meta hub must be reachable
+        // from the arrival cave.
+        Graph.AddDirected(vertex, GetLocation("Overworld - Meta - Meta"), GetItem("fixed"));
+
+        return anchor;
+    }
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>

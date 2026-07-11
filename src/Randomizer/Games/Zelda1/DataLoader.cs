@@ -4,10 +4,26 @@ using Randomizer.Graph;
 
 internal static class DataLoader
 {
+    /// <summary>
+    /// Overworld maps the default portal layout uses for cross-game portal caves. Any
+    /// overworld map with a cave works (the cave-entry hook matches the map id against
+    /// the transition table); these carry duplicated shops or a bombable cave, so
+    /// repurposing them costs no item locations. They are always kept out of entrance
+    /// shuffle so a portal placed on them never hides a shuffled cave; when combo shop
+    /// shuffle is active, they are also excluded from shop location generation.
+    /// </summary>
+    internal static readonly (int Map, string CaveNode)[] PortalCaveCandidates =
+    [
+        (0x66, "Open cave"),
+        (0x0C, "Open cave"),
+        (0x70, "Open cave"),
+    ];
+
     public static Vertex Fill(World world)
     {
         var graph = world.Graph;
         var yamlReader = new YamlReader(world.Config);
+        var reservedPortalCaveMaps = ReservedPortalCaveMaps(world);
 
         // Load the yaml data from files into memory
         yamlReader.LoadData();
@@ -15,8 +31,17 @@ internal static class DataLoader
         // Shuffle entrances in the data if needed before building the graph
         if (world.Config.EntranceShuffle == EntranceShuffleOption.Overworld)
         {
-            var entranceShuffler = new EntranceShuffler(world.Prng, yamlReader);
+            var entranceShuffler = new EntranceShuffler(world.Prng, yamlReader,
+                PortalCaveCandidates.Select(c => c.Map).ToList());
             entranceShuffler.Shuffle();
+        }
+
+        // Assign unique per-screen cave IDs for shops (and synthesize single-purchase shops) so they
+        // don't all share the same backing data. Runs after entrance shuffle so it sees final
+        // screen->cave assignments, and before BuildGraph so the new caves become graph locations.
+        if (world.Config.ShopShuffle != ShopShuffleOption.Off)
+        {
+            new ShopShuffler(world.Prng, yamlReader.Data!, reservedPortalCaveMaps).Shuffle();
         }
 
         // Generate randomized dungeons if enabled
@@ -25,7 +50,7 @@ internal static class DataLoader
             for (int level = 1; level <= 9; level++)
             {
                 var levelRnd = new Random(world.Prng.GetRandomInt(int.MaxValue));
-                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd, world.Config.HiddenItems);
+                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd, world.Config.HiddenItems, world.Config.MapPlacement);
 
                 // Generate() throws InvalidOperationException for layouts it can't finish (e.g. a
                 // connector below the start, L9 isolation orphaning rooms, or item positions that
@@ -58,7 +83,7 @@ internal static class DataLoader
 
         // Build the graph from the yaml data, this will parse the data and create vertices and edges according to the
         // current world data configuration
-        yamlReader.BuildGraph();
+        yamlReader.BuildGraph(reservedPortalCaveMaps);
 
         // Fill the world with vertices and edges after building the world from yaml data
         LoadVertices(world, yamlReader.GetVertices(world));
@@ -81,6 +106,7 @@ internal static class DataLoader
         world.Graph.AddDirected(startingVertex, world.GetLocation($"Overworld - Map {formattedStartMap} - Left exit"), world.GetItem("fixed"));
         world.Graph.AddDirected(startingVertex, world.GetLocation($"Overworld - Meta - Meta"), world.GetItem("fixed"));
 
+
         // Patch the Level 9 entrance edge to account for different triforce requirements
         var levelEntrance = world.GetLocation("Level 9 - Entrance");
         var entranceEdge = levelEntrance.Edges.Find(e => e.Condition.Item.Name == "Triforce")!;
@@ -91,6 +117,20 @@ internal static class DataLoader
         world.YamlData = yamlReader.Data!;
 
         return startingVertex;
+    }
+
+    private static HashSet<int> ReservedPortalCaveMaps(World world)
+    {
+        if (world.WorldConfig.Game != RandomizerTarget.Combo || world.WorldConfig.Combo == null)
+            return [];
+
+        bool hasPortalPartner = world.WorldConfig.Alttp != null
+            || world.WorldConfig.SuperMetroid != null
+            || world.WorldConfig.Metroid != null;
+
+        return hasPortalPartner
+            ? PortalCaveCandidates.Select(c => c.Map).ToHashSet()
+            : [];
     }
 
     private static void LoadVertices(World world, List<Dictionary<string, object>> vertices)

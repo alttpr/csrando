@@ -1,10 +1,40 @@
 ---
 title: Changelog
 description: Notable updates to the Game Randomizer web app.
-lastUpdated: 2024-09-15
+lastUpdated: 2026-07-11
 ---
 
 # Randomizer Changes
+
+## 2026-07-11
+### Quad Randomizer - Version 0.5.0
+* Systems Changes
+  * Any combination of games can now be chosen for a Combo seed - ALTTP is no longer forced to be included. Cross-game portals are generated dynamically for whichever games you pick, forming a full mesh of connections between them (direct SM↔M1, SM↔Z1 and M1↔Z1 portals in addition to the ALTTP ones); portals belonging to absent games are automatically reassigned to the games that remain
+  * Added a "Include spoiler log" toggle on the config page (for race seeds) - turning it off hides the spoiler from the seed's public page while still generating the seed
+  * Added a Metroid 1 generated map viewer to the spoiler log, showing the rooms, area layout, doors/elevators and item placements of a shuffled M1 world
+  * A large batch of NES rendering fixes for Zelda 1 and Metroid 1 during and after cross-game transitions (Andypro)
+    * Fixed a "ghost Link" appearing for the first frames after entering ALTTP through a portal
+    * Fixed sprite, tileset and tile-attribute flicker/corruption on door and portal transitions in both NES games
+    * Fixed bomb clouds being drawn behind dungeon priority tiles in Zelda 1, and the priority tiles staying black during the bomb screen-flash effect
+    * Portal destinations can now select the correct area palette (fixing wrong colors when arriving in Brinstar/Norfair)
+
+* Gameplay Changes
+  * Added Super Metroid, Metroid 1 and Zelda 1 as directly portal-connected games in Combo - all four games are now woven together rather than everything routing through ALTTP
+  * Added Metroid 1 Map Shuffle - generates a completely new randomized Metroid world map instead of the vanilla one (NOTE: this is in early testing, so expect potential bugs and balance issues)
+    * Map Size option (Small, Standard, Large, Nightmare) controls how large and dense the generated world is; Nightmare saturates the grid, growing every area until nothing more fits
+  * Added a Zelda 1 "Book reveals maps" option - the Magical Book reveals every dungeon map instead of its normal function, which is handy when playing with shuffled dungeons
+  * Added a Zelda 1 Dungeon Shuffle "Map placement" option (Off, Early, Closest) - forces each generated dungeon's Map into an item room near the entrance instead of shuffling it anywhere in the dungeon. Early keeps it within roughly the first 30% of the dungeon (scaled to dungeon size, may be behind a locked door); Closest puts it in the nearest item room. Either way it avoids being hidden behind a bombable wall when possible
+  * Added Zelda 1 Shop Shuffle option (Off, Junk, Full)
+    * Junk: shop caves sell randomized consumables at randomized prices and never gate progression
+    * Full: shop slots join the main item pool and can hold progression items, gated in logic behind cave reachability and possession of a farmable weapon
+  * Fixed a batch of NES item graphics issues when items from one game appear in another (Andypro)
+    * Fixed Zelda 1, Metroid 1 and Zelda 3 custom NES item sprites and palettes showing the wrong colors or graphics
+    * Fixed the Metroid 1 Fire Rod sprite colliding with the vanilla Ice Beam item, and duplicate progressive-item sprites loading when several copies spawned in the same area/dungeon
+    * Fixed the Wrecked Ship keycard receipt graphics in Zelda 3
+    * Fixed Zelda 1 heart container sprite graphics
+  * Fixed a Metroid 1 bug where a "mellow" enemy in a certain enemy slot became indestructible and erratic (Andypro)
+  * Improved Metroid 1 item persistence with a new bit-plane collection system, replacing the overflow-prone item/door history that could cause shuffled items and doors to respawn
+  * Softened the Zelda 1 ocean wave sound effect so it is less grating (Andypro)
 
 ## 2026-06-01
 ### Quad Randomizer - Version 0.4.0
