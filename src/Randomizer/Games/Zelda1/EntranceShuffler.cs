@@ -56,5 +56,28 @@ internal class EntranceShuffler
         {
             _data.special.recorder_dests[i] = (dungeons[i].map % 0x10 == 0) ? dungeons[i].map + 0x0f : dungeons[i].map - 1;
         }
+
+        // The flute (recorder) drop Y is the one landing value indexed by LEVEL rather than by
+        // screen, so when dungeons move it no longer matches the destination screen and can drop
+        // Link in a wall/water.
+        FixFluteLandings(dungeons);
+    }
+
+    private YamlReader.Screen? ScreenFor(YamlReader.OverworldMap map)
+        => _data.overworld_screens.FirstOrDefault(s => s.screen == map.screen && s.walkable != null);
+
+    // Recompute recorder_y_pos (the flute/whirlwind drop Y) for each dungeon entrance screen.
+    private void FixFluteLandings(List<YamlReader.OverworldMap> dungeons)
+    {
+        for (int i = 0; i < dungeons.Count && i < _data.special.recorder_y_pos.Length; i++)
+        {
+            var screen = ScreenFor(dungeons[i]);
+            if (screen == null)
+                continue;
+
+            var y = OverworldWalkability.ComputeFluteY(screen);
+            if (y != null)
+                _data.special.recorder_y_pos[i] = y.Value;
+        }
     }
 }

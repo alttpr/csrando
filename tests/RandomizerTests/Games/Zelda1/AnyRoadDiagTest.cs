@@ -8,6 +8,7 @@ using Randomizer.Graph;
 using Randomizer.RomModifications;
 
 [TestClass]
+[TestCategory(TestCategories.Slow)]
 public sealed class AnyRoadDiagTest
 {
     private static (int[] arrayScreens, int[] caveScreens) RunFill(int seed, bool dungeon)

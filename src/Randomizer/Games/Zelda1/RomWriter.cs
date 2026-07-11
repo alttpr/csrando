@@ -11,12 +11,19 @@ public static class RomWriter
         var data = world.YamlData!;
 
         rom.WriteTriforceGoal(world);
+        rom.WriteBookRevealsMaps(world);
         rom.WriteItems(world);
+        rom.WriteCavePrices(world, prng);
+        rom.WriteShuffledCaveData(world, data);
 
         if (world.Config.EntranceShuffle != EntranceShuffleOption.None)
         {
             rom.WriteOverworldMapData(world, prng, data);
             rom.WriteSpecial(world, prng, data);
+        }
+        else if (world.Config.ShopShuffle != ShopShuffleOption.Off)
+        {
+            rom.WriteOverworldMapData(world, prng, data);
         }
 
         if (world.Config.DungeonShuffle)

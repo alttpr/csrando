@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <!-- Auto-apply the default run filter (excludes [TestCategory("Slow")] tests). -->
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\RunSettings.runsettings</RunSettingsFilePath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

@@ -617,7 +617,11 @@ public class StatefulSearcher : ISearcher
 
     public bool BacktrackLocation(Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace)
     {
-        var (startState, startFlags) = _visitedItemLocations[vertex];
+        if (!_visitedItemLocations.TryGetValue(vertex, out var entry))
+        {
+            return false;
+        }
+        var (startState, startFlags) = entry;
 
         foreach (var flag in startFlags.All())
         {

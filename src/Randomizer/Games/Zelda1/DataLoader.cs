@@ -19,13 +19,21 @@ internal static class DataLoader
             entranceShuffler.Shuffle();
         }
 
+        // Assign unique per-screen cave IDs for shops (and synthesize single-purchase shops) so they
+        // don't all share the same backing data. Runs after entrance shuffle so it sees final
+        // screen->cave assignments, and before BuildGraph so the new caves become graph locations.
+        if (world.Config.ShopShuffle != ShopShuffleOption.Off)
+        {
+            new ShopShuffler(world.Prng, yamlReader.Data!).Shuffle();
+        }
+
         // Generate randomized dungeons if enabled
         if (world.Config.DungeonShuffle)
         {
             for (int level = 1; level <= 9; level++)
             {
                 var levelRnd = new Random(world.Prng.GetRandomInt(int.MaxValue));
-                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd, world.Config.HiddenItems);
+                var cfg = DungeonConfig.GetConfigForLevel(level, world.Config.DungeonStyle, world.Config.EnemyPlacement, levelRnd, world.Config.HiddenItems, world.Config.MapPlacement);
 
                 // Generate() throws InvalidOperationException for layouts it can't finish (e.g. a
                 // connector below the start, L9 isolation orphaning rooms, or item positions that

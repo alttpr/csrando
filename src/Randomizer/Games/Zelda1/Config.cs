@@ -19,6 +19,15 @@ public class Config
     [Description("This is in early testing, be aware of potential bugs and balance issues!")]
     public bool DungeonShuffle { get; init; } = false;
 
+    [Category("Gameplay")]
+    [Description("Randomize the contents of shop caves. Junk: shops sell random consumables at random prices. Full: shop slots join the item pool and can hold progression (gated in logic behind a farmable weapon).")]
+    [Default(ShopShuffleOption.Off)]
+    public ShopShuffleOption ShopShuffle { get; init; } = ShopShuffleOption.Off;
+
+    [Category("Gameplay")]
+    [Description("Make the Magical Book reveal all dungeon maps instead of its normal functionality. Handy with shuffled dungeons.")]
+    public bool BookRevealsMaps { get; init; } = false;
+
     // Sub-options below only have an effect when DungeonShuffle is enabled, so they are grouped
     // under a "Dungeon Shuffle" subcategory and hidden in the UI until it is turned on.
 
@@ -40,6 +49,12 @@ public class Config
     [Default(HiddenItemsOption.Sometimes)]
     public HiddenItemsOption HiddenItems { get; init; } = HiddenItemsOption.Sometimes;
 
+    [Category("Gameplay")]
+    [Subcategory("Dungeon Shuffle")]
+    [DependsOn(nameof(DungeonShuffle), true)]
+    [Default(MapPlacementOption.Off)]
+    public MapPlacementOption MapPlacement { get; init; } = MapPlacementOption.Off;
+
     [Ignore("Starting inventory is too advenced to be represented with simple attributes")]
     public List<string> StartingEquipment { get; init; } = [];
 
@@ -59,6 +74,16 @@ public class Config
 }
 
 public enum EntranceShuffleOption { None, Overworld }
+
+/// <summary>
+/// Controls randomization of shop cave contents.
+/// Off: vanilla shop items and prices.
+/// Junk: shops sell randomized consumables/filler at randomized prices; never gates progression.
+/// Full: shop slots become real item locations in the main pool (progression eligible), gated in
+///   logic behind cave reachability AND possession of a farmable weapon (since rupees are infinitely
+///   farmable, the price itself is flavor, not a logic gate).
+/// </summary>
+public enum ShopShuffleOption { Off, Junk, Full }
 
 /// <summary>
 /// Controls overall dungeon generation style.
@@ -89,3 +114,13 @@ public enum EnemyPlacementOption { Vanilla, Progressive, Random }
 /// Always: every item room that can use a kill trigger hides its item until the room is cleared.
 /// </summary>
 public enum HiddenItemsOption { Off, Sometimes, Always }
+
+/// <summary>
+/// Controls how each generated dungeon's Map item is placed (DungeonShuffle only).
+/// Off: the Map is freely shuffled anywhere in its dungeon, like every other dungeon item.
+/// Early: the Map is forced into an item room within roughly the first 30% of the dungeon's depth
+///   from the entrance (scaled to dungeon size); it may sit behind a locked door but avoids being
+///   gated behind a bombable wall when possible.
+/// Closest: the Map is forced into the item room nearest the dungeon entrance.
+/// </summary>
+public enum MapPlacementOption { Off, Early, Closest }

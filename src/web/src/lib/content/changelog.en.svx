@@ -6,6 +6,11 @@ lastUpdated: 2024-09-15
 
 # Randomizer Changes
 
+## 2026-06-25
+* Gameplay Changes
+  * Added a Zelda 1 "Book reveals maps" option - the Magical Book reveals every dungeon map instead of its normal function, which is handy when playing with shuffled dungeons
+  * Added a Zelda 1 Dungeon Shuffle "Map placement" option (Off, Early, Closest) - forces each generated dungeon's Map into an item room near the entrance instead of shuffling it anywhere in the dungeon. Early keeps it within roughly the first 30% of the dungeon (scaled to dungeon size, may be behind a locked door); Closest puts it in the nearest item room. Either way it avoids being hidden behind a bombable wall when possible
+
 ## 2026-06-01
 ### Quad Randomizer - Version 0.4.0
 * Systems Changes

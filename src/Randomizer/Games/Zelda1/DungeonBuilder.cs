@@ -30,6 +30,9 @@ internal record DungeonConfig
     /// <summary>Controls whether generated dungeon items are hidden behind clearing the room.</summary>
     public HiddenItemsOption HiddenItems { get; init; } = HiddenItemsOption.Sometimes;
 
+    /// <summary>Controls whether the dungeon Map is forced into an item room near the entrance.</summary>
+    public MapPlacementOption MapPlacement { get; init; } = MapPlacementOption.Off;
+
     // Baseline configs per level (Progressive style, no fuzz)
 
     private static readonly DungeonConfig[] BaseConfigs =
@@ -48,7 +51,7 @@ internal record DungeonConfig
     /// <summary>
     /// Generates a DungeonConfig for the given level and style, with optional random fuzz.
     /// </summary>
-    public static DungeonConfig GetConfigForLevel(int level, DungeonStyleOption style, EnemyPlacementOption enemyPlacement, Random rnd, HiddenItemsOption hiddenItems = HiddenItemsOption.Sometimes)
+    public static DungeonConfig GetConfigForLevel(int level, DungeonStyleOption style, EnemyPlacementOption enemyPlacement, Random rnd, HiddenItemsOption hiddenItems = HiddenItemsOption.Sometimes, MapPlacementOption mapPlacement = MapPlacementOption.Off)
     {
         var config = style switch
         {
@@ -62,7 +65,7 @@ internal record DungeonConfig
         // Nightmare defaults to Random enemies, but the explicit setting takes priority for other styles
         if (style != DungeonStyleOption.Nightmare)
             config = config with { EnemyPlacement = enemyPlacement };
-        return config with { HiddenItems = hiddenItems };
+        return config with { HiddenItems = hiddenItems, MapPlacement = mapPlacement };
     }
 
     private static DungeonConfig ApplyFuzz(DungeonConfig baseConfig, Random rnd,
@@ -215,6 +218,7 @@ internal class DungeonBuilder
         Stairs         = 1 << 6,
         LevelNineCheck = 1 << 7,
         SegmentStart   = 1 << 8,
+        MapEarly       = 1 << 9,
     }
 
     // Common role combinations
@@ -238,7 +242,7 @@ internal class DungeonBuilder
         (RoomRole.Start, "Start"), (RoomRole.End, "End"), (RoomRole.Boss, "Boss"),
         (RoomRole.Item, "Item"), (RoomRole.Connector, "Connector"), (RoomRole.Cellar, "Cellar"),
         (RoomRole.Stairs, "Stairs"), (RoomRole.LevelNineCheck, "LevelNineCheck"),
-        (RoomRole.SegmentStart, "SegmentStart"),
+        (RoomRole.SegmentStart, "SegmentStart"), (RoomRole.MapEarly, "MapEarly"),
     ];
 
     // Room
@@ -587,6 +591,43 @@ internal class DungeonBuilder
 
     private static int EncodeItemPosition(int x, int y) => ((x + 2) << 4) | (y + 6);
 
+    // When Link walks out of a cellar's stairs, the engine drops him at the position
+    // encoded in the cellar room's table-3 byte (ExitX[7:4] | ExitY[3:0]; verified against
+    // CheckSubroom in Z_05.asm). One byte serves every room the cellar connects to, so the
+    // chosen tile must be walkable in ALL of them or the player lands inside a block and gets
+    // stuck. The exit byte shares its nibble layout with EncodeItemPosition, so we reuse the
+    // item-placement walkability check (regions / NoPlace / blocks) to pick a safe tile,
+    // preferring the room centre and spiralling outward.
+    private int ComputeCellarExitByte(IReadOnlyList<Room> connectedRooms)
+    {
+        var screens = connectedRooms
+            .Select(r => GetUnderworldScreen(r.Screen))
+            .ToList();
+
+        foreach (var (x, y) in CellarExitTileCandidates())
+        {
+            int encoded = EncodeItemPosition(x, y);
+            if (screens.All(s => IsValidItemPosition(s, encoded)))
+                return encoded & 0xFF;
+        }
+
+        // No tile is walkable in every connected room (extremely unlikely). Fall back to the
+        // room centre; the template-matching pass still tries to pick a sane cellar.
+        return EncodeItemPosition(6, 3) & 0xFF;
+    }
+
+    // Candidate tiles for a cellar exit, ordered by distance from the room centre (6, 3) so
+    // Link lands as close to the middle as the connected rooms' layouts allow.
+    private static IEnumerable<(int X, int Y)> CellarExitTileCandidates()
+    {
+        const int centerX = 6, centerY = 3;
+        return
+            from x in Enumerable.Range(0, 12)
+            from y in Enumerable.Range(0, 7)
+            orderby Math.Abs(x - centerX) + Math.Abs(y - centerY)
+            select (x, y);
+    }
+
     private static bool IsValidItemPosition(YamlReader.Screen? screen, int encoded)
     {
         if (screen?.nodes?.regions == null) return false;
@@ -770,7 +811,7 @@ internal class DungeonBuilder
         var vanillaLevelMaps = GetVanillaLevelMaps();
         var itemPositionSlots = new List<int>(_itemPositionSlots);
         WriteNonCellarRooms(vanillaLevelMaps, itemPositionSlots);
-        WriteCellarRooms(vanillaLevelMaps);
+        WriteCellarRooms();
         UpdateLevelData(itemPositionSlots);
     }
 
@@ -837,11 +878,12 @@ internal class DungeonBuilder
                 generated_level = _level,
                 local_room_id = GetLocalRoomId(room),
                 neighbor_map_ids = neighborMapIds,
+                map_early = room.HasAnyRole(RoomRole.MapEarly),
             });
         }
     }
 
-    private void WriteCellarRooms(List<YamlReader.UnderworldMap> vanillaLevelMaps)
+    private void WriteCellarRooms()
     {
         foreach (var room in _map.FindRooms(RoomRole.Cellar))
         {
@@ -862,43 +904,47 @@ internal class DungeonBuilder
             {
                 screen = ScreenId.ItemCellar;
                 passageLeft = GetMapId(connectedRooms[0]);
-            }
-
-            var cellarTemplate = (vanillaLevelMaps.FirstOrDefault(m => m.passage && m.screen == screen)
-                ?? _data.underworld_maps.FirstOrDefault(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && m.passage && m.screen == screen))
-                ?? throw new Exception($"No vanilla cellar template found for screen {screen:X2}");
-
-            if (!isConnectorCellar)
-            {
                 itemPos = FixedCenterPosSlot;
                 passageRight = passageLeft;
             }
 
+            // Table 3 of a cellar holds the position Link returns to when he walks out of the
+            // stairs, not enemy data. Compute a tile that is walkable in every connected room
+            // and stash it in the enemies/enemy_id fields, which is the byte the ROM writer
+            // reassembles into table 3.
+            int exitByte = ComputeCellarExitByte(connectedRooms);
+
+            // A cellar is a single fixed-layout screen. For passage rooms the ROM writer
+            // overwrites tables 1-3 with passage/exit data (see Rom.cs), so palettes/doors are
+            // never emitted; the remaining flags are 0 in every vanilla cellar. room_item just
+            // needs to mark "has item" (any non-0x03 value) vs "no item" (0x03) — the actual
+            // item is placed by the graph randomizer.
             _data.underworld_maps.Add(new YamlReader.UnderworldMap
             {
                 map = mapId,
                 screen = screen,
                 name = $"Dungeon L{_level} Cellar({room.X},{room.Y})",
                 area = YamlReader.Area.Underworld,
-                palettes = [.. cellarTemplate.palettes],
-                doors = [.. cellarTemplate.doors],
+                palettes = [0, 0],
+                doors = [0, 0, 0, 0],
                 passage = true,
                 passage_left = passageLeft,
                 passage_right = passageRight,
-                enemies = cellarTemplate.enemies,
-                enemy_id = cellarTemplate.enemy_id,
-                enemy_mode = cellarTemplate.enemy_mode,
-                push_block = cellarTemplate.push_block,
-                dark_room = cellarTemplate.dark_room,
-                boss_sfx = cellarTemplate.boss_sfx,
-                room_item = room.HasAnyRole(RoomRole.Item) ? cellarTemplate.room_item : 0x03,
+                enemies = (exitByte >> 6) & 0x03,
+                enemy_id = exitByte & 0x3F,
+                enemy_mode = 0,
+                push_block = false,
+                dark_room = false,
+                boss_sfx = 0,
+                room_item = room.HasAnyRole(RoomRole.Item) ? 0x01 : 0x03,
                 item_pos = itemPos,
-                behaviour = cellarTemplate.behaviour,
+                behaviour = 0,
                 level_nine_check = null,
                 generated = true,
                 generated_level = _level,
                 local_room_id = GetLocalRoomId(room),
                 neighbor_map_ids = null,
+                map_early = room.HasAnyRole(RoomRole.MapEarly),
             });
         }
     }
@@ -1017,6 +1063,7 @@ internal class DungeonBuilder
         EnsureStartExitDoor();
         AssignEnemies();
         AssignItems(criticalPath, criticalPathDistances);
+        MarkMapEarlyRoom(startRoom);
         ResolveRoomBehaviours();
         SelectItemPositionSlots();
         FixOrphanedItemLocations();
@@ -1177,6 +1224,79 @@ internal class DungeonBuilder
                 $"Level {_level}: only {itemsPlaced} item rooms could be placed, but the item pool needs {requiredItems}.");
     }
 
+    // Early places the Map within roughly this fraction of the dungeon's depth (BFS radius) from
+    // the entrance, so "early" scales with dungeon size instead of being a fixed room count.
+    private const double MapEarlyDepthFraction = 0.30;
+
+    /// <summary>
+    /// When MapPlacement is enabled, tags the item rooms near the entrance with RoomRole.MapEarly.
+    /// YamlReader adds a tighter item set (z1d{level}m) to each tagged room's item location, and
+    /// ItemPooler pools the Map into that set, so the Map is forced to land in one of them.
+    ///
+    /// Distances are measured over doors, treating walls as impassable but allowing locked doors
+    /// (the Map may sit behind a key). Rooms reachable without crossing a bombable wall are
+    /// preferred so the Map isn't hidden behind a bomb-only secret.
+    ///   Early:   item rooms within ~30% of the dungeon's depth from the entrance.
+    ///   Closest: the item room(s) nearest the entrance.
+    ///
+    /// Several rooms are tagged (when available) rather than a single one: the assumed-fill placer
+    /// needs at least one tagged location it can reach when it gets to the Map, and locked-gated
+    /// rooms may become unreachable once keys are placed elsewhere. The set always includes a room
+    /// reachable with neither keys nor bombs so a valid spot exists; among that depth band, more
+    /// options also give the Map some placement variety.
+    /// </summary>
+    private void MarkMapEarlyRoom(Room startRoom)
+    {
+        if (_config.MapPlacement == MapPlacementOption.Off)
+            return;
+
+        // Door distances allowing locked doors (walls still block). This is the metric used for
+        // the depth threshold; bombable walls are traversable here.
+        var distances = DoorReachableDistances(startRoom, YamlReader.DoorType.Wall);
+
+        // Rooms reachable without ever crossing a bombable wall or a locked door — guaranteed
+        // reachable by the placer regardless of key placement, and the nicest spots for the Map.
+        var freeRooms = DoorReachableDistances(startRoom,
+            YamlReader.DoorType.Wall, YamlReader.DoorType.Bombable,
+            YamlReader.DoorType.Locked, YamlReader.DoorType.Locked2).Keys.ToHashSet();
+
+        var itemRooms = _map.UsedRooms
+            .Where(r => r.HasAnyRole(RoomRole.Item) && distances.ContainsKey(r))
+            .ToList();
+        if (itemRooms.Count == 0)
+            return;
+
+        int nearestDist = itemRooms.Min(r => distances[r]);
+        int threshold = _config.MapPlacement == MapPlacementOption.Closest
+            ? nearestDist
+            // Early: within ~30% of the dungeon depth, but never fewer than the closest item room.
+            : Math.Max(nearestDist, (int)Math.Ceiling(distances.Values.Max() * MapEarlyDepthFraction));
+
+        var candidates = itemRooms.Where(r => distances[r] <= threshold).ToList();
+
+        // Prefer the bomb/key-free candidates when any exist (so the visible early Map isn't gated
+        // behind a secret); otherwise keep the full set so the placer still has somewhere to go.
+        var freeCandidates = candidates.Where(freeRooms.Contains).ToList();
+        if (freeCandidates.Count > 0)
+            candidates = freeCandidates;
+
+        // Guarantee at least one placer-reachable (no keys, no bombs) location is tagged. If the
+        // early band has none, fall back to the nearest free item room anywhere in the dungeon so
+        // the Map always has a valid home, even if slightly past the depth threshold.
+        if (!candidates.Any(freeRooms.Contains))
+        {
+            var nearestFree = itemRooms
+                .Where(freeRooms.Contains)
+                .OrderBy(r => distances[r])
+                .FirstOrDefault();
+            if (nearestFree != null)
+                candidates.Add(nearestFree);
+        }
+
+        foreach (var room in candidates)
+            room.AddRole(RoomRole.MapEarly);
+    }
+
     private void ResolveRoomBehaviours()
     {
         foreach (var room in _map.UsedNonCellarRooms)
@@ -1324,33 +1444,48 @@ internal class DungeonBuilder
     }
 
     private List<Room> GetAccessibleRoomsWithoutKeys()
+        => DoorReachableDistances(_map.FindRoom(RoomRole.Start),
+            YamlReader.DoorType.Locked, YamlReader.DoorType.Locked2).Keys.ToList();
+
+    /// <summary>
+    /// BFS over the room graph from <paramref name="startRoom"/>, traversing doors but refusing to
+    /// pass through any door whose type is in <paramref name="blockedDoors"/>. Returns the door-step
+    /// distance to every reachable room. Doors are checked from the current room's side, mirroring
+    /// GetAccessibleRoomsWithoutKeys (door types are symmetric between neighbours).
+    /// </summary>
+    private Dictionary<Room, int> DoorReachableDistances(Room startRoom, params YamlReader.DoorType[] blockedDoors)
     {
-        var startRoom = _map.FindRoom(RoomRole.Start);
-        var visited = new HashSet<Room> { startRoom };
+        var blocked = new HashSet<YamlReader.DoorType>(blockedDoors);
+        var distances = new Dictionary<Room, int> { [startRoom] = 0 };
         var queue = new Queue<Room>();
         queue.Enqueue(startRoom);
-        var accessible = new List<Room>();
 
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
-            accessible.Add(current);
-
             foreach (var neighbor in current.Neighbors)
             {
-                if (visited.Contains(neighbor)) continue;
+                if (distances.ContainsKey(neighbor)) continue;
 
-                string dir = GetDirection(current, neighbor);
-                if (current.Doors.TryGetValue(dir, out var doorType) &&
-                    (doorType == YamlReader.DoorType.Locked || doorType == YamlReader.DoorType.Locked2))
-                    continue;
+                // Door rules only apply to grid-adjacent neighbours. Cellar/stair links connect
+                // non-adjacent rooms and are always traversable (the door in that direction is an
+                // unrelated wall, so checking it would wrongly block the passage).
+                if (IsGridAdjacent(current, neighbor))
+                {
+                    string dir = GetDirection(current, neighbor);
+                    if (current.Doors.TryGetValue(dir, out var doorType) && blocked.Contains(doorType))
+                        continue;
+                }
 
-                visited.Add(neighbor);
+                distances[neighbor] = distances[current] + 1;
                 queue.Enqueue(neighbor);
             }
         }
-        return accessible;
+        return distances;
     }
+
+    private static bool IsGridAdjacent(Room a, Room b)
+        => Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y) == 1;
 
     // Segment placement
 
