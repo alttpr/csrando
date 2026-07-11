@@ -83,7 +83,9 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         var preprocessor = new GraphPreprocessor(JsonData, this);
         preprocessor.Preprocess();
 
-        Start = GetLocation("Crateria - Landing Site - Bottom Left Door");
+        Start = GetLocation(Map != null
+            ? "Crateria - Crateria Map Room - Left Door"
+            : "Crateria - Landing Site - Bottom Left Door");
     }
 
     public Inventory ComputeStartingItems()

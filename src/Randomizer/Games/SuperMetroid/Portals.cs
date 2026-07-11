@@ -254,7 +254,7 @@ public static class Portals
     /// is looked up in the shuffled connections, whose partner exit is the door data that
     /// now leads in. Mirrors the map rando's save station rewiring.
     /// </summary>
-    private static int RemapEntranceDoor(World world, int vanillaEntrancePtr)
+    internal static int RemapEntranceDoor(World world, int vanillaEntrancePtr)
     {
         var map = world.Map!;
         var vanillaCounterpart = new Dictionary<int, int>();

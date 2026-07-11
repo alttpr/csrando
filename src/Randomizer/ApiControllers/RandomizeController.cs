@@ -24,28 +24,51 @@ public sealed class RandomizeController(ILogger<RandomizeController> logger) : C
 
         var worldConfigs = request.Configs;
 
-        var randomizer = RandomizerFactory.Create(worldConfigs, seed);
+        // A pinned seed is deterministic, so retrying it would only repeat the same
+        // failure; randomly-seeded requests get a few attempts because some settings
+        // (e.g. SM map rando) produce a fraction of unfillable or unwinnable seeds.
+        int maxAttempts = seed == null ? 5 : 1;
 
         try
         {
-            randomizer.Randomize();
-            if (!randomizer.IsWinnable())
+            for (int attempt = 1; ; attempt++)
             {
-                logger.LogError("API generated unwinnable game for seed: {Seed}", seed);
-                return Results.Problem("Generated game is unwinnable.");
+                try
+                {
+                    var randomizer = RandomizerFactory.Create(worldConfigs, seed);
+                    randomizer.Randomize();
+                    if (!randomizer.IsWinnable())
+                    {
+                        if (attempt == maxAttempts)
+                        {
+                            logger.LogError("API generated unwinnable game for seed: {Seed}", randomizer.PRNG.Seed);
+                            return Results.Problem("Generated game is unwinnable.");
+                        }
+
+                        logger.LogWarning("Randomization attempt {Attempt}/{MaxAttempts} generated an unwinnable game for seed {Seed}, retrying", attempt, maxAttempts, randomizer.PRNG.Seed);
+                        continue;
+                    }
+
+                    // ROM writing is part of generation from the API caller's perspective and
+                    // can expose settings-dependent failures too, so keep it inside the retry
+                    // boundary rather than returning an error after a successful fill.
+                    var loggedRomBroker = new LoggedRomBroker();
+                    randomizer.Write(loggedRomBroker);
+
+                    var response = new RandomizeResponse(
+                        randomizer.PRNG.Seed,
+                        loggedRomBroker.Worlds.ToDictionary(k => k.Key, v => new RandomizerWorldPatches(toBase64(v.Value.BpsPatch), toBase64(v.Value.IpsPatch))),
+                        request.IncludeSpoiler ? randomizer.SpoilerLog?.Spoiler : null
+                    );
+
+                    logger.LogInformation("API randomization successful for seed: {Seed} on attempt {Attempt}/{MaxAttempts}", response.Seed, attempt, maxAttempts);
+                    return Results.Ok(response);
+                }
+                catch (Exception ex) when (attempt < maxAttempts)
+                {
+                    logger.LogWarning(ex, "Randomization attempt {Attempt}/{MaxAttempts} failed, retrying", attempt, maxAttempts);
+                }
             }
-
-            var loggedRomBroker = new LoggedRomBroker();
-            randomizer.Write(loggedRomBroker);
-
-            var response = new RandomizeResponse(
-                randomizer.PRNG.Seed,
-                loggedRomBroker.Worlds.ToDictionary(k => k.Key, v => new RandomizerWorldPatches(toBase64(v.Value.BpsPatch), toBase64(v.Value.IpsPatch))),
-                request.IncludeSpoiler ? randomizer.SpoilerLog?.Spoiler : null
-            );
-
-            logger.LogInformation("API randomization successful for seed: {Seed}", response.Seed);
-            return Results.Ok(response);
         }
         catch (Exception ex)
         {

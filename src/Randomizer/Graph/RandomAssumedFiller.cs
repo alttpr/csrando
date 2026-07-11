@@ -34,7 +34,12 @@ internal sealed class RandomAssumedFiller
         // Do special things for SM in combo
         if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
         {
-            if (comboWorld.EffectiveInitialGame == "sm")
+            // Under the map randomizer the seed starts at the Crateria Map Room, whose
+            // single shuffled door rarely reaches any SM item with no equipment; the
+            // intended early route is the adjacent cross-game portal. The SM-only smart
+            // front fill would then find no location at all, so those seeds fill through
+            // the portals instead, like seeds that start in another game.
+            if (comboWorld.EffectiveInitialGame == "sm" && comboWorld.SMWorld.Map == null)
             {
                 for (int i = 0; i < _randomizer.Worlds.Length; ++i)
                 {
@@ -74,8 +79,11 @@ internal sealed class RandomAssumedFiller
                 {
                     var flatItemToPlace = flatItems.FirstOrDefault(i =>
                         i.Item.Name == frontFillItemName && i.Item.World == comboWorld.SMWorld);
-                    FrontFillCrossWorld(_randomizer.Worlds[0], _randomizer.Worlds[0].StartingItems, _randomizer.Graph, flatItemToPlace);
-                    flatItems.Remove(flatItemToPlace);
+                    if (flatItemToPlace != default)
+                    {
+                        FrontFillCrossWorld(_randomizer.Worlds[0], _randomizer.Worlds[0].StartingItems, _randomizer.Graph, flatItemToPlace);
+                        flatItems.Remove(flatItemToPlace);
+                    }
                 }
 
             }

@@ -112,6 +112,71 @@ public class Rom : GameRom
         }
     }
 
+    /// <summary>
+    /// Map-randomized games start in the Crateria map room instead of at the ship. This
+    /// is the first standard ALttP portal in combo games, so the initial logic can reach
+    /// another game without first having to escape the shuffled Landing Site connections.
+    /// </summary>
+    public void WriteStartingLocation(World world)
+    {
+        if (world.Map == null)
+            return;
+
+        const string roomName = "Crateria Map Room";
+        var geometry = world.JsonData.RoomGeometries.Single(r => r.name == roomName);
+        var door = geometry.doors.Single(d => d.exit_ptr.HasValue && d.entrance_ptr.HasValue);
+
+        // Reuse the portal conversion's arrival station when this room is a portal. If
+        // it is not converted, reserve an autosave-only station slot not already used by
+        // another converted Crateria room. Write the row here in either case: unlinked
+        // portal conversions deliberately do not emit their own patches.
+        var convertedRoom = world.PortalRooms.SingleOrDefault(r => r.RoomName == roomName);
+        int stationSlot = convertedRoom?.SaveStationSlot ?? FindAvailableStartStationSlot(world, geometry.area);
+        const int crateriaSaveStationTable = 0x44C5;
+        ushort roomHeader = (ushort)(0x8000 | (geometry.rom_address & 0x7FFF));
+        ushort entranceDoor = (ushort)(Portals.RemapEntranceDoor(world, door.entrance_ptr!.Value) & 0xFFFF);
+        Write(crateriaSaveStationTable + stationSlot * 14,
+        [
+            .. UshortBytes(roomHeader),
+            .. UshortBytes(entranceDoor),
+            0x00, 0x00, // door BTS
+            0x00, 0x00, // screen X
+            0x00, 0x00, // screen Y
+            0x78, 0x00, // Samus Y
+            0x00, 0x00, // Samus X
+        ]);
+
+        // sm-initsram.bin is assembled at $F9:9000, which the combo ROM's SA-1 mapping
+        // places at PC $799000 (it must not go through the LoROM SNES conversion). The
+        // custom save/load code stores the current load-station index and original area
+        // at file offsets $166/$168, and the map-randomizer area at $96E. The boot
+        // initializer fixes the checksum after copying this template into SRAM.
+        const int initialSram = 0x799000;
+        Write(initialSram + 0x166, UshortBytes((ushort)stationSlot));
+        Write(initialSram + 0x168, UshortBytes((ushort)geometry.area));
+
+        int mapRoomIndex = world.Map.room_id.FindIndex(id => id == geometry.room_id);
+        if (mapRoomIndex < 0)
+            throw new InvalidOperationException($"Map-randomizer map has no {roomName}");
+        Write(initialSram + 0x96E, UshortBytes((ushort)world.Map.room_area[mapRoomIndex]));
+    }
+
+    private static int FindAvailableStartStationSlot(World world, int area)
+    {
+        var usedSlots = world.PortalRooms
+            .Where(r => world.JsonData.RoomGeometries.Single(g => g.name == r.RoomName).area == area)
+            .Select(r => r.SaveStationSlot)
+            .ToHashSet();
+
+        foreach (int slot in new[] { 0x10, 0x11 })
+        {
+            if (!usedSlots.Contains(slot))
+                return slot;
+        }
+
+        throw new InvalidOperationException("No autosave-only Crateria station slot is available for the map-randomizer start");
+    }
+
     public void WritePlms(World world)
     {
         ushort plaquePlm = 0xd410;

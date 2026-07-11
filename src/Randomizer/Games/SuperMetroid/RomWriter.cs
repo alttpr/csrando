@@ -14,6 +14,7 @@ public static class RomWriter
         rom.WriteKeycardFlag(world);
         rom.WritePlms(world);
         rom.WriteMiscPatches(world);
+        rom.WriteStartingLocation(world);
         rom.WriteMap(world);
         rom.WriteSpawnAllItems(world);
     }

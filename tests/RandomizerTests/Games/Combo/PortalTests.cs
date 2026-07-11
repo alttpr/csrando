@@ -32,14 +32,19 @@ public sealed class PortalTests
 
     private static ComboWorld CreateWorld(bool alttp = false, bool sm = false, bool z1 = false, bool m1 = false,
         string initialGame = "alttp", int seed = 42, Z1ShopShuffleOption z1Shop = Z1ShopShuffleOption.Off,
-        bool m1MapShuffle = false)
+        bool m1MapShuffle = false, bool smMapRando = false)
     {
         var worldConfig = new WorldConfig
         {
             Game = RandomizerTarget.Combo,
             Combo = new Randomizer.Games.Combo.Config { InitialGame = initialGame },
             Alttp = alttp ? new Randomizer.Games.Alttp.Config() : null,
-            SuperMetroid = sm ? new Randomizer.Games.SuperMetroid.Config() : null,
+            SuperMetroid = sm ? new Randomizer.Games.SuperMetroid.Config
+            {
+                MapRandomizer = smMapRando
+                    ? Randomizer.Games.SuperMetroid.MapRandomizerSetting.Standard
+                    : Randomizer.Games.SuperMetroid.MapRandomizerSetting.None,
+            } : null,
             Zelda1 = z1 ? new Randomizer.Games.Zelda1.Config { ShopShuffle = z1Shop, Triforces = "8" } : null,
             Metroid = m1 ? new Randomizer.Games.Metroid.Config { MapShuffle = m1MapShuffle } : null,
         };
@@ -125,6 +130,48 @@ public sealed class PortalTests
         CollectionAssert.AreEqual(new byte[] { 0x22, 0x79, 0x9A, 0x80 }, rom.Read(0x304059, 4));
         CollectionAssert.AreEqual(untouchedPortalCode,
             rom.Read((SNES)0x80D040, untouchedPortalCode.Length));
+    }
+
+    [TestMethod]
+    public void Sm_MapRando_StartsAtCrateriaMapRoom()
+    {
+        string oldDataRoot = Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot;
+        try
+        {
+            // The large map corpus is intentionally excluded from build output, so use
+            // its source location for this production-pipeline regression test.
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "../../../../../src/Randomizer/Games/SuperMetroid/data"));
+
+            var world = CreateWorld(sm: true, initialGame: "sm", smMapRando: true);
+            var sm = world.SMWorld!;
+            var mapRoom = sm.JsonData.RoomGeometries.Single(r => r.name == "Crateria Map Room");
+            var mapDoor = mapRoom.doors.Single(d => d.exit_ptr.HasValue && d.entrance_ptr.HasValue);
+            Assert.AreEqual("Crateria - Crateria Map Room - Left Door", sm.Start.Name,
+                "map-rando logic must start in the same room as the ROM");
+
+            var rom = new MemoryRom();
+            Randomizer.Games.SuperMetroid.RomWriter.Write(rom, sm, new PRNG(42));
+
+            // The initial SRAM template selects the new Crateria station and the generated
+            // map area containing the map room.
+            const int initialSram = 0x799000; // SA-1-mapped $F9:9000
+            CollectionAssert.AreEqual(Words(0x10), rom.Read(initialSram + 0x166, 2), "station slot");
+            CollectionAssert.AreEqual(Words(mapRoom.area), rom.Read(initialSram + 0x168, 2), "original area");
+            int mapRoomIndex = sm.Map!.room_id.FindIndex(id => id == mapRoom.room_id);
+            CollectionAssert.AreEqual(Words(sm.Map.room_area[mapRoomIndex]), rom.Read(initialSram + 0x96E, 2), "map area");
+
+            // Slot $10 loads the map room through the door paired with it by the shuffled map.
+            CollectionAssert.AreEqual(Words(
+                0x8000 | (mapRoom.rom_address & 0x7FFF),
+                Randomizer.Games.SuperMetroid.Portals.RemapEntranceDoor(sm, mapDoor.entrance_ptr!.Value) & 0xFFFF,
+                0, 0, 0, 0x78, 0),
+                rom.Read(0x44C5 + 0x10 * 14, 14));
+        }
+        finally
+        {
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = oldDataRoot;
+        }
     }
 
     [TestMethod]
