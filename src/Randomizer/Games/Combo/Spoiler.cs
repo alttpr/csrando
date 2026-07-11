@@ -53,6 +53,7 @@ internal static partial class Spoiler
             includedGames.Add("Metroid");
             AppendLocationsForWorld(spoiler, metroidWorld, "Metroid");
             AppendStartingEquipment(spoiler, metroidWorld.Config.StartingEquipment, "Metroid");
+            Metroid.Spoiler.AppendMap(spoiler, metroidWorld, ItemWithGame);
         }
 
         var metaSection = GetOrCreateSection(spoiler, "meta");

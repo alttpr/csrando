@@ -24,6 +24,13 @@ public sealed class World : World<Item>
 
     public List<(BaseVertex, BaseVertex)> Portals { get; } = new();
 
+    /// <summary>
+    /// The cross-game portal connections of this world. PortalWriter emits every game's
+    /// transition table from these; randomized portal layouts only need to build a
+    /// different list here.
+    /// </summary>
+    public List<PortalConnection> PortalConnections { get; } = new();
+
     /// <summary>Add all the vertices to the graph for this region.</summary>
     /// <param name="id">id of this world</param>
     /// <param name="randomizerConfig">options for this world</param>
@@ -67,15 +74,37 @@ public sealed class World : World<Item>
         if (WorldConfig.Alttp != null && WorldConfig.Zelda1 != null)
         {
             Graph.AddDirected(AlttpWorld!.GetLocation("start"), Z1World!.Start, AlttpWorld!.GetItem("fixed"));
+            PortalConnections.Add(new(VanillaPortalSides.Z1, VanillaPortalSides.AlttpToZ1));
         }
 
         if (WorldConfig.Alttp != null && WorldConfig.Metroid != null)
         {
-            Graph.AddDirected(AlttpWorld!.GetLocation("start"), M1World!.Start, AlttpWorld!.GetItem("fixed"));
+            // M1 is entered physically through its portal anchors, not the spawn platform —
+            // under map shuffle the spawn can sit deep inside the generated map. The Meta
+            // hub (ability derivations and the win condition) is wired directly, since the
+            // start vertex that used to provide it is no longer the entry.
+            var alttpSide = AlttpWorld!.GetLocation("start");
+            Graph.AddDirected(alttpSide, M1World!.GetLocation("Meta - Metroid Meta Locations - Meta (0) - Meta"), AlttpWorld!.GetItem("fixed"));
+
+            foreach (var anchor in M1World.PortalAnchors)
+            {
+                var portalDoor = M1World.GetLocation(anchor.VertexName);
+                Graph.AddDirected(alttpSide, portalDoor, AlttpWorld!.GetItem("fixed"));
+                Graph.AddDirected(portalDoor, alttpSide, M1World.GetItem("fixed"));
+                Portals.Add((portalDoor, alttpSide));
+
+                PortalConnections.Add(new(
+                    new PortalSide("m1", 3, [(uint)anchor.RoomWord, (uint)anchor.Direction],
+                        anchor.DestinationId, anchor.DestinationArgs, anchor.VertexName),
+                    VanillaPortalSides.AlttpToM1));
+            }
         }
 
         if (WorldConfig.SuperMetroid != null && WorldConfig.Alttp != null)
         {
+            foreach (var (sm, alttp) in VanillaPortalSides.SmAlttp)
+                PortalConnections.Add(new(sm, alttp));
+
             // Create the portal entrances for the cross-game portals in the four rooms we need to connect for SM
             var crateriaMapStationPortalIn = graph.AddVertex(new SuperMetroid.Vertex()
             {

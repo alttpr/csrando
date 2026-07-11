@@ -84,6 +84,10 @@ The `package.json` includes additional scripts:
 - `npm run db:studio` – open Drizzle Studio for inspecting the SQLite database.
 - `npm run import-sprites` – CLI for the remote sprite workflow.
 
+## Public API
+
+External services such as Discord bots can generate seeds through the public SvelteKit API and link users to the normal seed permalink page. See [docs/PUBLIC_API.md](docs/PUBLIC_API.md).
+
 ## Randomizer Versions (Snapshots)
 
 Need to add or hotfix a version without redeploying? With `PRIVATE_ADMIN_VERSION_TOKEN` configured you can visit `/admin/new-version` on a running site, upload the IPS or BPS base patch, and fetch the latest metadata directly from the backend to create a new snapshot. You can optionally record the backend git commit hash and build timestamp to simplify debugging.

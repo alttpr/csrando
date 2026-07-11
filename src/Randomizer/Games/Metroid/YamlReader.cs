@@ -63,6 +63,13 @@ public class YamlReader
         public Scrolling scroll;
         public required NodeCollection nodes;
         public required EdgeCollection edges;
+
+        /// <summary>
+        /// Set when the item orb/pedestal is part of the screen's drawn structure rather than
+        /// only the special-items table (e.g. Brinstar 0x2A). Map shuffle then keeps the screen
+        /// on Item cells so it never renders a phantom orb on a plain corridor.
+        /// </summary>
+        public bool structuralItem;
     }
 
     public class NodeCollection
@@ -488,6 +495,12 @@ public class YamlReader
             // Create all edges
             foreach (var (type, weight, edges) in allEdges)
             {
+                // Edge groups suffixed ":NoShuffle" are vanilla-only routes that rely on
+                // map structure shuffle can't reproduce (e.g. freezing an enemy that flies
+                // in from the adjacent screen). Skip them when generating a shuffled map.
+                if (config.MapShuffle && weight.Contains(":NoShuffle"))
+                    continue;
+
                 foreach (var edge in edges ?? new())
                 {
                     var edgeNames = ((List<object>)edge).Cast<string>().ToList();
