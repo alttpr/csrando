@@ -106,9 +106,9 @@ internal sealed class ItemPooler : IItemPooler
         // cave's per-cave "z1c{cave}" set with distinct consumables. The set reservation keeps
         // progression out and the distinct draw avoids duplicate items within a cave. Full-mode
         // buy-once shops use "z1shop" and are left unconstrained, so they can hold progression.
-        // Only runs with shop shuffle on; off, take-anys stay ordinary DefaultSet filler locations.
-        if (world.Config.ShopShuffle != ShopShuffleOption.Off)
-            AddConsumableCaveItems(world, worldSet, ["z1takeany", "z1shopjunk", "z1shoprepeat"]);
+        // Take-anys exist regardless of the shop shuffle setting and must always be reserved;
+        // shop marker sets simply have no locations when shop shuffle is off.
+        AddConsumableCaveItems(world, worldSet, ["z1takeany", "z1shopjunk", "z1shoprepeat"]);
 
         // Fill the remaining empty locations with filler. The number of generated locations
         // varies per seed (especially with DungeonShuffle), so size the filler to exactly fill

@@ -14,6 +14,40 @@ using Randomizer.Graph;
 public sealed class ComboShopFillTest
 {
     [TestMethod]
+    public void TakeAnys_WithShopShuffleOff_ReserveZ1JunkItems()
+    {
+        const int seed = 42;
+        var config = new WorldConfig
+        {
+            Combo = new Randomizer.Games.Combo.Config(),
+            Alttp = new Randomizer.Games.Alttp.Config(),
+            Zelda1 = new Randomizer.Games.Zelda1.Config
+            {
+                ShopShuffle = Randomizer.Games.Zelda1.ShopShuffleOption.Off,
+            },
+        };
+        config.Alttp.SelectRandomValues(new PRNG(seed));
+        config.Zelda1.SelectRandomValues(new PRNG(seed));
+
+        var world = new Randomizer.Games.Combo.World(1, config, new Graph(), new PRNG(seed));
+        var pooler = new Randomizer.Games.Combo.ItemPooler([world], new PRNG(seed));
+        var takeAnyGroups = world.Z1World!.GetLocationsOfType(VertexType.Item)
+            .Where(v => v.Name.Contains(" - Take Any Item - "))
+            .GroupBy(v => v.ItemSet.Single(s => s.Name.StartsWith("z1c")))
+            .ToList();
+
+        Assert.IsTrue(takeAnyGroups.Count > 0, "Expected at least one Z1 take-any cave.");
+        foreach (var cave in takeAnyGroups)
+        {
+            var reservedItems = pooler.Pool.Where(p => p.Set == cave.Key).ToList();
+            Assert.AreEqual(cave.Count(), reservedItems.Count,
+                $"Take-any set {cave.Key} must reserve every slot so DefaultSet progression cannot enter it.");
+            Assert.IsTrue(reservedItems.All(p => p.Item.World == world.Z1World && p.Weight > 9000),
+                $"Take-any set {cave.Key} must contain only Z1 junk items.");
+        }
+    }
+
+    [TestMethod]
     public void ComboWithShopShuffle_ManySeeds_NoBacktrackKeyError()
     {
         int failures = 0;

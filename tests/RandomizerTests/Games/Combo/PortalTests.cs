@@ -135,13 +135,24 @@ public sealed class PortalTests
     [TestMethod]
     public void Sm_MapRando_StartsAtCrateriaMapRoom()
     {
+        // The map-rando Avro corpus is intentionally gitignored and therefore unavailable in CI.
+        // Keep this production-pipeline regression test for local checkouts that have the corpus,
+        // but do not fail the otherwise self-contained test suite when the external data is absent.
+        string sourceDataRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "../../../../../src/Randomizer/Games/SuperMetroid/data"));
+        string mapCorpus = Path.Combine(sourceDataRoot, "maps");
+        if (!Directory.Exists(mapCorpus)
+            || !Directory.EnumerateFiles(mapCorpus, "*.avro", SearchOption.AllDirectories).Any())
+        {
+            Assert.Inconclusive("Requires the local SM map-rando Avro corpus.");
+        }
+
         string oldDataRoot = Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot;
         try
         {
             // The large map corpus is intentionally excluded from build output, so use
             // its source location for this production-pipeline regression test.
-            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = Path.GetFullPath(Path.Combine(
-                AppContext.BaseDirectory, "../../../../../src/Randomizer/Games/SuperMetroid/data"));
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = sourceDataRoot;
 
             var world = CreateWorld(sm: true, initialGame: "sm", smMapRando: true);
             var sm = world.SMWorld!;

@@ -53,6 +53,11 @@ public sealed class ShopShuffleTest
     // standalone Z1 only HeartContainer accumulates (a Heart refill is fine to rebuy).
     private static readonly string[] CountItems = ["HeartContainer"];
 
+    // Keep in sync with ItemPooler.ShopJunkItems. These are the only items safe to put in a
+    // take-any cave, where choosing one item permanently removes the other choices.
+    private static readonly string[] TakeAnyItems =
+        ["RedPotion", "BluePotion", "BlueRing", "Bombs", "Arrows", "Rupee", "Rupee5", "Heart", "Key", "MagicShield"];
+
     // A cave id parsed from a shop/take-any location name.
     private static int CaveIdOf(Vertex v) => System.Convert.ToInt32(v.Name.Split(' ')[1], 16);
 
@@ -165,24 +170,22 @@ public sealed class ShopShuffleTest
         }
     }
 
-    [TestMethod]
+    [DataTestMethod]
+    [DataRow(ShopShuffleOption.Off)]
+    [DataRow(ShopShuffleOption.Junk)]
+    [DataRow(ShopShuffleOption.Full)]
     [TestCategory(TestCategories.Slow)]
-    public void TakeAnys_AreJunkOnly_NeverProgression()
+    public void TakeAnys_AreJunkOnly_NeverProgression(ShopShuffleOption shop)
     {
         // Take-anys let the player pick one of several items and lose the rest, so they must never
-        // hold progression (otherwise the player can strand it).
-        var progression = new[]
-        {
-            "SwordL1", "SwordL2", "SwordL3", "Raft", "StepLadder", "Recorder",
-            "Bow", "Rod", "PowerBracelet", "MagicalKey", "Book", "Letter",
-        };
+        // hold anything outside the explicitly safe junk list (otherwise the player can strand it).
 
         for (int seed = 1; seed <= 5; seed++)
         {
-            var world = RandomizeWorld(ShopShuffleOption.Full, seed);
+            var world = RandomizeWorld(shop, seed);
             foreach (var loc in TakeAnyLocations(world))
-                Assert.IsFalse(progression.Contains(loc.Item?.Name),
-                    $"seed {seed}: take-any {loc.Name} should not hold progression item {loc.Item?.Name}.");
+                Assert.IsTrue(TakeAnyItems.Contains(loc.Item?.Name),
+                    $"shop {shop}, seed {seed}: take-any {loc.Name} should not hold unsafe item {loc.Item?.Name}.");
         }
     }
 
