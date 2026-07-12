@@ -18,7 +18,7 @@ public sealed class GraphIntegrationTest
     {
         var reader = new YamlReader(new Config());
         reader.LoadData();
-        return (ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms), reader.Data!);
+        return (ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms, reader.Data!.transitions), reader.Data!);
     });
 
     private static (GeneratedWorld World, GeneratedRooms Rooms, YamlReader GraphReader) BuildWorld(int seed)
@@ -45,6 +45,82 @@ public sealed class GraphIntegrationTest
             Assert.IsTrue(names.Contains(rooms.StartLocationName),
                 $"seed {seed}: start vertex '{rooms.StartLocationName}' not in graph");
         }
+    }
+
+    [TestMethod]
+    public void ScreenTransition_OverridesOnlyTheConfiguredDirection()
+    {
+        var reader = new YamlReader(new Config());
+        reader.LoadData();
+        reader.Data!.rooms =
+        [
+            new Room
+            {
+                name = "Transition Test",
+                area = Area.Brinstar,
+                scroll = Scrolling.Vertical,
+                position = [0, 0],
+                screens = [0x03, 0x11],
+                sprites = []
+            }
+        ];
+        reader.Data.transitions =
+        [
+            new ScreenTransition
+            {
+                area = Area.Brinstar,
+                from = new TransitionEndpoint { screen = 0x11, direction = Direction.Up },
+                to = new TransitionEndpoint { screen = 0x03, direction = Direction.Down },
+                requirements = ["HiJump"]
+            }
+        ];
+        reader.BuildGraph();
+
+        const string upper = "Brinstar - Transition Test - Right Door Shaft (0) - Bottom";
+        const string lower = "Brinstar - Transition Test - Vertical Block Shaft (1) - Top";
+        var edges = reader.GetEdges(null!);
+
+        Assert.IsTrue(edges["HiJump"].Directed.Any(e => e[0] == lower && e[1] == upper));
+        Assert.IsTrue(edges["fixed"].Directed.Any(e => e[0] == upper && e[1] == lower));
+        Assert.IsFalse(edges["fixed"].Directed.Any(e => e[0] == lower && e[1] == upper));
+    }
+
+    [TestMethod]
+    public void ScreenTransition_SupportsAndGroupsAndOrAlternatives()
+    {
+        var reader = new YamlReader(new Config());
+        reader.LoadData();
+        reader.Data!.rooms =
+        [
+            new Room
+            {
+                name = "Transition Test",
+                area = Area.Brinstar,
+                scroll = Scrolling.Vertical,
+                position = [0, 0],
+                screens = [0x03, 0x11],
+                sprites = []
+            }
+        ];
+        reader.Data.transitions =
+        [
+            new ScreenTransition
+            {
+                area = Area.Brinstar,
+                from = new TransitionEndpoint { screen = 0x11, direction = Direction.Up },
+                to = new TransitionEndpoint { screen = 0x03, direction = Direction.Down },
+                requirements = [new List<object> { "IceBeam", "HiJump" }, "Morph"]
+            }
+        ];
+        reader.BuildGraph();
+
+        const string upper = "Brinstar - Transition Test - Right Door Shaft (0) - Bottom";
+        const string lower = "Brinstar - Transition Test - Vertical Block Shaft (1) - Top";
+        var edges = reader.GetEdges(null!);
+
+        Assert.IsTrue(edges["Morph"].Directed.Any(e => e[0] == lower && e[1] == upper));
+        var iceEdge = edges["IceBeam"].Directed.Single(e => e[0] == lower);
+        Assert.IsTrue(edges["HiJump"].Directed.Any(e => e[0] == iceEdge[1] && e[1] == upper));
     }
 
     [TestMethod]
@@ -107,8 +183,9 @@ public sealed class GraphIntegrationTest
                 if (CoordOf(name) is { } p)
                     graphReached.Add(p);
 
-            // Physical solver reach (excluding caps, which produce no vertices anyway).
-            var physical = AxisSolver.Solve(world.Grid, world.Start);
+            // Physical solver reach (excluding caps, which produce no vertices anyway). Pass the
+            // catalog so one-way impossible transitions block the same crossings the graph omits.
+            var physical = AxisSolver.Solve(world.Grid, world.Start, Loaded.Value.Catalog);
 
             // Every coordinate that owns graph vertices and is physically reachable must be
             // graph-reachable: a gap means the graph builder severed a chain the engine allows.

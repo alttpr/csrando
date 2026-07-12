@@ -8,10 +8,10 @@ using static Randomizer.Games.Metroid.YamlReader;
 /// <summary>
 /// Phase 2: assigns a concrete vanilla screen to every cell of a generated topology.
 ///
-/// Because <see cref="WorldGrid.FitsStrict"/> only depends on the abstract grid (edges,
-/// roles, door colors, neighbor run kinds and occupancy), cells can be fitted independently
-/// — no backtracking. Topology validation already proved every cell has at least one
-/// candidate. The fitter's job on top of correctness is taste: prefer screens with fewer
+/// Most cells can be fitted independently. Directional transition exclusions add a small
+/// adjacency constraint, so fitting backtracks within a run only if an otherwise preferred
+/// screen leaves no valid choice for the next cell. The fitter's job on top of correctness
+/// is taste: prefer screens with fewer
 /// extra openings (sealed openings look like dead walls in game) and avoid repeating the
 /// same screen back to back inside a run.
 /// </summary>
@@ -25,30 +25,55 @@ public static class ScreenFitter
 
         foreach (var run in grid.Runs)
         {
-            int? previousId = null;
+            var failedStates = new HashSet<(int Index, int? PreviousScreen)>();
 
-            foreach (var cell in run.Cells)
+            bool FitCell(int index, ScreenProfile? previous)
             {
+                if (index == run.Cells.Count)
+                    return true;
+                if (failedStates.Contains((index, previous?.ScreenId)))
+                    return false;
+
+                var cell = run.Cells[index];
                 var candidates = catalog.ForArea(cell.Area)
                     .Where(p => grid.FitsStrict(catalog, p, cell))
+                    .Where(p => previous == null || catalog.ScreensCanConnect(previous,
+                        run.Axis == Scrolling.Horizontal ? Direction.Right : Direction.Down, p))
                     .ToList();
 
                 if (candidates.Count == 0)
                 {
-                    errors.Add($"no screen fits {cell}");
-                    continue;
+                    failedStates.Add((index, previous?.ScreenId));
+                    return false;
                 }
 
                 int Score(ScreenProfile p) =>
                     ExtraOpenings(grid, cell, p) * 10
                     + GatedTraversal(cell, p) * 12
-                    + (p.ScreenId == previousId ? 5 : 0);
+                    + (p.ScreenId == previous?.ScreenId ? 5 : 0);
 
-                int best = candidates.Min(Score);
-                var pool = candidates.Where(p => Score(p) == best).ToList();
-                cell.AssignedScreen = pool[rng.Next(pool.Count)];
-                previousId = cell.AssignedScreen.ScreenId;
+                // Try the same random best candidate the old greedy fitter would choose first.
+                // Remaining candidates only matter when a later transition forces backtracking.
+                var ordered = candidates.OrderBy(Score).ToList();
+                int best = Score(ordered[0]);
+                int bestCount = ordered.TakeWhile(p => Score(p) == best).Count();
+                int first = rng.Next(bestCount);
+                (ordered[0], ordered[first]) = (ordered[first], ordered[0]);
+
+                foreach (var candidate in ordered)
+                {
+                    cell.AssignedScreen = candidate;
+                    if (FitCell(index + 1, candidate))
+                        return true;
+                }
+
+                cell.AssignedScreen = null;
+                failedStates.Add((index, previous?.ScreenId));
+                return false;
             }
+
+            if (!FitCell(0, null))
+                errors.Add($"no compatible screen sequence fits {run.Area} {run.Axis} run {run.Id}");
         }
 
         if (errors.Count > 0)

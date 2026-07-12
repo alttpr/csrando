@@ -11,7 +11,7 @@ public sealed class TopologyGeneratorTest
     {
         var reader = new YamlReader(new Config());
         reader.LoadData();
-        return ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms);
+        return ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms, reader.Data!.transitions);
     });
 
     private static GeneratedWorld Generate(int seed) =>

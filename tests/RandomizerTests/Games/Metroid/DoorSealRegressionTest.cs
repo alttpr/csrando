@@ -16,7 +16,7 @@ public sealed class DoorSealRegressionTest
     {
         var reader = new YamlReader(new Config());
         reader.LoadData();
-        return ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms);
+        return ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms, reader.Data!.transitions);
     });
 
     [TestMethod]

@@ -1,0 +1,1368 @@
+# Directional rules for crossing directly between shuffled scroll screens.
+# With no matching rule the transition is free, preserving the original behavior.
+# Entries under requirements are alternatives (logical OR). Items grouped in an
+# array must all be present (logical AND), so this:
+#
+#   requirements:
+#     - [IceBeam, HiJump]
+#     - Morph
+#
+# means (IceBeam AND HiJump) OR Morph.
+# To prohibit a screen pairing completely, add a directional entry like this:
+#
+# - area: Brinstar
+#   from:
+#     screen: 0x00
+#     direction: Up
+#   to:
+#     screen: 0x00
+#     direction: Down
+#   impossible: true
+- area: Brinstar
+  from:
+    screen: 0x02
+    direction: Up
+  to:
+    screen: 0x02
+    direction: Down
+  impossible: true
+
+- area: Brinstar
+  from:
+    screen: 0x02
+    direction: Up
+  to:
+    screen: 0x03
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Brinstar
+  from:
+    screen: 0x02
+    direction: Up
+  to:
+    screen: 0x04
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Brinstar
+  from:
+    screen: 0x02
+    direction: Up
+  to:
+    screen: 0x05
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Brinstar
+  from:
+    screen: 0x02
+    direction: Up
+  to:
+    screen: 0x06
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Brinstar
+  from:
+    screen: 0x02
+    direction: Up
+  to:
+    screen: 0x2E
+    direction: Down
+  impossible: true
+
+- area: Brinstar
+  from:
+    screen: 0x05
+    direction: Up
+  to:
+    screen: 0x2E
+    direction: Down
+  impossible: true
+
+- area: Brinstar
+  from:
+    screen: 0x06
+    direction: Up
+  to:
+    screen: 0x2E
+    direction: Down
+  impossible: true
+
+- area: Brinstar
+  from:
+    screen: 0x11
+    direction: Up
+  to:
+    screen: 0x03
+    direction: Down
+  requirements:
+    - IceBeam
+    - Morph
+
+- area: Brinstar
+  from:
+    screen: 0x11
+    direction: Up
+  to:
+    screen: 0x04
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Norfair
+  from:
+    screen: 0x0A
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - IceBeam
+
+- area: Norfair
+  from:
+    screen: 0x0B
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - [IceBeam, Morph, Bombs]
+
+- area: Norfair
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x02
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Norfair
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x09
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Norfair
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  impossible: true
+
+- area: Norfair
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  impossible: true
+
+- area: Norfair
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x0D
+    direction: Down
+  requirements:
+    - IceBeam
+
+- area: Norfair
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x11
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Norfair
+  from:
+    screen: 0x2D
+    direction: Up
+  to:
+    screen: 0x03
+    direction: Down
+  impossible: true
+
+- area: Norfair
+  from:
+    screen: 0x2D
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Norfair
+  from:
+    screen: 0x2D
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  impossible: true
+
+- area: Norfair
+  from:
+    screen: 0x2D
+    direction: Up
+  to:
+    screen: 0x0D
+    direction: Down
+  requirements:
+    - [Morph, Bombs]
+    - HiJump
+    - IceBeam
+
+- area: Norfair
+  from:
+    screen: 0x2D
+    direction: Up
+  to:
+    screen: 0x11
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x02
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x03
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x04
+    direction: Up
+  to:
+    screen: 0x15
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x04
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x04
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x05
+    direction: Up
+  to:
+    screen: 0x05
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x05
+    direction: Up
+  to:
+    screen: 0x08
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x05
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x05
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x05
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x06
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x07
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x07
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x08
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x08
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x09
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x09
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0A
+    direction: Up
+  to:
+    screen: 0x07
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Kraid
+  from:
+    screen: 0x0A
+    direction: Up
+  to:
+    screen: 0x08
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Kraid
+  from:
+    screen: 0x0A
+    direction: Up
+  to:
+    screen: 0x09
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Kraid
+  from:
+    screen: 0x0A
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - [HiJump, Morph]
+
+- area: Kraid
+  from:
+    screen: 0x0A
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0A
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0C
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0D
+    direction: Up
+  to:
+    screen: 0x03
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x0D
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - Morph
+    - HiJump
+
+- area: Kraid
+  from:
+    screen: 0x0D
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0D
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x03
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - Morph
+    - HiJump
+
+- area: Kraid
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x0E
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x15
+    direction: Down
+  to:
+    screen: 0x04
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x15
+    direction: Down
+  to:
+    screen: 0x06
+    direction: Up
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x15
+    direction: Down
+  to:
+    screen: 0x1E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x15
+    direction: Down
+  to:
+    screen: 0x23
+    direction: Up
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x03
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x04
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x05
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x06
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x07
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x08
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x09
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x0A
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x0C
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x0D
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x0E
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x1B
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x23
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1A
+    direction: Down
+  to:
+    screen: 0x24
+    direction: Up
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1B
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x02
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x03
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x04
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x05
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x07
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x08
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x09
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x0C
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x0D
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x0E
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x1E
+    direction: Up
+  to:
+    screen: 0x15
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x23
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x23
+    direction: Up
+  to:
+    screen: 0x15
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x23
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Kraid
+  from:
+    screen: 0x24
+    direction: Up
+  to:
+    screen: 0x09
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Kraid
+  from:
+    screen: 0x24
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  requirements:
+    - Morph
+
+- area: Kraid
+  from:
+    screen: 0x24
+    direction: Up
+  to:
+    screen: 0x1A
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x03
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  requirements:
+    - IceBeam
+
+- area: Ridley
+  from:
+    screen: 0x03
+    direction: Up
+  to:
+    screen: 0x29
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x06
+    direction: Up
+  to:
+    screen: 0x0D
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x07
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  requirements:
+    - IceBeam
+    - HiJump
+
+- area: Ridley
+  from:
+    screen: 0x07
+    direction: Up
+  to:
+    screen: 0x29
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x08
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  requirements:
+    - IceBeam
+    - HiJump
+
+- area: Ridley
+  from:
+    screen: 0x08
+    direction: Up
+  to:
+    screen: 0x29
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x09
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  requirements:
+    - IceBeam
+    - HiJump
+
+- area: Ridley
+  from:
+    screen: 0x09
+    direction: Up
+  to:
+    screen: 0x29
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0B
+    direction: Up
+  to:
+    screen: 0x29
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  requirements:
+    - HiJump
+
+- area: Ridley
+  from:
+    screen: 0x0C
+    direction: Up
+  to:
+    screen: 0x29
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x02
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x04
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x06
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x07
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x08
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x0A
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x0B
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x0E
+    direction: Up
+  to:
+    screen: 0x0D
+    direction: Down
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x11
+    direction: Right
+  to:
+    screen: 0x1F
+    direction: Left
+  requirements:
+    - IceBeam
+    - HiJump
+
+- area: Ridley
+  from:
+    screen: 0x17
+    direction: Left
+  to:
+    screen: 0x1F
+    direction: Right
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x17
+    direction: Right
+  to:
+    screen: 0x1D
+    direction: Left
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x17
+    direction: Right
+  to:
+    screen: 0x1E
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x17
+    direction: Right
+  to:
+    screen: 0x1F
+    direction: Left
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x18
+    direction: Left
+  to:
+    screen: 0x1F
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x18
+    direction: Right
+  to:
+    screen: 0x1F
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1A
+    direction: Left
+  to:
+    screen: 0x1F
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1A
+    direction: Right
+  to:
+    screen: 0x1F
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1B
+    direction: Right
+  to:
+    screen: 0x1E
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1C
+    direction: Right
+  to:
+    screen: 0x17
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1C
+    direction: Right
+  to:
+    screen: 0x1B
+    direction: Left
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x1C
+    direction: Right
+  to:
+    screen: 0x1F
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1E
+    direction: Left
+  to:
+    screen: 0x17
+    direction: Right
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x1E
+    direction: Left
+  to:
+    screen: 0x1B
+    direction: Right
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x1E
+    direction: Left
+  to:
+    screen: 0x1F
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1E
+    direction: Left
+  to:
+    screen: 0x23
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Left
+  to:
+    screen: 0x17
+    direction: Right
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Left
+  to:
+    screen: 0x18
+    direction: Right
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Left
+  to:
+    screen: 0x1A
+    direction: Right
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Left
+  to:
+    screen: 0x1B
+    direction: Right
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Left
+  to:
+    screen: 0x1C
+    direction: Right
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Right
+  to:
+    screen: 0x17
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Right
+  to:
+    screen: 0x18
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Right
+  to:
+    screen: 0x1A
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Right
+  to:
+    screen: 0x1B
+    direction: Left
+  requirements:
+    - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x1F
+    direction: Right
+  to:
+    screen: 0x1E
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x23
+    direction: Right
+  to:
+    screen: 0x1B
+    direction: Left
+  requirements:
+    - Morph
+
+- area: Ridley
+  from:
+    screen: 0x23
+    direction: Right
+  to:
+    screen: 0x1E
+    direction: Left
+  impossible: true

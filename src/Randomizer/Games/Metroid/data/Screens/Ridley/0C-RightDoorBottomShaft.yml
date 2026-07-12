@@ -14,6 +14,8 @@ nodes:
         direction: Up
 
 edges:
-  undirected:
+  directed:
       fixed:
           - ["Top", "Right door"]
+      IceBeam:
+          - ["Right door", "Top"]

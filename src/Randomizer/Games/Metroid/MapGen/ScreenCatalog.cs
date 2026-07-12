@@ -165,12 +165,15 @@ public class ScreenCatalog
     private readonly List<ScreenProfile> profiles = [];
     private readonly Dictionary<Area, List<ScreenProfile>> byArea = [];
     private readonly Dictionary<(Area, int, Direction), HashSet<RunKind>> doorContexts = [];
+    private readonly HashSet<(Area Area, int From, Direction FromDirection,
+        int To, Direction ToDirection)> impossibleTransitions = [];
 
     public IReadOnlyList<ScreenProfile> Profiles => profiles;
 
     public static readonly Area[] PlayableAreas = [Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley, Area.Tourian];
 
-    public static ScreenCatalog Build(IEnumerable<Screen> screens, IEnumerable<Room>? vanillaRooms = null)
+    public static ScreenCatalog Build(IEnumerable<Screen> screens, IEnumerable<Room>? vanillaRooms = null,
+        IEnumerable<ScreenTransition>? transitions = null)
     {
         var catalog = new ScreenCatalog();
         var errors = new List<string>();
@@ -190,6 +193,37 @@ public class ScreenCatalog
 
         if (vanillaRooms != null)
             catalog.BuildDoorContexts(vanillaRooms.ToList());
+
+        var transitionKeys = new HashSet<(Area, int, Direction, int, Direction)>();
+        foreach (var transition in transitions ?? [])
+        {
+            var key = (transition.area, transition.from.screen, transition.from.direction,
+                transition.to.screen, transition.to.direction);
+            if (!transitionKeys.Add(key))
+                errors.Add($"Duplicate transition: {transition.area} 0x{transition.from.screen:X2} " +
+                    $"{transition.from.direction} -> 0x{transition.to.screen:X2} {transition.to.direction}");
+
+            if (transition.impossible && transition.requirements.Count > 0)
+            {
+                errors.Add($"{transition.area} transition 0x{transition.from.screen:X2} " +
+                    $"{transition.from.direction} -> 0x{transition.to.screen:X2} " +
+                    $"{transition.to.direction}: cannot be both impossible and gated");
+            }
+
+            try
+            {
+                if (transition.RequirementAlternatives().Any(r => r.Count == 0))
+                    errors.Add($"{transition.area} transition contains an empty requirement group");
+            }
+            catch (InvalidDataException ex)
+            {
+                errors.Add($"{transition.area} transition has invalid requirements: {ex.Message}");
+            }
+
+            if (transition.impossible)
+                catalog.impossibleTransitions.Add((transition.area, transition.from.screen,
+                    transition.from.direction, transition.to.screen, transition.to.direction));
+        }
 
         catalog.Validate(errors);
 
@@ -263,6 +297,33 @@ public class ScreenCatalog
     public bool DoorAccepts(ScreenProfile profile, Direction side, RunKind neighborKind) =>
         neighborKind == RunKind.SingleCell
         || GetDoorContexts(profile.Area, profile.ScreenId, side).Contains(neighborKind);
+
+    /// <summary>
+    /// True when the two screens may be placed adjacent. An <c>impossible</c> transition is
+    /// directional: it blocks only that way of crossing the seam (a one-way drop still lets the
+    /// screens sit together). The placement is forbidden only when BOTH directions are marked
+    /// impossible, i.e. there is no legal way to cross the seam at all.
+    /// </summary>
+    public bool ScreensCanConnect(ScreenProfile from, Direction direction, ScreenProfile to)
+    {
+        var opposite = Directions.Opposite(direction);
+        bool forwardImpossible = impossibleTransitions.Contains(
+            (from.Area, from.ScreenId, direction, to.ScreenId, opposite));
+        bool reverseImpossible = impossibleTransitions.Contains(
+            (to.Area, to.ScreenId, opposite, from.ScreenId, direction));
+        return !(forwardImpossible && reverseImpossible);
+    }
+
+    /// <summary>
+    /// True when travelling <paramref name="direction"/> from screen <paramref name="fromScreen"/>
+    /// into the adjacent screen <paramref name="toScreen"/> (both in <paramref name="area"/>) is
+    /// marked impossible — a one-way seam that physical reachability must also refuse to cross
+    /// that way. <see cref="ScreensCanConnect"/> decides whether the screens may be placed at
+    /// all; this decides whether a specific crossing is passable.
+    /// </summary>
+    public bool TransitionBlocked(Area area, int fromScreen, Direction direction, int toScreen) =>
+        impossibleTransitions.Contains(
+            (area, fromScreen, direction, toScreen, Directions.Opposite(direction)));
 
     private static ScreenProfile? BuildProfile(Screen screen, List<string> errors)
     {

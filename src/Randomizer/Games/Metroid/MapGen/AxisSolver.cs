@@ -25,8 +25,13 @@ using static Randomizer.Games.Metroid.YamlReader;
 /// </summary>
 public static class AxisSolver
 {
-    /// <summary>Returns every cell reachable from <paramref name="start"/>.</summary>
-    public static HashSet<Point> Solve(WorldGrid grid, Point start)
+    /// <summary>
+    /// Returns every cell reachable from <paramref name="start"/>. When a
+    /// <paramref name="catalog"/> is supplied, directional <c>impossible</c> transitions between
+    /// the cells' assigned screens are treated as one-way blocks (the crossing is skipped in the
+    /// blocked direction only), matching what the logic graph builds.
+    /// </summary>
+    public static HashSet<Point> Solve(WorldGrid grid, Point start, ScreenCatalog? catalog = null)
     {
         if (grid.Cell(start) == null)
             throw new ArgumentException($"start {start} is empty");
@@ -40,6 +45,13 @@ public static class AxisSolver
                 queue.Enqueue(p);
         }
 
+        // A one-way impossible transition blocks scrolling from cell into neighbor in `dir`.
+        // The screens must be assigned (post-fit) to know their ids; if not, nothing is blocked.
+        bool Blocked(AbstractCell cell, AbstractCell neighbor, Direction dir) =>
+            catalog != null
+            && cell.AssignedScreen is { } from && neighbor.AssignedScreen is { } to
+            && catalog.TransitionBlocked(cell.Area, from.ScreenId, dir, to.ScreenId);
+
         Enqueue(start);
 
         while (queue.Count > 0)
@@ -52,6 +64,8 @@ public static class AxisSolver
                 var neighborPos = pos.Step(dir);
                 var neighbor = grid.Cell(neighborPos);
                 if (neighbor == null)
+                    continue;
+                if (Blocked(cell, neighbor, dir))
                     continue;
 
                 switch (cell.Edge(dir))
@@ -78,12 +92,14 @@ public static class AxisSolver
 
     /// <summary>
     /// Validates that every non-cap cell is physically reachable from the start cell.
-    /// Returns human-readable problems; empty means the layout passes.
+    /// Returns human-readable problems; empty means the layout passes. Pass the
+    /// <paramref name="catalog"/> after screen fitting to also enforce one-way impossible
+    /// transitions (a region reachable only through a blocked crossing counts as stranded).
     /// </summary>
-    public static List<string> Validate(WorldGrid grid, Point start)
+    public static List<string> Validate(WorldGrid grid, Point start, ScreenCatalog? catalog = null)
     {
         var problems = new List<string>();
-        var reached = Solve(grid, start);
+        var reached = Solve(grid, start, catalog);
 
         foreach (var cell in grid.Cells)
         {

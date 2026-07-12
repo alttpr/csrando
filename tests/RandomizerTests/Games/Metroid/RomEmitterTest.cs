@@ -22,7 +22,7 @@ public sealed class RomEmitterTest
     {
         var reader = new YamlReader(new Config());
         reader.LoadData();
-        return (ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms), reader.Data!);
+        return (ScreenCatalog.Build(reader.Data!.screens, reader.Data!.rooms, reader.Data!.transitions), reader.Data!);
     });
 
     private static (GeneratedWorld World, RomEmission Emission) Emit(int seed)

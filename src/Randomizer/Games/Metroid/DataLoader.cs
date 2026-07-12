@@ -73,7 +73,7 @@ internal static class DataLoader
     /// </summary>
     private static string GenerateMap(World world, YamlReader.YamlData data)
     {
-        var catalog = ScreenCatalog.Build(data.screens, data.rooms);
+        var catalog = ScreenCatalog.Build(data.screens, data.rooms, data.transitions);
         int mapSeed = world.Prng.GetRandomInt(int.MaxValue);
 
         var generator = new TopologyGenerator(catalog)
@@ -90,6 +90,15 @@ internal static class DataLoader
 
         var generated = generator.Generate(mapSeed);
         ScreenFitter.Fit(generated.Grid, catalog, mapSeed);
+
+        // Topology reachability is validated pre-fit, before screens (and their directional
+        // one-way transitions) are known. Re-validate now that concrete screens are assigned:
+        // a region reachable only by climbing a one-way seam the wrong way is stranded, so fail
+        // and let the randomization retry with a fresh seed.
+        var stranded = AxisSolver.Validate(generated.Grid, generated.Start, catalog);
+        if (stranded.Count > 0)
+            throw new GenerationException("post-fit reachability: " + stranded[0]
+                + $" (+{stranded.Count - 1} more)");
 
         // ROM emission joins vanilla special-item payloads to screens through the vanilla
         // room coordinates, so it must run before ApplyTo replaces the room list. Combo

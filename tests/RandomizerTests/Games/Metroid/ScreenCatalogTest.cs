@@ -11,7 +11,7 @@ public sealed class ScreenCatalogTest
     {
         var reader = new YamlReader(new Config());
         reader.LoadData();
-        return ScreenCatalog.Build(reader.Data!.screens);
+        return ScreenCatalog.Build(reader.Data!.screens, transitions: reader.Data!.transitions);
     }
 
     [TestMethod]
@@ -74,6 +74,66 @@ public sealed class ScreenCatalogTest
         Assert.IsNotNull(fallShaft);
         Assert.IsTrue(fallShaft.IsOneWay);
         Assert.AreEqual(Direction.Down, fallShaft.OneWayDirection);
+    }
+
+    private static ScreenTransition Impossible(Area area, int fromScreen, Direction fromDir,
+        int toScreen, Direction toDir) => new()
+        {
+            area = area,
+            from = new TransitionEndpoint { screen = fromScreen, direction = fromDir },
+            to = new TransitionEndpoint { screen = toScreen, direction = toDir },
+            impossible = true
+        };
+
+    [TestMethod]
+    public void OneWayImpossibleTransition_KeepsThePairPlaceable()
+    {
+        // 0x11 Up -> 0x03 Down is impossible, but the reverse (0x03 Down -> 0x11 Up) is not:
+        // a seam you can fall down but not climb back up. The screens must still be placeable.
+        var reader = new YamlReader(new Config());
+        reader.LoadData();
+        reader.Data!.transitions = [Impossible(Area.Brinstar, 0x11, Direction.Up, 0x03, Direction.Down)];
+        var catalog = ScreenCatalog.Build(reader.Data.screens, reader.Data.rooms, reader.Data.transitions);
+        var lower = catalog.Find(Area.Brinstar, 0x11)!;
+        var upper = catalog.Find(Area.Brinstar, 0x03)!;
+
+        // The pairing is allowed from either query orientation (a placement, not a traversal).
+        Assert.IsTrue(catalog.ScreensCanConnect(lower, Direction.Up, upper));
+        Assert.IsTrue(catalog.ScreensCanConnect(upper, Direction.Down, lower));
+
+        var grid = new WorldGrid();
+        var run = grid.PlaceRun(Area.Brinstar, Scrolling.Vertical, new Point(1, 1), 2, CellRole.Shaft);
+        run.Cells[0].ForcedScreenId = 0x03;
+        run.Cells[1].ForcedScreenId = 0x11;
+
+        // Fitting the placement must NOT throw — the one-way seam is legal.
+        ScreenFitter.Fit(grid, catalog, 1);
+    }
+
+    [TestMethod]
+    public void BothWayImpossibleTransition_RejectsTheScreenPair()
+    {
+        // Impossible in both traversal directions => the screens may never be adjacent.
+        var reader = new YamlReader(new Config());
+        reader.LoadData();
+        reader.Data!.transitions =
+        [
+            Impossible(Area.Brinstar, 0x11, Direction.Up, 0x03, Direction.Down),
+            Impossible(Area.Brinstar, 0x03, Direction.Down, 0x11, Direction.Up),
+        ];
+        var catalog = ScreenCatalog.Build(reader.Data.screens, reader.Data.rooms, reader.Data.transitions);
+        var lower = catalog.Find(Area.Brinstar, 0x11)!;
+        var upper = catalog.Find(Area.Brinstar, 0x03)!;
+
+        Assert.IsFalse(catalog.ScreensCanConnect(lower, Direction.Up, upper));
+        Assert.IsFalse(catalog.ScreensCanConnect(upper, Direction.Down, lower));
+
+        var grid = new WorldGrid();
+        var run = grid.PlaceRun(Area.Brinstar, Scrolling.Vertical, new Point(1, 1), 2, CellRole.Shaft);
+        run.Cells[0].ForcedScreenId = 0x03;
+        run.Cells[1].ForcedScreenId = 0x11;
+
+        Assert.ThrowsException<InvalidOperationException>(() => ScreenFitter.Fit(grid, catalog, 1));
     }
 
     [TestMethod]

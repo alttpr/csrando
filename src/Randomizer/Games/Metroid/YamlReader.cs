@@ -58,6 +58,51 @@ public class YamlReader
     {
         public required List<Room> rooms;
         public required List<Screen> screens;
+        public List<ScreenTransition> transitions = [];
+    }
+
+    /// <summary>
+    /// Directional logic for a particular pair of adjacent scroll screens. With no matching
+    /// entry, crossing between screens is free as before. Requirement entries are alternatives;
+    /// items grouped within one entry must all be present. For example
+    /// [[IceBeam, HiJump], Morph] means (IceBeam AND HiJump) OR Morph. Impossible entries
+    /// are rejected by map fitting and must never reach graph building.
+    /// </summary>
+    public class ScreenTransition
+    {
+        public Area area;
+        public required TransitionEndpoint from;
+        public required TransitionEndpoint to;
+        public List<object> requirements = [];
+        public bool impossible;
+
+        public IEnumerable<List<string>> RequirementAlternatives()
+        {
+            foreach (var requirement in requirements)
+            {
+                if (requirement is string single)
+                {
+                    yield return [single];
+                    continue;
+                }
+
+                if (requirement is IEnumerable<object> group)
+                {
+                    yield return group.Select(item => item as string
+                        ?? throw new InvalidDataException("Transition requirement groups may only contain item names"))
+                        .ToList();
+                    continue;
+                }
+
+                throw new InvalidDataException("Transition requirements must be item names or arrays of item names");
+            }
+        }
+    }
+
+    public class TransitionEndpoint
+    {
+        public int screen;
+        public Direction direction;
     }
 
     public class Screen
@@ -188,6 +233,7 @@ public class YamlReader
     }
 
     private const string ItemsPath = "Items.yml";
+    private const string TransitionsPath = "Transitions.yml";
 
     private static readonly Lazy<Dictionary<string, YamlItem>> _cachedItems = new(() =>
     {
@@ -248,7 +294,8 @@ public class YamlReader
         data = new YamlData
         {
             rooms = rooms,
-            screens = screens
+            screens = screens,
+            transitions = LoadFile<List<ScreenTransition>>(Path.Combine(path, TransitionsPath)) ?? []
         };
     }
 
@@ -429,7 +476,14 @@ public class YamlReader
                         _ => false
                     };
 
-                    if (basicRoom && screen.edges.directed is null && (screen.edges.undirected?.Count ?? 0) == 1 && (screen.edges.undirected?.All(e => e.Key == "fixed") ?? true))
+                    // Normally a completely free middle screen can be collapsed out of the
+                    // graph. Keep it when transition data mentions it: its boundary nodes are
+                    // needed to attach pair-specific requirements.
+                    bool hasTransitionRules = data.transitions.Any(t => t.area == screen.area
+                        && (t.from.screen == screen.screen || t.to.screen == screen.screen));
+                    if (!hasTransitionRules && basicRoom && screen.edges.directed is null
+                        && (screen.edges.undirected?.Count ?? 0) == 1
+                        && (screen.edges.undirected?.All(e => e.Key == "fixed") ?? true))
                     {
                         continue;
                     }
@@ -465,7 +519,7 @@ public class YamlReader
                             var targetExitName = $"{toScreenName} - {targetExit.name}";
                             var exitNode = FindOrCreateNode(exitName);
                             var targetExitNode = FindOrCreateNode(targetExitName);
-                            AddUndirectedEdge(exitNode, targetExitNode, "fixed");
+                            ConnectScreens(screen, exit, exitNode, toScreen, targetExit, targetExitNode);
                         }
                     }
                 }
@@ -520,6 +574,51 @@ public class YamlReader
             }
 
             prevScreen = screenNum;
+        }
+    }
+
+    private void ConnectScreens(Screen fromScreen, Exit fromExit, Dictionary<string, object?> fromNode,
+        Screen toScreen, Exit toExit, Dictionary<string, object?> toNode)
+    {
+        ConnectScreenDirection(fromScreen, fromExit, fromNode, toScreen, toExit, toNode);
+        ConnectScreenDirection(toScreen, toExit, toNode, fromScreen, fromExit, fromNode);
+    }
+
+    private void ConnectScreenDirection(Screen fromScreen, Exit fromExit, Dictionary<string, object?> fromNode,
+        Screen toScreen, Exit toExit, Dictionary<string, object?> toNode)
+    {
+        var transition = data!.transitions.SingleOrDefault(t =>
+            t.area == fromScreen.area
+            && t.from.screen == fromScreen.screen && t.from.direction == fromExit.direction
+            && t.to.screen == toScreen.screen && t.to.direction == toExit.direction);
+
+        // An impossible transition is one-way: this direction of crossing the seam cannot be
+        // done at all, so it contributes no edge. The opposite direction is handled by the
+        // paired ConnectScreenDirection call and is unaffected (e.g. a fall you can't climb
+        // back up). The fitter (ScreenCatalog.ScreensCanConnect) only forbids the placement
+        // when both directions are impossible, so reaching here with one impossible is expected.
+        if (transition?.impossible == true)
+            return;
+
+        var alternatives = transition?.requirements.Count > 0
+            ? transition.RequirementAlternatives().ToList()
+            : [["fixed"]];
+
+        foreach (var (requirements, alternativeIndex) in alternatives.Select((r, i) => (r, i)))
+        {
+            if (requirements.Count == 0)
+                throw new InvalidDataException("Transition requirement groups cannot be empty");
+
+            var previous = fromNode;
+            for (int requirementIndex = 0; requirementIndex < requirements.Count; requirementIndex++)
+            {
+                bool last = requirementIndex == requirements.Count - 1;
+                var next = last ? toNode : FindOrCreateNode(
+                    $"{fromNode["name"]} -> {toNode["name"]} " +
+                    $"transition ({alternativeIndex}:{requirementIndex})");
+                AddDirectedEdge(previous, next, requirements[requirementIndex]);
+                previous = next;
+            }
         }
     }
 
