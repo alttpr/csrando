@@ -6,6 +6,10 @@ namespace Randomizer.Games.Metroid;
 /// <param name="worlds">worlds to get Item pools for</param>
 internal sealed class ItemPooler : IItemPooler
 {
+    internal const string NothingItemSet = "m1-nothing";
+    internal const int MaximumMissiles = 21;
+    internal const int MaximumEnergyTanks = 8;
+    internal const int MaximumNonNothingItems = 37;
 
     private readonly PRNG _prng;
 
@@ -23,7 +27,9 @@ internal sealed class ItemPooler : IItemPooler
         {
             if (vertex.Type == VertexType.Item)
             {
-                setLocations.Add(vertex, [ItemSetName.DefaultSet, .. vertex.ItemSet]);
+                setLocations.Add(vertex,
+                    [ItemSetName.DefaultSet,
+                        new ItemSetName(NothingItemSet, vertex.World), .. vertex.ItemSet]);
             }
         }
         return setLocations;
@@ -37,27 +43,39 @@ internal sealed class ItemPooler : IItemPooler
     /// <summary>Get list of all items for <paramref name="world"/> in their weighted sets.</summary>
     private List<PooledItem> GetPoolForWorld(World world)
     {
-        // The assumed filler places lower weights FIRST, while the assumed inventory is
-        // still rich; the items placed last must land in locations reachable with almost
-        // nothing. So the heaviest progression gates (Morph, Missile for red doors, Bombs)
-        // go first and the situational upgrades go last. Generated map-shuffle worlds have
-        // a small "reachable with nothing" sphere, so placing Morph or Bombs last would
-        // leave them with no legal location.
+        int locationCount = world.GetLocationsOfType(VertexType.Item).Count();
+        const int progressionCount = 10;
+        int fillerCount = Math.Max(0, locationCount - progressionCount);
+        // Never exceed the historical capacity pool: one Missile and Energy Tank are
+        // progression-weighted below, with at most 20 and 7 more as filler. Small maps
+        // trim capacity filler; large maps use Nothing instead of unsafe extra tanks.
+        int capacityFillerCount = Math.Min(
+            fillerCount, MaximumNonNothingItems - progressionCount);
+        int energyTanks = Math.Min(
+            MaximumEnergyTanks - 1, Math.Max(0, capacityFillerCount - 14));
+        int missiles = capacityFillerCount - energyTanks;
+        int nothing = fillerCount - capacityFillerCount;
+
+        // Morph is placed late so assumed fill tends to put it somewhere accessible
+        // early. Constrained M1 starts front-fill Morph before this ordering.
         List<PooledItem> worldSet =
         [
-            new PooledItem(ItemSetName.DefaultSet, 1, world.GetItem("Morph")),
-            new PooledItem(ItemSetName.DefaultSet, 2, world.GetItem("Missile")),
-            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Bombs")),
-            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("IceBeam")),
-            new PooledItem(ItemSetName.DefaultSet, 5, world.GetItem("Varia")),
-            new PooledItem(ItemSetName.DefaultSet, 5, world.GetItem("HiJump")),
-            new PooledItem(ItemSetName.DefaultSet, 5, world.GetItem("LongBeam")),
-            new PooledItem(ItemSetName.DefaultSet, 5, world.GetItem("WaveBeam")),
-            new PooledItem(ItemSetName.DefaultSet, 5, world.GetItem("ScrewAttack")),
-            new PooledItem(ItemSetName.DefaultSet, 5, world.GetItem("EnergyTank")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Morph")),
+            new PooledItem(ItemSetName.DefaultSet, 4, world.GetItem("Bombs")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("IceBeam")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Varia")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("HiJump")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("LongBeam")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("WaveBeam")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ScrewAttack")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("EnergyTank")),
+            new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Missile")),
 
-            ..Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Missile")), 20),
-            ..Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("EnergyTank")), 6),
+            ..Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Missile")), missiles),
+            ..Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("EnergyTank")), energyTanks),
+            ..Enumerable.Repeat(new PooledItem(
+                new ItemSetName(NothingItemSet, world), 9999,
+                world.GetItem("Nothing")), nothing),
 
         ];
 

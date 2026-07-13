@@ -317,7 +317,7 @@ public sealed class RomEmitterTest
         {
             Combo = new Randomizer.Games.Combo.Config(),
             Alttp = new Randomizer.Games.Alttp.Config(),
-            Metroid = new Config { MapShuffle = true },
+            Metroid = new Config { MapShuffle = true, EarlyMorph = true },
         };
         config.Alttp.SelectRandomValues(new PRNG(42));
 
@@ -380,8 +380,8 @@ public sealed class RomEmitterTest
         Assert.AreEqual((byte)portalCell.Y, written[respawnAddress + 1], "portal respawn Y");
         Assert.AreEqual((byte)0x6E, written[respawnAddress + 2], "portal respawn spawn height");
 
-        // M1's Morph is front-filled in combo (like standalone): its location must be
-        // reachable with starting equipment alone, not buried behind other progression.
+        // The explicit Early Morph option makes M1's Morph reachable with starting
+        // equipment rather than leaving it to normal assumed-fill ordering.
         var morphItem = comboWorld.M1World.GetItem("Morph");
         var morphLocation = comboWorld.GetLocationsOfType(VertexType.Item)
             .OfType<Randomizer.Graph.Vertex>()

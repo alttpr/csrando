@@ -98,6 +98,28 @@ internal sealed class ItemPooler : IItemPooler
             pool.Add((ItemSetName.DefaultSet, 3, world.AlttpWorld.GetItem("SilverArrowUpgrade")));
         }
 
+        // M1 pads maps larger than its safe capacity-upgrade pool with scoped Nothing
+        // items. In Combo, prefer globally placeable junk from a game that has it so
+        // those slots participate in the shared filler pool without leaking Nothing.
+        var m1Nothing = world.M1World == null
+            ? []
+            : pool.Where(item => ReferenceEquals(item.Item.World, world.M1World)
+                    && item.Item.Name == "Nothing")
+                .ToList();
+        if (m1Nothing.Count > 0)
+        {
+            IItem? trash = world.AlttpWorld?.GetItem("FiveRupees");
+            trash ??= world.Z1World?.GetItem("Rupee5");
+            if (trash != null)
+            {
+                foreach (var nothing in m1Nothing)
+                    pool.Remove(nothing);
+                pool.AddRange(Enumerable.Repeat(
+                    new PooledItem(ItemSetName.DefaultSet, 9999, trash),
+                    m1Nothing.Count));
+            }
+        }
+
         return pool;
     }
 }

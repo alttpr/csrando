@@ -92,7 +92,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
         [Area.Brinstar] = (55, 130),
         [Area.Norfair] = (65, 160),
         [Area.Kraid] = (40, 100),
-        [Area.Ridley] = (32, 87),
+        [Area.Ridley] = (34, 87),
     };
 
     private (int Min, int Target) GoalFor(Area area)
@@ -136,7 +136,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 // The budget is fixed so high SizeScale values don't starve Ridley. No shaft
                 // extensions here: Ridley hangs below Norfair's deepest shaft, and pre-grow
                 // extensions dig Norfair to the grid bottom, leaving Ridley no vertical band.
-                GrowArea(Area.Norfair, grid.CellsOf(Area.Norfair).Count() + 30, allowExtend: false);
+                GrowArea(Area.Norfair, grid.CellsOf(Area.Norfair).Count() + 20, allowExtend: false);
 
                 BuildRidley();
                 PlaceRidleyLair();
@@ -1080,7 +1080,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
         [Area.Kraid] = new(ConnectorPercent: 15, WestPercent: 70, LongCorridorPercent: 35, SpacedBranches: true),
         // No spaced branches for Ridley: it grows in the cramped band above the bottom
         // edge, where the spacing rule starves it below its size minimum.
-        [Area.Ridley] = new(ConnectorPercent: 25, WestPercent: 30, LongCorridorPercent: 25, SpacedBranches: true),
+        [Area.Ridley] = new(ConnectorPercent: 25, WestPercent: 30, LongCorridorPercent: 25, SpacedBranches: false),
     };
 
     private void GrowAreas()
@@ -1489,20 +1489,20 @@ public class TopologyGenerator(ScreenCatalog catalog)
     }
 
     /// <summary>
-    /// Tops up item locations until the world can hold the item pool: the pool carries
-    /// 10 progression items plus 20 missiles and 6 energy tanks, and beating Ridley needs
-    /// 15 missiles, so with fewer than 31 locations an unlucky filler cannot make the seed
-    /// winnable. Targets 33-36 (vanilla has ~36) and fails the attempt below the minimum.
+    /// Tops up item locations to a map-size-scaled target. Beating Ridley needs 15 missiles,
+    /// so even Small maps retain the historical 31-location safety floor. Standard stays
+    /// near vanilla's ~36 locations, while Large and Nightmare maps keep roughly the same
+    /// item density instead of spreading the fixed vanilla pool over much larger worlds.
     /// </summary>
     private void EnsureItemCells()
     {
         const int HardMinimum = 31;
         const int AreaMinimum = 2;
-        // The item pool is fixed (ItemPooler: 10 progression + 20 missiles + 6 energy
-        // tanks). More locations than pool items would leave unfilled pedestals, which
-        // the emitted ROM tables render as free Bombs pickups (the placeholder item id).
-        const int PoolSize = 36;
-        int target = Rand(33, PoolSize);
+        int targetMaximum = Saturate
+            ? 54
+            : Math.Max(HardMinimum, (int)Math.Round(36 * SizeScale));
+        int targetMinimum = Math.Max(HardMinimum, targetMaximum - 3);
+        int target = Rand(targetMinimum, targetMaximum);
 
         bool HoldsItem(AbstractCell c) => c.Role == CellRole.Item
             || (c.Role == CellRole.Boss && c.ForcedScreenId == 0x1D); // Kraid's lair holds the energy tank
@@ -1543,10 +1543,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 cell.Role = CellRole.Item;
         }
 
-        // Big maps can organically overshoot through the growth rolls: demote surplus
-        // back to plain corridors, least interesting spots first. Forced item cells are
-        // structural (the morph pedestal, chozo rooms) and per-area minimums must
-        // survive the trim.
+        // Maps can organically overshoot through the growth rolls: demote surplus back
+        // to plain corridors, least interesting spots first. Forced item cells are
+        // structural (the morph pedestal, chozo rooms) and per-area minimums survive.
         foreach (var cell in grid.Cells.Where(c => c.Role == CellRole.Item && !c.ForcedScreenId.HasValue)
             .OrderBy(c => Interest(c) + rng.Next(10)))
         {
@@ -1558,8 +1557,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
         if (Count() < HardMinimum)
             throw new GenerationException($"only {Count()} item locations, need {HardMinimum}");
-        if (Count() > PoolSize)
-            throw new GenerationException($"{Count()} item locations exceed the {PoolSize}-item pool");
+        if (Count() > targetMaximum)
+            throw new GenerationException(
+                $"{Count()} item locations exceed the {targetMaximum}-item target");
     }
 
     /// <summary>

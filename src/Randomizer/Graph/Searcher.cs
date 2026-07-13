@@ -16,6 +16,7 @@ public class Searcher : ISearcher
     private readonly SetLocations _setLocations;
     private readonly VertexHashSet _otherWorldLocations;
     private readonly IWorld? _world;
+    private readonly Func<Vertex, bool> _collectItemAt;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -23,9 +24,11 @@ public class Searcher : ISearcher
     /// <param name="graph">The graph to search</param>
     /// <param name="start">The starting point to search from</param>
     /// <param name="inventory">The current inventory to use while searching</param>
-    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null, IWorld? world = null)
+    public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null,
+        IWorld? world = null, Func<Vertex, bool>? collectItemAt = null)
     {
         _world = world;
+        _collectItemAt = collectItemAt ?? (_ => true);
         _graph = graph;
         _visited = new(graph);
         _collected = new(graph);
@@ -152,6 +155,8 @@ public class Searcher : ISearcher
         foreach (var itemLocation in newlyVisited)
         {
             collected.Add(itemLocation);
+            if (!_collectItemAt(itemLocation))
+                continue;
             if (itemLocation.Item is not null)
             {
                 newItemsFound = true;
@@ -182,6 +187,15 @@ public class Searcher : ISearcher
     public bool HasFound(IItem item)
     {
         return _inventory.Has(item);
+    }
+
+    /// <summary>
+    /// Get the inventory resolved by this search, including fixed graph events and
+    /// synthetic door capabilities discovered while traversing the world.
+    /// </summary>
+    public Inventory GetInventory()
+    {
+        return _inventory.Clone();
     }
 
     /// <summary>

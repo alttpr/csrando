@@ -141,6 +141,8 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         return winSearcher.HasFound(GetItem("DefeatedSilverTwo"));
     }
 
+    public override IEnumerable<IItem> GetVictoryItems() => [GetItem("DefeatedSilverTwo")];
+
     public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new Searcher(graph, start ?? Start, inventory, setLocations, this);

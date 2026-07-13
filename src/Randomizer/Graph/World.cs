@@ -81,5 +81,9 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
 
     public abstract bool IsWinnable(Vertex start, Inventory startingInventory);
 
+    public virtual IEnumerable<IItem> GetVictoryItems() => [];
+
+    public virtual Vertex GetPlaythroughStart() => Start;
+
     public abstract ISearcher GetSearcherForWorld(Graph graph, Vertex? start, Inventory inventory, SetLocations? setLocations = null);
 }

@@ -12,9 +12,25 @@ public class RequirementResult
     public bool Met { get; set; }
     public RequirementCost? Cost { get; set; }
     public HashSet<string>? Missing { get; set; }
+    public Dictionary<string, int>? UsedItems { get; set; }
 
     public static RequirementResult Fail(params string[] missing) => new RequirementResult { Met = false, Cost = null, Missing = missing.Length > 0 ? new HashSet<string>(missing) : null };
-    public static RequirementResult Success(RequirementCost cost) => new RequirementResult { Met = true, Cost = cost };
+    public static RequirementResult Success(RequirementCost cost, string? item = null, int count = 1)
+    {
+        var result = new RequirementResult { Met = true, Cost = cost };
+        if (item != null)
+            result.UsedItems = new Dictionary<string, int> { [item] = count };
+        return result;
+    }
+
+    public void MergeSuccess(RequirementResult other)
+    {
+        if (other.UsedItems == null)
+            return;
+        UsedItems ??= [];
+        foreach (var (item, count) in other.UsedItems)
+            UsedItems[item] = Math.Max(UsedItems.GetValueOrDefault(item), count);
+    }
 
     public void MergeFail(RequirementResult other)
     {
@@ -69,7 +85,7 @@ public struct RequirementCost
     public static RequirementCost operator |(RequirementCost a, RequirementCost b)
     {
         var weightedAmmoA = a.Missiles + a.SuperMissiles * 3 + a.PowerBombs * 4;
-        var weightedAmmoB = b.Missiles + b.SuperMissiles * 3 + a.PowerBombs * 4;
+        var weightedAmmoB = b.Missiles + b.SuperMissiles * 3 + b.PowerBombs * 4;
 
         // Return the cheapest cost, with energy cost being the most important
         if (a.Energy < b.Energy)
@@ -180,7 +196,7 @@ public class RequirementHandler
                 else
                 {
                     if (inventory.Has(world.GetItem(single.Req)))
-                        return RequirementResult.Success(RequirementCost.ZeroCost);
+                        return RequirementResult.Success(RequirementCost.ZeroCost, single.Req);
                     else
                         return RequirementResult.Fail(single.Req);
                 }
@@ -188,7 +204,7 @@ public class RequirementHandler
             case Requirement.SingleItem singleItem:
                 if (inventory.Has(singleItem.Item))
                 {
-                    return RequirementResult.Success(RequirementCost.ZeroCost);
+                    return RequirementResult.Success(RequirementCost.ZeroCost, singleItem.Item.Name);
                 }
                 else
                 {
@@ -199,7 +215,7 @@ public class RequirementHandler
                     else
                     {
                         if (inventory.Has(world.GetItem(singleItem.Item.Name)))
-                            return RequirementResult.Success(RequirementCost.ZeroCost);
+                            return RequirementResult.Success(RequirementCost.ZeroCost, singleItem.Item.Name);
                         else
                             return RequirementResult.Fail(singleItem.Item.Name);
                     }
@@ -207,6 +223,7 @@ public class RequirementHandler
 
             case Requirement.And and:
                 var totalCost = RequirementCost.ZeroCost;
+                var successResult = RequirementResult.Success(RequirementCost.ZeroCost);
                 var failResult = RequirementResult.Fail();
                 bool failedAnd = false;
                 // We'll store success by default, and if we find a fail, we’ll flip it.
@@ -225,6 +242,7 @@ public class RequirementHandler
                     {
                         // Accumulate cost
                         totalCost += subResult.Cost!.Value;
+                        successResult.MergeSuccess(subResult);
                     }
                 }
 
@@ -234,7 +252,8 @@ public class RequirementHandler
                 }
                 else
                 {
-                    return RequirementResult.Success(totalCost);
+                    successResult.Cost = totalCost;
+                    return successResult;
                 }
 
             case Requirement.Or or:
@@ -254,7 +273,8 @@ public class RequirementHandler
                         else
                         {
                             var newCost = subResult.Cost! | bestSuccess.Cost!;
-                            bestSuccess = RequirementResult.Success(newCost.Value);
+                            if (newCost.Value.Equals(subResult.Cost!.Value))
+                                bestSuccess = subResult;
                         }
                     }
                     else
@@ -292,7 +312,7 @@ public class RequirementHandler
                         Missiles = ammo.Type == "Missile" ? ammo.Count : 0,
                         SuperMissiles = ammo.Type == "Super" ? ammo.Count : 0,
                         PowerBombs = ammo.Type == "PowerBomb" ? ammo.Count : 0
-                    });
+                    }, ammo.Type);
                 }
                 else
                 {
@@ -352,6 +372,7 @@ public class RequirementHandler
 
             case Requirement.EnemyKill enemyKill:
                 var candidateWeapons = new List<Weapon>();
+                var usedWeapons = new HashSet<Weapon>();
                 foreach (var weapon in weapons)
                 {
 
@@ -395,6 +416,7 @@ public class RequirementHandler
                         if (!invulSet.Contains(w.Name))
                         {
                             canKillEnemy = true;
+                            usedWeapons.Add(w);
                             break;
                         }
                     }
@@ -411,7 +433,11 @@ public class RequirementHandler
                 }
 
                 // If we get here, we can kill at least one enemy in each group
-                return RequirementResult.Success(RequirementCost.ZeroCost);
+                var enemyKillResult = RequirementResult.Success(RequirementCost.ZeroCost);
+                foreach (var weapon in usedWeapons)
+                    enemyKillResult.MergeSuccess(HandleRequirement(
+                        weapon.UseRequires, state, inventory, world, weapons));
+                return enemyKillResult;
 
 
             case Requirement.HibashiHits hibashiHits:
@@ -529,7 +555,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                });
+                }, hasVaria ? "Varia" : null);
 
             case Requirement.HeatFramesWithEnergyDrops heatFramesWithEnergyDrops:
                 var hasVariaHf = inventory.Has(world.GetItem("Varia"));
@@ -555,7 +581,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                });
+                }, hasVariaHf ? "Varia" : null);
 
             case Requirement.SamusEaterFrames samusEaterFrames:
                 return RequirementResult.Success(new RequirementCost
@@ -612,7 +638,18 @@ public class RequirementHandler
                 }
                 else
                 {
-                    return RequirementResult.Success(RequirementCost.ZeroCost);
+                    var availableResult = RequirementResult.Success(RequirementCost.ZeroCost);
+                    foreach (var resource in resourceAvailable.Available)
+                    {
+                        var (item, count) = RequiredExpansion(
+                            resource.Type, resource.Count);
+                        if (count > 0)
+                        {
+                            availableResult.UsedItems ??= [];
+                            availableResult.UsedItems[item] = count;
+                        }
+                    }
+                    return availableResult;
                 }
 
             case Requirement.CycleFrames cycleFrames:
@@ -660,7 +697,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                });
+                }, hasVariaG ? "Varia" : null);
 
             case Requirement.GravitylessLavaFrames gravitylessLavaFrames:
                 return RequirementResult.Success(new RequirementCost
@@ -695,7 +732,7 @@ public class RequirementHandler
                         Missiles = 0,
                         SuperMissiles = 0,
                         PowerBombs = 0
-                    });
+                    }, "SpeedBooster");
                 }
                 else
                 {
@@ -707,24 +744,37 @@ public class RequirementHandler
                 bool failedCap = false;
                 foreach (var c in capacity.Capacity)
                 {
-                    if (!inventory.HasAtLeast(world.GetItem(c.Type), c.Count))
+                    var (item, count) = RequiredExpansion(c.Type, c.Count);
+                    if (item == "" || !inventory.HasAtLeast(world.GetItem(item), count))
                     {
-                        failedCapacity.MergeFail(RequirementResult.Fail(c.Type));
+                        failedCapacity.MergeFail(RequirementResult.Fail(
+                            item == "" ? c.Type : item));
                         failedCap = true;
                     }
                 }
 
-                return failedCap ? failedCapacity : RequirementResult.Success(RequirementCost.ZeroCost);
+                if (failedCap)
+                    return failedCapacity;
+                var capacityResult = RequirementResult.Success(RequirementCost.ZeroCost);
+                capacityResult.UsedItems = [];
+                foreach (var c in capacity.Capacity)
+                {
+                    var (item, count) = RequiredExpansion(c.Type, c.Count);
+                    if (count > 0)
+                        capacityResult.UsedItems[item] = Math.Max(
+                            capacityResult.UsedItems.GetValueOrDefault(item), count);
+                }
+                return capacityResult;
 
             case Requirement.CanShineCharge canShineCharge:
-                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
+                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
 
             case Requirement.GetBlueSpeed blueSpeed:
                 if (blueSpeed.UsedTiles < world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles)
                 {
                     return RequirementResult.Fail();
                 }
-                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail("SpeedBooster");
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : RequirementResult.Fail("SpeedBooster");
 
             case Requirement.Tech tech:
                 if (HelperTechs.TryGetValue($"t_{tech.TechRequirement}", out var techRequirement))
@@ -752,12 +802,24 @@ public class RequirementHandler
                     return RequirementResult.Fail();
                 }
 
-                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail("SpeedBooster");
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : RequirementResult.Fail("SpeedBooster");
 
             default:
                 return RequirementResult.Fail();
         }
     }
+
+    internal static (string Item, int Count) RequiredExpansion(
+        string resourceType, int resourceCount) => resourceType switch
+    {
+        "Energy" or "RegularEnergy" =>
+            ("ETank", Math.Max(0, (int)Math.Ceiling((resourceCount - 99) / 100m))),
+        "ReserveEnergy" => ("ReserveTank", (int)Math.Ceiling(resourceCount / 100m)),
+        "Missile" => ("Missile", (int)Math.Ceiling(resourceCount / 5m)),
+        "Super" => ("Super", (int)Math.Ceiling(resourceCount / 5m)),
+        "PowerBomb" => ("PowerBomb", (int)Math.Ceiling(resourceCount / 5m)),
+        _ => ("", 0),
+    };
 
     public static int ObstacleMaskFromArray(string[] obstacles)
     {

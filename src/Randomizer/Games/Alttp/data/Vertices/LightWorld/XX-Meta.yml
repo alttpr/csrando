@@ -13,6 +13,7 @@ maps:
               - "DefaultItems"
               - "Enemies"
               - "Tower Entry - Check"
+              - "Ganon Vulnerable - Check"
             ConfigWorldWeaponSwordless:
               - "Swordless - Check"
             OcarinaActive:
@@ -246,6 +247,8 @@ maps:
               - "ConfigWorldGanonVulnerableRequired6"
             ConfigWorldGanonVulnerableRequired7:
               - "ConfigWorldGanonVulnerableRequired7"
+            ConfigWorldGanonVulnerableRequiredDungeons:
+              - "ConfigWorldGanonVulnerableRequiredDungeons"
 
         - name: "ConfigWorldGanonVulnerableRequired1"
           connections:

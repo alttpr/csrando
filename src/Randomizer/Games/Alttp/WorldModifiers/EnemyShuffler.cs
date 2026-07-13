@@ -100,6 +100,81 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         var enemiesRoot = world.GetLocation("Enemies");
 
         {
+            // Ganon
+            var fight = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "FightGanon",
+                World = world,
+            };
+            world.Graph.AddVertex(fight);
+            enemiesRoot.Edges.Add(new Edge(enemiesRoot, fight,
+                new ItemCondition(world.GetItem("GanonVulnerable"), 1)));
+
+            var phaseOne = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "GanonPhaseOneComplete",
+                World = world,
+            };
+            world.Graph.AddVertex(phaseOne);
+            foreach (string item in bosses["Ganon"])
+                fight.Edges.Add(new Edge(fight, phaseOne, new ItemCondition(world.GetItem(item), 1)));
+
+            var phaseTwo = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "GanonPhaseTwoComplete",
+                World = world,
+            };
+            world.Graph.AddVertex(phaseTwo);
+            foreach (string item in bosses["Ganon"])
+                phaseOne.Edges.Add(new Edge(phaseOne, phaseTwo, new ItemCondition(world.GetItem(item), 1)));
+
+            var phaseThree = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "GanonPhaseThreeComplete",
+                World = world,
+            };
+            world.Graph.AddVertex(phaseThree);
+            foreach (string item in bosses["Ganon"])
+                phaseTwo.Edges.Add(new Edge(phaseTwo, phaseThree, new ItemCondition(world.GetItem(item), 1)));
+
+            var torchesLit = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "GanonTorchesLit",
+                World = world,
+            };
+            world.Graph.AddVertex(torchesLit);
+            foreach (string item in bosses["GanonLightTorches"])
+                phaseThree.Edges.Add(new Edge(phaseThree, torchesLit, new ItemCondition(world.GetItem(item), 1)));
+
+            var defeated = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "DefeatGanon",
+                World = world,
+                Item = world.GetItem("DefeatGanon"),
+            };
+            world.Graph.AddVertex(defeated);
+            foreach (string item in bosses["GanonInvisible"])
+                torchesLit.Edges.Add(new Edge(torchesLit, defeated, new ItemCondition(world.GetItem(item), 1)));
+
+            var darkDefeated = new Vertex
+            {
+                Type = VertexType.Meta,
+                Name = "DarkDefeatGanon",
+                World = world,
+                Item = world.GetItem("DarkDefeatGanon"),
+            };
+            world.Graph.AddVertex(darkDefeated);
+            defeated.Edges.Add(new Edge(defeated, darkDefeated,
+                new ItemCondition(world.GetItem("MoonPearl"), 1)));
+        }
+
+        {
             // Helmasaur
             var enemyRoot = new Vertex
             {

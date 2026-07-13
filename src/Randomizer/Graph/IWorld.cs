@@ -36,6 +36,12 @@ public interface IWorld
     /// <param name="startingInventory">Starting items the player has innate access to.</param>
     bool IsWinnable(Vertex start, Inventory startingInventory);
 
+    /// <summary>The logical items/events whose collection completes this world.</summary>
+    IEnumerable<IItem> GetVictoryItems() => [];
+
+    /// <summary>The vertex where a logical playthrough begins for this world.</summary>
+    Vertex GetPlaythroughStart() => Start;
+
     /// <summary>
     /// Get a searcher for this specific world.
     /// </summary>

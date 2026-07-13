@@ -89,13 +89,21 @@ internal static class DataLoader
         };
 
         var generated = generator.Generate(mapSeed);
-        ScreenFitter.Fit(generated.Grid, catalog, mapSeed);
-
         // Topology reachability is validated pre-fit, before screens (and their directional
-        // one-way transitions) are known. Re-validate now that concrete screens are assigned:
-        // a region reachable only by climbing a one-way seam the wrong way is stranded, so fail
-        // and let the randomization retry with a fresh seed.
-        var stranded = AxisSolver.Validate(generated.Grid, generated.Start, catalog);
+        // one-way transitions) are known. Try alternate deterministic fits when a concrete
+        // assignment strands a region; the topology itself is still valid and does not need
+        // to be regenerated.
+        const int MaxFitAttempts = 16;
+        List<string> stranded = [];
+        for (int attempt = 0; attempt < MaxFitAttempts; attempt++)
+        {
+            ScreenFitter.Fit(generated.Grid, catalog,
+                unchecked(mapSeed + attempt * 7919));
+            stranded = AxisSolver.Validate(generated.Grid, generated.Start, catalog);
+            if (stranded.Count == 0)
+                break;
+        }
+
         if (stranded.Count > 0)
             throw new GenerationException("post-fit reachability: " + stranded[0]
                 + $" (+{stranded.Count - 1} more)");

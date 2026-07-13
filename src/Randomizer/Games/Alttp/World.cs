@@ -152,6 +152,8 @@ public sealed class World : World<Item>, IPortalHost
         return true;
     }
 
+    public override IEnumerable<IItem> GetVictoryItems() => [GetItem("Triforce")];
+
     public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new Searcher(graph, start ?? Start, inventory, setLocations, this);

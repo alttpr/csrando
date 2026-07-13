@@ -50,7 +50,6 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
         StartingItems.AddItem(GetItem("f_ZebesAwake"));
-        StartingItems.AddItem(GetItem("f_TourianOpen"));
 
         JsonData = new JsonReader(Config);
         JsonData.Load();
@@ -78,6 +77,8 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         {
             var mapRandomizer = new MapRandomizer(JsonData, this, prng);
             mapRandomizer.Randomize();
+            if (Map != null)
+                StartingItems.AddItem(GetItem("f_TourianOpen"));
         }
 
         var preprocessor = new GraphPreprocessor(JsonData, this);
@@ -91,6 +92,9 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
     public Inventory ComputeStartingItems()
     {
         var inventory = new Inventory([GetItem("fixed"), .. Config.StartingEquipment.Select(GetItem)]);
+        inventory.AddItem(GetItem("f_ZebesAwake"));
+        if (Map != null)
+            inventory.AddItem(GetItem("f_TourianOpen"));
         return inventory;
     }
 
@@ -103,6 +107,8 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         var winSearcher = new StatefulSearcher(Graph, (Vertex)this.Start, startingInventory);
         return winSearcher.HasFound(GetItem("f_DefeatedMotherBrain"));
     }
+
+    public override IEnumerable<IItem> GetVictoryItems() => [GetItem("f_DefeatedMotherBrain")];
 
     public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {

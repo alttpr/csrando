@@ -149,6 +149,11 @@ public class Config
     [Category("Gameplay")]
     public Logic Logic { get; init; } = Logic.Basic;
 
+    [Category("Gameplay")]
+    [Name("Early Morph Ball")]
+    [Description("Places Morph Ball early.")]
+    public bool EarlyMorph { get; init; } = false;
+
     [Ignore("Skill config is too complex to be represented with simple attributes")]
     public string[] CustomTech { get; init; } = [];
 
