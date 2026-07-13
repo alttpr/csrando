@@ -3,6 +3,7 @@ namespace RandomizerTests.Games.Metroid;
 using Randomizer.Games;
 using Randomizer.Games.Metroid;
 using Randomizer.Graph;
+using System.Text.Json;
 using Graph = Randomizer.Graph.Graph;
 using Vertex = Randomizer.Graph.Vertex;
 using GameRandomizer = Randomizer.Games.Metroid.GameRandomizer;
@@ -10,6 +11,32 @@ using GameRandomizer = Randomizer.Games.Metroid.GameRandomizer;
 [TestClass]
 public sealed class WorldTest
 {
+    [TestMethod]
+    public void Vanilla_ItemPoolUsesSafeCapacityLimitsAndNothingFiller()
+    {
+        var world = new World(0,
+            new WorldConfig { Metroid = new Config() }, new Graph(), new PRNG(1337));
+        var pooler = new ItemPooler([world], new PRNG(1337));
+        int locationCount = world.GetLocationsOfType(VertexType.Item).Count();
+
+        Assert.AreEqual(locationCount, pooler.Pool.Length);
+        int energyTanks = pooler.Pool.Count(item => item.Item.Name == "EnergyTank");
+        int missiles = pooler.Pool.Count(item => item.Item.Name == "Missile");
+        Assert.IsTrue(energyTanks <= ItemPooler.MaximumEnergyTanks,
+            $"Pool contains {energyTanks} Energy Tanks.");
+        Assert.IsTrue(missiles <= ItemPooler.MaximumMissiles,
+            $"Pool contains {missiles} Missiles.");
+        Assert.AreEqual(Math.Max(0, locationCount - ItemPooler.MaximumNonNothingItems),
+            pooler.Pool.Count(item => item.Item.Name == "Nothing"));
+        var nothingSet = new ItemSetName(ItemPooler.NothingItemSet, world);
+        Assert.IsTrue(pooler.Pool.Where(item => item.Item.Name == "Nothing")
+            .All(item => item.Set == nothingSet));
+        Assert.IsTrue(pooler.SetLocations[nothingSet]
+            .All(location => ReferenceEquals(location.World, world)));
+        CollectionAssert.AreEqual(new byte[] { 0x0B, 0x5A },
+            world.GetItem("Nothing").Bytes);
+    }
+
     private static World CreateWorld(Config? config = null, int seed = 42)
     {
         config ??= new Config { MapShuffle = true };
@@ -145,6 +172,37 @@ public sealed class WorldTest
             randomizer.Randomize();
             Assert.IsTrue(randomizer.IsWinnable(), $"seed {seed}: vanilla filled world not winnable");
         }
+    }
+
+    [TestMethod]
+    public void Vanilla_SpoilerContainsCompleteExplainablePlaythrough()
+    {
+        var randomizer = new GameRandomizer(
+            [new WorldConfig { Metroid = new Config() }], new PRNG(7));
+        randomizer.Randomize();
+
+        Assert.IsTrue(randomizer.SpoilerLog!.Spoiler.TryGetValue("playthrough", out var section));
+        using var document = JsonDocument.Parse(section["data"]);
+        var root = document.RootElement;
+        Assert.IsTrue(root.GetProperty("complete").GetBoolean());
+        Assert.AreEqual("DefeatedSilverTwo", root.GetProperty("victoryItems")[0].GetString());
+        Assert.IsFalse(root.GetProperty("startingItems").EnumerateArray().Any(item =>
+            item.GetProperty("name").GetString() == "AllowIBJ"));
+
+        var pickups = root.GetProperty("spheres").EnumerateArray()
+            .SelectMany(sphere => sphere.GetProperty("pickups").EnumerateArray())
+            .ToList();
+        Assert.IsTrue(pickups.Count > 0);
+        Assert.IsTrue(pickups.Any(pickup =>
+            pickup.GetProperty("item").GetProperty("name").GetString() == "DefeatedSilverTwo"));
+        Assert.IsTrue(pickups.All(pickup => pickup.TryGetProperty("path", out _)));
+        Assert.IsTrue(pickups.Any(pickup =>
+            pickup.GetProperty("requiredItems").GetArrayLength() > 0));
+        Assert.IsFalse(pickups
+            .SelectMany(pickup => pickup.GetProperty("path").EnumerateArray())
+            .SelectMany(step => step.GetProperty("requirements").EnumerateArray())
+            .Any(requirement => requirement.GetProperty("name").GetString() == "CanIBJ"),
+            "playthrough route used CanIBJ without the unavailable AllowIBJ setting");
     }
 
     [TestMethod]

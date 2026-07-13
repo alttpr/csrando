@@ -1,5 +1,8 @@
 namespace Randomizer.Graph;
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 /// <summary>
 /// Generates a Spoiler log for the randomizer.
 /// </summary>
@@ -9,7 +12,15 @@ public class SpoilerLog
 
     public SpoilerLog(GameRandomizer randomizer)
     {
-        // TODO: generate a playthrough.
+        var playthrough = PlaythroughGenerator.Generate(randomizer);
+        Spoiler["playthrough"] = new Dictionary<string, string>
+        {
+            ["data"] = JsonSerializer.Serialize(playthrough, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            })
+        };
         randomizer.AppendSpoiler(this);
     }
 }

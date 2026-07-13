@@ -241,21 +241,32 @@ public sealed class TopologyGeneratorTest
     }
 
     [TestMethod]
-    public void Generate_ItemLocationsNeverExceedThePool()
+    public void Generate_ItemLocationsScaleWithMapSize()
     {
-        // The pool is fixed at 36 items; surplus locations would stay unfilled and the
-        // ROM tables would render them as free Bombs (the placeholder id). Large maps
-        // organically roll many item cells during growth, so they are the risky case.
-        foreach (var scale in new[] { 1.0, 1.2 })
+        foreach (var scale in new[] { 0.7, 1.0, 1.2, 1.4 })
         {
             for (int seed = 1; seed <= 10; seed++)
             {
                 var world = new TopologyGenerator(Catalog.Value) { SizeScale = scale }.Generate(seed);
                 int items = world.Grid.Cells.Count(c => c.Role == CellRole.Item
                     || (c.Role == CellRole.Boss && c.ForcedScreenId == 0x1D));
-                Assert.IsTrue(items is >= 31 and <= 36,
-                    $"scale {scale} seed {seed}: {items} item locations for a 36-item pool");
+                int maximum = Math.Max(31, (int)Math.Round(36 * scale));
+                int minimum = Math.Max(31, maximum - 3);
+                Assert.IsTrue(items >= minimum && items <= maximum,
+                    $"scale {scale} seed {seed}: expected {minimum}-{maximum} item locations, got {items}");
             }
+        }
+    }
+
+    [TestMethod]
+    public void Generate_RidleyHasEnoughRoomToDevelop()
+    {
+        for (int seed = 1; seed <= 20; seed++)
+        {
+            var world = Generate(seed);
+            int ridleyCells = world.Grid.CellsOf(Area.Ridley).Count();
+            Assert.IsTrue(ridleyCells >= 34,
+                $"seed {seed}: Ridley has only {ridleyCells} cells");
         }
     }
 

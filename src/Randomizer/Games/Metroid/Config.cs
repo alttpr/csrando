@@ -12,6 +12,11 @@ public class Config
     public Logic Logic { get; init; } = Logic.Basic;
 
     [Category("Gameplay")]
+    [Name("Early Morph Ball")]
+    [Description("Places Morph Ball early.")]
+    public bool EarlyMorph { get; init; } = false;
+
+    [Category("Gameplay")]
     [Description("Generates a completely new randomized world map. This is in early testing, be aware of potential bugs!")]
     public bool MapShuffle { get; init; } = false;
 

@@ -39,5 +39,8 @@ TrinexxHeadIce:
 Ganon:
   - L2Sword
   - Hammer
+GanonLightTorches:
+  - Lamp
+  - FireRod
 GanonInvisible:
   - BowAndSilverArrows

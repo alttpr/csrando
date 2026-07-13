@@ -269,6 +269,23 @@ public sealed class World : World<Item>
         return true;
     }
 
+    public override IEnumerable<IItem> GetVictoryItems()
+    {
+        if (AlttpWorld != null) yield return AlttpWorld.GetItem("Triforce");
+        if (Z1World != null) yield return Z1World.GetItem("Zelda");
+        if (SMWorld != null) yield return SMWorld.GetItem("f_DefeatedMotherBrain");
+        if (M1World != null) yield return M1World.GetItem("DefeatedSilverTwo");
+    }
+
+    public override BaseVertex GetPlaythroughStart() => EffectiveInitialGame switch
+    {
+        "alttp" => AlttpWorld!.Start,
+        "sm" => SMWorld!.Start,
+        "z1" => Z1World!.Start,
+        "m1" => M1World!.Start,
+        _ => throw new ArgumentException("Invalid initial game", nameof(EffectiveInitialGame)),
+    };
+
     public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new ComboSearcher(graph, (Vertex)(start ?? Start), inventory, setLocations);

@@ -89,6 +89,8 @@ public sealed class World : World<Item>, IPortalHost
         return winSearcher.HasFound(GetItem("Zelda"));
     }
 
+    public override IEnumerable<IItem> GetVictoryItems() => [GetItem("Zelda")];
+
     public override ISearcher GetSearcherForWorld(Graph graph, BaseVertex? start, Inventory inventory, SetLocations? setLocations = null)
     {
         return new Searcher(graph, start ?? Start, inventory, setLocations, this);

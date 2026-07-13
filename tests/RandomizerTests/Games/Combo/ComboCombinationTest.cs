@@ -23,6 +23,89 @@ public sealed class ComboCombinationTest
         Metroid = m1 ? new M1Config() : null,
     };
 
+    [TestMethod]
+    public void VanillaAllGames_ItemPoolMatchesEmptyLocations()
+    {
+        var graph = new Randomizer.Graph.Graph();
+        var world = new Randomizer.Games.Combo.World(
+            0, CreateConfig(true, true, true, true), graph, new PRNG(1337));
+        var pooler = new Randomizer.Games.Combo.ItemPooler([world], new PRNG(1337));
+        int emptyLocations = pooler.SetLocations[ItemSetName.DefaultSet]
+            .Distinct()
+            .Count(location => location.Item == null);
+        string countsByGame = string.Join(", ", new IWorld?[]
+            { world.AlttpWorld, world.SMWorld, world.Z1World, world.M1World }
+            .OfType<IWorld>()
+            .Select(subworld =>
+                $"{subworld.GameId}: {pooler.Pool.Count(item => item.Item.World == subworld)} items/" +
+                $"{pooler.SetLocations[ItemSetName.DefaultSet].Distinct().Count(location => location.World == subworld && location.Item == null)} locations"));
+
+        Assert.AreEqual(emptyLocations, pooler.Pool.Length,
+            $"Pool has {pooler.Pool.Length} items for {emptyLocations} empty locations; " +
+            countsByGame);
+        Assert.IsFalse(pooler.Pool.Any(item =>
+            ReferenceEquals(item.Item.World, world.M1World)
+            && item.Item.Name == "Nothing"));
+        int m1Padding = Math.Max(0,
+            world.M1World!.GetLocationsOfType(VertexType.Item).Count()
+                - Randomizer.Games.Metroid.ItemPooler.MaximumNonNothingItems);
+        Assert.IsTrue(pooler.Pool.Count(item =>
+            ReferenceEquals(item.Item.World, world.AlttpWorld)
+            && item.Item.Name == "FiveRupees") >= m1Padding);
+    }
+
+    [DataTestMethod]
+    [DataRow(true, false, "FiveRupees")]
+    [DataRow(false, true, "Rupee5")]
+    [DataRow(false, false, "Nothing")]
+    public void M1Padding_UsesGlobalTrashWhenAvailable(
+        bool alttp, bool z1, string expectedFiller)
+    {
+        var graph = new Randomizer.Graph.Graph();
+        var world = new Randomizer.Games.Combo.World(
+            0, CreateConfig(alttp, sm: true, z1, m1: true), graph, new PRNG(1337));
+        var pooler = new Randomizer.Games.Combo.ItemPooler([world], new PRNG(1337));
+        int emptyLocations = pooler.SetLocations[ItemSetName.DefaultSet]
+            .Distinct()
+            .Count(location => location.Item == null);
+        int m1Padding = Math.Max(0,
+            world.M1World!.GetLocationsOfType(VertexType.Item).Count()
+                - Randomizer.Games.Metroid.ItemPooler.MaximumNonNothingItems);
+
+        Assert.AreEqual(emptyLocations, pooler.Pool.Length);
+        if (expectedFiller == "Nothing")
+        {
+            var nothingSet = new ItemSetName(
+                Randomizer.Games.Metroid.ItemPooler.NothingItemSet, world.M1World);
+            Assert.IsTrue(pooler.Pool.Where(item => item.Item.Name == "Nothing")
+                .All(item => item.Set == nothingSet));
+        }
+        else
+        {
+            Assert.IsFalse(pooler.Pool.Any(item =>
+                ReferenceEquals(item.Item.World, world.M1World)
+                && item.Item.Name == "Nothing"));
+            Assert.IsTrue(pooler.Pool.Count(item => item.Item.Name == expectedFiller)
+                >= m1Padding);
+        }
+    }
+
+    [DataTestMethod]
+    [DataRow(false, "alttp", "sm", false)]
+    [DataRow(false, "alttp", "m1", false)]
+    [DataRow(false, "sm", "sm", true)]
+    [DataRow(false, "sm", "m1", false)]
+    [DataRow(false, "m1", "sm", false)]
+    [DataRow(false, "m1", "m1", true)]
+    [DataRow(true, "alttp", "sm", true)]
+    [DataRow(true, "alttp", "m1", true)]
+    public void MorphFrontFill_UsesInitialGameUnlessOverridden(
+        bool earlyMorph, string initialGame, string morphGame, bool expected)
+    {
+        Assert.AreEqual(expected, RandomAssumedFiller.ShouldFrontFillMorph(
+            earlyMorph, initialGame, morphGame));
+    }
+
     [DataTestMethod]
     [DataRow(true, false, false, false)]
     [DataRow(false, true, false, false)]

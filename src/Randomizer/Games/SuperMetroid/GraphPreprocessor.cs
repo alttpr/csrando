@@ -37,6 +37,7 @@ public class GraphPreprocessor
     {
         PatchKeycards();
         PatchVanillaMapPreopenedDoors();
+        PatchBossGate();
 
         // Patch morph PLM
         var morphRoom = _reader.Rooms.First(r => r.Name == "Morph Ball Room");
@@ -53,8 +54,8 @@ public class GraphPreprocessor
             foreach(var edge in _graph.GetEdges(vtx))
             {
                 vtx.Edges.Add(edge);
+            }
         }
-    }
 
     //// Find all doors that are not blue
         //var doors = _graph.Vertices.OfType<SuperMetroid.Vertex>().Where(v => v.Node!.NodeType == "door" && v.Node!.NodeSubType != "elevator");
@@ -125,6 +126,45 @@ public class GraphPreprocessor
 
         //var doorPLM = _reader.RoomPLMs.First(r => r.Room == doorHeader.room && r.XPosition == doorHeader.x_low && r.YPosition == doorHeader.y_low);
 
+    }
+
+    private void PatchBossGate()
+    {
+        if (_world.Map != null)
+            return;
+
+        var statuesRoom = _reader.Rooms.First(room => room.Name == "Statues Room");
+        var bossRequirement = BossRequirement(int.Parse(_world.Config.Bosses));
+        foreach (var statuesCutscene in statuesRoom.Strats.Where(strat =>
+                     strat.Name == "Statues Cutscene"))
+            statuesCutscene.Requires = bossRequirement;
+    }
+
+    private static Requirement BossRequirement(int requiredBosses)
+    {
+        string[] bossFlags =
+        [
+            "f_DefeatedKraid",
+            "f_DefeatedPhantoon",
+            "f_DefeatedDraygon",
+            "f_DefeatedRidley",
+        ];
+        if (requiredBosses <= 0)
+            return new Requirement.Always();
+
+        var alternatives = Enumerable.Range(0, 1 << bossFlags.Length)
+            .Where(mask => Enumerable.Range(0, bossFlags.Length)
+                .Count(index => (mask & (1 << index)) != 0) == requiredBosses)
+            .Select(mask => new Requirement.And(Enumerable.Range(0, bossFlags.Length)
+                .Where(index => (mask & (1 << index)) != 0)
+                .Select(index => (Requirement)new Requirement.Single(bossFlags[index]))
+                .ToArray()))
+            .Cast<Requirement>()
+            .ToArray();
+
+        return alternatives.Length == 1
+            ? alternatives[0]
+            : new Requirement.Or(alternatives);
     }
 
     private void PatchVanillaMapPreopenedDoors()
@@ -436,6 +476,12 @@ public class GraphPreprocessor
 
     private void ConnectNodes(Vertex fromVtx, Vertex toVtx, Node fromNode, Node toNode, Room fromRoom, Room toRoom)
     {
+        // The ROM writer still needs this edge as shuffled-connection metadata,
+        // even though map-rando ROMs permanently block it in gameplay.
+        bool blockedMotherBrainConnection = _world.Map != null
+            && (fromRoom.Name == "Mother Brain Room" && fromNode.Name == "Left Blast Door"
+                || toRoom.Name == "Mother Brain Room" && toNode.Name == "Left Blast Door");
+
         List<Strat> fromStrats = fromRoom.Strats.Where(s => s.Link![0] == fromNode.Id && s.ExitCondition != null).ToList();
         List<Strat> toStrats = toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null).ToList();
         Requirement? unlockReq = null;
@@ -502,9 +548,23 @@ public class GraphPreprocessor
             // Create edges between the exit node strat and the target room strats
             foreach (var targetStrat in targetStrats)
             {
-                // Inject the door unlock requirement into the fromStrat
+                // Inject door and goal requirements into the traversal out of this node.
                 var newFromStrat = (Strat)strat.Clone();
-                newFromStrat.Requires = unlockReq == null ? OptimizeRequirement(strat.Requires) : OptimizeRequirement(new Requirement.And([strat.Requires, unlockReq]));
+                var requirements = new List<Requirement> { strat.Requires };
+                if (unlockReq != null)
+                    requirements.Add(unlockReq);
+                if (blockedMotherBrainConnection)
+                    requirements.Add(new Requirement.Never());
+                // Map rando pre-opens G4 and moves the configurable boss-count gate to
+                // the grey door installed on the shuffled connection into Mother Brain.
+                if (_world.Map != null
+                    && toRoom.Name == "Mother Brain Room"
+                    && toNode.Name == "Right Door")
+                {
+                    requirements.Add(BossRequirement(int.Parse(_world.Config.Bosses)));
+                }
+                newFromStrat.Requires = OptimizeRequirement(
+                    new Requirement.And(requirements.ToArray()));
 
                 var fromStratVtx = _graph.Vertices.First(v => v.RoomId == fromVtx.RoomId && v.Node!.Id == strat.Link![0]);
                 var targetStratVtx = _graph.Vertices.First(v => v.RoomId == toVtx.RoomId && v.Node!.Id == targetStrat.Link![0]);

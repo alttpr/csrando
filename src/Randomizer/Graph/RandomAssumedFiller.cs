@@ -31,94 +31,33 @@ internal sealed class RandomAssumedFiller
         var flatItems = flatItemsArray.ToList();
 
 
-        // Do special things for SM in combo
-        if (_randomizer.Worlds[0] is Games.Combo.World comboWorld && comboWorld.SMWorld != null)
+        if (_randomizer.Worlds[0] is Games.Combo.World comboWorld)
         {
-            // Under the map randomizer the seed starts at the Crateria Map Room, whose
-            // single shuffled door rarely reaches any SM item with no equipment; the
-            // intended early route is the adjacent cross-game portal. The SM-only smart
-            // front fill would then find no location at all, so those seeds fill through
-            // the portals instead, like seeds that start in another game.
-            if (comboWorld.EffectiveInitialGame == "sm" && comboWorld.SMWorld.Map == null)
+            // A Metroid start needs one Morph to open the starting game. Other starts
+            // retain assumed-fill ordering unless the player explicitly requests early
+            // Morphs, in which case each included Metroid game gets one.
+            IWorld?[] morphWorlds = [comboWorld.SMWorld, comboWorld.M1World];
+            foreach (var morphWorld in morphWorlds.OfType<IWorld>())
             {
-                for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+                bool earlyMorph = morphWorld switch
                 {
-                    var world = _randomizer.Worlds[i];
-                    if (world != null)
-                    {
-                        var smWorld = world switch
-                        {
-                            Games.SuperMetroid.World sm => sm,
-                            Games.Combo.World c => c.SMWorld,
-                            _ => null
-                        };
-
-                        if (smWorld != null)
-                        {
-                            SmartFrontFill(smWorld, world.StartingItems, flatItems, 5);
-
-                            // If we didn't fill SM's Morph, then fill it. Other games can also
-                            // have a Morph item, so the lookup has to stay scoped to SM.
-                            var flatMorph = flatItems.FirstOrDefault(i => i.Item == smWorld.GetItem("Morph"));
-                            if (flatMorph != default)
-                            {
-                                SmartFrontFill(smWorld, world.StartingItems, [flatMorph], 1);
-                                flatItems.Remove(flatMorph);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // SM's Morph specifically: M1's Morph shares the name and sorts first
-                // (lowest pool weight), so an unfiltered lookup would grab it instead and
-                // leave SM's Morph to land anywhere; M1's is front-filled separately below.
-                string[] frontFillItemNames = ["Morph"];
-                foreach (var frontFillItemName in frontFillItemNames)
-                {
-                    var flatItemToPlace = flatItems.FirstOrDefault(i =>
-                        i.Item.Name == frontFillItemName && i.Item.World == comboWorld.SMWorld);
-                    if (flatItemToPlace != default)
-                    {
-                        FrontFillCrossWorld(_randomizer.Worlds[0], _randomizer.Worlds[0].StartingItems, _randomizer.Graph, flatItemToPlace);
-                        flatItems.Remove(flatItemToPlace);
-                    }
-                }
-
+                    Games.SuperMetroid.World sm => sm.Config.EarlyMorph,
+                    Games.Metroid.World m1 => m1.Config.EarlyMorph,
+                    _ => false,
+                };
+                if (ShouldFrontFillMorph(earlyMorph,
+                        comboWorld.EffectiveInitialGame, morphWorld.GameId))
+                    FrontFillMorph(comboWorld, morphWorld, flatItems);
             }
         }
-
-        // Combo seeds front-fill M1's Morph for the same reason the standalone loop below
-        // does: nearly every M1 corridor is morph-gated, and with the lowest pool weight it
-        // is otherwise placed first — into the deepest locations — instead of early where
-        // it plays well.
-        foreach (var world in _randomizer.Worlds)
+        else
         {
-            if (world is not Games.Combo.World { M1World: { } m1World })
-                continue;
-
-            var comboM1Morph = flatItems.FirstOrDefault(i => i.Item.Name == "Morph" && i.Item.World == m1World);
-            if (comboM1Morph != default)
+            // Standalone Metroid games necessarily start in that game, so preserve the
+            // generation-safety front fill there as well.
+            foreach (var world in _randomizer.Worlds.Where(world =>
+                         world is Games.SuperMetroid.World or Games.Metroid.World))
             {
-                FrontFillCrossWorld(world, world.StartingItems, _randomizer.Graph, comboM1Morph);
-                flatItems.Remove(comboM1Morph);
-            }
-        }
-
-        // Standalone Metroid worlds also front-fill Morph: nearly every corridor has
-        // morph-gated passages, so a world without Morph in the starting sphere can
-        // deadlock the assumed fill.
-        foreach (var world in _randomizer.Worlds)
-        {
-            if (world is not Games.Metroid.World)
-                continue;
-
-            var flatMorph = flatItems.FirstOrDefault(i => i.Item.Name == "Morph" && i.Item.World == world);
-            if (flatMorph != default)
-            {
-                FrontFillCrossWorld(world, world.StartingItems, _randomizer.Graph, flatMorph);
-                flatItems.Remove(flatMorph);
+                FrontFillMorph(world, world, flatItems);
             }
         }
 
@@ -218,6 +157,23 @@ internal sealed class RandomAssumedFiller
         FastFillItemsInLocations(flatItems);
     }
 
+    internal static bool ShouldFrontFillMorph(
+        bool alwaysEarlyMorph, string initialGame, string morphGame) =>
+        alwaysEarlyMorph || initialGame == morphGame;
+
+    private void FrontFillMorph(
+        IWorld searchWorld, IWorld morphWorld, List<PooledItem> flatItems)
+    {
+        var morph = morphWorld.GetItem("Morph");
+        var flatMorph = flatItems.FirstOrDefault(item => ReferenceEquals(item.Item, morph));
+        if (flatMorph == default)
+            return;
+
+        FrontFillCrossWorld(searchWorld, searchWorld.StartingItems,
+            _randomizer.Graph, flatMorph);
+        flatItems.Remove(flatMorph);
+    }
+
     // Finds a location available with only the starting items and fills it, without checking if it's a good candidate
     private void FrontFillCrossWorld(IWorld world, Inventory startingItems, Graph graph, (ItemSetName, int, IItem) flatItem)
     {
@@ -259,94 +215,6 @@ internal sealed class RandomAssumedFiller
         }
 
     }
-
-
-    private void SmartFrontFill(IWorld world, Inventory inventory, List<(ItemSetName, int, IItem)> flatItems, int count)
-    {
-        int bestLocationCount = 0;
-        while (bestLocationCount < count)
-        {
-            var filteredFlatItems = flatItems.Where(f => f.Item3.World.GameId == world.GameId).ToList();
-            var bestLocations = GetBestLocationsForItems(world, filteredFlatItems, inventory);
-            if (!bestLocations.Any())
-            {
-                throw new Exception("No valid location for any item");
-            }
-
-            var bestLocation = bestLocations.OrderByDescending(x => x.newLocationCount).First();
-            var (itemSet, itemWeight, item) = bestLocation.Item1;
-            bestLocation.location.Item = item;
-            bestLocation.location.TrackPlacedItem();
-            flatItems.Remove(bestLocation.Item1);
-            _logger.LogInformation("(0%) [SFF] Placing: `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
-                item,
-                bestLocation.location,
-                itemSet,
-                bestLocation.newLocationCount
-            );
-
-            bestLocationCount = bestLocation.newLocationCount;
-        }
-    }
-
-    private IEnumerable<((ItemSetName, int, IItem), Vertex location, int newLocationCount)> GetBestLocationsForItems(IWorld world, List<(ItemSetName, int, IItem)> flatItems, Inventory inventory)
-    {
-        var placementCandidates = new List<((ItemSetName, int, IItem), Vertex location, int newLocationCount)>();
-        foreach (var itemKey in flatItems)
-        {
-            var (itemSet, itemWeight, item) = itemKey;
-            var location = GetBestLocationForItem(world, item, inventory);
-            if (location.HasValue)
-            {
-                placementCandidates.Add((itemKey, location.Value.location, location.Value.newLocationCount));
-            }
-        }
-
-        return placementCandidates;
-    }
-
-    private (Vertex location, int newLocationCount)? GetBestLocationForItem(IWorld world, IItem item, Inventory inventory)
-    {
-        var searcher = _randomizer.GetSearcherForInventory(world, inventory.All().Select(x => x.Key), world.Start);
-        var locations = searcher.GetEmptyLocationsInSet(ItemSetName.DefaultSet, null, true).ToList();
-        if (locations.Count == 0)
-        {
-            return null;
-        }
-        var locationCandidates = _prng.Shuffle(locations).ToList();
-        var locationCandidateResults = new List<(Vertex Location, int newLocations)>();
-
-        while (locationCandidates.Count > 0)
-        {
-            var locationCandidate = locationCandidates.First();
-            locationCandidates.Remove(locationCandidate);
-
-            // Test backtracking
-            var backtrackInventory = inventory.Clone();
-            var statefulSearcher = (StatefulSearcher)searcher;
-            var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)locationCandidate, backtrackInventory, (Games.SuperMetroid.Vertex)locationCandidate.World.Start, item);
-
-            if (!backtrackCheck)
-            {
-                continue;
-            }
-
-            // Verify that placing this item opens up at least one new location
-            locationCandidate.Item = item;
-            var newSearcher = _randomizer.GetSearcherForInventory(world, inventory.All().Select(x => x.Key), world.Start);
-            var newLocations = newSearcher.GetEmptyLocationsInSet(ItemSetName.DefaultSet, null, true).ToList();
-            locationCandidate.Item = null;
-            locationCandidateResults.Add((locationCandidate, newLocations.Count));
-        }
-
-        if (locationCandidateResults.Count == 0)
-        {
-            return null;
-        }
-
-        return locationCandidateResults.OrderBy(x => x.newLocations).First();
-    }
-
 
 
     /// <summary>

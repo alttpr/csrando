@@ -1,10 +1,22 @@
 ---
 title: Changelog
 description: Notable updates to the Game Randomizer web app.
-lastUpdated: 2026-07-11
+lastUpdated: 2026-07-13
 ---
 
 # Randomizer Changes
+
+## 2026-07-13
+### Quad Randomizer - Version 0.5.1
+* Systems Changes
+  * Added a logical playthrough to spoiler logs. It groups the pickups needed to finish a seed into progression spheres, and can show the required items, route, cross-game travel, and resource costs for each pickup
+    * An advanced playthrough view for logic events, flags, strategies, and complete routes is also available
+
+* Gameplay Changes
+  * Added an Early Morph Ball option for Super Metroid and Metroid 1, which places Morph Ball in an early reachable location when enabled
+  * Fixed ALTTP Ganon goal logic and boss-shuffle Ganon phase requirements so required equipment is evaluated correctly
+  * Fixed Super Metroid combat and resource requirements, stateful traversal, and cross-game reachability checks that could produce invalid logic
+  * Fixed Super Metroid Mother Brain and Tourian access logic issues
 
 ## 2026-07-11
 ### Quad Randomizer - Version 0.5.0
@@ -35,6 +47,14 @@ lastUpdated: 2026-07-11
   * Fixed a Metroid 1 bug where a "mellow" enemy in a certain enemy slot became indestructible and erratic (Andypro)
   * Improved Metroid 1 item persistence with a new bit-plane collection system, replacing the overflow-prone item/door history that could cause shuffled items and doors to respawn
   * Softened the Zelda 1 ocean wave sound effect so it is less grating (Andypro)
+
+* Hotfixes
+  * Fixed an issue with Z1 items/state when Z1 is the starting game (0.5.0a)
+  * When SM is the starting game with map randomization on, the starting room is the Crateria portal (0.5.0a)
+  * Fixed another Z1 dungeon state bug when Z1 was the starting game (0.5.0b)
+  * Fixed a bug that let progression items end up as take-anys in Z1 (0.5.0b)
+  * Fixed a bug that put a Z1 to M1 transition inside vanilla Level 9 in Z1 (0.5.0c)
+  * Improved M1 Map Shuffle logic to better consider specific screen combinations (0.5.0c)
 
 ## 2026-06-01
 ### Quad Randomizer - Version 0.4.0

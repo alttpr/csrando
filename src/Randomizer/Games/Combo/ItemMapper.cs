@@ -1523,6 +1523,13 @@ public class ItemMapper
         },
         ["m1"] = new()
         {
+            ["Nothing"] = new()
+            {
+                ["z1"] = new byte[] { 0x2f },
+                ["alttp"] = new byte[] { 0x5a },
+                ["m1"] = new byte[] { 0x0B, 0x5a },
+                ["sm"] = new byte[] { 0xE0, 0xEF, 0x5a }
+            },
             ["Bombs"] = new()
             {
                 ["z1"] = new byte[] { 0x92 },

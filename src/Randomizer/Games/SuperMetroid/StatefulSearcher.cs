@@ -6,12 +6,24 @@ using System.Linq;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 
+public sealed record StatefulPathStep(
+    Randomizer.Graph.Edge Edge,
+    string? Strategy,
+    IReadOnlyDictionary<IItem, int> Requirements,
+    IReadOnlyDictionary<string, int> ResourcesSpent);
+
+public sealed record StatefulPickup(
+    IItem Item,
+    string? Strategy,
+    IReadOnlyDictionary<IItem, int> Requirements,
+    IReadOnlyDictionary<string, int> ResourcesSpent);
+
 public class StatefulSearcher : ISearcher
 {
     private readonly Graph _graph;
     private Dictionary<Vertex, List<VisitedState>> _visitedStates = null!;
     private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates = null!;
-    private readonly Queue<(Vertex vertex, VisitedState state)> _queue = new();
+    private readonly Queue<(Vertex vertex, VisitedState state, StatefulPathStep? step)> _queue = new();
     private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = [];
     private readonly Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
     private readonly HashSet<Vertex> _visitedVertices;
@@ -25,16 +37,30 @@ public class StatefulSearcher : ISearcher
     private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = [];
     private readonly HashSet<Weapon> _currentWeapons = [];
     private readonly RequirementHandler _requirementHandler;
+    private readonly Func<Randomizer.Graph.Vertex, bool> _collectItemAt;
+    private readonly Dictionary<Randomizer.Graph.Vertex, StatefulPathStep?> _predecessors = [];
+    private readonly HashSet<Randomizer.Graph.Vertex> _recordedUnlocks = [];
+    private readonly Dictionary<(Randomizer.Graph.Vertex, IItem), StatefulPickup> _pickupDetails = [];
+    private readonly bool _capturePath;
+    // Path-only searches can suppress the event they are trying to explain so a
+    // later, post-event route cannot be mistaken for the acquisition route.
+    private readonly IItem? _excludedPickup;
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
-    public StatefulSearcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null, Vertex? target = null, VisitedState? visitedState = null)
+    public StatefulSearcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null,
+        Vertex? target = null, VisitedState? visitedState = null,
+        Func<Randomizer.Graph.Vertex, bool>? collectItemAt = null,
+        bool capturePath = false, IItem? excludedPickup = null)
     {
         _inventory = inventory;
         _target = target;
         _start = start;
         _setLocations = setLocations;
         _requirementHandler = ((World)start.World).RequirementHandler;
+        _collectItemAt = collectItemAt ?? (_ => true);
+        _capturePath = capturePath;
+        _excludedPickup = excludedPickup;
         _otherWorldLocations.Clear();
 
         var startState = (start, visitedState ?? new VisitedState
@@ -229,13 +255,13 @@ public class StatefulSearcher : ISearcher
 
         foreach (var start in starts)
         {
-            EnqueueState(start.Item1, start.Item2);
+            EnqueueState(start.Item1, start.Item2, null);
         }
 
         while (_queue.Count > 0)
         {
 
-            var (current, state) = DequeueState()!.Value;
+            var (current, state, incomingStep) = DequeueState()!.Value;
 
             //Console.WriteLine($"Visiting {current.Name} with state {state}");
 
@@ -251,10 +277,13 @@ public class StatefulSearcher : ISearcher
                 visitedStates = [];
                 _visitedStates[current] = visitedStates;
             }
+
             else
             {
                 _visitedStates[current].Add(state);
             }
+            if (_capturePath)
+                _predecessors.TryAdd(current, incomingStep);
 
 
             if (target != null && current == target)
@@ -283,17 +312,46 @@ public class StatefulSearcher : ISearcher
                     }
 
                     var toVtx = (Vertex)edge.To;
-                    EnqueueState(toVtx, state);
+                    EnqueueState(toVtx, state, _capturePath
+                        ? new StatefulPathStep(edge, null, new Dictionary<IItem, int>(),
+                            new Dictionary<string, int>())
+                        : null);
                 }
                 continue;
             }
 
 
             bool unlocked = false;
-            var (unlockState, yields) = UnlockNode(inventory, current, state, currentNode);
+            var (unlockState, yields, unlockStrategy, unlockResult) =
+                UnlockNode(inventory, current, state, currentNode);
+            Dictionary<IItem, int>? unlockRequirements =
+                _capturePath ? new Dictionary<IItem, int>() : null;
+            Dictionary<string, int>? unlockResources =
+                _capturePath ? new Dictionary<string, int>() : null;
+            bool unlockRecordedOnIncoming = false;
             if (unlockState != null)
             {
+                if (_capturePath)
+                    unlockResources = ResourcesSpent(state, unlockState.Value);
                 state = unlockState.Value;
+                if (_capturePath && unlockResult != null)
+                {
+                    foreach (var (item, count) in unlockResult.UsedItems ?? [])
+                        unlockRequirements![current.World.GetItem(item)] = count;
+                    AddResourceRequirements(
+                        unlockRequirements!, unlockResult.Cost!.Value, current.World);
+                }
+                if (_capturePath && _predecessors[current] is { } predecessor
+                    && _recordedUnlocks.Add(current)
+                    && (unlockStrategy != null || unlockRequirements!.Count > 0))
+                {
+                    _predecessors[current] = MergePathStep(
+                        predecessor, unlockStrategy, unlockRequirements!, unlockResources!);
+                    unlockRecordedOnIncoming = true;
+                }
+                else if (_capturePath && _recordedUnlocks.Contains(current)
+                    && _predecessors[current] != null)
+                    unlockRecordedOnIncoming = true;
                 if (current.Node!.NodeType == "door")
                 {
                     state = state.WithDoorUnlocked(current.NodeId);
@@ -302,6 +360,8 @@ public class StatefulSearcher : ISearcher
                 unlocked = true;
                 foreach (var yieldItem in yields)
                 {
+                    if (ReferenceEquals(yieldItem.Key.Item2, _excludedPickup))
+                        continue;
                     if (foundItems.TryGetValue(yieldItem.Key, out var existingState))
                     {
                         if (yieldItem.Value.Dominates(existingState))
@@ -312,6 +372,15 @@ public class StatefulSearcher : ISearcher
                     else
                     {
                         foundItems.Add(yieldItem.Key, yieldItem.Value);
+                    }
+                }
+                if (_capturePath)
+                {
+                    foreach (var (yieldLocation, yieldItem) in yields.Keys)
+                    {
+                        _pickupDetails.TryAdd((yieldLocation, yieldItem),
+                            new StatefulPickup(yieldItem, unlockStrategy,
+                                unlockRequirements!, unlockResources!));
                     }
                 }
             }
@@ -327,7 +396,13 @@ public class StatefulSearcher : ISearcher
                     _visitedItemLocations.Add(current, (state, inventory.Clone()));
                 }
 
-                if (current.Item != null)
+                if (_capturePath && current.Item != null)
+                    _pickupDetails.TryAdd((current, current.Item),
+                        new StatefulPickup(current.Item, unlockStrategy,
+                            unlockRequirements!, unlockResources!));
+
+                if (current.Item != null && !ReferenceEquals(current.Item, _excludedPickup)
+                    && _collectItemAt(current))
                 {
                     if (foundItems.TryGetValue((current, current.Item), out var existingState))
                     {
@@ -368,11 +443,20 @@ public class StatefulSearcher : ISearcher
                 if (edge is not SuperMetroid.Edge)
                 {
                     // This is a regular base edge, so no strats to consider, just enqueue the next vertex
-                    EnqueueState((Vertex)edge.To, state);
+                    EnqueueState((Vertex)edge.To, state, _capturePath
+                        ? new StatefulPathStep(edge,
+                            unlockRecordedOnIncoming ? null : unlockStrategy,
+                            unlockRecordedOnIncoming
+                                ? new Dictionary<IItem, int>()
+                                : unlockRequirements!,
+                            unlockRecordedOnIncoming
+                                ? new Dictionary<string, int>()
+                                : unlockResources!)
+                        : null);
                     continue;
                 }
 
-                var stratStates = new List<(Strat, VisitedState)>();
+                var stratStates = new List<(Strat Strat, VisitedState State, RequirementResult Result)>();
                 foreach (var strat in ((Edge)edge).Strats ?? [])
                 {
                     //Console.WriteLine($"Checking strat {strat.Name} at {current.Name} with state {state}");
@@ -406,7 +490,21 @@ public class StatefulSearcher : ISearcher
                         .WithObstacles(strat.ClearsObstacles ?? [])
                         .WithoutObstacles(strat.ResetsObstacles ?? []);
 
-                    stratStates.Add((strat, finalState));
+                    stratStates.Add((strat, finalState, result));
+
+                    if (_capturePath)
+                    {
+                        var stratRequirements = (result.UsedItems ?? []).ToDictionary(
+                            pair => (IItem)current.World.GetItem(pair.Key), pair => pair.Value);
+                        AddResourceRequirements(stratRequirements, result.Cost!.Value, current.World);
+                        foreach (var flag in strat.SetsFlags ?? [])
+                        {
+                            var flagItem = current.World.GetItem(flag);
+                            _pickupDetails.TryAdd((current, flagItem),
+                                new StatefulPickup(flagItem, strat.Name, stratRequirements,
+                                    ResourcesSpent(state, finalState)));
+                        }
+                    }
                 }
 
                 if (stratStates.Count == 0)
@@ -415,8 +513,8 @@ public class StatefulSearcher : ISearcher
                 }
 
                 // Find the best state (by comparing health and ammo) out of the completed strats and use that for enqueueing the next vertex
-                var (bestStrat, bestState) = stratStates.First();
-                foreach (var (strat, stratState) in stratStates)
+                var (bestStrat, bestState, bestResult) = stratStates.First();
+                foreach (var (strat, stratState, result) in stratStates)
                 {
                     // If any of the strats we "could" use sets flags, add them to the found items
                     if (strat.SetsFlags != null)
@@ -424,6 +522,8 @@ public class StatefulSearcher : ISearcher
                         foreach (var flag in strat.SetsFlags)
                         {
                             var flagItem = current.World.GetItem(flag);
+                            if (ReferenceEquals(flagItem, _excludedPickup))
+                                continue;
                             if (foundItems.TryGetValue((current, flagItem), out var existingState))
                             {
                                 if (stratState.Dominates(existingState))
@@ -442,6 +542,7 @@ public class StatefulSearcher : ISearcher
                     {
                         bestState = stratState;
                         bestStrat = strat;
+                        bestResult = result;
                     }
                 }
 
@@ -453,14 +554,34 @@ public class StatefulSearcher : ISearcher
                     bestState = bestState with { ObstacleBitFlags = 0, DoorUnlockedFlags = 0 };
                 }
 
-                EnqueueState(toVtx, bestState);
+                StatefulPathStep? pathStep = null;
+                if (_capturePath)
+                {
+                    var requirements = (bestResult.UsedItems ?? []).ToDictionary(
+                        pair => (IItem)current.World.GetItem(pair.Key), pair => pair.Value);
+                    AddResourceRequirements(requirements, bestResult.Cost!.Value, current.World);
+                    if (!unlockRecordedOnIncoming)
+                    {
+                        foreach (var (item, count) in unlockRequirements!)
+                            requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
+                    }
+                    pathStep = new StatefulPathStep(edge,
+                        JoinStrategies(unlockRecordedOnIncoming ? null : unlockStrategy,
+                            bestStrat.Name), requirements,
+                        MergeResources(
+                            unlockRecordedOnIncoming
+                                ? new Dictionary<string, int>()
+                                : unlockResources!,
+                            ResourcesSpent(state, bestState)));
+                }
+                EnqueueState(toVtx, bestState, pathStep);
             }
         }
 
         return foundItems;
     }
 
-    private void EnqueueState(Vertex v, VisitedState s)
+    private void EnqueueState(Vertex v, VisitedState s, StatefulPathStep? step)
     {
         if (!_inQueue.TryGetValue(v, out var list))
         {
@@ -475,15 +596,15 @@ public class StatefulSearcher : ISearcher
 
         list.RemoveAll(existing => s.Dominates(existing));
         list.Add(s);
-        _queue.Enqueue((v, s));
+        _queue.Enqueue((v, s, step));
     }
 
-    private (Vertex, VisitedState)? DequeueState()
+    private (Vertex, VisitedState, StatefulPathStep?)? DequeueState()
     {
         if (_queue.Count == 0)
             return null;
 
-        var (v, s) = _queue.Dequeue();
+        var (v, s, step) = _queue.Dequeue();
 
         if (_inQueue.TryGetValue(v, out var list))
         {
@@ -491,12 +612,81 @@ public class StatefulSearcher : ISearcher
             if (list.Count == 0)
                 _inQueue.Remove(v);
         }
-        return (v, s);
+        return (v, s, step);
     }
 
-    private (VisitedState?, Dictionary<(Vertex, IItem), VisitedState>) UnlockNode(Inventory inventory, Vertex current, VisitedState lockState, Node currentNode)
+    private static void AddResourceRequirements(
+        Dictionary<IItem, int> requirements, RequirementCost cost, IWorld world)
+    {
+        (string Type, int Amount)[] resources =
+        [
+            ("Energy", cost.Energy),
+            ("Missile", cost.Missiles),
+            ("Super", cost.SuperMissiles),
+            ("PowerBomb", cost.PowerBombs),
+        ];
+        foreach (var (type, amount) in resources)
+        {
+            // AmmoDrain stores a drain marker in bit 15. It consumes whatever
+            // resource is present (up to the encoded amount), so it is not a
+            // capacity requirement and must not be converted into item packs.
+            if (amount > 0x8000)
+                continue;
+            var (itemName, count) = RequirementHandler.RequiredExpansion(type, amount);
+            if (count <= 0)
+                continue;
+            var item = world.GetItem(itemName);
+            requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
+        }
+    }
+
+    private static StatefulPathStep MergePathStep(
+        StatefulPathStep step, string? strategy, IReadOnlyDictionary<IItem, int> requirements,
+        IReadOnlyDictionary<string, int> resourcesSpent)
+    {
+        var mergedRequirements = step.Requirements.ToDictionary();
+        foreach (var (item, count) in requirements)
+            mergedRequirements[item] = Math.Max(mergedRequirements.GetValueOrDefault(item), count);
+        return step with
+        {
+            Strategy = JoinStrategies(step.Strategy, strategy),
+            Requirements = mergedRequirements,
+            ResourcesSpent = MergeResources(step.ResourcesSpent, resourcesSpent),
+        };
+    }
+
+    private static Dictionary<string, int> ResourcesSpent(VisitedState before, VisitedState after)
+    {
+        var resources = new Dictionary<string, int>();
+        if (before.Energy > after.Energy)
+            resources["Energy"] = before.Energy - after.Energy;
+        if (before.Missiles > after.Missiles)
+            resources["Missiles"] = before.Missiles - after.Missiles;
+        if (before.SuperMissiles > after.SuperMissiles)
+            resources["Super Missiles"] = before.SuperMissiles - after.SuperMissiles;
+        if (before.PowerBombs > after.PowerBombs)
+            resources["Power Bombs"] = before.PowerBombs - after.PowerBombs;
+        return resources;
+    }
+
+    private static Dictionary<string, int> MergeResources(
+        IReadOnlyDictionary<string, int> first, IReadOnlyDictionary<string, int> second)
+    {
+        var merged = first.ToDictionary();
+        foreach (var (resource, amount) in second)
+            merged[resource] = merged.GetValueOrDefault(resource) + amount;
+        return merged;
+    }
+
+    private static string? JoinStrategies(string? first, string? second) =>
+        first == null ? second : second == null || second == first ? first : $"{first}; {second}";
+
+    private (VisitedState?, Dictionary<(Vertex, IItem), VisitedState>, string?, RequirementResult?)
+        UnlockNode(Inventory inventory, Vertex current, VisitedState lockState, Node currentNode)
     {
         var yields = new Dictionary<(Vertex, IItem), VisitedState>();
+        var usedStrategies = new List<string>();
+        var combinedResult = RequirementResult.Success(RequirementCost.ZeroCost);
 
         if (currentNode.Locks != null)
         {
@@ -513,7 +703,7 @@ public class StatefulSearcher : ISearcher
                     }
                 }
 
-                var unlockStratStates = new List<VisitedState>();
+                var unlockStratStates = new List<(Strat Strat, VisitedState State, RequirementResult Result)>();
 
 
                 foreach (var unlockStrat in lck.UnlockStrats ?? [])
@@ -543,33 +733,44 @@ public class StatefulSearcher : ISearcher
                         .WithObstacles(unlockStrat.ClearsObstacles ?? [])
                         .WithoutObstacles(unlockStrat.ResetsObstacles ?? []);
 
-                    unlockStratStates.Add(finalState);
+                    unlockStratStates.Add((unlockStrat, finalState, result));
                 }
 
                 if (unlockStratStates.Count == 0)
                 {
 
-                    return (null, []);
+                    return (null, [], null, null);
                 }
 
-                var bestState = unlockStratStates.First();
-                foreach (var unlockStratState in unlockStratStates)
+                var (bestStrat, bestState, bestResult) = unlockStratStates.First();
+                foreach (var (unlockStrat, unlockStratState, result) in unlockStratStates)
                 {
                     if (unlockStratState.Dominates(bestState))
                     {
                         bestState = unlockStratState;
+                        bestStrat = unlockStrat;
+                        bestResult = result;
                     }
                 }
 
                 lockState = bestState;
+                if (_capturePath)
+                {
+                    usedStrategies.Add(bestStrat.Name);
+                    combinedResult.Cost += bestResult.Cost!.Value;
+                    combinedResult.MergeSuccess(bestResult);
+                }
                 foreach (var yield in lck.Yields ?? [])
                 {
-                    yields.Add((current, current.World.GetItem(yield)), lockState);
+                    var yieldItem = current.World.GetItem(yield);
+                    yields.Add((current, yieldItem), lockState);
                 }
             }
         }
 
-        return (lockState, yields);
+        return (lockState, yields,
+            usedStrategies.Count == 0 ? null : string.Join("; ", usedStrategies),
+            usedStrategies.Count == 0 ? null : combinedResult);
     }
 
     IEnumerable<Randomizer.Graph.Vertex> ISearcher.GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets, bool onlyReachable)
@@ -613,6 +814,12 @@ public class StatefulSearcher : ISearcher
     public bool HasFound(IItem item)
     {
         return _foundItems.Contains(item);
+    }
+
+    /// <summary>Get the inventory resolved by this search.</summary>
+    public Inventory GetInventory()
+    {
+        return _inventory.Clone();
     }
 
     public bool BacktrackLocation(Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace)
@@ -716,6 +923,36 @@ public class StatefulSearcher : ISearcher
     }
 
     public IEnumerable<Randomizer.Graph.Vertex> GetOtherWorld() => _otherWorldLocations;
+
+    public IReadOnlyDictionary<Randomizer.Graph.Vertex, StatefulPathStep?> GetPredecessors() =>
+        _predecessors;
+
+    internal StatefulPickup? GetPickupDetails(Randomizer.Graph.Vertex location, IItem item) =>
+        _pickupDetails.GetValueOrDefault((location, item));
+
+    /// <summary>Item locations that can actually be opened, plus fixed flags yielded
+    /// by strategies. Randomized item contents are included even when collection was
+    /// disabled for sphere generation.</summary>
+    public IEnumerable<(Randomizer.Graph.Vertex Location, StatefulPickup Pickup)> GetPlaythroughPickups()
+    {
+        foreach (var location in _visitedItemLocations.Keys)
+        {
+            if (location.Item != null)
+                yield return (location, _pickupDetails.GetValueOrDefault(
+                    (location, location.Item),
+                    new StatefulPickup(location.Item, null, new Dictionary<IItem, int>(),
+                        new Dictionary<string, int>())));
+        }
+
+        foreach (var ((location, item), _) in _prevItems)
+        {
+            if (!ReferenceEquals(location.Item, item))
+                yield return (location, _pickupDetails.GetValueOrDefault(
+                    (location, item),
+                    new StatefulPickup(item, null, new Dictionary<IItem, int>(),
+                        new Dictionary<string, int>())));
+        }
+    }
 }
 
 public struct VisitedState

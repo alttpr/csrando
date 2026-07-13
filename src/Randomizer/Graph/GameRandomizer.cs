@@ -23,6 +23,14 @@ public abstract class GameRandomizer
     private readonly IItemPooler _itemPooler;
     public SpoilerLog? SpoilerLog;
 
+    internal Inventory PlaythroughStartingItems => _startingItems.Clone();
+    internal HashSet<Vertex> PlaythroughRandomizedLocations =>
+        _itemPooler.SetLocations.All().Values.SelectMany(locations => locations).ToHashSet();
+    internal HashSet<IItem> PlaythroughAssumedItems => _itemPooler.Pool
+        .Where(item => item.Weight is > 0 and <= 9000)
+        .Select(item => item.Item)
+        .ToHashSet();
+
     /// <summary>
     /// Set up the Randomizer. This involves:
     /// 1. Creating a new Graph
