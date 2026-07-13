@@ -672,7 +672,9 @@ public class ItemMapper
             {
                 ["z1"] = new byte[] { 0x2f },
                 ["alttp"] = new byte[] { 0x5a },
-                ["m1"] = new byte[] { 0x0B, 0x5a },
+                // Power-up id $FF = M1 engine's "empty slot" marker; leaves the
+                // location blank instead of spawning a broken custom item.
+                ["m1"] = new byte[] { 0x02, 0xFF },
                 ["sm"] = new byte[] { 0xE0, 0xEF, 0x5a }
             },
             ["RedClock"] = new()
@@ -1527,7 +1529,9 @@ public class ItemMapper
             {
                 ["z1"] = new byte[] { 0x2f },
                 ["alttp"] = new byte[] { 0x5a },
-                ["m1"] = new byte[] { 0x0B, 0x5a },
+                // Power-up id $FF = M1 engine's "empty slot" marker; leaves the
+                // location blank instead of spawning a broken custom item.
+                ["m1"] = new byte[] { 0x02, 0xFF },
                 ["sm"] = new byte[] { 0xE0, 0xEF, 0x5a }
             },
             ["Bombs"] = new()

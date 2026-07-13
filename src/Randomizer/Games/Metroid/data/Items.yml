@@ -18,5 +18,8 @@ EnergyTank:
   bytes: [0x02, 0x08]
 Missile:
   bytes: [0x02, 0x09]
+# Power-up entry with item id $FF, the engine's "empty slot" marker: the entry is
+# parsed (so doors/extras on the screen still load) but nothing spawns or can be
+# picked up. This is the blank-location encoding; never write it as a custom item.
 Nothing:
-  bytes: [0x0B, 0x5A]
+  bytes: [0x02, 0xFF]

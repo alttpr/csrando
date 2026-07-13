@@ -119,7 +119,9 @@ public static class RomEmitter
                     ?? throw new InvalidOperationException(
                         $"{cell.Area} screen 0x{screen.ScreenId:X2} has an item location without a position");
                 entry.ItemOffset = 0;
-                entry.Payload.AddRange([0x02, 0x00, position]); // item id is overwritten by WriteItems
+                // WriteItems overwrites [type, id]; id $FF is the engine's "empty slot"
+                // marker, so a location that never gets an item written stays blank.
+                entry.Payload.AddRange([0x02, 0xFF, position]);
             }
 
             if (specials.Extras.TryGetValue((cell.Area, screen.ScreenId), out var extras))

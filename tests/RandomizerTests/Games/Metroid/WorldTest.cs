@@ -33,7 +33,9 @@ public sealed class WorldTest
             .All(item => item.Set == nothingSet));
         Assert.IsTrue(pooler.SetLocations[nothingSet]
             .All(location => ReferenceEquals(location.World, world)));
-        CollectionAssert.AreEqual(new byte[] { 0x0B, 0x5A },
+        // Power-up entry with id $FF, the engine's "empty slot" marker: the location
+        // stays blank in-game instead of spawning a broken custom item.
+        CollectionAssert.AreEqual(new byte[] { 0x02, 0xFF },
             world.GetItem("Nothing").Bytes);
     }
 
