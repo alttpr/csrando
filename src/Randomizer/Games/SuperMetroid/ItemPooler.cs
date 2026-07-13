@@ -56,10 +56,8 @@ internal sealed class ItemPooler : IItemPooler
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ETank")), 10),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("ReserveTank")), 4),
 
-            // Combined with the progression-weighted ammo above, these preserve
-            // vanilla's 46 Missile, 10 Super, and 10 Power Bomb expansions.
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Missile")), 35),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Super")), 4),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Missile")), 30),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("Super")), 9),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("PowerBomb")), 4),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("ETank")), 4),
             new PooledItem(ItemSetName.DefaultSet, 9001, world.GetItem("XRayScope")),

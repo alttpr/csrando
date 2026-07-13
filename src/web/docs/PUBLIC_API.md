@@ -82,6 +82,20 @@ https://example.com/seed/abc123
 
 The `worlds` object contains base64-encoded patch data. Bots that only need to announce the generated seed can ignore it and only use `id` and `seed`. Bots generating a race seed should set `IncludeSpoiler` to `false`; the generated seed can still be shared through its public permalink without exposing its spoiler log.
 
+### Logical playthrough spoiler data
+
+When a spoiler is included, `spoilerLog.playthrough.data` contains a JSON-encoded logical playthrough. It identifies the pickups required to finish the seed and groups them into progression spheres. The seed page renders this data as the **Logical playthrough** panel.
+
+The decoded object has these top-level fields:
+
+- `complete`: whether the generated playthrough reached every victory item.
+- `victoryItems`: the victory items required for the seed.
+- `startingItems`: inventory available before the first sphere.
+- `spheres`: ordered progression spheres. Each pickup includes its item, location, required items, and route.
+- `warnings`: generation or analysis warnings, if any.
+
+Each route step can include item requirements, resource expenditure, a Super Metroid strategy, and `crossGame: true` for portal travel. `meta` items and pickups are logic events or flags rather than normal item locations; clients that present a simplified playthrough should hide them except for victory items. The field is optional so clients must continue to handle spoiler logs that do not contain it.
+
 For a Discord bot, the common flow is:
 
 1. Fetch or cache metadata for the randomizer.

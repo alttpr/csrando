@@ -1,7 +1,7 @@
 ---
 title: Settings
 description: A reference for every setting available in the Basic options view, and what each choice does.
-lastUpdated: 2026-07-11
+lastUpdated: 2026-07-13
 ---
 
 # Settings
@@ -173,6 +173,8 @@ together with Zelda 1, Super Metroid and Metroid 1.
   * *Medium* — Adds intermediate tricks (heat runs, suitless Maridia, mid-air morph, etc.).
   * *Hard* — Adds advanced/precise tricks.
   * *Custom* — Use a custom technique set (configured elsewhere).
+* **Early Morph Ball** — Forces Morph Ball into an early reachable location. Use this when
+  you want Morph Ball available near the start rather than relying on normal item placement.
 * **Map Randomizer** — *None* uses the vanilla map; *Standard* enables map randomization.
 * **Spawn All Items** — Spawn every item immediately regardless of game state (e.g. without
   needing to kill bosses such as Phantoon).
@@ -193,6 +195,8 @@ together with Zelda 1, Super Metroid and Metroid 1.
 
 * **Logic** — The skill level assumed by item placement. Currently only *Basic* is
   available.
+* **Early Morph Ball** — Forces Morph Ball into an early reachable location. Use this when
+  you want Morph Ball available near the start rather than relying on normal item placement.
 * **Map Shuffle** — Generates a completely new randomized world map instead of the vanilla
   one. *(Early testing — expect possible bugs and balance quirks.)* The option below only
   takes effect when this is enabled:
