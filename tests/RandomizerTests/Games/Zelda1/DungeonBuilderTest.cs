@@ -1058,6 +1058,39 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    public void Generate_CellarEndpointRoomsAreUnique()
+    {
+        // A room has only one staircase destination in the ROM. If two cellars share an
+        // endpoint, whichever cellar is written last replaces the first destination and makes
+        // the other cellar inaccessible (or turns a two-sided passage into a one-sided one).
+        const int seed = 2;
+        var data = CreateYamlReader().Data!;
+        var config = new DungeonConfig
+        {
+            Width = 6,
+            Height = 6,
+            Rooms = 22,
+            Segments = 1,
+            ItemCellars = 1,
+        };
+        var builder = CreateBuilder(data, level: 4, config, seed);
+        builder.Generate();
+
+        var cellars = builder.GetSpoilerData().Rooms
+            .Where(r => r.Roles.Contains("Cellar"))
+            .ToList();
+        Assert.AreEqual(2, cellars.Count, "The fixture should generate one item cellar and one connector cellar.");
+
+        var duplicateEndpoint = cellars
+            .SelectMany(r => r.ConnectedTo ?? [])
+            .GroupBy(c => (X: c[0], Y: c[1]))
+            .FirstOrDefault(g => g.Count() > 1);
+
+        Assert.IsNull(duplicateEndpoint,
+            $"Room ({duplicateEndpoint?.Key.X},{duplicateEndpoint?.Key.Y}) is an endpoint for multiple cellars.");
+    }
+
+    [TestMethod]
     public void Generate_SegmentedDungeon_HasConnectorRooms()
     {
         // Level 5+ should have multiple segments and connectors

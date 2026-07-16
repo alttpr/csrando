@@ -1633,11 +1633,13 @@ internal class DungeonBuilder
             int targetMax = targetDistances.Max(d => d.dist);
 
             var sourceRooms = sourceDistances
-                .Where(d => d.dist >= sourceMax * connectorDistanceFactor && !d.room.HasAnyRole(RoomRole.Connector))
+                .Where(d => d.dist >= sourceMax * connectorDistanceFactor
+                         && !d.room.HasAnyRole(RoomRole.Connector | RoomRole.Stairs))
                 .Select(d => d.room).ToArray();
 
             var targetRooms = targetDistances
-                .Where(d => d.dist <= targetMax * inverseFactor && !d.room.HasAnyRole(RoomRole.Connector))
+                .Where(d => d.dist <= targetMax * inverseFactor
+                         && !d.room.HasAnyRole(RoomRole.Connector | RoomRole.Stairs))
                 .Select(d => d.room).ToArray();
 
             var sourceRoom = sourceRooms[_rnd.Next(sourceRooms.Length)];
@@ -1674,7 +1676,8 @@ internal class DungeonBuilder
 
             int minDistance = (int)(criticalPathDistances.Values.Max() * distanceFactor);
             var possibleRooms = _map.UsedRooms
-                .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.Boss | RoomRole.Cellar | RoomRole.Connector | RoomRole.LevelNineCheck)
+                .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.Boss | RoomRole.Cellar
+                                         | RoomRole.Connector | RoomRole.Stairs | RoomRole.LevelNineCheck)
                          && criticalPathDistances[r] >= minDistance)
                 .ToArray();
 
@@ -1691,7 +1694,8 @@ internal class DungeonBuilder
         int minDistance = (int)(criticalPathDistances.Values.Max() * distanceFactor);
 
         var candidates = _map.UsedRooms
-            .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.Cellar | RoomRole.Connector | RoomRole.LevelNineCheck) &&
+            .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.Cellar
+                                     | RoomRole.Connector | RoomRole.Stairs | RoomRole.LevelNineCheck) &&
                         criticalPathDistances[r] >= minDistance)
             .ToArray();
 
