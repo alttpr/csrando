@@ -163,6 +163,8 @@ public class RequirementHandler
 {
     private readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
     private readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
+    private readonly Dictionary<string, HashSet<string>> EnemyInvulnerabilities =
+        new Dictionary<string, HashSet<string>>();
     private readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
     private readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
     private readonly HashSet<string> AllowedNotableStrategies = new HashSet<string>();
@@ -193,6 +195,8 @@ public class RequirementHandler
         foreach (var enemy in reader.Enemies.SelectMany(e => e.Enemies))
         {
             Enemies[enemy.Name] = enemy;
+            EnemyInvulnerabilities[enemy.Name] = new HashSet<string>(
+                enemy.Invul, StringComparer.Ordinal);
             EnemyDropExpectations[enemy.Name] = CalculatePerEnemyDropExpectation(enemy);
             foreach (var attack in enemy.Attacks)
             {
@@ -433,26 +437,21 @@ public class RequirementHandler
                           },*/
 
             case Requirement.EnemyKill enemyKill:
-                var candidateWeapons = new List<Weapon>();
-                var usedWeapons = new HashSet<Weapon>();
+                bool hasCandidateWeapon = false;
                 foreach (var weapon in weapons)
                 {
-
-                    if (enemyKill.ExcludedWeapons != null && enemyKill.ExcludedWeapons.Contains(weapon.Name))
-                    {
+                    if (enemyKill.ExcludedWeapons != null
+                        && enemyKill.ExcludedWeapons.Contains(weapon.Name))
                         continue;
-                    }
-
-                    if (enemyKill.ExplicitWeapons != null && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
-                    {
+                    if (enemyKill.ExplicitWeapons != null
+                        && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
                         continue;
-                    }
-
-                    candidateWeapons.Add(weapon);
+                    hasCandidateWeapon = true;
+                    break;
                 }
 
                 // If no weapons pass initial criteria, fail quickly
-                if (candidateWeapons.Count == 0)
+                if (!hasCandidateWeapon)
                 {
                     return RequirementResult.Fail(new[]
                     {
@@ -461,26 +460,27 @@ public class RequirementHandler
                     });
                 }
 
-
+                HashSet<Weapon>? usedWeapons = captureDetails ? [] : null;
                 // For each enemy group, check if at least one weapon can hurt them
                 foreach (var enemyGroup in enemyKill.Enemies)
                 {
-                    var enemyType = enemyGroup.First();
-                    var enemyCount = enemyGroup.Count();
-
-                    var enemy = Enemies[enemyType];
-                    // Possibly use a cached HashSet if performance is an issue
-                    var invulSet = new HashSet<string>(enemy.Invul);
+                    var invulSet = EnemyInvulnerabilities[enemyGroup[0]];
 
                     bool canKillEnemy = false;
-                    foreach (var w in candidateWeapons)
+                    foreach (var weapon in weapons)
                     {
-                        if (!invulSet.Contains(w.Name))
-                        {
-                            canKillEnemy = true;
-                            usedWeapons.Add(w);
-                            break;
-                        }
+                        if (enemyKill.ExcludedWeapons != null
+                            && enemyKill.ExcludedWeapons.Contains(weapon.Name))
+                            continue;
+                        if (enemyKill.ExplicitWeapons != null
+                            && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
+                            continue;
+                        if (invulSet.Contains(weapon.Name))
+                            continue;
+
+                        canKillEnemy = true;
+                        usedWeapons?.Add(weapon);
+                        break;
                     }
 
                     if (!canKillEnemy)
@@ -496,7 +496,7 @@ public class RequirementHandler
 
                 // If we get here, we can kill at least one enemy in each group
                 var enemyKillResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                if (captureDetails)
+                if (usedWeapons != null)
                 {
                     foreach (var weapon in usedWeapons)
                         enemyKillResult.MergeSuccess(HandleRequirement(

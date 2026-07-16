@@ -71,6 +71,26 @@ public sealed class ForwardStateTest
         Assert.AreEqual(5, state.ToVisited(expandedContext).Missiles);
     }
 
+    [TestMethod]
+    public void Frontier_PreservesDominanceAcrossInlineAndOverflowStates()
+    {
+        var frontier = new ForwardStateFrontier();
+        for (int energy = 0; energy < 6; energy++)
+        {
+            Assert.IsTrue(frontier.AddNondominated(new ForwardState(
+                energy, 5 - energy, 0, 0, 0, 0)));
+        }
+
+        Assert.AreEqual(6, frontier.Count);
+        var best = ForwardState.Empty;
+        Assert.IsTrue(frontier.AddNondominated(best));
+        Assert.AreEqual(1, frontier.Count);
+        Assert.IsFalse(frontier.AddNondominated(best));
+
+        frontier.RemoveEqual(best);
+        Assert.IsTrue(frontier.IsEmpty);
+    }
+
     private static (World World, Inventory Inventory) CreateWorldAndInventory()
     {
         var graph = new Graph();

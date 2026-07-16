@@ -23,6 +23,14 @@ internal sealed class ReverseBacktrackSearch
     private readonly HashSet<Weapon> _weapons;
     private readonly Dictionary<RequirementEvaluationKey, RequirementResult>
         _requirementResults = [];
+    private readonly List<ReverseState> _edgeCandidates = [];
+    private readonly List<ReverseState> _edgeFrontier = [];
+    private readonly List<ReverseState> _unlockResults = [];
+    private readonly List<ReverseState> _lockedEdgeCandidates = [];
+    private readonly List<ReverseState> _lockedEdgeFrontier = [];
+    private readonly List<ReverseState> _unlockCurrent = [];
+    private readonly List<ReverseState> _unlockCandidates = [];
+    private readonly List<ReverseState> _unlockPruned = [];
     private ReverseBacktrackSearch(
         World world, Inventory inventory, SmSearchModel model)
     {
@@ -137,29 +145,30 @@ internal sealed class ReverseBacktrackSearch
             DoorUnlockedFlags = state.DoorUnlockedFlags | unlockedDoor,
         };
 
-        var edgeStates = new List<ReverseState>();
+        _edgeCandidates.Clear();
         if (edge is not Edge smEdge)
         {
-            edgeStates.Add(state);
+            _edgeCandidates.Add(state);
         }
         else
         {
             foreach (var strategy in smEdge.Strats ?? [])
-                ApplyStrategy(state, strategy, edgeStates);
+                ApplyStrategy(state, strategy, _edgeCandidates);
         }
 
-        foreach (var edgeState in Prune(edgeStates))
+        Prune(_edgeCandidates, _edgeFrontier);
+        foreach (var edgeState in _edgeFrontier)
         {
-            var unlockedStates = new List<ReverseState>();
-            ApplyUnlocks(from, edgeState, unlockedStates);
-            foreach (var unlocked in unlockedStates)
+            _unlockResults.Clear();
+            ApplyUnlocks(from, edgeState, _unlockResults);
+            foreach (var unlocked in _unlockResults)
                 output.Add(FinishVertex(unlocked, unlockedDoor));
         }
 
         if (from.RoomId == to.RoomId
             && from.Node?.Locks is { Length: > 0 })
         {
-            var lockedEdgeStates = new List<ReverseState>();
+            _lockedEdgeCandidates.Clear();
             if (edge is Edge lockedSmEdge)
             {
                 foreach (var strategy in lockedSmEdge.Strats ?? [])
@@ -168,17 +177,18 @@ internal sealed class ReverseBacktrackSearch
                         {
                             DoorUnlockedFlags = state.DoorUnlockedFlags
                                 & ~unlockedDoor,
-                        }, strategy, lockedEdgeStates);
+                        }, strategy, _lockedEdgeCandidates);
                 }
             }
             else
             {
-                lockedEdgeStates.Add(state with
+                _lockedEdgeCandidates.Add(state with
                 {
                     DoorUnlockedFlags = state.DoorUnlockedFlags & ~unlockedDoor,
                 });
             }
-            foreach (var lockedState in Prune(lockedEdgeStates))
+            Prune(_lockedEdgeCandidates, _lockedEdgeFrontier);
+            foreach (var lockedState in _lockedEdgeFrontier)
             {
                 // Forward traversal may move along an in-room edge while the
                 // current door remains locked (for example, enter a gray-door
@@ -203,24 +213,32 @@ internal sealed class ReverseBacktrackSearch
     private void ApplyUnlocks(
         Vertex vertex, ReverseState downstream, List<ReverseState> output)
     {
-        IReadOnlyList<ReverseState> states = [downstream];
-        foreach (var nodeLock in (vertex.Node?.Locks ?? []).Reverse())
+        _unlockCurrent.Clear();
+        _unlockCurrent.Add(downstream);
+        List<ReverseState> states = _unlockCurrent;
+        List<ReverseState> pruned = _unlockPruned;
+        var locks = vertex.Node?.Locks ?? [];
+        for (int lockIndex = locks.Length - 1; lockIndex >= 0; lockIndex--)
         {
-            var next = new List<ReverseState>();
+            var nodeLock = locks[lockIndex];
+            _unlockCandidates.Clear();
             foreach (var state in states)
             {
                 if (nodeLock.Lock != null
                     && !EvaluateRequirement(state, nodeLock.Lock).Met)
                 {
-                    next.Add(state);
+                    _unlockCandidates.Add(state);
                     continue;
                 }
 
                 foreach (var strategy in nodeLock.UnlockStrats ?? [])
-                    ApplyStrategy(state, strategy, next,
+                    ApplyStrategy(state, strategy, _unlockCandidates,
                         _model.FlagsProducedInRoom(vertex.RoomId));
             }
-            states = Prune(next);
+            Prune(_unlockCandidates, pruned);
+            var oldStates = states;
+            states = pruned;
+            pruned = oldStates;
             if (states.Count == 0)
                 return;
 
@@ -349,13 +367,14 @@ internal sealed class ReverseBacktrackSearch
         DoorUnlockedFlags = state.DoorUnlockedFlags,
     };
 
-    private static List<ReverseState> Prune(
-        IReadOnlyList<ReverseState> candidates)
+    private static void Prune(
+        IReadOnlyList<ReverseState> candidates, List<ReverseState> frontier)
     {
-        var frontier = new List<ReverseState>(candidates.Count);
+        frontier.Clear();
+        if (frontier.Capacity < candidates.Count)
+            frontier.Capacity = candidates.Count;
         for (int index = 0; index < candidates.Count; index++)
             AddToFrontier(frontier, candidates[index]);
-        return frontier;
     }
 
     private bool Add(Vertex vertex, ReverseState state)

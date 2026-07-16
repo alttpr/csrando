@@ -22,13 +22,13 @@ public sealed record StatefulPickup(
 public class StatefulSearcher : ISearcher
 {
     private readonly Graph _graph;
-    private readonly List<ForwardState>?[] _visitedStates;
+    private readonly ForwardStateFrontier[] _visitedStates;
     private readonly List<int> _visitedStateIds = [];
     private readonly bool[] _visitedStateTouched;
     private readonly UnvisitedFrontier?[] _unvisitedStates;
     private readonly List<int> _unvisitedStateIds = [];
     private readonly Queue<(Vertex vertex, ForwardState state, StatefulPathStep? step)> _queue = new();
-    private readonly List<ForwardState>?[] _inQueue;
+    private readonly ForwardStateFrontier[] _inQueue;
     private readonly List<int> _inQueueIds = [];
     private readonly bool[] _inQueueTouched;
     private readonly Dictionary<Vertex, List<ForwardArrival>> _visitedItemLocations;
@@ -117,9 +117,9 @@ public class StatefulSearcher : ISearcher
         });
 
         _prevItems = [];
-        _visitedStates = new List<ForwardState>?[_searchModel.Capacity];
+        _visitedStates = new ForwardStateFrontier[_searchModel.Capacity];
         _visitedStateTouched = new bool[_searchModel.Capacity];
-        _inQueue = new List<ForwardState>?[_searchModel.Capacity];
+        _inQueue = new ForwardStateFrontier[_searchModel.Capacity];
         _inQueueTouched = new bool[_searchModel.Capacity];
         _visitedVertices = new(1024);
         _unvisitedStates = new UnvisitedFrontier?[_searchModel.Capacity];
@@ -168,7 +168,7 @@ public class StatefulSearcher : ISearcher
             }
             foreach (int vertexId in _visitedStateIds)
             {
-                if (_visitedStates[vertexId] != null)
+                if (!_visitedStates[vertexId].IsEmpty)
                     _visitedVertices.Add(_searchModel.VerticesById[vertexId]!);
             }
 
@@ -285,7 +285,7 @@ public class StatefulSearcher : ISearcher
             // Debt states are independent of capacity. Only vertices selected for
             // dependency re-evaluation need to leave the settled frontier.
             foreach (var (vertex, _) in _startStates)
-                _visitedStates[vertex.Id] = null;
+                _visitedStates[vertex.Id].Clear();
         } while (newItems.Count > 0);
 
         if (_target == null && !_capturePath && !_settledRestartActive
@@ -336,7 +336,7 @@ public class StatefulSearcher : ISearcher
 
         foreach (int vertexId in _visitedStateIds)
         {
-            _visitedStates[vertexId] = null;
+            _visitedStates[vertexId].Clear();
             _visitedStateTouched[vertexId] = false;
         }
         _visitedStateIds.Clear();
@@ -349,7 +349,7 @@ public class StatefulSearcher : ISearcher
         _queue.Clear();
         foreach (int vertexId in _inQueueIds)
         {
-            _inQueue[vertexId] = null;
+            _inQueue[vertexId].Clear();
             _inQueueTouched[vertexId] = false;
         }
         _inQueueIds.Clear();
@@ -376,17 +376,7 @@ public class StatefulSearcher : ISearcher
         if (states != null)
         {
             states.MissingItems.UnionWith(missingItems);
-
-            // If this state is a "best" state, add it
-            if (states.States.Any(s => s.Dominates(state)))
-            {
-                // There is a better state already in the list, only update the missing items
-            }
-            else
-            {
-                states.States.RemoveAll(s => state.Dominates(s));
-                states.States.Add(state);
-            }
+            AddNondominated(states.States, state);
         }
         else
         {
@@ -402,7 +392,7 @@ public class StatefulSearcher : ISearcher
         _queue.Clear();
         foreach (int vertexId in _inQueueIds)
         {
-            _inQueue[vertexId] = null;
+            _inQueue[vertexId].Clear();
             _inQueueTouched[vertexId] = false;
         }
         _inQueueIds.Clear();
@@ -424,36 +414,26 @@ public class StatefulSearcher : ISearcher
 
         while (_queue.Count > 0)
         {
-
             var (current, state, incomingStep) = DequeueState()!.Value;
             if (_trackMetrics)
                 _metricDequeuedStates++;
             _dequeuedStateCount++;
 
             // If we've already visited this vertex with a state that dominates the current state, skip it
-            var visitedStates = _visitedStates[current.Id];
-            if (visitedStates != null
-                && visitedStates.Any(vs => vs.Dominates(state)))
-            {
+            ref var visitedStates = ref _visitedStates[current.Id];
+            bool firstStateAtVertex = visitedStates.IsEmpty;
+            if (!visitedStates.AddNondominated(state))
                 continue;
-            }
 
             // Add the current state to the visited states for this vertex
-            if (visitedStates == null)
+            if (firstStateAtVertex)
             {
-                visitedStates = [];
-                _visitedStates[current.Id] = visitedStates;
                 if (!_visitedStateTouched[current.Id])
                 {
                     _visitedStateTouched[current.Id] = true;
                     _visitedStateIds.Add(current.Id);
                 }
             }
-            else
-            {
-                visitedStates.RemoveAll(state.Dominates);
-            }
-            visitedStates.Add(state);
             if (_capturePath)
                 _predecessors.TryAdd(current, incomingStep);
 
@@ -477,7 +457,7 @@ public class StatefulSearcher : ISearcher
                                 _visitedStateTouched[target.Id] = true;
                                 _visitedStateIds.Add(target.Id);
                             }
-                            _visitedStates[target.Id] = [state];
+                            _visitedStates[target.Id].SetSingle(state);
                             return [];
                         }
 
@@ -601,7 +581,7 @@ public class StatefulSearcher : ISearcher
                             _visitedStateTouched[target.Id] = true;
                             _visitedStateIds.Add(target.Id);
                         }
-                        _visitedStates[target.Id] = [state];
+                        _visitedStates[target.Id].SetSingle(state);
                         return [];
                     }
 
@@ -795,11 +775,9 @@ public class StatefulSearcher : ISearcher
             return;
         }
 
-        var list = _inQueue[v.Id];
-        if (list == null)
+        ref var list = ref _inQueue[v.Id];
+        if (list.IsEmpty)
         {
-            list = [];
-            _inQueue[v.Id] = list;
             if (!_inQueueTouched[v.Id])
             {
                 _inQueueTouched[v.Id] = true;
@@ -807,13 +785,8 @@ public class StatefulSearcher : ISearcher
             }
         }
 
-        if (list.Any(existing => existing.Dominates(s)))
-        {
+        if (!list.AddNondominated(s))
             return;
-        }
-
-        list.RemoveAll(existing => s.Dominates(existing));
-        list.Add(s);
         if (_trackMetrics)
             _metricEnqueues++;
         _queue.Enqueue((v, s, step));
@@ -844,19 +817,38 @@ public class StatefulSearcher : ISearcher
 
     private (Vertex, ForwardState, StatefulPathStep?)? DequeueState()
     {
-        if (_queue.Count == 0)
+        if (!_queue.TryDequeue(out var queued))
             return null;
 
-        var (vertex, state, step) = _queue.Dequeue();
-
-        var list = _inQueue[vertex.Id];
-        if (list != null)
+        var (vertex, state, step) = queued;
+        ref var list = ref _inQueue[vertex.Id];
+        if (!list.IsEmpty)
         {
-            list.RemoveAll(candidate => candidate.Equals(state));
-            if (list.Count == 0)
-                _inQueue[vertex.Id] = null;
+            list.RemoveEqual(state);
         }
         return (vertex, state, step);
+    }
+
+    private static bool AddNondominated(
+        List<ForwardState> frontier, ForwardState candidate)
+    {
+        for (int index = 0; index < frontier.Count; index++)
+        {
+            if (frontier[index].Dominates(candidate))
+                return false;
+        }
+
+        int writeIndex = 0;
+        for (int index = 0; index < frontier.Count; index++)
+        {
+            var existing = frontier[index];
+            if (!candidate.Dominates(existing))
+                frontier[writeIndex++] = existing;
+        }
+        if (writeIndex < frontier.Count)
+            frontier.RemoveRange(writeIndex, frontier.Count - writeIndex);
+        frontier.Add(candidate);
+        return true;
     }
 
     private static void AddResourceRequirements(
@@ -1112,10 +1104,21 @@ public class StatefulSearcher : ISearcher
             return;
         }
 
-        if (arrivals.Any(arrival => arrival.State.Dominates(state)))
-            return;
+        for (int index = 0; index < arrivals.Count; index++)
+        {
+            if (arrivals[index].State.Dominates(state))
+                return;
+        }
 
-        arrivals.RemoveAll(arrival => state.Dominates(arrival.State));
+        int writeIndex = 0;
+        for (int index = 0; index < arrivals.Count; index++)
+        {
+            var arrival = arrivals[index];
+            if (!state.Dominates(arrival.State))
+                arrivals[writeIndex++] = arrival;
+        }
+        if (writeIndex < arrivals.Count)
+            arrivals.RemoveRange(writeIndex, arrivals.Count - writeIndex);
         arrivals.Add(new ForwardArrival(state));
     }
 
@@ -1240,7 +1243,7 @@ public class StatefulSearcher : ISearcher
 
         // Debt states do not change when inventory capacity increases.
         foreach (var (vertex, _) in _startStates)
-            _visitedStates[vertex.Id] = null;
+            _visitedStates[vertex.Id].Clear();
 
         if (_startStates.Count > 0)
         {
@@ -1287,6 +1290,141 @@ public class StatefulSearcher : ISearcher
                     new StatefulPickup(item, null, new Dictionary<IItem, int>(),
                         new Dictionary<string, int>())));
         }
+    }
+}
+
+internal struct ForwardStateFrontier
+{
+    private const int InlineCapacity = 4;
+    private ForwardState _state0;
+    private ForwardState _state1;
+    private ForwardState _state2;
+    private ForwardState _state3;
+    private List<ForwardState>? _overflow;
+
+    public int Count { get; private set; }
+    public readonly bool IsEmpty => Count == 0;
+
+    public bool AddNondominated(ForwardState candidate)
+    {
+        for (int index = 0; index < Count; index++)
+        {
+            if (Get(index).Dominates(candidate))
+                return false;
+        }
+
+        int writeIndex = 0;
+        int originalCount = Count;
+        for (int index = 0; index < originalCount; index++)
+        {
+            var existing = Get(index);
+            if (!candidate.Dominates(existing))
+                Set(writeIndex++, existing);
+        }
+        Truncate(writeIndex);
+        AddUnchecked(candidate);
+        return true;
+    }
+
+    public void RemoveEqual(ForwardState state)
+    {
+        int writeIndex = 0;
+        int originalCount = Count;
+        for (int index = 0; index < originalCount; index++)
+        {
+            var candidate = Get(index);
+            if (!candidate.Equals(state))
+                Set(writeIndex++, candidate);
+        }
+        Truncate(writeIndex);
+    }
+
+    public void SetSingle(ForwardState state)
+    {
+        Clear();
+        AddUnchecked(state);
+    }
+
+    public void Clear()
+    {
+        _state0 = default;
+        _state1 = default;
+        _state2 = default;
+        _state3 = default;
+        _overflow?.Clear();
+        Count = 0;
+    }
+
+    private readonly ForwardState Get(int index) => index switch
+    {
+        0 => _state0,
+        1 => _state1,
+        2 => _state2,
+        3 => _state3,
+        _ => _overflow![index - InlineCapacity],
+    };
+
+    private void Set(int index, ForwardState state)
+    {
+        switch (index)
+        {
+            case 0:
+                _state0 = state;
+                break;
+            case 1:
+                _state1 = state;
+                break;
+            case 2:
+                _state2 = state;
+                break;
+            case 3:
+                _state3 = state;
+                break;
+            default:
+                _overflow![index - InlineCapacity] = state;
+                break;
+        }
+    }
+
+    private void AddUnchecked(ForwardState state)
+    {
+        switch (Count)
+        {
+            case 0:
+                _state0 = state;
+                break;
+            case 1:
+                _state1 = state;
+                break;
+            case 2:
+                _state2 = state;
+                break;
+            case 3:
+                _state3 = state;
+                break;
+            default:
+                (_overflow ??= new List<ForwardState>(InlineCapacity)).Add(state);
+                break;
+        }
+        Count++;
+    }
+
+    private void Truncate(int count)
+    {
+        int retainedOverflow = Math.Max(0, count - InlineCapacity);
+        if (_overflow != null && _overflow.Count > retainedOverflow)
+            _overflow.RemoveRange(
+                retainedOverflow, _overflow.Count - retainedOverflow);
+
+        if (count < 4)
+            _state3 = default;
+        if (count < 3)
+            _state2 = default;
+        if (count < 2)
+            _state1 = default;
+        if (count < 1)
+            _state0 = default;
+        Count = count;
     }
 }
 
@@ -1371,7 +1509,7 @@ internal readonly record struct ForwardState(
         {
             int difference = cost.Missiles - missiles;
             cost.Missiles = missiles;
-            cost.SuperMissiles += (int)Math.Ceiling(difference / 3m);
+            cost.SuperMissiles += (difference + 2) / 3;
         }
 
         if (energy - cost.Energy < 0
@@ -1453,7 +1591,7 @@ public struct VisitedState
         {
             var diff = Math.Abs(Missiles - cost.Missiles);
             cost.Missiles = Missiles;
-            cost.SuperMissiles += (int)Math.Ceiling(diff / 3.0m);
+            cost.SuperMissiles += (diff + 2) / 3;
         }
 
         // Check if we have enough resources to apply the cost, and also handle refilling (negative numbers by checking against the max values in our inventory)
