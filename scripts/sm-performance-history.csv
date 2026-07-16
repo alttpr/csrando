@@ -1,0 +1,3 @@
+date,checkpoint,commit,baseline_commit,settings,seeds,attempts,successful_attempts,paired_samples,mean_ms,median_ms,p95_ms,paired_reduction_pct,paired_speedup,failure_seeds,notes
+2026-07-16,main,c50d6f04,,scripts/settings-sm-only.json,9876-9905,30,26,24,7518,7321,9945,,,"9886;9890;9898;9902","Local main; timing statistics use seeds successful on both revisions."
+2026-07-16,reverse-search-v1,28917857,c50d6f04,scripts/settings-sm-only.json,9876-9905,30,24,24,4174,4097,4726,44.48,1.80,"9881;9886;9890;9898;9902;9903","Reverse traversal, forward-search, requirement, and profiler-guided optimizations; timing statistics use seeds successful on both revisions."

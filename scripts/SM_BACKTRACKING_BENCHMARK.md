@@ -97,6 +97,11 @@ winnability check for seeds 9886, 9890, 9898, and 9902. The optimized branch
 failed those seeds plus 9881 and 9903; failed attempts are reported separately
 and are not included in the timing comparison.
 
+The aggregate results are also retained in
+`scripts/sm-performance-history.csv`. Add one checkpoint row after each accepted
+optimization pass so the final progress report can chart every improvement from
+the same seed cohort without depending on ignored artifact files.
+
 ## CPU profiling
 
 Install `dotnet-trace` into the artifacts directory so it does not alter the
