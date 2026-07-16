@@ -1,23 +1,36 @@
 namespace Randomizer.Graph;
 
-using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Representation of Players inventory for graph based traversal.
+/// Item counts are stored in a flat array indexed by <see cref="IItem.Id"/> (ids are dense,
+/// assigned by <see cref="Graph.RegisterItem"/>), so lookups are array reads and Clone — which
+/// the key-door search performs for every explored state — is a flat array copy.
 /// </summary>
 public sealed class Inventory
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private readonly BitArray _bits = new(400);
-    private readonly Dictionary<IItem, int> _itemCount = new();
+    private const int InitialCapacity = 400;
+
+    private int[] _counts;
+    // Item instance for each held id, so the inventory can be enumerated (All/Merge).
+    private IItem?[] _items;
     private readonly Dictionary<IWorld, float> _health = new();
+
+    /// <summary>
+    /// Bumped on every mutation; lets callers cheaply detect that an inventory is unchanged
+    /// (the door search skips key types whose inputs haven't changed since their last run).
+    /// </summary>
+    internal int Version { get; private set; }
 
     public Inventory(params IItem[] items)
     {
+        _counts = new int[InitialCapacity];
+        _items = new IItem?[InitialCapacity];
         foreach (var item in items)
         {
             AddItem(item);
@@ -26,12 +39,14 @@ public sealed class Inventory
 
     private Inventory(Inventory other)
     {
-        _itemCount = new(other._itemCount);
+        // Faster than array.Clone() (MemberwiseClone); Clone runs for every state the
+        // key-door search explores.
+        _counts = GC.AllocateUninitializedArray<int>(other._counts.Length);
+        Array.Copy(other._counts, _counts, _counts.Length);
+        _items = new IItem?[other._items.Length];
+        Array.Copy(other._items, _items, _items.Length);
         _health = new(other._health);
-        if (other._bits != null)
-        {
-            _bits = (BitArray)other._bits.Clone();
-        }
+        Version = other.Version;
     }
 
     [Conditional("DEBUG")]
@@ -41,15 +56,22 @@ public sealed class Inventory
             _logger.LogWarning("Item {Name} does not have an ID. Make sure to call Graph.RegisterItem before using it.", item.Name);
     }
 
+    private void EnsureCapacity(int id)
+    {
+        if (id < _counts.Length)
+            return;
+
+        int newLength = Math.Max(id + 1, _counts.Length * 2);
+        Array.Resize(ref _counts, newLength);
+        Array.Resize(ref _items, newLength);
+    }
+
     public void AddItem(IItem item, int count = 1)
     {
         CheckItemId(item);
 
-        if (item.Id >= _bits.Length)
-        {
-            _bits.Length = item.Id + 1;
-        }
-        _bits.Set(item.Id, true);
+        EnsureCapacity(item.Id);
+        _items[item.Id] = item;
 
         float healthValue = item.HealthValue;
         if (healthValue > 0f)
@@ -62,29 +84,20 @@ public sealed class Inventory
             AddItem(logicalItem);
         }
 
-        if (!_itemCount.TryAdd(item, count))
-        {
-            _itemCount[item] += count;
-        }
+        _counts[item.Id] += count;
+        Version++;
     }
 
     public void RemoveItem(IItem item, int count = 1)
     {
-        if (!_bits.Get(item.Id))
+        if ((uint)item.Id >= (uint)_counts.Length || _counts[item.Id] == 0)
         {
             throw new Exception("Trying to remove an item not in inventory.");
         }
 
-        int previousCount = _itemCount[item];
-        if (previousCount > count)
-        {
-            _itemCount[item] -= count;
-        }
-        else
-        {
-            _itemCount.Remove(item);
-            _bits.Set(item.Id, false);
-        }
+        int previousCount = _counts[item.Id];
+        _counts[item.Id] = previousCount > count ? previousCount - count : 0;
+        Version++;
     }
 
     /// <summary>
@@ -95,24 +108,22 @@ public sealed class Inventory
     {
         if (item.LogicalItem is { } logicalItem)
         {
-            return _itemCount.GetValueOrDefault(logicalItem, 0);
+            return GetCountById(logicalItem.Id);
         }
 
-        return _itemCount.GetValueOrDefault(item, 0);
+        return GetCountById(item.Id);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int GetCountById(int id)
+    {
+        return (uint)id < (uint)_counts.Length ? _counts[id] : 0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Has(IItem item)
     {
-        if (_bits != null)
-        {
-            if (item.Id >= _bits.Length)
-            {
-                _bits.Length = item.Id + 1;
-            }
-            return _bits.Get(item.Id);
-        }
-        return _itemCount.ContainsKey(item);
+        return GetCountById(item.Id) > 0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -128,16 +139,18 @@ public sealed class Inventory
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool HasAtLeast(IItem item, int count)
     {
-        if (count == 1)
-        {
-            return Has(item);
-        }
-        return _itemCount.GetValueOrDefault(item, 0) >= count;
+        return GetCountById(item.Id) >= count;
     }
 
     internal IReadOnlyDictionary<IItem, int> All()
     {
-        return _itemCount.AsReadOnly();
+        var result = new Dictionary<IItem, int>();
+        for (int id = 0; id < _counts.Length; id++)
+        {
+            if (_counts[id] > 0)
+                result[_items[id]!] = _counts[id];
+        }
+        return result;
     }
 
     /// <summary>
@@ -147,13 +160,15 @@ public sealed class Inventory
     public Inventory Merge(Inventory inventory)
     {
         var newInventory = new Inventory(this);
-        if (_bits != null && inventory._bits != null)
-            newInventory._bits!.Length = Math.Max(_bits.Length, inventory._bits.Length);
+        newInventory.EnsureCapacity(inventory._counts.Length - 1);
 
-        foreach (var (item, count) in inventory._itemCount)
+        for (int id = 0; id < inventory._counts.Length; id++)
         {
-            newInventory._itemCount[item] = newInventory._itemCount.GetValueOrDefault(item, 0) + count;
-            newInventory._bits?.Set(item.Id, true);
+            if (inventory._counts[id] > 0)
+            {
+                newInventory._counts[id] += inventory._counts[id];
+                newInventory._items[id] = inventory._items[id];
+            }
         }
 
         return newInventory;
