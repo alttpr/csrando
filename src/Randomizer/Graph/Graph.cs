@@ -27,6 +27,8 @@ public sealed class Graph
     }
 
     public IEnumerable<Vertex> GetVertices() => _vertices;
+    /// <summary>Number of vertices in the graph. Matches the id space once <see cref="SetVertexIds"/> has run.</summary>
+    public int VertexCount => _verticesById.Length > 0 ? _verticesById.Length : _vertices.Count;
     public Vertex GetVertex(string name) => _verticesByName[name];
     public Vertex GetVertex(int id) => _verticesById[id];
     public bool HasVertex(Vertex vertex) => _vertices.Contains(vertex);
