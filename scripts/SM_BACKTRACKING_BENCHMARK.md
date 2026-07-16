@@ -79,6 +79,24 @@ improvements benefit both Legacy and Reverse modes, and short wall-clock runs
 are subject to machine-load variance. Prefer the within-run Legacy comparison
 when evaluating the backtracking architecture itself.
 
+### Actual main comparison
+
+On 2026-07-16, local `main` at `c50d6f04` and the optimized branch at
+`a6c52c6b` were run as separate Release processes over the same 30 SM-only
+seeds, 9876 through 9905. Timing statistics use the 24 seeds for which both
+revisions completed the post-generation winnability check.
+
+| Revision | Successful attempts | Mean | Median | p95 |
+| --- | ---: | ---: | ---: | ---: |
+| main | 26 / 30 | 7.518 s | 7.321 s | 9.945 s |
+| optimized | 24 / 30 | 4.174 s | 4.097 s | 4.726 s |
+
+Across the paired successful seeds, the optimized branch reduced mean full-seed
+generation time by 44.48% and provided 1.80x throughput. Main failed the
+winnability check for seeds 9886, 9890, 9898, and 9902. The optimized branch
+failed those seeds plus 9881 and 9903; failed attempts are reported separately
+and are not included in the timing comparison.
+
 ## CPU profiling
 
 Install `dotnet-trace` into the artifacts directory so it does not alter the
