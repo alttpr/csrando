@@ -1,17 +1,36 @@
 # Super Metroid search optimization progress
 
-Windows-benchmarked implementation: `e305a7a5`
+Windows-benchmarked implementation: `ac5d235c`
 
 Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`
 
 Exact-output search checkpoint: `68f24942`
 
-Frozen comparison baseline: tag `sm-search-baseline-v2`, described by
+Frozen historical baseline: tag `sm-search-baseline-v2`, described by
 `scripts/sm-performance-baseline.json`. Its raw Windows cohorts, generated
 dashboard, and preview are intentionally retained in Git so the next
 optimization pass can compare against the identical per-seed measurements.
 
+Current comparison baseline: tag `sm-search-baseline-v3` at `fcd37dea`.
+
 ## Result
+
+The inventory-only requirement cache checkpoint replaces a per-search-pass
+dictionary with one vertex-model-owned result array and epoch array. A fresh
+epoch isolates every settled inventory without clearing the arrays or growing
+them again for each `StatefulSearcher`.
+
+In an interleaved 30-seed Windows comparison against exact tag
+`sm-search-baseline-v3`, mean generation time fell from **2.946 s to 2.858 s**
+(**2.89% paired reduction**, **1.03x average paired speedup**), median fell
+**4.70%**, and p95 fell **0.37%**. Assumed fill improved **3.60%**. Allocations
+fell **14.91%**, from 1,107.3 MiB to 942.2 MiB per seed. Both revisions
+generated 30/30 seeds and all 30 placement + playthrough hashes match.
+
+The detailed dashboard and retained raw cohorts are
+`artifacts/sm-inventory-cache-v4-report.html`,
+`artifacts/sm-v3-contemporary-30.csv`, and
+`artifacts/sm-model-array-cache-30.csv`.
 
 The next SM-only checkpoint improves on the frozen `sm-search-baseline-v2`
 state by another **9.50% paired mean per-seed reduction** and **1.11x average
@@ -40,6 +59,7 @@ checkpoint already generated successfully.
 | `compiled-search-v2@68f24942` | 27/30 | 3.099 s | 3.040 s | 3.368 s | 58.71% / 2.42x |
 | `final-windows-50@a16a44c8` | 50/50 | 3.093 s | 3.060 s | 3.572 s | 54.95% / 2.28x |
 | `sm-local-frontiers-v3@e305a7a5` | 50/50 | 2.865 s | 2.797 s | 3.710 s | 9.50% / 1.11x vs frozen v2 |
+| `sm-inventory-cache-v4@ac5d235c` | 30/30 | 2.858 s | 2.707 s | 3.764 s | 2.89% / 1.03x vs v3 |
 | `fill-retry-final@ece12a88` | 100/100 | 5.451 s | 5.301 s | 6.522 s | WSL correctness cohort |
 
 The 100-seed row is the WSL correctness/work cohort, not a wall-clock comparison
@@ -153,6 +173,8 @@ was retained.
 - Slow SM-map/M1 portal playthrough regression: passed.
 - Validate mode seeds 9876–9878, 9881, and 9903: passed with stable canonical
   hashes and no reverse/reference disagreement.
+- Inventory-cache checkpoint: focused SM suite 33/33, full Windows suite 4,355
+  passed / 4,520 skipped / 0 failed, and Validate mode 5/5.
 - Final SM-only cohort: 100/100.
 - 30-seed SM/M1, keycard, Medium, and Hard cohorts: 30/30 each.
 

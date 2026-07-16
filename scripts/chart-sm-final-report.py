@@ -308,6 +308,9 @@ def main() -> None:
     worst_seed = max(common, key=lambda seed: number(baseline[seed], "generation_ms"))
     worst_before = number(baseline[worst_seed], "generation_ms")
     worst_after = number(current[worst_seed], "generation_ms")
+    worst_ratio = worst_before / worst_after
+    worst_detail = (f"{worst_ratio:.2f}× faster" if worst_ratio >= 1
+                    else f"{(worst_after / worst_before - 1) * 100:.1f}% slower")
     hash_matches = sum(baseline[seed].get("output_hash") ==
                        current[seed].get("output_hash") for seed in common)
     final_all_values = [number(row, "generation_ms") for row in current_ok]
@@ -320,7 +323,7 @@ def main() -> None:
              f"{paired_reduction:.1f}% mean reduction"),
         card(f"Worst baseline seed · {worst_seed}",
              f"{worst_before/1000:.2f} → {worst_after/1000:.2f} s",
-             f"{worst_before/worst_after:.2f}× faster"),
+             worst_detail, "good" if worst_ratio >= 1 else "failure"),
         card("Allocations / seed", f"{mib(baseline_alloc)} → {mib(current_alloc)}",
              f"{alloc_reduction:.1f}× less allocation"),
         card("Generation success",
@@ -332,7 +335,7 @@ def main() -> None:
               else "success count preserved")),
         card("Current p95 / worst",
              f"{percentile(final_all_values, .95)/1000:.2f} / {max(final_all_values)/1000:.2f} s",
-             "50 fresh Windows processes"),
+             f"{len(current_ok)} fresh Windows processes"),
     ])
 
     final_work = {
