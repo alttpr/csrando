@@ -9,6 +9,12 @@ using Randomizer.Graph;
 
 public struct RequirementResult
 {
+    // Single-item missing sets dominate failure results and are read-only to
+    // every consumer, so they are interned per item name. Sets handed out this
+    // way are never owned and must be copied before any extension.
+    private static readonly System.Collections.Concurrent
+        .ConcurrentDictionary<string, HashSet<string>> InternedMissing = new();
+
     private bool _ownsMissing;
 
     public bool Met { get; set; }
@@ -26,8 +32,19 @@ public struct RequirementResult
     {
         Met = false,
         Cost = null,
-        Missing = [missing],
-        _ownsMissing = true,
+        Missing = InternedMissing.GetOrAdd(
+            missing, static name => [name]),
+        _ownsMissing = false,
+    };
+
+    /// <summary>Fail with a caller-retained set. The set is borrowed, never
+    /// mutated, and must not be modified by the caller afterwards.</summary>
+    internal static RequirementResult FailShared(HashSet<string> missing) => new()
+    {
+        Met = false,
+        Cost = null,
+        Missing = missing,
+        _ownsMissing = false,
     };
 
     public static RequirementResult Fail(params string[] missing) => new()
@@ -89,10 +106,21 @@ public struct RequirementResult
             return;
 
         if (Missing == null)
+        {
+            // Adopt the consumed child's set together with its ownership;
+            // borrowed (interned or shared) sets must never be mutated.
             Missing = other.Missing;
+            _ownsMissing = other._ownsMissing;
+        }
         else if (!ReferenceEquals(Missing, other.Missing))
+        {
+            if (!_ownsMissing)
+            {
+                Missing = new HashSet<string>(Missing);
+                _ownsMissing = true;
+            }
             Missing.UnionWith(other.Missing);
-        _ownsMissing = true;
+        }
     }
 
     public override string ToString()
@@ -161,6 +189,13 @@ public struct RequirementCost
 
 public class RequirementHandler
 {
+    // Shared, never-mutated missing set for enemy-kill failures.
+    private static readonly HashSet<string> AnyWeaponMissing =
+    [
+        "Missile", "Super", "PowerBomb", "Charge", "Ice",
+        "Spazer", "Wave", "Plasma", "ScrewAttack", "Bombs",
+    ];
+
     private readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
     private readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
     private readonly Dictionary<string, HashSet<string>> EnemyInvulnerabilities =
@@ -453,11 +488,7 @@ public class RequirementHandler
                 // If no weapons pass initial criteria, fail quickly
                 if (!hasCandidateWeapon)
                 {
-                    return RequirementResult.Fail(new[]
-                    {
-                        "Missile", "Super", "PowerBomb", "Charge", "Ice",
-                        "Spazer", "Wave", "Plasma", "ScrewAttack", "Bombs"
-                    });
+                    return RequirementResult.FailShared(AnyWeaponMissing);
                 }
 
                 HashSet<Weapon>? usedWeapons = captureDetails ? [] : null;
@@ -486,11 +517,7 @@ public class RequirementHandler
                     if (!canKillEnemy)
                     {
                         // If we can't kill an enemy of this type, fail immediately
-                        return RequirementResult.Fail(new[]
-                        {
-                            "Missile", "Super", "PowerBomb", "Charge", "Ice",
-                            "Spazer", "Wave", "Plasma", "ScrewAttack", "Bombs"
-                        });
+                        return RequirementResult.FailShared(AnyWeaponMissing);
                     }
                 }
 

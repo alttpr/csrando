@@ -21,8 +21,10 @@ internal sealed class ReverseBacktrackSearch
     private readonly Dictionary<ulong, Inventory> _inventoriesByRequiredFlags = [];
     private readonly RequirementHandler _handler;
     private readonly HashSet<Weapon> _weapons;
+    // Pre-sized to the typical settled entry count so build-time growth does
+    // not repeatedly reallocate the backing arrays.
     private readonly Dictionary<RequirementEvaluationKey, RequirementResult>
-        _requirementResults = [];
+        _requirementResults = new(4096);
     private readonly List<ReverseState> _edgeCandidates = [];
     private readonly List<ReverseState> _edgeFrontier = [];
     private readonly List<ReverseState> _unlockResults = [];

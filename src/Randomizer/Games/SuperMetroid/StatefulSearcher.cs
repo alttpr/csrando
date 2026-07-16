@@ -21,6 +21,12 @@ public sealed record StatefulPickup(
 
 public class StatefulSearcher : ISearcher
 {
+    // Shared instances for path steps and pickups that carry no requirement or
+    // resource data. Exposed only through read-only interfaces; never mutated.
+    private static readonly Dictionary<IItem, int> EmptyRequirements = [];
+    private static readonly Dictionary<string, int> EmptyResources = [];
+    private static readonly HashSet<string> EmptyMissing = [];
+
     private readonly Graph _graph;
     private readonly ForwardStateFrontier[] _visitedStates;
     private readonly List<int> _visitedStateIds = [];
@@ -276,7 +282,7 @@ public class StatefulSearcher : ISearcher
             foreach (int vertexId in _unvisitedStateIds)
             {
                 var states = _unvisitedStates[vertexId];
-                if (states != null && states.MissingItems.Overlaps(checkItems))
+                if (states != null && SetsOverlap(states.MissingItems, checkItems))
                 {
                     var vertex = _searchModel.VerticesById[vertexId]!;
                     foreach (var state in states.States)
@@ -478,8 +484,8 @@ public class StatefulSearcher : ISearcher
 
                     var toVtx = (Vertex)edge.To;
                     EnqueueState(toVtx, state, _capturePath
-                        ? new StatefulPathStep(edge, null, new Dictionary<IItem, int>(),
-                            new Dictionary<string, int>())
+                        ? new StatefulPathStep(edge, null, EmptyRequirements,
+                            EmptyResources)
                         : null);
                 }
                 continue;
@@ -489,10 +495,8 @@ public class StatefulSearcher : ISearcher
             bool unlocked = false;
             var (unlockState, yields, unlockStrategy, unlockResult) =
                 UnlockNode(inventory, current, state, currentNode);
-            Dictionary<IItem, int>? unlockRequirements =
-                _capturePath ? new Dictionary<IItem, int>() : null;
-            Dictionary<string, int>? unlockResources =
-                _capturePath ? new Dictionary<string, int>() : null;
+            Dictionary<IItem, int>? unlockRequirements = null;
+            Dictionary<string, int>? unlockResources = null;
             bool unlockRecordedOnIncoming = false;
             if (unlockState != null)
             {
@@ -501,19 +505,18 @@ public class StatefulSearcher : ISearcher
                 state = unlockState.Value;
                 if (_capturePath && unlockResult != null)
                 {
-                    foreach (var (item, count) in
-                             unlockResult.Value.UsedItems ?? [])
-                        unlockRequirements![current.World.GetItem(item)] = count;
-                    AddResourceRequirements(
-                        unlockRequirements!, unlockResult.Value.Cost!.Value,
-                        current.World);
+                    AppendStepRequirements(ref unlockRequirements,
+                        unlockResult.Value, current.World);
                 }
                 if (_capturePath && _predecessors[current] is { } predecessor
                     && _recordedUnlocks.Add(current)
-                    && (unlockStrategy != null || unlockRequirements!.Count > 0))
+                    && (unlockStrategy != null
+                        || unlockRequirements is { Count: > 0 }))
                 {
                     _predecessors[current] = MergePathStep(
-                        predecessor, unlockStrategy, unlockRequirements!, unlockResources!);
+                        predecessor, unlockStrategy,
+                        unlockRequirements ?? EmptyRequirements,
+                        unlockResources ?? EmptyResources);
                     unlockRecordedOnIncoming = true;
                 }
                 else if (_capturePath && _recordedUnlocks.Contains(current)
@@ -549,7 +552,8 @@ public class StatefulSearcher : ISearcher
                     {
                         _pickupDetails.TryAdd((yieldLocation, yieldItem),
                             new StatefulPickup(yieldItem, unlockStrategy,
-                                unlockRequirements!, unlockResources!));
+                                unlockRequirements ?? EmptyRequirements,
+                                unlockResources ?? EmptyResources));
                     }
                 }
             }
@@ -561,7 +565,8 @@ public class StatefulSearcher : ISearcher
                 if (_capturePath && current.Item != null)
                     _pickupDetails.TryAdd((current, current.Item),
                         new StatefulPickup(current.Item, unlockStrategy,
-                            unlockRequirements!, unlockResources!));
+                            unlockRequirements ?? EmptyRequirements,
+                            unlockResources ?? EmptyResources));
 
                 if (current.Item != null && !ReferenceEquals(current.Item, _excludedPickup)
                     && _collectItemAt(current))
@@ -613,11 +618,11 @@ public class StatefulSearcher : ISearcher
                         ? new StatefulPathStep(edge,
                             unlockRecordedOnIncoming ? null : unlockStrategy,
                             unlockRecordedOnIncoming
-                                ? new Dictionary<IItem, int>()
-                                : unlockRequirements!,
+                                ? EmptyRequirements
+                                : unlockRequirements ?? EmptyRequirements,
                             unlockRecordedOnIncoming
-                                ? new Dictionary<string, int>()
-                                : unlockResources!)
+                                ? EmptyResources
+                                : unlockResources ?? EmptyResources)
                         : null);
                     continue;
                 }
@@ -635,7 +640,7 @@ public class StatefulSearcher : ISearcher
                         inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
-                        AddUnvisited(current, state, result.Missing ?? []);
+                        AddUnvisited(current, state, result.Missing ?? EmptyMissing);
                         continue;
                     }
 
@@ -645,7 +650,7 @@ public class StatefulSearcher : ISearcher
                     if (newState == null)
                     {
                         // Figure out what costs we're missing
-                        var missingCostItems = new HashSet<string>(result.Missing ?? []);
+                        var missingCostItems = new HashSet<string>(result.Missing ?? EmptyMissing);
                         var available = state.ToVisited(_searchContext);
                         if (available.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
                         if (available.Missiles - cost.Value.Missiles <= 0) { missingCostItems.Add("Missile"); }
@@ -663,14 +668,15 @@ public class StatefulSearcher : ISearcher
 
                     if (_capturePath)
                     {
-                        var stratRequirements = (result.UsedItems ?? []).ToDictionary(
-                            pair => (IItem)current.World.GetItem(pair.Key), pair => pair.Value);
-                        AddResourceRequirements(stratRequirements, result.Cost!.Value, current.World);
+                        Dictionary<IItem, int>? stratRequirements = null;
+                        AppendStepRequirements(
+                            ref stratRequirements, result, current.World);
                         foreach (var flag in strat.SetsFlags ?? [])
                         {
                             var flagItem = current.World.GetItem(flag);
                             _pickupDetails.TryAdd((current, flagItem),
-                                new StatefulPickup(flagItem, strat.Name, stratRequirements,
+                                new StatefulPickup(flagItem, strat.Name,
+                                    stratRequirements ?? EmptyRequirements,
                                     ResourcesSpent(state, finalState)));
                         }
                     }
@@ -725,23 +731,27 @@ public class StatefulSearcher : ISearcher
                 StatefulPathStep? pathStep = null;
                 if (_capturePath)
                 {
-                    var requirements = (bestResult.UsedItems ?? []).ToDictionary(
-                        pair => (IItem)current.World.GetItem(pair.Key), pair => pair.Value);
-                    AddResourceRequirements(requirements, bestResult.Cost!.Value, current.World);
+                    Dictionary<IItem, int>? requirements = null;
+                    AppendStepRequirements(
+                        ref requirements, bestResult, current.World);
                     if (!unlockRecordedOnIncoming)
                     {
-                        foreach (var (item, count) in unlockRequirements!)
+                        foreach (var (item, count) in
+                                 unlockRequirements ?? EmptyRequirements)
+                        {
+                            requirements ??= [];
                             requirements[item] = Math.Max(
                                 requirements.GetValueOrDefault(item), count);
+                        }
                     }
                     pathStep = new StatefulPathStep(edge,
                         JoinStrategies(
                             unlockRecordedOnIncoming ? null : unlockStrategy,
-                            bestStrat.Name), requirements,
+                            bestStrat.Name), requirements ?? EmptyRequirements,
                         MergeResources(
                             unlockRecordedOnIncoming
-                                ? new Dictionary<string, int>()
-                                : unlockResources!,
+                                ? EmptyResources
+                                : unlockResources ?? EmptyResources,
                             ResourcesSpent(state, bestState)));
                 }
                 EnqueueState(toVtx, bestState, pathStep);
@@ -875,6 +885,21 @@ public class StatefulSearcher : ISearcher
         return (vertex, state, step);
     }
 
+    /// <summary>Equivalent to <see cref="HashSet{T}.Overlaps(IEnumerable{T})"/>
+    /// for two hash sets, without boxing a struct enumerator.</summary>
+    private static bool SetsOverlap(HashSet<string> first, HashSet<string> second)
+    {
+        var (smaller, larger) = first.Count <= second.Count
+            ? (first, second)
+            : (second, first);
+        foreach (var item in smaller)
+        {
+            if (larger.Contains(item))
+                return true;
+        }
+        return false;
+    }
+
     private static bool AddNondominated(
         List<ForwardState> frontier, ForwardState candidate)
     {
@@ -897,29 +922,48 @@ public class StatefulSearcher : ISearcher
         return true;
     }
 
-    private static void AddResourceRequirements(
-        Dictionary<IItem, int> requirements, RequirementCost cost, IWorld world)
+    /// <summary>Fold the requirement result's used items and resource costs
+    /// into a step requirements dictionary, allocating it only when there is
+    /// something to record.</summary>
+    private static void AppendStepRequirements(
+        ref Dictionary<IItem, int>? requirements, in RequirementResult result,
+        IWorld world)
     {
-        (string Type, int Amount)[] resources =
-        [
-            ("Energy", cost.Energy),
-            ("Missile", cost.Missiles),
-            ("Super", cost.SuperMissiles),
-            ("PowerBomb", cost.PowerBombs),
-        ];
-        foreach (var (type, amount) in resources)
+        foreach (var (item, count) in result.UsedItems ?? EmptyResources)
         {
-            // AmmoDrain stores a drain marker in bit 15. It consumes whatever
-            // resource is present (up to the encoded amount), so it is not a
-            // capacity requirement and must not be converted into item packs.
-            if (amount > 0x8000)
-                continue;
-            var (itemName, count) = RequirementHandler.RequiredExpansion(type, amount);
-            if (count <= 0)
-                continue;
-            var item = world.GetItem(itemName);
-            requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
+            requirements ??= [];
+            requirements[world.GetItem(item)] = count;
         }
+        AddResourceRequirements(ref requirements, result.Cost!.Value, world);
+    }
+
+    private static void AddResourceRequirements(
+        ref Dictionary<IItem, int>? requirements, RequirementCost cost,
+        IWorld world)
+    {
+        AddResourceRequirement(ref requirements, "Energy", cost.Energy, world);
+        AddResourceRequirement(ref requirements, "Missile", cost.Missiles, world);
+        AddResourceRequirement(
+            ref requirements, "Super", cost.SuperMissiles, world);
+        AddResourceRequirement(
+            ref requirements, "PowerBomb", cost.PowerBombs, world);
+    }
+
+    private static void AddResourceRequirement(
+        ref Dictionary<IItem, int>? requirements, string type, int amount,
+        IWorld world)
+    {
+        // AmmoDrain stores a drain marker in bit 15. It consumes whatever
+        // resource is present (up to the encoded amount), so it is not a
+        // capacity requirement and must not be converted into item packs.
+        if (amount > 0x8000)
+            return;
+        var (itemName, count) = RequirementHandler.RequiredExpansion(type, amount);
+        if (count <= 0)
+            return;
+        var item = world.GetItem(itemName);
+        requirements ??= [];
+        requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
     }
 
     private static StatefulPathStep MergePathStep(
@@ -941,21 +985,23 @@ public class StatefulSearcher : ISearcher
     {
         var beforeVisited = before.ToVisited(_searchContext);
         var afterVisited = after.ToVisited(_searchContext);
-        var resources = new Dictionary<string, int>();
+        Dictionary<string, int>? resources = null;
         if (beforeVisited.Energy > afterVisited.Energy)
-            resources["Energy"] = beforeVisited.Energy - afterVisited.Energy;
+            (resources ??= [])["Energy"] = beforeVisited.Energy - afterVisited.Energy;
         if (beforeVisited.Missiles > afterVisited.Missiles)
-            resources["Missiles"] = beforeVisited.Missiles - afterVisited.Missiles;
+            (resources ??= [])["Missiles"] = beforeVisited.Missiles - afterVisited.Missiles;
         if (beforeVisited.SuperMissiles > afterVisited.SuperMissiles)
-            resources["Super Missiles"] = beforeVisited.SuperMissiles - afterVisited.SuperMissiles;
+            (resources ??= [])["Super Missiles"] = beforeVisited.SuperMissiles - afterVisited.SuperMissiles;
         if (beforeVisited.PowerBombs > afterVisited.PowerBombs)
-            resources["Power Bombs"] = beforeVisited.PowerBombs - afterVisited.PowerBombs;
-        return resources;
+            (resources ??= [])["Power Bombs"] = beforeVisited.PowerBombs - afterVisited.PowerBombs;
+        return resources ?? EmptyResources;
     }
 
     private static Dictionary<string, int> MergeResources(
         IReadOnlyDictionary<string, int> first, IReadOnlyDictionary<string, int> second)
     {
+        if (first.Count == 0 && second.Count == 0)
+            return EmptyResources;
         var merged = first.ToDictionary();
         foreach (var (resource, amount) in second)
             merged[resource] = merged.GetValueOrDefault(resource) + amount;
@@ -985,7 +1031,7 @@ public class StatefulSearcher : ISearcher
                         (World)current.World, _currentWeapons);
                     if (!lockResult.Met)
                     {
-                        AddUnvisited(current, lockState, lockResult.Missing ?? []);
+                        AddUnvisited(current, lockState, lockResult.Missing ?? EmptyMissing);
                         continue;
                     }
                 }
@@ -1005,7 +1051,7 @@ public class StatefulSearcher : ISearcher
                         (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
-                        AddUnvisited(current, lockState, result.Missing ?? []);
+                        AddUnvisited(current, lockState, result.Missing ?? EmptyMissing);
                         continue;
                     }
 
@@ -1014,7 +1060,7 @@ public class StatefulSearcher : ISearcher
                     var newState = lockState.ApplyCost(cost.Value, _searchContext);
                     if (newState == null)
                     {
-                        var missingCostItems = new HashSet<string>(result.Missing ?? []);
+                        var missingCostItems = new HashSet<string>(result.Missing ?? EmptyMissing);
                         var available = lockState.ToVisited(_searchContext);
                         if (available.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
                         if (available.Missiles - cost.Value.Missiles <= 0) { missingCostItems.Add("Missile"); }
@@ -1283,7 +1329,7 @@ public class StatefulSearcher : ISearcher
         foreach (int vertexId in _unvisitedStateIds)
         {
             var states = _unvisitedStates[vertexId];
-            if (states != null && states.MissingItems.Overlaps(diffItems))
+            if (states != null && SetsOverlap(states.MissingItems, diffItems))
             {
                 var vertex = _searchModel.VerticesById[vertexId]!;
                 foreach (var state in states.States)
@@ -1338,8 +1384,8 @@ public class StatefulSearcher : ISearcher
             if (location.Item != null)
                 yield return (location, _pickupDetails.GetValueOrDefault(
                     (location, location.Item),
-                    new StatefulPickup(location.Item, null, new Dictionary<IItem, int>(),
-                        new Dictionary<string, int>())));
+                    new StatefulPickup(location.Item, null, EmptyRequirements,
+                        EmptyResources)));
         }
 
         foreach (var ((location, item), _) in _prevItems)
@@ -1347,8 +1393,8 @@ public class StatefulSearcher : ISearcher
             if (!ReferenceEquals(location.Item, item))
                 yield return (location, _pickupDetails.GetValueOrDefault(
                     (location, item),
-                    new StatefulPickup(item, null, new Dictionary<IItem, int>(),
-                        new Dictionary<string, int>())));
+                    new StatefulPickup(item, null, EmptyRequirements,
+                        EmptyResources)));
         }
     }
 }
