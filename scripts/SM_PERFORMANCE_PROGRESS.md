@@ -1,6 +1,6 @@
 # Super Metroid search optimization progress
 
-Windows-benchmarked implementation: `a16a44c8`
+Windows-benchmarked implementation: `e305a7a5`
 
 Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`
 
@@ -12,6 +12,16 @@ dashboard, and preview are intentionally retained in Git so the next
 optimization pass can compare against the identical per-seed measurements.
 
 ## Result
+
+The next SM-only checkpoint improves on the frozen `sm-search-baseline-v2`
+state by another **9.50% paired mean per-seed reduction** and **1.11x average
+paired speedup** across the same 50 Windows seeds. Mean generation time fell
+from 3.175 s to 2.865 s, and allocations fell **52.07%**, from 2,305 MiB to
+1,105 MiB per seed. All 50 placement + playthrough hashes remain identical.
+
+The new detailed dashboard is
+`artifacts/sm-windows-sm-local-v3-report.html`, backed by the retained raw
+cohort `artifacts/sm-windows-sm-local-50.csv`.
 
 The final 50-seed Windows run reduced paired mean full-seed generation time by
 **54.95%** relative to main, with an average paired speedup of **2.28x**.
@@ -29,6 +39,7 @@ checkpoint already generated successfully.
 | `reverse-search-v1@28917857` | 24/30 | 4.174 s | 4.097 s | 4.726 s | 44.48% / 1.80x |
 | `compiled-search-v2@68f24942` | 27/30 | 3.099 s | 3.040 s | 3.368 s | 58.71% / 2.42x |
 | `final-windows-50@a16a44c8` | 50/50 | 3.093 s | 3.060 s | 3.572 s | 54.95% / 2.28x |
+| `sm-local-frontiers-v3@e305a7a5` | 50/50 | 2.865 s | 2.797 s | 3.710 s | 9.50% / 1.11x vs frozen v2 |
 | `fill-retry-final@ece12a88` | 100/100 | 5.451 s | 5.301 s | 6.522 s | WSL correctness cohort |
 
 The 100-seed row is the WSL correctness/work cohort, not a wall-clock comparison
@@ -91,6 +102,13 @@ performance-only stages.
 - A final settled-inventory pass removes incremental false positives. Bounded,
   deterministic whole-fill retries handle greedy placement dead ends without
   changing the first-attempt PRNG path of successful seeds.
+- SM forward visited/queued frontiers now keep their common first four states
+  inline and allocate overflow storage only for wider nondominated sets.
+- Reverse traversal reuses per-search candidate, pruning, and unlock buffers
+  instead of constructing temporary lists for every incoming edge and lock.
+- Enemy-kill checks reuse precomputed invulnerability sets and avoid candidate
+  or used-weapon collections when spoiler details are disabled. Ammo
+  substitution uses exact integer ceiling arithmetic in the hot path.
 
 The parsed-JSON template optimization was not introduced: the profile used for
 the architecture decision put graph construction below the 5% stop threshold.
@@ -126,7 +144,9 @@ was retained.
 
 - Final Windows normal suite: 4,354 passed, 4,520 skipped, 0 failed (1m 1s).
 - Final Windows slow SM regressions: 8 passed, 0 failed (26s).
-- Focused SM suite: 31 passed.
+- Focused SM suite: 34 passed.
+- SM-local frontier checkpoint normal suite: 4,355 passed, 4,520 skipped,
+  0 failed; slow SM regressions: 8 passed, 0 failed.
 - Slow SM generation regressions: 7 passed, including the formerly failing
   9881, 9903, 9908, 9917, 9931, 9955, and 9970 cases.
 - Full non-slow suite: 4,352 passed, 4,522 skipped, 0 failed.

@@ -185,13 +185,15 @@ def scatter_chart(
     )
 
 
-def progress_chart(history_path: Path, final_mean: float) -> str:
+def progress_chart(
+    history_path: Path, current_mean: float, current_label: str,
+) -> str:
     with history_path.open(newline="", encoding="utf-8-sig") as source:
         history = list(csv.DictReader(source))
     wanted = [row for row in history if row["checkpoint"] in
               {"main", "reverse-search-v1", "compiled-search-v2"}]
-    labels = [row["checkpoint"] for row in wanted] + ["final-windows-50"]
-    values = [float(row["mean_ms"]) / 1000 for row in wanted] + [final_mean / 1000]
+    labels = [row["checkpoint"] for row in wanted] + [current_label]
+    values = [float(row["mean_ms"]) / 1000 for row in wanted] + [current_mean / 1000]
     width, height = 940, 330
     left, right, top, bottom = 66, 24, 24, 74
     plot_w, plot_h = width-left-right, height-top-bottom
@@ -316,15 +318,19 @@ def main() -> None:
              f"{mean_speedup:.2f}× faster"),
         card("Paired mean / seed", f"{baseline_mean/1000:.2f} → {current_mean/1000:.2f} s",
              f"{paired_reduction:.1f}% mean reduction"),
-        card(f"Worst main seed · {worst_seed}",
+        card(f"Worst baseline seed · {worst_seed}",
              f"{worst_before/1000:.2f} → {worst_after/1000:.2f} s",
              f"{worst_before/worst_after:.2f}× faster"),
         card("Allocations / seed", f"{mib(baseline_alloc)} → {mib(current_alloc)}",
              f"{alloc_reduction:.1f}× less allocation"),
         card("Generation success",
              f"{len(baseline_ok)}/{len(baseline)} → {len(current_ok)}/{len(current)}",
-             f"recovered {len(current_ok)-len(baseline_ok)} seeds"),
-        card("Final p95 / worst",
+             (f"recovered {len(current_ok)-len(baseline_ok)} seeds"
+              if len(current_ok) > len(baseline_ok)
+              else "no generation failures"
+              if len(current_ok) == len(current) == len(baseline_ok) == len(baseline)
+              else "success count preserved")),
+        card("Current p95 / worst",
              f"{percentile(final_all_values, .95)/1000:.2f} / {max(final_all_values)/1000:.2f} s",
              "50 fresh Windows processes"),
     ])
@@ -370,46 +376,46 @@ table{{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}} t
 @media(max-width:800px){{.metrics,.two{{grid-template-columns:1fr}}.page{{padding:0 10px}}.hero{{padding:22px}}}}
 </style></head><body><main class="page">
 <header class="hero"><h1>{html.escape(args.title)}</h1>
-<div class="subtitle">Pinned main versus final optimized search · {len(seeds)} SM-only seeds ({min(seeds)}–{max(seeds)})</div>
+<div class="subtitle">{html.escape(args.baseline_name)} versus {html.escape(args.current_name)} · {len(seeds)} SM-only seeds ({min(seeds)}–{max(seeds)})</div>
 <div class="stamp">{html.escape(args.runtime)} · fresh process per seed · generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}</div></header>
 <div class="metrics">{cards}</div>
 
 <section class="panel"><h2>Total time by phase</h2><p class="note">Only the {len(common)} seeds successful on both revisions are included; validation is measured independently from generation.</p>
 {stage_chart(baseline_common, current_common, args.baseline_name, args.current_name)}</section>
 
-<section class="panel"><h2>Per-seed generation time</h2><p class="note">All {len(seeds)} attempts are shown. Main failures are red crosses at the time generation stopped; the y-axis is logarithmic.</p>
+<section class="panel"><h2>Per-seed generation time</h2><p class="note">All {len(seeds)} attempts are shown. Baseline failures are red crosses at the time generation stopped; the y-axis is logarithmic.</p>
 {scatter_chart(seeds, baseline, current, args.baseline_name, args.current_name)}</section>
 
-<section class="panel"><h2>Accepted-checkpoint progression</h2><p class="note">Intermediate checkpoints use their retained 30-seed Windows cohorts; the final bar uses the new {len(common)}-seed paired Windows cohort.</p>
-{progress_chart(args.history, current_mean)}</section>
+<section class="panel"><h2>Accepted-checkpoint progression</h2><p class="note">Intermediate checkpoints use their retained Windows cohorts; the final bar uses the new {len(common)}-seed paired Windows cohort.</p>
+{progress_chart(args.history, current_mean, args.current_name)}</section>
 
 <div class="two"><section class="panel"><h2>Allocation and GC pressure</h2>
 <p><strong>{mib(baseline_alloc)}</strong> → <strong>{mib(current_alloc)}</strong> allocated per paired seed ({alloc_reduction:.2f}× less).</p>
 <table><thead><tr><th>Collection</th><th>{html.escape(args.baseline_name)}</th><th>{html.escape(args.current_name)}</th></tr></thead><tbody>{gc_rows}</tbody></table>
 <p class="note">Collection counts are process-local. Lower allocation is the primary pressure metric; generation-specific collection counts also reflect the changed allocation lifetime distribution.</p></section>
-<section class="panel"><h2>Final search work</h2><table><tbody>{work_rows}</tbody></table>
+<section class="panel"><h2>Current search work</h2><table><tbody>{work_rows}</tbody></table>
 <p><span class="pill">0 production fallbacks</span><span class="pill">{paired_speedup:.2f}× average paired speedup</span></p></section></div>
 
 <div class="two"><section class="panel"><h2>Windows verification</h2>
 <table><tbody><tr><td class="left">Normal suite</td><td>{html.escape(args.full_tests)}</td></tr>
 <tr><td class="left">Slow SM regressions</td><td>{html.escape(args.slow_tests)}</td></tr>
-<tr><td class="left">Final benchmark generation</td><td>{len(current_ok)}/{len(current)} successful</td></tr>
-<tr><td class="left">Main benchmark generation</td><td>{len(baseline_ok)}/{len(baseline)} successful</td></tr></tbody></table></section>
+<tr><td class="left">Current benchmark generation</td><td>{len(current_ok)}/{len(current)} successful</td></tr>
+<tr><td class="left">Baseline benchmark generation</td><td>{len(baseline_ok)}/{len(baseline)} successful</td></tr></tbody></table></section>
 <section class="panel"><h2>Output equivalence context</h2>
-<p><strong>{hash_matches}/{len(common)}</strong> combined placement + playthrough hashes match pinned main.</p>
-<p class="note">Main is not the exact-output baseline: this branch contains documented correctness fixes and deterministic route-selection changes. The retained post-correctness checkpoint comparison remains the relevant equivalence gate, where all 90 previously successful seeds matched exactly.</p></section></div>
+<p><strong>{hash_matches}/{len(common)}</strong> combined placement + playthrough hashes match the comparison baseline.</p>
+<p class="note">Performance-only checkpoints are accepted only when these hashes remain identical, so placement and deterministic playthrough behavior stay fixed.</p></section></div>
 
-<section class="panel"><h2>Pinned-main failures</h2><p class="note">Failures are retained in totals and never silently removed; paired latency calculations use only common successful seeds.</p>{failure_table(baseline)}</section>
+<section class="panel"><h2>Baseline failures</h2><p class="note">Failures are retained in totals and never silently removed; paired latency calculations use only common successful seeds.</p>{failure_table(baseline)}</section>
 
 <section class="panel"><details><summary>Per-seed measurements</summary>
-<table><thead><tr><th>Seed</th><th>Main status</th><th>Main time</th><th>Final status</th><th>Final time</th><th>Speedup</th><th>Main alloc.</th><th>Final alloc.</th><th>Combined hash</th></tr></thead>
+<table><thead><tr><th>Seed</th><th>Baseline status</th><th>Baseline time</th><th>Current status</th><th>Current time</th><th>Speedup</th><th>Baseline alloc.</th><th>Current alloc.</th><th>Combined hash</th></tr></thead>
 <tbody>{seed_table(seeds, baseline, current)}</tbody></table></details></section>
 
 <section class="panel"><h2>Methodology</h2><ul>
 <li>Both binaries were built and executed with Windows .NET SDK 10.0.300 in Release mode from the same <code>F:</code> volume.</li>
-<li>Revisions were alternated per seed, main first and final second, with one fresh process for each attempt.</li>
-<li>Pinned main is <code>c50d6f04</code> plus measurement-only timing/allocation/hash instrumentation. Its search and fill behavior is unchanged.</li>
-<li>Final branch is <code>a16a44c8</code>. Detailed counters are opt-in and use local hot-loop accumulation.</li>
+<li>Each cohort used one fresh process per seed with the same settings and runtime environment.</li>
+<li>Comparison baseline: <code>{html.escape(args.baseline_name)}</code>.</li>
+<li>Current implementation: <code>{html.escape(args.current_name)}</code>. Detailed counters are opt-in and use local hot-loop accumulation.</li>
 <li>Paired cards and phase totals use the {len(common)} common successful seeds. Reliability and scatter plots use all {len(seeds)} attempts.</li>
 </ul><p class="note">Sources: {html.escape(str(args.baseline))}, {html.escape(str(args.current))}, {html.escape(str(args.history))}</p></section>
 </main></body></html>"""
