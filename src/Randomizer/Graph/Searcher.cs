@@ -1,6 +1,5 @@
 namespace Randomizer.Graph;
 
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using SearchResult = (VertexHashSet NewlyVisited, VertexHashSet NewSearchStarts);
 
@@ -22,7 +21,7 @@ public class Searcher : ISearcher
     // neither method is reentered while the other holds its scratch), so each BFS pass does not
     // allocate a marker set, a queue, and a visited-minus-collected clone.
     private readonly VertexHashSet _scratchMarked;
-    private readonly Queue<Vertex> _scratchQueue = new();
+    private readonly Queue<int> _scratchQueue = new();
     private readonly VertexHashSet _scratchUncollected;
     private readonly VertexHashSet _scratchNewlyVisited;
     private readonly VertexHashSet _scratchNewStarts;
@@ -288,37 +287,38 @@ public class Searcher : ISearcher
         queue.Clear();
         foreach (var start in startAt)
         {
-            if (!visited.Contains(start))
+            int startId = start.Id;
+            if (!visited.Contains(startId))
             {
-                marked.Add(start);
-                newlyVisited.Add(start);
+                marked.Add(startId);
+                newlyVisited.Add(startId);
             }
-            queue.Enqueue(start);
+            queue.Enqueue(startId);
         }
 
-        while (queue.TryDequeue(out var vertex))
+        // The BFS runs on the frozen edge view: flat spans of pre-resolved ids instead of
+        // Edge object chains, with the same per-vertex edge order.
+        while (queue.TryDequeue(out int vertexId))
         {
-            int unvisitedEdges = vertex.Edges.Count;
+            var edges = _graph.GetFrozenEdges(vertexId);
+            int unvisitedEdges = edges.Length;
 
-            foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
+            foreach (ref readonly var edge in edges)
             {
-                if(edge.To.World != vertex.World)
+                if (edge.CrossWorld)
                 {
-                    _otherWorldLocations.Add(edge.To);                    
+                    _otherWorldLocations.Add(edge.ToId);
                     continue;
                 }
 
-                if (!edge.Condition.IsUnconditional)
-                {
-                    if (!collected.Has(edge.Condition))
-                        continue;
-                }
+                if (!edge.Unconditional && !collected.HasAtLeastById(edge.ItemId, edge.Count))
+                    continue;
 
                 unvisitedEdges--;
-                if (!marked.Contains(edge.To))
+                if (!marked.Contains(edge.ToId))
                 {
-                    marked.Add(edge.To);
-                    queue.Enqueue(edge.To);
+                    marked.Add(edge.ToId);
+                    queue.Enqueue(edge.ToId);
                 }
             }
 
@@ -326,10 +326,10 @@ public class Searcher : ISearcher
             // all the edges, but the affected nodes are few and it's more
             // work than time saved overall.
             if (unvisitedEdges > 0)
-                newSearchStarts.Add(vertex);
+                newSearchStarts.Add(vertexId);
 
-            if (!visited.Contains(vertex))
-                newlyVisited.Add(vertex);
+            if (!visited.Contains(vertexId))
+                newlyVisited.Add(vertexId);
         }
     }
     private bool DoorSearch(Inventory inventory)

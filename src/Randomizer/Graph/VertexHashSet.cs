@@ -55,8 +55,14 @@ public class VertexHashSet : ICollection<Vertex>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(Vertex item)
     {
-        ref ulong word = ref _words[item.Id >> 6];
-        ulong bit = 1UL << item.Id;
+        Add(item.Id);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Add(int vertexId)
+    {
+        ref ulong word = ref _words[vertexId >> 6];
+        ulong bit = 1UL << vertexId;
         if ((word & bit) == 0)
         {
             word |= bit;
@@ -74,7 +80,13 @@ public class VertexHashSet : ICollection<Vertex>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Contains(Vertex item)
     {
-        return (_words[item.Id >> 6] & (1UL << item.Id)) != 0;
+        return Contains(item.Id);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Contains(int vertexId)
+    {
+        return (_words[vertexId >> 6] & (1UL << vertexId)) != 0;
     }
 
     public void CopyTo(Vertex[] array, int arrayIndex)

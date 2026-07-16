@@ -142,6 +142,13 @@ public sealed class Inventory
         return GetCountById(item.Id) >= count;
     }
 
+    /// <summary>Threshold check against a pre-resolved item id (the frozen edge view's fast path).</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal bool HasAtLeastById(int itemId, int count)
+    {
+        return GetCountById(itemId) >= count;
+    }
+
     internal IReadOnlyDictionary<IItem, int> All()
     {
         var result = new Dictionary<IItem, int>();
