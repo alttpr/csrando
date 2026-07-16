@@ -20,12 +20,24 @@ internal sealed class Randomize : Command
     private readonly Option<int> _bulk = new(["bulk", "--bulk"], () => 1, "generate multiple ROMs");
     private readonly Option<int> _multiworld = new(["multiworld", "--multiworld"], () => 1, "multiworld player count");
     private readonly Option<int?> _seed = new(["seed", "--seed"], "set starting seed");
+    private readonly Option<bool> _incrementSeed = new(
+        ["--increment-seed"],
+        "increment an explicit seed for each --bulk generation");
     // NOTE: use assemblebaserom to generate a usable preset; the following two options are mainly for testing of external rom changes.
     private readonly Option<FileInfo> _baseRom = new Option<FileInfo>(["rom", "--rom"], "set base rom").ExistingOnly();
     private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>(["bps", "--bps"], "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
     private readonly Option<DirectoryInfo> _outputDirectory = new(["outdir", "--outdir"], "output directory for generated games");
     private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>(["settings", "--settings"], "JSON serialized settings file").ExistingOnly();
     private readonly Option<bool> _dumpSpoiler = new(["spoiler", "--spoiler"], "dump spoiler log");
+    private readonly Option<FileInfo> _smBacktrackMetrics = new(
+        ["--sm-backtrack-metrics"],
+        "append per-seed Super Metroid backtracking metrics to a CSV file");
+    private readonly Option<string> _smBacktrackLabel = new(
+        ["--sm-backtrack-label"], () => "default",
+        "revision/configuration label used in the backtracking metrics report");
+    private readonly Option<Games.SuperMetroid.BacktrackBenchmarkMode> _smBacktrackMode = new(
+        ["--sm-backtrack-mode"], () => Games.SuperMetroid.BacktrackBenchmarkMode.Reverse,
+        "backtracking implementation to benchmark: Legacy, Reverse, or Validate");
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -33,11 +45,15 @@ internal sealed class Randomize : Command
         Add(_bulk);
         Add(_multiworld);
         Add(_seed);
+        Add(_incrementSeed);
         Add(_baseRom);
         Add(_baseBPS);
         Add(_outputDirectory);
         Add(_settingsFile);
         Add(_dumpSpoiler);
+        Add(_smBacktrackMetrics);
+        Add(_smBacktrackLabel);
+        Add(_smBacktrackMode);
 
         AddValidator(Validate);
 
@@ -65,18 +81,42 @@ internal sealed class Randomize : Command
         var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
         var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
         bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
+        var backtrackMetricsFile = context.ParseResult.GetValueForOption(_smBacktrackMetrics);
+        string backtrackLabel = context.ParseResult.GetValueForOption(_smBacktrackLabel) ?? "default";
+        int? startingSeed = context.ParseResult.GetValueForOption(_seed);
+        bool incrementSeed = context.ParseResult.GetValueForOption(_incrementSeed);
+        var backtrackMode = context.ParseResult.GetValueForOption(_smBacktrackMode);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
             var worldConfigs = GetWorldConfigs(context);
+            var seedSw = Stopwatch.StartNew();
             var randomizer = RandomizerFactory.Create(
                 worldConfigs,
-                context.ParseResult.GetValueForOption(_seed)
+                incrementSeed && startingSeed.HasValue
+                    ? unchecked(startingSeed.Value + i)
+                    : startingSeed
             );
+            Games.SuperMetroid.BacktrackMetrics.Configure(randomizer.Graph, backtrackMode);
             randomizer.Randomize();
+            seedSw.Stop();
+            var backtrackMetrics = Games.SuperMetroid.BacktrackMetrics
+                .SnapshotFor(randomizer.Graph);
             if (!randomizer.IsWinnable())
                 throw new Exception("Game Unwinnable.");
+
+            if (backtrackMetricsFile != null)
+            {
+                Games.SuperMetroid.BacktrackMetricsCsv.Append(
+                    backtrackMetricsFile,
+                    backtrackLabel,
+                    backtrackMode,
+                    randomizer.PRNG.Seed,
+                    randomizer.GetType().Name,
+                    seedSw.Elapsed,
+                    backtrackMetrics);
+            }
 
             if (outputDirectory != null)
             {

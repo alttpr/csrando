@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
@@ -25,7 +26,7 @@ public class StatefulSearcher : ISearcher
     private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates = null!;
     private readonly Queue<(Vertex vertex, VisitedState state, StatefulPathStep? step)> _queue = new();
     private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = [];
-    private readonly Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
+    private readonly Dictionary<Vertex, List<ForwardArrival>> _visitedItemLocations;
     private readonly HashSet<Vertex> _visitedVertices;
     private readonly HashSet<IItem> _foundItems = [];
     private readonly Inventory _inventory;
@@ -41,7 +42,14 @@ public class StatefulSearcher : ISearcher
     private readonly Dictionary<Randomizer.Graph.Vertex, StatefulPathStep?> _predecessors = [];
     private readonly HashSet<Randomizer.Graph.Vertex> _recordedUnlocks = [];
     private readonly Dictionary<(Randomizer.Graph.Vertex, IItem), StatefulPickup> _pickupDetails = [];
+    private readonly Dictionary<(Vertex Vertex, IItem Item), VisitedState>
+        _deferredBacktrackValidation = [];
     private readonly bool _capturePath;
+    private readonly BacktrackRegion? _targetRegion;
+    private readonly BacktrackCache _backtrackCache;
+    private readonly BacktrackMetrics _backtrackMetrics;
+    private readonly bool _isBacktrackSearch;
+    private int _dequeuedStateCount;
     // Path-only searches can suppress the event they are trying to explain so a
     // later, post-event route cannot be mistaken for the acquisition route.
     private readonly IItem? _excludedPickup;
@@ -52,9 +60,24 @@ public class StatefulSearcher : ISearcher
         Vertex? target = null, VisitedState? visitedState = null,
         Func<Randomizer.Graph.Vertex, bool>? collectItemAt = null,
         bool capturePath = false, IItem? excludedPickup = null)
+        : this(graph, start, inventory, setLocations, target, visitedState,
+            collectItemAt, capturePath, excludedPickup, null)
+    {
+    }
+
+    internal StatefulSearcher(Graph graph, Vertex start, Inventory inventory,
+        SetLocations? setLocations, Vertex? target, VisitedState? visitedState,
+        Func<Randomizer.Graph.Vertex, bool>? collectItemAt,
+        bool capturePath, IItem? excludedPickup, BacktrackRegion? targetRegion)
     {
         _inventory = inventory;
         _target = target;
+        _backtrackMetrics = BacktrackMetrics.ForGraph(graph);
+        _backtrackCache = BacktrackCache.ForGraph(graph);
+        _isBacktrackSearch = targetRegion != null;
+        _targetRegion = target == null || _backtrackMetrics.Mode == BacktrackBenchmarkMode.Legacy
+            ? null
+            : targetRegion ?? BacktrackRegion.Build(graph, target);
         _start = start;
         _setLocations = setLocations;
         _requirementHandler = ((World)start.World).RequirementHandler;
@@ -89,7 +112,6 @@ public class StatefulSearcher : ISearcher
     {
         var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
         var newItems = new Dictionary<(Vertex, IItem), VisitedState>();
-        int z = 0;
 
         foreach (var (vertex, state) in initialStates)
         {
@@ -98,9 +120,7 @@ public class StatefulSearcher : ISearcher
 
         do
         {
-            z++;
             foundItems = InternalSearch(_startStates, _inventory, _target);
-            //newItems = new(foundItems);
 
             newItems = foundItems.Where(x => !_prevItems.ContainsKey(x.Key)).ToDictionary(x => x.Key, x => x.Value);
             foreach (var foundItem in foundItems)
@@ -114,47 +134,102 @@ public class StatefulSearcher : ISearcher
                     _prevItems[foundItem.Key] = foundItem.Value;
                 }
             }
-
-
-            //newItems.ExceptWith(prevItems);
-            //prevItems.UnionWith(foundItems);
             _visitedVertices.UnionWith(_visitedStates.Select(x => x.Key));
 
-            int newEnergy = (newItems.Count(x => x.Key.Item2.Name == "ETank") * 100);
-            int newMissiles = (newItems.Count(x => x.Key.Item2.Name == "Missile") * 5);
-            int newSupers = (newItems.Count(x => x.Key.Item2.Name == "Super") * 5);
-            int newPowerBombs = (newItems.Count(x => x.Key.Item2.Name == "PowerBomb") * 5);
-
-            foreach (var ((vtx, item), itemState) in newItems)
+            if (_backtrackMetrics.Mode == BacktrackBenchmarkMode.Legacy)
             {
-                _inventory.AddItem(item);
-                if (_target == null && !vtx.Name.Contains("Tourian") && !(item.Name.StartsWith("f_") && _inventory.Has(item)))
+                // Preserve the old sequential behavior as the benchmark baseline.
+                foreach (var ((vtx, item), itemState) in newItems.ToArray())
                 {
-                    var backtrackSearcher = new StatefulSearcher(_graph, vtx, _inventory.Clone(), null, _start, itemState);
-                    if (!backtrackSearcher.HasVisited(_start))
+                    _inventory.AddItem(item);
+                    if (_target == null && !vtx.Name.Contains("Tourian")
+                        && !item.Name.StartsWith("f_", StringComparison.Ordinal)
+                        && !EvaluateBacktrack(
+                            vtx, itemState, _inventory.Clone(), _start))
                     {
-                        //Console.WriteLine($"Backtracking failed to find a path from {vtx.Name} to {start.Name}");
-                        _inventory.RemoveItem(item);
-                        newItems.Remove((vtx, item));
-                        _prevItems.Remove((vtx, item));
-
-                        if (_unvisitedStates.TryGetValue(vtx, out var states))
-                        {
-                            states.Item1.Add("Backtrack");
-                            _unvisitedStates[vtx] = states;
-                        }
-                        else
-                        {
-                            _unvisitedStates[vtx] = (["Backtrack"], [itemState with {
-                            Energy = itemState.Energy + newEnergy,
-                            Missiles = itemState.Missiles + newMissiles,
-                            SuperMissiles = itemState.SuperMissiles + newSupers,
-                            PowerBombs = itemState.PowerBombs + newPowerBombs
-                        }]);
-                        }
+                        RejectNewItem(vtx, item, itemState);
                     }
                 }
             }
+            else
+            {
+                // Forward-produced flags are global graph state, including
+                // flags produced on a side branch rather than the final return
+                // route. Promote those first, then resolve the item locations
+                // against one shared reverse pass.
+                var unconditional = newItems
+                    .Where(pair => _target != null
+                        || pair.Key.Item1.Name.Contains("Tourian")
+                        || pair.Key.Item2.Name.StartsWith(
+                            "f_", StringComparison.Ordinal))
+                    .ToArray();
+                foreach (var ((_, item), _) in unconditional)
+                    _inventory.AddItem(item);
+
+                var backtrackCandidates = newItems
+                    .Where(pair => !pair.Key.Item2.Name.StartsWith(
+                        "f_", StringComparison.Ordinal)
+                        && _target == null
+                        && !pair.Key.Item1.Name.Contains("Tourian"))
+                    .Select(pair => (pair.Key.Item1, pair.Key.Item2, pair.Value))
+                    .ToList();
+                foreach (var (_, item, _) in backtrackCandidates)
+                    _inventory.AddItem(item);
+
+                // All pickups in the forward sphere are concrete actions that
+                // can be collected before returning. Resolve them together,
+                // remove failures, and rebuild only when that removal changes
+                // the shared reverse inventory.
+                while (backtrackCandidates.Count > 0)
+                {
+                    var reverseInventory = _inventory.Clone();
+                    var rejected = backtrackCandidates
+                        .Where(candidate => !EvaluateBacktrack(
+                            candidate.Item1, candidate.Value,
+                            reverseInventory, _start,
+                            deferNegativeValidation: true))
+                        .ToArray();
+                    if (rejected.Length == 0)
+                        break;
+
+                    foreach (var (vtx, item, itemState) in rejected)
+                    {
+                        _deferredBacktrackValidation[(vtx, item)] = itemState;
+                        RejectNewItem(vtx, item, itemState);
+                    }
+                    var rejectedKeys = rejected
+                        .Select(candidate => (candidate.Item1, candidate.Item2))
+                        .ToHashSet();
+                    backtrackCandidates.RemoveAll(candidate =>
+                        rejectedKeys.Contains((candidate.Item1, candidate.Item2)));
+                }
+
+                foreach (var (vtx, item, _) in backtrackCandidates)
+                    _deferredBacktrackValidation.Remove((vtx, item));
+            }
+
+            void RejectNewItem(
+                Vertex vtx, IItem item, VisitedState itemState)
+            {
+                _inventory.RemoveItem(item);
+                newItems.Remove((vtx, item));
+                _prevItems.Remove((vtx, item));
+
+                if (_unvisitedStates.TryGetValue(vtx, out var states))
+                {
+                    states.Item1.Add("Backtrack");
+                    _unvisitedStates[vtx] = states;
+                }
+                else
+                {
+                    _unvisitedStates[vtx] = (["Backtrack"], [itemState]);
+                }
+            }
+
+            int newEnergy = newItems.Count(x => x.Key.Item2.Name == "ETank") * 100;
+            int newMissiles = newItems.Count(x => x.Key.Item2.Name == "Missile") * 5;
+            int newSupers = newItems.Count(x => x.Key.Item2.Name == "Super") * 5;
+            int newPowerBombs = newItems.Count(x => x.Key.Item2.Name == "PowerBomb") * 5;
 
             // Add new items to all unvisited states
             _unvisitedStates = _unvisitedStates.ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2.Select(s => s with
@@ -199,14 +274,9 @@ public class StatefulSearcher : ISearcher
                         })
                         .ToList()
                 );
-
-            //Console.WriteLine($"-- Found {newItems.Count} new items, {foundItems.Count} total items, {startStates.Count} new start states, {z} passes --");
         } while (newItems.Count > 0);
 
-        if (_target == null)
-        {
-            //Console.WriteLine($"StatefulSearcher took {stopWatch.ElapsedMilliseconds}ms to complete, doing {z} passes");
-        }
+        ValidateSettledBacktrackRejects();
 
         _foundItems.Clear();
         _foundItems.UnionWith(_prevItems.Select(x => x.Key.Item2));
@@ -219,22 +289,19 @@ public class StatefulSearcher : ISearcher
             return;
         }
 
-        //Console.WriteLine($"Adding unvisited state {state} to {vertex.Name} with missing items: {string.Join(",",missingItems)}");
         if (_unvisitedStates.TryGetValue(vertex, out var states))
         {
-            var mergedItems = states.Item1.Union(missingItems);
+            states.Item1.UnionWith(missingItems);
 
             // If this state is a "best" state, add it
             if (states.Item2.Any(s => s.Dominates(state)))
             {
                 // There is a better state already in the list, only update the missing items
-                states.Item1 = mergedItems.ToHashSet();
             }
             else
             {
                 states.Item2.RemoveAll(s => state.Dominates(s));
                 states.Item2.Add(state);
-                states.Item1 = mergedItems.ToHashSet();
             }
             _unvisitedStates[vertex] = states;
         }
@@ -246,12 +313,15 @@ public class StatefulSearcher : ISearcher
 
     private Dictionary<(Vertex, IItem), VisitedState> InternalSearch(List<(Vertex, VisitedState)> starts, Inventory inventory, Vertex? target = null)
     {
+        _backtrackMetrics.RecordForwardPass();
         var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
         _queue.Clear();
         _inQueue.Clear();
         _currentWeapons.Clear();
         _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
-            .Where(w => _requirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met));
+            .Where(w => HandleRequirement(
+                w.UseRequires, new VisitedState(), inventory,
+                (World)_start.World, []).Met));
 
         foreach (var start in starts)
         {
@@ -262,8 +332,8 @@ public class StatefulSearcher : ISearcher
         {
 
             var (current, state, incomingStep) = DequeueState()!.Value;
-
-            //Console.WriteLine($"Visiting {current.Name} with state {state}");
+            _backtrackMetrics.RecordForwardDequeuedState();
+            _dequeuedStateCount++;
 
             // If we've already visited this vertex with a state that dominates the current state, skip it
             if (_visitedStates.TryGetValue(current, out var visitedStates) && visitedStates.Any(vs => vs.Dominates(state)))
@@ -277,11 +347,11 @@ public class StatefulSearcher : ISearcher
                 visitedStates = [];
                 _visitedStates[current] = visitedStates;
             }
-
             else
             {
-                _visitedStates[current].Add(state);
+                visitedStates.RemoveAll(state.Dominates);
             }
+            visitedStates.Add(state);
             if (_capturePath)
                 _predecessors.TryAdd(current, incomingStep);
 
@@ -290,9 +360,6 @@ public class StatefulSearcher : ISearcher
             {
                 return [];
             }
-
-            //Console.WriteLine($"Visiting {current.Name} with state {state}");
-
             var currentNode = current.Node;
             if (currentNode == null)
             {
@@ -387,14 +454,7 @@ public class StatefulSearcher : ISearcher
 
             if (unlocked && current.Type == VertexType.Item)
             {
-                if (_visitedItemLocations.TryGetValue(current, out var visitedItemState))
-                {
-                    _visitedItemLocations[current] = (state, visitedItemState.Item2.Merge(inventory));
-                }
-                else
-                {
-                    _visitedItemLocations.Add(current, (state, inventory.Clone()));
-                }
+                RecordForwardArrival(current, state, inventory);
 
                 if (_capturePath && current.Item != null)
                     _pickupDetails.TryAdd((current, current.Item),
@@ -433,7 +493,6 @@ public class StatefulSearcher : ISearcher
                     continue;
                 }
 
-                //Console.WriteLine($"Checking edge {current.Name} -> {edge.To.Name}");
                 // Can't traverse doors if we couldn't unlock the node
                 if (!unlocked && ((Vertex)edge.To).RoomId != current.RoomId)
                 {
@@ -459,11 +518,11 @@ public class StatefulSearcher : ISearcher
                 var stratStates = new List<(Strat Strat, VisitedState State, RequirementResult Result)>();
                 foreach (var strat in ((Edge)edge).Strats ?? [])
                 {
-                    //Console.WriteLine($"Checking strat {strat.Name} at {current.Name} with state {state}");
-                    var result = _requirementHandler.HandleRequirement(strat.Requires, state, inventory, (World)current.World, _currentWeapons);
+                    var result = HandleRequirement(
+                        strat.Requires, state, inventory,
+                        (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
-                        //Console.WriteLine($"Failed to handle strat {strat.Name} at {current.Name} with state {state}");
                         AddUnvisited(current, state, result.Missing ?? []);
                         continue;
                     }
@@ -473,7 +532,6 @@ public class StatefulSearcher : ISearcher
                     var newState = state.ApplyCost(cost.Value, inventory, (World)current.World);
                     if (newState == null)
                     {
-                        //Console.WriteLine($"Failed to apply cost {cost} at {current.Name} with state {state}");
                         // Figure out what costs we're missing
                         var missingCostItems = new HashSet<string>(result.Missing ?? []);
                         if (state.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
@@ -581,8 +639,28 @@ public class StatefulSearcher : ISearcher
         return foundItems;
     }
 
+    private RequirementResult HandleRequirement(
+        Requirement requirement, VisitedState state, Inventory inventory,
+        World world, HashSet<Weapon> weapons)
+    {
+        _backtrackMetrics.RecordForwardRequirementEvaluation();
+        return _requirementHandler.HandleRequirement(
+            requirement, state, inventory, world, weapons);
+    }
+
     private void EnqueueState(Vertex v, VisitedState s, StatefulPathStep? step)
     {
+        _backtrackMetrics.RecordForwardEnqueueAttempt();
+        // A target search cannot succeed from a vertex with no directed path to
+        // either its target or a cross-world exit. This reverse-graph filter is
+        // state-agnostic and therefore cannot remove a valid route.
+        if (_targetRegion != null && !_targetRegion.Vertices.Contains(v))
+        {
+            if (_isBacktrackSearch)
+                _backtrackMetrics.RecordStructurallyPrunedEnqueue();
+            return;
+        }
+
         if (!_inQueue.TryGetValue(v, out var list))
         {
             list = [];
@@ -596,6 +674,7 @@ public class StatefulSearcher : ISearcher
 
         list.RemoveAll(existing => s.Dominates(existing));
         list.Add(s);
+        _backtrackMetrics.RecordForwardEnqueue();
         _queue.Enqueue((v, s, step));
     }
 
@@ -695,7 +774,9 @@ public class StatefulSearcher : ISearcher
                 // Check if this lock requires a specific item or flag to be locked, and if we don't fullfill the lock requirements, skip it
                 if (lck.Lock != null)
                 {
-                    var lockResult = _requirementHandler.HandleRequirement(lck.Lock, lockState, inventory, (World)current.World, _currentWeapons);
+                    var lockResult = HandleRequirement(
+                        lck.Lock, lockState, inventory,
+                        (World)current.World, _currentWeapons);
                     if (!lockResult.Met)
                     {
                         AddUnvisited(current, lockState, lockResult.Missing ?? []);
@@ -708,7 +789,9 @@ public class StatefulSearcher : ISearcher
 
                 foreach (var unlockStrat in lck.UnlockStrats ?? [])
                 {
-                    var result = _requirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
+                    var result = HandleRequirement(
+                        unlockStrat.Requires, lockState, inventory,
+                        (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
                         AddUnvisited(current, lockState, result.Missing ?? []);
@@ -826,30 +909,142 @@ public class StatefulSearcher : ISearcher
     {
         // A location this searcher never reached (e.g. one only reachable with items
         // found in other games) has no state to backtrack from.
-        if (!_visitedItemLocations.TryGetValue(vertex, out var visited))
+        if (!_visitedItemLocations.TryGetValue(vertex, out var arrivals))
             return false;
 
-        var (startState, startFlags) = visited;
+        // Use the inventory fixed point resolved by the forward search for every
+        // reverse query from this searcher. This mirrors the paired traversal
+        // model: flags and fixed pickups that became safely collectable are global
+        // input to both passes, while only the local resource states differ by
+        // vertex. Using each arrival's intermediate inventory here caused an
+        // almost unique reverse traversal to be built for every candidate.
+        var reverseInventory = _inventory.Clone();
+        while (reverseInventory.Has(itemToPlace))
+            reverseInventory.RemoveItem(itemToPlace);
 
-        foreach (var flag in startFlags.All())
+        foreach (var arrival in arrivals)
         {
-            if (!inventory.Has(flag.Key))
-                inventory.AddItem(flag.Key);
+            if (EvaluateBacktrack(
+                    vertex, arrival.State, reverseInventory, target))
+                return true;
         }
 
-        while (inventory.Has(itemToPlace))
-        {
-            inventory.RemoveItem(itemToPlace);
-        }
-
-        var backtrackSearcher = new StatefulSearcher(_graph, vertex, inventory, null, target, startState);
-        if (!backtrackSearcher.HasVisited(target))
-        {
-            return false;
-        }
-
-        return true;
+        return false;
     }
+
+    private void RecordForwardArrival(
+        Vertex vertex, VisitedState state, Inventory inventory)
+    {
+        if (!_visitedItemLocations.TryGetValue(vertex, out var arrivals))
+        {
+            _visitedItemLocations[vertex] =
+                [new ForwardArrival(state, inventory.Clone())];
+            return;
+        }
+
+        if (arrivals.Any(arrival =>
+                arrival.State.Dominates(state)
+                && InventoryContains(arrival.Inventory, inventory)))
+            return;
+
+        arrivals.RemoveAll(arrival =>
+            state.Dominates(arrival.State)
+            && InventoryContains(inventory, arrival.Inventory));
+        arrivals.Add(new ForwardArrival(state, inventory.Clone()));
+    }
+
+    private static bool InventoryContains(Inventory superset, Inventory subset) =>
+        subset.All().All(pair => superset.GetCount(pair.Key) >= pair.Value);
+
+    private bool EvaluateBacktrack(
+        Vertex vertex, VisitedState startState, Inventory inventory, Vertex target,
+        bool deferNegativeValidation = false)
+    {
+        _backtrackMetrics.RecordCheck();
+        if (_backtrackMetrics.Mode == BacktrackBenchmarkMode.Legacy)
+            return RunLegacyBacktrack(
+                vertex, startState, inventory, target, null, out _);
+
+        var targetRegion = GetBacktrackRegion(target);
+        if (!targetRegion.Vertices.Contains(vertex))
+        {
+            _backtrackMetrics.RecordStructuralReject();
+            return false;
+        }
+
+        var reverseSearch = GetReverseBacktrackSearch(
+            target, targetRegion, inventory);
+        bool canReturn = reverseSearch.CanReturn(vertex, startState);
+        if (canReturn || !deferNegativeValidation)
+            ValidateReverseResult(
+                canReturn, vertex, startState, inventory, target, targetRegion);
+        if (canReturn)
+        {
+            _backtrackMetrics.RecordReverseProof();
+            return true;
+        }
+        _backtrackMetrics.RecordReverseReject();
+        return false;
+    }
+
+    private void ValidateSettledBacktrackRejects()
+    {
+        if (_target != null
+            || _backtrackMetrics.Mode != BacktrackBenchmarkMode.Validate)
+            return;
+
+        foreach (var ((vertex, item), state) in
+                 _deferredBacktrackValidation.ToArray())
+        {
+            var inventory = _inventory.Clone();
+            inventory.AddItem(item);
+            if (EvaluateBacktrack(vertex, state, inventory, _start))
+                throw new InvalidOperationException(
+                    $"Settled reverse backtracking proved '{vertex.Name}' "
+                    + "after it had been left rejected by the forward/reverse "
+                    + "fixed point.");
+        }
+    }
+
+    private void ValidateReverseResult(
+        bool expected, Vertex vertex, VisitedState startState,
+        Inventory inventory, Vertex target, BacktrackRegion targetRegion)
+    {
+        if (_backtrackMetrics.Mode != BacktrackBenchmarkMode.Validate)
+            return;
+
+        bool actual = RunLegacyBacktrack(
+            vertex, startState, inventory, target, targetRegion, out _);
+        if (actual != expected)
+        {
+            throw new InvalidOperationException(
+                $"Reverse backtracking returned {expected} for '{vertex.Name}' "
+                + $"to '{target.Name}', but legacy search returned {actual}.");
+        }
+    }
+
+    private bool RunLegacyBacktrack(
+        Vertex vertex, VisitedState startState, Inventory inventory, Vertex target,
+        BacktrackRegion? targetRegion, out int states)
+    {
+        long started = Stopwatch.GetTimestamp();
+        var fallback = new StatefulSearcher(
+            _graph, vertex, inventory.Clone(), null, target, startState,
+            null, false, null, targetRegion);
+        bool success = fallback.HasVisited(target);
+        states = fallback._dequeuedStateCount;
+        _backtrackMetrics.RecordFallback(
+            success, Stopwatch.GetTimestamp() - started, states);
+        return success;
+    }
+
+    private BacktrackRegion GetBacktrackRegion(Vertex target)
+        => _backtrackCache.GetRegion(_graph, target, _backtrackMetrics);
+
+    private ReverseBacktrackSearch GetReverseBacktrackSearch(
+        Vertex target, BacktrackRegion region, Inventory inventory)
+        => _backtrackCache.GetReverseSearch(
+            target, region, inventory, _backtrackMetrics);
 
     public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt, Inventory prevInventory)
     {
@@ -929,6 +1124,8 @@ public class StatefulSearcher : ISearcher
 
     internal StatefulPickup? GetPickupDetails(Randomizer.Graph.Vertex location, IItem item) =>
         _pickupDetails.GetValueOrDefault((location, item));
+
+    private sealed record ForwardArrival(VisitedState State, Inventory Inventory);
 
     /// <summary>Item locations that can actually be opened, plus fixed flags yielded
     /// by strategies. Randomized item contents are included even when collection was

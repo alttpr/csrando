@@ -1,0 +1,11 @@
+[
+  {
+    "Language": "en",
+    "Game": "Combo",
+    "Combo": {
+      "InitialGame": "sm"
+    },
+    "SuperMetroid": {},
+    "Metroid": {}
+  }
+]

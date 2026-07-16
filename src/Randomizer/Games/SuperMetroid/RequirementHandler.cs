@@ -9,12 +9,34 @@ using Randomizer.Graph;
 
 public class RequirementResult
 {
+    private bool _ownsMissing;
+
     public bool Met { get; set; }
     public RequirementCost? Cost { get; set; }
     public HashSet<string>? Missing { get; set; }
     public Dictionary<string, int>? UsedItems { get; set; }
 
-    public static RequirementResult Fail(params string[] missing) => new RequirementResult { Met = false, Cost = null, Missing = missing.Length > 0 ? new HashSet<string>(missing) : null };
+    public static RequirementResult Fail() => new()
+    {
+        Met = false,
+        Cost = null,
+    };
+
+    public static RequirementResult Fail(string missing) => new()
+    {
+        Met = false,
+        Cost = null,
+        Missing = [missing],
+        _ownsMissing = true,
+    };
+
+    public static RequirementResult Fail(params string[] missing) => new()
+    {
+        Met = false,
+        Cost = null,
+        Missing = missing.Length > 0 ? new HashSet<string>(missing) : null,
+        _ownsMissing = missing.Length > 0,
+    };
     public static RequirementResult Success(RequirementCost cost, string? item = null, int count = 1)
     {
         var result = new RequirementResult { Met = true, Cost = cost };
@@ -39,12 +61,34 @@ public class RequirementResult
 
         if (Missing == null)
         {
-            Missing = new HashSet<string>(other.Missing);
+            // Failed sub-results are immutable to their callers. Borrow the
+            // first set and copy only if a later failure must extend it.
+            Missing = other.Missing;
+            _ownsMissing = false;
         }
         else
         {
+            if (ReferenceEquals(Missing, other.Missing))
+                return;
+            if (!_ownsMissing)
+            {
+                Missing = new HashSet<string>(Missing);
+                _ownsMissing = true;
+            }
             Missing.UnionWith(other.Missing);
         }
+    }
+
+    internal void MergeConsumedFail(RequirementResult other)
+    {
+        if (other.Missing == null || other.Missing.Count == 0)
+            return;
+
+        if (Missing == null)
+            Missing = other.Missing;
+        else if (!ReferenceEquals(Missing, other.Missing))
+            Missing.UnionWith(other.Missing);
+        _ownsMissing = true;
     }
 
     public override string ToString()
@@ -235,7 +279,7 @@ public class RequirementHandler
                     if (!subResult.Met)
                     {
                         // Merge the missing items from the failing sub-requirement
-                        failResult.MergeFail(subResult);
+                        failResult.MergeConsumedFail(subResult);
                         failedAnd = true;
                     }
                     else
@@ -280,7 +324,7 @@ public class RequirementHandler
                     else
                     {
                         // Merge the missing items from that failing subReq
-                        combinedFail.MergeFail(subResult);
+                        combinedFail.MergeConsumedFail(subResult);
                     }
                 }
 
@@ -627,7 +671,8 @@ public class RequirementHandler
                         failed = true;
                         if (resourceName != "")
                         {
-                            failedResource.MergeFail(RequirementResult.Fail(resourceName));
+                            failedResource.MergeConsumedFail(
+                                RequirementResult.Fail(resourceName));
                         }
                     }
                 }
@@ -747,7 +792,7 @@ public class RequirementHandler
                     var (item, count) = RequiredExpansion(c.Type, c.Count);
                     if (item == "" || !inventory.HasAtLeast(world.GetItem(item), count))
                     {
-                        failedCapacity.MergeFail(RequirementResult.Fail(
+                        failedCapacity.MergeConsumedFail(RequirementResult.Fail(
                             item == "" ? c.Type : item));
                         failedCap = true;
                     }
@@ -808,6 +853,10 @@ public class RequirementHandler
                 return RequirementResult.Fail();
         }
     }
+
+    internal bool TryGetOptimizedRequirement(
+        string name, out Requirement requirement) =>
+        HelperTechs.TryGetValue(name, out requirement!);
 
     internal static (string Item, int Count) RequiredExpansion(
         string resourceType, int resourceCount) => resourceType switch

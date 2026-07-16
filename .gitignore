@@ -8,7 +8,9 @@
 **/node_modules/
 **/PublishProfiles/
 **/DB/
+**/__pycache__/
 **/SuperMetroid/data/maps/
+artifacts/
 .vs
 .cr
 *.sfc
