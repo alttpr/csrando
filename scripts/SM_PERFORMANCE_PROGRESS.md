@@ -1,6 +1,6 @@
 # Super Metroid search optimization progress
 
-Windows-benchmarked implementation: `ac5d235c`
+Windows-benchmarked implementation: `82c4c114`
 
 Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`
 
@@ -11,9 +11,42 @@ Frozen historical baseline: tag `sm-search-baseline-v2`, described by
 dashboard, and preview are intentionally retained in Git so the next
 optimization pass can compare against the identical per-seed measurements.
 
-Current comparison baseline: tag `sm-search-baseline-v3` at `fcd37dea`.
+Current comparison baseline: `sm-inventory-cache-v4` at `b4ec2a1a`.
 
 ## Result
+
+The masked-evaluation-cache checkpoint classifies resource-dependent
+requirement reads separately from obstacle/door reads. Graph-state-dependent
+requirement results are now cached per search-pass epoch keyed on their
+plan-masked bits, EnemyKill (state-free when details are not captured) joins
+the inventory-only cache, and the reverse traversal's evaluation cache keys on
+compiled plan ids masked the same way, with ids shared across value-equal
+requirement instances. Compiled strategy plans live on the `Strat` itself,
+weapon sets are recomputed only when the inventory version changes, and
+reverse queries reuse one inventory snapshot per settled inventory.
+
+In an interleaved 30-seed Windows comparison against exact commit `b4ec2a1a`
+(fresh Release process per revision and seed, baseline first), mean total time
+per seed fell from **2.868 s to 2.515 s** (**12.31% paired reduction**,
+**1.14x average paired speedup**), median fell from 2.787 s to 2.429 s, and
+p95 fell from 3.552 s to 3.151 s. Assumed fill improved **16.31%** (1.20x) and
+allocations fell **4.22%**. Both revisions generated 30/30 seeds and all 30
+placement + playthrough hashes match.
+
+Two structural ideas were evaluated and rejected as unsound rather than
+implemented: skipping the settled restart when no backtrack rejection occurred
+changes output hashes because the restart rebuilds arrival states under the
+settled inventory (it is semantically load-bearing for `BacktrackLocation`),
+and capability-key reuse of forward searchers is invalid because forward
+affordability depends on accumulated route costs, which the capacity-threshold
+caps do not bound.
+
+The detailed dashboard and retained raw cohorts are
+`artifacts/sm-eval-cache-v5-report.html`,
+`artifacts/sm-v4-contemporary-30.csv`, and
+`artifacts/sm-eval-cache-30.csv`.
+
+## Previous result (sm-inventory-cache-v4)
 
 The inventory-only requirement cache checkpoint replaces a per-search-pass
 dictionary with one vertex-model-owned result array and epoch array. A fresh
@@ -60,6 +93,7 @@ checkpoint already generated successfully.
 | `final-windows-50@a16a44c8` | 50/50 | 3.093 s | 3.060 s | 3.572 s | 54.95% / 2.28x |
 | `sm-local-frontiers-v3@e305a7a5` | 50/50 | 2.865 s | 2.797 s | 3.710 s | 9.50% / 1.11x vs frozen v2 |
 | `sm-inventory-cache-v4@ac5d235c` | 30/30 | 2.858 s | 2.707 s | 3.764 s | 2.89% / 1.03x vs v3 |
+| `sm-eval-cache-v5@82c4c114` | 30/30 | 2.515 s | 2.429 s | 3.151 s | 12.31% / 1.14x vs v4 |
 | `fill-retry-final@ece12a88` | 100/100 | 5.451 s | 5.301 s | 6.522 s | WSL correctness cohort |
 
 The 100-seed row is the WSL correctness/work cohort, not a wall-clock comparison
@@ -175,6 +209,10 @@ was retained.
   hashes and no reverse/reference disagreement.
 - Inventory-cache checkpoint: focused SM suite 33/33, full Windows suite 4,355
   passed / 4,520 skipped / 0 failed, and Validate mode 5/5.
+- Eval-cache checkpoint: focused SM suite 33/33 plus 3 new cache unit tests,
+  full Windows suite 4,356 passed / 4,520 skipped / 0 failed, slow SM
+  regressions 8/8, Validate mode 5/5 (9876-9878, 9881, 9903), and 30/30 exact
+  output hashes against the interleaved v4 baseline cohort.
 - Final SM-only cohort: 100/100.
 - 30-seed SM/M1, keycard, Medium, and Hard cohorts: 30/30 each.
 
