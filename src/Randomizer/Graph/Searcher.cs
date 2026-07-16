@@ -18,6 +18,17 @@ public class Searcher : ISearcher
     private readonly IWorld? _world;
     private readonly Func<Vertex, bool> _collectItemAt;
 
+    // Scratch structures reused across InternalSearch/CollectItems calls (single-threaded, and
+    // neither method is reentered while the other holds its scratch), so each BFS pass does not
+    // allocate a marker set, a queue, and a visited-minus-collected clone.
+    private readonly VertexHashSet _scratchMarked;
+    private readonly Queue<Vertex> _scratchQueue = new();
+    private readonly VertexHashSet _scratchUncollected;
+
+    // Last (visited count, inventory version) each key type's door search ran against; both
+    // only grow, so an unchanged pair means a rerun would contribute nothing new.
+    private readonly Dictionary<IItem, (int VisitedCount, int InventoryVersion)> _doorSearchCache = new();
+
     /// <summary>
     /// I'm a jerk and don't like useful messages.
     /// </summary>
@@ -36,6 +47,8 @@ public class Searcher : ISearcher
         _inventory = inventory;
         _setLocations = setLocations ?? new();
         _otherWorldLocations = new(graph);
+        _scratchMarked = new(graph);
+        _scratchUncollected = new(graph);
 
         bool newItemsFound;
         do
@@ -160,8 +173,8 @@ public class Searcher : ISearcher
     private bool CollectItems(Inventory inventory, VertexHashSet visited, VertexHashSet collected)
     {
         bool newItemsFound = false;
-        var newlyVisited = visited.Clone();
-        newlyVisited.ExceptWith(collected);
+        var newlyVisited = _scratchUncollected;
+        newlyVisited.CopyFromExcept(visited, collected);
 
         IWorld? world = null;
         foreach (var itemLocation in newlyVisited)
@@ -242,8 +255,10 @@ public class Searcher : ISearcher
 
         var newlyVisited = new VertexHashSet(visited.Graph);
         var newSearchStarts = new VertexHashSet(visited.Graph);
-        var marked = new VertexHashSet(visited.Graph);
-        var queue = new Queue<Vertex>();
+        var marked = _scratchMarked;
+        marked.Clear();
+        var queue = _scratchQueue;
+        queue.Clear();
         foreach (var start in startAt)
         {
             if (!visited.Contains(start))
@@ -302,8 +317,16 @@ public class Searcher : ISearcher
             if (keyCount == 0)
                 continue;
 
+            // Both inputs only grow, so if neither changed since this key's last run, a rerun
+            // would return a result that is already unioned into the searcher state. The outer
+            // fixpoint loop guarantees at least one such no-op round per key; skip it.
+            var cacheEntry = (_visited.Count, inventory.Version);
+            if (_doorSearchCache.TryGetValue(key, out var lastRun) && lastRun == cacheEntry)
+                continue;
+
             var result = SubsetDoorSearch(inventory, key);
 
+            _doorSearchCache[key] = cacheEntry;
             strongLocations.UnionWith(result.NewlyVisited);
             strongSearchStarts.UnionWith(result.NewSearchStarts);
         }
@@ -411,8 +434,7 @@ public class Searcher : ISearcher
                 var child = GetChild(mask | bit, state, i, newVerticesFromDoor);
 
                 // Everything newly reachable after opening this door, relative to this state.
-                var weakLocations = child.Visited.Clone();
-                weakLocations.ExceptWith(state.Visited);
+                var weakLocations = VertexHashSet.AndNot(child.Visited, state.Visited);
                 var weakSearchStarts = child.LastFrontier.Clone();
 
                 if (child.Inventory.GetCount(key) > 0)
