@@ -63,14 +63,20 @@ internal sealed class RandomAssumedFiller
 
         flatItemsArray = flatItems.ToArray();
 
+        var assumedItemsByWorld = Enumerable.Range(0, _randomizer.Worlds.Length)
+            .Select(worldId => flatItems
+                .Where(entry => entry.Weight <= 9000
+                    && entry.Item.World.Id == worldId)
+                .Select(entry => entry.Item)
+                .ToList())
+            .ToArray();
+
         var searchers = new ISearcher[_randomizer.Worlds.Length];
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
         {
             searchers[i] = _randomizer.GetSearcherForInventory(
                 _randomizer.Worlds[i],
-                flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
-                    .Select(i => i.Item)
-                    .ToList(),
+                assumedItemsByWorld[i],
                 _randomizer.Worlds[i].Start
                 );
         }
@@ -87,12 +93,11 @@ internal sealed class RandomAssumedFiller
             // only add items to the inventory from that world to speed up the search as
             // we don't care to search other worlds.
             flatItems.Remove(itemKey);
+            assumedItemsByWorld[item.World.Id].Remove(item);
 
             searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
                 _randomizer.Worlds[item.World.Id],
-                flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
-                    .Select(i => i.Item)
-                    .ToList(),
+                assumedItemsByWorld[item.World.Id],
                 _randomizer.Worlds[item.World.Id].Start
                 );
 
@@ -118,11 +123,10 @@ internal sealed class RandomAssumedFiller
                         _ => throw new Exception("Invalid searcher type")
                     } ?? throw new InvalidOperationException("Super Metroid searcher is required for backtracking");
 
-                    var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
-                            .Select(i => i.Item)
-                            .ToList();
-                    var backtrackInventory = new Inventory(backtrackItems.ToArray());
-                    backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, item);
+                    backtrackCheck = statefulSearcher.BacktrackLocation(
+                        (Games.SuperMetroid.Vertex)location,
+                        (Games.SuperMetroid.Vertex)location.World.Start,
+                        item);
                     if (!backtrackCheck)
                     {
                         locations.Remove(location);
@@ -192,9 +196,11 @@ internal sealed class RandomAssumedFiller
             if (location.World.GameId == "sm")
             {
                 // Test backtracking
-                var backtrackInventory = startingItems.Clone();
                 var statefulSearcher = (StatefulSearcher)location.World.GetSearcherForWorld(graph, location.World.Start, startingItems);
-                var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, flatItem.Item3);
+                var backtrackCheck = statefulSearcher.BacktrackLocation(
+                    (Games.SuperMetroid.Vertex)location,
+                    (Games.SuperMetroid.Vertex)location.World.Start,
+                    flatItem.Item3);
 
                 if (!backtrackCheck)
                 {

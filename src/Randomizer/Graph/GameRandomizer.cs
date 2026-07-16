@@ -22,6 +22,9 @@ public abstract class GameRandomizer
     private readonly Vertex _start;
     private readonly IItemPooler _itemPooler;
     public SpoilerLog? SpoilerLog;
+    internal TimeSpan GraphConstructionElapsed { get; }
+    internal TimeSpan AssumedFillElapsed { get; private set; }
+    internal TimeSpan SpoilerElapsed { get; private set; }
 
     internal Inventory PlaythroughStartingItems => _startingItems.Clone();
     internal HashSet<Vertex> PlaythroughRandomizedLocations =>
@@ -62,6 +65,7 @@ public abstract class GameRandomizer
         Graph.SetVertexIds();
         _itemPooler = CreateItemPooler(Worlds, PRNG);
 
+        GraphConstructionElapsed = sw.Elapsed;
         _logger.LogInformation("Graph configuration took {TimeElapsed}", sw.Elapsed);
     }
 
@@ -77,9 +81,13 @@ public abstract class GameRandomizer
         var filler = new RandomAssumedFiller(this, PRNG);
         var sets = _itemPooler.Pool;
 
+        var sw = Stopwatch.StartNew();
         filler.FillGraph(sets);
+        AssumedFillElapsed = sw.Elapsed;
 
+        sw.Restart();
         SpoilerLog = new SpoilerLog(this);
+        SpoilerElapsed = sw.Elapsed;
     }
 
     /// <summary>

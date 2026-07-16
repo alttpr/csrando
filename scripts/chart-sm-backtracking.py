@@ -42,6 +42,15 @@ def aggregate(label: str, rows: list[dict[str, str]]) -> dict[str, float | str]:
         "p95_ms": percentile(generation, 0.95),
         "min_ms": min(generation),
         "max_ms": max(generation),
+        "graph_ms": statistics.fmean(number(row, "graph_construction_ms") for row in rows),
+        "fill_ms": statistics.fmean(number(row, "assumed_fill_ms") for row in rows),
+        "spoiler_ms": statistics.fmean(number(row, "spoiler_ms") for row in rows),
+        "validation_ms": statistics.fmean(number(row, "validation_ms") for row in rows),
+        "allocated_mb": statistics.fmean(number(row, "allocated_bytes") for row in rows)
+        / (1024 * 1024),
+        "gen0": statistics.fmean(number(row, "gen0_collections") for row in rows),
+        "gen1": statistics.fmean(number(row, "gen1_collections") for row in rows),
+        "gen2": statistics.fmean(number(row, "gen2_collections") for row in rows),
         "checks": checks,
         "resolved_pct": 0
         if checks == 0
@@ -121,22 +130,48 @@ def main() -> None:
     if baseline not in label_order:
         raise SystemExit(f"Baseline label {baseline!r} is not present in the CSV")
     labels = [baseline, *[label for label in label_order if label != baseline]]
-    seed_sets = [{seed for label, seed in latest if label == current} for current in labels]
+    successful = {
+        key: row for key, row in latest.items()
+        if row.get("status", "success") == "success"
+    }
+    seed_sets = [{seed for label, seed in successful if label == current} for current in labels]
     common_seeds = set.intersection(*seed_sets)
     if not common_seeds:
         raise SystemExit("Labels have no common seeds to compare")
 
     grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
     for label in labels:
-        grouped[label] = [latest[(label, seed)] for seed in sorted(common_seeds, key=int)]
+        grouped[label] = [successful[(label, seed)] for seed in sorted(common_seeds, key=int)]
     summaries = [aggregate(label, grouped[label]) for label in labels]
     baseline_mean = float(summaries[0]["mean_ms"])
+    baseline_rows = {row["seed"]: row for row in grouped[baseline]}
 
     table_rows = []
     for summary in summaries:
         mean_ms = float(summary["mean_ms"])
-        speedup = baseline_mean / mean_ms if mean_ms else 0
-        gain = (baseline_mean - mean_ms) * 100 / baseline_mean if baseline_mean else 0
+        current_rows = {row["seed"]: row for row in grouped[str(summary["label"])]}
+        paired_speedup = statistics.fmean(
+            number(baseline_rows[seed], "generation_ms")
+            / number(current_rows[seed], "generation_ms")
+            for seed in common_seeds
+        )
+        paired_gain = statistics.fmean(
+            (number(baseline_rows[seed], "generation_ms")
+             - number(current_rows[seed], "generation_ms"))
+            * 100 / number(baseline_rows[seed], "generation_ms")
+            for seed in common_seeds
+        )
+        hash_mismatches = sum(
+            bool(baseline_rows[seed].get("output_hash"))
+            and baseline_rows[seed].get("output_hash")
+            != current_rows[seed].get("output_hash")
+            for seed in common_seeds
+        )
+        failed_seeds = sorted(
+            (seed for (label, seed), row in latest.items()
+             if label == summary["label"] and row.get("status", "success") != "success"),
+            key=int,
+        )
         table_rows.append(
             "<tr>"
             f"<td>{html.escape(str(summary['label']))}</td>"
@@ -145,8 +180,16 @@ def main() -> None:
             f"<td>{mean_ms:.1f}</td>"
             f"<td>{float(summary['median_ms']):.1f}</td>"
             f"<td>{float(summary['p95_ms']):.1f}</td>"
-            f"<td>{speedup:.2f}×</td>"
-            f"<td>{gain:+.1f}%</td>"
+            f"<td>{paired_speedup:.2f}×</td>"
+            f"<td>{paired_gain:+.1f}%</td>"
+            f"<td>{float(summary['graph_ms']):.1f}</td>"
+            f"<td>{float(summary['fill_ms']):.1f}</td>"
+            f"<td>{float(summary['spoiler_ms']):.1f}</td>"
+            f"<td>{float(summary['validation_ms']):.1f}</td>"
+            f"<td>{float(summary['allocated_mb']):.1f}</td>"
+            f"<td>{float(summary['gen0']):.1f}/{float(summary['gen1']):.1f}/{float(summary['gen2']):.1f}</td>"
+            f"<td>{hash_mismatches}</td>"
+            f"<td>{html.escape(', '.join(failed_seeds) or '—')}</td>"
             f"<td>{float(summary['resolved_pct']):.1f}%</td>"
             f"<td>{float(summary['proof_pct']):.1f}%</td>"
             f"<td>{float(summary['reject_pct']):.1f}%</td>"
@@ -174,7 +217,9 @@ svg {{ width: 100%; min-width: 620px; }} .axis {{ stroke: #89919e; }}
 <p class="note">Baseline: <strong>{html.escape(baseline)}</strong>. Comparing {len(common_seeds)} identical seeds per label.</p>
 <div class="card"><table><thead><tr>
 <th>Label</th><th>Mode</th><th>Seeds</th><th>Mean ms</th><th>Median ms</th><th>P95 ms</th>
-<th>Speedup</th><th>Time gain</th><th>No fallback</th><th>Reverse proof</th>
+<th>Paired speedup</th><th>Paired gain</th><th>Graph ms</th><th>Fill ms</th>
+<th>Spoiler ms</th><th>Validation ms</th><th>Allocated MiB</th><th>GC 0/1/2</th>
+<th>Hash mismatches</th><th>Failures</th><th>No fallback</th><th>Reverse proof</th>
 <th>Reverse reject</th><th>Fallback rate</th><th>Fallback ms</th><th>Fallback states</th>
 <th>Reverse builds</th><th>Reverse build ms</th><th>Frontier entries</th>
 </tr></thead><tbody>{''.join(table_rows)}</tbody></table></div>

@@ -86,11 +86,18 @@ internal sealed class Randomize : Command
         int? startingSeed = context.ParseResult.GetValueForOption(_seed);
         bool incrementSeed = context.ParseResult.GetValueForOption(_incrementSeed);
         var backtrackMode = context.ParseResult.GetValueForOption(_smBacktrackMode);
+        bool collectBacktrackMetrics = backtrackMetricsFile != null;
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
             var worldConfigs = GetWorldConfigs(context);
+            long allocatedBefore = collectBacktrackMetrics
+                ? GC.GetTotalAllocatedBytes(precise: false)
+                : 0;
+            int gen0Before = collectBacktrackMetrics ? GC.CollectionCount(0) : 0;
+            int gen1Before = collectBacktrackMetrics ? GC.CollectionCount(1) : 0;
+            int gen2Before = collectBacktrackMetrics ? GC.CollectionCount(2) : 0;
             var seedSw = Stopwatch.StartNew();
             var randomizer = RandomizerFactory.Create(
                 worldConfigs,
@@ -98,25 +105,63 @@ internal sealed class Randomize : Command
                     ? unchecked(startingSeed.Value + i)
                     : startingSeed
             );
-            Games.SuperMetroid.BacktrackMetrics.Configure(randomizer.Graph, backtrackMode);
-            randomizer.Randomize();
+            Games.SuperMetroid.BacktrackMetrics.Configure(
+                randomizer.Graph, backtrackMode,
+                enabled: collectBacktrackMetrics);
+            TimeSpan generationElapsed = TimeSpan.Zero;
+            TimeSpan validationElapsed = TimeSpan.Zero;
+            string outputHash = "";
+            Exception? failure = null;
+            try
+            {
+                randomizer.Randomize();
+                generationElapsed = seedSw.Elapsed;
+                if (collectBacktrackMetrics)
+                    outputHash = Games.SuperMetroid.SeedOutputHash.Compute(randomizer);
+
+                var validationSw = Stopwatch.StartNew();
+                bool winnable = randomizer.IsWinnable();
+                validationElapsed = validationSw.Elapsed;
+                if (!winnable)
+                    failure = new Exception("Game Unwinnable.");
+            }
+            catch (Exception ex)
+            {
+                generationElapsed = seedSw.Elapsed;
+                failure = ex;
+            }
             seedSw.Stop();
-            var backtrackMetrics = Games.SuperMetroid.BacktrackMetrics
-                .SnapshotFor(randomizer.Graph);
-            if (!randomizer.IsWinnable())
-                throw new Exception("Game Unwinnable.");
 
             if (backtrackMetricsFile != null)
             {
+                var backtrackMetrics = Games.SuperMetroid.BacktrackMetrics
+                    .SnapshotFor(randomizer.Graph);
                 Games.SuperMetroid.BacktrackMetricsCsv.Append(
                     backtrackMetricsFile,
                     backtrackLabel,
                     backtrackMode,
                     randomizer.PRNG.Seed,
                     randomizer.GetType().Name,
+                    generationElapsed,
+                    randomizer.GraphConstructionElapsed,
+                    randomizer.AssumedFillElapsed,
+                    randomizer.SpoilerElapsed,
+                    validationElapsed,
                     seedSw.Elapsed,
+                    GC.GetTotalAllocatedBytes(precise: false) - allocatedBefore,
+                    GC.CollectionCount(0) - gen0Before,
+                    GC.CollectionCount(1) - gen1Before,
+                    GC.CollectionCount(2) - gen2Before,
+                    outputHash,
+                    failure == null ? "success" : "failure",
+                    failure == null
+                        ? ""
+                        : $"{failure.GetType().Name}: {failure.Message}",
                     backtrackMetrics);
             }
+
+            if (failure != null)
+                throw failure;
 
             if (outputDirectory != null)
             {

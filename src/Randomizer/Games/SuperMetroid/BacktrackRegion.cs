@@ -13,12 +13,19 @@ using Randomizer.Graph;
 internal sealed class BacktrackRegion
 {
     private BacktrackRegion(
+        SmSearchModel model,
+        bool[] membership,
         IReadOnlySet<Vertex> vertices,
         IReadOnlyDictionary<Vertex, IReadOnlyList<Randomizer.Graph.Edge>> incomingEdges)
     {
+        Model = model;
+        Membership = membership;
         Vertices = vertices;
         IncomingEdges = incomingEdges;
     }
+
+    internal SmSearchModel Model { get; }
+    internal bool[] Membership { get; }
 
     public IReadOnlySet<Vertex> Vertices { get; }
 
@@ -31,62 +38,49 @@ internal sealed class BacktrackRegion
 
     public static BacktrackRegion Build(Graph graph, Vertex target)
     {
-        var vertices = graph.GetVertices()
-            .OfType<Vertex>()
-            .Where(vertex => vertex.World == target.World)
-            .ToArray();
-        var incoming = vertices.ToDictionary(
-            vertex => vertex,
-            _ => new List<Randomizer.Graph.Edge>());
-
-        foreach (var from in vertices)
-        {
-            foreach (var edge in from.Edges)
-            {
-                if (edge.To.World == from.World && edge.To is Vertex to
-                    && incoming.TryGetValue(to, out var predecessors))
-                {
-                    // Keep the direction of the original edge. Walking this list
-                    // backwards means that `from` can potentially reach `to`.
-                    predecessors.Add(edge);
-                }
-            }
-        }
+        var model = SmSearchModel.For(target.World, graph);
 
         var region = new HashSet<Vertex>();
-        var queue = new Queue<Vertex>();
+        var membership = new bool[model.Capacity];
+        var queue = new Queue<int>();
 
         AddSeed(target);
 
         // Target searches currently consider leaving the SM world a successful
         // backtrack (see StatefulSearcher.InternalSearch). Those exits are
         // therefore additional terminals of the reverse traversal.
-        foreach (var exit in vertices.Where(vertex =>
-                     vertex.Edges.Any(edge => edge.To.World != vertex.World)))
-        {
-            AddSeed(exit);
-        }
+        foreach (int exitId in model.CrossWorldTerminalIds)
+            AddSeed(model.VerticesById[exitId]!);
 
-        while (queue.TryDequeue(out var current))
+        while (queue.TryDequeue(out int currentId))
         {
-            foreach (var incomingEdge in incoming[current])
+            foreach (var incomingEdge in model.IncomingEdgesById[currentId])
             {
                 var predecessor = (Vertex)incomingEdge.From;
-                if (region.Add(predecessor))
-                    queue.Enqueue(predecessor);
+                if (!membership[predecessor.Id])
+                    AddSeed(predecessor);
             }
         }
 
         return new BacktrackRegion(
+            model,
+            membership,
             region,
-            incoming.ToDictionary(
-                pair => pair.Key,
-                pair => (IReadOnlyList<Randomizer.Graph.Edge>)pair.Value));
+            model.VertexIds.ToDictionary(
+                id => model.VerticesById[id]!,
+                id => (IReadOnlyList<Randomizer.Graph.Edge>)
+                    model.IncomingEdgesById[id]));
 
         void AddSeed(Vertex vertex)
         {
-            if (region.Add(vertex))
-                queue.Enqueue(vertex);
+            if (membership[vertex.Id])
+                return;
+            membership[vertex.Id] = true;
+            region.Add(vertex);
+            queue.Enqueue(vertex.Id);
         }
     }
+
+    internal bool Contains(Vertex vertex) =>
+        (uint)vertex.Id < (uint)Membership.Length && Membership[vertex.Id];
 }

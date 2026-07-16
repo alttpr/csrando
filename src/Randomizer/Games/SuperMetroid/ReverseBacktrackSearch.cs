@@ -1,7 +1,5 @@
 namespace Randomizer.Games.SuperMetroid;
 
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 
@@ -14,23 +12,27 @@ using Randomizer.Graph;
 /// </summary>
 internal sealed class ReverseBacktrackSearch
 {
-    private static readonly ConditionalWeakTable<World, RequirementMaskCache>
-        RequirementMasksByWorld = new();
-    private readonly Dictionary<Vertex, List<ReverseState>> _states = [];
+    private readonly List<ReverseState>?[] _states;
+    private readonly List<int> _frontierVertexIds = [];
+    private readonly SmSearchModel _model;
     private readonly World _world;
     private readonly Inventory _inventory;
+    private readonly ulong _inventoryFlagMask;
+    private readonly Dictionary<ulong, Inventory> _inventoriesByRequiredFlags = [];
     private readonly RequirementHandler _handler;
     private readonly HashSet<Weapon> _weapons;
-    private readonly RequirementMaskCache _requirementMasks;
     private readonly Dictionary<RequirementEvaluationKey, RequirementResult>
         _requirementResults = [];
-    private ReverseBacktrackSearch(World world, Inventory inventory)
+    private ReverseBacktrackSearch(
+        World world, Inventory inventory, SmSearchModel model)
     {
         _world = world;
+        _model = model;
+        _states = new List<ReverseState>?[model.Capacity];
         _inventory = inventory.Clone();
+        _inventoryFlagMask = model.InventoryFlagMask(inventory);
+        _inventoriesByRequiredFlags[0] = _inventory;
         _handler = world.RequirementHandler;
-        _requirementMasks = RequirementMasksByWorld.GetValue(
-            world, _ => new RequirementMaskCache());
         var capacity = new VisitedState
         {
             Energy = 99 + inventory.GetCount(world.GetItem("ETank")) * 100,
@@ -40,7 +42,8 @@ internal sealed class ReverseBacktrackSearch
         };
         _weapons = world.JsonData.Weapons.Weapons
             .Where(weapon => _handler.HandleRequirement(
-                weapon.UseRequires, capacity, inventory, world, []).Met)
+                weapon.UseRequires, capacity, inventory, world, [],
+                captureDetails: false).Met)
             .ToHashSet();
     }
 
@@ -48,33 +51,35 @@ internal sealed class ReverseBacktrackSearch
         BacktrackRegion region, Vertex target, Inventory inventory)
     {
         var search = new ReverseBacktrackSearch(
-            (World)target.World, inventory);
-        var queue = new Queue<(Vertex Vertex, ReverseState State)>();
+            (World)target.World, inventory, region.Model);
+        var queue = new Queue<(int VertexId, ReverseState State)>();
+        var predecessors = new List<ReverseState>();
 
-        AddTerminal(target);
-        foreach (var exit in region.Vertices.Where(vertex =>
-                     vertex.Edges.Any(edge => edge.To.World != vertex.World)))
-            AddTerminal(exit);
+        AddTerminal(target.Id);
+        foreach (int exitId in region.Model.CrossWorldTerminalIds)
+            AddTerminal(exitId);
 
         while (queue.TryDequeue(out var pending))
         {
-            var (to, downstream) = pending;
-            if (!search._states.TryGetValue(to, out var current)
-                || !current.Contains(downstream))
+            var (toId, downstream) = pending;
+            var current = search._states[toId];
+            if (current == null || !current.Contains(downstream))
                 continue;
+            var to = region.Model.VerticesById[toId]!;
 
-            foreach (var edge in region.IncomingEdges[to])
+            foreach (var edge in region.Model.IncomingEdgesById[toId])
             {
                 var from = (Vertex)edge.From;
-                if (!region.Vertices.Contains(from))
+                if (!region.Contains(from))
                     continue;
 
-                foreach (var predecessor in search.Traverse(
-                             from, to, edge, downstream))
+                predecessors.Clear();
+                search.Traverse(from, to, edge, downstream, predecessors);
+                foreach (var predecessor in predecessors)
                 {
                     if (search.Add(from, predecessor))
                     {
-                        queue.Enqueue((from, predecessor));
+                        queue.Enqueue((from.Id, predecessor));
                     }
                 }
             }
@@ -82,35 +87,27 @@ internal sealed class ReverseBacktrackSearch
 
         return search;
 
-        void AddTerminal(Vertex vertex)
+        void AddTerminal(int vertexId)
         {
-            if (search.Add(vertex, ReverseState.Empty))
-                queue.Enqueue((vertex, ReverseState.Empty));
+            var vertex = region.Model.VerticesById[vertexId]!;
+            if (region.Contains(vertex)
+                && search.Add(vertex, ReverseState.Empty))
+                queue.Enqueue((vertexId, ReverseState.Empty));
         }
     }
 
     public bool CanReturn(Vertex vertex, VisitedState arrivalState) =>
-        _states.TryGetValue(vertex, out var states)
+        (uint)vertex.Id < (uint)_states.Length
+        && _states[vertex.Id] is { } states
         && states.Any(state => state.IsAffordableFrom(arrivalState));
 
-    public bool UsesInventory(Inventory inventory)
-    {
-        int ownCount = _inventory.All().Count(pair =>
-            ReferenceEquals(pair.Key.World, _world));
-        int suppliedCount = inventory.All().Count(pair =>
-            ReferenceEquals(pair.Key.World, _world));
-        return ownCount == suppliedCount
-            && _inventory.All().All(pair =>
-                !ReferenceEquals(pair.Key.World, _world)
-                || inventory.GetCount(pair.Key) == pair.Value);
-    }
+    public int FrontierVertexCount => _frontierVertexIds.Count;
+    public int FrontierEntryCount => _frontierVertexIds.Sum(
+        vertexId => _states[vertexId]!.Count);
 
-    public int FrontierVertexCount => _states.Count;
-    public int FrontierEntryCount => _states.Values.Sum(states => states.Count);
-
-    private IEnumerable<ReverseState> Traverse(
+    private void Traverse(
         Vertex from, Vertex to, Randomizer.Graph.Edge edge,
-        ReverseState downstream)
+        ReverseState downstream, List<ReverseState> output)
     {
         var state = downstream;
 
@@ -121,8 +118,9 @@ internal sealed class ReverseBacktrackSearch
         if (from.RoomId != to.RoomId)
         {
             if (state.RequiredObstacleBitFlags != 0
-                || state.DoorUnlockedFlags != 0)
-                yield break;
+                || state.DoorUnlockedFlags != 0
+                || state.RequiredFlagMask != 0)
+                return;
             state = state with
             {
                 RequiredObstacleBitFlags = 0,
@@ -147,18 +145,15 @@ internal sealed class ReverseBacktrackSearch
         else
         {
             foreach (var strategy in smEdge.Strats ?? [])
-            {
-                foreach (var result in ApplyStrategy(state, strategy))
-                    edgeStates.Add(result);
-            }
+                ApplyStrategy(state, strategy, edgeStates);
         }
 
         foreach (var edgeState in Prune(edgeStates))
         {
-            foreach (var unlocked in ApplyUnlocks(from, edgeState))
-            {
-                yield return FinishVertex(unlocked, unlockedDoor);
-            }
+            var unlockedStates = new List<ReverseState>();
+            ApplyUnlocks(from, edgeState, unlockedStates);
+            foreach (var unlocked in unlockedStates)
+                output.Add(FinishVertex(unlocked, unlockedDoor));
         }
 
         if (from.RoomId == to.RoomId
@@ -169,13 +164,11 @@ internal sealed class ReverseBacktrackSearch
             {
                 foreach (var strategy in lockedSmEdge.Strats ?? [])
                 {
-                    foreach (var result in ApplyStrategy(
-                        state with
+                    ApplyStrategy(state with
                         {
                             DoorUnlockedFlags = state.DoorUnlockedFlags
                                 & ~unlockedDoor,
-                        }, strategy))
-                        lockedEdgeStates.Add(result);
+                        }, strategy, lockedEdgeStates);
                 }
             }
             else
@@ -192,7 +185,7 @@ internal sealed class ReverseBacktrackSearch
                 // room, kill its enemies, then open the door on the way out).
                 // Keep that predecessor distinct from the automatically
                 // unlocked alternatives above.
-                yield return FinishVertex(lockedState, unlockedDoor);
+                output.Add(FinishVertex(lockedState, unlockedDoor));
             }
         }
     }
@@ -207,8 +200,8 @@ internal sealed class ReverseBacktrackSearch
         return state;
     }
 
-    private IEnumerable<ReverseState> ApplyUnlocks(
-        Vertex vertex, ReverseState downstream)
+    private void ApplyUnlocks(
+        Vertex vertex, ReverseState downstream, List<ReverseState> output)
     {
         IReadOnlyList<ReverseState> states = [downstream];
         foreach (var nodeLock in (vertex.Node?.Locks ?? []).Reverse())
@@ -224,41 +217,45 @@ internal sealed class ReverseBacktrackSearch
                 }
 
                 foreach (var strategy in nodeLock.UnlockStrats ?? [])
-                    next.AddRange(ApplyStrategy(state, strategy));
+                    ApplyStrategy(state, strategy, next,
+                        _model.FlagsProducedInRoom(vertex.RoomId));
             }
             states = Prune(next);
             if (states.Count == 0)
-                yield break;
+                return;
 
         }
 
         foreach (var state in states)
-            yield return state;
+            output.Add(state);
     }
 
-    private IEnumerable<ReverseState> ApplyStrategy(
-        ReverseState downstream, Strat strategy)
+    private void ApplyStrategy(
+        ReverseState downstream, Strat strategy,
+        List<ReverseState> output, ulong allowedNewFlags = 0)
     {
-        var predecessor = downstream.InvertObstacles(
-            strategy.ClearsObstacles ?? [], strategy.ResetsObstacles ?? []);
-        if (predecessor is null)
-            yield break;
-
-        foreach (var (state, result) in RequirementMatches(
-                     predecessor.Value, strategy.Requires))
+        var plan = _model.GetStrategyPlan(strategy, _handler);
+        var predecessor = (downstream with
         {
-            if (result.Cost is { } cost
-                && state.ApplyCost(cost) is { } withCost)
-                yield return withCost;
-        }
+            RequiredFlagMask = downstream.RequiredFlagMask
+                & ~plan.SetsFlagMask,
+        }).InvertObstacles(
+            plan.ClearsObstacleMask, plan.ResetsObstacleMask);
+        if (predecessor is null)
+            return;
+
+        AddRequirementMatches(
+            predecessor.Value, strategy.Requires, allowedNewFlags, output);
     }
 
-    private IEnumerable<(ReverseState State, RequirementResult Result)>
-        RequirementMatches(ReverseState state, Requirement requirement)
+    private void AddRequirementMatches(
+        ReverseState state, Requirement requirement,
+        ulong allowedNewFlags, List<ReverseState> output)
     {
-        var masks = _requirementMasks.Get(requirement, this);
-        int obstacleMask = masks.Obstacles;
-        int doorMask = masks.Doors;
+        var plan = _model.GetRequirementPlan(requirement, _handler);
+        int obstacleMask = plan.ObstacleMask;
+        int doorMask = plan.DoorMask;
+        ulong flagMask = plan.FlagMask & ~_inventoryFlagMask & allowedNewFlags;
         int obstacleValues = 0;
         while (true)
         {
@@ -271,17 +268,29 @@ internal sealed class ReverseBacktrackSearch
                 {
                     if ((state.DoorUnlockedFlags & doorMask & ~doorValues) == 0)
                     {
-                        var candidate = state with
+                        ulong flagValues = 0;
+                        while (true)
                         {
-                            RequiredObstacleBitFlags = state.RequiredObstacleBitFlags
-                                | obstacleValues,
-                            ForbiddenObstacleBitFlags = state.ForbiddenObstacleBitFlags
-                                | (obstacleMask & ~obstacleValues),
-                            DoorUnlockedFlags = state.DoorUnlockedFlags | doorValues,
-                        };
-                        var result = EvaluateRequirement(candidate, requirement);
-                        if (result.Met)
-                            yield return (candidate, result);
+                            if ((state.RequiredFlagMask & flagMask & ~flagValues) == 0)
+                            {
+                                var candidate = state with
+                                {
+                                    RequiredObstacleBitFlags = state.RequiredObstacleBitFlags
+                                        | obstacleValues,
+                                    ForbiddenObstacleBitFlags = state.ForbiddenObstacleBitFlags
+                                        | (obstacleMask & ~obstacleValues),
+                                    DoorUnlockedFlags = state.DoorUnlockedFlags | doorValues,
+                                    RequiredFlagMask = state.RequiredFlagMask | flagValues,
+                                };
+                                var result = EvaluateRequirement(candidate, requirement);
+                                if (result.Met && result.Cost is { } cost
+                                    && candidate.ApplyCost(cost) is { } withCost)
+                                    output.Add(withCost);
+                            }
+                            if (flagValues == flagMask)
+                                break;
+                            flagValues = (flagValues - flagMask) & flagMask;
+                        }
                     }
                     if (doorValues == doorMask)
                         break;
@@ -299,15 +308,33 @@ internal sealed class ReverseBacktrackSearch
     {
         var key = new RequirementEvaluationKey(
             requirement, state.RequiredObstacleBitFlags,
-            state.DoorUnlockedFlags);
+            state.DoorUnlockedFlags, state.RequiredFlagMask);
         if (_requirementResults.TryGetValue(key, out var cached))
             return cached;
 
         var result = _handler.HandleRequirement(
-            requirement, AvailableState(state), _inventory,
-            _world, _weapons);
+            requirement, AvailableState(state),
+            InventoryWithRequiredFlags(state.RequiredFlagMask),
+            _world, _weapons, captureDetails: false);
         _requirementResults[key] = result;
         return result;
+    }
+
+    private Inventory InventoryWithRequiredFlags(ulong requiredFlags)
+    {
+        requiredFlags &= ~_inventoryFlagMask;
+        if (_inventoriesByRequiredFlags.TryGetValue(
+                requiredFlags, out var inventory))
+            return inventory;
+
+        inventory = _inventory.Clone();
+        for (int index = 0; index < _model.FlagItems.Length; index++)
+        {
+            if ((requiredFlags & (1UL << index)) != 0)
+                inventory.AddItem(_model.FlagItems[index]);
+        }
+        _inventoriesByRequiredFlags[requiredFlags] = inventory;
+        return inventory;
     }
 
     private VisitedState AvailableState(ReverseState state) => new()
@@ -322,52 +349,7 @@ internal sealed class ReverseBacktrackSearch
         DoorUnlockedFlags = state.DoorUnlockedFlags,
     };
 
-    private int ReferencedObstacles(Requirement requirement) => requirement switch
-    {
-        Requirement.ObstaclesCleared cleared =>
-            RequirementHandler.ObstacleMaskFromArray(cleared.Obstacles),
-        Requirement.ObstaclesNotCleared notCleared =>
-            RequirementHandler.ObstacleMaskFromArray(notCleared.Obstacles),
-        Requirement.And and => and.Reqs.Aggregate(
-            0, (mask, child) => mask | ReferencedObstacles(child)),
-        Requirement.Or or => or.Reqs.Aggregate(
-            0, (mask, child) => mask | ReferencedObstacles(child)),
-        Requirement.Not not => ReferencedObstacles(not.Req),
-        Requirement.Single single
-            when _handler.TryGetOptimizedRequirement(single.Req, out var helper) =>
-            ReferencedObstacles(helper),
-        Requirement.SingleItem item
-            when _handler.TryGetOptimizedRequirement(item.Item.Name, out var helper) =>
-            ReferencedObstacles(helper),
-        Requirement.Tech tech
-            when _handler.TryGetOptimizedRequirement(
-                $"t_{tech.TechRequirement}", out var helper) =>
-            ReferencedObstacles(helper),
-        _ => 0,
-    };
-
-    private int ReferencedDoors(Requirement requirement) => requirement switch
-    {
-        Requirement.DoorUnlockedAtNode door => 1 << door.Node,
-        Requirement.And and => and.Reqs.Aggregate(
-            0, (mask, child) => mask | ReferencedDoors(child)),
-        Requirement.Or or => or.Reqs.Aggregate(
-            0, (mask, child) => mask | ReferencedDoors(child)),
-        Requirement.Not not => ReferencedDoors(not.Req),
-        Requirement.Single single
-            when _handler.TryGetOptimizedRequirement(single.Req, out var helper) =>
-            ReferencedDoors(helper),
-        Requirement.SingleItem item
-            when _handler.TryGetOptimizedRequirement(item.Item.Name, out var helper) =>
-            ReferencedDoors(helper),
-        Requirement.Tech tech
-            when _handler.TryGetOptimizedRequirement(
-                $"t_{tech.TechRequirement}", out var helper) =>
-            ReferencedDoors(helper),
-        _ => 0,
-    };
-
-    private static IReadOnlyList<ReverseState> Prune(
+    private static List<ReverseState> Prune(
         IReadOnlyList<ReverseState> candidates)
     {
         var frontier = new List<ReverseState>(candidates.Count);
@@ -378,9 +360,11 @@ internal sealed class ReverseBacktrackSearch
 
     private bool Add(Vertex vertex, ReverseState state)
     {
-        if (!_states.TryGetValue(vertex, out var frontier))
+        var frontier = _states[vertex.Id];
+        if (frontier == null)
         {
-            _states[vertex] = [state];
+            _states[vertex.Id] = [state];
+            _frontierVertexIds.Add(vertex.Id);
             return true;
         }
         return AddToFrontier(frontier, state);
@@ -475,9 +459,10 @@ internal sealed class ReverseBacktrackSearch
         int PowerBombs,
         int RequiredObstacleBitFlags,
         int ForbiddenObstacleBitFlags,
-        int DoorUnlockedFlags)
+        int DoorUnlockedFlags,
+        ulong RequiredFlagMask)
     {
-        public static ReverseState Empty => new(0, 0, 0, 0, 0, 0, 0);
+        public static ReverseState Empty => new(0, 0, 0, 0, 0, 0, 0, 0);
 
         public ReverseState? ApplyCost(RequirementCost cost)
         {
@@ -495,10 +480,8 @@ internal sealed class ReverseBacktrackSearch
         }
 
         public ReverseState? InvertObstacles(
-            string[] clearsObstacles, string[] resetsObstacles)
+            int clears, int resets)
         {
-            int clears = RequirementHandler.ObstacleMaskFromArray(clearsObstacles);
-            int resets = RequirementHandler.ObstacleMaskFromArray(resetsObstacles);
             if ((RequiredObstacleBitFlags & resets) != 0
                 || (ForbiddenObstacleBitFlags & clears) != 0)
                 return null;
@@ -517,7 +500,8 @@ internal sealed class ReverseBacktrackSearch
             && (state.ObstacleBitFlags & RequiredObstacleBitFlags)
                 == RequiredObstacleBitFlags
             && (state.ObstacleBitFlags & ForbiddenObstacleBitFlags) == 0
-            && (state.DoorUnlockedFlags & DoorUnlockedFlags) == DoorUnlockedFlags;
+            && (state.DoorUnlockedFlags & DoorUnlockedFlags) == DoorUnlockedFlags
+            && RequiredFlagMask == 0;
 
         public bool Dominates(ReverseState other) =>
             Energy <= other.Energy
@@ -528,12 +512,14 @@ internal sealed class ReverseBacktrackSearch
                 == RequiredObstacleBitFlags
             && (ForbiddenObstacleBitFlags & other.ForbiddenObstacleBitFlags)
                 == ForbiddenObstacleBitFlags
-            && (DoorUnlockedFlags & other.DoorUnlockedFlags) == DoorUnlockedFlags;
+            && (DoorUnlockedFlags & other.DoorUnlockedFlags) == DoorUnlockedFlags
+            && (RequiredFlagMask & other.RequiredFlagMask) == RequiredFlagMask;
 
         public bool HasSameGraphConstraints(ReverseState other) =>
             RequiredObstacleBitFlags == other.RequiredObstacleBitFlags
             && ForbiddenObstacleBitFlags == other.ForbiddenObstacleBitFlags
-            && DoorUnlockedFlags == other.DoorUnlockedFlags;
+            && DoorUnlockedFlags == other.DoorUnlockedFlags
+            && RequiredFlagMask == other.RequiredFlagMask;
 
         public long Cost(int metric)
         {
@@ -563,21 +549,7 @@ internal sealed class ReverseBacktrackSearch
     private readonly record struct RequirementEvaluationKey(
         Requirement Requirement,
         int ObstacleBitFlags,
-        int DoorUnlockedFlags);
-
-    private readonly record struct RequirementMasks(int Obstacles, int Doors);
-
-    private sealed class RequirementMaskCache
-    {
-        private readonly ConcurrentDictionary<Requirement, RequirementMasks> _masks =
-            new(ReferenceEqualityComparer.Instance);
-
-        public RequirementMasks Get(
-            Requirement requirement, ReverseBacktrackSearch search) =>
-            _masks.GetOrAdd(requirement, static (candidate, state) =>
-                new RequirementMasks(
-                    state.ReferencedObstacles(candidate),
-                    state.ReferencedDoors(candidate)), search);
-    }
+        int DoorUnlockedFlags,
+        ulong RequiredFlagMask);
 
 }

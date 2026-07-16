@@ -26,12 +26,21 @@ if ($LASTEXITCODE -ne 0) { throw "Release build failed" }
 function Invoke-SeedRun([string]$Label, [string]$Mode) {
     $logPath = Join-Path $outputPath "$Label.log"
     Write-Host "Generating $Count seeds in $Mode mode as '$Label'..."
-    & dotnet run --project $projectPath --configuration Release --no-build --no-launch-profile -- `
-        randomize --settings $settingsPath --seed $StartSeed --bulk $Count --increment-seed `
-        --sm-backtrack-metrics $csvPath --sm-backtrack-label $Label `
-        --sm-backtrack-mode $Mode *> $logPath
-    if ($LASTEXITCODE -ne 0) {
-        throw "Benchmark '$Label' failed; see $logPath"
+    Remove-Item $logPath -Force -ErrorAction SilentlyContinue
+    $failures = [Collections.Generic.List[int]]::new()
+    for ($offset = 0; $offset -lt $Count; $offset++) {
+        $seed = $StartSeed + $offset
+        & dotnet run --project $projectPath --configuration Release --no-build --no-launch-profile -- `
+            randomize --settings $settingsPath --seed $seed `
+            --sm-backtrack-metrics $csvPath --sm-backtrack-label $Label `
+            --sm-backtrack-mode $Mode *>> $logPath
+        if ($LASTEXITCODE -ne 0) {
+            $failures.Add($seed)
+            Write-Warning "Benchmark '$Label' failed for seed $seed; continuing."
+        }
+    }
+    if ($failures.Count -gt 0) {
+        Write-Warning "Benchmark '$Label' failures: $($failures -join ', ')"
     }
 }
 

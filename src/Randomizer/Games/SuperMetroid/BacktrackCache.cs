@@ -15,8 +15,9 @@ internal sealed class BacktrackCache
     private static readonly ConditionalWeakTable<Graph, BacktrackCache> ByGraph = new();
 
     private readonly Dictionary<Vertex, BacktrackRegion> _regions = [];
-    private readonly ConcurrentDictionary<(Vertex Target, string Inventory),
+    private readonly ConcurrentDictionary<(Vertex Target, ReverseCapabilityKey Inventory),
         Lazy<ReverseBacktrackSearch>> _reverseSearches = [];
+    private readonly Dictionary<World, ReverseCapabilityProfile> _capabilityProfiles = [];
     private readonly object _lock = new();
 
     public static BacktrackCache ForGraph(Graph graph) =>
@@ -30,11 +31,12 @@ internal sealed class BacktrackCache
             if (_regions.TryGetValue(target, out var region))
                 return region;
 
-            long started = Stopwatch.GetTimestamp();
+            long started = metrics.Enabled ? Stopwatch.GetTimestamp() : 0;
             region = BacktrackRegion.Build(graph, target);
             _regions[target] = region;
-            metrics.RecordRegionBuild(
-                Stopwatch.GetTimestamp() - started, region.Vertices.Count);
+            if (metrics.Enabled)
+                metrics.RecordRegionBuild(
+                    Stopwatch.GetTimestamp() - started, region.Vertices.Count);
             return region;
         }
     }
@@ -43,30 +45,29 @@ internal sealed class BacktrackCache
         Vertex target, BacktrackRegion region, Inventory inventory,
         BacktrackMetrics metrics)
     {
-        var key = (target, InventoryKey(inventory, target.World));
+        var world = (World)target.World;
+        ReverseCapabilityProfile profile;
+        lock (_lock)
+        {
+            if (!_capabilityProfiles.TryGetValue(world, out profile!))
+            {
+                profile = ReverseCapabilityProfile.Build(world);
+                _capabilityProfiles[world] = profile;
+            }
+        }
+        var key = (target, profile.CreateKey(inventory));
         var lazySearch = _reverseSearches.GetOrAdd(key, _ =>
             new Lazy<ReverseBacktrackSearch>(() =>
             {
-                long started = Stopwatch.GetTimestamp();
+                long started = metrics.Enabled ? Stopwatch.GetTimestamp() : 0;
                 var built = ReverseBacktrackSearch.Build(
                     region, target, inventory);
-                metrics.RecordReverseSearchBuild(
-                    Stopwatch.GetTimestamp() - started, built);
+                if (metrics.Enabled)
+                    metrics.RecordReverseSearchBuild(
+                        Stopwatch.GetTimestamp() - started, built);
                 return built;
             }, LazyThreadSafetyMode.ExecutionAndPublication));
         var search = lazySearch.Value;
-        if (!search.UsesInventory(inventory))
-        {
-            throw new InvalidOperationException(
-                "Reverse-search inventory cache key collision.");
-        }
         return search;
     }
-
-    internal static string InventoryKey(
-        Inventory inventory, IWorld world) => string.Join(
-        ';', inventory.All()
-            .Where(pair => ReferenceEquals(pair.Key.World, world))
-            .OrderBy(pair => pair.Key.Name, StringComparer.Ordinal)
-            .Select(pair => $"{pair.Key.Name}:{pair.Value}"));
 }

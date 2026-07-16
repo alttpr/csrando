@@ -7,7 +7,7 @@ using Randomizer.Games.Metadata;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 
-public class RequirementResult
+public struct RequirementResult
 {
     private bool _ownsMissing;
 
@@ -44,6 +44,10 @@ public class RequirementResult
             result.UsedItems = new Dictionary<string, int> { [item] = count };
         return result;
     }
+
+    public static RequirementResult Success(
+        RequirementCost cost, string? item, bool captureDetails) =>
+        Success(cost, captureDetails ? item : null);
 
     public void MergeSuccess(RequirementResult other)
     {
@@ -222,7 +226,9 @@ public class RequirementHandler
         }
     }
 
-    public RequirementResult HandleRequirement(Requirement req, VisitedState state, Inventory inventory, World world, HashSet<Weapon> weapons)
+    public RequirementResult HandleRequirement(
+        Requirement req, VisitedState state, Inventory inventory, World world,
+        HashSet<Weapon> weapons, bool captureDetails = true)
     {
         switch (req)
         {
@@ -235,12 +241,14 @@ public class RequirementHandler
             case Requirement.Single single:
                 if (HelperTechs.TryGetValue(single.Req, out var helper))
                 {
-                    return HandleRequirement(helper, state, inventory, world, weapons);
+                    return HandleRequirement(
+                        helper, state, inventory, world, weapons, captureDetails);
                 }
                 else
                 {
                     if (inventory.Has(world.GetItem(single.Req)))
-                        return RequirementResult.Success(RequirementCost.ZeroCost, single.Req);
+                        return RequirementResult.Success(
+                            RequirementCost.ZeroCost, single.Req, captureDetails);
                     else
                         return RequirementResult.Fail(single.Req);
                 }
@@ -248,18 +256,23 @@ public class RequirementHandler
             case Requirement.SingleItem singleItem:
                 if (inventory.Has(singleItem.Item))
                 {
-                    return RequirementResult.Success(RequirementCost.ZeroCost, singleItem.Item.Name);
+                    return RequirementResult.Success(
+                        RequirementCost.ZeroCost, singleItem.Item.Name,
+                        captureDetails);
                 }
                 else
                 {
                     if (HelperTechs.TryGetValue(singleItem.Item.Name, out var singleItemHelper))
                     {
-                        return HandleRequirement(singleItemHelper, state, inventory, world, weapons);
+                        return HandleRequirement(singleItemHelper, state, inventory,
+                            world, weapons, captureDetails);
                     }
                     else
                     {
                         if (inventory.Has(world.GetItem(singleItem.Item.Name)))
-                            return RequirementResult.Success(RequirementCost.ZeroCost, singleItem.Item.Name);
+                            return RequirementResult.Success(
+                                RequirementCost.ZeroCost, singleItem.Item.Name,
+                                captureDetails);
                         else
                             return RequirementResult.Fail(singleItem.Item.Name);
                     }
@@ -274,7 +287,8 @@ public class RequirementHandler
 
                 foreach (var subReq in and.Reqs)
                 {
-                    var subResult = HandleRequirement(subReq, state, inventory, world, weapons);
+                    var subResult = HandleRequirement(
+                        subReq, state, inventory, world, weapons, captureDetails);
 
                     if (!subResult.Met)
                     {
@@ -307,7 +321,8 @@ public class RequirementHandler
 
                 foreach (var subReq in or.Reqs)
                 {
-                    var subResult = HandleRequirement(subReq, state, inventory, world, weapons);
+                    var subResult = HandleRequirement(
+                        subReq, state, inventory, world, weapons, captureDetails);
                     if (subResult.Met)
                     {
                         if (bestSuccess == null)
@@ -316,7 +331,8 @@ public class RequirementHandler
                         }
                         else
                         {
-                            var newCost = subResult.Cost! | bestSuccess.Cost!;
+                            var newCost = subResult.Cost!
+                                | bestSuccess.Value.Cost!;
                             if (newCost.Value.Equals(subResult.Cost!.Value))
                                 bestSuccess = subResult;
                         }
@@ -335,11 +351,13 @@ public class RequirementHandler
                 }
                 else
                 {
-                    return bestSuccess;
+                    return bestSuccess.Value;
                 }
 
             case Requirement.Not not:
-                return HandleRequirement(not.Req, state, inventory, world, weapons) == null ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
+                _ = HandleRequirement(not.Req, state, inventory, world, weapons,
+                    captureDetails);
+                return RequirementResult.Fail();
 
             case Requirement.ObstaclesNotCleared obstaclesNotCleared:
                 return (state.ObstacleBitFlags & ObstacleMaskFromArray(obstaclesNotCleared.Obstacles)) == 0 ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
@@ -356,7 +374,7 @@ public class RequirementHandler
                         Missiles = ammo.Type == "Missile" ? ammo.Count : 0,
                         SuperMissiles = ammo.Type == "Super" ? ammo.Count : 0,
                         PowerBombs = ammo.Type == "PowerBomb" ? ammo.Count : 0
-                    }, ammo.Type);
+                    }, ammo.Type, captureDetails);
                 }
                 else
                 {
@@ -478,9 +496,13 @@ public class RequirementHandler
 
                 // If we get here, we can kill at least one enemy in each group
                 var enemyKillResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                foreach (var weapon in usedWeapons)
-                    enemyKillResult.MergeSuccess(HandleRequirement(
-                        weapon.UseRequires, state, inventory, world, weapons));
+                if (captureDetails)
+                {
+                    foreach (var weapon in usedWeapons)
+                        enemyKillResult.MergeSuccess(HandleRequirement(
+                            weapon.UseRequires, state, inventory, world, weapons,
+                            captureDetails));
+                }
                 return enemyKillResult;
 
 
@@ -599,7 +621,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                }, hasVaria ? "Varia" : null);
+                }, hasVaria ? "Varia" : null, captureDetails);
 
             case Requirement.HeatFramesWithEnergyDrops heatFramesWithEnergyDrops:
                 var hasVariaHf = inventory.Has(world.GetItem("Varia"));
@@ -625,7 +647,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                }, hasVariaHf ? "Varia" : null);
+                }, hasVariaHf ? "Varia" : null, captureDetails);
 
             case Requirement.SamusEaterFrames samusEaterFrames:
                 return RequirementResult.Success(new RequirementCost
@@ -683,15 +705,19 @@ public class RequirementHandler
                 }
                 else
                 {
-                    var availableResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                    foreach (var resource in resourceAvailable.Available)
+                    var availableResult = RequirementResult.Success(
+                        RequirementCost.ZeroCost);
+                    if (captureDetails)
                     {
-                        var (item, count) = RequiredExpansion(
-                            resource.Type, resource.Count);
-                        if (count > 0)
+                        foreach (var resource in resourceAvailable.Available)
                         {
-                            availableResult.UsedItems ??= [];
-                            availableResult.UsedItems[item] = count;
+                            var (item, count) = RequiredExpansion(
+                                resource.Type, resource.Count);
+                            if (count > 0)
+                            {
+                                availableResult.UsedItems ??= [];
+                                availableResult.UsedItems[item] = count;
+                            }
                         }
                     }
                     return availableResult;
@@ -742,7 +768,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                }, hasVariaG ? "Varia" : null);
+                }, hasVariaG ? "Varia" : null, captureDetails);
 
             case Requirement.GravitylessLavaFrames gravitylessLavaFrames:
                 return RequirementResult.Success(new RequirementCost
@@ -777,7 +803,7 @@ public class RequirementHandler
                         Missiles = 0,
                         SuperMissiles = 0,
                         PowerBombs = 0
-                    }, "SpeedBooster");
+                    }, "SpeedBooster", captureDetails);
                 }
                 else
                 {
@@ -800,31 +826,37 @@ public class RequirementHandler
 
                 if (failedCap)
                     return failedCapacity;
-                var capacityResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                capacityResult.UsedItems = [];
-                foreach (var c in capacity.Capacity)
+                var capacityResult = RequirementResult.Success(
+                    RequirementCost.ZeroCost);
+                if (captureDetails)
                 {
-                    var (item, count) = RequiredExpansion(c.Type, c.Count);
-                    if (count > 0)
-                        capacityResult.UsedItems[item] = Math.Max(
-                            capacityResult.UsedItems.GetValueOrDefault(item), count);
+                    capacityResult.UsedItems = [];
+                    foreach (var c in capacity.Capacity)
+                    {
+                        var (item, count) = RequiredExpansion(c.Type, c.Count);
+                        if (count > 0)
+                            capacityResult.UsedItems[item] = Math.Max(
+                                capacityResult.UsedItems.GetValueOrDefault(item),
+                                count);
+                    }
                 }
                 return capacityResult;
 
             case Requirement.CanShineCharge canShineCharge:
-                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
+                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster", captureDetails) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
 
             case Requirement.GetBlueSpeed blueSpeed:
                 if (blueSpeed.UsedTiles < world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles)
                 {
                     return RequirementResult.Fail();
                 }
-                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : RequirementResult.Fail("SpeedBooster");
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster", captureDetails) : RequirementResult.Fail("SpeedBooster");
 
             case Requirement.Tech tech:
                 if (HelperTechs.TryGetValue($"t_{tech.TechRequirement}", out var techRequirement))
                 {
-                    return HandleRequirement(techRequirement, state, inventory, world, weapons);
+                    return HandleRequirement(techRequirement, state, inventory,
+                        world, weapons, captureDetails);
                 }
                 else
                 {
@@ -847,7 +879,7 @@ public class RequirementHandler
                     return RequirementResult.Fail();
                 }
 
-                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : RequirementResult.Fail("SpeedBooster");
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster", captureDetails) : RequirementResult.Fail("SpeedBooster");
 
             default:
                 return RequirementResult.Fail();
@@ -857,6 +889,53 @@ public class RequirementHandler
     internal bool TryGetOptimizedRequirement(
         string name, out Requirement requirement) =>
         HelperTechs.TryGetValue(name, out requirement!);
+
+    internal void CollectCapacityThresholds(
+        Requirement requirement,
+        Dictionary<string, int> maximumCounts,
+        HashSet<Requirement> visited)
+    {
+        if (!visited.Add(requirement))
+            return;
+
+        switch (requirement)
+        {
+            case Requirement.ResourceCapacity capacity:
+                foreach (var resource in capacity.Capacity)
+                {
+                    var (item, count) = RequiredExpansion(
+                        resource.Type, resource.Count);
+                    if (item.Length > 0)
+                        maximumCounts[item] = Math.Max(
+                            maximumCounts.GetValueOrDefault(item), count);
+                }
+                break;
+            case Requirement.And and:
+                foreach (var child in and.Reqs)
+                    CollectCapacityThresholds(child, maximumCounts, visited);
+                break;
+            case Requirement.Or or:
+                foreach (var child in or.Reqs)
+                    CollectCapacityThresholds(child, maximumCounts, visited);
+                break;
+            case Requirement.Not not:
+                CollectCapacityThresholds(not.Req, maximumCounts, visited);
+                break;
+            case Requirement.Single single
+                when TryGetOptimizedRequirement(single.Req, out var helper):
+                CollectCapacityThresholds(helper, maximumCounts, visited);
+                break;
+            case Requirement.SingleItem item
+                when TryGetOptimizedRequirement(item.Item.Name, out var helper):
+                CollectCapacityThresholds(helper, maximumCounts, visited);
+                break;
+            case Requirement.Tech tech
+                when TryGetOptimizedRequirement(
+                    $"t_{tech.TechRequirement}", out var helper):
+                CollectCapacityThresholds(helper, maximumCounts, visited);
+                break;
+        }
+    }
 
     internal static (string Item, int Count) RequiredExpansion(
         string resourceType, int resourceCount) => resourceType switch

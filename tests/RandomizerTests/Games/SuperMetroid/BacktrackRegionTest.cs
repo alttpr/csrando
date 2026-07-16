@@ -63,6 +63,7 @@ public sealed class BacktrackRegionTest
         graph.AddDirected(b, a, fixedItem);
         graph.AddDirected(d, b, fixedItem);
         graph.AddDirected(e, d, fixedItem);
+        graph.SetVertexIds();
 
         var region = BacktrackRegion.Build(graph, a);
 
@@ -88,6 +89,7 @@ public sealed class BacktrackRegionTest
 
         graph.AddDirected(beforeExit, exit, fixedItem);
         graph.AddDirected(exit, outside, fixedItem);
+        graph.SetVertexIds();
 
         var region = BacktrackRegion.Build(graph, target);
 
@@ -399,6 +401,8 @@ public sealed class BacktrackRegionTest
         graph.SetVertexIds();
         var target = (SmVertex)world.Start;
         var metrics = BacktrackMetrics.ForGraph(graph);
+        BacktrackMetrics.Configure(
+            graph, BacktrackBenchmarkMode.Reverse, enabled: true);
         var cache = BacktrackCache.ForGraph(graph);
         var region = cache.GetRegion(graph, target, metrics);
 
@@ -412,8 +416,17 @@ public sealed class BacktrackRegionTest
         inventoryWithUnrelatedItem.AddItem(unrelatedItem);
         Assert.AreSame(reverse, cache.GetReverseSearch(
             target, region, inventoryWithUnrelatedItem, metrics));
+        var missiles = world.GetItem("Missile");
+        var oneMissile = inventory.Clone();
+        oneMissile.AddItem(missiles);
+        var manyMissiles = inventory.Clone();
+        manyMissiles.AddItem(missiles, 99);
+        var oneMissileSearch = cache.GetReverseSearch(
+            target, region, oneMissile, metrics);
+        Assert.AreSame(oneMissileSearch, cache.GetReverseSearch(
+            target, region, manyMissiles, metrics));
         Assert.AreEqual(1, BacktrackMetrics.SnapshotFor(graph).RegionBuilds);
-        Assert.AreEqual(1,
+        Assert.AreEqual(2,
             BacktrackMetrics.SnapshotFor(graph).ReverseSearchBuilds);
     }
 
