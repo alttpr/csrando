@@ -24,8 +24,6 @@ internal sealed class RandomAssumedFiller
     /// <param name="items">items to be placed</param>
     public void FillGraph(PooledItem[] items)
     {
-        var setCounts = items.GroupBy(k => k.Set).ToDictionary(k => k.Key, set => set.Count());
-
         // fix placement groups
         var flatItemsArray = _prng.Shuffle(items).OrderBy(i => i.Weight).ToArray();
         var flatItems = flatItemsArray.ToList();
@@ -63,98 +61,152 @@ internal sealed class RandomAssumedFiller
 
         flatItemsArray = flatItems.ToArray();
 
-        var searchers = new ISearcher[_randomizer.Worlds.Length];
-        for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+        var placementItems = flatItemsArray
+            .TakeWhile(item => item.Weight <= 9000)
+            .ToArray();
+        var basePlacedItemCounts = _randomizer.Worlds
+            .Select(world => world.PlacedItemCount)
+            .ToArray();
+        const int maximumAttempts = 16;
+        string failureMessage = "Unable to place progression items";
+
+        for (int attempt = 0; attempt < maximumAttempts; attempt++)
         {
-            searchers[i] = _randomizer.GetSearcherForInventory(
-                _randomizer.Worlds[i],
-                flatItems.Where(item => item.Weight <= 9000 && (item.Item.World.Id == i))
-                    .Select(i => i.Item)
-                    .ToList(),
-                _randomizer.Worlds[i].Start
-                );
-        }
-
-        int itemsToPlaceCount = flatItems.Where(i => i.Weight <= 9000).Count();
-
-        foreach (var itemKey in flatItemsArray)
-        {
-            var (itemSet, itemWeight, item) = itemKey;
-            if (itemWeight > 9000)
-                break;
-
-            // When placing an item that is constrained to an item set from a specific world,
-            // only add items to the inventory from that world to speed up the search as
-            // we don't care to search other worlds.
-            flatItems.Remove(itemKey);
-
-            searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
-                _randomizer.Worlds[item.World.Id],
-                flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
-                    .Select(i => i.Item)
-                    .ToList(),
-                _randomizer.Worlds[item.World.Id].Start
-                );
-
-            var locations = new List<Vertex>();
-            for (int i = 0; i < _randomizer.Worlds.Length; ++i)
+            var attemptPrng = attempt == 0
+                ? _prng
+                : new PRNG(unchecked(_prng.Seed + attempt * -1640531527));
+            var setCounts = items.GroupBy(item => item.Set)
+                .ToDictionary(group => group.Key, group => group.Count());
+            var assumedItemsByWorld = Enumerable.Range(
+                    0, _randomizer.Worlds.Length)
+                .Select(worldId => placementItems
+                    .Where(entry => entry.Item.World.Id == worldId)
+                    .Select(entry => entry.Item)
+                    .ToList())
+                .ToArray();
+            var searchers = new ISearcher[_randomizer.Worlds.Length];
+            for (int worldId = 0; worldId < _randomizer.Worlds.Length; worldId++)
             {
-                locations.AddRange(_randomizer.Worlds[i].GetEmptyLocationsInSet(searchers[i], item, itemSet, setCounts));
+                searchers[worldId] = _randomizer.GetSearcherForInventory(
+                    _randomizer.Worlds[worldId],
+                    assumedItemsByWorld[worldId],
+                    _randomizer.Worlds[worldId].Start);
             }
 
-            if (locations.Count == 0)
-                throw new Exception($"No locations for `{item}` in set `{itemSet}`");
-
-            bool backtrackCheck = false;
-            var location = _prng.GetRandomElement(locations);
-            while (!backtrackCheck)
+            var placedLocations = new List<Vertex>(placementItems.Length);
+            var acceptedLocationCounts = new int[placementItems.Length];
+            bool succeeded = true;
+            for (int index = 0; index < placementItems.Length; index++)
             {
-                if (location.World is Games.SuperMetroid.World)
-                {
-                    var statefulSearcher = searchers[location.World.Id] switch
-                    {
-                        Games.SuperMetroid.StatefulSearcher s => s,
-                        Games.Combo.ComboSearcher { SMSearcher: { } smSearcher } => smSearcher,
-                        _ => throw new Exception("Invalid searcher type")
-                    } ?? throw new InvalidOperationException("Super Metroid searcher is required for backtracking");
+                var (itemSet, _, item) = placementItems[index];
 
-                    var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
-                            .Select(i => i.Item)
-                            .ToList();
-                    var backtrackInventory = new Inventory(backtrackItems.ToArray());
-                    backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, item);
-                    if (!backtrackCheck)
+                // For a world-constrained item, only that world's remaining
+                // assumed items affect its searcher. Other worlds retain their
+                // existing searcher until one of their items is placed.
+                assumedItemsByWorld[item.World.Id].Remove(item);
+                searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
+                    _randomizer.Worlds[item.World.Id],
+                    assumedItemsByWorld[item.World.Id],
+                    _randomizer.Worlds[item.World.Id].Start);
+
+                var locations = new List<Vertex>();
+                for (int worldId = 0; worldId < _randomizer.Worlds.Length;
+                     worldId++)
+                {
+                    locations.AddRange(_randomizer.Worlds[worldId]
+                        .GetEmptyLocationsInSet(
+                            searchers[worldId], item, itemSet, setCounts));
+                }
+
+                if (locations.Count == 0)
+                {
+                    failureMessage =
+                        $"No locations for `{item}` in set `{itemSet}`";
+                    succeeded = false;
+                    break;
+                }
+
+                Vertex? selected = null;
+                while (locations.Count > 0)
+                {
+                    var location = attemptPrng.GetRandomElement(locations);
+                    if (location.World is Games.SuperMetroid.World)
                     {
-                        locations.Remove(location);
-                        if (locations.Count == 0)
+                        var statefulSearcher = searchers[location.World.Id] switch
                         {
-                            throw new Exception($"No valid locations for `{item}` in set `{itemSet}`");
+                            Games.SuperMetroid.StatefulSearcher s => s,
+                            Games.Combo.ComboSearcher
+                            {
+                                SMSearcher: { } smSearcher
+                            } => smSearcher,
+                            _ => throw new Exception("Invalid searcher type")
+                        } ?? throw new InvalidOperationException(
+                            "Super Metroid searcher is required for backtracking");
+
+                        if (!statefulSearcher.BacktrackLocation(
+                                (Games.SuperMetroid.Vertex)location,
+                                (Games.SuperMetroid.Vertex)location.World.Start,
+                                item))
+                        {
+                            locations.Remove(location);
+                            continue;
                         }
-                        location = _prng.GetRandomElement(locations);
-                        continue;
                     }
+                    selected = location;
+                    break;
                 }
-                else
+
+                if (selected == null)
                 {
-                    backtrackCheck = true;
+                    failureMessage =
+                        $"No valid locations for `{item}` in set `{itemSet}`";
+                    succeeded = false;
+                    break;
                 }
+
+                selected.Item = item;
+                selected.TrackPlacedItem();
+                setCounts[itemSet]--;
+                placedLocations.Add(selected);
+                acceptedLocationCounts[index] = locations.Count;
             }
 
-            _logger.LogInformation("({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
-                (flatItemsArray.Length - flatItems.Count) * 100 / itemsToPlaceCount,
-                itemWeight,
-                item,
-                location,
-                itemSet,
-                locations.Count
-            );
+            if (succeeded)
+            {
+                if (attempt > 0)
+                {
+                    _logger.LogWarning(
+                        "Assumed fill succeeded on placement attempt {Attempt}",
+                        attempt + 1);
+                }
+                for (int index = 0; index < placementItems.Length; index++)
+                {
+                    var (itemSet, itemWeight, item) = placementItems[index];
+                    _logger.LogInformation(
+                        "({Percentage}%) [{Weight}] Placing `{Item}` in `{Location}` ({ItemSet}:{AvailableLocations})",
+                        (index + 1) * 100 / placementItems.Length,
+                        itemWeight,
+                        item,
+                        placedLocations[index],
+                        itemSet,
+                        acceptedLocationCounts[index]);
+                }
 
-            location.Item = item;
-            location.TrackPlacedItem();
-            setCounts[itemSet]--;
+                flatItems.RemoveAll(item => item.Weight <= 9000);
+                FastFillItemsInLocations(flatItems);
+                return;
+            }
+
+            foreach (var location in placedLocations)
+                location.Item = null;
+            for (int worldId = 0; worldId < _randomizer.Worlds.Length;
+                 worldId++)
+                _randomizer.Worlds[worldId].PlacedItemCount =
+                    basePlacedItemCounts[worldId];
         }
 
-        FastFillItemsInLocations(flatItems);
+        throw new Exception(
+            $"{failureMessage} after {maximumAttempts} placement attempts");
     }
 
     internal static bool ShouldFrontFillMorph(
@@ -192,9 +244,11 @@ internal sealed class RandomAssumedFiller
             if (location.World.GameId == "sm")
             {
                 // Test backtracking
-                var backtrackInventory = startingItems.Clone();
                 var statefulSearcher = (StatefulSearcher)location.World.GetSearcherForWorld(graph, location.World.Start, startingItems);
-                var backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, flatItem.Item3);
+                var backtrackCheck = statefulSearcher.BacktrackLocation(
+                    (Games.SuperMetroid.Vertex)location,
+                    (Games.SuperMetroid.Vertex)location.World.Start,
+                    flatItem.Item3);
 
                 if (!backtrackCheck)
                 {
