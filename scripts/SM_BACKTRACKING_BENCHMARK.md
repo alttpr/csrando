@@ -44,6 +44,19 @@ python scripts/chart-sm-backtracking.py `
   --baseline baseline --out artifacts/sm-backtracking-report.html
 ```
 
+For the detailed final dashboard (headline cards, phase totals, log-scale
+per-seed scatter, allocation/GC pressure, failures, search work, and test
+results), compare two exact Windows cohorts with:
+
+```powershell
+python scripts/chart-sm-final-report.py `
+  artifacts/sm-windows-main-50.csv artifacts/sm-windows-final-50.csv `
+  --history scripts/sm-performance-history.csv `
+  --baseline-name main@c50d6f04 --current-name final@a16a44c8 `
+  --runtime "Windows 11 · .NET SDK 10.0.300 · Release" `
+  --out artifacts/sm-windows-final-report.html
+```
+
 The report compares only successful seeds present under every label. It includes
 full seed generation mean/median/p95, paired baseline-relative speedup, phase
 timings, allocation and GC counts, output-hash mismatches, explicit failure

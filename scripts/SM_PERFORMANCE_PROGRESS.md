@@ -1,34 +1,67 @@
 # Super Metroid search optimization progress
 
-Final implementation: `ece12a88`  
-Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`  
+Windows-benchmarked implementation: `a16a44c8`
+
+Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`
+
 Exact-output search checkpoint: `68f24942`
 
 ## Result
 
-The directly comparable 30-seed Windows run reduced paired mean full-seed
-generation time by **58.71%** relative to main, improving throughput by
-**2.42x**. The final correctness pass then recovered every remaining SM-only
-failure: seeds 9876–9975 completed **100/100**, with no production legacy
-backtracking fallback and no output-hash changes among the 90 seeds that the
-pre-retry checkpoint already generated successfully.
+The final 50-seed Windows run reduced paired mean full-seed generation time by
+**54.95%** relative to main, with an average paired speedup of **2.28x**.
+Allocations fell by **8.43x**, from 18,727 MiB to 2,220 MiB per paired seed.
+Pinned main generated 44/50 seeds; the final branch generated **50/50**.
+
+The larger correctness pass also recovered every remaining SM-only failure:
+seeds 9876–9975 completed **100/100**, with no production legacy backtracking
+fallback and no output-hash changes among the 90 seeds that the pre-retry
+checkpoint already generated successfully.
 
 | Checkpoint | Seeds completed | Mean | Median | p95 | Paired result vs main |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `main@c50d6f04` | 26/30 | 7.518 s | 7.321 s | 9.945 s | baseline |
 | `reverse-search-v1@28917857` | 24/30 | 4.174 s | 4.097 s | 4.726 s | 44.48% / 1.80x |
 | `compiled-search-v2@68f24942` | 27/30 | 3.099 s | 3.040 s | 3.368 s | 58.71% / 2.42x |
-| `fill-retry-final@ece12a88` | 100/100 | 5.451 s | 5.301 s | 6.522 s | different environment |
+| `final-windows-50@a16a44c8` | 50/50 | 3.093 s | 3.060 s | 3.572 s | 54.95% / 2.28x |
+| `fill-retry-final@ece12a88` | 100/100 | 5.451 s | 5.301 s | 6.522 s | WSL correctness cohort |
 
-The last row is the final WSL correctness/work cohort, not a wall-clock
-comparison with the Windows rows. In that environment graph JSON construction
+The 100-seed row is the WSL correctness/work cohort, not a wall-clock comparison
+with the Windows rows. In that environment graph JSON construction
 averaged 1.998 s instead of 0.263 s at the prior checkpoint. Search output and
 work metrics, rather than its raw total, are the valid comparison.
 
 The machine-readable aggregate history is in
 `scripts/sm-performance-history.csv`. The detailed final HTML work report is
-`artifacts/sm-search-v2-final-100seed-report.html` when generated locally from
-the retained metrics CSV files.
+`artifacts/sm-windows-final-report.html`; its full-page preview is
+`artifacts/sm-windows-final-report.png`. The separate 100-seed work report is
+`artifacts/sm-search-v2-final-100seed-report.html`.
+
+## Final Windows comparison
+
+Both revisions were built and run with Windows .NET SDK 10.0.300 in Release
+mode from the same `F:` volume. Revisions were alternated per seed, main first
+and final second, with a fresh process for every attempt. Pinned main contained
+measurement-only instrumentation; its search and fill behavior was unchanged.
+
+| Metric, 44 common successful seeds | Main | Final | Change |
+| --- | ---: | ---: | ---: |
+| Total generation time | 307.99 s | 136.07 s | 2.26x faster |
+| Mean generation time | 7.000 s | 3.093 s | 54.95% paired reduction |
+| Median generation time | 6.879 s | 3.060 s | 55.5% lower |
+| p95 generation time | 8.850 s | 3.572 s | 59.6% lower |
+| Allocations per seed | 18,727 MiB | 2,220 MiB | 8.43x less |
+| Mean validation time | 443.4 ms | 47.3 ms | 9.37x faster |
+
+The worst main latency among common successes was seed 9879: 9.421 seconds on
+main and 2.815 seconds on final, a 3.35x speedup. Across all final attempts, p95
+was 4.08 seconds and the worst seed was 5.24 seconds.
+
+Main failed seeds 9886, 9890, 9898, 9902, 9915, and 9924. Final generated and
+independently validated all six. Combined placement + playthrough hashes are
+not expected to match main because this branch includes documented correctness
+and route-selection fixes; `68f24942` remains the exact-output baseline for the
+performance-only stages.
 
 ## What changed
 
@@ -86,6 +119,8 @@ was retained.
 
 ## Correctness gates
 
+- Final Windows normal suite: 4,354 passed, 4,520 skipped, 0 failed (1m 1s).
+- Final Windows slow SM regressions: 8 passed, 0 failed (26s).
 - Focused SM suite: 31 passed.
 - Slow SM generation regressions: 7 passed, including the formerly failing
   9881, 9903, 9908, 9917, 9931, 9955, and 9970 cases.
