@@ -66,6 +66,7 @@ public class StatefulSearcher : ISearcher
     private long _metricEnqueueAttempts;
     private long _metricEnqueues;
     private long _metricStructurallyPrunedEnqueues;
+    private int _requirementCacheEpoch;
     // Path-only searches can suppress the event they are trying to explain so a
     // later, post-event route cannot be mistaken for the acquisition route.
     private readonly IItem? _excludedPickup;
@@ -749,15 +750,16 @@ public class StatefulSearcher : ISearcher
         var plan = _searchModel.GetRequirementPlan(
             requirement, _requirementHandler);
         if (!_capturePath && !plan.StateDependent
-            && _searchContext.RequirementResults.TryGetValue(
-                requirement, out var cached))
+            && _searchModel.TryGetRequirementResult(
+                plan.Id, _requirementCacheEpoch, out var cached))
             return cached;
 
         var result = _requirementHandler.HandleRequirement(
             requirement, state.ToVisited(_searchContext), inventory, world,
             weapons, captureDetails: _capturePath);
         if (!_capturePath && !plan.StateDependent)
-            _searchContext.RequirementResults[requirement] = result;
+            _searchModel.SetRequirementResult(
+                plan.Id, _requirementCacheEpoch, result);
         return result;
     }
 
@@ -800,6 +802,7 @@ public class StatefulSearcher : ISearcher
         _metricEnqueueAttempts = 0;
         _metricEnqueues = 0;
         _metricStructurallyPrunedEnqueues = 0;
+        _requirementCacheEpoch = _searchModel.BeginRequirementCacheEpoch();
         _searchContext = new SearchContext(inventory, (World)_start.World);
 
         var result = InternalSearch(starts, inventory, target);
@@ -1442,8 +1445,6 @@ internal sealed class SearchContext
     public int MissileCapacity { get; }
     public int SuperMissileCapacity { get; }
     public int PowerBombCapacity { get; }
-    public Dictionary<Requirement, RequirementResult> RequirementResults { get; } =
-        new(ReferenceEqualityComparer.Instance);
 }
 
 internal readonly record struct ForwardState(

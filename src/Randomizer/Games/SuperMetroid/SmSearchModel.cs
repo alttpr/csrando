@@ -101,6 +101,10 @@ internal sealed class SmSearchModel
     private readonly Dictionary<int, ulong> _flagsProducedByRoom = [];
     private readonly Dictionary<Requirement, CompiledRequirementPlan>
         _requirements = new(ReferenceEqualityComparer.Instance);
+    private int _nextRequirementId;
+    private RequirementResult[] _requirementResults = [];
+    private int[] _requirementResultEpochs = [];
+    private int _requirementCacheEpoch;
     private readonly Dictionary<Strat, CompiledStrategyPlan> _strategies =
         new(ReferenceEqualityComparer.Instance);
 
@@ -179,6 +183,7 @@ internal sealed class SmSearchModel
                 _ => default,
             };
             visiting.Remove(current);
+            result = result with { Id = _nextRequirementId++ };
             _requirements[current] = result;
             return result;
         }
@@ -208,6 +213,46 @@ internal sealed class SmSearchModel
         return plan;
     }
 
+    internal int BeginRequirementCacheEpoch()
+    {
+        if (++_requirementCacheEpoch == 0)
+        {
+            Array.Clear(_requirementResultEpochs);
+            _requirementCacheEpoch = 1;
+        }
+        return _requirementCacheEpoch;
+    }
+
+    internal bool TryGetRequirementResult(
+        int requirementId, int epoch, out RequirementResult result)
+    {
+        if ((uint)requirementId < (uint)_requirementResultEpochs.Length
+            && _requirementResultEpochs[requirementId] == epoch)
+        {
+            result = _requirementResults[requirementId];
+            return true;
+        }
+        result = default;
+        return false;
+    }
+
+    internal void SetRequirementResult(
+        int requirementId, int epoch, RequirementResult result)
+    {
+        if (requirementId < 0 || epoch != _requirementCacheEpoch)
+            return;
+        if (requirementId >= _requirementResults.Length)
+        {
+            int capacity = Math.Max(
+                requirementId + 1,
+                Math.Max(256, _requirementResults.Length * 2));
+            Array.Resize(ref _requirementResults, capacity);
+            Array.Resize(ref _requirementResultEpochs, capacity);
+        }
+        _requirementResults[requirementId] = result;
+        _requirementResultEpochs[requirementId] = epoch;
+    }
+
     public static SmSearchModel For(IWorld world, Graph graph)
     {
         var models = ByGraph.GetValue(graph, _ => []);
@@ -225,14 +270,15 @@ internal sealed class SmSearchModel
 
 internal readonly record struct CompiledRequirementPlan(
     int ObstacleMask, int DoorMask, ulong FlagMask,
-    bool StateDependent = false)
+    bool StateDependent = false, int Id = -1)
 {
     public static CompiledRequirementPlan operator |(
         CompiledRequirementPlan left, CompiledRequirementPlan right) => new(
         left.ObstacleMask | right.ObstacleMask,
         left.DoorMask | right.DoorMask,
         left.FlagMask | right.FlagMask,
-        left.StateDependent || right.StateDependent);
+        left.StateDependent || right.StateDependent,
+        -1);
 }
 
 internal readonly record struct CompiledStrategyPlan(
