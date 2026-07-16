@@ -1,6 +1,6 @@
 # Super Metroid search optimization progress
 
-Windows-benchmarked implementation: `82c4c114`
+Windows-benchmarked implementation: `8eaff955`
 
 Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`
 
@@ -11,9 +11,32 @@ Frozen historical baseline: tag `sm-search-baseline-v2`, described by
 dashboard, and preview are intentionally retained in Git so the next
 optimization pass can compare against the identical per-seed measurements.
 
-Current comparison baseline: `sm-inventory-cache-v4` at `b4ec2a1a`.
+Current comparison baseline: `sm-eval-cache-v5` at `3042ff6a`.
 
 ## Result
+
+The allocation-trim checkpoint was driven by a GCAllocationTick profile of one
+seed. Path-step requirement and resource dictionaries are now built only when
+they carry content, with shared empty instances behind the read-only record
+interfaces; single-item missing sets (the dominant failure shape) are interned
+per item name; the constant enemy-kill weapon set is shared;
+`MergeConsumedFail` copies borrowed sets before extending them; unvisited
+wake-up checks overlap hash sets without boxing an enumerator; and the reverse
+evaluation cache is pre-sized.
+
+In an interleaved 30-seed Windows comparison against exact commit `3042ff6a`,
+allocations fell **44.68%**, from **947.0 MB to 523.9 MB per seed**, paired
+mean total fell from **2.481 s to 2.322 s** (**6.43% paired reduction**,
+**1.07x average paired speedup**), median fell from 2.391 s to 2.259 s, p95
+fell from 2.990 s to 2.695 s, and reverse traversal construction fell 11.95%.
+Both revisions generated 30/30 seeds and all 30 placement + playthrough hashes
+match.
+
+The detailed dashboard and retained raw cohorts are
+`artifacts/sm-alloc-trim-v6-report.html`,
+`artifacts/sm-v5-contemporary-30.csv`, and `artifacts/sm-alloc-trim-30.csv`.
+
+## Previous result (sm-eval-cache-v5)
 
 The masked-evaluation-cache checkpoint classifies resource-dependent
 requirement reads separately from obstacle/door reads. Graph-state-dependent
@@ -94,6 +117,7 @@ checkpoint already generated successfully.
 | `sm-local-frontiers-v3@e305a7a5` | 50/50 | 2.865 s | 2.797 s | 3.710 s | 9.50% / 1.11x vs frozen v2 |
 | `sm-inventory-cache-v4@ac5d235c` | 30/30 | 2.858 s | 2.707 s | 3.764 s | 2.89% / 1.03x vs v3 |
 | `sm-eval-cache-v5@82c4c114` | 30/30 | 2.515 s | 2.429 s | 3.151 s | 12.31% / 1.14x vs v4 |
+| `sm-alloc-trim-v6@8eaff955` | 30/30 | 2.322 s | 2.259 s | 2.695 s | 6.43% / 1.07x vs v5 |
 | `fill-retry-final@ece12a88` | 100/100 | 5.451 s | 5.301 s | 6.522 s | WSL correctness cohort |
 
 The 100-seed row is the WSL correctness/work cohort, not a wall-clock comparison
@@ -213,6 +237,9 @@ was retained.
   full Windows suite 4,356 passed / 4,520 skipped / 0 failed, slow SM
   regressions 8/8, Validate mode 5/5 (9876-9878, 9881, 9903), and 30/30 exact
   output hashes against the interleaved v4 baseline cohort.
+- Alloc-trim checkpoint: full Windows suite 4,359 passed / 4,520 skipped /
+  0 failed, slow SM regressions 8/8, Validate mode 5/5, and 30/30 exact
+  output hashes against the interleaved v5 baseline cohort.
 - Final SM-only cohort: 100/100.
 - 30-seed SM/M1, keycard, Medium, and Hard cohorts: 30/30 each.
 
