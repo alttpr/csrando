@@ -110,16 +110,23 @@ internal static class PlaythroughGenerator
             .ToHashSet();
         var found = new List<FoundPickup>();
 
+        // Loop invariants, hoisted: the manual-pickup set and the candidate cross-world entry
+        // edges do not change between spheres (for single-world games the edge list is empty).
+        var manualPickupLocations = new HashSet<Vertex>(randomizedLocations);
+        manualPickupLocations.UnionWith(victoryLocations);
+        var crossWorldEntryEdges = randomizer.Graph.GetVertices().SelectMany(vertex => vertex.Edges)
+            .Where(edge => edge.From.World != edge.To.World
+                && !initiallyStartedWorlds.Contains(edge.To.World))
+            .ToList();
+
         for (int sphere = 0; sphere < randomizer.Graph.GetVertices().Count(); sphere++)
         {
             int persistentStartsBeforeSphere = persistentStarts.Count;
             var reachability = FindReachable(randomizer.Graph, persistentStarts, inventory,
-                [.. randomizedLocations, .. victoryLocations]);
+                manualPickupLocations);
             var paths = BuildPaths(starts, reachability, persistentEntryPaths);
-            foreach (var edge in randomizer.Graph.GetVertices().SelectMany(vertex => vertex.Edges)
-                         .Where(edge => edge.From.World != edge.To.World
-                             && !initiallyStartedWorlds.Contains(edge.To.World)
-                             && reachability.Vertices.Contains(edge.To)
+            foreach (var edge in crossWorldEntryEdges
+                         .Where(edge => reachability.Vertices.Contains(edge.To)
                              && paths.ContainsKey(edge.To)))
             {
                 if (persistentStarts.Add(edge.To))

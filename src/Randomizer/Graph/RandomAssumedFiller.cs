@@ -91,8 +91,7 @@ internal sealed class RandomAssumedFiller
             searchers[item.World.Id] = _randomizer.GetSearcherForInventory(
                 _randomizer.Worlds[item.World.Id],
                 flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
-                    .Select(i => i.Item)
-                    .ToList(),
+                    .Select(i => i.Item),
                 _randomizer.Worlds[item.World.Id].Start
                 );
 
