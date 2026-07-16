@@ -35,20 +35,26 @@ dotnet run --project src/Randomizer -- randomize `
   --sm-backtrack-label reverse-v2 --sm-backtrack-mode Reverse
 ```
 
-Generate the self-contained comparison report:
+Generate the self-contained comparison report. The chart tool accepts multiple
+CSV files, which is useful when a large exact cohort was collected in batches:
 
 ```powershell
-python scripts/chart-sm-backtracking.py artifacts/sm-backtracking.csv `
+python scripts/chart-sm-backtracking.py `
+  artifacts/sm-backtracking-1.csv artifacts/sm-backtracking-2.csv `
   --baseline baseline --out artifacts/sm-backtracking-report.html
 ```
 
-The report compares only seeds present under every label. It includes full seed
-generation mean/median/p95, baseline-relative speedup, reverse-proof coverage,
-fallback rate, reverse traversal build count/time, and frontier size.
+The report compares only successful seeds present under every label. It includes
+full seed generation mean/median/p95, paired baseline-relative speedup, phase
+timings, allocation and GC counts, output-hash mismatches, explicit failure
+lists, reverse-proof coverage, fallback rate, reverse traversal build count/time,
+and frontier size.
 
 `generation_ms` covers graph/world construction and item placement/spoiler
-generation. It intentionally excludes the post-generation winnability check and
-ROM writing so those phases do not hide changes in search/fill performance.
+generation. `validation_ms` records the independent post-generation winnability
+check, while `total_ms` includes both. ROM writing remains excluded so it does
+not hide search/fill changes. Schema 9 also records a canonical hash of sorted
+placements and playthrough output.
 
 For useful results, use a Release build, close other CPU-heavy applications,
 and run at least 30 seeds. Run each label from a fresh process if comparing code
@@ -64,9 +70,11 @@ at the first mismatch. This mode is for correctness checks, not speed results.
 
 ## Retained checkpoints
 
-The repository artifacts currently retain two three-seed SM-only checkpoints
-for seeds 9876 through 9878. These short runs are useful for development
-comparisons; use the larger run described above before drawing final conclusions.
+The aggregate history in `scripts/sm-performance-history.csv` permanently keeps
+the main, first reverse-search, compiled-search, and final correctness
+checkpoints. The full implementation report is in
+`scripts/SM_PERFORMANCE_PROGRESS.md`. Ignored files under `artifacts/` retain the
+local per-seed details and self-contained HTML charts.
 
 | Checkpoint | Legacy mean | Reverse mean | Reverse reduction | Report |
 | --- | ---: | ---: | ---: | --- |
@@ -81,26 +89,27 @@ when evaluating the backtracking architecture itself.
 
 ### Actual main comparison
 
-On 2026-07-16, local `main` at `c50d6f04` and the optimized branch at
-`a6c52c6b` were run as separate Release processes over the same 30 SM-only
-seeds, 9876 through 9905. Timing statistics use the 24 seeds for which both
+On 2026-07-16, local `main` at `c50d6f04` and compiled-search checkpoint
+`68f24942` were run as separate Release processes over the same 30 SM-only
+seeds, 9876 through 9905. Timing statistics use the 26 seeds for which both
 revisions completed the post-generation winnability check.
 
 | Revision | Successful attempts | Mean | Median | p95 |
 | --- | ---: | ---: | ---: | ---: |
 | main | 26 / 30 | 7.518 s | 7.321 s | 9.945 s |
-| optimized | 24 / 30 | 4.174 s | 4.097 s | 4.726 s |
+| compiled search | 27 / 30 | 3.099 s | 3.040 s | 3.368 s |
 
-Across the paired successful seeds, the optimized branch reduced mean full-seed
-generation time by 44.48% and provided 1.80x throughput. Main failed the
-winnability check for seeds 9886, 9890, 9898, and 9902. The optimized branch
-failed those seeds plus 9881 and 9903; failed attempts are reported separately
-and are not included in the timing comparison.
+Across the paired successful seeds, the compiled-search branch reduced mean
+full-seed generation time by 58.71% and provided 2.42x throughput. The final
+checkpoint `ece12a88` adds deterministic whole-fill retries and completes all
+100 SM-only seeds 9876 through 9975. It retains identical output hashes for all
+90 seeds that the pre-retry 100-seed checkpoint generated successfully.
 
-The aggregate results are also retained in
-`scripts/sm-performance-history.csv`. Add one checkpoint row after each accepted
-optimization pass so the final progress report can chart every improvement from
-the same seed cohort without depending on ignored artifact files.
+Add one row to `scripts/sm-performance-history.csv` after each accepted
+optimization pass so progress remains available without depending on ignored
+artifact files. Do not compare wall-clock rows collected on different operating
+systems/filesystems; retain their correctness and work metrics but leave the
+paired speedup fields blank.
 
 ## CPU profiling
 
