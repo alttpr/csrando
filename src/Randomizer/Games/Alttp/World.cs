@@ -105,6 +105,23 @@ public sealed class World : World<Item>, IPortalHost
 
         return locations;
     }
+    public override void TrackPlacedItem(BaseVertex location)
+    {
+        base.TrackPlacedItem(location);
+
+        // A small key placed in its own key-for-key chest is always recoverable:
+        // opening that door refunds the key spent on it. Register the chest as a
+        // fixed key so the door-spending logic counts it as available supply, in
+        // particular for the playthrough searcher which cannot pick up randomized
+        // items mid-search.
+        if (location.Item is Item { Type: ItemType.SmallKey } key
+            && KeyForKeys.TryGetValue(key, out var keyForKeys)
+            && keyForKeys.Any(target => ReferenceEquals(target.Chest, location)))
+        {
+            Graph.FixedKeys[key].Add(location);
+        }
+    }
+
     protected override bool ShouldTrack(BaseVertex location)
     {
         return location is Vertex { SubType: var subType } && subType is not VertexType.Medallion and not VertexType.Refill and not VertexType.Prize;

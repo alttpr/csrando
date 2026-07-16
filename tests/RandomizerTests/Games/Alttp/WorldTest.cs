@@ -42,6 +42,55 @@ public sealed class WorldTest
     }
 
     [TestMethod]
+    public void Vanilla_KeyForKeysIsPopulated()
+    {
+        var world = new World(1, new WorldConfig { Alttp = new Config() }, new(), new(1337));
+
+        var chestsByKey = world.KeyForKeys.ToDictionary(
+            entry => entry.Key.Name,
+            entry => entry.Value.Select(target => target.Chest.Name).Order().ToList());
+
+        Assert.AreEqual(8, chestsByKey.Count);
+
+        // Lone empty chests behind a single small key door
+        CollectionAssert.AreEqual(new[] { "Eastern Palace - Big Key Chest" }, chestsByKey["KeyP1"]);
+        CollectionAssert.AreEqual(new[] { "Tower Of Hera - Big Key Chest" }, chestsByKey["KeyP3"]);
+        CollectionAssert.AreEqual(new[] { "Palace of Darkness - Big Key Chest", "Palace of Darkness - Harmless Hellway Chest" }, chestsByKey["KeyD1"]);
+        CollectionAssert.AreEqual(new[] { "Turtle Rock - Big Key Chest" }, chestsByKey["KeyD7"]);
+        CollectionAssert.AreEqual(new[] { "Ganon's Tower - Map Chest" }, chestsByKey["KeyA2"]);
+
+        // Lone big chests behind their big key
+        CollectionAssert.AreEqual(new[] { "Swamp Palace - Big Chest" }, chestsByKey["BigKeyD2"]);
+        CollectionAssert.AreEqual(new[] { "Skull Woods - Big Chest" }, chestsByKey["BigKeyD3"]);
+        CollectionAssert.AreEqual(new[] { "Ice Palace - Big Chest" }, chestsByKey["BigKeyD5"]);
+
+        // Small key targets must carry the door regions gating them, so placement
+        // can check the door itself is reachable.
+        foreach (var (chest, regions) in world.KeyForKeys[world.GetItem("KeyP1")])
+            Assert.AreNotEqual(0, regions.Count, $"No door regions recorded for {chest.Name}");
+    }
+
+    [TestMethod]
+    public void KeyForKeyPlacement_RegistersChestAsFixedKey()
+    {
+        var world = new World(1, new WorldConfig { Alttp = new Config() }, new(), new(1337));
+        var key = world.GetItem("KeyP1");
+        var chest = world.KeyForKeys[key].Single().Chest;
+
+        chest.Item = key;
+        chest.TrackPlacedItem();
+
+        Assert.IsTrue(world.Graph.FixedKeys[key].Contains(chest),
+            "A key placed in its own key-for-key chest must count as a fixed key for door spending.");
+
+        // A non key-for-key chest must not be registered.
+        var otherChest = world.GetLocation("Eastern Palace - Big Chest");
+        otherChest.Item = key;
+        otherChest.TrackPlacedItem();
+        Assert.IsFalse(world.Graph.FixedKeys[key].Contains(otherChest));
+    }
+
+    [TestMethod]
     [DataRow(StateOption.Open, "DarkDefeatGanon")]
     [DataRow(StateOption.Inverted, "DefeatGanon")]
     public void GanonDefeat_UsesTheRoomBunnyState(StateOption state, string requirement)

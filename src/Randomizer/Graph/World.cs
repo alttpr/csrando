@@ -69,7 +69,7 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     /// <param name="type">type to search for</param>
     public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
 
-    public void TrackPlacedItem(Vertex location)
+    public virtual void TrackPlacedItem(Vertex location)
     {
         if (ShouldTrack(location))
             location.World.PlacedItemCount++;
