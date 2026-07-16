@@ -20,28 +20,50 @@ public sealed record StatefulPickup(
 
 public class StatefulSearcher : ISearcher
 {
+    // Shared instances for path steps and pickups that carry no requirement or
+    // resource data. Exposed only through read-only interfaces; never mutated.
+    private static readonly Dictionary<IItem, int> EmptyRequirements = [];
+    private static readonly Dictionary<string, int> EmptyResources = [];
+    private static readonly HashSet<string> EmptyMissing = [];
+
     private readonly Graph _graph;
-    private Dictionary<Vertex, List<VisitedState>> _visitedStates = null!;
-    private Dictionary<Vertex, (HashSet<string>, List<VisitedState>)> _unvisitedStates = null!;
-    private readonly Queue<(Vertex vertex, VisitedState state, StatefulPathStep? step)> _queue = new();
-    private readonly Dictionary<Vertex, List<VisitedState>> _inQueue = [];
-    private readonly Dictionary<Vertex, (VisitedState, Inventory)> _visitedItemLocations;
+    private readonly ForwardStateFrontier[] _visitedStates;
+    private readonly List<int> _visitedStateIds = [];
+    private readonly bool[] _visitedStateTouched;
+    private readonly UnvisitedFrontier?[] _unvisitedStates;
+    private readonly List<int> _unvisitedStateIds = [];
+    private readonly Queue<(Vertex vertex, ForwardState state, StatefulPathStep? step)> _queue = new();
+    private readonly ForwardStateFrontier[] _inQueue;
+    private readonly List<int> _inQueueIds = [];
+    private readonly bool[] _inQueueTouched;
+    private readonly Dictionary<Vertex, List<ForwardArrival>> _visitedItemLocations;
     private readonly HashSet<Vertex> _visitedVertices;
     private readonly HashSet<IItem> _foundItems = [];
     private readonly Inventory _inventory;
-    private readonly Dictionary<(Vertex, IItem), VisitedState> _prevItems;
+    private readonly Dictionary<IItem, int> _restartFlags;
+    private readonly Dictionary<(Vertex, IItem), ForwardState> _prevItems;
     private readonly Vertex? _target;
     private readonly Vertex _start;
-    private readonly List<(Vertex, VisitedState)> _startStates;
+    private readonly List<(Vertex, ForwardState)> _startStates;
+    private readonly HashSet<Vertex> _persistentStarts;
     private readonly SetLocations? _setLocations;
     private readonly List<Randomizer.Graph.Vertex> _otherWorldLocations = [];
     private readonly HashSet<Weapon> _currentWeapons = [];
     private readonly RequirementHandler _requirementHandler;
+    private readonly SmSearchModel _searchModel;
     private readonly Func<Randomizer.Graph.Vertex, bool> _collectItemAt;
     private readonly Dictionary<Randomizer.Graph.Vertex, StatefulPathStep?> _predecessors = [];
     private readonly HashSet<Randomizer.Graph.Vertex> _recordedUnlocks = [];
     private readonly Dictionary<(Randomizer.Graph.Vertex, IItem), StatefulPickup> _pickupDetails = [];
     private readonly bool _capturePath;
+    private readonly BacktrackRegion? _targetRegion;
+    private readonly BacktrackCache _backtrackCache;
+    private bool _settledRestartActive;
+    private int _currentWeaponsInventoryVersion = -1;
+    private Inventory? _reverseInventory;
+    private int _reverseInventoryVersion = -1;
+    private SearchContext _searchContext = null!;
+    private int _requirementCacheEpoch;
     // Path-only searches can suppress the event they are trying to explain so a
     // later, post-event route cannot be mistaken for the acquisition route.
     private readonly IItem? _excludedPickup;
@@ -52,12 +74,29 @@ public class StatefulSearcher : ISearcher
         Vertex? target = null, VisitedState? visitedState = null,
         Func<Randomizer.Graph.Vertex, bool>? collectItemAt = null,
         bool capturePath = false, IItem? excludedPickup = null)
+        : this(graph, start, inventory, setLocations, target, visitedState,
+            collectItemAt, capturePath, excludedPickup, null)
+    {
+    }
+
+    internal StatefulSearcher(Graph graph, Vertex start, Inventory inventory,
+        SetLocations? setLocations, Vertex? target, VisitedState? visitedState,
+        Func<Randomizer.Graph.Vertex, bool>? collectItemAt,
+        bool capturePath, IItem? excludedPickup, BacktrackRegion? targetRegion)
     {
         _inventory = inventory;
         _target = target;
+        _backtrackCache = BacktrackCache.ForGraph(graph);
+        _targetRegion = target == null
+            ? null
+            : targetRegion ?? BacktrackRegion.Build(graph, target);
         _start = start;
+        _restartFlags = inventory.All()
+            .Where(pair => IsReplayableFlag(pair.Key))
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
         _setLocations = setLocations;
         _requirementHandler = ((World)start.World).RequirementHandler;
+        _searchModel = SmSearchModel.For(start.World, graph);
         _collectItemAt = collectItemAt ?? (_ => true);
         _capturePath = capturePath;
         _excludedPickup = excludedPickup;
@@ -73,12 +112,16 @@ public class StatefulSearcher : ISearcher
         });
 
         _prevItems = [];
-        _visitedStates = new(1024);
+        _visitedStates = new ForwardStateFrontier[_searchModel.Capacity];
+        _visitedStateTouched = new bool[_searchModel.Capacity];
+        _inQueue = new ForwardStateFrontier[_searchModel.Capacity];
+        _inQueueTouched = new bool[_searchModel.Capacity];
         _visitedVertices = new(1024);
-        _unvisitedStates = new(1024);
+        _unvisitedStates = new UnvisitedFrontier?[_searchModel.Capacity];
         _visitedItemLocations = new(128);
         _graph = graph;
         _startStates = [];
+        _persistentStarts = [start];
 
         List<(Vertex, VisitedState)> startStates = [startState];
         Search(startStates);
@@ -86,10 +129,16 @@ public class StatefulSearcher : ISearcher
     }
 
     public void Search(List<(Vertex, VisitedState)> initialStates)
+        => SearchForward(initialStates.Select(start => (
+            start.Item1,
+            ForwardState.FromVisited(start.Item2, _inventory,
+                (World)start.Item1.World))).ToList());
+
+    private void SearchForward(List<(Vertex, ForwardState)> initialStates)
     {
-        var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
-        var newItems = new Dictionary<(Vertex, IItem), VisitedState>();
-        int z = 0;
+        var foundItems = new Dictionary<(Vertex, IItem), ForwardState>();
+        var newItems = new Dictionary<(Vertex, IItem), ForwardState>();
+        bool promotedAnyItems = false;
 
         foreach (var (vertex, state) in initialStates)
         {
@@ -98,9 +147,7 @@ public class StatefulSearcher : ISearcher
 
         do
         {
-            z++;
-            foundItems = InternalSearch(_startStates, _inventory, _target);
-            //newItems = new(foundItems);
+            foundItems = RunSearchPass(_startStates, _inventory, _target);
 
             newItems = foundItems.Where(x => !_prevItems.ContainsKey(x.Key)).ToDictionary(x => x.Key, x => x.Value);
             foreach (var foundItem in foundItems)
@@ -114,144 +161,220 @@ public class StatefulSearcher : ISearcher
                     _prevItems[foundItem.Key] = foundItem.Value;
                 }
             }
-
-
-            //newItems.ExceptWith(prevItems);
-            //prevItems.UnionWith(foundItems);
-            _visitedVertices.UnionWith(_visitedStates.Select(x => x.Key));
-
-            int newEnergy = (newItems.Count(x => x.Key.Item2.Name == "ETank") * 100);
-            int newMissiles = (newItems.Count(x => x.Key.Item2.Name == "Missile") * 5);
-            int newSupers = (newItems.Count(x => x.Key.Item2.Name == "Super") * 5);
-            int newPowerBombs = (newItems.Count(x => x.Key.Item2.Name == "PowerBomb") * 5);
-
-            foreach (var ((vtx, item), itemState) in newItems)
+            foreach (int vertexId in _visitedStateIds)
             {
-                _inventory.AddItem(item);
-                if (_target == null && !vtx.Name.Contains("Tourian") && !(item.Name.StartsWith("f_") && _inventory.Has(item)))
-                {
-                    var backtrackSearcher = new StatefulSearcher(_graph, vtx, _inventory.Clone(), null, _start, itemState);
-                    if (!backtrackSearcher.HasVisited(_start))
-                    {
-                        //Console.WriteLine($"Backtracking failed to find a path from {vtx.Name} to {start.Name}");
-                        _inventory.RemoveItem(item);
-                        newItems.Remove((vtx, item));
-                        _prevItems.Remove((vtx, item));
+                if (!_visitedStates[vertexId].IsEmpty)
+                    _visitedVertices.Add(_searchModel.VerticesById[vertexId]!);
+            }
 
-                        if (_unvisitedStates.TryGetValue(vtx, out var states))
-                        {
-                            states.Item1.Add("Backtrack");
-                            _unvisitedStates[vtx] = states;
-                        }
-                        else
-                        {
-                            _unvisitedStates[vtx] = (["Backtrack"], [itemState with {
-                            Energy = itemState.Energy + newEnergy,
-                            Missiles = itemState.Missiles + newMissiles,
-                            SuperMissiles = itemState.SuperMissiles + newSupers,
-                            PowerBombs = itemState.PowerBombs + newPowerBombs
-                        }]);
-                        }
-                    }
+            // Forward-produced flags are global graph state, including
+            // flags produced on a side branch rather than the final return
+            // route. Promote those first, then resolve the item locations
+            // against one shared reverse pass.
+            var unconditional = newItems
+                .Where(pair => _target != null
+                    || pair.Key.Item1.Name.Contains("Tourian")
+                    || pair.Key.Item2.Name.StartsWith(
+                        "f_", StringComparison.Ordinal))
+                .ToArray();
+            foreach (var ((_, item), _) in unconditional)
+                _inventory.AddItem(item);
+
+            var backtrackCandidates = newItems
+                .Where(pair => !pair.Key.Item2.Name.StartsWith(
+                    "f_", StringComparison.Ordinal)
+                    && _target == null
+                    && !pair.Key.Item1.Name.Contains("Tourian"))
+                .Select(pair => (pair.Key.Item1, pair.Key.Item2, pair.Value))
+                .ToList();
+            foreach (var (_, item, _) in backtrackCandidates)
+                _inventory.AddItem(item);
+
+            // All pickups in the forward sphere are concrete actions that
+            // can be collected before returning. Resolve them together,
+            // remove failures, and rebuild only when that removal changes
+            // the shared reverse inventory.
+            while (backtrackCandidates.Count > 0)
+            {
+                var reverseInventory = GetReverseInventory();
+                var rejected = backtrackCandidates
+                    .Where(candidate => !EvaluateBacktrack(
+                        candidate.Item1, candidate.Value,
+                        reverseInventory, _start))
+                    .ToArray();
+                if (rejected.Length == 0)
+                    break;
+
+                foreach (var (vtx, item, itemState) in rejected)
+                    RejectNewItem(vtx, item, itemState);
+                var rejectedKeys = rejected
+                    .Select(candidate => (candidate.Item1, candidate.Item2))
+                    .ToHashSet();
+                backtrackCandidates.RemoveAll(candidate =>
+                    rejectedKeys.Contains((candidate.Item1, candidate.Item2)));
+            }
+
+            void RejectNewItem(
+                Vertex vtx, IItem item, ForwardState itemState)
+            {
+                _inventory.RemoveItem(item);
+                newItems.Remove((vtx, item));
+                _prevItems.Remove((vtx, item));
+
+                var states = _unvisitedStates[vtx.Id];
+                if (states != null)
+                {
+                    states.MissingItems.Add("Backtrack");
+                }
+                else
+                {
+                    _unvisitedStates[vtx.Id] = new UnvisitedFrontier(
+                        ["Backtrack"], [itemState]);
+                    _unvisitedStateIds.Add(vtx.Id);
                 }
             }
 
-            // Add new items to all unvisited states
-            _unvisitedStates = _unvisitedStates.ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2.Select(s => s with
-            {
-                Energy = s.Energy + newEnergy,
-                Missiles = s.Missiles + newMissiles,
-                SuperMissiles = s.SuperMissiles + newSupers,
-                PowerBombs = s.PowerBombs + newPowerBombs
-            }).ToList()));
-
+            promotedAnyItems |= newItems.Count > 0;
 
             _startStates.Clear();
             var checkItems = newItems.Select(x => x.Key.Item2.Name).ToHashSet();
             checkItems.Add("Backtrack");
-            foreach (var (vertex, states) in _unvisitedStates)
+            foreach (int vertexId in _unvisitedStateIds)
             {
-                if (states.Item1.Overlaps(checkItems))
+                var states = _unvisitedStates[vertexId];
+                if (states != null && SetsOverlap(states.MissingItems, checkItems))
                 {
-                    foreach (var state in states.Item2)
+                    var vertex = _searchModel.VerticesById[vertexId]!;
+                    foreach (var state in states.States)
                     {
                         _startStates.Add((vertex, state));
                     }
                 }
             }
 
-            // Update all visited states with new energy/ammo where the visited states is not in the start states
-            var startStateKeys = _startStates
-                .Select(s => s.Item1)
-                .ToHashSet();
-
-            _visitedStates = _visitedStates
-                .Where(kvp => !startStateKeys.Contains(kvp.Key))
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value
-                        .Select(s => s with
-                        {
-                            Energy = s.Energy + newEnergy,
-                            Missiles = s.Missiles + newMissiles,
-                            SuperMissiles = s.SuperMissiles + newSupers,
-                            PowerBombs = s.PowerBombs + newPowerBombs
-                        })
-                        .ToList()
-                );
-
-            //Console.WriteLine($"-- Found {newItems.Count} new items, {foundItems.Count} total items, {startStates.Count} new start states, {z} passes --");
+            // Debt states are independent of capacity. Only vertices selected for
+            // dependency re-evaluation need to leave the settled frontier.
+            foreach (var (vertex, _) in _startStates)
+                _visitedStates[vertex.Id].Clear();
         } while (newItems.Count > 0);
 
-        if (_target == null)
+        if (_target == null && !_capturePath && !_settledRestartActive
+            && promotedAnyItems)
         {
-            //Console.WriteLine($"StatefulSearcher took {stopWatch.ElapsedMilliseconds}ms to complete, doing {z} passes");
+            bool foundNewPhysicalItem;
+            do
+            {
+                var previousPhysicalItems = _prevItems.Keys
+                    .Where(key => !IsReplayableFlag(key.Item2))
+                    .ToHashSet();
+                ResetTraversalForSettledRestart();
+                _settledRestartActive = true;
+                try
+                {
+                    SearchForward(_persistentStarts
+                        .Select(vertex => (vertex, ForwardState.Empty))
+                        .ToList());
+                }
+                finally
+                {
+                    _settledRestartActive = false;
+                }
+                foundNewPhysicalItem = _prevItems.Keys.Any(key =>
+                    !IsReplayableFlag(key.Item2)
+                    && !previousPhysicalItems.Contains(key));
+            } while (foundNewPhysicalItem);
         }
 
         _foundItems.Clear();
         _foundItems.UnionWith(_prevItems.Select(x => x.Key.Item2));
     }
 
-    private void AddUnvisited(Vertex vertex, VisitedState state, HashSet<string> missingItems)
+    private void ResetTraversalForSettledRestart()
+    {
+        foreach (var flag in _inventory.All()
+                     .Where(pair => IsReplayableFlag(pair.Key))
+                     .ToArray())
+            _inventory.RemoveItem(flag.Key, flag.Value);
+        foreach (var (flag, count) in _restartFlags)
+            _inventory.AddItem(flag, count);
+        foreach (var key in _prevItems.Keys
+                     .Where(key => IsReplayableFlag(key.Item2))
+                     .ToArray())
+            _prevItems.Remove(key);
+
+        foreach (int vertexId in _visitedStateIds)
+        {
+            _visitedStates[vertexId].Clear();
+            _visitedStateTouched[vertexId] = false;
+        }
+        _visitedStateIds.Clear();
+        foreach (int vertexId in _unvisitedStateIds)
+            _unvisitedStates[vertexId] = null;
+        _unvisitedStateIds.Clear();
+        _visitedVertices.Clear();
+        _visitedItemLocations.Clear();
+        _startStates.Clear();
+        _queue.Clear();
+        foreach (int vertexId in _inQueueIds)
+        {
+            _inQueue[vertexId].Clear();
+            _inQueueTouched[vertexId] = false;
+        }
+        _inQueueIds.Clear();
+        _otherWorldLocations.Clear();
+        _currentWeapons.Clear();
+        _currentWeaponsInventoryVersion = -1;
+        _predecessors.Clear();
+        _recordedUnlocks.Clear();
+        _pickupDetails.Clear();
+    }
+
+    private bool IsReplayableFlag(IItem item) =>
+        ReferenceEquals(item.World, _start.World)
+        && item.Name.StartsWith("f_", StringComparison.Ordinal);
+
+    private void AddUnvisited(Vertex vertex, ForwardState state, HashSet<string> missingItems)
     {
         if (missingItems.Count == 0)
         {
             return;
         }
 
-        //Console.WriteLine($"Adding unvisited state {state} to {vertex.Name} with missing items: {string.Join(",",missingItems)}");
-        if (_unvisitedStates.TryGetValue(vertex, out var states))
+        var states = _unvisitedStates[vertex.Id];
+        if (states != null)
         {
-            var mergedItems = states.Item1.Union(missingItems);
-
-            // If this state is a "best" state, add it
-            if (states.Item2.Any(s => s.Dominates(state)))
-            {
-                // There is a better state already in the list, only update the missing items
-                states.Item1 = mergedItems.ToHashSet();
-            }
-            else
-            {
-                states.Item2.RemoveAll(s => state.Dominates(s));
-                states.Item2.Add(state);
-                states.Item1 = mergedItems.ToHashSet();
-            }
-            _unvisitedStates[vertex] = states;
+            states.MissingItems.UnionWith(missingItems);
+            AddNondominated(states.States, state);
         }
         else
         {
-            _unvisitedStates[vertex] = (missingItems, new List<VisitedState> { state });
+            _unvisitedStates[vertex.Id] = new UnvisitedFrontier(
+                new HashSet<string>(missingItems, StringComparer.Ordinal), [state]);
+            _unvisitedStateIds.Add(vertex.Id);
         }
     }
 
-    private Dictionary<(Vertex, IItem), VisitedState> InternalSearch(List<(Vertex, VisitedState)> starts, Inventory inventory, Vertex? target = null)
+    private Dictionary<(Vertex, IItem), ForwardState> InternalSearch(List<(Vertex, ForwardState)> starts, Inventory inventory, Vertex? target = null)
     {
-        var foundItems = new Dictionary<(Vertex, IItem), VisitedState>();
+        var foundItems = new Dictionary<(Vertex, IItem), ForwardState>();
         _queue.Clear();
-        _inQueue.Clear();
-        _currentWeapons.Clear();
-        _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
-            .Where(w => _requirementHandler.HandleRequirement(w.UseRequires, new VisitedState(), inventory, (World)_start.World, []).Met));
+        foreach (int vertexId in _inQueueIds)
+        {
+            _inQueue[vertexId].Clear();
+            _inQueueTouched[vertexId] = false;
+        }
+        _inQueueIds.Clear();
+        // The usable weapon set depends only on the inventory, which does not
+        // change within a pass, so recompute it only when the inventory has.
+        if (_currentWeaponsInventoryVersion != inventory.Version)
+        {
+            _currentWeaponsInventoryVersion = inventory.Version;
+            _currentWeapons.Clear();
+            _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
+                .Where(weapon => _requirementHandler.HandleRequirement(
+                    weapon.UseRequires, new VisitedState(), inventory,
+                    (World)_start.World, [], captureDetails: false).Met));
+        }
 
         foreach (var start in starts)
         {
@@ -260,27 +383,22 @@ public class StatefulSearcher : ISearcher
 
         while (_queue.Count > 0)
         {
-
             var (current, state, incomingStep) = DequeueState()!.Value;
 
-            //Console.WriteLine($"Visiting {current.Name} with state {state}");
-
             // If we've already visited this vertex with a state that dominates the current state, skip it
-            if (_visitedStates.TryGetValue(current, out var visitedStates) && visitedStates.Any(vs => vs.Dominates(state)))
-            {
+            ref var visitedStates = ref _visitedStates[current.Id];
+            bool firstStateAtVertex = visitedStates.IsEmpty;
+            if (!visitedStates.AddNondominated(state))
                 continue;
-            }
 
             // Add the current state to the visited states for this vertex
-            if (!_visitedStates.TryGetValue(current, out visitedStates))
+            if (firstStateAtVertex)
             {
-                visitedStates = [];
-                _visitedStates[current] = visitedStates;
-            }
-
-            else
-            {
-                _visitedStates[current].Add(state);
+                if (!_visitedStateTouched[current.Id])
+                {
+                    _visitedStateTouched[current.Id] = true;
+                    _visitedStateIds.Add(current.Id);
+                }
             }
             if (_capturePath)
                 _predecessors.TryAdd(current, incomingStep);
@@ -290,9 +408,6 @@ public class StatefulSearcher : ISearcher
             {
                 return [];
             }
-
-            //Console.WriteLine($"Visiting {current.Name} with state {state}");
-
             var currentNode = current.Node;
             if (currentNode == null)
             {
@@ -303,7 +418,12 @@ public class StatefulSearcher : ISearcher
                     {
                         if (target != null)
                         {
-                            _visitedStates[target] = [state];
+                            if (!_visitedStateTouched[target.Id])
+                            {
+                                _visitedStateTouched[target.Id] = true;
+                                _visitedStateIds.Add(target.Id);
+                            }
+                            _visitedStates[target.Id].SetSingle(state);
                             return [];
                         }
 
@@ -313,8 +433,8 @@ public class StatefulSearcher : ISearcher
 
                     var toVtx = (Vertex)edge.To;
                     EnqueueState(toVtx, state, _capturePath
-                        ? new StatefulPathStep(edge, null, new Dictionary<IItem, int>(),
-                            new Dictionary<string, int>())
+                        ? new StatefulPathStep(edge, null, EmptyRequirements,
+                            EmptyResources)
                         : null);
                 }
                 continue;
@@ -324,10 +444,8 @@ public class StatefulSearcher : ISearcher
             bool unlocked = false;
             var (unlockState, yields, unlockStrategy, unlockResult) =
                 UnlockNode(inventory, current, state, currentNode);
-            Dictionary<IItem, int>? unlockRequirements =
-                _capturePath ? new Dictionary<IItem, int>() : null;
-            Dictionary<string, int>? unlockResources =
-                _capturePath ? new Dictionary<string, int>() : null;
+            Dictionary<IItem, int>? unlockRequirements = null;
+            Dictionary<string, int>? unlockResources = null;
             bool unlockRecordedOnIncoming = false;
             if (unlockState != null)
             {
@@ -336,17 +454,18 @@ public class StatefulSearcher : ISearcher
                 state = unlockState.Value;
                 if (_capturePath && unlockResult != null)
                 {
-                    foreach (var (item, count) in unlockResult.UsedItems ?? [])
-                        unlockRequirements![current.World.GetItem(item)] = count;
-                    AddResourceRequirements(
-                        unlockRequirements!, unlockResult.Cost!.Value, current.World);
+                    AppendStepRequirements(ref unlockRequirements,
+                        unlockResult.Value, current.World);
                 }
                 if (_capturePath && _predecessors[current] is { } predecessor
                     && _recordedUnlocks.Add(current)
-                    && (unlockStrategy != null || unlockRequirements!.Count > 0))
+                    && (unlockStrategy != null
+                        || unlockRequirements is { Count: > 0 }))
                 {
                     _predecessors[current] = MergePathStep(
-                        predecessor, unlockStrategy, unlockRequirements!, unlockResources!);
+                        predecessor, unlockStrategy,
+                        unlockRequirements ?? EmptyRequirements,
+                        unlockResources ?? EmptyResources);
                     unlockRecordedOnIncoming = true;
                 }
                 else if (_capturePath && _recordedUnlocks.Contains(current)
@@ -358,48 +477,45 @@ public class StatefulSearcher : ISearcher
                 }
 
                 unlocked = true;
-                foreach (var yieldItem in yields)
+                if (yields != null)
                 {
-                    if (ReferenceEquals(yieldItem.Key.Item2, _excludedPickup))
-                        continue;
-                    if (foundItems.TryGetValue(yieldItem.Key, out var existingState))
+                    foreach (var yieldItem in yields)
                     {
-                        if (yieldItem.Value.Dominates(existingState))
+                        if (ReferenceEquals(yieldItem.Key.Item2, _excludedPickup))
+                            continue;
+                        if (foundItems.TryGetValue(
+                                yieldItem.Key, out var existingState))
                         {
-                            foundItems[yieldItem.Key] = yieldItem.Value;
+                            if (yieldItem.Value.Dominates(existingState))
+                                foundItems[yieldItem.Key] = yieldItem.Value;
+                        }
+                        else
+                        {
+                            foundItems.Add(yieldItem.Key, yieldItem.Value);
                         }
                     }
-                    else
-                    {
-                        foundItems.Add(yieldItem.Key, yieldItem.Value);
-                    }
                 }
-                if (_capturePath)
+                if (_capturePath && yields != null)
                 {
                     foreach (var (yieldLocation, yieldItem) in yields.Keys)
                     {
                         _pickupDetails.TryAdd((yieldLocation, yieldItem),
                             new StatefulPickup(yieldItem, unlockStrategy,
-                                unlockRequirements!, unlockResources!));
+                                unlockRequirements ?? EmptyRequirements,
+                                unlockResources ?? EmptyResources));
                     }
                 }
             }
 
             if (unlocked && current.Type == VertexType.Item)
             {
-                if (_visitedItemLocations.TryGetValue(current, out var visitedItemState))
-                {
-                    _visitedItemLocations[current] = (state, visitedItemState.Item2.Merge(inventory));
-                }
-                else
-                {
-                    _visitedItemLocations.Add(current, (state, inventory.Clone()));
-                }
+                RecordForwardArrival(current, state);
 
                 if (_capturePath && current.Item != null)
                     _pickupDetails.TryAdd((current, current.Item),
                         new StatefulPickup(current.Item, unlockStrategy,
-                            unlockRequirements!, unlockResources!));
+                            unlockRequirements ?? EmptyRequirements,
+                            unlockResources ?? EmptyResources));
 
                 if (current.Item != null && !ReferenceEquals(current.Item, _excludedPickup)
                     && _collectItemAt(current))
@@ -425,7 +541,12 @@ public class StatefulSearcher : ISearcher
                     // TODO: Maybe this should be a bit more sophisticated, but for now it makes sense to skip backtracking when we change worlds
                     if (target != null)
                     {
-                        _visitedStates[target] = [state];
+                        if (!_visitedStateTouched[target.Id])
+                        {
+                            _visitedStateTouched[target.Id] = true;
+                            _visitedStateIds.Add(target.Id);
+                        }
+                        _visitedStates[target.Id].SetSingle(state);
                         return [];
                     }
 
@@ -433,7 +554,6 @@ public class StatefulSearcher : ISearcher
                     continue;
                 }
 
-                //Console.WriteLine($"Checking edge {current.Name} -> {edge.To.Name}");
                 // Can't traverse doors if we couldn't unlock the node
                 if (!unlocked && ((Vertex)edge.To).RoomId != current.RoomId)
                 {
@@ -447,39 +567,44 @@ public class StatefulSearcher : ISearcher
                         ? new StatefulPathStep(edge,
                             unlockRecordedOnIncoming ? null : unlockStrategy,
                             unlockRecordedOnIncoming
-                                ? new Dictionary<IItem, int>()
-                                : unlockRequirements!,
+                                ? EmptyRequirements
+                                : unlockRequirements ?? EmptyRequirements,
                             unlockRecordedOnIncoming
-                                ? new Dictionary<string, int>()
-                                : unlockResources!)
+                                ? EmptyResources
+                                : unlockResources ?? EmptyResources)
                         : null);
                     continue;
                 }
 
-                var stratStates = new List<(Strat Strat, VisitedState State, RequirementResult Result)>();
+                bool foundStrategy = false;
+                Strat bestStrat = null!;
+                ForwardState bestState = default;
+                RequirementResult bestResult = default;
                 foreach (var strat in ((Edge)edge).Strats ?? [])
                 {
-                    //Console.WriteLine($"Checking strat {strat.Name} at {current.Name} with state {state}");
-                    var result = _requirementHandler.HandleRequirement(strat.Requires, state, inventory, (World)current.World, _currentWeapons);
+                    var strategyPlan = _searchModel.GetStrategyPlan(
+                        strat, _requirementHandler);
+                    var result = HandleRequirement(
+                        strat.Requires, strategyPlan.Requirement, state,
+                        inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
-                        //Console.WriteLine($"Failed to handle strat {strat.Name} at {current.Name} with state {state}");
-                        AddUnvisited(current, state, result.Missing ?? []);
+                        AddUnvisited(current, state, result.Missing ?? EmptyMissing);
                         continue;
                     }
 
                     var cost = result.Cost!;
 
-                    var newState = state.ApplyCost(cost.Value, inventory, (World)current.World);
+                    var newState = state.ApplyCost(cost.Value, _searchContext);
                     if (newState == null)
                     {
-                        //Console.WriteLine($"Failed to apply cost {cost} at {current.Name} with state {state}");
                         // Figure out what costs we're missing
-                        var missingCostItems = new HashSet<string>(result.Missing ?? []);
-                        if (state.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
-                        if (state.Missiles - cost.Value.Missiles <= 0) { missingCostItems.Add("Missile"); }
-                        if (state.SuperMissiles - cost.Value.SuperMissiles <= 0) { missingCostItems.Add("Super"); }
-                        if (state.PowerBombs - cost.Value.PowerBombs <= 0) { missingCostItems.Add("PowerBomb"); }
+                        var missingCostItems = new HashSet<string>(result.Missing ?? EmptyMissing);
+                        var available = state.ToVisited(_searchContext);
+                        if (available.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
+                        if (available.Missiles - cost.Value.Missiles <= 0) { missingCostItems.Add("Missile"); }
+                        if (available.SuperMissiles - cost.Value.SuperMissiles <= 0) { missingCostItems.Add("Super"); }
+                        if (available.PowerBombs - cost.Value.PowerBombs <= 0) { missingCostItems.Add("PowerBomb"); }
 
 
                         AddUnvisited(current, state, missingCostItems);
@@ -487,35 +612,24 @@ public class StatefulSearcher : ISearcher
                     }
 
                     var finalState = newState.Value
-                        .WithObstacles(strat.ClearsObstacles ?? [])
-                        .WithoutObstacles(strat.ResetsObstacles ?? []);
-
-                    stratStates.Add((strat, finalState, result));
+                        .WithObstacles(strategyPlan.ClearsObstacleMask)
+                        .WithoutObstacles(strategyPlan.ResetsObstacleMask);
 
                     if (_capturePath)
                     {
-                        var stratRequirements = (result.UsedItems ?? []).ToDictionary(
-                            pair => (IItem)current.World.GetItem(pair.Key), pair => pair.Value);
-                        AddResourceRequirements(stratRequirements, result.Cost!.Value, current.World);
+                        Dictionary<IItem, int>? stratRequirements = null;
+                        AppendStepRequirements(
+                            ref stratRequirements, result, current.World);
                         foreach (var flag in strat.SetsFlags ?? [])
                         {
                             var flagItem = current.World.GetItem(flag);
                             _pickupDetails.TryAdd((current, flagItem),
-                                new StatefulPickup(flagItem, strat.Name, stratRequirements,
+                                new StatefulPickup(flagItem, strat.Name,
+                                    stratRequirements ?? EmptyRequirements,
                                     ResourcesSpent(state, finalState)));
                         }
                     }
-                }
 
-                if (stratStates.Count == 0)
-                {
-                    continue;
-                }
-
-                // Find the best state (by comparing health and ammo) out of the completed strats and use that for enqueueing the next vertex
-                var (bestStrat, bestState, bestResult) = stratStates.First();
-                foreach (var (strat, stratState, result) in stratStates)
-                {
                     // If any of the strats we "could" use sets flags, add them to the found items
                     if (strat.SetsFlags != null)
                     {
@@ -526,52 +640,67 @@ public class StatefulSearcher : ISearcher
                                 continue;
                             if (foundItems.TryGetValue((current, flagItem), out var existingState))
                             {
-                                if (stratState.Dominates(existingState))
+                                if (finalState.Dominates(existingState))
                                 {
-                                    foundItems[(current, flagItem)] = stratState;
+                                    foundItems[(current, flagItem)] = finalState;
                                 }
                             }
                             else
                             {
-                                foundItems.Add((current, flagItem), stratState);
+                                foundItems.Add((current, flagItem), finalState);
                             }
                         }
                     }
 
-                    if (stratState.Dominates(bestState))
+                    // Preserve strategy order and the established behavior where
+                    // a later strategy replaces the current choice only when its
+                    // resulting state fully dominates it (including equality).
+                    if (!foundStrategy || finalState.Dominates(bestState))
                     {
-                        bestState = stratState;
+                        bestState = finalState;
                         bestStrat = strat;
                         bestResult = result;
                     }
+                    foundStrategy = true;
                 }
 
+                if (!foundStrategy)
+                    continue;
 
                 Vertex toVtx = (Vertex)edge.To;
-
                 if (toVtx.RoomId != current.RoomId)
                 {
-                    bestState = bestState with { ObstacleBitFlags = 0, DoorUnlockedFlags = 0 };
+                    bestState = bestState with
+                    {
+                        ObstacleBitFlags = 0,
+                        DoorUnlockedFlags = 0,
+                    };
                 }
 
                 StatefulPathStep? pathStep = null;
                 if (_capturePath)
                 {
-                    var requirements = (bestResult.UsedItems ?? []).ToDictionary(
-                        pair => (IItem)current.World.GetItem(pair.Key), pair => pair.Value);
-                    AddResourceRequirements(requirements, bestResult.Cost!.Value, current.World);
+                    Dictionary<IItem, int>? requirements = null;
+                    AppendStepRequirements(
+                        ref requirements, bestResult, current.World);
                     if (!unlockRecordedOnIncoming)
                     {
-                        foreach (var (item, count) in unlockRequirements!)
-                            requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
+                        foreach (var (item, count) in
+                                 unlockRequirements ?? EmptyRequirements)
+                        {
+                            requirements ??= [];
+                            requirements[item] = Math.Max(
+                                requirements.GetValueOrDefault(item), count);
+                        }
                     }
                     pathStep = new StatefulPathStep(edge,
-                        JoinStrategies(unlockRecordedOnIncoming ? null : unlockStrategy,
-                            bestStrat.Name), requirements,
+                        JoinStrategies(
+                            unlockRecordedOnIncoming ? null : unlockStrategy,
+                            bestStrat.Name), requirements ?? EmptyRequirements,
                         MergeResources(
                             unlockRecordedOnIncoming
-                                ? new Dictionary<string, int>()
-                                : unlockResources!,
+                                ? EmptyResources
+                                : unlockResources ?? EmptyResources,
                             ResourcesSpent(state, bestState)));
                 }
                 EnqueueState(toVtx, bestState, pathStep);
@@ -581,63 +710,183 @@ public class StatefulSearcher : ISearcher
         return foundItems;
     }
 
-    private void EnqueueState(Vertex v, VisitedState s, StatefulPathStep? step)
+    private RequirementResult HandleRequirement(
+        Requirement requirement, ForwardState state, Inventory inventory,
+        World world, HashSet<Weapon> weapons)
+        => HandleRequirement(
+            requirement,
+            _searchModel.GetRequirementPlan(requirement, _requirementHandler),
+            state, inventory, world, weapons);
+
+    private RequirementResult HandleRequirement(
+        Requirement requirement, in CompiledRequirementPlan plan,
+        ForwardState state, Inventory inventory,
+        World world, HashSet<Weapon> weapons)
     {
-        if (!_inQueue.TryGetValue(v, out var list))
+        // Results are cacheable per epoch unless they read resources: the
+        // inventory, flag set, and weapon set are all fixed within one epoch,
+        // and graph-state readers depend only on the masked obstacle/door bits
+        // that become part of the cache key.
+        bool cacheable = !_capturePath && !plan.ResourceDependent;
+        if (cacheable)
         {
-            list = [];
-            _inQueue[v] = list;
+            if (!plan.GraphStateDependent)
+            {
+                if (_searchModel.TryGetRequirementResult(
+                        plan.Id, _requirementCacheEpoch, out var cached))
+                    return cached;
+            }
+            else if (_searchModel.TryGetStateRequirementResult(
+                         plan.Id, _requirementCacheEpoch,
+                         state.ObstacleBitFlags & plan.ObstacleMask,
+                         state.DoorUnlockedFlags & plan.DoorMask,
+                         out var cachedState))
+            {
+                return cachedState;
+            }
         }
 
-        if (list.Any(existing => existing.Dominates(s)))
+        var result = _requirementHandler.HandleRequirement(
+            requirement, state.ToVisited(_searchContext), inventory, world,
+            weapons, captureDetails: _capturePath);
+        if (cacheable)
         {
+            if (!plan.GraphStateDependent)
+                _searchModel.SetRequirementResult(
+                    plan.Id, _requirementCacheEpoch, result);
+            else
+                _searchModel.SetStateRequirementResult(
+                    plan.Id, _requirementCacheEpoch,
+                    state.ObstacleBitFlags & plan.ObstacleMask,
+                    state.DoorUnlockedFlags & plan.DoorMask, result);
+        }
+        return result;
+    }
+
+    private void EnqueueState(Vertex v, ForwardState s, StatefulPathStep? step)
+    {
+        // A target search cannot succeed from a vertex with no directed path to
+        // either its target or a cross-world exit. This reverse-graph filter is
+        // state-agnostic and therefore cannot remove a valid route.
+        if (_targetRegion != null && !_targetRegion.Contains(v))
             return;
+
+        ref var list = ref _inQueue[v.Id];
+        if (list.IsEmpty)
+        {
+            if (!_inQueueTouched[v.Id])
+            {
+                _inQueueTouched[v.Id] = true;
+                _inQueueIds.Add(v.Id);
+            }
         }
 
-        list.RemoveAll(existing => s.Dominates(existing));
-        list.Add(s);
+        if (!list.AddNondominated(s))
+            return;
         _queue.Enqueue((v, s, step));
     }
 
-    private (Vertex, VisitedState, StatefulPathStep?)? DequeueState()
+    private Dictionary<(Vertex, IItem), ForwardState> RunSearchPass(
+        List<(Vertex, ForwardState)> starts, Inventory inventory, Vertex? target)
     {
-        if (_queue.Count == 0)
+        _requirementCacheEpoch = _searchModel.BeginRequirementCacheEpoch();
+        _searchContext = new SearchContext(inventory, (World)_start.World);
+        return InternalSearch(starts, inventory, target);
+    }
+
+    private (Vertex, ForwardState, StatefulPathStep?)? DequeueState()
+    {
+        if (!_queue.TryDequeue(out var queued))
             return null;
 
-        var (v, s, step) = _queue.Dequeue();
-
-        if (_inQueue.TryGetValue(v, out var list))
+        var (vertex, state, step) = queued;
+        ref var list = ref _inQueue[vertex.Id];
+        if (!list.IsEmpty)
         {
-            list.RemoveAll(x => x.Equals(s));
-            if (list.Count == 0)
-                _inQueue.Remove(v);
+            list.RemoveEqual(state);
         }
-        return (v, s, step);
+        return (vertex, state, step);
+    }
+
+    /// <summary>Equivalent to <see cref="HashSet{T}.Overlaps(IEnumerable{T})"/>
+    /// for two hash sets, without boxing a struct enumerator.</summary>
+    private static bool SetsOverlap(HashSet<string> first, HashSet<string> second)
+    {
+        var (smaller, larger) = first.Count <= second.Count
+            ? (first, second)
+            : (second, first);
+        foreach (var item in smaller)
+        {
+            if (larger.Contains(item))
+                return true;
+        }
+        return false;
+    }
+
+    private static bool AddNondominated(
+        List<ForwardState> frontier, ForwardState candidate)
+    {
+        for (int index = 0; index < frontier.Count; index++)
+        {
+            if (frontier[index].Dominates(candidate))
+                return false;
+        }
+
+        int writeIndex = 0;
+        for (int index = 0; index < frontier.Count; index++)
+        {
+            var existing = frontier[index];
+            if (!candidate.Dominates(existing))
+                frontier[writeIndex++] = existing;
+        }
+        if (writeIndex < frontier.Count)
+            frontier.RemoveRange(writeIndex, frontier.Count - writeIndex);
+        frontier.Add(candidate);
+        return true;
+    }
+
+    /// <summary>Fold the requirement result's used items and resource costs
+    /// into a step requirements dictionary, allocating it only when there is
+    /// something to record.</summary>
+    private static void AppendStepRequirements(
+        ref Dictionary<IItem, int>? requirements, in RequirementResult result,
+        IWorld world)
+    {
+        foreach (var (item, count) in result.UsedItems ?? EmptyResources)
+        {
+            requirements ??= [];
+            requirements[world.GetItem(item)] = count;
+        }
+        AddResourceRequirements(ref requirements, result.Cost!.Value, world);
     }
 
     private static void AddResourceRequirements(
-        Dictionary<IItem, int> requirements, RequirementCost cost, IWorld world)
+        ref Dictionary<IItem, int>? requirements, RequirementCost cost,
+        IWorld world)
     {
-        (string Type, int Amount)[] resources =
-        [
-            ("Energy", cost.Energy),
-            ("Missile", cost.Missiles),
-            ("Super", cost.SuperMissiles),
-            ("PowerBomb", cost.PowerBombs),
-        ];
-        foreach (var (type, amount) in resources)
-        {
-            // AmmoDrain stores a drain marker in bit 15. It consumes whatever
-            // resource is present (up to the encoded amount), so it is not a
-            // capacity requirement and must not be converted into item packs.
-            if (amount > 0x8000)
-                continue;
-            var (itemName, count) = RequirementHandler.RequiredExpansion(type, amount);
-            if (count <= 0)
-                continue;
-            var item = world.GetItem(itemName);
-            requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
-        }
+        AddResourceRequirement(ref requirements, "Energy", cost.Energy, world);
+        AddResourceRequirement(ref requirements, "Missile", cost.Missiles, world);
+        AddResourceRequirement(
+            ref requirements, "Super", cost.SuperMissiles, world);
+        AddResourceRequirement(
+            ref requirements, "PowerBomb", cost.PowerBombs, world);
+    }
+
+    private static void AddResourceRequirement(
+        ref Dictionary<IItem, int>? requirements, string type, int amount,
+        IWorld world)
+    {
+        // AmmoDrain stores a drain marker in bit 15. It consumes whatever
+        // resource is present (up to the encoded amount), so it is not a
+        // capacity requirement and must not be converted into item packs.
+        if (amount > 0x8000)
+            return;
+        var (itemName, count) = RequirementHandler.RequiredExpansion(type, amount);
+        if (count <= 0)
+            return;
+        var item = world.GetItem(itemName);
+        requirements ??= [];
+        requirements[item] = Math.Max(requirements.GetValueOrDefault(item), count);
     }
 
     private static StatefulPathStep MergePathStep(
@@ -655,23 +904,27 @@ public class StatefulSearcher : ISearcher
         };
     }
 
-    private static Dictionary<string, int> ResourcesSpent(VisitedState before, VisitedState after)
+    private Dictionary<string, int> ResourcesSpent(ForwardState before, ForwardState after)
     {
-        var resources = new Dictionary<string, int>();
-        if (before.Energy > after.Energy)
-            resources["Energy"] = before.Energy - after.Energy;
-        if (before.Missiles > after.Missiles)
-            resources["Missiles"] = before.Missiles - after.Missiles;
-        if (before.SuperMissiles > after.SuperMissiles)
-            resources["Super Missiles"] = before.SuperMissiles - after.SuperMissiles;
-        if (before.PowerBombs > after.PowerBombs)
-            resources["Power Bombs"] = before.PowerBombs - after.PowerBombs;
-        return resources;
+        var beforeVisited = before.ToVisited(_searchContext);
+        var afterVisited = after.ToVisited(_searchContext);
+        Dictionary<string, int>? resources = null;
+        if (beforeVisited.Energy > afterVisited.Energy)
+            (resources ??= [])["Energy"] = beforeVisited.Energy - afterVisited.Energy;
+        if (beforeVisited.Missiles > afterVisited.Missiles)
+            (resources ??= [])["Missiles"] = beforeVisited.Missiles - afterVisited.Missiles;
+        if (beforeVisited.SuperMissiles > afterVisited.SuperMissiles)
+            (resources ??= [])["Super Missiles"] = beforeVisited.SuperMissiles - afterVisited.SuperMissiles;
+        if (beforeVisited.PowerBombs > afterVisited.PowerBombs)
+            (resources ??= [])["Power Bombs"] = beforeVisited.PowerBombs - afterVisited.PowerBombs;
+        return resources ?? EmptyResources;
     }
 
     private static Dictionary<string, int> MergeResources(
         IReadOnlyDictionary<string, int> first, IReadOnlyDictionary<string, int> second)
     {
+        if (first.Count == 0 && second.Count == 0)
+            return EmptyResources;
         var merged = first.ToDictionary();
         foreach (var (resource, amount) in second)
             merged[resource] = merged.GetValueOrDefault(resource) + amount;
@@ -681,12 +934,13 @@ public class StatefulSearcher : ISearcher
     private static string? JoinStrategies(string? first, string? second) =>
         first == null ? second : second == null || second == first ? first : $"{first}; {second}";
 
-    private (VisitedState?, Dictionary<(Vertex, IItem), VisitedState>, string?, RequirementResult?)
-        UnlockNode(Inventory inventory, Vertex current, VisitedState lockState, Node currentNode)
+    private (ForwardState?, Dictionary<(Vertex, IItem), ForwardState>?, string?, RequirementResult?)
+        UnlockNode(Inventory inventory, Vertex current, ForwardState lockState, Node currentNode)
     {
-        var yields = new Dictionary<(Vertex, IItem), VisitedState>();
-        var usedStrategies = new List<string>();
-        var combinedResult = RequirementResult.Success(RequirementCost.ZeroCost);
+        Dictionary<(Vertex, IItem), ForwardState>? yields = null;
+        string? usedStrategies = null;
+        var combinedResult = RequirementResult.Success(
+            RequirementCost.ZeroCost);
 
         if (currentNode.Locks != null)
         {
@@ -695,82 +949,84 @@ public class StatefulSearcher : ISearcher
                 // Check if this lock requires a specific item or flag to be locked, and if we don't fullfill the lock requirements, skip it
                 if (lck.Lock != null)
                 {
-                    var lockResult = _requirementHandler.HandleRequirement(lck.Lock, lockState, inventory, (World)current.World, _currentWeapons);
+                    var lockResult = HandleRequirement(
+                        lck.Lock, lockState, inventory,
+                        (World)current.World, _currentWeapons);
                     if (!lockResult.Met)
                     {
-                        AddUnvisited(current, lockState, lockResult.Missing ?? []);
+                        AddUnvisited(current, lockState, lockResult.Missing ?? EmptyMissing);
                         continue;
                     }
                 }
 
-                var unlockStratStates = new List<(Strat Strat, VisitedState State, RequirementResult Result)>();
-
+                bool foundStrategy = false;
+                Strat bestStrat = null!;
+                ForwardState bestState = default;
+                RequirementResult bestResult = default;
 
                 foreach (var unlockStrat in lck.UnlockStrats ?? [])
                 {
-                    var result = _requirementHandler.HandleRequirement(unlockStrat.Requires, lockState, inventory, (World)current.World, _currentWeapons);
+                    var strategyPlan = _searchModel.GetStrategyPlan(
+                        unlockStrat, _requirementHandler);
+                    var result = HandleRequirement(
+                        unlockStrat.Requires, strategyPlan.Requirement,
+                        lockState, inventory,
+                        (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
-                        AddUnvisited(current, lockState, result.Missing ?? []);
+                        AddUnvisited(current, lockState, result.Missing ?? EmptyMissing);
                         continue;
                     }
 
                     var cost = result.Cost!;
 
-                    var newState = lockState.ApplyCost(cost.Value, inventory, (World)current.World);
+                    var newState = lockState.ApplyCost(cost.Value, _searchContext);
                     if (newState == null)
                     {
-                        var missingCostItems = new HashSet<string>(result.Missing ?? []);
-                        if (lockState.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
-                        if (lockState.Missiles - cost.Value.Missiles <= 0) { missingCostItems.Add("Missile"); }
-                        if (lockState.SuperMissiles - cost.Value.SuperMissiles <= 0) { missingCostItems.Add("Super"); }
-                        if (lockState.PowerBombs - cost.Value.PowerBombs <= 0) { missingCostItems.Add("PowerBomb"); }
+                        var missingCostItems = new HashSet<string>(result.Missing ?? EmptyMissing);
+                        var available = lockState.ToVisited(_searchContext);
+                        if (available.Energy - cost.Value.Energy <= 0) { missingCostItems.Add("ETank"); }
+                        if (available.Missiles - cost.Value.Missiles <= 0) { missingCostItems.Add("Missile"); }
+                        if (available.SuperMissiles - cost.Value.SuperMissiles <= 0) { missingCostItems.Add("Super"); }
+                        if (available.PowerBombs - cost.Value.PowerBombs <= 0) { missingCostItems.Add("PowerBomb"); }
                         AddUnvisited(current, lockState, missingCostItems);
                         continue;
                     }
 
                     var finalState = newState.Value
-                        .WithObstacles(unlockStrat.ClearsObstacles ?? [])
-                        .WithoutObstacles(unlockStrat.ResetsObstacles ?? []);
+                        .WithObstacles(strategyPlan.ClearsObstacleMask)
+                        .WithoutObstacles(strategyPlan.ResetsObstacleMask);
 
-                    unlockStratStates.Add((unlockStrat, finalState, result));
-                }
-
-                if (unlockStratStates.Count == 0)
-                {
-
-                    return (null, [], null, null);
-                }
-
-                var (bestStrat, bestState, bestResult) = unlockStratStates.First();
-                foreach (var (unlockStrat, unlockStratState, result) in unlockStratStates)
-                {
-                    if (unlockStratState.Dominates(bestState))
+                    if (!foundStrategy || finalState.Dominates(bestState))
                     {
-                        bestState = unlockStratState;
+                        bestState = finalState;
                         bestStrat = unlockStrat;
                         bestResult = result;
                     }
+                    foundStrategy = true;
                 }
+
+                if (!foundStrategy)
+                    return (null, null, null, null);
 
                 lockState = bestState;
                 if (_capturePath)
                 {
-                    usedStrategies.Add(bestStrat.Name);
+                    usedStrategies = JoinStrategies(
+                        usedStrategies, bestStrat.Name);
                     combinedResult.Cost += bestResult.Cost!.Value;
                     combinedResult.MergeSuccess(bestResult);
                 }
                 foreach (var yield in lck.Yields ?? [])
                 {
                     var yieldItem = current.World.GetItem(yield);
-                    yields.Add((current, yieldItem), lockState);
+                    (yields ??= []).Add((current, yieldItem), lockState);
                 }
             }
         }
 
-        return (lockState, yields,
-            usedStrategies.Count == 0 ? null : string.Join("; ", usedStrategies),
-            usedStrategies.Count == 0 ? null : combinedResult);
+        return (lockState, yields, usedStrategies,
+            usedStrategies == null ? null : combinedResult);
     }
 
     IEnumerable<Randomizer.Graph.Vertex> ISearcher.GetEmptyLocationsInSet(ItemSetName itemSet, Dictionary<ItemSetName, int>? itemSets, bool onlyReachable)
@@ -822,103 +1078,127 @@ public class StatefulSearcher : ISearcher
         return _inventory.Clone();
     }
 
-    public bool BacktrackLocation(Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace)
+    public bool BacktrackLocation(
+        Vertex vertex, Vertex target, IItem itemToPlace)
     {
         // A location this searcher never reached (e.g. one only reachable with items
         // found in other games) has no state to backtrack from.
-        if (!_visitedItemLocations.TryGetValue(vertex, out var visited))
+        if (!_visitedItemLocations.TryGetValue(vertex, out var arrivals))
             return false;
 
-        var (startState, startFlags) = visited;
+        // Use the inventory fixed point resolved by the forward search for every
+        // reverse query from this searcher. This mirrors the paired traversal
+        // model: flags and fixed pickups that became safely collectable are global
+        // input to both passes, while only the local resource states differ by
+        // vertex. Using each arrival's intermediate inventory here caused an
+        // almost unique reverse traversal to be built for every candidate.
+        var reverseInventory = GetReverseInventory();
 
-        foreach (var flag in startFlags.All())
+        foreach (var arrival in arrivals)
         {
-            if (!inventory.Has(flag.Key))
-                inventory.AddItem(flag.Key);
+            if (EvaluateBacktrack(
+                    vertex, arrival.State, reverseInventory, target))
+                return true;
         }
 
-        while (inventory.Has(itemToPlace))
+        return false;
+    }
+
+    // Kept for source compatibility with callers written against the old API.
+    // Reverse traversal uses the searcher's settled inventory, not this snapshot.
+    public bool BacktrackLocation(
+        Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace) =>
+        BacktrackLocation(vertex, target, itemToPlace);
+
+    /// <summary>A read-only snapshot of the searcher's inventory for reverse
+    /// queries, reused until the inventory changes. Callers must not mutate it.</summary>
+    private Inventory GetReverseInventory()
+    {
+        if (_reverseInventory == null
+            || _reverseInventoryVersion != _inventory.Version)
         {
-            inventory.RemoveItem(itemToPlace);
+            _reverseInventory = _inventory.Clone();
+            _reverseInventoryVersion = _inventory.Version;
+        }
+        return _reverseInventory;
+    }
+
+    private void RecordForwardArrival(
+        Vertex vertex, ForwardState state)
+    {
+        if (!_visitedItemLocations.TryGetValue(vertex, out var arrivals))
+        {
+            _visitedItemLocations[vertex] =
+                [new ForwardArrival(state)];
+            return;
         }
 
-        var backtrackSearcher = new StatefulSearcher(_graph, vertex, inventory, null, target, startState);
-        if (!backtrackSearcher.HasVisited(target))
+        for (int index = 0; index < arrivals.Count; index++)
         {
+            if (arrivals[index].State.Dominates(state))
+                return;
+        }
+
+        int writeIndex = 0;
+        for (int index = 0; index < arrivals.Count; index++)
+        {
+            var arrival = arrivals[index];
+            if (!state.Dominates(arrival.State))
+                arrivals[writeIndex++] = arrival;
+        }
+        if (writeIndex < arrivals.Count)
+            arrivals.RemoveRange(writeIndex, arrivals.Count - writeIndex);
+        arrivals.Add(new ForwardArrival(state));
+    }
+
+    private bool EvaluateBacktrack(
+        Vertex vertex, ForwardState startState, Inventory inventory, Vertex target)
+    {
+        var arrivalState = startState.ToVisited(inventory, (World)vertex.World);
+        var targetRegion = _backtrackCache.GetRegion(_graph, target);
+        if (!targetRegion.Contains(vertex))
             return false;
-        }
 
-        return true;
+        var reverseSearch = _backtrackCache.GetReverseSearch(
+            target, targetRegion, inventory);
+        return reverseSearch.CanReturn(vertex, arrivalState);
     }
 
     public void ResumeSearch(IEnumerable<Randomizer.Graph.Vertex> startAt, Inventory prevInventory)
     {
+        var newStarts = startAt.Cast<Vertex>().ToList();
+        _persistentStarts.UnionWith(newStarts);
         var diffItems = _inventory.All().Except(prevInventory.All()).Where(x => x.Key.World == _start.World).Select(x => x.Key.Name).ToHashSet();
 
-        var newEnergy = (_inventory.GetCount(_start.World.GetItem("ETank")) - prevInventory.GetCount(_start.World.GetItem("ETank"))) * 100;
-        var newMissiles = (_inventory.GetCount(_start.World.GetItem("Missile")) - prevInventory.GetCount(_start.World.GetItem("Missile"))) * 5;
-        var newSupers = (_inventory.GetCount(_start.World.GetItem("Super")) - prevInventory.GetCount(_start.World.GetItem("Super"))) * 5;
-        var newPowerBombs = (_inventory.GetCount(_start.World.GetItem("PowerBomb")) - prevInventory.GetCount(_start.World.GetItem("PowerBomb"))) * 5;
 
-        // Add new items to all unvisited states
-        _unvisitedStates = _unvisitedStates.ToDictionary(x => x.Key, x => (x.Value.Item1, x.Value.Item2.Select(s => s with
+        foreach (int vertexId in _unvisitedStateIds)
         {
-            Energy = s.Energy + newEnergy,
-            Missiles = s.Missiles + newMissiles,
-            SuperMissiles = s.SuperMissiles + newSupers,
-            PowerBombs = s.PowerBombs + newPowerBombs
-        }).ToList()));
-
-
-        foreach (var (vertex, states) in _unvisitedStates)
-        {
-            if (states.Item1.Overlaps(diffItems))
+            var states = _unvisitedStates[vertexId];
+            if (states != null && SetsOverlap(states.MissingItems, diffItems))
             {
-                foreach (var state in states.Item2)
+                var vertex = _searchModel.VerticesById[vertexId]!;
+                foreach (var state in states.States)
                 {
                     _startStates.Add((vertex, state));
                 }
             }
         }
 
-        foreach (Vertex start in startAt)
+        foreach (Vertex start in newStarts)
         {
             if (!_visitedVertices.Contains(start))
             {
-                _startStates.Add((start, new VisitedState
-                {
-                    Energy = 99 + _inventory.GetCount(start.World.GetItem("ETank")) * 100,
-                    Missiles = _inventory.GetCount(start.World.GetItem("Missile")) * 5,
-                    SuperMissiles = _inventory.GetCount(start.World.GetItem("Super")) * 5,
-                    PowerBombs = _inventory.GetCount(start.World.GetItem("PowerBomb")) * 5,
-                    ObstacleBitFlags = 0
-                }));
+                _startStates.Add((start, ForwardState.Empty));
             }
         }
 
-        // Update all visited states with new energy/ammo where the visited states is not in the start states
-        var startStateKeys = _startStates
-            .Select(s => s.Item1)
-            .ToHashSet();
-
-        _visitedStates = _visitedStates
-            .Where(kvp => !startStateKeys.Contains(kvp.Key))
-            .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value
-                    .Select(s => s with
-                    {
-                        Energy = s.Energy + newEnergy,
-                        Missiles = s.Missiles + newMissiles,
-                        SuperMissiles = s.SuperMissiles + newSupers,
-                        PowerBombs = s.PowerBombs + newPowerBombs
-                    })
-                    .ToList()
-            );
+        // Debt states do not change when inventory capacity increases.
+        foreach (var (vertex, _) in _startStates)
+            _visitedStates[vertex.Id].Clear();
 
         if (_startStates.Count > 0)
         {
-            Search([]);
+            SearchForward([]);
         }
     }
 
@@ -930,6 +1210,15 @@ public class StatefulSearcher : ISearcher
     internal StatefulPickup? GetPickupDetails(Randomizer.Graph.Vertex location, IItem item) =>
         _pickupDetails.GetValueOrDefault((location, item));
 
+    private sealed class UnvisitedFrontier(
+        HashSet<string> missingItems, List<ForwardState> states)
+    {
+        public HashSet<string> MissingItems { get; } = missingItems;
+        public List<ForwardState> States { get; } = states;
+    }
+
+    private readonly record struct ForwardArrival(ForwardState State);
+
     /// <summary>Item locations that can actually be opened, plus fixed flags yielded
     /// by strategies. Randomized item contents are included even when collection was
     /// disabled for sphere generation.</summary>
@@ -940,8 +1229,8 @@ public class StatefulSearcher : ISearcher
             if (location.Item != null)
                 yield return (location, _pickupDetails.GetValueOrDefault(
                     (location, location.Item),
-                    new StatefulPickup(location.Item, null, new Dictionary<IItem, int>(),
-                        new Dictionary<string, int>())));
+                    new StatefulPickup(location.Item, null, EmptyRequirements,
+                        EmptyResources)));
         }
 
         foreach (var ((location, item), _) in _prevItems)
@@ -949,10 +1238,271 @@ public class StatefulSearcher : ISearcher
             if (!ReferenceEquals(location.Item, item))
                 yield return (location, _pickupDetails.GetValueOrDefault(
                     (location, item),
-                    new StatefulPickup(item, null, new Dictionary<IItem, int>(),
-                        new Dictionary<string, int>())));
+                    new StatefulPickup(item, null, EmptyRequirements,
+                        EmptyResources)));
         }
     }
+}
+
+internal struct ForwardStateFrontier
+{
+    private const int InlineCapacity = 4;
+    private ForwardState _state0;
+    private ForwardState _state1;
+    private ForwardState _state2;
+    private ForwardState _state3;
+    private List<ForwardState>? _overflow;
+
+    public int Count { get; private set; }
+    public readonly bool IsEmpty => Count == 0;
+
+    public bool AddNondominated(ForwardState candidate)
+    {
+        for (int index = 0; index < Count; index++)
+        {
+            if (Get(index).Dominates(candidate))
+                return false;
+        }
+
+        int writeIndex = 0;
+        int originalCount = Count;
+        for (int index = 0; index < originalCount; index++)
+        {
+            var existing = Get(index);
+            if (!candidate.Dominates(existing))
+                Set(writeIndex++, existing);
+        }
+        Truncate(writeIndex);
+        AddUnchecked(candidate);
+        return true;
+    }
+
+    public void RemoveEqual(ForwardState state)
+    {
+        int writeIndex = 0;
+        int originalCount = Count;
+        for (int index = 0; index < originalCount; index++)
+        {
+            var candidate = Get(index);
+            if (!candidate.Equals(state))
+                Set(writeIndex++, candidate);
+        }
+        Truncate(writeIndex);
+    }
+
+    public void SetSingle(ForwardState state)
+    {
+        Clear();
+        AddUnchecked(state);
+    }
+
+    public void Clear()
+    {
+        _state0 = default;
+        _state1 = default;
+        _state2 = default;
+        _state3 = default;
+        _overflow?.Clear();
+        Count = 0;
+    }
+
+    private readonly ForwardState Get(int index) => index switch
+    {
+        0 => _state0,
+        1 => _state1,
+        2 => _state2,
+        3 => _state3,
+        _ => _overflow![index - InlineCapacity],
+    };
+
+    private void Set(int index, ForwardState state)
+    {
+        switch (index)
+        {
+            case 0:
+                _state0 = state;
+                break;
+            case 1:
+                _state1 = state;
+                break;
+            case 2:
+                _state2 = state;
+                break;
+            case 3:
+                _state3 = state;
+                break;
+            default:
+                _overflow![index - InlineCapacity] = state;
+                break;
+        }
+    }
+
+    private void AddUnchecked(ForwardState state)
+    {
+        switch (Count)
+        {
+            case 0:
+                _state0 = state;
+                break;
+            case 1:
+                _state1 = state;
+                break;
+            case 2:
+                _state2 = state;
+                break;
+            case 3:
+                _state3 = state;
+                break;
+            default:
+                (_overflow ??= new List<ForwardState>(InlineCapacity)).Add(state);
+                break;
+        }
+        Count++;
+    }
+
+    private void Truncate(int count)
+    {
+        int retainedOverflow = Math.Max(0, count - InlineCapacity);
+        if (_overflow != null && _overflow.Count > retainedOverflow)
+            _overflow.RemoveRange(
+                retainedOverflow, _overflow.Count - retainedOverflow);
+
+        if (count < 4)
+            _state3 = default;
+        if (count < 3)
+            _state2 = default;
+        if (count < 2)
+            _state1 = default;
+        if (count < 1)
+            _state0 = default;
+        Count = count;
+    }
+}
+
+internal sealed class SearchContext
+{
+    public SearchContext(Inventory inventory, World world)
+    {
+        EnergyCapacity = 99 + inventory.GetCount(world.GetItem("ETank")) * 100;
+        MissileCapacity = inventory.GetCount(world.GetItem("Missile")) * 5;
+        SuperMissileCapacity = inventory.GetCount(world.GetItem("Super")) * 5;
+        PowerBombCapacity = inventory.GetCount(world.GetItem("PowerBomb")) * 5;
+    }
+
+    public int EnergyCapacity { get; }
+    public int MissileCapacity { get; }
+    public int SuperMissileCapacity { get; }
+    public int PowerBombCapacity { get; }
+}
+
+internal readonly record struct ForwardState(
+    int EnergyDebt,
+    int MissileDebt,
+    int SuperMissileDebt,
+    int PowerBombDebt,
+    int ObstacleBitFlags,
+    int DoorUnlockedFlags)
+{
+    public static ForwardState Empty => new(0, 0, 0, 0, 0, 0);
+
+    public static ForwardState FromVisited(
+        VisitedState state, Inventory inventory, World world) => new(
+        Math.Max(0, EnergyCapacity(inventory, world) - state.Energy),
+        Math.Max(0, MissileCapacity(inventory, world) - state.Missiles),
+        Math.Max(0, SuperCapacity(inventory, world) - state.SuperMissiles),
+        Math.Max(0, PowerBombCapacity(inventory, world) - state.PowerBombs),
+        state.ObstacleBitFlags,
+        state.DoorUnlockedFlags);
+
+    public VisitedState ToVisited(Inventory inventory, World world) => new()
+    {
+        Energy = Math.Max(0, EnergyCapacity(inventory, world) - EnergyDebt),
+        Missiles = Math.Max(0, MissileCapacity(inventory, world) - MissileDebt),
+        SuperMissiles = Math.Max(0,
+            SuperCapacity(inventory, world) - SuperMissileDebt),
+        PowerBombs = Math.Max(0,
+            PowerBombCapacity(inventory, world) - PowerBombDebt),
+        ObstacleBitFlags = ObstacleBitFlags,
+        DoorUnlockedFlags = DoorUnlockedFlags,
+    };
+
+    public VisitedState ToVisited(SearchContext context) => new()
+    {
+        Energy = Math.Max(0, context.EnergyCapacity - EnergyDebt),
+        Missiles = Math.Max(0, context.MissileCapacity - MissileDebt),
+        SuperMissiles = Math.Max(0,
+            context.SuperMissileCapacity - SuperMissileDebt),
+        PowerBombs = Math.Max(0,
+            context.PowerBombCapacity - PowerBombDebt),
+        ObstacleBitFlags = ObstacleBitFlags,
+        DoorUnlockedFlags = DoorUnlockedFlags,
+    };
+
+    public ForwardState? ApplyCost(RequirementCost cost, SearchContext context)
+    {
+        int energy = context.EnergyCapacity - EnergyDebt;
+        int missiles = context.MissileCapacity - MissileDebt;
+        int supers = context.SuperMissileCapacity - SuperMissileDebt;
+        int powerBombs = context.PowerBombCapacity - PowerBombDebt;
+
+        if (cost.Energy > 0x8000)
+            cost.Energy = Math.Min(energy, cost.Energy & 0x7fff);
+        if (cost.Missiles > 0x8000)
+            cost.Missiles = Math.Min(missiles, cost.Missiles & 0x7fff);
+        if (cost.SuperMissiles > 0x8000)
+            cost.SuperMissiles = Math.Min(supers, cost.SuperMissiles & 0x7fff);
+        if (cost.PowerBombs > 0x8000)
+            cost.PowerBombs = Math.Min(powerBombs, cost.PowerBombs & 0x7fff);
+
+        if (missiles - cost.Missiles < 0)
+        {
+            int difference = cost.Missiles - missiles;
+            cost.Missiles = missiles;
+            cost.SuperMissiles += (difference + 2) / 3;
+        }
+
+        if (energy - cost.Energy < 0
+            || missiles - cost.Missiles < 0
+            || supers - cost.SuperMissiles < 0
+            || powerBombs - cost.PowerBombs < 0)
+            return null;
+
+        return this with
+        {
+            EnergyDebt = Math.Max(0, EnergyDebt + cost.Energy),
+            MissileDebt = Math.Max(0, MissileDebt + cost.Missiles),
+            SuperMissileDebt = Math.Max(
+                0, SuperMissileDebt + cost.SuperMissiles),
+            PowerBombDebt = Math.Max(0, PowerBombDebt + cost.PowerBombs),
+        };
+    }
+
+    public bool Dominates(ForwardState other) =>
+        EnergyDebt <= other.EnergyDebt
+        && SuperMissileDebt <= other.SuperMissileDebt
+        && MissileDebt + SuperMissileDebt * 3
+            <= other.MissileDebt + other.SuperMissileDebt * 3
+        && PowerBombDebt <= other.PowerBombDebt
+        && (ObstacleBitFlags & other.ObstacleBitFlags)
+            == other.ObstacleBitFlags;
+
+    public ForwardState WithDoorUnlocked(int node) =>
+        this with { DoorUnlockedFlags = DoorUnlockedFlags | (1 << node) };
+
+    public ForwardState WithObstacles(int obstacleMask) =>
+        this with { ObstacleBitFlags = ObstacleBitFlags | obstacleMask };
+
+    public ForwardState WithoutObstacles(int obstacleMask) =>
+        this with { ObstacleBitFlags = ObstacleBitFlags & ~obstacleMask };
+
+    private static int EnergyCapacity(Inventory inventory, World world) =>
+        99 + inventory.GetCount(world.GetItem("ETank")) * 100;
+    private static int MissileCapacity(Inventory inventory, World world) =>
+        inventory.GetCount(world.GetItem("Missile")) * 5;
+    private static int SuperCapacity(Inventory inventory, World world) =>
+        inventory.GetCount(world.GetItem("Super")) * 5;
+    private static int PowerBombCapacity(Inventory inventory, World world) =>
+        inventory.GetCount(world.GetItem("PowerBomb")) * 5;
 }
 
 public struct VisitedState
@@ -967,6 +1517,7 @@ public struct VisitedState
     public bool Dominates(VisitedState other)
     {
         return Energy >= other.Energy
+            && SuperMissiles >= other.SuperMissiles
             && (Missiles + SuperMissiles * 3) >= (other.Missiles + other.SuperMissiles * 3)
             && PowerBombs >= other.PowerBombs
             && (ObstacleBitFlags & other.ObstacleBitFlags) == other.ObstacleBitFlags;
@@ -989,7 +1540,7 @@ public struct VisitedState
         {
             var diff = Math.Abs(Missiles - cost.Missiles);
             cost.Missiles = Missiles;
-            cost.SuperMissiles += (int)Math.Ceiling(diff / 3.0m);
+            cost.SuperMissiles += (diff + 2) / 3;
         }
 
         // Check if we have enough resources to apply the cost, and also handle refilling (negative numbers by checking against the max values in our inventory)

@@ -24,6 +24,7 @@ public class GraphPreprocessor
     private readonly World _world;
     private readonly SmGraph _graph;
     private readonly List<string> _allowedTechs;
+    private readonly Dictionary<(int RoomId, int NodeId), Vertex> _verticesByNode = [];
 
     public GraphPreprocessor(JsonReader reader, World world)
     {
@@ -419,15 +420,16 @@ public class GraphPreprocessor
                 };
 
                 _graph.AddVertex(vertex);
+                _verticesByNode.Add((room.Id, node.Id), vertex);
             }
 
             // Connect in-room links
             foreach (var link in room.Links)
             {
-                var fromVtx = _graph.Vertices.First(v => v.RoomId == room.Id && v.Node!.Id == link.From);
+                var fromVtx = VertexAt(room.Id, link.From);
                 foreach (var linkTo in link.To)
                 {
-                    var toVtx = _graph.Vertices.First(v => v.RoomId == room.Id && v.Node!.Id == linkTo.Id);
+                    var toVtx = VertexAt(room.Id, linkTo.Id);
                     var linkStrats = room.Strats.Where(s => s.Link![0] == link.From && s.Link![1] == linkTo.Id && (s.ExitCondition == null || s.ExitCondition is ExitCondition.LeaveNormally || s.ExitCondition is ExitCondition.LeaveWithRunway) &&
                         (s.EntranceCondition == null || 
                          s.EntranceCondition is EntranceCondition.ComeInNormally ||
@@ -453,8 +455,10 @@ public class GraphPreprocessor
         // Connect rooms
         foreach (var connection in _reader.Connections.SelectMany(c => c.Connections))
         {
-            var fromVtx = _graph.Vertices.First(v => v.RoomId == connection.Nodes[0].RoomId && v.Node!.Id == connection.Nodes[0].NodeId);
-            var toVtx = _graph.Vertices.First(v => v.RoomId == connection.Nodes[1].RoomId && v.Node!.Id == connection.Nodes[1].NodeId);
+            var fromVtx = VertexAt(
+                connection.Nodes[0].RoomId, connection.Nodes[0].NodeId);
+            var toVtx = VertexAt(
+                connection.Nodes[1].RoomId, connection.Nodes[1].NodeId);
 
             var fromNode = fromVtx.Node!;
             var toNode = toVtx.Node!;
@@ -566,13 +570,16 @@ public class GraphPreprocessor
                 newFromStrat.Requires = OptimizeRequirement(
                     new Requirement.And(requirements.ToArray()));
 
-                var fromStratVtx = _graph.Vertices.First(v => v.RoomId == fromVtx.RoomId && v.Node!.Id == strat.Link![0]);
-                var targetStratVtx = _graph.Vertices.First(v => v.RoomId == toVtx.RoomId && v.Node!.Id == targetStrat.Link![0]);
+                var fromStratVtx = VertexAt(fromVtx.RoomId, strat.Link![0]);
+                var targetStratVtx = VertexAt(toVtx.RoomId, targetStrat.Link![0]);
 
                 _graph.AddDirected(fromStratVtx, targetStratVtx, [newFromStrat]);
             }
         }
     }
+
+    private Vertex VertexAt(int roomId, int nodeId) =>
+        _verticesByNode[(roomId, nodeId)];
 
     public Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
     {
