@@ -223,6 +223,26 @@ public sealed class PlaythroughTest
     }
 
     [TestMethod]
+    public void EnemyKillFailure_ReportsWaveItemDependency()
+    {
+        var graph = new Randomizer.Graph.Graph();
+        var world = new World(0, new WorldConfig
+        {
+            SuperMetroid = new Config(),
+        }, graph, new PRNG(1234));
+        graph.SetVertexIds();
+        var requirement = new Requirement.EnemyKill([["Zoomer"]]);
+
+        var result = world.RequirementHandler.HandleRequirement(
+            requirement, new VisitedState { Energy = 99 },
+            new Inventory(), world, []);
+
+        Assert.IsFalse(result.Met);
+        CollectionAssert.Contains(result.Missing!.ToList(), "Wave");
+        CollectionAssert.DoesNotContain(result.Missing!.ToList(), "WaveBeam");
+    }
+
+    [TestMethod]
     public void RequirementCostOr_UsesEachOperandsPowerBombCount()
     {
         var powerBombCost = new RequirementCost { PowerBombs = 2 };

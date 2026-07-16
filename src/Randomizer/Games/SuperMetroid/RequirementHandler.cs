@@ -457,7 +457,7 @@ public class RequirementHandler
                     return RequirementResult.Fail(new[]
                     {
                         "Missile", "Super", "PowerBomb", "Charge", "Ice",
-                        "Spazer", "WaveBeam", "Plasma", "ScrewAttack", "Bombs"
+                        "Spazer", "Wave", "Plasma", "ScrewAttack", "Bombs"
                     });
                 }
 
@@ -489,7 +489,7 @@ public class RequirementHandler
                         return RequirementResult.Fail(new[]
                         {
                             "Missile", "Super", "PowerBomb", "Charge", "Ice",
-                            "Spazer", "WaveBeam", "Plasma", "ScrewAttack", "Bombs"
+                            "Spazer", "Wave", "Plasma", "ScrewAttack", "Bombs"
                         });
                     }
                 }

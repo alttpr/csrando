@@ -12,7 +12,12 @@ public sealed class GenerationRegressionTest
     [DoNotParallelize]
     [DataRow(9881)]
     [DataRow(9903)]
-    public void CorrectSuperMissileDominance_StillProducesWinnableSeed(int seed)
+    [DataRow(9908)]
+    [DataRow(9917)]
+    [DataRow(9931)]
+    [DataRow(9955)]
+    [DataRow(9970)]
+    public void SettledSearchAndFillRetries_ProduceWinnableSeed(int seed)
     {
         var config = new WorldConfig
         {

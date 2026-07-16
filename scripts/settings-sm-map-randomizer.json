@@ -7,6 +7,9 @@
     },
     "SuperMetroid": {
       "MapRandomizer": "Standard"
+    },
+    "Metroid": {
+      "MapShuffle": true
     }
   }
 ]

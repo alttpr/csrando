@@ -105,14 +105,19 @@ def bar_chart(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("csv", type=Path, help="metrics CSV emitted by the randomizer")
+    parser.add_argument(
+        "csv", type=Path, nargs="+",
+        help="one or more metrics CSV files emitted by the randomizer",
+    )
     parser.add_argument("--out", type=Path, default=Path("sm-backtracking-report.html"))
     parser.add_argument("--baseline", help="label to use as the performance baseline")
     parser.add_argument("--title", default="Super Metroid backtracking performance")
     args = parser.parse_args()
 
-    with args.csv.open(newline="", encoding="utf-8") as source:
-        rows = list(csv.DictReader(source))
+    rows: list[dict[str, str]] = []
+    for csv_path in args.csv:
+        with csv_path.open(newline="", encoding="utf-8") as source:
+            rows.extend(csv.DictReader(source))
     if not rows:
         raise SystemExit("Metrics CSV has no data rows")
 
@@ -226,7 +231,7 @@ svg {{ width: 100%; min-width: 620px; }} .axis {{ stroke: #89919e; }}
 <div class="card">{bar_chart(summaries, 'mean_ms', 'Mean full seed generation time', ' ms')}</div>
 <div class="card">{bar_chart(summaries, 'reverse_build_ms', 'Total reverse traversal build time', ' ms')}</div>
 <div class="card">{bar_chart(summaries, 'resolved_pct', 'Backtrack checks resolved without fallback', '%')}</div>
-<p class="note">Generated from {html.escape(str(args.csv))}. Lower generation time and fallback rate are better.</p>
+<p class="note">Generated from {html.escape(', '.join(map(str, args.csv)))}. Lower generation time and fallback rate are better.</p>
 </body></html>"""
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(document, encoding="utf-8")
