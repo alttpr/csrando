@@ -59,6 +59,9 @@ public class StatefulSearcher : ISearcher
     private readonly bool _trackMetrics;
     private readonly bool _isBacktrackSearch;
     private bool _settledRestartActive;
+    private int _currentWeaponsInventoryVersion = -1;
+    private Inventory? _reverseInventory;
+    private int _reverseInventoryVersion = -1;
     private SearchContext _searchContext = null!;
     private int _dequeuedStateCount;
     private long _metricDequeuedStates;
@@ -219,7 +222,7 @@ public class StatefulSearcher : ISearcher
                 // the shared reverse inventory.
                 while (backtrackCandidates.Count > 0)
                 {
-                    var reverseInventory = _inventory.Clone();
+                    var reverseInventory = GetReverseInventory();
                     var rejected = backtrackCandidates
                         .Where(candidate => !EvaluateBacktrack(
                             candidate.Item1, candidate.Value,
@@ -356,6 +359,7 @@ public class StatefulSearcher : ISearcher
         _inQueueIds.Clear();
         _otherWorldLocations.Clear();
         _currentWeapons.Clear();
+        _currentWeaponsInventoryVersion = -1;
         _deferredBacktrackValidation.Clear();
         _predecessors.Clear();
         _recordedUnlocks.Clear();
@@ -397,16 +401,22 @@ public class StatefulSearcher : ISearcher
             _inQueueTouched[vertexId] = false;
         }
         _inQueueIds.Clear();
-        _currentWeapons.Clear();
-        _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
-            .Where(weapon =>
-            {
-                if (_trackMetrics)
-                    _metricRequirementEvaluations++;
-                return _requirementHandler.HandleRequirement(
-                    weapon.UseRequires, new VisitedState(), inventory,
-                    (World)_start.World, [], captureDetails: false).Met;
-            }));
+        // The usable weapon set depends only on the inventory, which does not
+        // change within a pass, so recompute it only when the inventory has.
+        if (_currentWeaponsInventoryVersion != inventory.Version)
+        {
+            _currentWeaponsInventoryVersion = inventory.Version;
+            _currentWeapons.Clear();
+            _currentWeapons.UnionWith(((World)_start.World).JsonData.Weapons.Weapons
+                .Where(weapon =>
+                {
+                    if (_trackMetrics)
+                        _metricRequirementEvaluations++;
+                    return _requirementHandler.HandleRequirement(
+                        weapon.UseRequires, new VisitedState(), inventory,
+                        (World)_start.World, [], captureDetails: false).Met;
+                }));
+        }
 
         foreach (var start in starts)
         {
@@ -621,8 +631,8 @@ public class StatefulSearcher : ISearcher
                     var strategyPlan = _searchModel.GetStrategyPlan(
                         strat, _requirementHandler);
                     var result = HandleRequirement(
-                        strat.Requires, state, inventory,
-                        (World)current.World, _currentWeapons);
+                        strat.Requires, strategyPlan.Requirement, state,
+                        inventory, (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
                         AddUnvisited(current, state, result.Missing ?? []);
@@ -744,22 +754,55 @@ public class StatefulSearcher : ISearcher
     private RequirementResult HandleRequirement(
         Requirement requirement, ForwardState state, Inventory inventory,
         World world, HashSet<Weapon> weapons)
+        => HandleRequirement(
+            requirement,
+            _searchModel.GetRequirementPlan(requirement, _requirementHandler),
+            state, inventory, world, weapons);
+
+    private RequirementResult HandleRequirement(
+        Requirement requirement, in CompiledRequirementPlan plan,
+        ForwardState state, Inventory inventory,
+        World world, HashSet<Weapon> weapons)
     {
         if (_trackMetrics)
             _metricRequirementEvaluations++;
-        var plan = _searchModel.GetRequirementPlan(
-            requirement, _requirementHandler);
-        if (!_capturePath && !plan.StateDependent
-            && _searchModel.TryGetRequirementResult(
-                plan.Id, _requirementCacheEpoch, out var cached))
-            return cached;
+        // Results are cacheable per epoch unless they read resources: the
+        // inventory, flag set, and weapon set are all fixed within one epoch,
+        // and graph-state readers depend only on the masked obstacle/door bits
+        // that become part of the cache key.
+        bool cacheable = !_capturePath && !plan.ResourceDependent;
+        if (cacheable)
+        {
+            if (!plan.GraphStateDependent)
+            {
+                if (_searchModel.TryGetRequirementResult(
+                        plan.Id, _requirementCacheEpoch, out var cached))
+                    return cached;
+            }
+            else if (_searchModel.TryGetStateRequirementResult(
+                         plan.Id, _requirementCacheEpoch,
+                         state.ObstacleBitFlags & plan.ObstacleMask,
+                         state.DoorUnlockedFlags & plan.DoorMask,
+                         out var cachedState))
+            {
+                return cachedState;
+            }
+        }
 
         var result = _requirementHandler.HandleRequirement(
             requirement, state.ToVisited(_searchContext), inventory, world,
             weapons, captureDetails: _capturePath);
-        if (!_capturePath && !plan.StateDependent)
-            _searchModel.SetRequirementResult(
-                plan.Id, _requirementCacheEpoch, result);
+        if (cacheable)
+        {
+            if (!plan.GraphStateDependent)
+                _searchModel.SetRequirementResult(
+                    plan.Id, _requirementCacheEpoch, result);
+            else
+                _searchModel.SetStateRequirementResult(
+                    plan.Id, _requirementCacheEpoch,
+                    state.ObstacleBitFlags & plan.ObstacleMask,
+                    state.DoorUnlockedFlags & plan.DoorMask, result);
+        }
         return result;
     }
 
@@ -957,7 +1000,8 @@ public class StatefulSearcher : ISearcher
                     var strategyPlan = _searchModel.GetStrategyPlan(
                         unlockStrat, _requirementHandler);
                     var result = HandleRequirement(
-                        unlockStrat.Requires, lockState, inventory,
+                        unlockStrat.Requires, strategyPlan.Requirement,
+                        lockState, inventory,
                         (World)current.World, _currentWeapons);
                     if (!result.Met)
                     {
@@ -1079,7 +1123,7 @@ public class StatefulSearcher : ISearcher
         // input to both passes, while only the local resource states differ by
         // vertex. Using each arrival's intermediate inventory here caused an
         // almost unique reverse traversal to be built for every candidate.
-        var reverseInventory = _inventory.Clone();
+        var reverseInventory = GetReverseInventory();
 
         foreach (var arrival in arrivals)
         {
@@ -1096,6 +1140,19 @@ public class StatefulSearcher : ISearcher
     public bool BacktrackLocation(
         Vertex vertex, Inventory inventory, Vertex target, IItem itemToPlace) =>
         BacktrackLocation(vertex, target, itemToPlace);
+
+    /// <summary>A read-only snapshot of the searcher's inventory for reverse
+    /// queries, reused until the inventory changes. Callers must not mutate it.</summary>
+    private Inventory GetReverseInventory()
+    {
+        if (_reverseInventory == null
+            || _reverseInventoryVersion != _inventory.Version)
+        {
+            _reverseInventory = _inventory.Clone();
+            _reverseInventoryVersion = _inventory.Version;
+        }
+        return _reverseInventory;
+    }
 
     private void RecordForwardArrival(
         Vertex vertex, ForwardState state)

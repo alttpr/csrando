@@ -225,7 +225,8 @@ internal sealed class ReverseBacktrackSearch
             foreach (var state in states)
             {
                 if (nodeLock.Lock != null
-                    && !EvaluateRequirement(state, nodeLock.Lock).Met)
+                    && !EvaluateRequirement(state, nodeLock.Lock,
+                        _model.GetRequirementPlan(nodeLock.Lock, _handler)).Met)
                 {
                     _unlockCandidates.Add(state);
                     continue;
@@ -263,14 +264,15 @@ internal sealed class ReverseBacktrackSearch
             return;
 
         AddRequirementMatches(
-            predecessor.Value, strategy.Requires, allowedNewFlags, output);
+            predecessor.Value, strategy.Requires, plan.Requirement,
+            allowedNewFlags, output);
     }
 
     private void AddRequirementMatches(
         ReverseState state, Requirement requirement,
+        in CompiledRequirementPlan plan,
         ulong allowedNewFlags, List<ReverseState> output)
     {
-        var plan = _model.GetRequirementPlan(requirement, _handler);
         int obstacleMask = plan.ObstacleMask;
         int doorMask = plan.DoorMask;
         ulong flagMask = plan.FlagMask & ~_inventoryFlagMask & allowedNewFlags;
@@ -300,7 +302,8 @@ internal sealed class ReverseBacktrackSearch
                                     DoorUnlockedFlags = state.DoorUnlockedFlags | doorValues,
                                     RequiredFlagMask = state.RequiredFlagMask | flagValues,
                                 };
-                                var result = EvaluateRequirement(candidate, requirement);
+                                var result = EvaluateRequirement(
+                                    candidate, requirement, plan);
                                 if (result.Met && result.Cost is { } cost
                                     && candidate.ApplyCost(cost) is { } withCost)
                                     output.Add(withCost);
@@ -322,11 +325,17 @@ internal sealed class ReverseBacktrackSearch
     }
 
     private RequirementResult EvaluateRequirement(
-        ReverseState state, Requirement requirement)
+        ReverseState state, Requirement requirement,
+        in CompiledRequirementPlan plan)
     {
+        // The tree reads graph state and event flags only through the bits
+        // named by its compiled masks, resources are constant in reverse
+        // evaluation, and the weapon set and inventory are fixed per search,
+        // so states agreeing on the masked bits share one result.
         var key = new RequirementEvaluationKey(
-            requirement, state.RequiredObstacleBitFlags,
-            state.DoorUnlockedFlags, state.RequiredFlagMask);
+            plan.Id, state.RequiredObstacleBitFlags & plan.ObstacleMask,
+            state.DoorUnlockedFlags & plan.DoorMask,
+            state.RequiredFlagMask & plan.FlagMask);
         if (_requirementResults.TryGetValue(key, out var cached))
             return cached;
 
@@ -566,7 +575,7 @@ internal sealed class ReverseBacktrackSearch
     }
 
     private readonly record struct RequirementEvaluationKey(
-        Requirement Requirement,
+        int RequirementPlanId,
         int ObstacleBitFlags,
         int DoorUnlockedFlags,
         ulong RequiredFlagMask);

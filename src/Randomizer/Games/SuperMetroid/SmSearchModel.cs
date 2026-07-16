@@ -101,12 +101,16 @@ internal sealed class SmSearchModel
     private readonly Dictionary<int, ulong> _flagsProducedByRoom = [];
     private readonly Dictionary<Requirement, CompiledRequirementPlan>
         _requirements = new(ReferenceEqualityComparer.Instance);
+    // Requirement evaluation is a pure function of the requirement's value, so
+    // value-equal instances (records) can share one cache id and therefore one
+    // cached result slot.
+    private readonly Dictionary<Requirement, int> _requirementIdsByValue = [];
     private int _nextRequirementId;
     private RequirementResult[] _requirementResults = [];
     private int[] _requirementResultEpochs = [];
     private int _requirementCacheEpoch;
-    private readonly Dictionary<Strat, CompiledStrategyPlan> _strategies =
-        new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<StateRequirementKey,
+        (int Epoch, RequirementResult Result)> _stateRequirementResults = [];
 
     public ulong FlagMask(IEnumerable<string>? flags)
     {
@@ -154,10 +158,10 @@ internal sealed class SmSearchModel
             var result = current switch
             {
                 Requirement.ObstaclesCleared cleared => new(
-                    RequirementHandler.ObstacleMaskFromArray(cleared.Obstacles), 0, 0, true),
+                    RequirementHandler.ObstacleMaskFromArray(cleared.Obstacles), 0, 0),
                 Requirement.ObstaclesNotCleared notCleared => new(
-                    RequirementHandler.ObstacleMaskFromArray(notCleared.Obstacles), 0, 0, true),
-                Requirement.DoorUnlockedAtNode door => new(0, 1 << door.Node, 0, true),
+                    RequirementHandler.ObstacleMaskFromArray(notCleared.Obstacles), 0, 0),
+                Requirement.DoorUnlockedAtNode door => new(0, 1 << door.Node, 0),
                 Requirement.Single single when single.Req.StartsWith(
                     "f_", StringComparison.Ordinal) => new(
                     0, 0, FlagMask([single.Req])),
@@ -178,12 +182,24 @@ internal sealed class SmSearchModel
                         $"t_{tech.TechRequirement}", out var helper) => Compile(helper),
                 Requirement.ResourceAvailable
                     or Requirement.HeatFramesWithEnergyDrops
-                    or Requirement.Shinespark
-                    or Requirement.EnemyKill => new(0, 0, 0, true),
+                    or Requirement.Shinespark => new(0, 0, 0, true),
+                // EnemyKill reads only the weapon set and inventory unless
+                // details are captured, and result caching is disabled for
+                // detail-capturing searches. Both inputs are fixed within one
+                // requirement-cache epoch, so its results are cacheable.
+                Requirement.EnemyKill => new(0, 0, 0),
                 _ => default,
             };
             visiting.Remove(current);
-            result = result with { Id = _nextRequirementId++ };
+            if (_requirementIdsByValue.TryGetValue(current, out int sharedId))
+            {
+                result = result with { Id = sharedId };
+            }
+            else
+            {
+                result = result with { Id = _nextRequirementId++ };
+                _requirementIdsByValue[current] = result.Id;
+            }
             _requirements[current] = result;
             return result;
         }
@@ -200,7 +216,10 @@ internal sealed class SmSearchModel
     public CompiledStrategyPlan GetStrategyPlan(
         Strat strategy, RequirementHandler handler)
     {
-        if (_strategies.TryGetValue(strategy, out var plan))
+        // Every strategy belongs to exactly one world's data model, and each
+        // (graph, world) pair owns exactly one SmSearchModel, so the compiled
+        // plan can live on the strategy itself instead of a lookup table.
+        if (strategy.CompiledPlan is { } plan)
             return plan;
         plan = new CompiledStrategyPlan(
             GetRequirementPlan(strategy.Requires, handler),
@@ -209,7 +228,7 @@ internal sealed class SmSearchModel
             RequirementHandler.ObstacleMaskFromArray(
                 strategy.ResetsObstacles ?? []),
             FlagMask(strategy.SetsFlags));
-        _strategies[strategy] = plan;
+        strategy.CompiledPlan = plan;
         return plan;
     }
 
@@ -218,10 +237,40 @@ internal sealed class SmSearchModel
         if (++_requirementCacheEpoch == 0)
         {
             Array.Clear(_requirementResultEpochs);
+            _stateRequirementResults.Clear();
             _requirementCacheEpoch = 1;
         }
         return _requirementCacheEpoch;
     }
+
+    internal bool TryGetStateRequirementResult(
+        int requirementId, int epoch, int obstacleBits, int doorBits,
+        out RequirementResult result)
+    {
+        if (_stateRequirementResults.TryGetValue(
+                new StateRequirementKey(requirementId, obstacleBits, doorBits),
+                out var entry)
+            && entry.Epoch == epoch)
+        {
+            result = entry.Result;
+            return true;
+        }
+        result = default;
+        return false;
+    }
+
+    internal void SetStateRequirementResult(
+        int requirementId, int epoch, int obstacleBits, int doorBits,
+        RequirementResult result)
+    {
+        if (requirementId < 0 || epoch != _requirementCacheEpoch)
+            return;
+        _stateRequirementResults[new StateRequirementKey(
+            requirementId, obstacleBits, doorBits)] = (epoch, result);
+    }
+
+    private readonly record struct StateRequirementKey(
+        int Id, int ObstacleBits, int DoorBits);
 
     internal bool TryGetRequirementResult(
         int requirementId, int epoch, out RequirementResult result)
@@ -270,14 +319,18 @@ internal sealed class SmSearchModel
 
 internal readonly record struct CompiledRequirementPlan(
     int ObstacleMask, int DoorMask, ulong FlagMask,
-    bool StateDependent = false, int Id = -1)
+    bool ResourceDependent = false, int Id = -1)
 {
+    /// <summary>Reads traversal state, but only through the obstacle and door
+    /// bits named by the masks, so results can be cached per masked value.</summary>
+    public bool GraphStateDependent => (ObstacleMask | DoorMask) != 0;
+
     public static CompiledRequirementPlan operator |(
         CompiledRequirementPlan left, CompiledRequirementPlan right) => new(
         left.ObstacleMask | right.ObstacleMask,
         left.DoorMask | right.DoorMask,
         left.FlagMask | right.FlagMask,
-        left.StateDependent || right.StateDependent,
+        left.ResourceDependent || right.ResourceDependent,
         -1);
 }
 

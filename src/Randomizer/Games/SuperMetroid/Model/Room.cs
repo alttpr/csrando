@@ -161,6 +161,9 @@ public class Strat : ICloneable
     public Note? Note { get; set; }
     public Note? DevNote { get; set; }
 
+    // Owned by the single SmSearchModel of the world this strategy belongs to.
+    internal CompiledStrategyPlan? CompiledPlan;
+
     public override string ToString()
     {
         // Return a format string with the strat name and links
@@ -169,7 +172,11 @@ public class Strat : ICloneable
 
     public object Clone()
     {
-        return this.MemberwiseClone();
+        // A clone may be mutated by graph preprocessing, which would make an
+        // inherited compiled plan stale.
+        var clone = (Strat)MemberwiseClone();
+        clone.CompiledPlan = null;
+        return clone;
     }
 }
 
