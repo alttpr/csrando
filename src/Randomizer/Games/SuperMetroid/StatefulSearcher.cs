@@ -1164,6 +1164,7 @@ public struct VisitedState
     public bool Dominates(VisitedState other)
     {
         return Energy >= other.Energy
+            && SuperMissiles >= other.SuperMissiles
             && (Missiles + SuperMissiles * 3) >= (other.Missiles + other.SuperMissiles * 3)
             && PowerBombs >= other.PowerBombs
             && (ObstacleBitFlags & other.ObstacleBitFlags) == other.ObstacleBitFlags;

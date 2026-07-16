@@ -9,6 +9,24 @@ using SmVertex = Randomizer.Games.SuperMetroid.Vertex;
 public sealed class BacktrackRegionTest
 {
     [TestMethod]
+    public void VisitedState_DoesNotUseMissilesAsRequiredSupers()
+    {
+        var missiles = new VisitedState
+        {
+            Energy = 99,
+            Missiles = 15,
+        };
+        var supers = new VisitedState
+        {
+            Energy = 99,
+            SuperMissiles = 5,
+        };
+
+        Assert.IsFalse(missiles.Dominates(supers));
+        Assert.IsTrue(supers.Dominates(missiles));
+    }
+
+    [TestMethod]
     public void RequirementResult_MergeFailCopiesOnlyWhenExtended()
     {
         var first = RequirementResult.Fail("Morph");
