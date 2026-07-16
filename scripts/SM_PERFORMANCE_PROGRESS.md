@@ -6,6 +6,11 @@ Historical baselines: `main@c50d6f04`, `reverse-search-v1@28917857`
 
 Exact-output search checkpoint: `68f24942`
 
+Frozen comparison baseline: tag `sm-search-baseline-v2`, described by
+`scripts/sm-performance-baseline.json`. Its raw Windows cohorts, generated
+dashboard, and preview are intentionally retained in Git so the next
+optimization pass can compare against the identical per-seed measurements.
+
 ## Result
 
 The final 50-seed Windows run reduced paired mean full-seed generation time by
@@ -156,3 +161,8 @@ python scripts/chart-sm-backtracking.py `
 Keep performance-only checkpoints only when hashes remain stable and the
 documented mean/target-work acceptance gate is met. Failures remain explicit in
 the CSV and are never excluded silently.
+
+For the next optimization pass, use `artifacts/sm-windows-final-50.csv` as the
+dashboard baseline, rerun seeds 9876–9925 on Windows with the same settings and
+runtime, append the accepted checkpoint to `scripts/sm-performance-history.csv`,
+and include both the frozen baseline and new cohort in the regenerated report.

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "name": "sm-search-v2-windows-baseline",
+  "tag": "sm-search-baseline-v2",
+  "benchmarked_implementation_commit": "a16a44c8",
+  "reporting_commit": "fe0fba35",
+  "baseline_revision": "main@c50d6f04",
+  "runtime": {
+    "operating_system": "Windows 11",
+    "dotnet_sdk": "10.0.300",
+    "configuration": "Release",
+    "process_policy": "fresh process per revision and seed; main then current"
+  },
+  "cohort": {
+    "settings": "scripts/settings-sm-only.json",
+    "first_seed": 9876,
+    "last_seed": 9925,
+    "attempts": 50,
+    "common_successes": 44,
+    "row_policy": "latest row for each label and seed"
+  },
+  "results": {
+    "main_successes": 44,
+    "current_successes": 50,
+    "main_failure_seeds": [9886, 9890, 9898, 9902, 9915, 9924],
+    "paired_total_main_ms": 307992.471,
+    "paired_total_current_ms": 136073.085,
+    "paired_mean_main_ms": 6999.829,
+    "paired_mean_current_ms": 3092.570,
+    "paired_median_main_ms": 6879.143,
+    "paired_median_current_ms": 3059.976,
+    "paired_p95_main_ms": 8850.394,
+    "paired_p95_current_ms": 3571.774,
+    "average_paired_speedup": 2.280768,
+    "average_paired_reduction_percent": 54.954913,
+    "paired_allocated_main_mib": 18726.573,
+    "paired_allocated_current_mib": 2220.489,
+    "allocation_reduction": 8.433534,
+    "current_all_seed_mean_ms": 3174.925,
+    "current_all_seed_median_ms": 3076.813,
+    "current_all_seed_p95_ms": 4083.540,
+    "current_all_seed_worst_ms": 5236.856,
+    "production_legacy_fallbacks": 0
+  },
+  "verification": {
+    "windows_normal_tests": "4354 passed; 4520 skipped; 0 failed; 1m 1s",
+    "windows_slow_sm_tests": "8 passed; 0 failed; 26s",
+    "post_correctness_output_equivalence": "90/90 previously successful seeds matched exact combined output hashes"
+  },
+  "artifacts": {
+    "main_metrics": {
+      "path": "artifacts/sm-windows-main-50.csv",
+      "sha256": "45206816af8bf9f8481dbb1d686af2f62f9462263758bdff0370d35fb24e3e54"
+    },
+    "current_metrics": {
+      "path": "artifacts/sm-windows-final-50.csv",
+      "sha256": "c195b8d6d01d51b28f44af3d6975bd6c56f245eea83f4f3da5990f837e998668"
+    },
+    "dashboard": {
+      "path": "artifacts/sm-windows-final-report.html",
+      "sha256": "b497feb8c7182eb98fec6eef6cb8754b633244e93dd60acbed8a6075f70bb1f6"
+    },
+    "preview": {
+      "path": "artifacts/sm-windows-final-report.png",
+      "sha256": "bedcb72ca4753080c2871efdb1abab42dd3fdd0a8f29b1cd998f573079b9b155"
+    }
+  },
+  "next_checkpoint": {
+    "required_runtime": "Windows 11 / .NET SDK 10.0.300 / Release",
+    "required_settings": "scripts/settings-sm-only.json",
+    "required_seeds": "9876-9925",
+    "comparison_metrics": "artifacts/sm-windows-final-50.csv",
+    "dashboard_action": "append the accepted checkpoint to scripts/sm-performance-history.csv and regenerate the detailed dashboard with this cohort as baseline",
+    "acceptance": "no new failures; document intentional hash changes; paired mean improves at least 2% or targeted work improves at least 10% without aggregate regression"
+  }
+}

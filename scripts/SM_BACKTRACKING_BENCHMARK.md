@@ -124,6 +124,13 @@ artifact files. Do not compare wall-clock rows collected on different operating
 systems/filesystems; retain their correctness and work metrics but leave the
 paired speedup fields blank.
 
+The frozen baseline for the next pass is tag `sm-search-baseline-v2`; its
+machine-readable manifest is `scripts/sm-performance-baseline.json`. Compare a
+new Windows cohort against the retained
+`artifacts/sm-windows-final-50.csv`, not against the older main cohort. After an
+optimization is accepted, retain its raw cohort and add it to the history and
+detailed dashboard rather than overwriting the baseline files.
+
 ## CPU profiling
 
 Install `dotnet-trace` into the artifacts directory so it does not alter the
