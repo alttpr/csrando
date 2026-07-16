@@ -97,7 +97,14 @@ public class Searcher : ISearcher
     {
         foreach (var (key, doors) in visited.Graph.Doors)
         {
-            int lockedDoorCount = doors.Count(d => !inventory.Has(d.Key));
+            // Plain loops instead of LINQ Count(predicate): this method runs at the top of
+            // every InternalSearch, so closure allocations here add up.
+            int lockedDoorCount = 0;
+            foreach (var door in doors)
+            {
+                if (!inventory.Has(door.Key))
+                    lockedDoorCount++;
+            }
 
             // If all the doors are already opened, we don't have anything to do
             if (lockedDoorCount == 0)
@@ -107,7 +114,12 @@ public class Searcher : ISearcher
 
             // If we have all the randomized keys, mark all the doors as unlockable and spend all the current keys
             // as we would collect the fixed keys while exploring the rest of the dungeon if needed.
-            int uncollectedFixedKeys = visited.Graph.FixedKeys[key].Count(v => !visited.Contains(v));
+            int uncollectedFixedKeys = 0;
+            foreach (var fixedKey in visited.Graph.FixedKeys[key])
+            {
+                if (!visited.Contains(fixedKey))
+                    uncollectedFixedKeys++;
+            }
             if (keyCount + uncollectedFixedKeys >= lockedDoorCount)
             {
                 _logger.LogTrace("Opening all doors with key {Key}", key);
@@ -290,9 +302,10 @@ public class Searcher : ISearcher
             if (keyCount == 0)
                 continue;
 
-            var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventory, key, _visited, _collected);
-            strongLocations.UnionWith(recursiveLocations);
-            strongSearchStarts.UnionWith(recursiveSearchStarts);
+            var result = SubsetDoorSearch(inventory, key);
+
+            strongLocations.UnionWith(result.NewlyVisited);
+            strongSearchStarts.UnionWith(result.NewSearchStarts);
         }
 
         _visited.UnionWith(strongLocations);
@@ -302,80 +315,177 @@ public class Searcher : ISearcher
         return strongLocations.Count != 0 || foundItems;
     }
 
-    private SearchResult RecursiveDoorSearchInternal(Inventory inventory, IItem key, VertexHashSet visitedBeforeDoors, VertexHashSet collectedBeforeDoors, params Vertex[] additionalStarts)
+    /// <summary>
+    /// State of one key type's door search after opening a specific set of its doors:
+    /// the exploration result is a function of the set alone, not the opening order.
+    /// </summary>
+    private sealed class DoorSubsetState
     {
-        if (inventory.GetCount(key) == 0)
-            return InternalSearch(inventory, visitedBeforeDoors, additionalStarts);
+        /// <summary>All vertices reachable with this door set open.</summary>
+        public required VertexHashSet Visited;
+        /// <summary>Vertices whose items have been collected while reaching this state.</summary>
+        public required VertexHashSet Collected;
+        /// <summary>Inventory including collected items and the spent keys.</summary>
+        public required Inventory Inventory;
+        /// <summary>Accumulated resume points (door frontiers and partially-explored vertices).</summary>
+        public required VertexHashSet Starts;
+        /// <summary>The last exploration pass's resume points, mirroring the legacy per-door weak starts.</summary>
+        public required VertexHashSet LastFrontier;
+    }
 
-        inventory = inventory.Clone();
+    /// <summary>
+    /// Compute "strong" reachability for one key type: the intersection over all possible
+    /// key-spending choices, so that no order of opening doors can soft-lock the player.
+    /// Rather than enumerating every spending *order* (factorial in the door count), this
+    /// explores each *set* of opened doors once — the state after opening a set of doors is
+    /// order-independent — and computes the same intersection over the choices available in
+    /// each state.
+    /// </summary>
+    private SearchResult SubsetDoorSearch(Inventory inventory, IItem key)
+    {
+        var doors = _graph.Doors[key];
+        // The subset is tracked in a 64-bit mask; no real dungeon comes anywhere close.
+        if (doors.Count > 63)
+            throw new NotSupportedException($"More than 63 doors for a single key type ({key}) is not supported.");
 
-        VertexHashSet? strongLocations = null;
-        VertexHashSet? strongSearchStarts = null;
-        var visitedBeforeRecursion = visitedBeforeDoors.Clone();
-        var collectedBeforeRecursion = collectedBeforeDoors.Clone();
-
-        foreach (var door in visitedBeforeDoors.Graph.Doors[key])
+        var doorItems = new IItem[doors.Count];
+        var doorPairs = new HashSet<(Vertex A, Vertex B)>[doors.Count];
+        int doorIndex = 0;
+        foreach (var (unlockItem, pairs) in doors)
         {
-            // Skip the door if it's already been opened
-            if (inventory.Has(door.Key))
-                continue;
-
-            List<Vertex> newVerticesFromDoor = new();
-            foreach (var (a, b) in door.Value)
-            {
-                bool seenA = visitedBeforeDoors.Contains(a);
-                bool seenB = visitedBeforeDoors.Contains(b);
-                if (seenA != seenB)
-                    newVerticesFromDoor.Add(seenA ? b : a);
-            }
-            if (newVerticesFromDoor.Count == 0)
-                continue;
-
-            var inventoryForIteration = inventory.Clone();
-
-            // Open the door, consume a key
-            inventoryForIteration.AddItem(door.Key);
-            inventoryForIteration.RemoveItem(key);
-
-            // Check what's behind the door
-            Vertex[] startAt = [.. newVerticesFromDoor, .. additionalStarts];
-            var weakLocations = new VertexHashSet(visitedBeforeRecursion.Graph);
-            var weakSearchStarts = new VertexHashSet(visitedBeforeRecursion.Graph);
-            do
-            {
-                var (weakLocations2, weakSearchStarts2) = InternalSearch(inventoryForIteration, visitedBeforeRecursion, startAt);
-
-                visitedBeforeRecursion.UnionWith(weakLocations2);
-                weakLocations.UnionWith(weakLocations2);
-                weakSearchStarts = weakSearchStarts2;
-            } while (CollectItems(inventoryForIteration, visitedBeforeRecursion, collectedBeforeRecursion));
-            if (inventoryForIteration.GetCount(key) > 0)
-            {
-                var (recursiveLocations, recursiveSearchStarts) = RecursiveDoorSearchInternal(inventoryForIteration, key, visitedBeforeRecursion, collectedBeforeRecursion, [.. startAt, .. weakSearchStarts]);
-                weakLocations.UnionWith(recursiveLocations);
-                weakSearchStarts.UnionWith(recursiveSearchStarts);
-            }
-            // reset
-            visitedBeforeRecursion.IntersectWith(visitedBeforeDoors);
-            collectedBeforeRecursion.IntersectWith(collectedBeforeDoors);
-
-
-            if (weakLocations.Count == 0)
-                return (new VertexHashSet(visitedBeforeDoors.Graph), new VertexHashSet(visitedBeforeDoors.Graph));
-
-            if (strongLocations != null && strongSearchStarts != null)
-            {
-                strongLocations.IntersectWith(weakLocations);
-                strongSearchStarts.IntersectWith(weakSearchStarts);
-            }
-            else
-            {
-                strongLocations = weakLocations;
-                strongSearchStarts = weakSearchStarts;
-            }
+            doorItems[doorIndex] = unlockItem;
+            doorPairs[doorIndex] = pairs;
+            doorIndex++;
         }
 
-        return (strongLocations ?? new VertexHashSet(visitedBeforeDoors.Graph), strongSearchStarts ?? new VertexHashSet(visitedBeforeDoors.Graph));
+        // The entry state references the searcher's sets directly; they are only read here
+        // (children clone before mutating).
+        var states = new Dictionary<ulong, DoorSubsetState>
+        {
+            [0] = new DoorSubsetState
+            {
+                Visited = _visited,
+                Collected = _collected,
+                Inventory = inventory,
+                Starts = new VertexHashSet(_graph),
+                LastFrontier = new VertexHashSet(_graph),
+            },
+        };
+        var solved = new Dictionary<ulong, SearchResult>();
+
+        return Solve(0);
+
+        // Returns the strong (guaranteed regardless of play order) newly-visited vertices and
+        // resume points, relative to the state with this set of doors open.
+        SearchResult Solve(ulong mask)
+        {
+            if (solved.TryGetValue(mask, out var cached))
+                return cached;
+
+            var state = states[mask];
+            VertexHashSet? strongLocations = null;
+            VertexHashSet? strongSearchStarts = null;
+
+            for (int i = 0; i < doorItems.Length; i++)
+            {
+                ulong bit = 1UL << i;
+                if ((mask & bit) != 0)
+                    continue;
+
+                // Skip the door if it's already been opened (directly, or as a side effect of
+                // SpendObviousKeys during exploration).
+                if (state.Inventory.Has(doorItems[i]))
+                    continue;
+
+                List<Vertex> newVerticesFromDoor = new();
+                foreach (var (a, b) in doorPairs[i])
+                {
+                    bool seenA = state.Visited.Contains(a);
+                    bool seenB = state.Visited.Contains(b);
+                    if (seenA != seenB)
+                        newVerticesFromDoor.Add(seenA ? b : a);
+                }
+                if (newVerticesFromDoor.Count == 0)
+                    continue;
+
+                var child = GetChild(mask | bit, state, i, newVerticesFromDoor);
+
+                // Everything newly reachable after opening this door, relative to this state.
+                var weakLocations = child.Visited.Clone();
+                weakLocations.ExceptWith(state.Visited);
+                var weakSearchStarts = child.LastFrontier.Clone();
+
+                if (child.Inventory.GetCount(key) > 0)
+                {
+                    var (recursiveLocations, recursiveSearchStarts) = Solve(mask | bit);
+                    weakLocations.UnionWith(recursiveLocations);
+                    weakSearchStarts.UnionWith(recursiveSearchStarts);
+                }
+
+                if (weakLocations.Count == 0)
+                {
+                    SearchResult empty = (new VertexHashSet(_graph), new VertexHashSet(_graph));
+                    solved[mask] = empty;
+                    return empty;
+                }
+
+                if (strongLocations != null && strongSearchStarts != null)
+                {
+                    strongLocations.IntersectWith(weakLocations);
+                    strongSearchStarts.IntersectWith(weakSearchStarts);
+                }
+                else
+                {
+                    strongLocations = weakLocations;
+                    strongSearchStarts = weakSearchStarts;
+                }
+            }
+
+            SearchResult result = (
+                strongLocations ?? new VertexHashSet(_graph),
+                strongSearchStarts ?? new VertexHashSet(_graph));
+            solved[mask] = result;
+            return result;
+        }
+
+        // Get (or compute once) the state after opening one more door from a parent state.
+        DoorSubsetState GetChild(ulong childMask, DoorSubsetState parent, int doorToOpen, List<Vertex> newVerticesFromDoor)
+        {
+            if (states.TryGetValue(childMask, out var existing))
+                return existing;
+
+            var childInventory = parent.Inventory.Clone();
+            childInventory.AddItem(doorItems[doorToOpen]);
+            childInventory.RemoveItem(key);
+
+            var childVisited = parent.Visited.Clone();
+            var childCollected = parent.Collected.Clone();
+
+            Vertex[] startAt = [.. newVerticesFromDoor, .. parent.Starts];
+            var lastFrontier = new VertexHashSet(_graph);
+            do
+            {
+                var (newlyVisited, newSearchStarts) = InternalSearch(childInventory, childVisited, startAt);
+                childVisited.UnionWith(newlyVisited);
+                lastFrontier = newSearchStarts;
+            } while (CollectItems(childInventory, childVisited, childCollected));
+
+            var childStarts = parent.Starts.Clone();
+            foreach (var vertex in newVerticesFromDoor)
+                childStarts.Add(vertex);
+            childStarts.UnionWith(lastFrontier);
+
+            var child = new DoorSubsetState
+            {
+                Visited = childVisited,
+                Collected = childCollected,
+                Inventory = childInventory,
+                Starts = childStarts,
+                LastFrontier = lastFrontier,
+            };
+            states[childMask] = child;
+            return child;
+        }
     }
 
     private static readonly string[] _noBombFollowerItems = ["hop", "Flippers", "DarkFlippers"];
