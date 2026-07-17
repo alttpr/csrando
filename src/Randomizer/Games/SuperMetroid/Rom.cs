@@ -640,6 +640,33 @@ public class Rom : GameRom
 
         // Disable the code that writes the standard elevator destination area markers
         Write((SNES)0x82BB30, [0x6B]); // RTL
+
+        RemoveEyeDoors(world);
+    }
+
+    // Eye door PLM ids. Each eye door is made up of the eye itself plus two shutter
+    // shot-blocks; both orientations use the same set. Overwriting each with the
+    // self-deleting "Nothing" PLM removes the eye door entirely.
+    private static readonly HashSet<ushort> EyeDoorPlmIds =
+    [
+        0xDB48, 0xDB4C, 0xDB52, // one orientation (eye + two shutters)
+        0xDB56, 0xDB5A, 0xDB60, // other orientation (eye + two shutters)
+    ];
+
+    private void RemoveEyeDoors(World world)
+    {
+        foreach (var plm in world.JsonData.RoomPLMs)
+        {
+            if (!EyeDoorPlmIds.Contains(plm.PlmId))
+            {
+                continue;
+            }
+
+            // Overwrite just the 2-byte PLM id with Nothing (0xB62F). Nothing is a
+            // self-deleting PLM that ignores its arguments, so the x/y/arg bytes can
+            // stay as-is.
+            Write((SNES)(plm.Address + (plm.PlmIndex * 6)), BitConverter.GetBytes((ushort)DoorTypePlm.Nothing));
+        }
     }
 
 
