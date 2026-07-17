@@ -436,6 +436,36 @@ public sealed class DungeonBuilderTest
     }
 
     [TestMethod]
+    [TestCategory(TestCategories.Slow)]
+    public void Generate_BossRoomScreen_CanHostItsBoss()
+    {
+        // The boss room's fixed vanilla boss enemy is written directly in AssignEnemies and never
+        // runs through the regular EnemyRules screen filter. So AssignScreens must pick the boss
+        // room a screen its boss can actually spawn on — otherwise the enemy has no valid spawn
+        // and the game freezes (originally seen with push-block screen 0x20). L9's boss (Ganon) is
+        // on a forced GanonRoom screen, so this only concerns L1-8.
+        for (int seed = 1; seed <= 60; seed++)
+        {
+            for (int level = 1; level <= 8; level++)
+            {
+                var data = CreateYamlReader().Data!;
+                var builder = CreateBuilder(data, level, seed: seed);
+                builder.Generate();
+                builder.Write();
+
+                var levelData = data.levels.First(l => l.level == level && l.area == YamlReader.Area.Underworld);
+                var bossRoom = data.underworld_maps.First(m =>
+                    m.generated && m.generated_level == level && !m.passage && m.map == levelData.boss_room_id);
+
+                Assert.IsTrue(
+                    DungeonBuilder.EnemyFitsScreen((bossRoom.enemies, bossRoom.enemy_id, bossRoom.enemy_mode), bossRoom.screen),
+                    $"Seed {seed} L{level}: boss room {bossRoom.local_room_id:X2} on screen {bossRoom.screen:X2} " +
+                    $"cannot host its boss (id={bossRoom.enemy_id:X2}, mode={bossRoom.enemy_mode}) — no valid spawn.");
+            }
+        }
+    }
+
+    [TestMethod]
     [DataRow(1)]
     [DataRow(5)]
     [DataRow(9)]

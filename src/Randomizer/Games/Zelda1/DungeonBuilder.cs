@@ -2012,8 +2012,50 @@ internal class DungeonBuilder
     }
 
     /// <summary>
-    /// Each rule returns false to reject an enemy template for a room, true to allow it.
-    /// Room already has its screen assigned when these are evaluated.
+    /// Screen-compatibility rules: whether an enemy template can spawn on a given screen. Each
+    /// rule returns false to reject the template, true to allow it. These depend only on the
+    /// template and the screen (not on any other room state), so they are reused both for regular
+    /// enemy placement and for choosing the boss room's screen.
+    /// </summary>
+    private static readonly List<Func<(int enemies, int enemy_id, int enemy_mode), int, bool>> EnemyScreenRules =
+    [
+        // Skip excluded screens
+        (_, screen) => !ExcludedEnemyScreens.Contains(screen),
+
+        // Gleeok (mode=1, codes 0x02-0x05) needs large open screens
+        (t, screen) => !(t.enemy_mode == 1 && t.enemy_id >= 0x02 && t.enemy_id <= 0x05)
+            || GoodGleeokScreens.Contains(screen),
+
+        // Lanmola (mode=0, codes 0x3A/0x3B) needs open screens
+        (t, screen) => !(t.enemy_mode == 0 && (t.enemy_id == 0x3A || t.enemy_id == 0x3B))
+            || GoodLanmolaScreens.Contains(screen),
+
+        // Dodongo (mode=0, codes 0x31/0x32) can't go in tight screens
+        (t, screen) => !(t.enemy_mode == 0 && (t.enemy_id == 0x31 || t.enemy_id == 0x32))
+            || !BadDodongoScreens.Contains(screen),
+
+        // Rupee Boss (mode=0, code 0x35) needs specific screens
+        (t, screen) => !(t.enemy_mode == 0 && t.enemy_id == 0x35)
+            || GoodRupeeBossScreens.Contains(screen),
+
+        // Traps and trap combos need screens with proper spike tile positions
+        (t, screen) => !IsTrapEnemy(t.enemy_id, t.enemy_mode)
+            || GoodSpikeScreens.Contains(screen),
+    ];
+
+    /// <summary>
+    /// Whether an enemy template can spawn on the given screen (screen-compatibility rules only,
+    /// no room role/used gating). Used when choosing the boss room's screen — its fixed vanilla
+    /// boss enemy skips the regular EnemyRules filter in AssignEnemies, so its screen must be
+    /// vetted here or the boss can land somewhere with no valid spawn and the game freezes.
+    /// </summary>
+    internal static bool EnemyFitsScreen((int enemies, int enemy_id, int enemy_mode) template, int screen)
+        => EnemyScreenRules.All(rule => rule(template, screen));
+
+    /// <summary>
+    /// Full rules for placing a regular enemy in a room. Each rule returns false to reject an
+    /// enemy template for a room, true to allow it. Room already has its screen assigned when
+    /// these are evaluated.
     /// </summary>
     private static readonly List<Func<(int enemies, int enemy_id, int enemy_mode), Room, int, bool>> EnemyRules =
     [
@@ -2023,28 +2065,8 @@ internal class DungeonBuilder
         // No enemies in start, cellar, end, boss, or L9 check rooms (boss rooms are handled separately)
         (_, room, _) => !room.HasAnyRole(EnemyExcludedRoles),
 
-        // Skip excluded screens
-        (_, room, _) => !ExcludedEnemyScreens.Contains(room.Screen),
-
-        // Gleeok (mode=1, codes 0x02-0x05) needs large open screens
-        (t, room, _) => !(t.enemy_mode == 1 && t.enemy_id >= 0x02 && t.enemy_id <= 0x05)
-            || GoodGleeokScreens.Contains(room.Screen),
-
-        // Lanmola (mode=0, codes 0x3A/0x3B) needs open screens
-        (t, room, _) => !(t.enemy_mode == 0 && (t.enemy_id == 0x3A || t.enemy_id == 0x3B))
-            || GoodLanmolaScreens.Contains(room.Screen),
-
-        // Dodongo (mode=0, codes 0x31/0x32) can't go in tight screens
-        (t, room, _) => !(t.enemy_mode == 0 && (t.enemy_id == 0x31 || t.enemy_id == 0x32))
-            || !BadDodongoScreens.Contains(room.Screen),
-
-        // Rupee Boss (mode=0, code 0x35) needs specific screens
-        (t, room, _) => !(t.enemy_mode == 0 && t.enemy_id == 0x35)
-            || GoodRupeeBossScreens.Contains(room.Screen),
-
-        // Traps and trap combos need screens with proper spike tile positions
-        (t, room, _) => !IsTrapEnemy(t.enemy_id, t.enemy_mode)
-            || GoodSpikeScreens.Contains(room.Screen),
+        // Screen must be able to host this enemy
+        (t, room, _) => EnemyFitsScreen(t, room.Screen),
     ];
 
     private static bool EnemyFitsRoom((int enemies, int enemy_id, int enemy_mode) template, Room room, int level)
@@ -2157,11 +2179,26 @@ internal class DungeonBuilder
         var underworldScreens = _data.underworld_screens;
         var screenConnectivity = PrecalculateScreenConnectivity();
 
+        // The (non-L9) boss room spawns its fixed vanilla boss enemy on the assigned screen but
+        // skips the EnemyRules filter in AssignEnemies, so screen selection for the boss room must
+        // respect the same enemy-fit rules (excluded screens, Gleeok/Dodongo/Rupee/spike screens).
+        // Otherwise the boss can land on a screen with no valid spawn and the game freezes.
+        // (L9's boss screen is overridden to GanonRoom below, so it needs no fit filtering.)
+        var bossTemplate = _level != 9
+            ? GetVanillaLevelMaps()
+                .Where(m => m.map == _levelData.boss_room_id && !m.passage)
+                .Select(m => ((int enemies, int enemy_id, int enemy_mode)?)(m.enemies, m.enemy_id, m.enemy_mode))
+                .FirstOrDefault()
+            : null;
+
         foreach (var room in _map.UsedNonCellarRooms
             .Where(r => !r.HasAnyRole(RoomRole.Start | RoomRole.End | RoomRole.LevelNineCheck)))
         {
+            bool filterBoss = bossTemplate != null && room.HasAnyRole(RoomRole.Boss);
+
             var candidateScreens = underworldScreens
                 .Where(s => ScreenFitsRoom(s, room, screenConnectivity[s.screen]))
+                .Where(s => !filterBoss || EnemyFitsScreen(bossTemplate!.Value, s.screen))
                 .ToArray();
 
             if (candidateScreens.Length == 0)
