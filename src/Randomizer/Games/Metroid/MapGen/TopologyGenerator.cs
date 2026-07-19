@@ -143,6 +143,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 PlaceChozoItemRooms();
                 PlacePortalAnchors();
                 GrowAreas();
+                PlaceMapStations();
                 EnsureItemCells();
                 PlaceHiddenBombWalls();
                 ValidateWorld();
@@ -1056,6 +1057,143 @@ public class TopologyGenerator(ScreenCatalog catalog)
         _ => throw new GenerationException($"{area} cannot host an M1 portal anchor"),
     };
 
+    // ---------------------------------------------------------------- map stations
+
+    /// <summary>
+    /// Places one map-station cell per area except Tourian, holding the fixed map pickup
+    /// (custom item $CE) that reveals the area's automap. Runs after growth so depth is
+    /// meaningful over the final layout: each station prefers a dedicated dead-end
+    /// corridor hung off a shaft cell far (by room-graph distance) from the area's entry
+    /// point, rewarding exploration. When the grown grid has no space left for a new
+    /// corridor (common near saturation), the deepest existing corridor cell that can
+    /// hold an item screen is converted instead — consuming a corridor cell
+    /// EnsureItemCells could otherwise use; an area too tight for both fails the
+    /// attempt like any other placement failure.
+    /// </summary>
+    private void PlaceMapStations()
+    {
+        foreach (var area in new[] { Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley })
+        {
+            var depths = AreaDepths(area);
+
+            // The deepest existing corridor cell that could hold the station sets the
+            // depth to beat: a dedicated room is nicer, but not at the cost of sitting
+            // near the entrance when a deeper conversion spot exists.
+            var conversion = DeepestConvertibleCell(area, depths);
+            int floor = conversion != null ? depths.GetValueOrDefault(conversion.Position) : 0;
+
+            if (TryPlaceMapStationRoom(area, depths, floor))
+                continue;
+            if (conversion == null)
+                throw new GenerationException($"could not place a {area} map station");
+
+            conversion.Role = CellRole.MapStation;
+            landmarks[$"{area}MapStation"] = conversion.Position;
+        }
+    }
+
+    /// <summary>
+    /// Room-graph BFS distance of every cell of <paramref name="area"/> from its entry
+    /// point: the start cell for Brinstar, the elevator platform for the lower areas.
+    /// Scroll, door, and intra-area elevator edges all count as one step.
+    /// </summary>
+    private Dictionary<Point, int> AreaDepths(Area area)
+    {
+        var root = area == Area.Brinstar
+            ? start
+            : grid.Links.Where(l => l.Type == LinkType.Elevator)
+                .Select(l => l.B.Step(Direction.Down))
+                .FirstOrDefault(p => grid.Cell(p)?.Area == area);
+        if (grid.Cell(root)?.Area != area)
+            throw new GenerationException($"no entry cell for {area} depth search");
+
+        var depths = new Dictionary<Point, int> { [root] = 0 };
+        var queue = new Queue<Point>();
+        queue.Enqueue(root);
+        while (queue.Count > 0)
+        {
+            var p = queue.Dequeue();
+            var cell = grid.Cell(p)!;
+            foreach (var dir in Directions.All)
+            {
+                if (cell.Edge(dir) == EdgeRequirement.Wall)
+                    continue;
+                var neighbor = grid.Cell(p.Step(dir));
+                if (neighbor == null || neighbor.Area != area || neighbor.Role == CellRole.Cap
+                    || depths.ContainsKey(neighbor.Position))
+                    continue;
+                depths[neighbor.Position] = depths[p] + 1;
+                queue.Enqueue(neighbor.Position);
+            }
+        }
+
+        return depths;
+    }
+
+    /// <summary>
+    /// Hangs a dead-end map-station corridor off a deep shaft cell: door, two or three
+    /// walkable cells, solid cap at the far end. The station sits on the fittable cell
+    /// nearest the cap (reward at the end of the detour, like item corridors), and its
+    /// resulting depth (shaft depth + walk) must reach <paramref name="depthFloor"/>.
+    /// A placed corridor whose cells turn out not to fit any item screen simply stays
+    /// a plain dead-end corridor and the search moves on.
+    /// </summary>
+    private bool TryPlaceMapStationRoom(Area area, Dictionary<Point, int> depths, int depthFloor)
+    {
+        var candidates = ShaftsOf(area).SelectMany(InteriorCells)
+            .OrderByDescending(c => 2 * depths.GetValueOrDefault(c.Position) + rng.Next(4))
+            .ToList();
+
+        foreach (var shaftCell in candidates)
+        {
+            foreach (var side in Shuffled(new[] { Direction.Left, Direction.Right }))
+            {
+                // Stretch a short roll to reach the depth floor rather than abandoning
+                // a side that a three-cell walk would satisfy.
+                int walk = Math.Max(Rand(2, 3), depthFloor - depths.GetValueOrDefault(shaftCell.Position));
+                if (walk > 3)
+                    continue;
+                int y = shaftCell.Position.Y;
+                var startX = side == Direction.Right ? shaftCell.Position.X + 1 : shaftCell.Position.X - walk - 1;
+                var cells = Enumerable.Range(startX, walk + 1).Select(x => new Point(x, y)).ToList();
+
+                if (cells[0].X < 1 || cells[^1].X > 30 || !cells.All(grid.CanPlace)
+                    || !CanAddDoor(shaftCell, side, RunKind.MultiHorizontal)
+                    || !CorridorEndExists(area, Directions.Opposite(side), RunKind.MultiVertical))
+                    continue;
+
+                var corridor = grid.PlaceRun(area, Scrolling.Horizontal, cells[0], walk + 1, CellRole.Corridor,
+                    capStart: side == Direction.Left, capEnd: side == Direction.Right);
+                if (side == Direction.Right)
+                    grid.LinkDoor(shaftCell, corridor.Cells[0]);
+                else
+                    grid.LinkDoor(corridor.Cells[^1], shaftCell);
+
+                var cap = corridor.Cells.First(c => c.Role == CellRole.Cap);
+                var station = corridor.Cells
+                    .Where(c => c.Role == CellRole.Corridor
+                        && catalog.ForArea(area).Any(p => p.HasItemLocation && grid.FitsStrict(catalog, p, c)))
+                    .OrderBy(c => Math.Abs(c.Position.X - cap.Position.X))
+                    .FirstOrDefault();
+                if (station == null)
+                    continue;
+
+                station.Role = CellRole.MapStation;
+                landmarks[$"{area}MapStation"] = station.Position;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>The deepest existing corridor cell that could hold the map-station item.</summary>
+    private AbstractCell? DeepestConvertibleCell(Area area, Dictionary<Point, int> depths) =>
+        grid.CellsOf(area)
+            .Where(c => c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue)
+            .OrderByDescending(c => depths.GetValueOrDefault(c.Position))
+            .FirstOrDefault(c => catalog.ForArea(area).Any(p => p.HasItemLocation && grid.FitsStrict(catalog, p, c)));
+
     // ---------------------------------------------------------------- filler growth
 
     /// <summary>
@@ -1626,7 +1764,8 @@ public class TopologyGenerator(ScreenCatalog catalog)
             throw new GenerationException($"expected 4 elevator links, found {elevators}");
 
         foreach (var required in new[] { "Start", "StatuesGate", "TourianElevator", "MotherBrain", "EscapeShaft",
-                                         "Kraid", "Ridley", "ConstructionZone", "VariaShaft", "HiddenWall0" })
+                                         "Kraid", "Ridley", "ConstructionZone", "VariaShaft", "HiddenWall0",
+                                         "BrinstarMapStation", "NorfairMapStation", "KraidMapStation", "RidleyMapStation" })
             if (!landmarks.ContainsKey(required))
                 throw new GenerationException($"missing landmark {required}");
     }

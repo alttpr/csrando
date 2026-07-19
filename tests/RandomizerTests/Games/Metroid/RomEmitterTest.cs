@@ -74,17 +74,19 @@ public sealed class RomEmitterTest
                 lastX = x;
                 int offsetByte = blob[pos + 1];
 
-                // Payload chain: type bytes route through handler indices 1-9; $00 ends.
+                // Payload chain: type bytes route through handler indices 1-9 (plus the
+                // extended custom-item type $0B from hooks.asm); $00 ends.
                 var payloads = new List<byte[]>();
                 int p = pos + 2;
                 int firstPayloadAddress = RomEmitter.TableAddress + p;
                 while (blob[p] != 0x00)
                 {
                     int type = blob[p] & 0x0F;
-                    Assert.IsTrue(type is >= 1 and <= 9, $"{area} ({x},{y}): bad item type 0x{blob[p]:X2}");
+                    Assert.IsTrue(type is >= 1 and <= 9 or 0x0B, $"{area} ({x},{y}): bad item type 0x{blob[p]:X2}");
                     int length = type switch
                     {
                         0x02 => 3,                          // power-up: type, id, position
+                        0x0B => 3,                          // custom item: type, id, position
                         0x04 => 2,                          // elevator: type, data
                         0x09 => 2,                          // door: type, info
                         0x03 or 0x08 => 1,                  // special enemies / rinkas: type only
@@ -203,6 +205,61 @@ public sealed class RomEmitterTest
                     $"seed {seed}: placeholder type byte at {cell}");
             }
         }
+    }
+
+    [TestMethod]
+    public void Emit_MapStationsHoldTheFixedMapItem()
+    {
+        for (int seed = 1; seed <= 10; seed++)
+        {
+            var (world, emission) = Emit(seed);
+
+            var stationCells = world.Grid.Cells
+                .Where(c => c.Role == CellRole.MapStation)
+                .Select(c => (c.Area, c.Position))
+                .ToList();
+            Assert.AreEqual(4, stationCells.Count, $"seed {seed}: one map station per area except Tourian");
+            CollectionAssert.AreEquivalent(
+                new[] { Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley },
+                stationCells.Select(s => s.Area).ToList(), $"seed {seed}");
+
+            // Each station carries the final [custom item $0B, map id $CE, position] entry,
+            // outside the fillable pool (no exposed item address).
+            var mapEntries = TableAreas
+                .SelectMany(a => ParseTable(emission, a))
+                .Where(e => e.Payloads.Any(p => p[0] == 0x0B))
+                .ToList();
+            CollectionAssert.AreEquivalent(
+                stationCells.Select(s => s.Position).ToList(),
+                mapEntries.Select(e => new Point(e.X, e.Y)).ToList(),
+                $"seed {seed}: map item entries must sit exactly on the map station cells");
+
+            foreach (var entry in mapEntries)
+            {
+                var payload = entry.Payloads.Single(p => p[0] == 0x0B);
+                Assert.AreEqual(0xCE, payload[1], $"seed {seed}: map item id at ({entry.X},{entry.Y})");
+                Assert.IsFalse(emission.ItemAddresses.ContainsKey(new Point(entry.X, entry.Y)),
+                    $"seed {seed}: map station at ({entry.X},{entry.Y}) must not be a fillable location");
+            }
+        }
+    }
+
+    [TestMethod]
+    public void Vanilla_PatchesTheInitialMapReveal()
+    {
+        // Vanilla layouts place no map-station pickups; the seed pre-reveals every
+        // area's automap through the M1MapInitialReveal byte instead.
+        var vanilla = new GameRandomizer(
+            [new WorldConfig { Metroid = new Config() }], new PRNG(21));
+        vanilla.Randomize();
+        var patch = ((World)vanilla.Worlds[0]).PatchData![AutomapComposer.InitialRevealAddress];
+        CollectionAssert.AreEqual(new byte[] { 0x1F }, patch, "vanilla seeds reveal all five areas");
+
+        var shuffled = new GameRandomizer(
+            [new WorldConfig { Metroid = new Config { MapShuffle = true } }], new PRNG(21));
+        shuffled.Randomize();
+        Assert.IsFalse(((World)shuffled.Worlds[0]).PatchData!.ContainsKey(AutomapComposer.InitialRevealAddress),
+            "map shuffle keeps the assembled $00 (areas revealed by map stations)");
     }
 
     [TestMethod]

@@ -18,6 +18,12 @@ public enum CellRole
     DoorTube,
     /// <summary>Cell that must host an item location.</summary>
     Item,
+    /// <summary>
+    /// Cell that hosts the area's fixed map-station pickup (custom item $CE). Needs an
+    /// item-location screen like <see cref="Item"/>, but the emitter writes the map item
+    /// directly instead of exposing the location to the item filler.
+    /// </summary>
+    MapStation,
     /// <summary>Cell that must host a boss location.</summary>
     Boss,
     /// <summary>The start cell (Brinstar 0x09).</summary>
@@ -406,14 +412,15 @@ public class WorldGrid
         }
 
         // Screens that draw the item orb into their structure (e.g. Brinstar 0x2A) only belong
-        // on an Item cell; on any other cell the orb renders with no item behind it. Forced
-        // cells pick their own screen, so they are exempt.
-        if (profile.HasStructuralItem && cell.Role != CellRole.Item && !cell.ForcedScreenId.HasValue)
+        // on a cell that really holds an item; anywhere else the orb renders with no item
+        // behind it. Forced cells pick their own screen, so they are exempt.
+        if (profile.HasStructuralItem && cell.Role is not (CellRole.Item or CellRole.MapStation)
+            && !cell.ForcedScreenId.HasValue)
             return false;
 
         return cell.Role switch
         {
-            CellRole.Item => profile.HasItemLocation,
+            CellRole.Item or CellRole.MapStation => profile.HasItemLocation,
             CellRole.Boss => profile.HasBossLocation,
             CellRole.Start => profile.HasStartLocation,
             CellRole.ElevatorTop or CellRole.ElevatorBottom => profile.HasElevatorPlatform,

@@ -65,7 +65,8 @@ public static class RoomBuilder
                 var screen = cell.AssignedScreen!;
 
                 // Item sprites: item cells, plus boss cells whose screen carries an item
-                // (Kraid's lair has the energy tank).
+                // (Kraid's lair has the energy tank). MapStation cells stay out of this
+                // set: their fixed pickup is written by RomEmitter, never by the filler.
                 if (cell.Role is CellRole.Item or CellRole.Boss && screen.ItemLocationNames.Count > 0)
                 {
                     room.sprites.Add(new Sprite
@@ -159,6 +160,7 @@ public static class RoomBuilder
         CellRole.Escape => "Escape Shaft",
         CellRole.Portal => "Portal",
         _ when run.Cells.Any(c => c.Role == CellRole.ElevatorBottom) => "Elevator Shaft",
+        _ when run.Cells.Any(c => c.Role == CellRole.MapStation) => "Map Room",
         _ => run.Axis == Scrolling.Vertical ? "Shaft" : "Corridor"
     };
 }
