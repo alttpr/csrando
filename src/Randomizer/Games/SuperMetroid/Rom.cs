@@ -11,6 +11,8 @@ using System.Text;
 
 public class Rom : GameRom
 {
+    private static readonly byte[] DeletedPlmData = [0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00];
+
     private static readonly byte[] VanillaMapPreopenedDoorFlagCode =
     [
         0xAF, 0xB2, 0xD8, 0x7E,       // LDA.l $7ED8B2
@@ -182,6 +184,14 @@ public class Rom : GameRom
         ushort plaquePlm = 0xd410;
         int plmTablePos = _plmTableOffset;
 
+        // Remove vanilla Gadoras before installing keycard doors. Four keycard doors
+        // intentionally replace the eye PLM in the same three-entry PLM sequences, so
+        // doing this later would delete the newly installed keycard door as well.
+        if (world.Map != null)
+        {
+            RemoveEyeDoors(world);
+        }
+
         if (world.Config.Keycards == Keycards.All)
         {
             var doorList = new List<ushort[]> {
@@ -253,7 +263,7 @@ public class Rom : GameRom
                     if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C) || door[3] == KeycardEvents.LowerNorfairBoss || door[3] == KeycardEvents.MaridiaBoss || door[3] == KeycardEvents.WreckedShipBoss)
                     {
                         // Overwrite the extra parts of the Gadora with a PLM that just deletes itself
-                        Write((SNES)(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 });
+                        Write((SNES)(0x8f0000 + door[6] + 0x06), [.. DeletedPlmData, .. DeletedPlmData]);
                     }
                 }
                 // Plaque data
@@ -640,13 +650,11 @@ public class Rom : GameRom
 
         // Disable the code that writes the standard elevator destination area markers
         Write((SNES)0x82BB30, [0x6B]); // RTL
-
-        RemoveEyeDoors(world);
     }
 
     // Eye door PLM ids. Each eye door is made up of the eye itself plus two shutter
-    // shot-blocks; both orientations use the same set. Overwriting each with the
-    // self-deleting "Nothing" PLM removes the eye door entirely.
+    // shot-blocks; both orientations use the same set. Overwriting each complete PLM
+    // record with the self-deleting "Nothing" PLM removes the eye door entirely.
     private static readonly HashSet<ushort> EyeDoorPlmIds =
     [
         0xDB48, 0xDB4C, 0xDB52, // one orientation (eye + two shutters)
@@ -662,10 +670,9 @@ public class Rom : GameRom
                 continue;
             }
 
-            // Overwrite just the 2-byte PLM id with Nothing (0xB62F). Nothing is a
-            // self-deleting PLM that ignores its arguments, so the x/y/arg bytes can
-            // stay as-is.
-            Write((SNES)(plm.Address + (plm.PlmIndex * 6)), BitConverter.GetBytes((ushort)DoorTypePlm.Nothing));
+            // Match the established keycard Gadora replacement byte-for-byte: clear the
+            // full PLM record instead of retaining the Gadora coordinates and argument.
+            Write((SNES)(plm.Address + (plm.PlmIndex * 6)), DeletedPlmData);
         }
     }
 
