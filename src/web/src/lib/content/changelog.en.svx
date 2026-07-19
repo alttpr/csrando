@@ -1,10 +1,21 @@
 ---
 title: Changelog
 description: Notable updates to the Game Randomizer web app.
-lastUpdated: 2026-07-13
+lastUpdated: 2026-07-19
 ---
 
 # Randomizer Changes
+
+## 2026-07-19
+### Quad Randomizer - Version 0.5.2
+* Systems Changes
+  * Added an in-game automap for Metroid 1 Map Shuffle. Map stations reveal their area's generated layout; vanilla-map seeds start with all areas revealed
+
+* Gameplay Changes
+  * Added conservative Super Metroid logic for door exit and entrance conditions, including runway length, movement state, water and heated-room requirements
+  * Added Hungry Goriya and Bait support to Zelda 1 dungeon logic. When dungeon logic needs Bait, shuffled shops guarantee an accessible repeatable source
+  * Improved Zelda 1 Dungeon Shuffle reliability: connector cellars no longer reuse stair rooms, item locations avoid incompatible cellar rooms, and boss screens now respect enemy-placement restrictions
+  * Removed Gadoras from Super Metroid Map Randomizer
 
 ## 2026-07-13
 ### Quad Randomizer - Version 0.5.1

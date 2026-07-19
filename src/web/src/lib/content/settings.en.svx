@@ -198,8 +198,9 @@ together with Zelda 1, Super Metroid and Metroid 1.
 * **Early Morph Ball** — Forces Morph Ball into an early reachable location. Use this when
   you want Morph Ball available near the start rather than relying on normal item placement.
 * **Map Shuffle** — Generates a completely new randomized world map instead of the vanilla
-  one. *(Early testing — expect possible bugs and balance quirks.)* The option below only
-  takes effect when this is enabled:
+  one. *(Early testing — expect possible bugs and balance quirks.)* On generated maps, a
+  Map Station reveals the layout for its current area; vanilla-map seeds start with all areas
+  revealed. The option below only takes effect when this is enabled:
   * **Map Size** — How large and dense the generated world is.
     * *Small* — A compact world.
     * *Standard* — A vanilla-sized world. (Default.)
