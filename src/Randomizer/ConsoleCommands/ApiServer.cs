@@ -1,7 +1,6 @@
 namespace Randomizer.ConsoleCommands;
 
 using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 internal sealed class ApiServer : Command
 {
     private readonly Option<bool> _enableOpenApi = new("--enable-open-api", "Enable OpenAPI document hosting");
-    private readonly Argument<string[]> _others = new();
+    private readonly Argument<string[]> _others = new("api-parameters") { DefaultValueFactory = _ => [] };
 
     public ApiServer()
         : base("api", "Run an API server for web use.")
@@ -19,11 +18,11 @@ internal sealed class ApiServer : Command
         Add(_enableOpenApi);
         Add(_others);
 
-        this.SetHandler(context => context.ExitCode = Handle(context));
+        SetAction(Handle);
     }
-    public int Handle(InvocationContext context)
+    public int Handle(ParseResult parseResult)
     {
-        var builder = WebApplication.CreateBuilder(context.ParseResult.GetValueForArgument(_others));
+        var builder = WebApplication.CreateBuilder(parseResult.GetValue(_others)!);
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
         builder.Services.AddLogging();
@@ -55,7 +54,7 @@ internal sealed class ApiServer : Command
 
         var app = builder.Build();
         app.MapControllers();
-        if (context.ParseResult.GetValueForOption(_enableOpenApi))
+        if (parseResult.GetValue(_enableOpenApi))
             app.MapOpenApi();
 
         app.Run();
