@@ -8,6 +8,11 @@
 **/node_modules/
 **/PublishProfiles/
 **/DB/
+# The SvelteKit server source uses a lowercase `db` directory. Git on Windows
+# matches the rule above case-insensitively, so explicitly keep its source
+# modules trackable.
+!src/web/src/lib/server/db/
+!src/web/src/lib/server/db/**
 **/SuperMetroid/data/maps/
 .vs
 .cr

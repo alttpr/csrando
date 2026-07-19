@@ -1,27 +1,55 @@
 <script lang="ts">
 	import * as m from "$lib/paraglide/messages";
-	import { goto } from "$app/navigation";
+	import { goto, beforeNavigate } from "$app/navigation";
 	import GameSelector from "$lib/components/config/GameSelector.svelte";
 	import OptionForm from "$lib/components/config/OptionForm.svelte";
 	import GameTabs from "$lib/components/config/GameTabs.svelte";
 	import Button from "$lib/components/ui/Button.svelte";
 	import Select from "$lib/components/ui/Select.svelte";
 	import Toggle from "$lib/components/ui/Toggle.svelte";
+	import ProfileToolbar from "$lib/components/config/profiles/ProfileToolbar.svelte";
 	import { createSeed } from "$lib/services/data";
-	import type {
-		Metadata,
-		MetadataSetting,
-		SingleChoiceSetting,
-		MultipleChoiceSetting,
-		SliderSetting,
-		ToggleSetting,
-		GenericSetting,
-		InputSetting,
-	} from "$lib/types";
+	import {
+		initializeFormValues,
+		normalizeConfig,
+		buildRandomizePayload,
+		hydrateFormState,
+		configsEqual,
+		type NormalizedConfig,
+	} from "$lib/config/normalize";
+	import { CONFIG_SCHEMA_VERSION } from "$lib/config/constants";
+	import { ProfileState, type LoadedForm } from "$lib/config/profile-state.svelte";
+	import { resolveStartupSelection } from "$lib/config/profile-selection";
+	import {
+		clearDraft,
+		loadDraft,
+		loadLocalLastUsedProfile,
+		saveDraft,
+	} from "$lib/config/profile-storage";
+	import type { ProfileListResponseDto } from "$lib/schemas/profiles";
+	import type { Metadata, SingleChoiceSetting } from "$lib/types";
 
 	interface PageData {
 		metadata: Metadata | null;
 		error: string | null;
+		configId?: string;
+		profileBootstrap?: ProfileListResponseDto | null;
+		queryProfileId?: string | null;
+		sharedProfile?: {
+			name: string;
+			description: string | null;
+			settings: unknown;
+			configSchemaVersion: number;
+		} | null;
+		sharedInvalid?: boolean;
+		seedSettings?: {
+			seedId: string;
+			settings: unknown;
+			configSchemaVersion: number;
+		} | null;
+		seedSettingsInvalid?: boolean;
+		// Provided by the root layout load.
+		user?: { username: string; isAdmin?: boolean } | null;
 	}
 
 	interface Props {
@@ -32,6 +60,9 @@
 
 	const metadata = $derived(data.metadata);
 	const pageError = $derived(data.error);
+	const configId = $derived(data.configId ?? "");
+	const user = $derived(data.user ?? null);
+	const isAdmin = $derived(!!user?.isAdmin);
 
 	let formValues: {
 		global: { [key: string]: unknown };
@@ -45,111 +76,6 @@
 	}> = $state([]);
 	let selectedGames: string[] = $state([]);
 	let activeGameTab: string | null = $state(null);
-
-	// Helper function to get default value for an option
-	function getDefaultValue(option: MetadataSetting): unknown {
-		switch (option.type) {
-			case "SingleChoice": {
-				const sc = option as SingleChoiceSetting;
-				if (sc.default && sc.default in option.values)
-					return sc.default;
-				const firstKey = Object.keys(option.values)[0];
-				if (firstKey) {
-					return option.values[firstKey];
-				}
-				return "";
-			}
-			case "MultipleChoice":
-				return (option as MultipleChoiceSetting).default || [];
-			case "Slider":
-				return (option as SliderSetting).default || 0;
-			case "Toggle":
-				return (option as ToggleSetting).default ?? false;
-			case "Input":
-				return (option as InputSetting).default || "";
-			case "Generic":
-				return (option as GenericSetting).default || null;
-			default:
-				return null;
-		}
-	}
-
-	function initializeFormValues(metadata: Metadata) {
-		const result = {
-			availableGames: [] as Array<{
-				id: string;
-				name: string;
-				description?: string;
-			}>,
-			formGlobal: {} as { [key: string]: unknown },
-			formPerGame: {} as {
-				[gameKey: string]: { [key: string]: unknown };
-			},
-			selectedGames: [] as string[],
-			activeTab: null as string | null,
-		};
-
-		// Process global settings
-		if (metadata.settings) {
-			for (const option of metadata.settings) {
-				result.formGlobal[option.key] = getDefaultValue(option);
-			}
-		}
-
-		if (metadata.gameSettings) {
-			for (const game in metadata.gameSettings) {
-				const gameSettings = metadata.gameSettings[game];
-
-				// Initialize an empty object for this game's options
-				result.formPerGame[game] = {};
-
-				const gameSpecificOptions =
-					gameSettings && gameSettings.settings
-						? gameSettings.settings
-						: [];
-
-				// Only add to availableGames if there are actual settings
-				if (
-					Array.isArray(gameSpecificOptions) &&
-					gameSpecificOptions.length > 0
-				) {
-					// Add to our results array
-					result.availableGames.push({
-						id: game,
-						name:
-							(
-								gameSettings as unknown as {
-									game?: { name?: string };
-								}
-							).game?.name || game,
-						description: (
-							gameSettings as unknown as {
-								game?: { description?: string };
-							}
-						).game?.description,
-					});
-
-					// Process each option
-					for (const option of gameSpecificOptions) {
-						if (option && typeof option.key === "string") {
-							result.formPerGame[game][option.key] =
-								getDefaultValue(option);
-						}
-					}
-				}
-			}
-		}
-
-		// Set initial selection if games are available
-		if (result.availableGames.length > 0) {
-			// Set all available games as selected by default
-			result.selectedGames = result.availableGames.map((game) => game.id);
-			// Set the first game as the active tab
-			result.activeTab = result.availableGames[0].id;
-		}
-
-		return result;
-	}
 
 	function resetFormState(newMetadata: Metadata | null) {
 		if (!newMetadata) {
@@ -189,6 +115,97 @@
 	let formSubmissionError: string | null = $state(null);
 	let includeSpoiler = $state(true);
 
+	let profileState = $state<ProfileState | null>(null);
+	let toolbarRef = $state<ReturnType<typeof ProfileToolbar> | null>(null);
+	// Skip the unsaved-changes guard for navigations we initiate deliberately
+	// (seed generation, confirmed leave).
+	let bypassNavigationGuard = false;
+	let profileInitToken = 0;
+
+	function applyLoadedForm(loaded: LoadedForm) {
+		formValues = {
+			global: { ...loaded.form.global },
+			perGame: Object.fromEntries(
+				Object.entries(loaded.form.perGame).map(([game, values]) => [
+					game,
+					{ ...values },
+				]),
+			),
+		};
+		selectedGames = [...loaded.form.selectedGames];
+		if (loaded.activeTab) activeGameTab = loaded.activeTab;
+	}
+
+	// Name of a profile loaded through a ?share= link, shown in the toolbar.
+	let sharedProfileName = $state<string | null>(null);
+	// Seed id whose settings were loaded through ?fromSeed=.
+	let seedSourceId = $state<string | null>(null);
+
+	// Startup selection: ?share= link > ?fromSeed= seed settings > explicit
+	// profile path (or legacy query) > recoverable draft > default > last-used >
+	// recommended preset > defaults.
+	async function initializeProfiles(meta: Metadata) {
+		const token = ++profileInitToken;
+		const state = new ProfileState(configId, !!user);
+		if (data.profileBootstrap) {
+			state.applyList(data.profileBootstrap);
+		} else {
+			await state.refreshList();
+			if (token !== profileInitToken) return;
+		}
+		profileState = state;
+
+		if (data.sharedProfile) {
+			const loaded = state.applySharedSettings(
+				data.sharedProfile.settings as NormalizedConfig,
+				data.sharedProfile.configSchemaVersion,
+				meta,
+			);
+			if (token === profileInitToken && loaded) {
+				applyLoadedForm(loaded);
+				sharedProfileName = data.sharedProfile.name;
+			}
+			return;
+		}
+
+		if (data.seedSettings) {
+			const loaded = state.applySharedSettings(
+				data.seedSettings.settings as NormalizedConfig,
+				data.seedSettings.configSchemaVersion,
+				meta,
+			);
+			if (token === profileInitToken && loaded) {
+				applyLoadedForm(loaded);
+				seedSourceId = data.seedSettings.seedId;
+			}
+			return;
+		}
+
+		const draft = loadDraft(configId);
+		const selection = resolveStartupSelection(
+			{
+				queryProfileId: data.queryProfileId,
+				defaultProfileId: state.defaultProfileId,
+				lastUsedProfileId:
+					data.profileBootstrap?.preferences?.lastUsedProfileId ?? null,
+				localLastUsedProfileId: loadLocalLastUsedProfile(configId),
+				recommendedId: state.recommendedId,
+				knownProfileIds: state.allProfiles().map((p) => p.id),
+			},
+			draft,
+		);
+
+		if (selection.kind === "draft") {
+			const loaded = await state.applyDraft(selection.draft, meta);
+			if (token === profileInitToken && loaded) applyLoadedForm(loaded);
+		} else if (selection.kind === "profile") {
+			const loaded = await state.select(selection.profileId, meta, {
+				recordUse: false,
+			});
+			if (token === profileInitToken && loaded) applyLoadedForm(loaded);
+		}
+	}
+
 	$effect(() => {
 		const meta = metadata ?? null;
 		const signature = getMetadataSignature(meta);
@@ -197,6 +214,107 @@
 		resetFormState(meta);
 		generating = false;
 		formSubmissionError = null;
+		profileState = null;
+		if (meta && configId) {
+			void initializeProfiles(meta);
+		} else {
+			profileInitToken++;
+		}
+	});
+
+	const currentNormalized = $derived(
+		metadata
+			? normalizeConfig(
+					{
+						selectedGames,
+						global: formValues.global,
+						perGame: formValues.perGame,
+					},
+					metadata,
+				)
+			: null,
+	);
+	const defaultsNormalized = $derived(
+		metadata
+			? normalizeConfig(hydrateFormState({}, metadata).form, metadata)
+			: null,
+	);
+	const profileStatus = $derived(
+		profileState ? profileState.status(currentNormalized) : "custom",
+	);
+
+	// Persist unsaved work as a local draft (debounced). The draft is cleared
+	// once the configuration matches the loaded profile or plain defaults.
+	let draftTimer: ReturnType<typeof setTimeout> | null = null;
+	$effect(() => {
+		if (!profileState || !currentNormalized || !configId) return;
+		const status = profileStatus;
+		const snapshot = currentNormalized;
+		const defaults = defaultsNormalized;
+		const selectedId = profileState.selected?.id ?? null;
+		const revisionId = profileState.selectedRevisionId;
+		if (draftTimer) clearTimeout(draftTimer);
+		draftTimer = setTimeout(() => {
+			if (status === "modified") {
+				saveDraft(configId, {
+					settings: snapshot,
+					profileId: selectedId,
+					profileRevisionId: revisionId,
+				});
+			} else if (status === "custom") {
+				if (defaults && !configsEqual(snapshot, defaults)) {
+					saveDraft(configId, {
+						settings: snapshot,
+						profileId: null,
+						profileRevisionId: null,
+					});
+				} else {
+					clearDraft(configId);
+				}
+			} else {
+				clearDraft(configId);
+			}
+		}, 1000);
+		return () => {
+			if (draftTimer) clearTimeout(draftTimer);
+		};
+	});
+
+	// Full reset from the profile overflow menu: drop the local draft and the
+	// profile selection and go back to plain metadata defaults.
+	function resetConfiguration() {
+		clearDraft(configId);
+		sharedProfileName = null;
+		seedSourceId = null;
+		profileState?.clearSelection();
+		if (metadata) resetFormState(metadata);
+	}
+
+	// Toolbar-driven form loads (profile switch, revert) leave the shared-link
+	// context behind.
+	function handleToolbarApply(loaded: LoadedForm) {
+		sharedProfileName = null;
+		seedSourceId = null;
+		applyLoadedForm(loaded);
+	}
+
+	beforeNavigate((navigation) => {
+		if (bypassNavigationGuard || profileStatus !== "modified") return;
+		if (navigation.type === "leave") {
+			// Closing the tab / hard navigation: let the browser prompt. The
+			// local draft additionally preserves the work.
+			navigation.cancel();
+			return;
+		}
+		navigation.cancel();
+		toolbarRef?.requestLeave(() => {
+			bypassNavigationGuard = true;
+			if (navigation.to) {
+				void goto(navigation.to.url).finally(() => {
+					bypassNavigationGuard = false;
+				});
+			}
+		});
 	});
 	let selectedVisibility = $state(["Basic"]);
 	let visibilitySelection = $state<"basic" | "advanced" | "expert" | "wip">(
@@ -288,152 +406,42 @@
 		}
 
 		try {
-			const isRandomSelection = (value: unknown) =>
-				typeof value === "string" &&
-				value.trim().toLowerCase() === "randompick";
-
-			const filterNonNullValues = (obj: unknown) => {
-				const o = obj as Record<string, unknown> | undefined;
-				if (!o) {
-					return {};
-				}
-				const entries: Array<[string, unknown]> = [];
-				for (const [key, value] of Object.entries(o)) {
-					if (value === null || isRandomSelection(value)) {
-						continue;
-					}
-
-					if (Array.isArray(value)) {
-						const sanitizedArray = value.filter(
-							(item) => item != null && !isRandomSelection(item),
-						);
-						if (sanitizedArray.length === 0) {
-							continue;
-						}
-						entries.push([key, sanitizedArray]);
-						continue;
-					}
-
-					if (typeof value === "string") {
-						const trimmed = value.trim();
-						if (
-							!trimmed ||
-							trimmed.toLowerCase() === "randompick"
-						) {
-							continue;
-						}
-						entries.push([key, trimmed]);
-						continue;
-					}
-
-					entries.push([key, value]);
-				}
-				return Object.fromEntries(entries);
-			};
-
-			const gameSettings: { [key: string]: { [key: string]: unknown } } =
-				{};
-
-			for (const gameId of selectedGames) {
-				const currentGameOptions = formValues.perGame[gameId];
-
-				if (currentGameOptions) {
-					const validGameOptions =
-						filterNonNullValues(currentGameOptions);
-
-					if (Object.keys(validGameOptions).length > 0) {
-						gameSettings[gameId] = validGameOptions;
-					}
-				}
+			if (!metadata) {
+				throw new Error(m.config_no_metadata());
 			}
 
-			// Transform per-game settings for sliders that provide options (optionsFor)
-			if (metadata?.gameSettings) {
-				for (const [gameKey, gameMeta] of Object.entries(
-					metadata.gameSettings,
-				)) {
-					for (const setting of gameMeta.settings) {
-						if (setting.type === "Slider" && setting.optionsFor) {
-							const currentVal = (gameSettings[gameKey] || {})[
-								setting.key
-							];
-							if (currentVal === undefined) {
-								// If user didn't pick, send full numeric range as array
-								const from = setting.range.from ?? 0;
-								const to = setting.range.to;
-								const arr = Array.from(
-									{ length: to - from + 1 },
-									(_, i) => i + from,
-								);
-								if (!gameSettings[gameKey])
-									gameSettings[gameKey] = {};
-								gameSettings[gameKey][setting.key] = arr;
-							} else if (typeof currentVal === "number") {
-								gameSettings[gameKey][setting.key] = [
-									currentVal,
-								];
-							}
-						}
-					}
-				}
-			}
+			const snapshot = normalizeConfig(
+				{
+					selectedGames,
+					global: formValues.global,
+					perGame: formValues.perGame,
+				},
+				metadata,
+			);
+			const payload = buildRandomizePayload(snapshot, metadata, {
+				includeSpoiler,
+			});
 
-			// Use the explicit global Game setting (RandomizerTarget enum) provided by metadata instead of deriving.
-			let globalGameTarget = (formValues.global["Game"] as string) || "";
-			if (!globalGameTarget && metadata?.settings) {
-				const gameSetting = metadata.settings.find(
-					(s) => s.key === "Game",
-				);
-				if (
-					gameSetting &&
-					"default" in gameSetting &&
-					typeof (gameSetting as { default?: unknown }).default ===
-						"string"
-				) {
-					globalGameTarget = (gameSetting as { default?: string })
-						.default as string;
-				}
-			}
-			if (!globalGameTarget) globalGameTarget = "Alttpr";
-
-			const worldConfig: Record<string, unknown> = {
-				Language: (formValues.global["Language"] as string) || "en",
-			};
-			if (!isRandomSelection(globalGameTarget)) {
-				worldConfig.Game = globalGameTarget;
-			}
-
-			const worldGameKeys = new Set<string>();
-			for (const gameKey of selectedGames) {
-				worldGameKeys.add(gameKey);
-			}
-
-			for (const gameKey of worldGameKeys) {
-				const perGame =
-					gameSettings[gameKey] ??
-					filterNonNullValues(formValues.perGame[gameKey]);
-				worldConfig[gameKey] = perGame || {};
-			}
-
-			if ((globalGameTarget || "").toLowerCase() === "combo") {
-				worldConfig["Combo"] =
-					filterNonNullValues(formValues.perGame["Combo"]) || {};
-			}
-
-			const payload = {
-				Seed: 0,
-				IncludeSpoiler: includeSpoiler,
-				Configs: [worldConfig],
-			};
-
-			const result = await createSeed(payload);
+			// Generation always uses the visible configuration; the profile
+			// reference is provenance metadata only and never requires saving.
+			const result = await createSeed(payload, {
+				profileId: profileState?.selected?.id ?? null,
+				profileRevisionId: profileState?.selectedRevisionId ?? null,
+				settingsSnapshot: snapshot,
+				configSchemaVersion: CONFIG_SCHEMA_VERSION,
+			});
 
 			if (!result.id) {
 				throw new Error(m.config_randomize_no_seed_id());
 			}
 
 			// Navigate to the generated seed page. Use an absolute path to avoid base path issues.
-			await goto(`/seed/${result.id}`);
+			bypassNavigationGuard = true;
+			try {
+				await goto(`/seed/${result.id}`);
+			} finally {
+				bypassNavigationGuard = false;
+			}
 		} catch (e: unknown) {
 			formSubmissionError =
 				(e as { message?: string })?.message ||
@@ -495,6 +503,24 @@
 				/>
 			</div>
 		</div>
+
+		<!-- Seed profile toolbar -->
+		{#if profileState}
+			<ProfileToolbar
+				bind:this={toolbarRef}
+				state={profileState}
+				{metadata}
+				{currentNormalized}
+				isAuthenticated={!!user}
+				{isAdmin}
+				sharedName={sharedProfileName}
+				sharedInvalid={data.sharedInvalid ?? false}
+				{seedSourceId}
+				seedSourceInvalid={data.seedSettingsInvalid ?? false}
+				onapply={handleToolbarApply}
+				onreset={resetConfiguration}
+			/>
+		{/if}
 
 		<form
 			onsubmit={(event) => {

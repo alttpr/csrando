@@ -43,7 +43,7 @@ This project provides a web interface for a game randomizer, allowing users to c
 
     Optional extras:
 
-    - `PRIVATE_ADMIN_VERSION_TOKEN` enables the `/admin/new-version` UI for managing randomizer snapshots.
+    - `PRIVATE_ADMIN_VERSION_TOKEN` is a one-time bootstrap credential for promoting the first administrator. After that, all administration requires a signed-in admin account.
     - `LOCAL_TEST_MODE=true` switches various services (metadata, randomizer calls) to bundled mock data.
 
 ## Running the Development Server
@@ -88,9 +88,18 @@ The `package.json` includes additional scripts:
 
 External services such as Discord bots can generate seeds through the public SvelteKit API and link users to the normal seed permalink page. See [docs/PUBLIC_API.md](docs/PUBLIC_API.md).
 
+## Profile guide
+
+For instructions on choosing, saving, revising, sharing, and managing seed
+profiles, see [docs/PROFILES.md](docs/PROFILES.md).
+
 ## Randomizer Versions (Snapshots)
 
-Need to add or hotfix a version without redeploying? With `PRIVATE_ADMIN_VERSION_TOKEN` configured you can visit `/admin/new-version` on a running site, upload the IPS or BPS base patch, and fetch the latest metadata directly from the backend to create a new snapshot. You can optionally record the backend git commit hash and build timestamp to simplify debugging.
+Signed-in administrators can visit `/admin/new-version` on a running site to
+upload an IPS or BPS base patch and fetch the latest metadata directly from the
+backend. You can optionally record the backend git commit hash and build
+timestamp to simplify debugging. The server-level bootstrap token does not
+grant access to this page or endpoint.
 
 Use the CLI to store immutable snapshots of the randomizer (base IPS/BPS patch + metadata) so old seeds remain compatible even after updates.
 
@@ -192,6 +201,7 @@ For developer setup and self-hosted deployment instructions, see:
 
 - docs/DEVELOPMENT.md
 - docs/DEPLOYMENT.md
+- docs/PROFILES.md (user guide)
 
 ## Continuous Integration & Release
 

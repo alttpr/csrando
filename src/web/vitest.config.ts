@@ -20,6 +20,9 @@ export default defineConfig({
       "$app/environment": fileURLToPath(
         new URL("./tests/vite-stubs/app-environment.ts", import.meta.url),
       ),
+      "$app/navigation": fileURLToPath(
+        new URL("./tests/vite-stubs/app-navigation.ts", import.meta.url),
+      ),
     },
   },
   test: {

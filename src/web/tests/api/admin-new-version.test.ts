@@ -50,6 +50,15 @@ let POST: RequestHandler;
 let db: DbModule["db"];
 
 const TEST_TOKEN = "test-secret-token";
+const adminLocals = {
+  user: {
+    id: "version-admin",
+    username: "version-admin",
+    githubId: null,
+    isAdmin: true,
+  },
+  session: { id: "admin-session" },
+};
 
 beforeAll(async () => {
   process.env.DATABASE_URL = ":memory:";
@@ -71,23 +80,20 @@ afterEach(async () => {
 describe("POST /api/admin/new-version", () => {
   const url = "http://localhost/api/admin/new-version";
 
-  it("returns 500 when admin token is not configured", async () => {
-    const originalToken = process.env.PRIVATE_ADMIN_VERSION_TOKEN;
-    delete process.env.PRIVATE_ADMIN_VERSION_TOKEN;
-
+  it("requires an authenticated browser session", async () => {
     const request = new Request(url, { method: "POST" });
 
-    await expect(POST({ request } as never)).rejects.toMatchObject({
-      status: 500,
-      body: { message: "Admin token is not configured on the server." },
+    await expect(
+      POST({
+        request,
+        locals: { user: null, session: null },
+      } as never),
+    ).rejects.toMatchObject({
+      status: 401,
     });
-
-    if (originalToken) {
-      process.env.PRIVATE_ADMIN_VERSION_TOKEN = originalToken;
-    }
   });
 
-  it("rejects requests with an invalid admin token", async () => {
+  it("does not accept the legacy token from a non-admin session", async () => {
     const request = new Request(url, {
       method: "POST",
       headers: {
@@ -101,10 +107,15 @@ describe("POST /api/admin/new-version", () => {
       }),
     });
 
-    await expect(POST({ request } as never)).rejects.toMatchObject({
-      status: 401,
-      body: { message: "Invalid admin access token." },
-    });
+    await expect(
+      POST({
+        request,
+        locals: {
+          user: { ...adminLocals.user, isAdmin: false },
+          session: adminLocals.session,
+        },
+      } as never),
+    ).rejects.toMatchObject({ status: 403 });
   });
 
   it("validates required fields", async () => {
@@ -121,7 +132,9 @@ describe("POST /api/admin/new-version", () => {
       }),
     });
 
-    await expect(POST({ request } as never)).rejects.toMatchObject({
+    await expect(
+      POST({ request, locals: adminLocals } as never),
+    ).rejects.toMatchObject({
       status: 400,
       body: {
         message: "Fix the highlighted errors and try again.",
@@ -148,7 +161,9 @@ describe("POST /api/admin/new-version", () => {
       }),
     });
 
-    await expect(POST({ request } as never)).rejects.toMatchObject({
+    await expect(
+      POST({ request, locals: adminLocals } as never),
+    ).rejects.toMatchObject({
       status: 400,
       body: {
         message: "basePatchBase64 must be a base64 encoded string.",
@@ -183,7 +198,7 @@ describe("POST /api/admin/new-version", () => {
       }),
     });
 
-    const response = await POST({ request } as never);
+    const response = await POST({ request, locals: adminLocals } as never);
     expect(response.status).toBe(200);
 
     const payload = await response.json();

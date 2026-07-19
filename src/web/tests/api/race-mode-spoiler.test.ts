@@ -7,17 +7,21 @@ import {
   it,
   vi,
 } from "vitest";
-import { createHash } from "crypto";
 import { seeds } from "$lib/server/db/schema";
-import { ADMIN_VERSION_COOKIE_NAME } from "$lib/server/admin/version-service";
 
 type DbModule = typeof import("$lib/server/db");
 
 const { createRandomizerMock, getActiveRandomizerVersionForMock } = vi.hoisted(
-  () => ({
-    createRandomizerMock: vi.fn(),
-    getActiveRandomizerVersionForMock: vi.fn(),
-  }),
+  () => {
+    // Must run before any import evaluates $lib/server/db: this file pulls in
+    // version-service statically, which opens the database at module load.
+    // Without this, the test can hit the real local.db in a fresh worker.
+    process.env.DATABASE_URL = ":memory:";
+    return {
+      createRandomizerMock: vi.fn(),
+      getActiveRandomizerVersionForMock: vi.fn(),
+    };
+  },
 );
 
 vi.mock("$env/dynamic/private", () => ({
@@ -49,15 +53,12 @@ let adminSpoilerGet: typeof import("../../src/routes/api/admin/seed/[id]/spoiler
 let randomizePost: typeof import("../../src/routes/api/randomize/+server").POST;
 let db: DbModule["db"];
 
-const TEST_TOKEN = "test-secret-token";
 const seedId = "race-seed";
 const apiSeedId = "api-hide-spoiler-seed";
 const spoilerLog = { world: { location: "item" } };
 
 beforeAll(async () => {
   process.env.DATABASE_URL = ":memory:";
-  process.env.PRIVATE_ADMIN_VERSION_TOKEN = TEST_TOKEN;
-
   ({ db } = await import("$lib/server/db"));
   ({ GET: publicSeedGet } = await import(
     "../../src/routes/api/seed/[id]/+server"
@@ -174,21 +175,25 @@ describe("race mode spoilers", () => {
     await expect(
       adminSpoilerGet({
         params: { id: seedId },
-        cookies: { get: () => undefined },
+        locals: { user: null, session: null },
       } as never),
     ).rejects.toMatchObject({
       status: 401,
-      body: { message: "Admin authentication is required." },
+      body: { message: "Unauthorized" },
     });
   });
 
   it("returns the stored spoiler log to an authenticated admin", async () => {
-    const tokenHash = createHash("sha256").update(TEST_TOKEN).digest("hex");
     const response = await adminSpoilerGet({
       params: { id: seedId },
-      cookies: {
-        get: (name: string) =>
-          name === ADMIN_VERSION_COOKIE_NAME ? tokenHash : undefined,
+      locals: {
+        user: {
+          id: "race-admin",
+          username: "race-admin",
+          githubId: null,
+          isAdmin: true,
+        },
+        session: { id: "race-admin-session" },
       },
     } as never);
 

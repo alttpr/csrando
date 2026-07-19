@@ -22,6 +22,14 @@ describe("RandomizerResponseSchema", () => {
     const parsed = RandomizerResponseSchema.safeParse(data);
     expect(parsed.success).toBe(false);
   });
+
+  it("requires every world to contain an IPS or BPS patch", () => {
+    const parsed = RandomizerResponseSchema.safeParse({
+      seed: 1234,
+      worlds: { w1: {} },
+    });
+    expect(parsed.success).toBe(false);
+  });
 });
 
 describe("RandomizeRequestSchema", () => {

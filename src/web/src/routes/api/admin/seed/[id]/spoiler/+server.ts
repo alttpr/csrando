@@ -1,13 +1,12 @@
 import { error, json, type RequestHandler } from "@sveltejs/kit";
-import { isAdminAuthorized } from "$lib/server/admin/version-service";
+import { requireAdmin, requireSessionUser } from "$lib/server/auth-guards";
 import { db } from "$lib/server/db";
 import { seeds } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
-export const GET: RequestHandler = async ({ params, cookies }) => {
-  if (!isAdminAuthorized(cookies)) {
-    throw error(401, { message: "Admin authentication is required." });
-  }
+export const GET: RequestHandler = async ({ params, locals }) => {
+  requireSessionUser(locals);
+  requireAdmin(locals);
 
   const seedId = params.id;
   if (!seedId) {

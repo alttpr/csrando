@@ -36,6 +36,13 @@
 					>{m.nav_config_combo()}</a
 				>
 			{/if}
+			{#if user?.isAdmin}
+				<a
+					href="/admin"
+					class="text-lg font-semibold hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+					>Admin</a
+				>
+			{/if}
 		</div>
 
 		<div class="flex items-center space-x-2">
@@ -74,6 +81,13 @@
 						onclick={() => (helpMenuOpen = false)}
 					>
 						{m.nav_settings()}
+					</a>
+					<a
+						href="/content/profiles"
+						class="block px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-600"
+						onclick={() => (helpMenuOpen = false)}
+					>
+						{m.nav_profiles_guide()}
 					</a>
 					<a
 						href="/content/changelog"

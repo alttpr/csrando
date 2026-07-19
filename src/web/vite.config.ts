@@ -12,4 +12,11 @@ export default defineConfig({
       outdir: "./src/lib/paraglide",
     }),
   ],
+  optimizeDeps: {
+    // Pre-bundle deps that Vite otherwise discovers on the first page load.
+    // Late discovery forces a mid-session re-optimization + reload, which can
+    // leave the browser with two copies of Svelte's runtime (manifesting as
+    // "lifecycle_outside_component" errors in dev).
+    include: ["clsx", "devalue"],
+  },
 });

@@ -1,0 +1,42 @@
+import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { z } from "zod";
+import { requireSessionUser } from "$lib/server/auth-guards";
+import {
+  promoteProfileToOfficial,
+  toProfileSummary,
+} from "$lib/server/profiles/service";
+
+const PromoteProfileSchema = z.object({
+  slug: z.string().trim().min(2).max(64),
+  name: z.string().trim().min(1).max(60).optional(),
+  description: z.string().trim().max(240).nullable().optional(),
+});
+
+// Copy a profile's current revision into a new official preset (admin only;
+// the admin check lives in the service).
+export const POST: RequestHandler = async ({ params, request, locals }) => {
+  const user = requireSessionUser(locals);
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    throw error(400, { message: "Request body must be valid JSON." });
+  }
+  const parsed = PromoteProfileSchema.safeParse(body);
+  if (!parsed.success) {
+    throw error(400, {
+      message: "Fix the highlighted errors and try again.",
+      fieldErrors: { slug: "A slug of 2-64 characters is required" },
+    });
+  }
+
+  const { profile, revision } = await promoteProfileToOfficial(
+    user,
+    params.id!,
+    parsed.data,
+  );
+  return json(
+    { profile: toProfileSummary(profile, revision) },
+    { status: 201 },
+  );
+};
