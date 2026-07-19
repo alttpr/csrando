@@ -1149,7 +1149,10 @@ internal class DungeonBuilder
 
     private bool ItemFitsRoom(Room room)
     {
-        if (room.HasAnyRole(RoomRole.Start | RoomRole.Boss | RoomRole.End | RoomRole.Connector | RoomRole.Stairs | RoomRole.Item | RoomRole.LevelNineCheck))
+        // Cellar exclusion matters: a connector cellar given the Item role is written as a
+        // passage screen (0x3E), which never yields an item location — the slot silently
+        // disappears and a MapEarly tag on it leaves the z1d{level}m set empty.
+        if (room.HasAnyRole(RoomRole.Start | RoomRole.Boss | RoomRole.End | RoomRole.Connector | RoomRole.Stairs | RoomRole.Item | RoomRole.Cellar | RoomRole.LevelNineCheck))
             return false;
 
         // Item + shutters only works when the room can use clear logic.
