@@ -335,6 +335,9 @@ public class YamlReader
         public required List<int> allowed_levels;
         [YamlMember(Alias = "kill_items")]
         public List<string> kill_items { get; set; } = new();
+
+        [YamlMember(Alias = "blocks_passage")]
+        public bool blocks_passage { get; set; }
     }
 
     public class EnemyList
@@ -743,6 +746,25 @@ public class YamlReader
                     }
                 }
             }
+            // Vanilla shops keep their wares and aren't fill locations, but logic must know Bait
+            // is purchasable there: it feeds the passage-blocking Hungry Goriya (which consumes
+            // it on each feeding), and a shop is a repeatable source, so any number of Goriya
+            // rooms stays solvable. Same farming-weapon gate as shuffled shop purchases.
+            else if (config.ShopShuffle == ShopShuffleOption.Off && ShopShuffler.IsShop(cave)
+                     && cave.items.Contains(LoadItems()["Bait"].Byte))
+            {
+                var baitNode = CreateNode(new()
+                {
+                    { "name", $"Cave {cave.cave:X2} - Shop - Bait" },
+                    { "type", VertexType.Meta },
+                    { "item", "Bait" },
+                    { "itemset", (string[])["zelda"] },
+                });
+                foreach (var weapon in farmingWeapons)
+                {
+                    AddDirectedEdge(caveNode, baitNode, weapon);
+                }
+            }
         }
     }
 
@@ -1042,6 +1064,12 @@ public class YamlReader
         {
             var screen = data!.underworld_screens.First(s => s.area == map.area && s.screen == map.screen);
 
+            // Does a passage-blocking enemy (the Hungry Goriya) stand in the way of leaving this
+            // room? Its kill_items (Bait) drive the room-clear requirement; the Bait supply is
+            // guaranteed by BuildCaves (vanilla shops) or ItemPooler (shuffled shops).
+            bool passageBlocked = GetEnemiesInRoom(map).Any(name =>
+                data.enemies.enemies.FirstOrDefault(e => e.name == name)?.blocks_passage == true);
+
             // Go through doors and create nodes for them
             for (int i = 0; i <= 3; i++)
             {
@@ -1071,9 +1099,12 @@ public class YamlReader
                     continue;
                 }
 
-                // Connect this exit to the other room
+                // Connect this exit to the other room. The room must be cleared to leave when a
+                // kill-behaviour shutter gates this door, or when a passage-blocking enemy stands
+                // in the way of every door.
                 string? doorKillRequirement = null;
-                if (door == DoorType.Shutter && (map.behaviour == (int)RoomBehaviour.KillForShutter || map.behaviour == (int)RoomBehaviour.KillForItem))
+                if ((door == DoorType.Shutter && (map.behaviour == (int)RoomBehaviour.KillForShutter || map.behaviour == (int)RoomBehaviour.KillForItem))
+                    || passageBlocked)
                 {
                     doorKillRequirement = CreateRoomClearLogic(map, mapName);
                 }
@@ -1407,8 +1438,25 @@ public class YamlReader
                 _ => throw new Exception("Unknown door type")
             };
 
-            // Connect the source exit to the target entrance
-            AddDirectedEdge(exitNode, targetEntranceNode, sourceRequirement);
+            // Connect the source exit to the target entrance. A kill-behaviour shutter consumes
+            // the kill requirement in the switch above; for a passage-blocking enemy the clear
+            // also applies to every other door type, on top of the door's own requirement (a
+            // locked door out of the Goriya room needs Key AND the room clear) — sequence two
+            // edges through a "- Cleared" node to express the AND.
+            if (killRequirement == null || sourceRequirement == killRequirement || sourceRequirement == "Never")
+            {
+                AddDirectedEdge(exitNode, targetEntranceNode, sourceRequirement);
+            }
+            else if (sourceRequirement == "fixed")
+            {
+                AddDirectedEdge(exitNode, targetEntranceNode, killRequirement);
+            }
+            else
+            {
+                var clearedNode = FindOrCreateNode($"{exitNode["name"]} - Cleared");
+                AddDirectedEdge(exitNode, clearedNode, killRequirement);
+                AddDirectedEdge(clearedNode, targetEntranceNode, sourceRequirement);
+            }
         }
     }
 

@@ -189,6 +189,107 @@ public sealed class ShopShuffleTest
         }
     }
 
+    // The vanilla Level 7 Hungry Goriya room (map A8): the Goriya blocks the room until
+    // "defeated" by handing over Bait (its kill_items), so every exit is gated on the
+    // standard room-clear chain while entry and the room interior stay free.
+    private const string GoriyaRoom = "Underworld - Level 7 - Map A8";
+
+    [DataTestMethod]
+    [DataRow(ShopShuffleOption.Off)]
+    [DataRow(ShopShuffleOption.Full)]
+    [DataRow(ShopShuffleOption.Junk)]
+    public void HungryGoriyaRoom_ExitsGatedOnRoomClear(ShopShuffleOption mode)
+    {
+        var world = CreateWorld(mode);
+        var allEdges = world.Graph.GetVertices().SelectMany(v => v.Edges).ToList();
+
+        // Leaving through any door requires the room clear (A8: Open north, Locked south)...
+        var exitEdges = allEdges
+            .Where(e => e.From.Name.StartsWith($"{GoriyaRoom} - ") && e.From.Name.EndsWith(" edge - Exit"))
+            .ToList();
+        Assert.IsTrue(exitEdges.Count > 0, "Expected exit edges in the Hungry Goriya room.");
+        Assert.IsTrue(exitEdges.All(e => e.Condition.Item.Name == "MapA8Clear"),
+            "Leaving the Hungry Goriya room must require the room clear, found: " +
+            string.Join(",", exitEdges.Select(e => e.Condition.Item.Name)));
+
+        // ...with the locked south door still needing its Key on top of the clear (the AND is
+        // sequenced through the "- Cleared" node).
+        var keyEdges = allEdges
+            .Where(e => e.From.Name == $"{GoriyaRoom} - Bottom edge - Exit - Cleared")
+            .ToList();
+        Assert.IsTrue(keyEdges.Count > 0 && keyEdges.All(e => e.Condition.Item.Name == "Key"),
+            "The locked south door must still require a Key after the clear.");
+
+        // ...and the clear chain requires defeating the Goriya, i.e. holding Bait.
+        var defeatEdges = allEdges
+            .Where(e => e.To.Name == $"{GoriyaRoom} - Clear - Defeated Hungry Goriya")
+            .ToList();
+        Assert.IsTrue(defeatEdges.Count > 0 && defeatEdges.All(e => e.Condition.Item.Name == "DefeatHungry Goriya"),
+            "The Goriya room clear must require defeating the Hungry Goriya.");
+
+        // Entry stays free: the entrance-to-room step must not be gated, or the clear chain
+        // (fed from the room interior) could never be satisfied.
+        var entryEdges = allEdges
+            .Where(e => e.To.Name == $"{GoriyaRoom} - Top edge"
+                        && e.From.Name == $"{GoriyaRoom} - Top edge - Entrance")
+            .ToList();
+        Assert.IsTrue(entryEdges.Count > 0 && entryEdges.All(e => e.Condition.Item.Name == "fixed"),
+            "Entering the Hungry Goriya room must stay free.");
+    }
+
+    [TestMethod]
+    public void ShopShuffleOff_BaitPurchasableAtVanillaShops()
+    {
+        // With vanilla shops the Bait-selling caves (1F and 20) are modeled as a purchasable
+        // Bait, gated on a farming weapon like any shop purchase — that's what satisfies the
+        // Goriya gate when shops keep their vanilla wares.
+        var world = CreateWorld(ShopShuffleOption.Off);
+        var baitNodes = world.Graph.GetVertices()
+            .Where(v => v.Name.EndsWith(" - Shop - Bait"))
+            .ToList();
+        Assert.AreEqual(2, baitNodes.Count, "Expected the two vanilla Bait shops (caves 1F and 20).");
+
+        foreach (var baitNode in baitNodes)
+        {
+            var incoming = world.Graph.GetVertices()
+                .SelectMany(v => v.Edges)
+                .Where(e => e.To == baitNode)
+                .ToList();
+            Assert.IsTrue(incoming.Count > 0 && incoming.All(e => ExpectedFarmingWeapons.Contains(e.Condition.Item.Name)),
+                $"{baitNode.Name} should be gated on a farming weapon.");
+        }
+
+        // No weapon -> no rupee farming -> no Bait purchase in logic.
+        var noWeapon = new Searcher(world.Graph, world.Start!, new Inventory([world.GetItem("fixed")]));
+        Assert.IsFalse(baitNodes.Any(noWeapon.HasVisited),
+            "Bait should be out of logic without a farming weapon.");
+
+        var withSword = new Searcher(world.Graph, world.Start!,
+            new Inventory([world.GetItem("fixed"), world.GetItem("SwordL1")]));
+        Assert.IsTrue(baitNodes.Any(withSword.HasVisited),
+            "With a sword, buying Bait should be in logic.");
+    }
+
+    [DataTestMethod]
+    [DataRow(ShopShuffleOption.Full)]
+    [DataRow(ShopShuffleOption.Junk)]
+    [TestCategory(TestCategories.Slow)]
+    public void ShopShuffleOn_BaitIsStockedInARepeatableShop(ShopShuffleOption mode)
+    {
+        // Shop shuffle replaces the vanilla Bait wares, so Bait is force-stocked in a repeatable
+        // shop (cave id < 0x24): the Goriya consumes the Bait on each feeding, so the source must
+        // restock or multiple Goriya rooms could never be supported.
+        for (int seed = 1; seed <= 5; seed++)
+        {
+            var world = RandomizeWorld(mode, seed);
+            var baitLocation = world.GetLocationsOfType(VertexType.Item)
+                .FirstOrDefault(v => v.Item?.Name == "Bait");
+            Assert.IsNotNull(baitLocation, $"shop {mode}, seed {seed}: Bait should be placed in the world.");
+            Assert.IsTrue(baitLocation.Name.Contains(" - Shop - ") && CaveIdOf(baitLocation) < 0x24,
+                $"shop {mode}, seed {seed}: Bait should sit in a repeatable shop, found {baitLocation.Name}.");
+        }
+    }
+
     [TestMethod]
     public void BuyOnceShops_HaveExactlyOneItem_OnFreshCaveIds()
     {

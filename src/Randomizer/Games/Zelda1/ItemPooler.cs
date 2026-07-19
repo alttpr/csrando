@@ -136,6 +136,43 @@ internal sealed class ItemPooler : IItemPooler
     private static readonly string[] ShopJunkItems =
         ["RedPotion", "BluePotion", "BlueRing", "Bombs", "Arrows", "Rupee", "Rupee5", "Heart", "Key", "MagicShield"];
 
+    // Shop marker sets whose caves restock on re-entry when the cave ID is an original one
+    // (< 0x24; the synthesized buy-once IDs >= 0x24 are emptied after a single purchase).
+    private static readonly string[] RepeatableShopMarkers = ["z1shopjunk", "z1shoprepeat"];
+
+    // First cave ID synthesized by ShopShuffler for buy-once shops. IDs below it restock.
+    private const int FirstBuyOnceCaveId = 0x24;
+
+    private static int CaveIdOfSet(string caveSetName) =>
+        Convert.ToInt32(caveSetName["z1c".Length..], 16);
+
+    /// <summary>
+    /// Does any dungeon room in this world hold a passage-blocking enemy (the Hungry Goriya)?
+    /// Checked against the world's actual level data, so this keeps working if dungeon shuffle
+    /// ever starts placing such enemies in generated layouts.
+    /// </summary>
+    private static bool WorldNeedsBait(World world)
+    {
+        var data = world.YamlData;
+        if (data == null)
+            return !world.Config.DungeonShuffle; // no data means vanilla layout, which has the Goriya
+
+        var blockingIds = data.enemies.enemies.Where(e => e.blocks_passage).Select(e => e.id).ToHashSet();
+        var levelRooms = data.levels.Where(l => l.area == YamlReader.Area.Underworld)
+            .SelectMany(l => l.rooms).ToHashSet();
+
+        return data.underworld_maps.Any(m =>
+        {
+            if (!levelRooms.Contains(m.map) || m.passage)
+                return false;
+            int effectiveId = (m.enemy_mode << 6) | m.enemy_id;
+            if (effectiveId >= 0x62) // enemy list: check its members
+                return data.enemies.enemy_lists.FirstOrDefault(l => l.id == effectiveId - 0x62)
+                    ?.data.Any(blockingIds.Contains) == true;
+            return blockingIds.Contains(effectiveId);
+        });
+    }
+
     /// <summary>
     /// Stock each consumable cave with distinct consumables drawn into its per-cave "z1c{cave}" set.
     /// A cave qualifies if its locations carry one of <paramref name="markerSets"/>.
@@ -145,12 +182,44 @@ internal sealed class ItemPooler : IItemPooler
         var caveGroups = world.GetLocationsOfType(VertexType.Item)
             .OfType<Vertex>()
             .Where(v => v.ItemSet.Any(s => markerSets.Contains(s.Name) && s.World == world))
-            .GroupBy(v => v.ItemSet.First(s => s.Name.StartsWith("z1c") && s.World == world).Name);
+            .GroupBy(v => v.ItemSet.First(s => s.Name.StartsWith("z1c") && s.World == world).Name)
+            .ToList();
+
+        // If the world contains a passage-blocking enemy, guarantee Bait in a REPEATABLE shop:
+        // each feeding consumes the Bait, so the player must be able to buy another — a one-shot
+        // source caps the number of feedable Goriyas at one. Weight 0 places it before the
+        // progression pass, so later placements see its real location instead of assuming it.
+        string? baitCaveSet = null;
+        if (WorldNeedsBait(world))
+        {
+            var repeatableShops = caveGroups
+                .Where(g => CaveIdOfSet(g.Key) < FirstBuyOnceCaveId
+                            && g.Any(v => v.ItemSet.Any(s => RepeatableShopMarkers.Contains(s.Name))))
+                .Select(g => g.Key)
+                .ToList();
+            if (repeatableShops.Count > 0)
+            {
+                baitCaveSet = _prng.GetRandomElement(repeatableShops);
+                worldSet.Add(new PooledItem(new ItemSetName(baitCaveSet, world), 0, world.GetItem("Bait")));
+            }
+            else if (world.Config.ShopShuffle != ShopShuffleOption.Off)
+            {
+                // No repeatable shop rolled (vanishingly rare) — fall back to a one-shot pool
+                // Bait. Enough for the single vanilla Goriya; revisit if multiple ever exist.
+                worldSet.Add(new PooledItem(ItemSetName.DefaultSet, 3, world.GetItem("Bait")));
+            }
+            // With shops vanilla there are no shop locations at all: the vanilla Bait shops keep
+            // their wares and YamlReader models the purchase directly, so nothing to add here.
+        }
 
         foreach (var group in caveGroups)
         {
             int slots = group.Count();
             var caveSet = new ItemSetName(group.Key, world);
+
+            // The forced Bait occupies one of this cave's slots.
+            if (group.Key == baitCaveSet)
+                slots--;
 
             // Distinct draw per cave; fall back to repeats only if a cave somehow has more slots
             // than the consumable list (it won't, with 3 slots and 10 items).

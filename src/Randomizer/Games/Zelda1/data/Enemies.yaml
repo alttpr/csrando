@@ -202,6 +202,8 @@ enemies:
   - id: 0x36
     name: "Hungry Goriya"
     allowed_levels: []
+    kill_items: ["Bait"]
+    blocks_passage: true
   - id: 0x37
     name: "Zelda"
     allowed_levels: []
