@@ -33,6 +33,7 @@ export interface User {
   id: string;
   username: string;
   githubId: number | null;
+  isAdmin?: boolean;
 }
 
 export interface Seed {

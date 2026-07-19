@@ -1,10 +1,27 @@
 import { lucia } from "$lib/server/auth";
 import { sequence } from "@sveltejs/kit/hooks";
+import { building } from "$app/environment";
+import { ensureOfficialProfilesSeeded } from "$lib/server/profiles/seed-official";
+import { authenticateApiKey } from "$lib/server/api-keys";
+
+// Seed missing official presets at boot (idempotent; retried lazily from the
+// profiles API when the generator metadata is not available yet).
+if (!building) {
+  ensureOfficialProfilesSeeded().catch((err) => {
+    console.error("[profiles] official preset seeding failed:", err);
+  });
+}
 
 export const handle = sequence(async ({ event, resolve }) => {
   const sessionId = event.cookies.get(lucia.sessionCookieName);
   if (!sessionId) {
-    event.locals.user = null;
+    // External tools can authenticate API routes with a personal API key
+    // (Authorization: Bearer qr_...). Key-authenticated requests have
+    // locals.session === null, which endpoints use to restrict
+    // session-only operations (e.g. managing API keys).
+    event.locals.user = event.url.pathname.startsWith("/api/")
+      ? await authenticateApiKey(event.request.headers.get("authorization"))
+      : null;
     event.locals.session = null;
     return resolve(event);
   }

@@ -1,7 +1,7 @@
 ---
 title: Information
 description: Overview of the Game Randomizer web experience and where to learn more.
-lastUpdated: 2024-09-15
+lastUpdated: 2026-07-20
 ---
 
 # Information
@@ -20,15 +20,16 @@ A lot of things is still work in progress, but most basic settings should work a
 ## Combo/Quad Randomizer
 ### Quick notes
 	* This is a randomizer that combines Super Metroid, A Link to the Past, Metroid 1 and Zelda 1.
-    * Right now all games except for A Link to the Past can be toggled on or off (this will change later when more portals are added)
-	* The portal to Zelda 1 is the Kakariko Fortune Teller
-	* The portal to Metroid 1 is the Lumberjack hut
-	* More portals will be added later
-	* For the "Ganon" goal, all final bosses are required to be defeated to beat the game
+	* These are the cross-game portals when all games are selected:
+        * sm:Crateria Map Room          - alttp:Lake Hylia Fortune Teller
+        * sm:Norfair Map Room           - alttp:Old Man Home Circle
+        * sm:Maridia Missile Refill     - alttp:Hint Giver Cave
+        * sm:Golden Torizo Energy       - alttp:Mire Big Fairy
+        * alttp:Kakariko Fortune Teller - z1:Portal Cave 66
+        * alttp:Lumberjacks House       - m1:Brinstar Portal
+        * z1:Portal Cave 0C             - sm:Caterpillar Save Room
+        * m1:Norfair Portal             - sm:Bubble Mountain Save Room
+        * z1:Portal Cave 5E             - m1:Kraid Portal
+
 	* In Z1 and M1 you can use Up+B on the second controller when paused to "die" and restart at the start of a dungeon/area
     * SM Logic is made to roughly match the similar named logic levels in the SM map randomizer
-    * Right now the game will always start in A Link to the Past
-
-### Known issues
-    * The portal from Metroid 1 is janky and you might need to go back and forth to make it work inside Metroid 1
-    * Hard-resetting out of SM, M1 or Z1 into Alttp can lead to upgrade issues with progressive items.

@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal sealed class ApiServer : Command
 {
-    private readonly Option<bool> _enableOpenApi = new("--enable-open-api", "Enable OpenAPI document hosting");
+    private readonly Option<bool> _enableOpenApi = new("--enable-open-api") { Description = "Enable OpenAPI document hosting" };
     private readonly Argument<string[]> _others = new("api-parameters") { DefaultValueFactory = _ => [] };
 
     public ApiServer()

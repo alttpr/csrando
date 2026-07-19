@@ -62,10 +62,6 @@
       buildDate?: string;
     },
   );
-  const authError = $derived(
-    form && form.type === "authenticate" && !form.success ? form.message : null,
-  );
-
   function formatTimestamp(value: string): string {
     const asDate = new Date(value);
     if (Number.isNaN(asDate.getTime())) return value;
@@ -90,61 +86,10 @@
         without a full deployment.
       </p>
     </div>
-    {#if data.authorized}
-      <form method="post" action="?/logout">
-        <Button type="submit" variant="secondary">Sign out</Button>
-      </form>
-    {/if}
+    <Button href="/logout" variant="secondary">Sign out</Button>
   </div>
 
-  {#if !data.secretConfigured}
-    <Card
-      title="Admin access not configured"
-      subtitle="Set PRIVATE_ADMIN_VERSION_TOKEN in the environment and reload to enable remote version creation."
-    >
-      <p class="text-sm text-slate-600 dark:text-slate-300">
-        For now, a shared one-time token protects this page. Configure
-        <code class="font-mono">PRIVATE_ADMIN_VERSION_TOKEN</code> on the server,
-        then refresh and enter the token to unlock the form.
-      </p>
-    </Card>
-  {:else if !data.authorized}
-    <Card
-      title="Admin access"
-      subtitle="Enter the shared secret token to unlock remote version management."
-    >
-      {#if authError}
-        <div
-          class="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-400/40 dark:bg-red-900/40 dark:text-red-200"
-        >
-          {authError}
-        </div>
-      {/if}
-      <form method="post" action="?/authenticate" class="space-y-4">
-        <div>
-          <label
-            for="token"
-            class="block text-sm font-medium text-slate-700 dark:text-slate-200"
-            >Access token</label
-          >
-          <input
-            id="token"
-            name="token"
-            type="password"
-            required
-            class="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-            autocomplete="off"
-          />
-          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            The token is stored in an HTTP-only cookie for 12 hours on this
-            device.
-          </p>
-        </div>
-        <Button type="submit">Unlock</Button>
-      </form>
-    </Card>
-  {:else}
-    {#if createSuccess}
+  {#if createSuccess}
       <div
         class="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-400/40 dark:bg-green-900/30 dark:text-green-100"
       >
@@ -485,5 +430,4 @@
         </div>
       {/if}
     </Card>
-  {/if}
 </div>

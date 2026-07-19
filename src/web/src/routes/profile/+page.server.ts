@@ -1,15 +1,54 @@
 import { redirect, fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import { db } from "$lib/server/db";
-import { users, sessions, userSeeds } from "$lib/server/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  apiKeys,
+  configurationProfiles,
+  users,
+  sessions,
+  userSeeds,
+} from "$lib/server/db/schema";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { lucia } from "$lib/server/auth";
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user) {
     throw redirect(302, "/login");
   }
-  return {};
+  const count = sql<number>`count(*)`;
+  const [seedRows, profileRows, keyRows] = await Promise.all([
+    db
+      .select({ count })
+      .from(userSeeds)
+      .where(eq(userSeeds.userId, locals.user.id)),
+    db
+      .select({ count })
+      .from(configurationProfiles)
+      .where(
+        and(
+          eq(configurationProfiles.ownerUserId, locals.user.id),
+          isNull(configurationProfiles.deletedAt),
+        ),
+      ),
+    db
+      .select({ count })
+      .from(apiKeys)
+      .where(
+        and(eq(apiKeys.userId, locals.user.id), isNull(apiKeys.revokedAt)),
+      ),
+  ]);
+  return {
+    account: {
+      username: locals.user.username,
+      loginMethod: locals.user.githubId === null ? "Password" : "GitHub",
+      isAdmin: Boolean(locals.user.isAdmin),
+    },
+    stats: {
+      seeds: seedRows[0]?.count ?? 0,
+      profiles: profileRows[0]?.count ?? 0,
+      apiKeys: keyRows[0]?.count ?? 0,
+    },
+  };
 };
 
 export const actions: Actions = {

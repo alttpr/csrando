@@ -21,7 +21,7 @@ Request body:
     {
       "Language": "en",
       "Game": "Alttpr",
-      "Alttp": {}
+      "Alttpr": {}
     }
   ]
 }
@@ -33,8 +33,8 @@ Fields:
 - `IncludeSpoiler`: boolean. When `false`, the response and public seed permalink omit `spoilerLog`. The server still generates and securely stores the spoiler for admin diagnostics.
 - `Configs`: array with at least one world config object. The website currently generates one world config.
 - `Configs[].Language`: language code, normally `en`.
-- `Configs[].Game`: randomizer target, such as `Alttpr` or `Combo`. Use the `randomizer` value returned by `GET /api/metadata`.
-- `Configs[].Alttp`, `Configs[].Metroid`, and other game keys: per-game settings objects. Valid keys and defaults should be discovered from metadata.
+- `Configs[].Game`: randomizer target, such as `Alttpr` or `Combo`. Use the `randomizer` value returned by `GET /api/metadata`. It may be omitted to let a configured random-target mode choose the target.
+- `Configs[].Alttpr`, `Configs[].Sm`, and other game keys: per-game settings objects. Their exact names, valid keys, and defaults come from `gameSettings` in metadata; do not derive them from display names.
 
 Example with `curl`:
 
@@ -48,7 +48,7 @@ curl -sS https://example.com/api/randomize \
       {
         "Language": "en",
         "Game": "Alttpr",
-        "Alttp": {}
+        "Alttpr": {}
       }
     ]
   }'
@@ -80,7 +80,7 @@ Use the returned `id` to build the public permalink:
 https://example.com/seed/abc123
 ```
 
-The `worlds` object contains base64-encoded patch data. Bots that only need to announce the generated seed can ignore it and only use `id` and `seed`. Bots generating a race seed should set `IncludeSpoiler` to `false`; the generated seed can still be shared through its public permalink without exposing its spoiler log.
+Each entry in `worlds` contains at least one base64-encoded `ipsPatch` or `bpsPatch`; clients must not assume both are present. Bots that only need to announce the generated seed can ignore `worlds` and only use `id` and `seed`. Bots generating a race seed should set `IncludeSpoiler` to `false`; `spoilerLog` is then omitted from this response and hidden on the public permalink, while remaining available to authorized administrators for diagnostics.
 
 ### Logical playthrough spoiler data
 
@@ -145,7 +145,7 @@ Each setting includes a `key`, `name`, `type`, and usually either `default`, `va
 GET /api/seed/{id}
 ```
 
-Returns the stored seed row for a generated seed. This is useful if a bot needs to look up a previously generated seed by permalink id. Seeds created with `IncludeSpoiler: false` never include their spoiler log in this public response.
+Returns the stored seed row for a generated seed. This includes `id`, `options`, `patchData`, `placementInfo`, `spoilerLog`, version/profile attribution fields, the normalized `settingsSnapshot` when available, and `createdAt`. This is useful if a bot needs to look up a previously generated seed by permalink id. For seeds created with `IncludeSpoiler: false`, `spoilerLog` is `null` in this public response.
 
 Example:
 
@@ -159,16 +159,123 @@ curl -sS https://example.com/api/seed/abc123
 GET /api/seed/{id}/base-patch
 ```
 
-Returns the immutable base patch associated with the randomizer version used for that seed, when available.
+Returns the immutable base patch associated with the randomizer version used for that seed as `application/octet-stream`, when available. The response is publicly cacheable and immutable; a seed without a stored randomizer version/base patch returns `404`.
 
 Most external services do not need this route. The website's seed page uses it when patching ROMs in the browser.
+
+## Authenticate with an API key
+
+Logged-in users can create personal API keys at `/profile/api-keys`. The plain secret (`qr_...`) is shown exactly once at creation.
+
+Send the key as a Bearer token on any `/api/` route:
+
+```http
+Authorization: Bearer qr_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+Key-authenticated requests act as the key's owner: they can read and manage that user's private seed profiles, and generated seeds are linked to the user's history. Deliberate restrictions:
+
+- API keys never grant administrator rights, even if the owning user is an admin.
+- API keys cannot call session-only account/security operations, including creating or revoking API keys and changing the account password.
+
+## Seed profiles
+
+```http
+GET /api/profiles?configId=combo
+```
+
+`configId` is required and case-insensitive. The response contains:
+
+- `officials`: active official profile summaries (available without authentication).
+- `mine`: the authenticated user's active private profile summaries, otherwise `[]`.
+- `preferences`: the authenticated user's defaults/favorites, otherwise `null`.
+- `recommendedId`: the internal id of the recommended official profile.
+- `configSchemaVersion`: the current normalized-settings schema version.
+
+Profile summaries include `id`, `scope`, `slug`, `configId`, `name`, `description`, revision/schema information, `selectedGames`, curation tags/status, ordering, and timestamps. API operations use the internal `id`. Human-facing official links use the slug, for example `/config/combo/recommended`.
+
+```http
+GET    /api/profiles/{id}
+GET    /api/profiles/{id}?revision={revisionId}
+POST   /api/profiles                   # create a private profile
+POST   /api/profiles/{id}/revisions    # save new settings (owner)
+POST   /api/profiles/{id}/duplicate    # copy a readable profile
+PATCH  /api/profiles/{id}              # update metadata (owner)
+DELETE /api/profiles/{id}              # soft delete (owner)
+```
+
+`GET /api/profiles/{id}` returns `{ "profile": ProfileSummary, "revision": ProfileRevision }`. Official profiles are readable anonymously. Private profiles return `404` to non-owners, and deleted profiles return `404` to everyone, without revealing whether they exist.
+
+Create a private profile with:
+
+```json
+{
+  "configId": "combo",
+  "name": "My tournament settings",
+  "description": "Optional description",
+  "settings": {
+    "selectedGames": ["Alttpr", "Sm"],
+    "global": { "Game": "Combo", "Language": "en" },
+    "perGame": {
+      "Alttpr": {},
+      "Sm": {},
+      "Combo": {}
+    }
+  },
+  "setAsDefault": false,
+  "favorite": false
+}
+```
+
+Profile settings use the normalized configuration shape shown above and are validated against current generator metadata. Creation returns `{ "profile": ..., "revision": ... }` with status `201`.
+
+Revision updates send `{ "settings": ..., "baseRevisionId": "...", "changeSummary": "optional" }`. `baseRevisionId` must be the profile's current revision id (or `null` only when the profile has no current revision); a stale value returns `409`. Successful revision creation returns the updated profile and revision with status `201`.
+
+`POST /api/profiles/{id}/duplicate` accepts an optional `{ "name": "..." }` body and creates an independent private copy. `PATCH` accepts profile metadata such as `name` and `description`. Official-profile curation remains browser-admin functionality because API keys never carry admin rights.
+
+Owners can create or revoke the capability link used by the website with `POST` or `DELETE /api/profiles/{id}/share`. The POST response is `{ "token": "..." }`; the browser URL is `/config/{configId}?share={token}`. The token grants access only to an unowned settings snapshot through that page—it does not authorize the regular profile API.
+
+## Generate a seed from a profile
+
+External tools can generate directly from a saved profile without reconstructing the full `Configs` payload:
+
+```http
+POST /api/randomize
+Content-Type: application/json
+Authorization: Bearer qr_...   (required for private profiles)
+```
+
+```json
+{
+  "ProfileId": "the-profile-id",
+  "Seed": 0,
+  "IncludeSpoiler": false
+}
+```
+
+Optional fields: `Seed` (default `0` = random), `IncludeSpoiler` (default `true`), `RevisionId` (generate from an older revision; defaults to the profile's current one). Official presets work without authentication; private profiles require an API key owned by the profile's owner. The response is identical to a regular `/api/randomize` call, and the stored seed records which profile and revision it came from.
+
+`ProfileId` is always the internal profile id returned by the profiles API, not an official profile slug.
+
+## Fetch authenticated seed history
+
+```http
+GET /api/user/seeds
+Authorization: Bearer qr_...
+```
+
+Returns the authenticated user's generated seeds in newest-first order. Each entry contains `id`, generation `options`, and `createdAt`. Anonymous requests return `401`.
 
 ## Errors
 
 The API uses normal HTTP status codes:
 
 - `400`: invalid request body or missing required data.
-- `404`: requested metadata or seed was not found.
+- `401`: authentication required or invalid credentials.
+- `403`: authenticated but not allowed (e.g. admin-only or session-only operations).
+- `404`: requested metadata, seed, or profile was not found.
+- `409`: profile revision conflict (stale `baseRevisionId`).
+- `503`: generator metadata required for profile expansion is temporarily unavailable.
 - `500`: backend randomizer, database, or server error.
 
 Error responses usually contain a JSON body with a `message` field, but clients should also handle plain text error bodies.

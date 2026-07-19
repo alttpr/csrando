@@ -2,9 +2,8 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 import {
   AdminVersionError,
   createRandomizerVersion,
-  getConfiguredAdminTokenHash,
-  isTokenAuthorized,
 } from "$lib/server/admin/version-service";
+import { requireAdmin, requireSessionUser } from "$lib/server/auth-guards";
 
 type CreateVersionPayload = {
   baseVersion?: unknown;
@@ -18,32 +17,9 @@ type CreateVersionPayload = {
   buildDate?: unknown;
 };
 
-function extractAdminToken(request: Request): string | null {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const token = authHeader.slice("Bearer ".length).trim();
-    if (token.length > 0) {
-      return token;
-    }
-  }
-  const headerToken = request.headers.get("x-admin-version-token");
-  if (headerToken && headerToken.trim().length > 0) {
-    return headerToken.trim();
-  }
-  return null;
-}
-
-export const POST: RequestHandler = async ({ request }) => {
-  if (!getConfiguredAdminTokenHash()) {
-    throw error(500, {
-      message: "Admin token is not configured on the server.",
-    });
-  }
-
-  const providedToken = extractAdminToken(request);
-  if (!isTokenAuthorized(providedToken)) {
-    throw error(401, { message: "Invalid admin access token." });
-  }
+export const POST: RequestHandler = async ({ request, locals }) => {
+  requireSessionUser(locals);
+  requireAdmin(locals);
 
   let payload: CreateVersionPayload;
   try {

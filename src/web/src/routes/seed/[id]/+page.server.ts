@@ -8,11 +8,15 @@ import { parseMetadata } from "$lib/schemas/metadata";
 import type { Metadata } from "$lib/types";
 import { getRandomizerVersionBySeedId } from "$lib/server/db/randomizer";
 import { shouldHideSpoiler } from "$lib/server/seed-visibility";
+import {
+  getSeedAttribution,
+  type SeedAttributionDto,
+} from "$lib/server/profiles/service";
 
 // Define a type for the seed details, inferring from the Drizzle schema
 type SeedDetails = typeof seeds.$inferSelect;
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
   const seedId = params.id;
 
   if (!seedId) {
@@ -126,10 +130,38 @@ export const load: PageServerLoad = async ({ params }) => {
       console.error("Failed to fetch metadata for seed page:", e);
     }
 
+    // Profile attribution (which profile generated this seed). Best-effort:
+    // the page must render even if profiles are unavailable.
+    let profileAttribution: SeedAttributionDto | null = null;
+    if (seedDetails.profileId) {
+      try {
+        profileAttribution = await getSeedAttribution(
+          seedDetails.profileId,
+          seedDetails.profileRevisionId,
+          locals.user,
+        );
+      } catch (e) {
+        console.error("Failed to resolve seed profile attribution:", e);
+      }
+    }
+
+    // An accessible, unchanged profile can always be opened directly. A
+    // snapshot is required only for the unowned ?fromSeed= fallback.
+    const settingsConfigId =
+      profileAttribution?.profileId && !seedDetails.differedFromRevision
+        ? profileAttribution.configId
+        : seedDetails.settingsSnapshot
+          ? (profileAttribution?.configId ??
+            randomizerIdForSeed?.toLowerCase() ??
+            null)
+          : null;
+
     return {
       seedDetails: shouldHideSpoiler(seedDetails.options)
         ? { ...seedDetails, spoilerLog: null }
         : seedDetails,
+      profileAttribution,
+      settingsConfigId,
       metadata,
       randomizerVersion: versionTag
         ? {

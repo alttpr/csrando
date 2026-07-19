@@ -10,6 +10,8 @@
 		fullWidth?: boolean;
 		className?: string;
 		children?: Snippet;
+		// Pass-through data attributes (test ids, autofocus markers, ...).
+		[key: `data-${string}`]: string | boolean | undefined;
 	}
 
 	let {
@@ -55,7 +57,20 @@
 </script>
 
 {#if href !== undefined}
-	<a {href} {onclick} class={classes} {...otherProps}>
+	<a
+		href={disabled ? undefined : href}
+		aria-disabled={disabled ? "true" : undefined}
+		tabindex={disabled ? -1 : undefined}
+		onclick={(event) => {
+			if (disabled) {
+				event.preventDefault();
+				return;
+			}
+			onclick?.(event);
+		}}
+		class={classes}
+		{...otherProps}
+	>
 		{@render children?.()}
 	</a>
 {:else}

@@ -1,13 +1,10 @@
 import { env as privateEnv } from "$env/dynamic/private";
-import type { Cookies } from "@sveltejs/kit";
 import { metadataApi } from "$lib/services/api";
 import { db } from "$lib/server/db";
 import { randomizerVersions } from "$lib/server/db/schema";
 import { and, eq, ne, sql } from "drizzle-orm";
 import { createHash } from "crypto";
 import { generateId } from "$lib/utils/id";
-
-export const ADMIN_VERSION_COOKIE_NAME = "admin_version_token";
 
 export class AdminVersionError extends Error {
   status: number;
@@ -37,14 +34,6 @@ export function getConfiguredAdminTokenHash(): string | null {
     return null;
   }
   return hashAdminToken(secret);
-}
-
-export function isAdminAuthorized(cookies: Cookies): boolean {
-  const configured = getConfiguredAdminTokenHash();
-  if (!configured) {
-    return false;
-  }
-  return cookies.get(ADMIN_VERSION_COOKIE_NAME) === configured;
 }
 
 export function isTokenAuthorized(token: string | null | undefined): boolean {

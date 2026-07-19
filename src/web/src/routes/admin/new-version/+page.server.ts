@@ -1,13 +1,9 @@
-import { dev } from "$app/environment";
 import { fail } from "@sveltejs/kit";
 import {
-  ADMIN_VERSION_COOKIE_NAME,
   AdminVersionError,
   createRandomizerVersion,
-  getConfiguredAdminTokenHash,
-  hashAdminToken,
-  isAdminAuthorized,
 } from "$lib/server/admin/version-service";
+import { requirePanelAccess } from "$lib/server/admin/guard";
 import { db } from "$lib/server/db";
 import { randomizerVersions } from "$lib/server/db/schema";
 import { desc } from "drizzle-orm";
@@ -34,8 +30,6 @@ type CreateActionValues = {
 };
 
 export type ActionData =
-  | { type: "authenticate"; success: true }
-  | { type: "authenticate"; success: false; message: string }
   | {
       type: "create";
       success: true;
@@ -57,8 +51,7 @@ export type ActionData =
       message: string;
       fieldErrors?: Record<string, string>;
       values?: CreateActionValues;
-    }
-  | { type: "logout"; success: true };
+    };
 
 function serializeDate(value: unknown): string {
   if (value instanceof Date) {
@@ -73,100 +66,45 @@ function serializeDate(value: unknown): string {
   return new Date().toISOString();
 }
 
-export const load: PageServerLoad = async ({ cookies }) => {
-  const configuredTokenHash = getConfiguredAdminTokenHash();
-  const authorized =
-    configuredTokenHash !== null &&
-    cookies.get(ADMIN_VERSION_COOKIE_NAME) === configuredTokenHash;
+export const load: PageServerLoad = async ({ cookies, locals }) => {
+  requirePanelAccess(locals, cookies);
+  const rows = await db
+    .select({
+      id: randomizerVersions.id,
+      versionTag: randomizerVersions.versionTag,
+      randomizerId: randomizerVersions.randomizerId,
+      isActive: randomizerVersions.isActive,
+      createdAt: randomizerVersions.createdAt,
+      buildDate: randomizerVersions.buildDate,
+      gitCommitHash: randomizerVersions.gitCommitHash,
+    })
+    .from(randomizerVersions)
+    .orderBy(desc(randomizerVersions.createdAt))
+    .limit(15);
 
-  let recentVersions: RecentVersionSummary[] = [];
-  if (authorized) {
-    const rows = await db
-      .select({
-        id: randomizerVersions.id,
-        versionTag: randomizerVersions.versionTag,
-        randomizerId: randomizerVersions.randomizerId,
-        isActive: randomizerVersions.isActive,
-        createdAt: randomizerVersions.createdAt,
-        buildDate: randomizerVersions.buildDate,
-        gitCommitHash: randomizerVersions.gitCommitHash,
-      })
-      .from(randomizerVersions)
-      .orderBy(desc(randomizerVersions.createdAt))
-      .limit(15);
-
-    recentVersions = rows.map((row) => ({
-      id: row.id,
-      versionTag: row.versionTag,
-      randomizerId: row.randomizerId,
-      isActive: Boolean(row.isActive),
-      createdAt: serializeDate(row.createdAt),
-      buildDate: serializeDate(row.buildDate ?? row.createdAt),
-      gitCommitHash: row.gitCommitHash ?? null,
-    }));
-  }
+  const recentVersions: RecentVersionSummary[] = rows.map((row) => ({
+    id: row.id,
+    versionTag: row.versionTag,
+    randomizerId: row.randomizerId,
+    isActive: Boolean(row.isActive),
+    createdAt: serializeDate(row.createdAt),
+    buildDate: serializeDate(row.buildDate ?? row.createdAt),
+    gitCommitHash: row.gitCommitHash ?? null,
+  }));
 
   return {
-    authorized,
-    secretConfigured: configuredTokenHash !== null,
     recentVersions,
   };
 };
 
 export const actions: Actions = {
-  authenticate: async ({ request, cookies }) => {
-    const configured = getConfiguredAdminTokenHash();
-    if (!configured) {
-      return fail(500, {
-        type: "authenticate",
-        success: false,
-        message: "Admin token is not configured on the server.",
-      });
-    }
-
-    const formData = await request.formData();
-    const token = formData.get("token");
-    if (!token || typeof token !== "string" || token.trim().length === 0) {
-      return fail(400, {
-        type: "authenticate",
-        success: false,
-        message: "Access token is required.",
-      });
-    }
-
-    if (hashAdminToken(token) !== configured) {
-      return fail(401, {
-        type: "authenticate",
-        success: false,
-        message: "Invalid access token.",
-      });
-    }
-
-    cookies.set(ADMIN_VERSION_COOKIE_NAME, configured, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-      secure: !dev,
-      maxAge: 60 * 60 * 12, // 12 hours
-    });
-    cookies.delete(ADMIN_VERSION_COOKIE_NAME, { path: "/admin" });
-
-    return { type: "authenticate", success: true } satisfies ActionData;
-  },
-
-  logout: async ({ cookies }) => {
-    cookies.delete(ADMIN_VERSION_COOKIE_NAME, { path: "/" });
-    cookies.delete(ADMIN_VERSION_COOKIE_NAME, { path: "/admin" });
-    return { type: "logout", success: true } satisfies ActionData;
-  },
-
-  create: async ({ request, cookies }) => {
-    if (!isAdminAuthorized(cookies)) {
+  create: async ({ request, locals }) => {
+    if (!(locals.user?.isAdmin && locals.session)) {
       return fail(401, {
         type: "create",
         success: false,
         message:
-          "You must enter the admin access token before creating versions.",
+          "You must sign in as an administrator before creating versions.",
       });
     }
 

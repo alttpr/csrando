@@ -1,12 +1,43 @@
 import { sql } from "drizzle-orm";
-import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
+import {
+  text,
+  integer,
+  sqliteTable,
+  primaryKey,
+  uniqueIndex,
+  index,
+} from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
   username: text("username").notNull().unique(),
   githubId: integer("github_id").unique(), // Assuming you might want GitHub OAuth later
   hashedPassword: text("hashed_password"), // For username/password auth
+  // Grants management of official seed profiles (and future admin surfaces).
+  isAdmin: integer("is_admin", { mode: "boolean" }).notNull().default(false),
 });
+
+// Personal access tokens for the public API. Only the SHA-256 hash of the
+// secret is stored; the plain secret is shown once at creation time.
+export const apiKeys = sqliteTable(
+  "api_key",
+  {
+    id: text("id").notNull().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    tokenHash: text("token_hash").notNull().unique(),
+    // First characters of the secret, for display/identification only.
+    tokenPrefix: text("token_prefix").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(current_timestamp)`),
+    lastUsedAt: integer("last_used_at", { mode: "timestamp" }),
+    revokedAt: integer("revoked_at", { mode: "timestamp" }),
+  },
+  (t) => [index("api_key_user_idx").on(t.userId)],
+);
 
 export const sessions = sqliteTable("session", {
   id: text("id").notNull().primaryKey(),
@@ -53,10 +84,130 @@ export const seeds = sqliteTable("seed", {
   randomizerVersionId: text("randomizer_version_id").references(
     () => randomizerVersions.id,
   ),
+  // Optional seed-profile attribution. Intentionally no FKs: a seed's stored
+  // configuration must never change when profiles are edited or deleted.
+  profileId: text("profile_id"),
+  profileRevisionId: text("profile_revision_id"),
+  // Whether the submitted configuration differed from the referenced revision
+  // (computed server-side at generation time).
+  differedFromRevision: integer("differed_from_revision", { mode: "boolean" }),
+  configSchemaVersion: integer("config_schema_version"),
+  // NormalizedConfig snapshot of the submitted configuration ("options" holds
+  // the generator payload, which is lossy).
+  settingsSnapshot: text("settings_snapshot", { mode: "json" }),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`(current_timestamp)`),
 });
+
+// Named seed configurations. "official" profiles are curated by admins and
+// have no owner; "user" profiles are private to their owner. Settings live in
+// immutable revisions (configurationProfileRevisions); the profile points at
+// its newest revision via currentRevisionId (no FK: circular reference with
+// the revisions table — integrity is enforced in the profiles service).
+export const configurationProfiles = sqliteTable(
+  "configuration_profile",
+  {
+    id: text("id").notNull().primaryKey(),
+    ownerUserId: text("owner_user_id").references(() => users.id, {
+      onDelete: "cascade",
+    }),
+    scope: text("scope", { enum: ["official", "user"] }).notNull(),
+    // Stable identifier for official presets; used as the seeding idempotency key.
+    slug: text("slug").unique(),
+    // Which config page this profile belongs to (canonical metadata id, e.g. "combo").
+    configId: text("config_id").notNull(),
+    name: text("name").notNull(),
+    description: text("description"),
+    currentRevisionId: text("current_revision_id"),
+    // Curation metadata for official presets.
+    gameTags: text("game_tags", { mode: "json" }),
+    difficultyTag: text("difficulty_tag"),
+    isRecommended: integer("is_recommended", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    featured: integer("featured", { mode: "boolean" }).notNull().default(false),
+    archived: integer("archived", { mode: "boolean" }).notNull().default(false),
+    // Capability token for sharing a private profile by link; null = not
+    // shared. Anyone with the token can load the profile's current revision.
+    shareToken: text("share_token").unique(),
+    displayOrder: integer("display_order").notNull().default(0),
+    deletedAt: integer("deleted_at", { mode: "timestamp" }),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(current_timestamp)`),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(current_timestamp)`),
+  },
+  (t) => [
+    index("configuration_profile_owner_idx").on(t.ownerUserId),
+    index("configuration_profile_config_idx").on(t.configId, t.scope),
+  ],
+);
+
+// Immutable snapshots of a profile's settings. Rows are only ever inserted;
+// "updating" a profile appends a new revision and moves currentRevisionId.
+export const configurationProfileRevisions = sqliteTable(
+  "configuration_profile_revision",
+  {
+    id: text("id").notNull().primaryKey(),
+    profileId: text("profile_id")
+      .notNull()
+      .references(() => configurationProfiles.id, { onDelete: "cascade" }),
+    revisionNumber: integer("revision_number").notNull(),
+    configSchemaVersion: integer("config_schema_version").notNull(),
+    // NormalizedConfig JSON (see $lib/config/normalize).
+    settings: text("settings", { mode: "json" }).notNull(),
+    changeSummary: text("change_summary"),
+    createdBy: text("created_by").references(() => users.id),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(current_timestamp)`),
+    publishedAt: integer("published_at", { mode: "timestamp" }),
+  },
+  (t) => [
+    uniqueIndex("configuration_profile_revision_unique").on(
+      t.profileId,
+      t.revisionNumber,
+    ),
+  ],
+);
+
+export const userProfilePreferences = sqliteTable("user_profile_preference", {
+  userId: text("user_id")
+    .notNull()
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  defaultProfileId: text("default_profile_id").references(
+    () => configurationProfiles.id,
+    { onDelete: "set null" },
+  ),
+  lastUsedProfileId: text("last_used_profile_id").references(
+    () => configurationProfiles.id,
+    { onDelete: "set null" },
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(current_timestamp)`),
+});
+
+export const userProfileFavorites = sqliteTable(
+  "user_profile_favorite",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    profileId: text("profile_id")
+      .notNull()
+      .references(() => configurationProfiles.id, { onDelete: "cascade" }),
+    displayOrder: integer("display_order").notNull().default(0),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(current_timestamp)`),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.profileId] })],
+);
 
 export const userSeeds = sqliteTable("user_seed", {
   userId: text("user_id")
