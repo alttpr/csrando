@@ -87,6 +87,82 @@ public sealed class PlaythroughTest
         Assert.AreEqual(0, root.GetProperty("warnings").GetArrayLength());
     }
 
+    [TestMethod]
+    public void RunwayEntranceConditions_AreOnlyReachableThroughMatchedArrivalStates()
+    {
+        var graph = new Randomizer.Graph.Graph();
+        var world = new World(0, new WorldConfig
+        {
+            SuperMetroid = new Config(),
+        }, graph, new PRNG(1234));
+        graph.SetVertexIds();
+
+        var aqueductDoor = (Randomizer.Games.SuperMetroid.Vertex)world.GetLocation(
+            "Maridia - Aqueduct - Bottom Left Door");
+        var aqueductItem = (Randomizer.Games.SuperMetroid.Vertex)world.GetLocation(
+            "Maridia - Aqueduct - Top Right Left Item");
+
+        Assert.IsFalse(aqueductDoor.Edges
+            .OfType<Randomizer.Games.SuperMetroid.Edge>()
+            .Where(edge => ReferenceEquals(edge.To, aqueductItem))
+            .SelectMany(edge => edge.Strats ?? [])
+            .Any(strat => strat.Name == "Suitless Shinespark"),
+            "A normal or internally reached door state must not expose comeInRunning.");
+
+        var suitlessArrival = graph.GetVertices()
+            .OfType<Randomizer.Games.SuperMetroid.Vertex>()
+            .Single(vertex => vertex.LogicalName == aqueductDoor.Name
+                && vertex.Edges.OfType<Randomizer.Games.SuperMetroid.Edge>()
+                    .Where(edge => ReferenceEquals(edge.To, aqueductItem))
+                    .SelectMany(edge => edge.Strats ?? [])
+                    .Any(strat => strat.Name == "Suitless Shinespark"));
+
+        var incomingSuitlessEdges = graph.GetVertices().SelectMany(vertex => vertex.Edges)
+            .OfType<Randomizer.Games.SuperMetroid.Edge>()
+            .Where(edge => ReferenceEquals(edge.To, suitlessArrival))
+            .ToList();
+        Assert.IsTrue(incomingSuitlessEdges.Count > 0,
+            "The Aqueduct conditioned arrival must have an incoming runway match.");
+        Assert.IsTrue(incomingSuitlessEdges.All(edge => edge.Strats!.All(strat =>
+                strat.ExitCondition is ExitCondition.LeaveWithRunway)),
+            "A conditioned arrival state must only be entered from a matching runway exit.");
+        Assert.IsTrue(incomingSuitlessEdges.SelectMany(edge => edge.Strats!)
+            .Any(strat => strat.Requires is not Requirement.Never),
+            "At least one Aqueduct runway must actually satisfy comeInRunning.");
+
+        Type[] supportedConditions =
+        [
+            typeof(EntranceCondition.ComeInRunning),
+            typeof(EntranceCondition.ComeInJumping),
+            typeof(EntranceCondition.ComeInSpinning),
+        ];
+        var conditionedEdges = graph.GetVertices()
+            .OfType<Randomizer.Games.SuperMetroid.Vertex>()
+            .Where(vertex => vertex.LogicalName != null)
+            .SelectMany(vertex => vertex.Edges
+                .OfType<Randomizer.Games.SuperMetroid.Edge>()
+                .SelectMany(edge => edge.Strats ?? []))
+            .Where(strat => strat.EntranceCondition != null)
+            .ToList();
+
+        foreach (Type conditionType in supportedConditions)
+        {
+            Assert.IsTrue(conditionedEdges.Any(strat =>
+                    strat.EntranceCondition!.GetType() == conditionType),
+                $"Expected an arrival-state edge for {conditionType.Name}.");
+        }
+
+        Assert.IsFalse(graph.GetVertices()
+            .OfType<Randomizer.Games.SuperMetroid.Vertex>()
+            .Where(vertex => vertex.LogicalName == null)
+            .SelectMany(vertex => vertex.Edges
+                .OfType<Randomizer.Games.SuperMetroid.Edge>()
+                .SelectMany(edge => edge.Strats ?? []))
+            .Any(strat => strat.EntranceCondition != null
+                && supportedConditions.Contains(strat.EntranceCondition.GetType())),
+            "Supported entrance-conditioned strats leaked onto an ordinary node.");
+    }
+
     [DataTestMethod]
     [DoNotParallelize]
     [DataRow(MapRandomizerSetting.None)]

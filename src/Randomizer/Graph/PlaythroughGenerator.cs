@@ -588,7 +588,10 @@ internal static class PlaythroughGenerator
     }
 
     private static PlaythroughVertex VertexInfo(Vertex vertex) =>
-        new(vertex.Name, vertex.World.GameId, vertex.World.Id, vertex.Type.ToString());
+        new(vertex is Games.SuperMetroid.Vertex { LogicalName: { } logicalName }
+                ? logicalName
+                : vertex.Name,
+            vertex.World.GameId, vertex.World.Id, vertex.Type.ToString());
 
     private static PlaythroughItem Item(
         IItem item, int count = 1, bool meta = false, bool initial = false) =>

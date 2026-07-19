@@ -2,9 +2,11 @@
 
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
+using BaseEdge = Randomizer.Graph.Edge;
 using ExitCondition = Model.ExitCondition;
 
 public class DoorPlmData
@@ -24,6 +26,8 @@ public class GraphPreprocessor
     private readonly World _world;
     private readonly SmGraph _graph;
     private readonly List<string> _allowedTechs;
+    private readonly Dictionary<Strat, Vertex> _entranceVertices = [];
+    private int _entranceVertexId;
 
     public GraphPreprocessor(JsonReader reader, World world)
     {
@@ -421,6 +425,39 @@ public class GraphPreprocessor
                 _graph.AddVertex(vertex);
             }
 
+            // Entrance conditions describe transient state at a door. Keep the
+            // ordinary node as the normal state and create a private state vertex
+            // for each supported conditioned strat. A vertex is per-strat rather
+            // than merely per condition type so a weak runway cannot unlock a
+            // second strat with stricter speed constraints.
+            foreach (var strat in room.Strats.Where(s =>
+                         s.Link is { Length: >= 2 } &&
+                         IsSupportedRunwayEntrance(s.EntranceCondition)))
+            {
+                var node = room.Nodes.First(n => n.Id == strat.Link![0]);
+                var logicalName = $"{room.Area} - {room.Name} - {node.Name}";
+                var entranceVertex = new Vertex
+                {
+                    Name = $"{logicalName} [entrance-state:{++_entranceVertexId}]",
+                    LogicalName = logicalName,
+                    Type = VertexType.Meta,
+                    World = _world,
+                    RoomId = room.Id,
+                    NodeId = node.Id,
+                    Node = node,
+                };
+                _graph.AddVertex(entranceVertex);
+                _entranceVertices.Add(strat, entranceVertex);
+
+                // Samus may discard the incoming momentum and continue from the
+                // door normally. This is deliberately a plain graph edge so it
+                // does not add a synthetic strategy to the spoiler path.
+                var normalVertex = _graph.Vertices.First(v =>
+                    v.RoomId == room.Id && v.NodeId == node.Id && v.LogicalName == null);
+                _graph.AddUnconditional(entranceVertex, normalVertex,
+                    new ItemCondition(_world.GetItem("fixed"), 1));
+            }
+
             // Connect in-room links
             foreach (var link in room.Links)
             {
@@ -431,9 +468,6 @@ public class GraphPreprocessor
                     var linkStrats = room.Strats.Where(s => s.Link![0] == link.From && s.Link![1] == linkTo.Id && (s.ExitCondition == null || s.ExitCondition is ExitCondition.LeaveNormally || s.ExitCondition is ExitCondition.LeaveWithRunway) &&
                         (s.EntranceCondition == null || 
                          s.EntranceCondition is EntranceCondition.ComeInNormally ||
-                         s.EntranceCondition is EntranceCondition.ComeInRunning ||
-                         s.EntranceCondition is EntranceCondition.ComeInJumping ||
-                         s.EntranceCondition is EntranceCondition.ComeInSpinning ||
                          s.EntranceCondition is EntranceCondition.ComesThroughToilet));
                     
                     if (linkStrats.Any())
@@ -445,7 +479,20 @@ public class GraphPreprocessor
                         }
 
                         _graph.AddDirected(fromVtx, toVtx, linkStrats);
-                    } 
+                    }
+
+                    // A supported entrance-conditioned strat can only begin at
+                    // the state vertex reached by matching it across the door.
+                    foreach (var strat in room.Strats.Where(s =>
+                                 s.Link![0] == link.From && s.Link![1] == linkTo.Id &&
+                                 IsSupportedRunwayEntrance(s.EntranceCondition) &&
+                                 (s.ExitCondition == null ||
+                                  s.ExitCondition is ExitCondition.LeaveNormally ||
+                                  s.ExitCondition is ExitCondition.LeaveWithRunway)))
+                    {
+                        strat.Requires = OptimizeRequirement(strat.Requires);
+                        _graph.AddDirected(_entranceVertices[strat], toVtx, [strat]);
+                    }
                 }
             }
         }
@@ -551,6 +598,9 @@ public class GraphPreprocessor
                 // Inject door and goal requirements into the traversal out of this node.
                 var newFromStrat = (Strat)strat.Clone();
                 var requirements = new List<Requirement> { strat.Requires };
+                if (strat.ExitCondition is ExitCondition.LeaveWithRunway runway)
+                    requirements.Add(RunwayEntranceRequirement(
+                        runway, targetStrat.EntranceCondition!, fromRoom, fromNode));
                 if (unlockReq != null)
                     requirements.Add(unlockReq);
                 if (blockedMotherBrainConnection)
@@ -566,12 +616,116 @@ public class GraphPreprocessor
                 newFromStrat.Requires = OptimizeRequirement(
                     new Requirement.And(requirements.ToArray()));
 
-                var fromStratVtx = _graph.Vertices.First(v => v.RoomId == fromVtx.RoomId && v.Node!.Id == strat.Link![0]);
-                var targetStratVtx = _graph.Vertices.First(v => v.RoomId == toVtx.RoomId && v.Node!.Id == targetStrat.Link![0]);
+                var fromStratVtx = _entranceVertices.GetValueOrDefault(strat) ?? fromVtx;
+                var targetStratVtx = _entranceVertices.GetValueOrDefault(targetStrat) ?? toVtx;
 
                 _graph.AddDirected(fromStratVtx, targetStratVtx, [newFromStrat]);
             }
         }
+    }
+
+    private static bool IsSupportedRunwayEntrance(EntranceCondition? condition) =>
+        condition is EntranceCondition.ComeInRunning or
+            EntranceCondition.ComeInJumping or
+            EntranceCondition.ComeInSpinning;
+
+    private Requirement RunwayEntranceRequirement(ExitCondition.LeaveWithRunway runway,
+        EntranceCondition entrance, Room fromRoom, Node fromNode)
+    {
+        var requirements = new List<Requirement>();
+        decimal effectiveLength = EffectiveRunwayLength(runway);
+        string speedBooster;
+
+        switch (entrance)
+        {
+            case EntranceCondition.ComeInNormally:
+                return new Requirement.Always();
+
+            case EntranceCondition.ComeInRunning running:
+                if (effectiveLength < running.MinTiles ||
+                    running.MaxTiles is { } runningMax && runningMax < running.MinTiles)
+                    return new Requirement.Never();
+                speedBooster = running.SpeedBooster;
+                break;
+
+            case EntranceCondition.ComeInJumping jumping:
+                if (effectiveLength < jumping.MinTiles ||
+                    jumping.MaxTiles is { } jumpingMax && jumpingMax < jumping.MinTiles)
+                    return new Requirement.Never();
+                speedBooster = jumping.SpeedBooster;
+                break;
+
+            case EntranceCondition.ComeInSpinning spinning:
+                decimal usableLength = effectiveLength - spinning.UnusableTiles;
+                int maximumSpeed = MaximumExtraRunSpeed(usableLength);
+                speedBooster = spinning.SpeedBooster;
+                if (speedBooster.Equals("false", StringComparison.OrdinalIgnoreCase))
+                    maximumSpeed = Math.Min(maximumSpeed, 0x20);
+
+                int minimum = ParseExtraRunSpeed(spinning.MinExtraRunSpeed) ?? 0;
+                int maximum = ParseExtraRunSpeed(spinning.MaxExtraRunSpeed) ?? int.MaxValue;
+                if (minimum > maximum || minimum > maximumSpeed)
+                    return new Requirement.Never();
+                if (!speedBooster.Equals("false", StringComparison.OrdinalIgnoreCase) &&
+                    minimum > 0x20)
+                    requirements.Add(new Requirement.Single("SpeedBooster"));
+                break;
+
+            default:
+                return new Requirement.Never();
+        }
+
+        if (speedBooster.Equals("true", StringComparison.OrdinalIgnoreCase))
+            requirements.Add(new Requirement.Single("SpeedBooster"));
+        else if (speedBooster.Equals("false", StringComparison.OrdinalIgnoreCase))
+            requirements.Add(new Requirement.Single("canDisableEquipment"));
+
+        if (fromNode.DoorEnvironments?.Any(environment =>
+                environment.Physics.Equals("water", StringComparison.OrdinalIgnoreCase)) == true)
+            requirements.Add(new Requirement.Single("Gravity"));
+
+        // Implicit heat cost depends on runway use and whether the exit strat
+        // starts at this door. Until that calculation is modeled, require Varia
+        // so heated runway use remains possible without granting a free hellrun.
+        if (fromRoom.RoomEnvironments?.Any(environment => environment.Heated) == true)
+            requirements.Add(new Requirement.Single("Varia"));
+
+        return requirements.Count switch
+        {
+            0 => new Requirement.Always(),
+            1 => requirements[0],
+            _ => new Requirement.And(requirements.ToArray()),
+        };
+    }
+
+    private static decimal EffectiveRunwayLength(ExitCondition.LeaveWithRunway runway) =>
+        runway.Length - (runway.StartingDownTiles ?? 0) -
+        9m / 16m * (1 - runway.OpenEnd) +
+        1m / 3m * (runway.SteepUpTiles ?? 0) +
+        1m / 7m * (runway.SteepDownTiles ?? 0) +
+        5m / 27m * (runway.GentleUpTiles ?? 0) +
+        5m / 59m * (runway.GentleDownTiles ?? 0);
+
+    private static int? ParseExtraRunSpeed(string? value)
+    {
+        if (value == null)
+            return null;
+        string hexadecimal = value.TrimStart('$').Replace(".", "");
+        return int.Parse(hexadecimal, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+    }
+
+    private static int MaximumExtraRunSpeed(decimal runwayLength)
+    {
+        int[] speeds =
+        [
+            0x00, 0x0A, 0x0E, 0x12, 0x16, 0x1A, 0x1E, 0x21, 0x24, 0x27,
+            0x2A, 0x2D, 0x30, 0x33, 0x35, 0x38, 0x3A, 0x3D, 0x3F, 0x42,
+            0x44, 0x46, 0x48, 0x4A, 0x4D, 0x4F, 0x51, 0x53, 0x55, 0x57,
+            0x59, 0x5B, 0x5C, 0x5E, 0x60, 0x62, 0x64, 0x65, 0x67, 0x69,
+            0x6B, 0x6C, 0x6E, 0x70,
+        ];
+        int tiles = Math.Clamp(decimal.ToInt32(decimal.Floor(runwayLength)), 0, 43);
+        return speeds[tiles];
     }
 
     public Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
@@ -596,8 +750,8 @@ public class GraphPreprocessor
 public class SmGraph
 {
     public List<Vertex> Vertices { get; } = new();
-    public List<Edge> Edges { get; } = new();
-    public Dictionary<Vertex, List<Edge>> AdjecencyList { get; } = new();
+    public List<BaseEdge> Edges { get; } = new();
+    public Dictionary<Vertex, List<BaseEdge>> AdjecencyList { get; } = new();
 
     public Vertex AddVertex(Vertex vertex)
     {
@@ -632,7 +786,14 @@ public class SmGraph
         AddDirected(to, from, condition);
     }
 
-    public IEnumerable<Edge> GetEdges(Vertex vertex)
+    public void AddUnconditional(Vertex from, Vertex to, ItemCondition condition)
+    {
+        var edge = new BaseEdge(from, to, condition);
+        Edges.Add(edge);
+        AdjecencyList[from].Add(edge);
+    }
+
+    public IEnumerable<BaseEdge> GetEdges(Vertex vertex)
     {
         return AdjecencyList[vertex];
     }
