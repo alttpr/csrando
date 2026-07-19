@@ -16,6 +16,10 @@ public sealed class Inventory
     private readonly Dictionary<IItem, int> _itemCount = new();
     private readonly Dictionary<IWorld, float> _health = new();
 
+    /// <summary>Monotonic change counter. Two observations of the same
+    /// instance with equal versions have identical contents.</summary>
+    internal int Version { get; private set; }
+
     public Inventory(params IItem[] items)
     {
         foreach (var item in items)
@@ -44,6 +48,8 @@ public sealed class Inventory
     public void AddItem(IItem item, int count = 1)
     {
         CheckItemId(item);
+
+        Version++;
 
         if (item.Id >= _bits.Length)
         {
@@ -74,6 +80,8 @@ public sealed class Inventory
         {
             throw new Exception("Trying to remove an item not in inventory.");
         }
+
+        Version++;
 
         int previousCount = _itemCount[item];
         if (previousCount > count)

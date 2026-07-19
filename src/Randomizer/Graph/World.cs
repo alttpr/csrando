@@ -20,21 +20,28 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     public Inventory StartingItems { get; protected init; } = null!;
 
     protected readonly Dictionary<string, TItem> _allItems = [];
+    private readonly object _itemCreationLock = new();
     public ushort PlacedItemCount { get; set; }
 
     IItem IWorld.GetItem(string name) => GetItem(name);
     public TItem GetItem(string name)
     {
         if (_allItems.TryGetValue(name, out var matchingItem))
-        {
             return matchingItem;
+
+        // Logic tests and bulk generation may request the same lazily-created
+        // item concurrently. Keep the common existing-item lookup lock-free,
+        // then serialize only the uncommon creation path and check again.
+        lock (_itemCreationLock)
+        {
+            if (_allItems.TryGetValue(name, out matchingItem))
+                return matchingItem;
+
+            // allow made up items
+            var item = Graph.RegisterItem(CreateItem(name, this));
+            _allItems.Add(item.Name, item);
+            return item;
         }
-
-        // allow made up items
-        var item = Graph.RegisterItem(CreateItem(name, this));
-        _allItems.Add(item.Name, item);
-
-        return item;
     }
     protected abstract TItem CreateItem(string name, IWorld world);
 

@@ -7,14 +7,53 @@ using Randomizer.Games.Metadata;
 using Randomizer.Games.SuperMetroid.Model;
 using Randomizer.Graph;
 
-public class RequirementResult
+public struct RequirementResult
 {
+    // Single-item missing sets dominate failure results and are read-only to
+    // every consumer, so they are interned per item name. Sets handed out this
+    // way are never owned and must be copied before any extension.
+    private static readonly System.Collections.Concurrent
+        .ConcurrentDictionary<string, HashSet<string>> InternedMissing = new();
+
+    private bool _ownsMissing;
+
     public bool Met { get; set; }
     public RequirementCost? Cost { get; set; }
     public HashSet<string>? Missing { get; set; }
     public Dictionary<string, int>? UsedItems { get; set; }
 
-    public static RequirementResult Fail(params string[] missing) => new RequirementResult { Met = false, Cost = null, Missing = missing.Length > 0 ? new HashSet<string>(missing) : null };
+    public static RequirementResult Fail() => new()
+    {
+        Met = false,
+        Cost = null,
+    };
+
+    public static RequirementResult Fail(string missing) => new()
+    {
+        Met = false,
+        Cost = null,
+        Missing = InternedMissing.GetOrAdd(
+            missing, static name => [name]),
+        _ownsMissing = false,
+    };
+
+    /// <summary>Fail with a caller-retained set. The set is borrowed, never
+    /// mutated, and must not be modified by the caller afterwards.</summary>
+    internal static RequirementResult FailShared(HashSet<string> missing) => new()
+    {
+        Met = false,
+        Cost = null,
+        Missing = missing,
+        _ownsMissing = false,
+    };
+
+    public static RequirementResult Fail(params string[] missing) => new()
+    {
+        Met = false,
+        Cost = null,
+        Missing = missing.Length > 0 ? new HashSet<string>(missing) : null,
+        _ownsMissing = missing.Length > 0,
+    };
     public static RequirementResult Success(RequirementCost cost, string? item = null, int count = 1)
     {
         var result = new RequirementResult { Met = true, Cost = cost };
@@ -22,6 +61,10 @@ public class RequirementResult
             result.UsedItems = new Dictionary<string, int> { [item] = count };
         return result;
     }
+
+    public static RequirementResult Success(
+        RequirementCost cost, string? item, bool captureDetails) =>
+        Success(cost, captureDetails ? item : null);
 
     public void MergeSuccess(RequirementResult other)
     {
@@ -39,10 +82,43 @@ public class RequirementResult
 
         if (Missing == null)
         {
-            Missing = new HashSet<string>(other.Missing);
+            // Failed sub-results are immutable to their callers. Borrow the
+            // first set and copy only if a later failure must extend it.
+            Missing = other.Missing;
+            _ownsMissing = false;
         }
         else
         {
+            if (ReferenceEquals(Missing, other.Missing))
+                return;
+            if (!_ownsMissing)
+            {
+                Missing = new HashSet<string>(Missing);
+                _ownsMissing = true;
+            }
+            Missing.UnionWith(other.Missing);
+        }
+    }
+
+    internal void MergeConsumedFail(RequirementResult other)
+    {
+        if (other.Missing == null || other.Missing.Count == 0)
+            return;
+
+        if (Missing == null)
+        {
+            // Adopt the consumed child's set together with its ownership;
+            // borrowed (interned or shared) sets must never be mutated.
+            Missing = other.Missing;
+            _ownsMissing = other._ownsMissing;
+        }
+        else if (!ReferenceEquals(Missing, other.Missing))
+        {
+            if (!_ownsMissing)
+            {
+                Missing = new HashSet<string>(Missing);
+                _ownsMissing = true;
+            }
             Missing.UnionWith(other.Missing);
         }
     }
@@ -113,8 +189,17 @@ public struct RequirementCost
 
 public class RequirementHandler
 {
+    // Shared, never-mutated missing set for enemy-kill failures.
+    private static readonly HashSet<string> AnyWeaponMissing =
+    [
+        "Missile", "Super", "PowerBomb", "Charge", "Ice",
+        "Spazer", "Wave", "Plasma", "ScrewAttack", "Bombs",
+    ];
+
     private readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
     private readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
+    private readonly Dictionary<string, HashSet<string>> EnemyInvulnerabilities =
+        new Dictionary<string, HashSet<string>>();
     private readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
     private readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
     private readonly HashSet<string> AllowedNotableStrategies = new HashSet<string>();
@@ -145,6 +230,8 @@ public class RequirementHandler
         foreach (var enemy in reader.Enemies.SelectMany(e => e.Enemies))
         {
             Enemies[enemy.Name] = enemy;
+            EnemyInvulnerabilities[enemy.Name] = new HashSet<string>(
+                enemy.Invul, StringComparer.Ordinal);
             EnemyDropExpectations[enemy.Name] = CalculatePerEnemyDropExpectation(enemy);
             foreach (var attack in enemy.Attacks)
             {
@@ -178,7 +265,9 @@ public class RequirementHandler
         }
     }
 
-    public RequirementResult HandleRequirement(Requirement req, VisitedState state, Inventory inventory, World world, HashSet<Weapon> weapons)
+    public RequirementResult HandleRequirement(
+        Requirement req, VisitedState state, Inventory inventory, World world,
+        HashSet<Weapon> weapons, bool captureDetails = true)
     {
         switch (req)
         {
@@ -191,12 +280,14 @@ public class RequirementHandler
             case Requirement.Single single:
                 if (HelperTechs.TryGetValue(single.Req, out var helper))
                 {
-                    return HandleRequirement(helper, state, inventory, world, weapons);
+                    return HandleRequirement(
+                        helper, state, inventory, world, weapons, captureDetails);
                 }
                 else
                 {
                     if (inventory.Has(world.GetItem(single.Req)))
-                        return RequirementResult.Success(RequirementCost.ZeroCost, single.Req);
+                        return RequirementResult.Success(
+                            RequirementCost.ZeroCost, single.Req, captureDetails);
                     else
                         return RequirementResult.Fail(single.Req);
                 }
@@ -204,18 +295,23 @@ public class RequirementHandler
             case Requirement.SingleItem singleItem:
                 if (inventory.Has(singleItem.Item))
                 {
-                    return RequirementResult.Success(RequirementCost.ZeroCost, singleItem.Item.Name);
+                    return RequirementResult.Success(
+                        RequirementCost.ZeroCost, singleItem.Item.Name,
+                        captureDetails);
                 }
                 else
                 {
                     if (HelperTechs.TryGetValue(singleItem.Item.Name, out var singleItemHelper))
                     {
-                        return HandleRequirement(singleItemHelper, state, inventory, world, weapons);
+                        return HandleRequirement(singleItemHelper, state, inventory,
+                            world, weapons, captureDetails);
                     }
                     else
                     {
                         if (inventory.Has(world.GetItem(singleItem.Item.Name)))
-                            return RequirementResult.Success(RequirementCost.ZeroCost, singleItem.Item.Name);
+                            return RequirementResult.Success(
+                                RequirementCost.ZeroCost, singleItem.Item.Name,
+                                captureDetails);
                         else
                             return RequirementResult.Fail(singleItem.Item.Name);
                     }
@@ -230,12 +326,13 @@ public class RequirementHandler
 
                 foreach (var subReq in and.Reqs)
                 {
-                    var subResult = HandleRequirement(subReq, state, inventory, world, weapons);
+                    var subResult = HandleRequirement(
+                        subReq, state, inventory, world, weapons, captureDetails);
 
                     if (!subResult.Met)
                     {
                         // Merge the missing items from the failing sub-requirement
-                        failResult.MergeFail(subResult);
+                        failResult.MergeConsumedFail(subResult);
                         failedAnd = true;
                     }
                     else
@@ -263,7 +360,8 @@ public class RequirementHandler
 
                 foreach (var subReq in or.Reqs)
                 {
-                    var subResult = HandleRequirement(subReq, state, inventory, world, weapons);
+                    var subResult = HandleRequirement(
+                        subReq, state, inventory, world, weapons, captureDetails);
                     if (subResult.Met)
                     {
                         if (bestSuccess == null)
@@ -272,7 +370,8 @@ public class RequirementHandler
                         }
                         else
                         {
-                            var newCost = subResult.Cost! | bestSuccess.Cost!;
+                            var newCost = subResult.Cost!
+                                | bestSuccess.Value.Cost!;
                             if (newCost.Value.Equals(subResult.Cost!.Value))
                                 bestSuccess = subResult;
                         }
@@ -280,7 +379,7 @@ public class RequirementHandler
                     else
                     {
                         // Merge the missing items from that failing subReq
-                        combinedFail.MergeFail(subResult);
+                        combinedFail.MergeConsumedFail(subResult);
                     }
                 }
 
@@ -291,11 +390,13 @@ public class RequirementHandler
                 }
                 else
                 {
-                    return bestSuccess;
+                    return bestSuccess.Value;
                 }
 
             case Requirement.Not not:
-                return HandleRequirement(not.Req, state, inventory, world, weapons) == null ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
+                _ = HandleRequirement(not.Req, state, inventory, world, weapons,
+                    captureDetails);
+                return RequirementResult.Fail();
 
             case Requirement.ObstaclesNotCleared obstaclesNotCleared:
                 return (state.ObstacleBitFlags & ObstacleMaskFromArray(obstaclesNotCleared.Obstacles)) == 0 ? RequirementResult.Success(RequirementCost.ZeroCost) : RequirementResult.Fail();
@@ -312,7 +413,7 @@ public class RequirementHandler
                         Missiles = ammo.Type == "Missile" ? ammo.Count : 0,
                         SuperMissiles = ammo.Type == "Super" ? ammo.Count : 0,
                         PowerBombs = ammo.Type == "PowerBomb" ? ammo.Count : 0
-                    }, ammo.Type);
+                    }, ammo.Type, captureDetails);
                 }
                 else
                 {
@@ -371,72 +472,64 @@ public class RequirementHandler
                           },*/
 
             case Requirement.EnemyKill enemyKill:
-                var candidateWeapons = new List<Weapon>();
-                var usedWeapons = new HashSet<Weapon>();
+                bool hasCandidateWeapon = false;
                 foreach (var weapon in weapons)
                 {
-
-                    if (enemyKill.ExcludedWeapons != null && enemyKill.ExcludedWeapons.Contains(weapon.Name))
-                    {
+                    if (enemyKill.ExcludedWeapons != null
+                        && enemyKill.ExcludedWeapons.Contains(weapon.Name))
                         continue;
-                    }
-
-                    if (enemyKill.ExplicitWeapons != null && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
-                    {
+                    if (enemyKill.ExplicitWeapons != null
+                        && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
                         continue;
-                    }
-
-                    candidateWeapons.Add(weapon);
+                    hasCandidateWeapon = true;
+                    break;
                 }
 
                 // If no weapons pass initial criteria, fail quickly
-                if (candidateWeapons.Count == 0)
+                if (!hasCandidateWeapon)
                 {
-                    return RequirementResult.Fail(new[]
-                    {
-                        "Missile", "Super", "PowerBomb", "Charge", "Ice",
-                        "Spazer", "WaveBeam", "Plasma", "ScrewAttack", "Bombs"
-                    });
+                    return RequirementResult.FailShared(AnyWeaponMissing);
                 }
 
-
+                HashSet<Weapon>? usedWeapons = captureDetails ? [] : null;
                 // For each enemy group, check if at least one weapon can hurt them
                 foreach (var enemyGroup in enemyKill.Enemies)
                 {
-                    var enemyType = enemyGroup.First();
-                    var enemyCount = enemyGroup.Count();
-
-                    var enemy = Enemies[enemyType];
-                    // Possibly use a cached HashSet if performance is an issue
-                    var invulSet = new HashSet<string>(enemy.Invul);
+                    var invulSet = EnemyInvulnerabilities[enemyGroup[0]];
 
                     bool canKillEnemy = false;
-                    foreach (var w in candidateWeapons)
+                    foreach (var weapon in weapons)
                     {
-                        if (!invulSet.Contains(w.Name))
-                        {
-                            canKillEnemy = true;
-                            usedWeapons.Add(w);
-                            break;
-                        }
+                        if (enemyKill.ExcludedWeapons != null
+                            && enemyKill.ExcludedWeapons.Contains(weapon.Name))
+                            continue;
+                        if (enemyKill.ExplicitWeapons != null
+                            && !enemyKill.ExplicitWeapons.Contains(weapon.Name))
+                            continue;
+                        if (invulSet.Contains(weapon.Name))
+                            continue;
+
+                        canKillEnemy = true;
+                        usedWeapons?.Add(weapon);
+                        break;
                     }
 
                     if (!canKillEnemy)
                     {
                         // If we can't kill an enemy of this type, fail immediately
-                        return RequirementResult.Fail(new[]
-                        {
-                            "Missile", "Super", "PowerBomb", "Charge", "Ice",
-                            "Spazer", "WaveBeam", "Plasma", "ScrewAttack", "Bombs"
-                        });
+                        return RequirementResult.FailShared(AnyWeaponMissing);
                     }
                 }
 
                 // If we get here, we can kill at least one enemy in each group
                 var enemyKillResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                foreach (var weapon in usedWeapons)
-                    enemyKillResult.MergeSuccess(HandleRequirement(
-                        weapon.UseRequires, state, inventory, world, weapons));
+                if (usedWeapons != null)
+                {
+                    foreach (var weapon in usedWeapons)
+                        enemyKillResult.MergeSuccess(HandleRequirement(
+                            weapon.UseRequires, state, inventory, world, weapons,
+                            captureDetails));
+                }
                 return enemyKillResult;
 
 
@@ -555,7 +648,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                }, hasVaria ? "Varia" : null);
+                }, hasVaria ? "Varia" : null, captureDetails);
 
             case Requirement.HeatFramesWithEnergyDrops heatFramesWithEnergyDrops:
                 var hasVariaHf = inventory.Has(world.GetItem("Varia"));
@@ -581,7 +674,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                }, hasVariaHf ? "Varia" : null);
+                }, hasVariaHf ? "Varia" : null, captureDetails);
 
             case Requirement.SamusEaterFrames samusEaterFrames:
                 return RequirementResult.Success(new RequirementCost
@@ -627,7 +720,8 @@ public class RequirementHandler
                         failed = true;
                         if (resourceName != "")
                         {
-                            failedResource.MergeFail(RequirementResult.Fail(resourceName));
+                            failedResource.MergeConsumedFail(
+                                RequirementResult.Fail(resourceName));
                         }
                     }
                 }
@@ -638,15 +732,19 @@ public class RequirementHandler
                 }
                 else
                 {
-                    var availableResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                    foreach (var resource in resourceAvailable.Available)
+                    var availableResult = RequirementResult.Success(
+                        RequirementCost.ZeroCost);
+                    if (captureDetails)
                     {
-                        var (item, count) = RequiredExpansion(
-                            resource.Type, resource.Count);
-                        if (count > 0)
+                        foreach (var resource in resourceAvailable.Available)
                         {
-                            availableResult.UsedItems ??= [];
-                            availableResult.UsedItems[item] = count;
+                            var (item, count) = RequiredExpansion(
+                                resource.Type, resource.Count);
+                            if (count > 0)
+                            {
+                                availableResult.UsedItems ??= [];
+                                availableResult.UsedItems[item] = count;
+                            }
                         }
                     }
                     return availableResult;
@@ -697,7 +795,7 @@ public class RequirementHandler
                     Missiles = 0,
                     SuperMissiles = 0,
                     PowerBombs = 0
-                }, hasVariaG ? "Varia" : null);
+                }, hasVariaG ? "Varia" : null, captureDetails);
 
             case Requirement.GravitylessLavaFrames gravitylessLavaFrames:
                 return RequirementResult.Success(new RequirementCost
@@ -732,7 +830,7 @@ public class RequirementHandler
                         Missiles = 0,
                         SuperMissiles = 0,
                         PowerBombs = 0
-                    }, "SpeedBooster");
+                    }, "SpeedBooster", captureDetails);
                 }
                 else
                 {
@@ -747,7 +845,7 @@ public class RequirementHandler
                     var (item, count) = RequiredExpansion(c.Type, c.Count);
                     if (item == "" || !inventory.HasAtLeast(world.GetItem(item), count))
                     {
-                        failedCapacity.MergeFail(RequirementResult.Fail(
+                        failedCapacity.MergeConsumedFail(RequirementResult.Fail(
                             item == "" ? c.Type : item));
                         failedCap = true;
                     }
@@ -755,31 +853,37 @@ public class RequirementHandler
 
                 if (failedCap)
                     return failedCapacity;
-                var capacityResult = RequirementResult.Success(RequirementCost.ZeroCost);
-                capacityResult.UsedItems = [];
-                foreach (var c in capacity.Capacity)
+                var capacityResult = RequirementResult.Success(
+                    RequirementCost.ZeroCost);
+                if (captureDetails)
                 {
-                    var (item, count) = RequiredExpansion(c.Type, c.Count);
-                    if (count > 0)
-                        capacityResult.UsedItems[item] = Math.Max(
-                            capacityResult.UsedItems.GetValueOrDefault(item), count);
+                    capacityResult.UsedItems = [];
+                    foreach (var c in capacity.Capacity)
+                    {
+                        var (item, count) = RequiredExpansion(c.Type, c.Count);
+                        if (count > 0)
+                            capacityResult.UsedItems[item] = Math.Max(
+                                capacityResult.UsedItems.GetValueOrDefault(item),
+                                count);
+                    }
                 }
                 return capacityResult;
 
             case Requirement.CanShineCharge canShineCharge:
-                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
+                return inventory.Has(world.GetItem("SpeedBooster")) && canShineCharge.UsedTiles >= world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster", captureDetails) : (canShineCharge.UsedTiles < 25 ? RequirementResult.Fail() : RequirementResult.Fail("SpeedBooster"));
 
             case Requirement.GetBlueSpeed blueSpeed:
                 if (blueSpeed.UsedTiles < world.Config.LogicSkillConfigs[world.Config.Logic].ShinechargeTiles)
                 {
                     return RequirementResult.Fail();
                 }
-                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : RequirementResult.Fail("SpeedBooster");
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster", captureDetails) : RequirementResult.Fail("SpeedBooster");
 
             case Requirement.Tech tech:
                 if (HelperTechs.TryGetValue($"t_{tech.TechRequirement}", out var techRequirement))
                 {
-                    return HandleRequirement(techRequirement, state, inventory, world, weapons);
+                    return HandleRequirement(techRequirement, state, inventory,
+                        world, weapons, captureDetails);
                 }
                 else
                 {
@@ -802,10 +906,61 @@ public class RequirementHandler
                     return RequirementResult.Fail();
                 }
 
-                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster") : RequirementResult.Fail("SpeedBooster");
+                return inventory.Has(world.GetItem("SpeedBooster")) ? RequirementResult.Success(RequirementCost.ZeroCost, "SpeedBooster", captureDetails) : RequirementResult.Fail("SpeedBooster");
 
             default:
                 return RequirementResult.Fail();
+        }
+    }
+
+    internal bool TryGetOptimizedRequirement(
+        string name, out Requirement requirement) =>
+        HelperTechs.TryGetValue(name, out requirement!);
+
+    internal void CollectCapacityThresholds(
+        Requirement requirement,
+        Dictionary<string, int> maximumCounts,
+        HashSet<Requirement> visited)
+    {
+        if (!visited.Add(requirement))
+            return;
+
+        switch (requirement)
+        {
+            case Requirement.ResourceCapacity capacity:
+                foreach (var resource in capacity.Capacity)
+                {
+                    var (item, count) = RequiredExpansion(
+                        resource.Type, resource.Count);
+                    if (item.Length > 0)
+                        maximumCounts[item] = Math.Max(
+                            maximumCounts.GetValueOrDefault(item), count);
+                }
+                break;
+            case Requirement.And and:
+                foreach (var child in and.Reqs)
+                    CollectCapacityThresholds(child, maximumCounts, visited);
+                break;
+            case Requirement.Or or:
+                foreach (var child in or.Reqs)
+                    CollectCapacityThresholds(child, maximumCounts, visited);
+                break;
+            case Requirement.Not not:
+                CollectCapacityThresholds(not.Req, maximumCounts, visited);
+                break;
+            case Requirement.Single single
+                when TryGetOptimizedRequirement(single.Req, out var helper):
+                CollectCapacityThresholds(helper, maximumCounts, visited);
+                break;
+            case Requirement.SingleItem item
+                when TryGetOptimizedRequirement(item.Item.Name, out var helper):
+                CollectCapacityThresholds(helper, maximumCounts, visited);
+                break;
+            case Requirement.Tech tech
+                when TryGetOptimizedRequirement(
+                    $"t_{tech.TechRequirement}", out var helper):
+                CollectCapacityThresholds(helper, maximumCounts, visited);
+                break;
         }
     }
 
