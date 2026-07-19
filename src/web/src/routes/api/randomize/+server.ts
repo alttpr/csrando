@@ -128,7 +128,8 @@ async function expandPresetRequest(
   }
   const { PresetId, RevisionId, Seed, IncludeSpoiler } = parsed.data;
 
-  // Throws 404 for unknown/foreign presets.
+  // The reference may be an internal id or an official preset slug. Private
+  // presets remain available only to their owner.
   const { preset, revision } = await getPresetWithRevision(
     PresetId,
     user,

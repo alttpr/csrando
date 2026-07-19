@@ -192,7 +192,7 @@ GET /api/presets?configId=combo
 - `recommendedId`: the internal id of the recommended official preset.
 - `configSchemaVersion`: the current normalized-settings schema version.
 
-Preset summaries include `id`, `scope`, `slug`, `configId`, `name`, `description`, revision/schema information, `selectedGames`, curation tags/status, ordering, and timestamps. API operations use the internal `id`. Human-facing official links use the slug, for example `/config/combo/recommended`.
+Preset summaries include `id`, `scope`, `slug`, `configId`, `name`, `description`, revision/schema information, `selectedGames`, curation tags/status, ordering, and timestamps. Mutations use the internal `id`. Public reads and seed generation can use an official preset's slug, matching human-facing links such as `/config/combo/recommended`.
 
 ```http
 GET    /api/presets/{id}
@@ -247,7 +247,7 @@ Authorization: Bearer qr_...   (required for private presets)
 
 ```json
 {
-  "PresetId": "the-preset-id",
+  "PresetId": "recommended",
   "Seed": 0,
   "IncludeSpoiler": false
 }
@@ -255,7 +255,7 @@ Authorization: Bearer qr_...   (required for private presets)
 
 Optional fields: `Seed` (default `0` = random), `IncludeSpoiler` (default `true`), `RevisionId` (generate from an older revision; defaults to the preset's current one). Official presets work without authentication; private presets require an API key owned by the preset's owner. The response is identical to a regular `/api/randomize` call, and the stored seed records which preset and revision it came from.
 
-`PresetId` is always the internal preset id returned by the presets API, not an official preset slug.
+`PresetId` accepts either the internal id returned by the presets API or an official preset's readable slug. Private presets must use their internal id.
 
 ## Fetch authenticated seed history
 

@@ -189,7 +189,7 @@ describe("POST /api/randomize with PresetId (external tools)", () => {
     expect(forwarded.IncludeSpoiler).toBe(true);
   });
 
-  it("allows anonymous generation from official presets", async () => {
+  it("allows anonymous generation from an official preset slug", async () => {
     const list = await (
       await presetsRoute.GET({
         url: new URL("http://localhost/api/presets?configId=combo"),
@@ -197,8 +197,14 @@ describe("POST /api/randomize with PresetId (external tools)", () => {
       } as never)
     ).json();
 
+    const recommended = list.officials.find(
+      (preset: { id: string; slug: string | null }) =>
+        preset.id === list.recommendedId,
+    );
+    expect(recommended?.slug).toBe("recommended");
+
     const body = await generateByPreset(null, {
-      PresetId: list.recommendedId,
+      PresetId: "Recommended",
     });
     expect(body.id).toBeTruthy();
     const rows = await db
@@ -206,7 +212,7 @@ describe("POST /api/randomize with PresetId (external tools)", () => {
       .from(seeds)
       .where(eq(seeds.id, body.id))
       .limit(1);
-    expect(rows[0].presetId).toBe(list.recommendedId);
+    expect(rows[0].presetId).toBe(recommended.id);
   });
 
   it("rejects foreign private presets and unknown ids with 404", async () => {

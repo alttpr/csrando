@@ -197,15 +197,38 @@ async function getPresetRow(id: string): Promise<PresetRow | null> {
   return rows[0] ?? null;
 }
 
+async function getPresetRowByReference(
+  reference: string,
+): Promise<PresetRow | null> {
+  const byId = await getPresetRow(reference);
+  if (byId) return byId;
+
+  // Official presets are deliberately shared by their readable slug. Accept
+  // that same reference anywhere a readable preset is requested, including
+  // bot generation and the public detail endpoint. Private presets remain
+  // addressable only by their opaque id.
+  const rows = await db
+    .select()
+    .from(configurationPresets)
+    .where(
+      and(
+        eq(configurationPresets.scope, "official"),
+        eq(configurationPresets.slug, reference.trim().toLowerCase()),
+      ),
+    )
+    .limit(1);
+  return rows[0] ?? null;
+}
+
 // Read authorization: official presets are readable by everyone (archived
 // ones stay readable by id so an already-selected preset degrades
 // gracefully); private presets only by their owner. Foreign or deleted
 // presets surface as 404 to avoid leaking existence.
 export async function getReadablePreset(
-  id: string,
+  reference: string,
   user: User | null,
 ): Promise<PresetRow> {
-  const preset = await getPresetRow(id);
+  const preset = await getPresetRowByReference(reference);
   if (!preset || preset.deletedAt) {
     throw error(404, { message: "Preset not found" });
   }
@@ -331,6 +354,9 @@ export async function createPreset(
     });
   }
 
+  const officialSlug =
+    scope === "official" ? await assertNewOfficialSlug(input.slug ?? "") : null;
+
   if (scope === "user") {
     const countRows = await db
       .select({ count: sql<number>`count(*)` })
@@ -360,7 +386,7 @@ export async function createPreset(
         id: presetId,
         ownerUserId: scope === "user" ? user.id : null,
         scope,
-        slug: scope === "official" ? (input.slug ?? null) : null,
+        slug: officialSlug,
         configId: input.configId,
         name: input.name,
         description: input.description ?? null,
@@ -572,7 +598,15 @@ export async function softDeletePreset(
   const now = new Date();
   db.transaction((tx) => {
     tx.update(configurationPresets)
-      .set({ deletedAt: now, updatedAt: now })
+      .set({
+        deletedAt: now,
+        updatedAt: now,
+        // Deleted rows remain for seed attribution, but their public name is
+        // no longer reserved. This lets an accidentally deleted official
+        // preset be recreated with the same readable URL.
+        slug: null,
+        isRecommended: false,
+      })
       .where(eq(configurationPresets.id, preset.id))
       .run();
     tx.update(userPresetPreferences)

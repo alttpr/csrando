@@ -170,6 +170,20 @@ describe("GET /api/presets", () => {
     expect(result.mine.map((p) => p.name)).toContain("Case test");
   });
 
+  it("loads an official preset by its readable slug", async () => {
+    await listPresets(null);
+    const response = await byId.GET({
+      params: { id: "Recommended" },
+      url: new URL("http://localhost/api/presets/Recommended"),
+      locals: locals(null),
+    } as never);
+    const body = await response.json();
+    expect(body.preset).toMatchObject({
+      scope: "official",
+      slug: "recommended",
+    });
+  });
+
   it("only shows a user's own presets in mine", async () => {
     await createPreset(alice, {
       configId: "combo",
@@ -344,6 +358,42 @@ describe("POST /api/presets", () => {
       list.officials.map((p: { slug: string | null }) => p.slug),
     ).toContain("tournament");
   });
+
+  it("requires a unique slug when creating an official preset", async () => {
+    await expect(
+      createPreset(admin, {
+        configId: "combo",
+        name: "Missing slug",
+        settings: defaultSettings(),
+        scope: "official",
+      }),
+    ).rejects.toMatchObject({
+      status: 400,
+      body: { fieldErrors: { slug: expect.any(String) } },
+    });
+
+    await createPreset(admin, {
+      configId: "combo",
+      name: "First weekly",
+      settings: defaultSettings(),
+      scope: "official",
+      slug: "weekly",
+    });
+    await expect(
+      createPreset(admin, {
+        configId: "combo",
+        name: "Second weekly",
+        settings: defaultSettings(),
+        scope: "official",
+        slug: "weekly",
+      }),
+    ).rejects.toMatchObject({
+      status: 400,
+      body: {
+        fieldErrors: { slug: expect.stringContaining("already exists") },
+      },
+    });
+  });
 });
 
 describe("PATCH /api/presets/[id]", () => {
@@ -498,6 +548,34 @@ describe("DELETE /api/presets/[id]", () => {
         locals: locals(bob),
       } as never),
     ).rejects.toMatchObject({ status: 404 });
+  });
+
+  it("releases an official preset slug when it is deleted", async () => {
+    const first = await createPreset(admin, {
+      configId: "combo",
+      name: "First weekly race",
+      settings: defaultSettings(),
+      scope: "official",
+      slug: "weekly-race",
+    });
+
+    await byId.DELETE({
+      params: { id: first.preset.id },
+      locals: locals(admin),
+    } as never);
+
+    const replacement = await createPreset(admin, {
+      configId: "combo",
+      name: "Replacement weekly race",
+      settings: defaultSettings(),
+      scope: "official",
+      slug: "weekly-race",
+    });
+    expect(replacement.preset).toMatchObject({
+      scope: "official",
+      slug: "weekly-race",
+      name: "Replacement weekly race",
+    });
   });
 });
 
