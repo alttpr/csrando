@@ -28,9 +28,9 @@
 	} from "$lib/utils/rom";
 	import { sha256Hex } from "$lib/utils/hash";
 	import {
-		profileConfigPath,
+		presetConfigPath,
 		seedSettingsPath,
-	} from "$lib/config/profile-links";
+	} from "$lib/config/preset-links";
 
 	import { gameStaticInfo } from "$lib/game-static-info";
 
@@ -43,7 +43,7 @@
 		seedSettingsPath({
 			seedId: data.seedDetails.id,
 			settingsConfigId: data.settingsConfigId,
-			profile: data.profileAttribution,
+			preset: data.presetAttribution,
 			differedFromRevision: data.seedDetails.differedFromRevision,
 		}),
 	);
@@ -1330,17 +1330,17 @@
 						</p>
 					{/if}
 				{/if}
-				{#if data.profileAttribution && !seedDetails.differedFromRevision}
-					{@const attribution = data.profileAttribution}
+				{#if data.presetAttribution && !seedDetails.differedFromRevision}
+					{@const attribution = data.presetAttribution}
 					<p
 						class="text-xs text-slate-600 dark:text-slate-300 mt-1 flex flex-wrap items-center gap-1"
 					>
 						<strong class="text-slate-700 dark:text-slate-200"
-							>{m.seed_page_profile_label()}:</strong
+							>{m.seed_page_preset_label()}:</strong
 						>
-						{#if attribution.profileId}
+						{#if attribution.presetId}
 							<a
-								href={profileConfigPath(attribution) ?? undefined}
+								href={presetConfigPath(attribution) ?? undefined}
 								class="text-primary-600 dark:text-primary-400 hover:underline"
 								>{attribution.name}</a
 							>
@@ -1349,14 +1349,14 @@
 						{/if}
 						{#if attribution.revisionNumber !== null}
 							<span class="text-slate-500 dark:text-slate-400">
-								({m.seed_page_profile_revision({
+								({m.seed_page_preset_revision({
 									number: attribution.revisionNumber,
 								})})
 							</span>
 						{/if}
 						{#if attribution.deleted}
 							<Badge variant="neutral"
-								>{m.seed_page_profile_deleted()}</Badge
+								>{m.seed_page_preset_deleted()}</Badge
 							>
 						{/if}
 					</p>

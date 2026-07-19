@@ -30,7 +30,7 @@ vi.mock("$lib/services/api", () => ({
 }));
 
 type DbModule = typeof import("$lib/server/db");
-type ServiceModule = typeof import("$lib/server/profiles/service");
+type ServiceModule = typeof import("$lib/server/presets/service");
 type SeedsModule = typeof import("$lib/server/db/seeds");
 
 let db: DbModule["db"];
@@ -64,7 +64,7 @@ function defaultSettings(): NormalizedConfig {
 beforeAll(async () => {
   process.env.DATABASE_URL = ":memory:";
   ({ db } = await import("$lib/server/db"));
-  service = await import("$lib/server/profiles/service");
+  service = await import("$lib/server/presets/service");
   seedsModule = await import("$lib/server/db/seeds");
 
   for (const user of [alice, bob, admin]) {
@@ -78,7 +78,7 @@ beforeAll(async () => {
 
 describe("getSeedAttribution", () => {
   it("shows official presets to everyone, including anonymous viewers", async () => {
-    const { profile, revision } = await service.createProfile(admin, {
+    const { preset, revision } = await service.createPreset(admin, {
       configId: "combo",
       name: "Attribution Official",
       settings: defaultSettings(),
@@ -86,13 +86,9 @@ describe("getSeedAttribution", () => {
       slug: "attr-official",
     });
 
-    const anon = await service.getSeedAttribution(
-      profile.id,
-      revision.id,
-      null,
-    );
+    const anon = await service.getSeedAttribution(preset.id, revision.id, null);
     expect(anon).toEqual({
-      profileId: profile.id,
+      presetId: preset.id,
       slug: "attr-official",
       name: "Attribution Official",
       scope: "official",
@@ -101,78 +97,74 @@ describe("getSeedAttribution", () => {
       deleted: false,
     });
 
-    const other = await service.getSeedAttribution(
-      profile.id,
-      revision.id,
-      bob,
-    );
-    expect(other?.profileId).toBe(profile.id);
+    const other = await service.getSeedAttribution(preset.id, revision.id, bob);
+    expect(other?.presetId).toBe(preset.id);
   });
 
-  it("shows private profiles only to their owner", async () => {
-    const { profile, revision } = await service.createProfile(alice, {
+  it("shows private presets only to their owner", async () => {
+    const { preset, revision } = await service.createPreset(alice, {
       configId: "combo",
       name: "Alice Private",
       settings: defaultSettings(),
     });
 
     const owner = await service.getSeedAttribution(
-      profile.id,
+      preset.id,
       revision.id,
       alice,
     );
     expect(owner?.name).toBe("Alice Private");
-    expect(owner?.profileId).toBe(profile.id);
+    expect(owner?.presetId).toBe(preset.id);
     expect(owner?.slug).toBeNull();
     expect(owner?.revisionNumber).toBe(revision.revisionNumber);
 
     expect(
-      await service.getSeedAttribution(profile.id, revision.id, bob),
+      await service.getSeedAttribution(preset.id, revision.id, bob),
     ).toBeNull();
     expect(
-      await service.getSeedAttribution(profile.id, revision.id, null),
+      await service.getSeedAttribution(preset.id, revision.id, null),
     ).toBeNull();
   });
 
-  it("keeps the name but drops the link for deleted profiles", async () => {
-    const { profile, revision } = await service.createProfile(alice, {
+  it("keeps the name but drops the link for deleted presets", async () => {
+    const { preset, revision } = await service.createPreset(alice, {
       configId: "combo",
       name: "Alice Deleted",
       settings: defaultSettings(),
     });
-    await service.softDeleteProfile(alice, profile.id);
+    await service.softDeletePreset(alice, preset.id);
 
     const attribution = await service.getSeedAttribution(
-      profile.id,
+      preset.id,
       revision.id,
       alice,
     );
     expect(attribution).toMatchObject({
-      profileId: null,
+      presetId: null,
       name: "Alice Deleted",
       deleted: true,
     });
   });
 
-  it("returns null for unknown profiles and ignores foreign revision ids", async () => {
+  it("returns null for unknown presets and ignores foreign revision ids", async () => {
     expect(
       await service.getSeedAttribution("does-not-exist-1", null, alice),
     ).toBeNull();
 
-    const first = await service.createProfile(alice, {
+    const first = await service.createPreset(alice, {
       configId: "combo",
       name: "Alice Revision Guard",
       settings: defaultSettings(),
     });
-    const second = await service.createProfile(alice, {
+    const second = await service.createPreset(alice, {
       configId: "combo",
-      name: "Alice Other Profile",
+      name: "Alice Other Preset",
       settings: defaultSettings(),
     });
 
-    // A revision id belonging to a different profile must not resolve.
+    // A revision id belonging to a different preset must not resolve.
     const attribution = await service.getSeedAttribution(
-      first.profile.id,
+      first.preset.id,
       second.revision.id,
       alice,
     );

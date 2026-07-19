@@ -88,10 +88,10 @@ The `package.json` includes additional scripts:
 
 External services such as Discord bots can generate seeds through the public SvelteKit API and link users to the normal seed permalink page. See [docs/PUBLIC_API.md](docs/PUBLIC_API.md).
 
-## Profile guide
+## Preset guide
 
 For instructions on choosing, saving, revising, sharing, and managing seed
-profiles, see [docs/PROFILES.md](docs/PROFILES.md).
+presets, see [docs/PRESETS.md](docs/PRESETS.md).
 
 ## Randomizer Versions (Snapshots)
 
@@ -201,7 +201,7 @@ For developer setup and self-hosted deployment instructions, see:
 
 - docs/DEVELOPMENT.md
 - docs/DEPLOYMENT.md
-- docs/PROFILES.md (user guide)
+- docs/PRESETS.md (user guide)
 
 ## Continuous Integration & Release
 

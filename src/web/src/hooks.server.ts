@@ -1,14 +1,14 @@
 import { lucia } from "$lib/server/auth";
 import { sequence } from "@sveltejs/kit/hooks";
 import { building } from "$app/environment";
-import { ensureOfficialProfilesSeeded } from "$lib/server/profiles/seed-official";
+import { ensureOfficialPresetsSeeded } from "$lib/server/presets/seed-official";
 import { authenticateApiKey } from "$lib/server/api-keys";
 
 // Seed missing official presets at boot (idempotent; retried lazily from the
-// profiles API when the generator metadata is not available yet).
+// presets API when the generator metadata is not available yet).
 if (!building) {
-  ensureOfficialProfilesSeeded().catch((err) => {
-    console.error("[profiles] official preset seeding failed:", err);
+  ensureOfficialPresetsSeeded().catch((err) => {
+    console.error("[presets] official preset seeding failed:", err);
   });
 }
 

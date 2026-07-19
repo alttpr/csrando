@@ -5,7 +5,7 @@ import { db } from "$lib/server/db";
 import { seeds } from "$lib/server/db/schema";
 import { requirePanelAccess } from "$lib/server/admin/guard";
 import { shouldHideSpoiler } from "$lib/server/seed-visibility";
-import { getSeedAttribution } from "$lib/server/profiles/service";
+import { getSeedAttribution } from "$lib/server/presets/service";
 
 function toIso(value: unknown): string | null {
   if (value instanceof Date) {
@@ -29,8 +29,8 @@ export const load: PageServerLoad = async ({ params, locals, cookies }) => {
       createdAt: seeds.createdAt,
       options: seeds.options,
       spoilerLog: seeds.spoilerLog,
-      profileId: seeds.profileId,
-      profileRevisionId: seeds.profileRevisionId,
+      presetId: seeds.presetId,
+      presetRevisionId: seeds.presetRevisionId,
       differedFromRevision: seeds.differedFromRevision,
     })
     .from(seeds)
@@ -42,11 +42,11 @@ export const load: PageServerLoad = async ({ params, locals, cookies }) => {
   }
 
   let attribution = null;
-  if (seed.profileId) {
+  if (seed.presetId) {
     try {
       attribution = await getSeedAttribution(
-        seed.profileId,
-        seed.profileRevisionId,
+        seed.presetId,
+        seed.presetRevisionId,
         locals.user,
       );
     } catch (e) {

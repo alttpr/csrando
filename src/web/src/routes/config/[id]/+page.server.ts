@@ -3,18 +3,15 @@ import type { User } from "lucia";
 import * as m from "$lib/paraglide/messages";
 import { metadataApi } from "$lib/services/api";
 import { parseMetadata } from "$lib/schemas/metadata";
-import {
-  getSharedProfile,
-  listProfilesFor,
-} from "$lib/server/profiles/service";
+import { getSharedPreset, listPresetsFor } from "$lib/server/presets/service";
 import { getSeedSettingsSnapshot } from "$lib/server/db/seeds";
-import type { ProfileListResponseDto } from "$lib/schemas/profiles";
-import { resolveProfileReference } from "$lib/config/profile-selection";
+import type { PresetListResponseDto } from "$lib/schemas/presets";
+import { resolvePresetReference } from "$lib/config/preset-selection";
 
 // Define our own types since we can't access ./$types
 interface Params {
   id: string;
-  profile?: string;
+  preset?: string;
 }
 
 interface LoadEvent {
@@ -24,8 +21,8 @@ interface LoadEvent {
 }
 
 // Settings snapshot delivered through a ?share= capability link. Carries no
-// profile ids: the recipient gets a read-only copy, not the profile itself.
-export interface SharedProfilePayload {
+// preset ids: the recipient gets a read-only copy, not the preset itself.
+export interface SharedPresetPayload {
   name: string;
   description: string | null;
   settings: unknown;
@@ -44,9 +41,9 @@ interface LoadResult {
   metadata: Metadata | null;
   error: string | null;
   configId: string;
-  profileBootstrap: ProfileListResponseDto | null;
-  queryProfileId: string | null;
-  sharedProfile: SharedProfilePayload | null;
+  presetBootstrap: PresetListResponseDto | null;
+  queryPresetId: string | null;
+  sharedPreset: SharedPresetPayload | null;
   // A ?share= token was present but did not resolve (revoked/deleted).
   sharedInvalid: boolean;
   seedSettings: SeedSettingsPayload | null;
@@ -54,27 +51,27 @@ interface LoadResult {
   seedSettingsInvalid: boolean;
 }
 
-async function loadSharedProfile(url: URL): Promise<{
-  sharedProfile: SharedProfilePayload | null;
+async function loadSharedPreset(url: URL): Promise<{
+  sharedPreset: SharedPresetPayload | null;
   sharedInvalid: boolean;
 }> {
   const token = url.searchParams.get("share");
-  if (!token) return { sharedProfile: null, sharedInvalid: false };
+  if (!token) return { sharedPreset: null, sharedInvalid: false };
   try {
-    const shared = await getSharedProfile(token);
-    if (!shared) return { sharedProfile: null, sharedInvalid: true };
+    const shared = await getSharedPreset(token);
+    if (!shared) return { sharedPreset: null, sharedInvalid: true };
     return {
-      sharedProfile: {
-        name: shared.profile.name,
-        description: shared.profile.description,
+      sharedPreset: {
+        name: shared.preset.name,
+        description: shared.preset.description,
         settings: shared.revision.settings,
         configSchemaVersion: shared.revision.configSchemaVersion,
       },
       sharedInvalid: false,
     };
   } catch (e) {
-    console.error("Failed to resolve shared profile link:", e);
-    return { sharedProfile: null, sharedInvalid: true };
+    console.error("Failed to resolve shared preset link:", e);
+    return { sharedPreset: null, sharedInvalid: true };
   }
 }
 
@@ -89,15 +86,15 @@ async function loadSeedSettings(url: URL): Promise<{
   return { seedSettings: snapshot, seedSettingsInvalid: false };
 }
 
-async function loadProfileBootstrap(
+async function loadPresetBootstrap(
   configId: string,
   user: User | null,
-): Promise<ProfileListResponseDto | null> {
+): Promise<PresetListResponseDto | null> {
   try {
-    return await listProfilesFor(configId, user);
+    return await listPresetsFor(configId, user);
   } catch (e) {
-    // Profiles are an enhancement; the config page must work without them.
-    console.error(`Failed to load profiles for '${configId}':`, e);
+    // Presets are an enhancement; the config page must work without them.
+    console.error(`Failed to load presets for '${configId}':`, e);
     return null;
   }
 }
@@ -108,18 +105,16 @@ export const load = async ({
   url,
 }: LoadEvent): Promise<LoadResult> => {
   const id = (params.id || "").toLowerCase();
-  // Path-style profile links are canonical; retain query support for links
-  // created before `/config/{config}/{profile}` was introduced.
-  const queryProfileId = params.profile ?? url.searchParams.get("profile");
-  const shared = await loadSharedProfile(url);
+  const queryPresetId = params.preset ?? null;
+  const shared = await loadSharedPreset(url);
   const fromSeed = await loadSeedSettings(url);
   if (!id) {
     return {
       metadata: null,
       error: "Invalid ID provided.",
       configId: id,
-      profileBootstrap: null,
-      queryProfileId,
+      presetBootstrap: null,
+      queryPresetId,
       ...shared,
       ...fromSeed,
     };
@@ -127,9 +122,9 @@ export const load = async ({
 
   try {
     const canonical = await metadataApi.resolveCanonicalId(id);
-    // Profiles use lowercase config ids everywhere; the canonical id keeps
+    // Presets use lowercase config ids everywhere; the canonical id keeps
     // the backend's casing (e.g. "Combo") for metadata fetches only.
-    const profileConfigId = canonical.toLowerCase();
+    const presetConfigId = canonical.toLowerCase();
     const raw = await metadataApi.getById(canonical);
 
     const parsed = parseMetadata(raw);
@@ -138,9 +133,9 @@ export const load = async ({
       return {
         metadata: null,
         error: m.config_metadata_fetch_error(),
-        configId: profileConfigId,
-        profileBootstrap: null,
-        queryProfileId,
+        configId: presetConfigId,
+        presetBootstrap: null,
+        queryPresetId,
         ...shared,
         ...fromSeed,
       };
@@ -151,27 +146,27 @@ export const load = async ({
       return {
         metadata: null,
         error: m.config_no_metadata(),
-        configId: profileConfigId,
-        profileBootstrap: null,
-        queryProfileId,
+        configId: presetConfigId,
+        presetBootstrap: null,
+        queryPresetId,
         ...shared,
         ...fromSeed,
       };
     }
 
-    const profileBootstrap = await loadProfileBootstrap(
-      profileConfigId,
+    const presetBootstrap = await loadPresetBootstrap(
+      presetConfigId,
       locals.user,
     );
 
     return {
       metadata,
       error: null,
-      configId: profileConfigId,
-      profileBootstrap,
-      queryProfileId: resolveProfileReference(
-        queryProfileId,
-        profileBootstrap?.officials ?? [],
+      configId: presetConfigId,
+      presetBootstrap,
+      queryPresetId: resolvePresetReference(
+        queryPresetId,
+        presetBootstrap?.officials ?? [],
       ),
       ...shared,
       ...fromSeed,
@@ -193,8 +188,8 @@ export const load = async ({
       metadata: null,
       error: errorMsg,
       configId: id,
-      profileBootstrap: null,
-      queryProfileId,
+      presetBootstrap: null,
+      queryPresetId,
       ...shared,
       ...fromSeed,
     };

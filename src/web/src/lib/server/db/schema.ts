@@ -13,7 +13,7 @@ export const users = sqliteTable("user", {
   username: text("username").notNull().unique(),
   githubId: integer("github_id").unique(), // Assuming you might want GitHub OAuth later
   hashedPassword: text("hashed_password"), // For username/password auth
-  // Grants management of official seed profiles (and future admin surfaces).
+  // Grants management of official seed presets (and future admin surfaces).
   isAdmin: integer("is_admin", { mode: "boolean" }).notNull().default(false),
 });
 
@@ -84,10 +84,10 @@ export const seeds = sqliteTable("seed", {
   randomizerVersionId: text("randomizer_version_id").references(
     () => randomizerVersions.id,
   ),
-  // Optional seed-profile attribution. Intentionally no FKs: a seed's stored
-  // configuration must never change when profiles are edited or deleted.
-  profileId: text("profile_id"),
-  profileRevisionId: text("profile_revision_id"),
+  // Optional seed-preset attribution. Intentionally no FKs: a seed's stored
+  // configuration must never change when presets are edited or deleted.
+  presetId: text("preset_id"),
+  presetRevisionId: text("preset_revision_id"),
   // Whether the submitted configuration differed from the referenced revision
   // (computed server-side at generation time).
   differedFromRevision: integer("differed_from_revision", { mode: "boolean" }),
@@ -100,13 +100,13 @@ export const seeds = sqliteTable("seed", {
     .default(sql`(current_timestamp)`),
 });
 
-// Named seed configurations. "official" profiles are curated by admins and
-// have no owner; "user" profiles are private to their owner. Settings live in
-// immutable revisions (configurationProfileRevisions); the profile points at
+// Named seed configurations. "official" presets are curated by admins and
+// have no owner; "user" presets are private to their owner. Settings live in
+// immutable revisions (configurationPresetRevisions); the preset points at
 // its newest revision via currentRevisionId (no FK: circular reference with
-// the revisions table — integrity is enforced in the profiles service).
-export const configurationProfiles = sqliteTable(
-  "configuration_profile",
+// the revisions table — integrity is enforced in the presets service).
+export const configurationPresets = sqliteTable(
+  "configuration_preset",
   {
     id: text("id").notNull().primaryKey(),
     ownerUserId: text("owner_user_id").references(() => users.id, {
@@ -115,7 +115,7 @@ export const configurationProfiles = sqliteTable(
     scope: text("scope", { enum: ["official", "user"] }).notNull(),
     // Stable identifier for official presets; used as the seeding idempotency key.
     slug: text("slug").unique(),
-    // Which config page this profile belongs to (canonical metadata id, e.g. "combo").
+    // Which config page this preset belongs to (canonical metadata id, e.g. "combo").
     configId: text("config_id").notNull(),
     name: text("name").notNull(),
     description: text("description"),
@@ -128,8 +128,8 @@ export const configurationProfiles = sqliteTable(
       .default(false),
     featured: integer("featured", { mode: "boolean" }).notNull().default(false),
     archived: integer("archived", { mode: "boolean" }).notNull().default(false),
-    // Capability token for sharing a private profile by link; null = not
-    // shared. Anyone with the token can load the profile's current revision.
+    // Capability token for sharing a private preset by link; null = not
+    // shared. Anyone with the token can load the preset's current revision.
     shareToken: text("share_token").unique(),
     displayOrder: integer("display_order").notNull().default(0),
     deletedAt: integer("deleted_at", { mode: "timestamp" }),
@@ -141,20 +141,20 @@ export const configurationProfiles = sqliteTable(
       .default(sql`(current_timestamp)`),
   },
   (t) => [
-    index("configuration_profile_owner_idx").on(t.ownerUserId),
-    index("configuration_profile_config_idx").on(t.configId, t.scope),
+    index("configuration_preset_owner_idx").on(t.ownerUserId),
+    index("configuration_preset_config_idx").on(t.configId, t.scope),
   ],
 );
 
-// Immutable snapshots of a profile's settings. Rows are only ever inserted;
-// "updating" a profile appends a new revision and moves currentRevisionId.
-export const configurationProfileRevisions = sqliteTable(
-  "configuration_profile_revision",
+// Immutable snapshots of a preset's settings. Rows are only ever inserted;
+// "updating" a preset appends a new revision and moves currentRevisionId.
+export const configurationPresetRevisions = sqliteTable(
+  "configuration_preset_revision",
   {
     id: text("id").notNull().primaryKey(),
-    profileId: text("profile_id")
+    presetId: text("preset_id")
       .notNull()
-      .references(() => configurationProfiles.id, { onDelete: "cascade" }),
+      .references(() => configurationPresets.id, { onDelete: "cascade" }),
     revisionNumber: integer("revision_number").notNull(),
     configSchemaVersion: integer("config_schema_version").notNull(),
     // NormalizedConfig JSON (see $lib/config/normalize).
@@ -167,24 +167,24 @@ export const configurationProfileRevisions = sqliteTable(
     publishedAt: integer("published_at", { mode: "timestamp" }),
   },
   (t) => [
-    uniqueIndex("configuration_profile_revision_unique").on(
-      t.profileId,
+    uniqueIndex("configuration_preset_revision_unique").on(
+      t.presetId,
       t.revisionNumber,
     ),
   ],
 );
 
-export const userProfilePreferences = sqliteTable("user_profile_preference", {
+export const userPresetPreferences = sqliteTable("user_preset_preference", {
   userId: text("user_id")
     .notNull()
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
-  defaultProfileId: text("default_profile_id").references(
-    () => configurationProfiles.id,
+  defaultPresetId: text("default_preset_id").references(
+    () => configurationPresets.id,
     { onDelete: "set null" },
   ),
-  lastUsedProfileId: text("last_used_profile_id").references(
-    () => configurationProfiles.id,
+  lastUsedPresetId: text("last_used_preset_id").references(
+    () => configurationPresets.id,
     { onDelete: "set null" },
   ),
   updatedAt: integer("updated_at", { mode: "timestamp" })
@@ -192,21 +192,21 @@ export const userProfilePreferences = sqliteTable("user_profile_preference", {
     .default(sql`(current_timestamp)`),
 });
 
-export const userProfileFavorites = sqliteTable(
-  "user_profile_favorite",
+export const userPresetFavorites = sqliteTable(
+  "user_preset_favorite",
   {
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    profileId: text("profile_id")
+    presetId: text("preset_id")
       .notNull()
-      .references(() => configurationProfiles.id, { onDelete: "cascade" }),
+      .references(() => configurationPresets.id, { onDelete: "cascade" }),
     displayOrder: integer("display_order").notNull().default(0),
     createdAt: integer("created_at", { mode: "timestamp" })
       .notNull()
       .default(sql`(current_timestamp)`),
   },
-  (t) => [primaryKey({ columns: [t.userId, t.profileId] })],
+  (t) => [primaryKey({ columns: [t.userId, t.presetId] })],
 );
 
 export const userSeeds = sqliteTable("user_seed", {

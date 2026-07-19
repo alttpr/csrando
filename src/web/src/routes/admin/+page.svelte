@@ -6,9 +6,9 @@
 		seedsLast24h: number;
 		seedsLast7d: number;
 		seedsLast30d: number;
-		userProfiles: number;
-		officialProfiles: number;
-		archivedOfficialProfiles: number;
+		userPresets: number;
+		officialPresets: number;
+		archivedOfficialPresets: number;
 		activeApiKeys: number;
 		versions: number;
 		activeVersionTags: string[];
@@ -28,13 +28,13 @@
 		{ label: "Seeds (30 days)", value: stats.seedsLast30d },
 		{ label: "Members", value: stats.users },
 		{ label: "Administrators", value: stats.admins },
-		{ label: "User profiles", value: stats.userProfiles },
+		{ label: "User presets", value: stats.userPresets },
 		{
 			label: "Official presets",
-			value: stats.officialProfiles,
+			value: stats.officialPresets,
 			hint:
-				stats.archivedOfficialProfiles > 0
-					? `+ ${stats.archivedOfficialProfiles} archived`
+				stats.archivedOfficialPresets > 0
+					? `+ ${stats.archivedOfficialPresets} archived`
 					: null,
 		},
 		{ label: "Active API keys", value: stats.activeApiKeys },

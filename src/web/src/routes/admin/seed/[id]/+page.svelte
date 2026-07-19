@@ -2,7 +2,7 @@
 	import Badge from "$lib/components/ui/Badge.svelte";
 	import Button from "$lib/components/ui/Button.svelte";
 	import SpoilerLog from "$lib/components/seed/SpoilerLog.svelte";
-	import { profileConfigPath } from "$lib/config/profile-links";
+	import { presetConfigPath } from "$lib/config/preset-links";
 
 	interface Props {
 		data: {
@@ -14,7 +14,7 @@
 				differedFromRevision: boolean | null;
 			};
 			attribution: {
-				profileId: string | null;
+				presetId: string | null;
 				slug: string | null;
 				name: string;
 				scope: "official" | "user";
@@ -51,10 +51,10 @@
 
 {#if data.attribution}
 	<p class="mb-3 text-sm text-slate-600 dark:text-slate-300">
-		Generated from profile
-		{#if data.attribution.profileId}
+		Generated from preset
+		{#if data.attribution.presetId}
 			<a
-				href={profileConfigPath(data.attribution) ?? undefined}
+				href={presetConfigPath(data.attribution) ?? undefined}
 				class="text-primary-600 hover:underline dark:text-primary-400"
 			>
 				{data.attribution.name}

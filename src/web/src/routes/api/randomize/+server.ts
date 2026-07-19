@@ -9,9 +9,9 @@ import { shouldHideSpoiler } from "$lib/server/seed-visibility";
 import {
   RandomizerResponseSchema,
   RandomizeRequestSchema,
-  RandomizeByProfileRequestSchema,
+  RandomizeByPresetRequestSchema,
 } from "$lib/schemas/backend";
-import { NormalizedConfigSchema } from "$lib/schemas/profiles";
+import { NormalizedConfigSchema } from "$lib/schemas/presets";
 import {
   buildRandomizePayload,
   configsEqual,
@@ -22,27 +22,27 @@ import {
 import { migrateConfig, ConfigMigrationError } from "$lib/config/migrations";
 import { CONFIG_SCHEMA_VERSION } from "$lib/config/constants";
 import {
-  getProfileWithRevision,
+  getPresetWithRevision,
   setPreferences,
-} from "$lib/server/profiles/service";
-import { getValidationMetadata } from "$lib/server/profiles/validate";
+} from "$lib/server/presets/service";
+import { getValidationMetadata } from "$lib/server/presets/validate";
 import type { User } from "lucia";
 
-interface SeedProfileAttribution {
-  profileId: string | null;
-  profileRevisionId: string | null;
+interface SeedPresetAttribution {
+  presetId: string | null;
+  presetRevisionId: string | null;
   differedFromRevision: boolean | null;
   configSchemaVersion: number | null;
   settingsSnapshot: unknown;
 }
 
-// Resolve profile attribution for a generated seed. Best-effort provenance
-// metadata: an invalid or vanished profile reference degrades to a plain
+// Resolve preset attribution for a generated seed. Best-effort provenance
+// metadata: an invalid or vanished preset reference degrades to a plain
 // snapshot and must never fail generation. The "differed" flag is computed
 // here from the stored revision — the client's opinion is not trusted.
-async function resolveProfileAttribution(
-  profile: NonNullable<
-    ReturnType<typeof RandomizeRequestSchema.parse>["Profile"]
+async function resolvePresetAttribution(
+  preset: NonNullable<
+    ReturnType<typeof RandomizeRequestSchema.parse>["Preset"]
   >,
   user: User | null,
   generatorRequest: {
@@ -50,15 +50,15 @@ async function resolveProfileAttribution(
     IncludeSpoiler: boolean;
     Configs: Array<Record<string, unknown>>;
   },
-): Promise<SeedProfileAttribution> {
+): Promise<SeedPresetAttribution> {
   const snapshotParse = NormalizedConfigSchema.safeParse(
-    profile.settingsSnapshot,
+    preset.settingsSnapshot,
   );
   const settingsSnapshot = snapshotParse.success ? snapshotParse.data : null;
 
-  const result: SeedProfileAttribution = {
-    profileId: null,
-    profileRevisionId: null,
+  const result: SeedPresetAttribution = {
+    presetId: null,
+    presetRevisionId: null,
     differedFromRevision: null,
     configSchemaVersion: null,
     settingsSnapshot: null,
@@ -73,7 +73,7 @@ async function resolveProfileAttribution(
 
     // Bind the claimed normalized snapshot to the generator payload actually
     // submitted. Otherwise a client could attribute arbitrary Configs to an
-    // unrelated profile or make a modified seed appear unchanged.
+    // unrelated preset or make a modified seed appear unchanged.
     const metadata = await getValidationMetadata(configId);
     if (!metadata) return result;
     const { form } = hydrateFormState(settingsSnapshot, metadata);
@@ -84,7 +84,7 @@ async function resolveProfileAttribution(
     });
     if (!configsEqual(rebuilt.Configs, generatorRequest.Configs)) {
       console.warn(
-        "Seed profile attribution dropped: settings do not match Configs",
+        "Seed preset attribution dropped: settings do not match Configs",
       );
       return result;
     }
@@ -92,45 +92,45 @@ async function resolveProfileAttribution(
     result.settingsSnapshot = normalized;
     result.configSchemaVersion = CONFIG_SCHEMA_VERSION;
 
-    if (profile.profileId && profile.profileRevisionId) {
-      // Enforce profile visibility only after preserving the independently
+    if (preset.presetId && preset.presetRevisionId) {
+      // Enforce preset visibility only after preserving the independently
       // verified snapshot; invalid attribution should not break "open these
       // settings" for the generated seed.
-      const stored = await getProfileWithRevision(
-        profile.profileId,
+      const stored = await getPresetWithRevision(
+        preset.presetId,
         user,
-        profile.profileRevisionId,
+        preset.presetRevisionId,
       );
-      if (stored.profile.configId !== configId) return result;
-      result.profileId = stored.profile.id;
-      result.profileRevisionId = stored.revision.id;
+      if (stored.preset.configId !== configId) return result;
+      result.presetId = stored.preset.id;
+      result.presetRevisionId = stored.revision.id;
       result.differedFromRevision = !configsEqual(
         normalized,
         stored.revision.settings,
       );
-    } else if (profile.profileId || profile.profileRevisionId) return result;
+    } else if (preset.presetId || preset.presetRevisionId) return result;
   } catch (err) {
-    console.error("Failed to resolve seed profile attribution:", err);
+    console.error("Failed to resolve seed preset attribution:", err);
   }
   return result;
 }
 
-// Expand a generate-by-profile request into a full randomize request. Used by
-// external tools (bots) so they can generate from a saved profile id without
+// Expand a generate-by-preset request into a full randomize request. Used by
+// external tools (bots) so they can generate from a saved preset id without
 // reconstructing the generator payload themselves.
-async function expandProfileRequest(
+async function expandPresetRequest(
   raw: unknown,
   user: User | null,
 ): Promise<Record<string, unknown>> {
-  const parsed = RandomizeByProfileRequestSchema.safeParse(raw);
+  const parsed = RandomizeByPresetRequestSchema.safeParse(raw);
   if (!parsed.success) {
-    throw svelteError(400, { message: "Invalid profile generation request" });
+    throw svelteError(400, { message: "Invalid preset generation request" });
   }
-  const { ProfileId, RevisionId, Seed, IncludeSpoiler } = parsed.data;
+  const { PresetId, RevisionId, Seed, IncludeSpoiler } = parsed.data;
 
-  // Throws 404 for unknown/foreign profiles.
-  const { profile, revision } = await getProfileWithRevision(
-    ProfileId,
+  // Throws 404 for unknown/foreign presets.
+  const { preset, revision } = await getPresetWithRevision(
+    PresetId,
     user,
     RevisionId ?? null,
   );
@@ -145,17 +145,17 @@ async function expandProfileRequest(
     if (err instanceof ConfigMigrationError) {
       throw svelteError(400, {
         message:
-          "This profile was saved with an unsupported configuration version.",
+          "This preset was saved with an unsupported configuration version.",
       });
     }
     throw err;
   }
 
-  const metadata = await getValidationMetadata(profile.configId);
+  const metadata = await getValidationMetadata(preset.configId);
   if (!metadata) {
     throw svelteError(503, {
       message:
-        "Generator metadata is unavailable; cannot expand the profile into a configuration.",
+        "Generator metadata is unavailable; cannot expand the preset into a configuration.",
     });
   }
 
@@ -168,9 +168,9 @@ async function expandProfileRequest(
 
   return {
     ...payload,
-    Profile: {
-      profileId: profile.id,
-      profileRevisionId: revision.id,
+    Preset: {
+      presetId: preset.id,
+      presetRevisionId: revision.id,
       settingsSnapshot: normalized,
       configSchemaVersion: CONFIG_SCHEMA_VERSION,
     },
@@ -191,8 +191,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   try {
-    if ("ProfileId" in (optionsFromRequest as Record<string, unknown>)) {
-      optionsFromRequest = await expandProfileRequest(
+    if ("PresetId" in (optionsFromRequest as Record<string, unknown>)) {
+      optionsFromRequest = await expandPresetRequest(
         optionsFromRequest,
         locals.user,
       );
@@ -211,10 +211,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       IncludeSpoiler: includeSpoiler,
       Seed,
       Configs,
-      Profile: profileBlock,
+      Preset: presetBlock,
     } = parsedRequest.data;
     // Race mode controls public visibility only. Always retain spoilers for admin diagnostics.
-    // The Profile attribution block is intentionally NOT forwarded to the generator.
+    // The Preset attribution block is intentionally NOT forwarded to the generator.
     const generatorRequest = { Seed, IncludeSpoiler: true, Configs };
     const randomizeResponseRaw = await randomizeApi.create(generatorRequest);
 
@@ -267,8 +267,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       }
     }
 
-    const attribution = profileBlock
-      ? await resolveProfileAttribution(profileBlock, locals.user, {
+    const attribution = presetBlock
+      ? await resolvePresetAttribution(presetBlock, locals.user, {
           ...generatorRequest,
           IncludeSpoiler: includeSpoiler,
         })
@@ -285,8 +285,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       placementInfo: [],
       spoilerLog: randomizeResponse.spoilerLog || null,
       randomizerVersionId: activeVersion?.id,
-      profileId: attribution?.profileId ?? null,
-      profileRevisionId: attribution?.profileRevisionId ?? null,
+      presetId: attribution?.presetId ?? null,
+      presetRevisionId: attribution?.presetRevisionId ?? null,
       differedFromRevision: attribution?.differedFromRevision ?? null,
       configSchemaVersion: attribution?.configSchemaVersion ?? null,
       settingsSnapshot: attribution?.settingsSnapshot ?? null,
@@ -300,14 +300,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         seedId: uniqueId,
         createdAt: new Date(),
       });
-      if (attribution?.profileId) {
+      if (attribution?.presetId) {
         try {
           await setPreferences(locals.user, {
-            lastUsedProfileId: attribution.profileId,
+            lastUsedPresetId: attribution.presetId,
           });
         } catch (err) {
           // Best-effort bookkeeping; never fail generation over it.
-          console.error("Failed to record last-used profile:", err);
+          console.error("Failed to record last-used preset:", err);
         }
       }
     }

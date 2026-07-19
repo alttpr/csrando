@@ -1,9 +1,9 @@
 import type { Seed } from "$lib/types";
 import type {
-  ProfileDetailResponseDto,
-  ProfileListResponseDto,
-  ProfilePreferencesDto,
-} from "$lib/schemas/profiles";
+  PresetDetailResponseDto,
+  PresetListResponseDto,
+  PresetPreferencesDto,
+} from "$lib/schemas/presets";
 import type { NormalizedConfig } from "$lib/config/normalize";
 
 type JsonFetchInit = RequestInit & { errorMessage?: string };
@@ -78,19 +78,19 @@ export async function fetchUserSeeds(): Promise<Seed[]> {
   });
 }
 
-export interface SeedProfileAttribution {
-  profileId: string | null;
-  profileRevisionId: string | null;
+export interface SeedPresetAttribution {
+  presetId: string | null;
+  presetRevisionId: string | null;
   settingsSnapshot: NormalizedConfig;
   configSchemaVersion: number;
 }
 
 export async function createSeed(
   options: unknown,
-  profile?: SeedProfileAttribution,
+  preset?: SeedPresetAttribution,
 ): Promise<{ id: string }> {
-  const body = profile
-    ? { ...(options as Record<string, unknown>), Profile: profile }
+  const body = preset
+    ? { ...(options as Record<string, unknown>), Preset: preset }
     : options;
   return await fetchJson<{ id: string }>("/api/randomize", {
     method: "POST",
@@ -102,7 +102,7 @@ export async function createSeed(
   });
 }
 
-// --- Seed profile API client ---
+// --- Seed preset API client ---
 
 function jsonInit(method: string, body: unknown): JsonFetchInit {
   return {
@@ -112,29 +112,29 @@ function jsonInit(method: string, body: unknown): JsonFetchInit {
   };
 }
 
-export async function fetchProfiles(
+export async function fetchPresets(
   configId: string,
-): Promise<ProfileListResponseDto> {
-  return await fetchJson<ProfileListResponseDto>(
-    `/api/profiles?configId=${encodeURIComponent(configId)}`,
-    { errorMessage: "Failed to load profiles" },
+): Promise<PresetListResponseDto> {
+  return await fetchJson<PresetListResponseDto>(
+    `/api/presets?configId=${encodeURIComponent(configId)}`,
+    { errorMessage: "Failed to load presets" },
   );
 }
 
-export async function fetchProfile(
+export async function fetchPreset(
   id: string,
   revisionId?: string | null,
-): Promise<ProfileDetailResponseDto> {
+): Promise<PresetDetailResponseDto> {
   const suffix = revisionId
     ? `?revision=${encodeURIComponent(revisionId)}`
     : "";
-  return await fetchJson<ProfileDetailResponseDto>(
-    `/api/profiles/${encodeURIComponent(id)}${suffix}`,
-    { errorMessage: "Failed to load the profile" },
+  return await fetchJson<PresetDetailResponseDto>(
+    `/api/presets/${encodeURIComponent(id)}${suffix}`,
+    { errorMessage: "Failed to load the preset" },
   );
 }
 
-export interface CreateProfilePayload {
+export interface CreatePresetPayload {
   configId: string;
   name: string;
   description?: string;
@@ -148,113 +148,110 @@ export interface CreateProfilePayload {
   isRecommended?: boolean;
 }
 
-export async function createProfile(
-  payload: CreateProfilePayload,
-): Promise<ProfileDetailResponseDto> {
-  return await fetchJson<ProfileDetailResponseDto>("/api/profiles", {
+export async function createPreset(
+  payload: CreatePresetPayload,
+): Promise<PresetDetailResponseDto> {
+  return await fetchJson<PresetDetailResponseDto>("/api/presets", {
     ...jsonInit("POST", payload),
-    errorMessage: "Failed to save the profile",
+    errorMessage: "Failed to save the preset",
   });
 }
 
-export async function createProfileRevision(
-  profileId: string,
+export async function createPresetRevision(
+  presetId: string,
   payload: {
     settings: NormalizedConfig;
     changeSummary?: string;
     baseRevisionId: string | null;
   },
-): Promise<ProfileDetailResponseDto> {
-  return await fetchJson<ProfileDetailResponseDto>(
-    `/api/profiles/${encodeURIComponent(profileId)}/revisions`,
+): Promise<PresetDetailResponseDto> {
+  return await fetchJson<PresetDetailResponseDto>(
+    `/api/presets/${encodeURIComponent(presetId)}/revisions`,
     {
       ...jsonInit("POST", payload),
-      errorMessage: "Failed to save the profile",
+      errorMessage: "Failed to save the preset",
     },
   );
 }
 
-export async function duplicateProfile(
-  profileId: string,
+export async function duplicatePreset(
+  presetId: string,
   name?: string,
-): Promise<ProfileDetailResponseDto> {
-  return await fetchJson<ProfileDetailResponseDto>(
-    `/api/profiles/${encodeURIComponent(profileId)}/duplicate`,
+): Promise<PresetDetailResponseDto> {
+  return await fetchJson<PresetDetailResponseDto>(
+    `/api/presets/${encodeURIComponent(presetId)}/duplicate`,
     {
       ...jsonInit("POST", name ? { name } : {}),
-      errorMessage: "Failed to copy the profile",
+      errorMessage: "Failed to copy the preset",
     },
   );
 }
 
-export async function patchProfile(
-  profileId: string,
+export async function patchPreset(
+  presetId: string,
   patch: Record<string, unknown>,
-): Promise<{ profile: ProfileListResponseDto["officials"][number] }> {
-  return await fetchJson(`/api/profiles/${encodeURIComponent(profileId)}`, {
+): Promise<{ preset: PresetListResponseDto["officials"][number] }> {
+  return await fetchJson(`/api/presets/${encodeURIComponent(presetId)}`, {
     ...jsonInit("PATCH", patch),
-    errorMessage: "Failed to update the profile",
+    errorMessage: "Failed to update the preset",
   });
 }
 
-// Admin: promote a profile received through a share link.
-export async function promoteSharedProfile(input: {
+// Admin: promote a preset received through a share link.
+export async function promoteSharedPreset(input: {
   token: string;
   slug: string;
   name?: string;
   description?: string | null;
-}): Promise<{ profile: ProfileListResponseDto["officials"][number] }> {
-  return await fetchJson("/api/profiles/promote-shared", {
+}): Promise<{ preset: PresetListResponseDto["officials"][number] }> {
+  return await fetchJson("/api/presets/promote-shared", {
     ...jsonInit("POST", input),
-    errorMessage: "Failed to promote the shared profile",
+    errorMessage: "Failed to promote the shared preset",
   });
 }
 
-// Admin: copy a profile's current revision into a new official preset.
-export async function promoteProfile(
-  profileId: string,
+// Admin: copy a preset's current revision into a new official preset.
+export async function promotePreset(
+  presetId: string,
   input: { slug: string; name?: string; description?: string | null },
-): Promise<{ profile: ProfileListResponseDto["officials"][number] }> {
+): Promise<{ preset: PresetListResponseDto["officials"][number] }> {
   return await fetchJson(
-    `/api/profiles/${encodeURIComponent(profileId)}/promote`,
+    `/api/presets/${encodeURIComponent(presetId)}/promote`,
     {
       ...jsonInit("POST", input),
-      errorMessage: "Failed to promote the profile",
+      errorMessage: "Failed to promote the preset",
     },
   );
 }
 
-export async function ensureProfileShare(
-  profileId: string,
+export async function ensurePresetShare(
+  presetId: string,
 ): Promise<{ token: string }> {
-  return await fetchJson(
-    `/api/profiles/${encodeURIComponent(profileId)}/share`,
-    {
-      method: "POST",
-      errorMessage: "Failed to create the share link",
-    },
-  );
+  return await fetchJson(`/api/presets/${encodeURIComponent(presetId)}/share`, {
+    method: "POST",
+    errorMessage: "Failed to create the share link",
+  });
 }
 
-export async function revokeProfileShare(profileId: string): Promise<void> {
-  await fetchJson(`/api/profiles/${encodeURIComponent(profileId)}/share`, {
+export async function revokePresetShare(presetId: string): Promise<void> {
+  await fetchJson(`/api/presets/${encodeURIComponent(presetId)}/share`, {
     method: "DELETE",
     errorMessage: "Failed to disable the share link",
   });
 }
 
-export async function deleteProfile(profileId: string): Promise<void> {
-  await fetchJson(`/api/profiles/${encodeURIComponent(profileId)}`, {
+export async function deletePreset(presetId: string): Promise<void> {
+  await fetchJson(`/api/presets/${encodeURIComponent(presetId)}`, {
     method: "DELETE",
-    errorMessage: "Failed to delete the profile",
+    errorMessage: "Failed to delete the preset",
   });
 }
 
-export async function saveProfilePreferences(preferences: {
-  defaultProfileId?: string | null;
-  lastUsedProfileId?: string | null;
-}): Promise<{ preferences: ProfilePreferencesDto }> {
-  return await fetchJson("/api/user/profile-preferences", {
+export async function savePresetPreferences(preferences: {
+  defaultPresetId?: string | null;
+  lastUsedPresetId?: string | null;
+}): Promise<{ preferences: PresetPreferencesDto }> {
+  return await fetchJson("/api/user/preset-preferences", {
     ...jsonInit("PUT", preferences),
     errorMessage: "Failed to save preferences",
   });
@@ -292,13 +289,13 @@ export async function revokeApiKeyRequest(id: string): Promise<void> {
   });
 }
 
-export async function saveProfileFavorite(
-  profileId: string,
+export async function savePresetFavorite(
+  presetId: string,
   favorited: boolean,
   displayOrder?: number,
 ): Promise<void> {
-  await fetchJson("/api/user/profile-favorites", {
-    ...jsonInit("PUT", { profileId, favorited, displayOrder }),
+  await fetchJson("/api/user/preset-favorites", {
+    ...jsonInit("PUT", { presetId, favorited, displayOrder }),
     errorMessage: "Failed to update favorite",
   });
 }

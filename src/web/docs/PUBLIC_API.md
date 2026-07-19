@@ -145,7 +145,7 @@ Each setting includes a `key`, `name`, `type`, and usually either `default`, `va
 GET /api/seed/{id}
 ```
 
-Returns the stored seed row for a generated seed. This includes `id`, `options`, `patchData`, `placementInfo`, `spoilerLog`, version/profile attribution fields, the normalized `settingsSnapshot` when available, and `createdAt`. This is useful if a bot needs to look up a previously generated seed by permalink id. For seeds created with `IncludeSpoiler: false`, `spoilerLog` is `null` in this public response.
+Returns the stored seed row for a generated seed. This includes `id`, `options`, `patchData`, `placementInfo`, `spoilerLog`, version/preset attribution fields, the normalized `settingsSnapshot` when available, and `createdAt`. This is useful if a bot needs to look up a previously generated seed by permalink id. For seeds created with `IncludeSpoiler: false`, `spoilerLog` is `null` in this public response.
 
 Example:
 
@@ -173,40 +173,40 @@ Send the key as a Bearer token on any `/api/` route:
 Authorization: Bearer qr_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Key-authenticated requests act as the key's owner: they can read and manage that user's private seed profiles, and generated seeds are linked to the user's history. Deliberate restrictions:
+Key-authenticated requests act as the key's owner: they can read and manage that user's private seed presets, and generated seeds are linked to the user's history. Deliberate restrictions:
 
 - API keys never grant administrator rights, even if the owning user is an admin.
 - API keys cannot call session-only account/security operations, including creating or revoking API keys and changing the account password.
 
-## Seed profiles
+## Seed presets
 
 ```http
-GET /api/profiles?configId=combo
+GET /api/presets?configId=combo
 ```
 
 `configId` is required and case-insensitive. The response contains:
 
-- `officials`: active official profile summaries (available without authentication).
-- `mine`: the authenticated user's active private profile summaries, otherwise `[]`.
+- `officials`: active official preset summaries (available without authentication).
+- `mine`: the authenticated user's active private preset summaries, otherwise `[]`.
 - `preferences`: the authenticated user's defaults/favorites, otherwise `null`.
-- `recommendedId`: the internal id of the recommended official profile.
+- `recommendedId`: the internal id of the recommended official preset.
 - `configSchemaVersion`: the current normalized-settings schema version.
 
-Profile summaries include `id`, `scope`, `slug`, `configId`, `name`, `description`, revision/schema information, `selectedGames`, curation tags/status, ordering, and timestamps. API operations use the internal `id`. Human-facing official links use the slug, for example `/config/combo/recommended`.
+Preset summaries include `id`, `scope`, `slug`, `configId`, `name`, `description`, revision/schema information, `selectedGames`, curation tags/status, ordering, and timestamps. API operations use the internal `id`. Human-facing official links use the slug, for example `/config/combo/recommended`.
 
 ```http
-GET    /api/profiles/{id}
-GET    /api/profiles/{id}?revision={revisionId}
-POST   /api/profiles                   # create a private profile
-POST   /api/profiles/{id}/revisions    # save new settings (owner)
-POST   /api/profiles/{id}/duplicate    # copy a readable profile
-PATCH  /api/profiles/{id}              # update metadata (owner)
-DELETE /api/profiles/{id}              # soft delete (owner)
+GET    /api/presets/{id}
+GET    /api/presets/{id}?revision={revisionId}
+POST   /api/presets                   # create a private preset
+POST   /api/presets/{id}/revisions    # save new settings (owner)
+POST   /api/presets/{id}/duplicate    # copy a readable preset
+PATCH  /api/presets/{id}              # update metadata (owner)
+DELETE /api/presets/{id}              # soft delete (owner)
 ```
 
-`GET /api/profiles/{id}` returns `{ "profile": ProfileSummary, "revision": ProfileRevision }`. Official profiles are readable anonymously. Private profiles return `404` to non-owners, and deleted profiles return `404` to everyone, without revealing whether they exist.
+`GET /api/presets/{id}` returns `{ "preset": PresetSummary, "revision": PresetRevision }`. Official presets are readable anonymously. Private presets return `404` to non-owners, and deleted presets return `404` to everyone, without revealing whether they exist.
 
-Create a private profile with:
+Create a private preset with:
 
 ```json
 {
@@ -227,35 +227,35 @@ Create a private profile with:
 }
 ```
 
-Profile settings use the normalized configuration shape shown above and are validated against current generator metadata. Creation returns `{ "profile": ..., "revision": ... }` with status `201`.
+Preset settings use the normalized configuration shape shown above and are validated against current generator metadata. Creation returns `{ "preset": ..., "revision": ... }` with status `201`.
 
-Revision updates send `{ "settings": ..., "baseRevisionId": "...", "changeSummary": "optional" }`. `baseRevisionId` must be the profile's current revision id (or `null` only when the profile has no current revision); a stale value returns `409`. Successful revision creation returns the updated profile and revision with status `201`.
+Revision updates send `{ "settings": ..., "baseRevisionId": "...", "changeSummary": "optional" }`. `baseRevisionId` must be the preset's current revision id (or `null` only when the preset has no current revision); a stale value returns `409`. Successful revision creation returns the updated preset and revision with status `201`.
 
-`POST /api/profiles/{id}/duplicate` accepts an optional `{ "name": "..." }` body and creates an independent private copy. `PATCH` accepts profile metadata such as `name` and `description`. Official-profile curation remains browser-admin functionality because API keys never carry admin rights.
+`POST /api/presets/{id}/duplicate` accepts an optional `{ "name": "..." }` body and creates an independent private copy. `PATCH` accepts preset metadata such as `name` and `description`. Official-preset curation remains browser-admin functionality because API keys never carry admin rights.
 
-Owners can create or revoke the capability link used by the website with `POST` or `DELETE /api/profiles/{id}/share`. The POST response is `{ "token": "..." }`; the browser URL is `/config/{configId}?share={token}`. The token grants access only to an unowned settings snapshot through that page—it does not authorize the regular profile API.
+Owners can create or revoke the capability link used by the website with `POST` or `DELETE /api/presets/{id}/share`. The POST response is `{ "token": "..." }`; the browser URL is `/config/{configId}?share={token}`. The token grants access only to an unowned settings snapshot through that page—it does not authorize the regular preset API.
 
-## Generate a seed from a profile
+## Generate a seed from a preset
 
-External tools can generate directly from a saved profile without reconstructing the full `Configs` payload:
+External tools can generate directly from a saved preset without reconstructing the full `Configs` payload:
 
 ```http
 POST /api/randomize
 Content-Type: application/json
-Authorization: Bearer qr_...   (required for private profiles)
+Authorization: Bearer qr_...   (required for private presets)
 ```
 
 ```json
 {
-  "ProfileId": "the-profile-id",
+  "PresetId": "the-preset-id",
   "Seed": 0,
   "IncludeSpoiler": false
 }
 ```
 
-Optional fields: `Seed` (default `0` = random), `IncludeSpoiler` (default `true`), `RevisionId` (generate from an older revision; defaults to the profile's current one). Official presets work without authentication; private profiles require an API key owned by the profile's owner. The response is identical to a regular `/api/randomize` call, and the stored seed records which profile and revision it came from.
+Optional fields: `Seed` (default `0` = random), `IncludeSpoiler` (default `true`), `RevisionId` (generate from an older revision; defaults to the preset's current one). Official presets work without authentication; private presets require an API key owned by the preset's owner. The response is identical to a regular `/api/randomize` call, and the stored seed records which preset and revision it came from.
 
-`ProfileId` is always the internal profile id returned by the profiles API, not an official profile slug.
+`PresetId` is always the internal preset id returned by the presets API, not an official preset slug.
 
 ## Fetch authenticated seed history
 
@@ -273,9 +273,9 @@ The API uses normal HTTP status codes:
 - `400`: invalid request body or missing required data.
 - `401`: authentication required or invalid credentials.
 - `403`: authenticated but not allowed (e.g. admin-only or session-only operations).
-- `404`: requested metadata, seed, or profile was not found.
-- `409`: profile revision conflict (stale `baseRevisionId`).
-- `503`: generator metadata required for profile expansion is temporarily unavailable.
+- `404`: requested metadata, seed, or preset was not found.
+- `409`: preset revision conflict (stale `baseRevisionId`).
+- `503`: generator metadata required for preset expansion is temporarily unavailable.
 - `500`: backend randomizer, database, or server error.
 
 Error responses usually contain a JSON body with a `message` field, but clients should also handle plain text error bodies.

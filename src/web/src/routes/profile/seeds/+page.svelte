@@ -6,7 +6,7 @@
 		id: string;
 		options: unknown;
 		createdAt: string | null;
-		profileId: string | null;
+		presetId: string | null;
 		differedFromRevision: boolean | null;
 	}
 
@@ -45,9 +45,9 @@
 							</p>
 						</div>
 						<div class="flex items-center gap-2">
-							{#if seed.profileId}
+							{#if seed.presetId}
 								<Badge variant={seed.differedFromRevision ? "warning" : "neutral"}>
-									{seed.differedFromRevision ? "Modified profile" : "Profile"}
+									{seed.differedFromRevision ? "Modified preset" : "Preset"}
 								</Badge>
 							{/if}
 							<Button href={`/seed/${seed.id}`} variant="secondary" size="xs">Open</Button>

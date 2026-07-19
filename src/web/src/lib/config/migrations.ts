@@ -3,7 +3,7 @@ import type { NormalizedConfig } from "./normalize";
 
 // Sequential, versioned migrations for stored seed configurations. When a
 // setting changes shape in a future release, bump CONFIG_SCHEMA_VERSION and
-// append a migration step here; older profile revisions and drafts are then
+// append a migration step here; older preset revisions and drafts are then
 // upgraded on load.
 export interface ConfigMigration {
   from: number;

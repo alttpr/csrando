@@ -9,7 +9,7 @@ import type {
   GenericSetting,
 } from "$lib/types";
 
-// The canonical seed-configuration shape stored in profile revisions, drafts and
+// The canonical seed-configuration shape stored in preset revisions, drafts and
 // seed snapshots. It mirrors the config form state (not the generator payload,
 // which is lossy and cannot be hydrated back into the form).
 export interface NormalizedConfig {

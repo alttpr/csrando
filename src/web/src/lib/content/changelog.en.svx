@@ -7,13 +7,13 @@ lastUpdated: 2026-07-20
 # Randomizer Changes
 
 ## 2026-07-20
-### Website profiles and administration
-* Added official and personal seed profiles, including saved revisions, defaults, favorites, duplicate/save-as-new workflows, and readable official-profile links
-* Added revocable links for sharing private profile settings without exposing the profile or account
-* Added profile attribution to seed pages while preserving the exact settings used by older or modified seeds
-* Reorganized account management into overview, seeds, profiles, API keys, and security sections
-* Added personal API keys and documented profile-based seed generation for external tools
-* Added Profile Guide to the website Help menu
+### Website presets and administration
+* Added official and personal seed presets, including saved revisions, defaults, favorites, duplicate/save-as-new workflows, and readable official-preset links
+* Added revocable links for sharing private preset settings without exposing the preset or account
+* Added preset attribution to seed pages while preserving the exact settings used by older or modified seeds
+* Reorganized account management into overview, seeds, presets, API keys, and security sections
+* Added personal API keys and documented preset-based seed generation for external tools
+* Added Preset Guide to the website Help menu
 
 ## 2026-07-19
 ### Quad Randomizer - Version 0.5.2

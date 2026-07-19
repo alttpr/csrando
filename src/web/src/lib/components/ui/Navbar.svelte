@@ -83,11 +83,11 @@
 						{m.nav_settings()}
 					</a>
 					<a
-						href="/content/profiles"
+						href="/content/presets"
 						class="block px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-600"
 						onclick={() => (helpMenuOpen = false)}
 					>
-						{m.nav_profiles_guide()}
+						{m.nav_presets_guide()}
 					</a>
 					<a
 						href="/content/changelog"

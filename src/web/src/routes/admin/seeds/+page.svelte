@@ -7,7 +7,7 @@
 		createdAt: string | null;
 		versionTag: string | null;
 		raceMode: boolean;
-		profileId: string | null;
+		presetId: string | null;
 		differedFromRevision: boolean | null;
 	}
 
@@ -105,8 +105,8 @@
 							{#if seed.raceMode}
 								<Badge variant="warning">Race</Badge>
 							{/if}
-							{#if seed.profileId}
-								<Badge variant="info">Profile</Badge>
+							{#if seed.presetId}
+								<Badge variant="info">Preset</Badge>
 							{/if}
 							{#if seed.differedFromRevision}
 								<Badge variant="neutral">Modified</Badge>

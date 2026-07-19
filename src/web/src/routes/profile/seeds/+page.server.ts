@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
         id: seeds.id,
         options: seeds.options,
         createdAt: seeds.createdAt,
-        profileId: seeds.profileId,
+        presetId: seeds.presetId,
         differedFromRevision: seeds.differedFromRevision,
       })
       .from(userSeeds)

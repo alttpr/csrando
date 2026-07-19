@@ -30,16 +30,16 @@ vi.mock("$lib/services/api", () => ({
 }));
 
 type DbModule = typeof import("$lib/server/db");
-type ServiceModule = typeof import("$lib/server/profiles/service");
+type ServiceModule = typeof import("$lib/server/presets/service");
 type AdminServiceModule = typeof import("$lib/server/admin/admin-service");
-type PromoteProfileRoute =
-  typeof import("../../src/routes/api/profiles/[id]/promote/+server");
+type PromotePresetRoute =
+  typeof import("../../src/routes/api/presets/[id]/promote/+server");
 type PromoteUserRoute =
   typeof import("../../src/routes/api/admin/promote/+server");
 type SpoilerRoute =
   typeof import("../../src/routes/api/admin/seed/[id]/spoiler/+server");
 type PromoteSharedRoute =
-  typeof import("../../src/routes/api/profiles/promote-shared/+server");
+  typeof import("../../src/routes/api/presets/promote-shared/+server");
 type ResetPasswordRoute =
   typeof import("../../src/routes/api/admin/users/[id]/reset-password/+server");
 type ChangePasswordRoute =
@@ -48,7 +48,7 @@ type ChangePasswordRoute =
 let db: DbModule["db"];
 let service: ServiceModule;
 let adminService: AdminServiceModule;
-let promoteProfileRoute: PromoteProfileRoute;
+let promotePresetRoute: PromotePresetRoute;
 let promoteUserRoute: PromoteUserRoute;
 let spoilerRoute: SpoilerRoute;
 let promoteSharedRoute: PromoteSharedRoute;
@@ -91,17 +91,17 @@ beforeAll(async () => {
   process.env.DATABASE_URL = ":memory:";
   delete process.env.PRIVATE_ADMIN_VERSION_TOKEN;
   ({ db } = await import("$lib/server/db"));
-  service = await import("$lib/server/profiles/service");
+  service = await import("$lib/server/presets/service");
   adminService = await import("$lib/server/admin/admin-service");
-  promoteProfileRoute = await import(
-    "../../src/routes/api/profiles/[id]/promote/+server"
+  promotePresetRoute = await import(
+    "../../src/routes/api/presets/[id]/promote/+server"
   );
   promoteUserRoute = await import("../../src/routes/api/admin/promote/+server");
   spoilerRoute = await import(
     "../../src/routes/api/admin/seed/[id]/spoiler/+server"
   );
   promoteSharedRoute = await import(
-    "../../src/routes/api/profiles/promote-shared/+server"
+    "../../src/routes/api/presets/promote-shared/+server"
   );
   resetPasswordRoute = await import(
     "../../src/routes/api/admin/users/[id]/reset-password/+server"
@@ -119,17 +119,17 @@ beforeAll(async () => {
   }
 });
 
-describe("promoteProfileToOfficial", () => {
-  it("copies an admin's profile into a new official preset", async () => {
-    const source = await service.createProfile(admin, {
+describe("promotePresetToOfficial", () => {
+  it("copies an admin's preset into a new official preset", async () => {
+    const source = await service.createPreset(admin, {
       configId: "combo",
       name: "Panel Source",
       settings: defaultSettings(),
     });
 
-    const response = await promoteProfileRoute.POST({
-      params: { id: source.profile.id },
-      request: jsonRequest(`/api/profiles/${source.profile.id}/promote`, {
+    const response = await promotePresetRoute.POST({
+      params: { id: source.preset.id },
+      request: jsonRequest(`/api/presets/${source.preset.id}/promote`, {
         slug: "panel-promoted",
         name: "Promoted Preset",
       }),
@@ -137,65 +137,62 @@ describe("promoteProfileToOfficial", () => {
     } as never);
     expect(response.status).toBe(201);
     const body = await response.json();
-    expect(body.profile).toMatchObject({
+    expect(body.preset).toMatchObject({
       scope: "official",
       slug: "panel-promoted",
       name: "Promoted Preset",
       configId: "combo",
     });
 
-    // The source stays a private user profile.
-    const untouched = await service.getReadableProfile(
-      source.profile.id,
-      admin,
-    );
+    // The source stays a private user preset.
+    const untouched = await service.getReadablePreset(source.preset.id, admin);
     expect(untouched.scope).toBe("user");
   });
 
   it("rejects non-admins and duplicate slugs", async () => {
-    const source = await service.createProfile(member, {
+    const source = await service.createPreset(member, {
       configId: "combo",
       name: "Member Source",
       settings: defaultSettings(),
     });
     await expect(
-      service.promoteProfileToOfficial(member, source.profile.id, {
+      service.promotePresetToOfficial(member, source.preset.id, {
         slug: "member-slug",
       }),
     ).rejects.toMatchObject({ status: 403 });
 
     await expect(
-      service.promoteProfileToOfficial(admin, source.profile.id, {
+      service.promotePresetToOfficial(admin, source.preset.id, {
         slug: "panel-promoted",
       }),
-    ).rejects.toMatchObject({ status: 404 }); // member's private profile is invisible
+    ).rejects.toMatchObject({ status: 404 }); // member's private preset is invisible
 
-    const own = await service.createProfile(admin, {
+    const own = await service.createPreset(admin, {
       configId: "combo",
       name: "Panel Slug Clash",
       settings: defaultSettings(),
     });
     await expect(
-      service.promoteProfileToOfficial(admin, own.profile.id, {
+      service.promotePresetToOfficial(admin, own.preset.id, {
         slug: "panel-promoted",
       }),
     ).rejects.toMatchObject({ status: 400 });
   });
 });
 
-describe("listOfficialProfilesForAdmin", () => {
+describe("listOfficialPresetsForAdmin", () => {
   it("includes archived presets", async () => {
-    const { profile } = await service.createProfile(admin, {
+    const { preset } = await service.createPreset(admin, {
       configId: "combo",
       name: "Panel Archived",
       settings: defaultSettings(),
       scope: "official",
       slug: "panel-archived",
     });
-    await service.updateProfileMeta(admin, profile.id, { archived: true });
+    await service.updatePresetMeta(admin, preset.id, { archived: true });
 
-    const all = await service.listOfficialProfilesForAdmin();
-    const archived = all.find((p) => p.id === profile.id);
+    const all = await service.listOfficialPresetsForAdmin();
+    const archived = all.find((p) => p.id === preset.id);
     expect(archived?.archived).toBe(true);
   });
 });
@@ -279,16 +276,16 @@ describe("GET /api/admin/seed/[id]/spoiler", () => {
 });
 
 describe("promote from share link", () => {
-  it("lets an admin promote another user's shared profile", async () => {
-    const source = await service.createProfile(member, {
+  it("lets an admin promote another user's shared preset", async () => {
+    const source = await service.createPreset(member, {
       configId: "combo",
       name: "Member Shared",
       settings: defaultSettings(),
     });
-    const token = await service.ensureShareToken(member, source.profile.id);
+    const token = await service.ensureShareToken(member, source.preset.id);
 
     const response = await promoteSharedRoute.POST({
-      request: jsonRequest("/api/profiles/promote-shared", {
+      request: jsonRequest("/api/presets/promote-shared", {
         token,
         slug: "shared-promoted",
       }),
@@ -296,35 +293,32 @@ describe("promote from share link", () => {
     } as never);
     expect(response.status).toBe(201);
     const body = await response.json();
-    expect(body.profile).toMatchObject({
+    expect(body.preset).toMatchObject({
       scope: "official",
       slug: "shared-promoted",
       name: "Member Shared",
     });
 
-    // The member's profile stays private and untouched.
-    const untouched = await service.getReadableProfile(
-      source.profile.id,
-      member,
-    );
+    // The member's preset stays private and untouched.
+    const untouched = await service.getReadablePreset(source.preset.id, member);
     expect(untouched.scope).toBe("user");
   });
 
   it("rejects invalid tokens and non-admins", async () => {
     await expect(
-      service.promoteSharedProfileToOfficial(admin, "bogus-token", {
+      service.promoteSharedPresetToOfficial(admin, "bogus-token", {
         slug: "never-used",
       }),
     ).rejects.toMatchObject({ status: 404 });
 
-    const source = await service.createProfile(member, {
+    const source = await service.createPreset(member, {
       configId: "combo",
       name: "Member Shared Two",
       settings: defaultSettings(),
     });
-    const token = await service.ensureShareToken(member, source.profile.id);
+    const token = await service.ensureShareToken(member, source.preset.id);
     await expect(
-      service.promoteSharedProfileToOfficial(member, token, {
+      service.promoteSharedPresetToOfficial(member, token, {
         slug: "member-cannot",
       }),
     ).rejects.toMatchObject({ status: 403 });
@@ -426,7 +420,7 @@ describe("admin-service", () => {
     expect(stats.users).toBeGreaterThanOrEqual(2);
     expect(stats.seedsTotal).toBeGreaterThanOrEqual(1);
     expect(
-      stats.officialProfiles + stats.archivedOfficialProfiles,
+      stats.officialPresets + stats.archivedOfficialPresets,
     ).toBeGreaterThanOrEqual(2);
   });
 

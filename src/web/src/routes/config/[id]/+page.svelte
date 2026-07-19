@@ -7,7 +7,7 @@
 	import Button from "$lib/components/ui/Button.svelte";
 	import Select from "$lib/components/ui/Select.svelte";
 	import Toggle from "$lib/components/ui/Toggle.svelte";
-	import ProfileToolbar from "$lib/components/config/profiles/ProfileToolbar.svelte";
+	import PresetToolbar from "$lib/components/config/presets/PresetToolbar.svelte";
 	import { createSeed } from "$lib/services/data";
 	import {
 		initializeFormValues,
@@ -18,24 +18,24 @@
 		type NormalizedConfig,
 	} from "$lib/config/normalize";
 	import { CONFIG_SCHEMA_VERSION } from "$lib/config/constants";
-	import { ProfileState, type LoadedForm } from "$lib/config/profile-state.svelte";
-	import { resolveStartupSelection } from "$lib/config/profile-selection";
+	import { PresetState, type LoadedForm } from "$lib/config/preset-state.svelte";
+	import { resolveStartupSelection } from "$lib/config/preset-selection";
 	import {
 		clearDraft,
 		loadDraft,
-		loadLocalLastUsedProfile,
+		loadLocalLastUsedPreset,
 		saveDraft,
-	} from "$lib/config/profile-storage";
-	import type { ProfileListResponseDto } from "$lib/schemas/profiles";
+	} from "$lib/config/preset-storage";
+	import type { PresetListResponseDto } from "$lib/schemas/presets";
 	import type { Metadata, SingleChoiceSetting } from "$lib/types";
 
 	interface PageData {
 		metadata: Metadata | null;
 		error: string | null;
 		configId?: string;
-		profileBootstrap?: ProfileListResponseDto | null;
-		queryProfileId?: string | null;
-		sharedProfile?: {
+		presetBootstrap?: PresetListResponseDto | null;
+		queryPresetId?: string | null;
+		sharedPreset?: {
 			name: string;
 			description: string | null;
 			settings: unknown;
@@ -115,12 +115,12 @@
 	let formSubmissionError: string | null = $state(null);
 	let includeSpoiler = $state(true);
 
-	let profileState = $state<ProfileState | null>(null);
-	let toolbarRef = $state<ReturnType<typeof ProfileToolbar> | null>(null);
+	let presetState = $state<PresetState | null>(null);
+	let toolbarRef = $state<ReturnType<typeof PresetToolbar> | null>(null);
 	// Skip the unsaved-changes guard for navigations we initiate deliberately
 	// (seed generation, confirmed leave).
 	let bypassNavigationGuard = false;
-	let profileInitToken = 0;
+	let presetInitToken = 0;
 
 	function applyLoadedForm(loaded: LoadedForm) {
 		formValues = {
@@ -136,34 +136,34 @@
 		if (loaded.activeTab) activeGameTab = loaded.activeTab;
 	}
 
-	// Name of a profile loaded through a ?share= link, shown in the toolbar.
-	let sharedProfileName = $state<string | null>(null);
+	// Name of a preset loaded through a ?share= link, shown in the toolbar.
+	let sharedPresetName = $state<string | null>(null);
 	// Seed id whose settings were loaded through ?fromSeed=.
 	let seedSourceId = $state<string | null>(null);
 
 	// Startup selection: ?share= link > ?fromSeed= seed settings > explicit
-	// profile path (or legacy query) > recoverable draft > default > last-used >
+	// preset path (or legacy query) > recoverable draft > default > last-used >
 	// recommended preset > defaults.
-	async function initializeProfiles(meta: Metadata) {
-		const token = ++profileInitToken;
-		const state = new ProfileState(configId, !!user);
-		if (data.profileBootstrap) {
-			state.applyList(data.profileBootstrap);
+	async function initializePresets(meta: Metadata) {
+		const token = ++presetInitToken;
+		const state = new PresetState(configId, !!user);
+		if (data.presetBootstrap) {
+			state.applyList(data.presetBootstrap);
 		} else {
 			await state.refreshList();
-			if (token !== profileInitToken) return;
+			if (token !== presetInitToken) return;
 		}
-		profileState = state;
+		presetState = state;
 
-		if (data.sharedProfile) {
+		if (data.sharedPreset) {
 			const loaded = state.applySharedSettings(
-				data.sharedProfile.settings as NormalizedConfig,
-				data.sharedProfile.configSchemaVersion,
+				data.sharedPreset.settings as NormalizedConfig,
+				data.sharedPreset.configSchemaVersion,
 				meta,
 			);
-			if (token === profileInitToken && loaded) {
+			if (token === presetInitToken && loaded) {
 				applyLoadedForm(loaded);
-				sharedProfileName = data.sharedProfile.name;
+				sharedPresetName = data.sharedPreset.name;
 			}
 			return;
 		}
@@ -174,7 +174,7 @@
 				data.seedSettings.configSchemaVersion,
 				meta,
 			);
-			if (token === profileInitToken && loaded) {
+			if (token === presetInitToken && loaded) {
 				applyLoadedForm(loaded);
 				seedSourceId = data.seedSettings.seedId;
 			}
@@ -184,25 +184,25 @@
 		const draft = loadDraft(configId);
 		const selection = resolveStartupSelection(
 			{
-				queryProfileId: data.queryProfileId,
-				defaultProfileId: state.defaultProfileId,
-				lastUsedProfileId:
-					data.profileBootstrap?.preferences?.lastUsedProfileId ?? null,
-				localLastUsedProfileId: loadLocalLastUsedProfile(configId),
+				queryPresetId: data.queryPresetId,
+				defaultPresetId: state.defaultPresetId,
+				lastUsedPresetId:
+					data.presetBootstrap?.preferences?.lastUsedPresetId ?? null,
+				localLastUsedPresetId: loadLocalLastUsedPreset(configId),
 				recommendedId: state.recommendedId,
-				knownProfileIds: state.allProfiles().map((p) => p.id),
+				knownPresetIds: state.allPresets().map((p) => p.id),
 			},
 			draft,
 		);
 
 		if (selection.kind === "draft") {
 			const loaded = await state.applyDraft(selection.draft, meta);
-			if (token === profileInitToken && loaded) applyLoadedForm(loaded);
-		} else if (selection.kind === "profile") {
-			const loaded = await state.select(selection.profileId, meta, {
+			if (token === presetInitToken && loaded) applyLoadedForm(loaded);
+		} else if (selection.kind === "preset") {
+			const loaded = await state.select(selection.presetId, meta, {
 				recordUse: false,
 			});
-			if (token === profileInitToken && loaded) applyLoadedForm(loaded);
+			if (token === presetInitToken && loaded) applyLoadedForm(loaded);
 		}
 	}
 
@@ -214,11 +214,11 @@
 		resetFormState(meta);
 		generating = false;
 		formSubmissionError = null;
-		profileState = null;
+		presetState = null;
 		if (meta && configId) {
-			void initializeProfiles(meta);
+			void initializePresets(meta);
 		} else {
-			profileInitToken++;
+			presetInitToken++;
 		}
 	});
 
@@ -239,34 +239,34 @@
 			? normalizeConfig(hydrateFormState({}, metadata).form, metadata)
 			: null,
 	);
-	const profileStatus = $derived(
-		profileState ? profileState.status(currentNormalized) : "custom",
+	const presetStatus = $derived(
+		presetState ? presetState.status(currentNormalized) : "custom",
 	);
 
 	// Persist unsaved work as a local draft (debounced). The draft is cleared
-	// once the configuration matches the loaded profile or plain defaults.
+	// once the configuration matches the loaded preset or plain defaults.
 	let draftTimer: ReturnType<typeof setTimeout> | null = null;
 	$effect(() => {
-		if (!profileState || !currentNormalized || !configId) return;
-		const status = profileStatus;
+		if (!presetState || !currentNormalized || !configId) return;
+		const status = presetStatus;
 		const snapshot = currentNormalized;
 		const defaults = defaultsNormalized;
-		const selectedId = profileState.selected?.id ?? null;
-		const revisionId = profileState.selectedRevisionId;
+		const selectedId = presetState.selected?.id ?? null;
+		const revisionId = presetState.selectedRevisionId;
 		if (draftTimer) clearTimeout(draftTimer);
 		draftTimer = setTimeout(() => {
 			if (status === "modified") {
 				saveDraft(configId, {
 					settings: snapshot,
-					profileId: selectedId,
-					profileRevisionId: revisionId,
+					presetId: selectedId,
+					presetRevisionId: revisionId,
 				});
 			} else if (status === "custom") {
 				if (defaults && !configsEqual(snapshot, defaults)) {
 					saveDraft(configId, {
 						settings: snapshot,
-						profileId: null,
-						profileRevisionId: null,
+						presetId: null,
+						presetRevisionId: null,
 					});
 				} else {
 					clearDraft(configId);
@@ -280,26 +280,26 @@
 		};
 	});
 
-	// Full reset from the profile overflow menu: drop the local draft and the
-	// profile selection and go back to plain metadata defaults.
+	// Full reset from the preset overflow menu: drop the local draft and the
+	// preset selection and go back to plain metadata defaults.
 	function resetConfiguration() {
 		clearDraft(configId);
-		sharedProfileName = null;
+		sharedPresetName = null;
 		seedSourceId = null;
-		profileState?.clearSelection();
+		presetState?.clearSelection();
 		if (metadata) resetFormState(metadata);
 	}
 
-	// Toolbar-driven form loads (profile switch, revert) leave the shared-link
+	// Toolbar-driven form loads (preset switch, revert) leave the shared-link
 	// context behind.
 	function handleToolbarApply(loaded: LoadedForm) {
-		sharedProfileName = null;
+		sharedPresetName = null;
 		seedSourceId = null;
 		applyLoadedForm(loaded);
 	}
 
 	beforeNavigate((navigation) => {
-		if (bypassNavigationGuard || profileStatus !== "modified") return;
+		if (bypassNavigationGuard || presetStatus !== "modified") return;
 		if (navigation.type === "leave") {
 			// Closing the tab / hard navigation: let the browser prompt. The
 			// local draft additionally preserves the work.
@@ -422,11 +422,11 @@
 				includeSpoiler,
 			});
 
-			// Generation always uses the visible configuration; the profile
+			// Generation always uses the visible configuration; the preset
 			// reference is provenance metadata only and never requires saving.
 			const result = await createSeed(payload, {
-				profileId: profileState?.selected?.id ?? null,
-				profileRevisionId: profileState?.selectedRevisionId ?? null,
+				presetId: presetState?.selected?.id ?? null,
+				presetRevisionId: presetState?.selectedRevisionId ?? null,
 				settingsSnapshot: snapshot,
 				configSchemaVersion: CONFIG_SCHEMA_VERSION,
 			});
@@ -504,16 +504,16 @@
 			</div>
 		</div>
 
-		<!-- Seed profile toolbar -->
-		{#if profileState}
-			<ProfileToolbar
+		<!-- Seed preset toolbar -->
+		{#if presetState}
+			<PresetToolbar
 				bind:this={toolbarRef}
-				state={profileState}
+				state={presetState}
 				{metadata}
 				{currentNormalized}
 				isAuthenticated={!!user}
 				{isAdmin}
-				sharedName={sharedProfileName}
+				sharedName={sharedPresetName}
 				sharedInvalid={data.sharedInvalid ?? false}
 				{seedSourceId}
 				seedSourceInvalid={data.seedSettingsInvalid ?? false}

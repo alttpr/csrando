@@ -5,7 +5,7 @@ import {
   type FormStateSnapshot,
 } from "$lib/config/normalize";
 
-// Shared generator-metadata fixture used by normalization and profiles tests.
+// Shared generator-metadata fixture used by normalization and presets tests.
 export const rawMetadataFixture = {
   settings: [
     {

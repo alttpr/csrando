@@ -2,7 +2,7 @@ import { and, desc, eq, gte, isNull, like, sql } from "drizzle-orm";
 import { db } from "$lib/server/db";
 import {
   apiKeys,
-  configurationProfiles,
+  configurationPresets,
   randomizerVersions,
   seeds,
   users,
@@ -16,9 +16,9 @@ export interface SiteStats {
   seedsLast24h: number;
   seedsLast7d: number;
   seedsLast30d: number;
-  userProfiles: number;
-  officialProfiles: number;
-  archivedOfficialProfiles: number;
+  userPresets: number;
+  officialPresets: number;
+  archivedOfficialPresets: number;
   activeApiKeys: number;
   versions: number;
   activeVersionTags: string[];
@@ -39,7 +39,7 @@ export async function getSiteStats(): Promise<SiteStats> {
     seed24Rows,
     seed7Rows,
     seed30Rows,
-    userProfileRows,
+    userPresetRows,
     officialRows,
     archivedOfficialRows,
     apiKeyRows,
@@ -54,31 +54,31 @@ export async function getSiteStats(): Promise<SiteStats> {
     db.select({ count }).from(seeds).where(gte(seeds.createdAt, monthAgo)),
     db
       .select({ count })
-      .from(configurationProfiles)
+      .from(configurationPresets)
       .where(
         and(
-          eq(configurationProfiles.scope, "user"),
-          isNull(configurationProfiles.deletedAt),
+          eq(configurationPresets.scope, "user"),
+          isNull(configurationPresets.deletedAt),
         ),
       ),
     db
       .select({ count })
-      .from(configurationProfiles)
+      .from(configurationPresets)
       .where(
         and(
-          eq(configurationProfiles.scope, "official"),
-          isNull(configurationProfiles.deletedAt),
-          eq(configurationProfiles.archived, false),
+          eq(configurationPresets.scope, "official"),
+          isNull(configurationPresets.deletedAt),
+          eq(configurationPresets.archived, false),
         ),
       ),
     db
       .select({ count })
-      .from(configurationProfiles)
+      .from(configurationPresets)
       .where(
         and(
-          eq(configurationProfiles.scope, "official"),
-          isNull(configurationProfiles.deletedAt),
-          eq(configurationProfiles.archived, true),
+          eq(configurationPresets.scope, "official"),
+          isNull(configurationPresets.deletedAt),
+          eq(configurationPresets.archived, true),
         ),
       ),
     db.select({ count }).from(apiKeys).where(isNull(apiKeys.revokedAt)),
@@ -97,9 +97,9 @@ export async function getSiteStats(): Promise<SiteStats> {
     seedsLast24h: seed24Rows[0]?.count ?? 0,
     seedsLast7d: seed7Rows[0]?.count ?? 0,
     seedsLast30d: seed30Rows[0]?.count ?? 0,
-    userProfiles: userProfileRows[0]?.count ?? 0,
-    officialProfiles: officialRows[0]?.count ?? 0,
-    archivedOfficialProfiles: archivedOfficialRows[0]?.count ?? 0,
+    userPresets: userPresetRows[0]?.count ?? 0,
+    officialPresets: officialRows[0]?.count ?? 0,
+    archivedOfficialPresets: archivedOfficialRows[0]?.count ?? 0,
     activeApiKeys: apiKeyRows[0]?.count ?? 0,
     versions: versionRows[0]?.count ?? 0,
     activeVersionTags: activeVersions.map((v) => v.versionTag),
@@ -232,7 +232,7 @@ export interface AdminSeedRow {
   createdAt: string | null;
   versionTag: string | null;
   raceMode: boolean;
-  profileId: string | null;
+  presetId: string | null;
   differedFromRevision: boolean | null;
 }
 
@@ -265,7 +265,7 @@ export async function listSeedsForAdmin(options: {
         id: seeds.id,
         createdAt: seeds.createdAt,
         options: seeds.options,
-        profileId: seeds.profileId,
+        presetId: seeds.presetId,
         differedFromRevision: seeds.differedFromRevision,
         versionTag: randomizerVersions.versionTag,
       })
@@ -290,7 +290,7 @@ export async function listSeedsForAdmin(options: {
       createdAt: toIso(row.createdAt),
       versionTag: row.versionTag ?? null,
       raceMode: shouldHideSpoiler(row.options),
-      profileId: row.profileId,
+      presetId: row.presetId,
       differedFromRevision:
         row.differedFromRevision === null
           ? null

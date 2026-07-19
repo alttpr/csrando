@@ -11,7 +11,7 @@ import { shouldHideSpoiler } from "$lib/server/seed-visibility";
 import {
   getSeedAttribution,
   type SeedAttributionDto,
-} from "$lib/server/profiles/service";
+} from "$lib/server/presets/service";
 
 // Define a type for the seed details, inferring from the Drizzle schema
 type SeedDetails = typeof seeds.$inferSelect;
@@ -130,28 +130,28 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       console.error("Failed to fetch metadata for seed page:", e);
     }
 
-    // Profile attribution (which profile generated this seed). Best-effort:
-    // the page must render even if profiles are unavailable.
-    let profileAttribution: SeedAttributionDto | null = null;
-    if (seedDetails.profileId) {
+    // Preset attribution (which preset generated this seed). Best-effort:
+    // the page must render even if presets are unavailable.
+    let presetAttribution: SeedAttributionDto | null = null;
+    if (seedDetails.presetId) {
       try {
-        profileAttribution = await getSeedAttribution(
-          seedDetails.profileId,
-          seedDetails.profileRevisionId,
+        presetAttribution = await getSeedAttribution(
+          seedDetails.presetId,
+          seedDetails.presetRevisionId,
           locals.user,
         );
       } catch (e) {
-        console.error("Failed to resolve seed profile attribution:", e);
+        console.error("Failed to resolve seed preset attribution:", e);
       }
     }
 
-    // An accessible, unchanged profile can always be opened directly. A
+    // An accessible, unchanged preset can always be opened directly. A
     // snapshot is required only for the unowned ?fromSeed= fallback.
     const settingsConfigId =
-      profileAttribution?.profileId && !seedDetails.differedFromRevision
-        ? profileAttribution.configId
+      presetAttribution?.presetId && !seedDetails.differedFromRevision
+        ? presetAttribution.configId
         : seedDetails.settingsSnapshot
-          ? (profileAttribution?.configId ??
+          ? (presetAttribution?.configId ??
             randomizerIdForSeed?.toLowerCase() ??
             null)
           : null;
@@ -160,7 +160,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       seedDetails: shouldHideSpoiler(seedDetails.options)
         ? { ...seedDetails, spoilerLog: null }
         : seedDetails,
-      profileAttribution,
+      presetAttribution,
       settingsConfigId,
       metadata,
       randomizerVersion: versionTag

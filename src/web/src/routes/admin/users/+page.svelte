@@ -248,7 +248,7 @@
 		Pass this password to
 		<strong>{resetResult?.username ?? ""}</strong> through a channel you
 		trust. It is shown only once; they can change it afterwards on their
-		profile page.
+		preset page.
 	</p>
 	<p
 		class="mt-3 select-all rounded border border-slate-300 bg-slate-50 px-3 py-2 text-center font-mono text-lg dark:border-slate-600 dark:bg-slate-900"

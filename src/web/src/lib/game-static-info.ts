@@ -50,7 +50,7 @@ const zelda1ManifestSegments: RdcManifestSegment[] = [
     length: 32,
     addressType: "pc",
     addresses: [{ mapping: "default", address: 0x608eb4 }],
-  }, // WALK1_PROFILE_BIGSHIELD
+  }, // WALK1_PRESET_BIGSHIELD
   {
     length: 448,
     addressType: "pc",
@@ -60,7 +60,7 @@ const zelda1ManifestSegments: RdcManifestSegment[] = [
     length: 32,
     addressType: "pc",
     addresses: [{ mapping: "default", address: 0x6105bf }],
-  }, // WALK2_PROFILE_BIGSHIELD
+  }, // WALK2_PRESET_BIGSHIELD
   {
     length: 64,
     addressType: "pc",

@@ -12,7 +12,7 @@
 	const links = [
 		{ href: "/admin", label: "Dashboard", exact: true },
 		{ href: "/admin/users", label: "Users", exact: false },
-		{ href: "/admin/profiles", label: "Official profiles", exact: false },
+		{ href: "/admin/presets", label: "Official presets", exact: false },
 		{ href: "/admin/seeds", label: "Seeds", exact: false },
 		{ href: "/admin/versions", label: "Versions", exact: false },
 		{ href: "/admin/new-version", label: "New version", exact: false },

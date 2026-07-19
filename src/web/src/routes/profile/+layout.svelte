@@ -12,7 +12,7 @@
 	const links = [
 		{ href: "/profile", label: "Overview", exact: true },
 		{ href: "/profile/seeds", label: "Seeds", exact: false },
-		{ href: "/profile/profiles", label: "Profiles", exact: false },
+		{ href: "/profile/presets", label: "Presets", exact: false },
 		{ href: "/profile/api-keys", label: "API keys", exact: false },
 		{ href: "/profile/security", label: "Security", exact: false },
 	];

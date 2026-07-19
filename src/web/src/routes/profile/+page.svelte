@@ -8,7 +8,7 @@
 				loginMethod: string;
 				isAdmin: boolean;
 			};
-			stats: { seeds: number; profiles: number; apiKeys: number };
+			stats: { seeds: number; presets: number; apiKeys: number };
 		};
 	}
 
@@ -22,9 +22,9 @@
 			description: "Browse and reopen your generated seeds.",
 		},
 		{
-			href: "/profile/profiles",
-			label: "Saved profiles",
-			value: data.stats.profiles,
+			href: "/profile/presets",
+			label: "Saved presets",
+			value: data.stats.presets,
 			description: "Manage reusable randomizer configurations.",
 		},
 		{

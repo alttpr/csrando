@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import { db } from "$lib/server/db";
 import {
   apiKeys,
-  configurationProfiles,
+  configurationPresets,
   users,
   sessions,
   userSeeds,
@@ -16,18 +16,18 @@ export const load: PageServerLoad = async ({ locals }) => {
     throw redirect(302, "/login");
   }
   const count = sql<number>`count(*)`;
-  const [seedRows, profileRows, keyRows] = await Promise.all([
+  const [seedRows, presetRows, keyRows] = await Promise.all([
     db
       .select({ count })
       .from(userSeeds)
       .where(eq(userSeeds.userId, locals.user.id)),
     db
       .select({ count })
-      .from(configurationProfiles)
+      .from(configurationPresets)
       .where(
         and(
-          eq(configurationProfiles.ownerUserId, locals.user.id),
-          isNull(configurationProfiles.deletedAt),
+          eq(configurationPresets.ownerUserId, locals.user.id),
+          isNull(configurationPresets.deletedAt),
         ),
       ),
     db
@@ -45,7 +45,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     },
     stats: {
       seeds: seedRows[0]?.count ?? 0,
-      profiles: profileRows[0]?.count ?? 0,
+      presets: presetRows[0]?.count ?? 0,
       apiKeys: keyRows[0]?.count ?? 0,
     },
   };
