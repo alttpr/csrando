@@ -520,7 +520,7 @@ public sealed class PortalTests
         }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(Z1ShopShuffleOption.Full)]
     [DataRow(Z1ShopShuffleOption.Junk)]
     public void Z1PortalCaves_DoNotExposeShopLocations_WithShopShuffle(Z1ShopShuffleOption shop)
@@ -587,7 +587,7 @@ public sealed class PortalTests
     public void EffectiveInitialGame_RejectsUnknownGame()
     {
         var world = CreateWorld(sm: true, initialGame: "bogus");
-        var exception = Assert.ThrowsException<ArgumentException>(() => _ = world.EffectiveInitialGame);
+        var exception = Assert.Throws<ArgumentException>(() => _ = world.EffectiveInitialGame);
         StringAssert.Contains(exception.Message, "Invalid initial game");
     }
 
@@ -817,7 +817,7 @@ public sealed class PortalTests
         world.Graph.AddDirected(world.AlttpWorld!.GetLocation("start"),
             world.SMWorld!.Start, world.AlttpWorld.GetItem("fixed"));
 
-        var exception = Assert.ThrowsException<Exception>(() => world.DerivePortalEdges());
+        var exception = Assert.Throws<Exception>(() => world.DerivePortalEdges());
         StringAssert.Contains(exception.Message, "cannot host a portal");
     }
 }

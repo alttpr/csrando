@@ -3,9 +3,13 @@ using Randomizer.Games.Alttp;
 
 namespace RandomizerTests.Logic.Inverted.OverworldGlitches;
 
-[Ignore("Skipped until logic is implemented")]
 public abstract class InvertedOverworldGlitchesLogicTests : LogicTestBase
 {
+    [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
+    public static void ClassInit(TestContext testContext)
+    {
+        Assert.Inconclusive("Skipped until logic is implemented");
+    }
     protected override WorldConfig GetWorldConfig() => new()
     {
         Alttp = new()

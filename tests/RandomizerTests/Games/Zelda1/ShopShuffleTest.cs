@@ -69,7 +69,7 @@ public sealed class ShopShuffleTest
             "With shop shuffle off, shops keep their vanilla contents and are not graph locations.");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ShopShuffleOption.Full)]
     [DataRow(ShopShuffleOption.Junk)]
     public void ShopShuffleOn_CreatesShopLocations(ShopShuffleOption mode)
@@ -137,7 +137,7 @@ public sealed class ShopShuffleTest
     }
 
     // End-to-end: the result is winnable and every item location (shop slots included) is filled.
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ShopShuffleOption.Full, 42)]
     [DataRow(ShopShuffleOption.Full, 7)]
     [DataRow(ShopShuffleOption.Junk, 42)]
@@ -170,7 +170,7 @@ public sealed class ShopShuffleTest
         }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ShopShuffleOption.Off)]
     [DataRow(ShopShuffleOption.Junk)]
     [DataRow(ShopShuffleOption.Full)]
@@ -194,7 +194,7 @@ public sealed class ShopShuffleTest
     // standard room-clear chain while entry and the room interior stay free.
     private const string GoriyaRoom = "Underworld - Level 7 - Map A8";
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ShopShuffleOption.Off)]
     [DataRow(ShopShuffleOption.Full)]
     [DataRow(ShopShuffleOption.Junk)]
@@ -270,7 +270,7 @@ public sealed class ShopShuffleTest
             "With a sword, buying Bait should be in logic.");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ShopShuffleOption.Full)]
     [DataRow(ShopShuffleOption.Junk)]
     [TestCategory(TestCategories.Slow)]

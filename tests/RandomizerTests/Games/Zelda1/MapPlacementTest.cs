@@ -29,7 +29,7 @@ public sealed class MapPlacementTest
     private static bool IsDungeonMapSet(ItemSetName set, int level) =>
         set.Name == $"z1d{level}m";
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Slow)]
     [DataRow(MapPlacementOption.Early, 1)]
     [DataRow(MapPlacementOption.Early, 42)]
@@ -61,7 +61,7 @@ public sealed class MapPlacementTest
         }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Slow)]
     [DataRow(1)]
     [DataRow(42)]

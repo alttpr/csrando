@@ -29,7 +29,7 @@ public sealed class ItemPoolerTest
     // pool is sized dynamically to exactly fill the empty locations. If the pool is larger than
     // the empty locations, surplus filler is silently dropped; if smaller, locations are left
     // empty and show up as "Nothing". Either way the pool must match the empty-location count.
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(false, 42)]
     [DataRow(true, 1)]
     [DataRow(true, 3)]
@@ -50,7 +50,7 @@ public sealed class ItemPoolerTest
     // Shop shuffle adds shop slots as empty locations; the pool sizing must still match exactly so
     // every slot (shop or not) is filled. Junk mode additionally constrains its slots to a
     // consumables-only set, which must be sized to exactly cover those slots.
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(ShopShuffleOption.Junk, 42)]
     [DataRow(ShopShuffleOption.Junk, 7)]
     [DataRow(ShopShuffleOption.Full, 42)]
@@ -71,7 +71,7 @@ public sealed class ItemPoolerTest
     // and that set must have at least one location (the entrance-adjacent item room tagged by the
     // builder) — otherwise placement would fail with "No locations for Map". Pool size is unchanged
     // because the Map is just reassigned to a different set, not added or removed.
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(MapPlacementOption.Early, 1)]
     [DataRow(MapPlacementOption.Early, 42)]
     [DataRow(MapPlacementOption.Closest, 7)]

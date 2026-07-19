@@ -163,7 +163,7 @@ public sealed class PlaythroughTest
             "Supported entrance-conditioned strats leaked onto an ordinary node.");
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DoNotParallelize]
     [DataRow(MapRandomizerSetting.None)]
     [DataRow(MapRandomizerSetting.Standard)]

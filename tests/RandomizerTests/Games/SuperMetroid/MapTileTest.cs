@@ -6,7 +6,7 @@ using SuperMetroidRom = Randomizer.Games.SuperMetroid.Rom;
 [TestClass]
 public sealed class MapTileTest
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(TileInterior.MapStation, true, 0x001D)]
     [DataRow(TileInterior.MapStation, false, 0x401D)]
     [DataRow(TileInterior.EnergyRefill, true, 0x001E)]
@@ -25,7 +25,7 @@ public sealed class MapTileTest
         Assert.AreEqual((ushort)expected, tile.GetPortalTileValue(portalOnLeft));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(null, 0x081C)]
     [DataRow(true, 0x081D)]
     [DataRow(false, 0x481D)]

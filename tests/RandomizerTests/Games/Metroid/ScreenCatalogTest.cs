@@ -133,7 +133,7 @@ public sealed class ScreenCatalogTest
         run.Cells[0].ForcedScreenId = 0x03;
         run.Cells[1].ForcedScreenId = 0x11;
 
-        Assert.ThrowsException<InvalidOperationException>(() => ScreenFitter.Fit(grid, catalog, 1));
+        Assert.Throws<InvalidOperationException>(() => ScreenFitter.Fit(grid, catalog, 1));
     }
 
     [TestMethod]
