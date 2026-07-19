@@ -66,6 +66,11 @@ public static class RomEmitter
     private const int TablePointerNes = 0x9598;
     private const int StartPositionNes = 0x95D7; // X at $95D7, Y at $95D8
 
+    /// <summary>Extended custom-item payload type (hooks.asm $EDDF), power-up layout.</summary>
+    private const byte CustomItemType = 0x0B;
+    /// <summary>Local map item (newitems.asm !M1_MAP_ITEM_ID): reveals the area, no inventory.</summary>
+    private const byte MapItemId = 0xCE;
+
     private static readonly Area[] TableAreas =
         [Area.Brinstar, Area.Norfair, Area.Tourian, Area.Kraid, Area.Ridley];
 
@@ -113,6 +118,8 @@ public static class RomEmitter
                 ?? throw new InvalidOperationException($"cell {cell} has no assigned screen");
             var entry = new TableEntry { Cell = cell.Position };
 
+            // Fillable item slots. MapStation cells fit item screens too but must stay
+            // out of this set, or the filler would write over their fixed pickup below.
             if (cell.Role is CellRole.Item or CellRole.Boss && screen.ItemLocationNames.Count > 0)
             {
                 var position = screen.ItemPosition
@@ -122,6 +129,16 @@ public static class RomEmitter
                 // WriteItems overwrites [type, id]; id $FF is the engine's "empty slot"
                 // marker, so a location that never gets an item written stays blank.
                 entry.Payload.AddRange([0x02, 0xFF, position]);
+            }
+
+            // Map stations hold their area's fixed map pickup. The bytes are final here
+            // (no ItemOffset), so the location never enters the item filler's pool.
+            if (cell.Role == CellRole.MapStation)
+            {
+                var position = screen.ItemPosition
+                    ?? throw new InvalidOperationException(
+                        $"{cell.Area} map station screen 0x{screen.ScreenId:X2} has no item position");
+                entry.Payload.AddRange([CustomItemType, MapItemId, position]);
             }
 
             if (specials.Extras.TryGetValue((cell.Area, screen.ScreenId), out var extras))
@@ -147,6 +164,7 @@ public static class RomEmitter
         patches[TableAddress] = blob;
 
         AddStartPositions(world, patches, respawnAtPortal);
+        AddAutomap(world, patches);
 
         return new RomEmission
         {
@@ -299,6 +317,23 @@ public static class RomEmitter
         }
 
         return [.. blob];
+    }
+
+    /// <summary>
+    /// Composes the automap payload for the generated map and patches the bounds, seed
+    /// identity, and tilemap planes of the base ROM's M1MP block. The changed seed
+    /// identity makes the runtime reset stale explored-map SRAM for the new layout.
+    /// </summary>
+    private static void AddAutomap(GeneratedWorld world, Dictionary<int, byte[]> patches)
+    {
+        var automap = AutomapComposer.Compose(world);
+        patches[AutomapComposer.BoundsAddress] = automap.Bounds;
+        patches[AutomapComposer.SeedIdAddress] =
+        [
+            (byte)automap.SeedId, (byte)(automap.SeedId >> 8),
+            (byte)(automap.SeedId >> 16), (byte)(automap.SeedId >> 24),
+        ];
+        patches[AutomapComposer.TilemapsAddress] = automap.Planes;
     }
 
     private static void AddStartPositions(GeneratedWorld world, Dictionary<int, byte[]> patches,

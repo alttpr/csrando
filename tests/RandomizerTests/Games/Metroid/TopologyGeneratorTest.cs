@@ -168,6 +168,62 @@ public sealed class TopologyGeneratorTest
     }
 
     [TestMethod]
+    public void Generate_PlacesAMapStationDeepInEachArea()
+    {
+        for (int seed = 1; seed <= 20; seed++)
+        {
+            var world = Generate(seed);
+            var grid = world.Grid;
+
+            foreach (var area in new[] { Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley })
+            {
+                Assert.IsTrue(world.Landmarks.TryGetValue($"{area}MapStation", out var pos),
+                    $"seed {seed}: no {area} map station landmark");
+                var cell = grid.Cell(pos)!;
+                Assert.AreEqual(CellRole.MapStation, cell.Role, $"seed {seed}: {area}");
+                Assert.AreEqual(area, cell.Area, $"seed {seed}: {area} station in the wrong area");
+
+                // Depth check: the station must sit beyond the median room-graph distance
+                // from the area entry (start cell / elevator platform), so it rewards
+                // exploring rather than greeting the player at the entrance.
+                var entry = area == Area.Brinstar
+                    ? world.Start
+                    : grid.Links.Where(l => l.Type == LinkType.Elevator)
+                        .Select(l => l.B.Step(Direction.Down))
+                        .First(p => grid.Cell(p)?.Area == area);
+                var depths = Bfs(grid, entry, area);
+                var median = depths.Values.Order().ElementAt(depths.Count / 2);
+                Assert.IsTrue(depths[pos] >= median,
+                    $"seed {seed}: {area} station depth {depths[pos]} below the median {median}");
+            }
+
+            Assert.IsFalse(grid.CellsOf(Area.Tourian).Any(c => c.Role == CellRole.MapStation),
+                $"seed {seed}: Tourian must not have a map station");
+        }
+    }
+
+    private static Dictionary<Point, int> Bfs(WorldGrid grid, Point root, Area area)
+    {
+        var depths = new Dictionary<Point, int> { [root] = 0 };
+        var queue = new Queue<Point>([root]);
+        while (queue.Count > 0)
+        {
+            var p = queue.Dequeue();
+            foreach (var dir in Directions.All)
+            {
+                if (grid.Cell(p)!.Edge(dir) == EdgeRequirement.Wall)
+                    continue;
+                var n = grid.Cell(p.Step(dir));
+                if (n == null || n.Area != area || n.Role == CellRole.Cap || depths.ContainsKey(n.Position))
+                    continue;
+                depths[n.Position] = depths[p] + 1;
+                queue.Enqueue(n.Position);
+            }
+        }
+        return depths;
+    }
+
+    [TestMethod]
     public void Generate_EveryAreaHasItems()
     {
         for (int seed = 1; seed <= 10; seed++)

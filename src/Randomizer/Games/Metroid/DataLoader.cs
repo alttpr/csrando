@@ -43,6 +43,12 @@ internal static class DataLoader
             // The vanilla fixed anchors created by BuildPortalRooms: portal rooms behind
             // east-side doors in the areas requested by the combo portal layout.
             world.PatchData = yamlReader.BuildPortalRooms(world);
+
+            // Vanilla layouts place no map-station pickups, so pre-reveal every area's
+            // automap instead: the base ROM ships the vanilla map payload, and this byte
+            // is copied into the persistent reveal state when the automap state resets.
+            world.PatchData[MapGen.AutomapComposer.InitialRevealAddress] =
+                [MapGen.AutomapComposer.RevealAllAreas];
         }
 
         yamlReader.BuildGraph();
