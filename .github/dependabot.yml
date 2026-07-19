@@ -1,0 +1,16 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    ignore:
+    - dependency-name: "Microsoft.OpenApi"
+      # .NET 10 isn't compatible with the newer 3.x (which comes with .NET 11, see dotnet/aspnetcore#64317).
+      # But since versions below 2.7.5 are affected by a vulnerability, we need to specifically reference it ourselves (and update it).
+      versions: [ "<3.0.0" ]
