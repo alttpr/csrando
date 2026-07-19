@@ -54,7 +54,7 @@ public sealed class ComboCombinationTest
             && item.Item.Name == "FiveRupees") >= m1Padding);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(true, false, "FiveRupees")]
     [DataRow(false, true, "Rupee5")]
     [DataRow(false, false, "Nothing")]
@@ -90,7 +90,7 @@ public sealed class ComboCombinationTest
         }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(false, "alttp", "sm", false)]
     [DataRow(false, "alttp", "m1", false)]
     [DataRow(false, "sm", "sm", true)]
@@ -106,7 +106,7 @@ public sealed class ComboCombinationTest
             earlyMorph, initialGame, morphGame));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(true, false, false, false)]
     [DataRow(false, true, false, false)]
     [DataRow(false, false, true, false)]
@@ -133,7 +133,7 @@ public sealed class ComboCombinationTest
         Assert.AreEqual(m1, world.M1World != null);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [TestCategory(TestCategories.Slow)]
     [DataRow(false, true, false, false)]
     [DataRow(false, false, true, false)]
