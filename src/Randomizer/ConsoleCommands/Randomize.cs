@@ -1,7 +1,6 @@
 namespace Randomizer.ConsoleCommands;
 
 using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.Text.Encodings.Web;
@@ -17,15 +16,15 @@ internal sealed class Randomize : Command
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private readonly Option<int> _bulk = new(["bulk", "--bulk"], () => 1, "generate multiple ROMs");
-    private readonly Option<int> _multiworld = new(["multiworld", "--multiworld"], () => 1, "multiworld player count");
-    private readonly Option<int?> _seed = new(["seed", "--seed"], "set starting seed");
+    private readonly Option<int> _bulk = new("bulk", "--bulk") { Description = "generate multiple ROMs", DefaultValueFactory = _ => 1 };
+    private readonly Option<int> _multiworld = new("multiworld", "--multiworld") { Description = "multiworld player count", DefaultValueFactory = _ => 1 };
+    private readonly Option<int?> _seed = new("seed", "--seed") { Description = "set starting seed" };
     // NOTE: use assemblebaserom to generate a usable preset; the following two options are mainly for testing of external rom changes.
-    private readonly Option<FileInfo> _baseRom = new Option<FileInfo>(["rom", "--rom"], "set base rom").ExistingOnly();
-    private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>(["bps", "--bps"], "set base rom patch BPS (for use with a vanilla rom)").ExistingOnly();
-    private readonly Option<DirectoryInfo> _outputDirectory = new(["outdir", "--outdir"], "output directory for generated games");
-    private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>(["settings", "--settings"], "JSON serialized settings file").ExistingOnly();
-    private readonly Option<bool> _dumpSpoiler = new(["spoiler", "--spoiler"], "dump spoiler log");
+    private readonly Option<FileInfo> _baseRom = new Option<FileInfo>("rom", "--rom") { Description = "set base rom" }.AcceptExistingOnly();
+    private readonly Option<FileInfo> _baseBPS = new Option<FileInfo>("bps", "--bps") { Description = "set base rom patch BPS (for use with a vanilla rom)" }.AcceptExistingOnly();
+    private readonly Option<DirectoryInfo> _outputDirectory = new("outdir", "--outdir") { Description = "output directory for generated games" };
+    private readonly Option<FileInfo> _settingsFile = new Option<FileInfo>("settings", "--settings") { Description = "JSON serialized settings file" }.AcceptExistingOnly();
+    private readonly Option<bool> _dumpSpoiler = new("spoiler", "--spoiler") { Description = "dump spoiler log" };
 
     public Randomize()
         : base("randomize", "Generate a randomized ROM.")
@@ -39,44 +38,40 @@ internal sealed class Randomize : Command
         Add(_settingsFile);
         Add(_dumpSpoiler);
 
-        AddValidator(Validate);
+        Validators.Add(Validate);
 
-        this.SetHandler(context => context.ExitCode = Handle(context));
+        SetAction(Handle);
     }
 
     private void Validate(CommandResult result)
     {
-        List<string> errors = [];
+        if (result.GetValue(_multiworld) <= 0)
+            result.AddError("Multiworld player count needs to be at least 1");
 
-        if (result.GetValueForOption(_multiworld) <= 0)
-            errors.Add("Multiworld player count needs to be at least 1");
-
-        if (result.GetValueForOption(_bulk) <= 0)
-            errors.Add("Bulk count needs to be at least 1");
-
-        result.ErrorMessage = string.Join('\n', errors);
+        if (result.GetValue(_bulk) <= 0)
+            result.AddError("Bulk count needs to be at least 1");
     }
 
     /// <summary>Execute the console command.</summary>
-    public int Handle(InvocationContext context)
+    public int Handle(ParseResult parseResult)
     {
-        int bulk = Math.Max(context.ParseResult.GetValueForOption(_bulk), 1);
-        var baseRom = context.ParseResult.GetValueForOption(_baseRom);
-        var baseBPS = context.ParseResult.GetValueForOption(_baseBPS);
-        var outputDirectory = context.ParseResult.GetValueForOption(_outputDirectory);
-        bool dumpSpoiler = context.ParseResult.GetValueForOption(_dumpSpoiler);
+        int bulk = Math.Max(parseResult.GetValue(_bulk), 1);
+        var baseRom = parseResult.GetValue(_baseRom);
+        var baseBPS = parseResult.GetValue(_baseBPS);
+        var outputDirectory = parseResult.GetValue(_outputDirectory);
+        bool dumpSpoiler = parseResult.GetValue(_dumpSpoiler);
 
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < bulk; i++)
         {
-            var worldConfigs = GetWorldConfigs(context);
+            var worldConfigs = GetWorldConfigs(parseResult);
             var randomizer = RandomizerFactory.Create(
                 worldConfigs,
-                context.ParseResult.GetValueForOption(_seed)
+                parseResult.GetValue(_seed)
             );
             randomizer.Randomize();
             if (!randomizer.IsWinnable())
-                throw new Exception("Game Unwinnable.");
+                throw new Exception($"Game Unwinnable (seed: {randomizer.PRNG.Seed}).");
 
             if (outputDirectory != null)
             {
@@ -110,9 +105,9 @@ internal sealed class Randomize : Command
         PropertyNameCaseInsensitive = true,
         Converters = { new JsonStringEnumConverter() },
     };
-    private WorldConfig[] GetWorldConfigs(InvocationContext context)
+    private WorldConfig[] GetWorldConfigs(ParseResult parseResult)
     {
-        var settingsFile = context.ParseResult.GetValueForOption(_settingsFile);
+        var settingsFile = parseResult.GetValue(_settingsFile);
         if (settingsFile == null && File.Exists(Config.SettingsFile))
             settingsFile = new FileInfo(Config.SettingsFile);
         if (settingsFile != null && settingsFile.Exists)
@@ -137,7 +132,7 @@ internal sealed class Randomize : Command
                 if (singleConfig != null)
                 {
                     _logger.LogInformation("Read single world from passed config file.");
-                    return Enumerable.Repeat(singleConfig, context.ParseResult.GetValueForOption(_multiworld)).ToArray();
+                    return Enumerable.Repeat(singleConfig, parseResult.GetValue(_multiworld)).ToArray();
                 }
             }
             catch { }

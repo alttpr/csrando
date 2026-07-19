@@ -10,16 +10,16 @@ using BpsNet;
 
 internal sealed class AssembleBaseRoms : Command
 {
-    private readonly Option<bool> _assembleAlttp = new(["-a", "--assemble-alttp"], "Assemble the ALTTP base rom");
-    private readonly Option<bool> _assembleCombo = new(["-c", "--assemble-combo"], "Assemble the Combo base rom");
-    private readonly Option<bool> _createBpsPatch = new(["-b", "--create-bps-patch"], "Create a BPS patch and copy to src/web/static");
+    private readonly Option<bool> _assembleAlttp = new("-a", "--assemble-alttp") { Description = "Assemble the ALTTP base rom" };
+    private readonly Option<bool> _assembleCombo = new("-c", "--assemble-combo") { Description = "Assemble the Combo base rom" };
+    private readonly Option<bool> _createBpsPatch = new("-b", "--create-bps-patch") { Description = "Create a BPS patch and copy to src/web/static" };
 
-    private readonly Option<FileInfo> _z3Rom = new(["-r", "--z3-rom"], "Vanilla JP1.0 ALTTP ROM file");
-    private readonly Option<FileInfo> _z1Rom = new(["-z", "--z1-rom"], "Vanilla PRG0 Zelda 1 ROM file");
-    private readonly Option<FileInfo> _m1Rom = new(["-m", "--m1-rom"], "Vanilla Metroid 1 ROM file");
-    private readonly Option<FileInfo> _smRom = new(["-s", "--sm-rom"], "Vanilla (US/JP) Super Metroid ROM file");
+    private readonly Option<FileInfo> _z3Rom = new("-r", "--z3-rom") { Description = "Vanilla JP1.0 ALTTP ROM file" };
+    private readonly Option<FileInfo> _z1Rom = new("-z", "--z1-rom") { Description = "Vanilla PRG0 Zelda 1 ROM file" };
+    private readonly Option<FileInfo> _m1Rom = new("-m", "--m1-rom") { Description = "Vanilla Metroid 1 ROM file" };
+    private readonly Option<FileInfo> _smRom = new("-s", "--sm-rom") { Description = "Vanilla (US/JP) Super Metroid ROM file" };
 
-    private readonly Option<bool> _featurePatreonSupporters = new(["-p", "--feature-patreon-supporters"], "Feature Patreon supporters in the generated ROM");
+    private readonly Option<bool> _featurePatreonSupporters = new("-p", "--feature-patreon-supporters") { Description = "Feature Patreon supporters in the generated ROM" };
 
     public AssembleBaseRoms()
         : base("assemblebaseroms", "Assemble the randomizer base roms")
@@ -33,10 +33,18 @@ internal sealed class AssembleBaseRoms : Command
         Add(_createBpsPatch);
         Add(_featurePatreonSupporters);
 
-        this.SetHandler(Assemble, _z3Rom, _z1Rom, _m1Rom, _smRom, _assembleAlttp, _assembleCombo, _createBpsPatch, _featurePatreonSupporters);
+        SetAction(parseResult => Assemble(
+            parseResult.GetValue(_z3Rom),
+            parseResult.GetValue(_z1Rom),
+            parseResult.GetValue(_m1Rom),
+            parseResult.GetValue(_smRom),
+            parseResult.GetValue(_assembleAlttp),
+            parseResult.GetValue(_assembleCombo),
+            parseResult.GetValue(_createBpsPatch),
+            parseResult.GetValue(_featurePatreonSupporters)));
     }
 
-    private void Assemble(FileInfo z3Rom, FileInfo z1Rom, FileInfo m1Rom, FileInfo smRom, bool assembleAlttp, bool assembleCombo, bool createBpsPatch, bool featurePatreonSupporters)
+    private void Assemble(FileInfo? z3Rom, FileInfo? z1Rom, FileInfo? m1Rom, FileInfo? smRom, bool assembleAlttp, bool assembleCombo, bool createBpsPatch, bool featurePatreonSupporters)
     {
         if (assembleAlttp)
         {

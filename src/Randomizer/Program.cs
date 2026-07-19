@@ -1,14 +1,16 @@
 ﻿using System.CommandLine;
 using Randomizer.ConsoleCommands;
 
-var alttpr = new RootCommand("The Legend of Zelda: A Link to the Past Randomizer");
-alttpr.AddCommand(new Randomize());
-alttpr.AddCommand(new AssembleBaseRoms());
-alttpr.AddCommand(new ApiServer());
+var alttpr = new RootCommand("The Legend of Zelda: A Link to the Past Randomizer")
+{
+    new Randomize(),
+    new AssembleBaseRoms(),
+    new ApiServer()
+};
 
 try
 {
-    return alttpr.Invoke(args);
+    return alttpr.Parse(args).Invoke();
 }
 finally
 {
