@@ -14,7 +14,10 @@
 	}: Props = $props();
 
 	$effect(() => {
-		if (isOptionsFor) {
+		// Auxiliary random-choice fields start with every option enabled, but a
+		// non-empty selection may have come from a loaded preset and must not be
+		// overwritten when this field mounts.
+		if (isOptionsFor && selected.length === 0) {
 			selected = Object.keys(items);
 		}
 	});
