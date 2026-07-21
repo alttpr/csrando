@@ -33,6 +33,16 @@ public class Rom : GameRom
 
     private const int MAP_X_OFFSET = 4;
     private const int MAP_Y_OFFSET = 4;
+    private const ushort BOSS_MAP_TILE = 0x01DF;
+
+    private static readonly HashSet<int> BossRoomIds =
+    [
+        84,  // Kraid
+        142, // Ridley
+        158, // Phantoon
+        193, // Draygon
+        238, // Mother Brain
+    ];
 
 
     public Rom(IRom rom, int offset) : base(rom, offset)
@@ -817,7 +827,6 @@ public class Rom : GameRom
     private void WriteMiniMapData(World world)
     {
         var mapStations = new List<(int Area, int X, int Y, bool? PortalOnLeft)>();
-        var bossIcons = new List<(int, int, int)>(); // area, x, y
         // A converted room is only emitted when its vertex participates in a cross-game
         // edge. Merely preparing or resolving an unused conversion must not alter its map.
         var activePortalRooms = world.PortalRooms
@@ -864,12 +873,15 @@ public class Rom : GameRom
 
             var (offsetX, offsetY) = (mapRoomX - area_x_offsets[mapArea], mapRoomY - area_y_offsets[mapArea]);
             activePortalRooms.TryGetValue(roomGeometry.name, out var portalRoom);
+            bool isBossRoom = BossRoomIds.Contains(mapRoom);
 
             foreach (var tile in mapTiles.MapTiles)
             {
-                var tileBytes = portalRoom == null
-                    ? tile.GetBytes()
-                    : tile.GetPortalBytes(portalRoom.PortalOnLeft);
+                var tileBytes = isBossRoom
+                    ? BitConverter.GetBytes(BOSS_MAP_TILE)
+                    : portalRoom == null
+                        ? tile.GetBytes()
+                        : tile.GetPortalBytes(portalRoom.PortalOnLeft);
 
                 ushort palette = MapTile.Red;
                 if (mapTiles.Heated == true)
