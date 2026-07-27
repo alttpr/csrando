@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!--
+    Opt-in filter for the performance measurement harness (PerfHarness.cs). Run with:
+      dotnet test (dash-dash)settings tests/RandomizerTests/Perf.runsettings
+
+    Optionally set CSRANDO_PERF_LABEL / CSRANDO_PERF_SEEDS first; see PerfHarness.cs.
+  -->
+  <RunConfiguration>
+    <TestCaseFilter>TestCategory=Perf</TestCaseFilter>
+  </RunConfiguration>
+</RunSettings>

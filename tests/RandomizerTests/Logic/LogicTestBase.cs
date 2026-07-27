@@ -33,8 +33,21 @@ public abstract class LogicTestBase
             Assert.Fail($"Location \"{location}\" doesn't exist in the graph");
         }
 
-        var searcher = randomizer.GetSearcherForInventory(world, inventory.Select(world.GetItem), world.Start);
+        var searcher = GetSearcherForInventory(randomizer, world, inventory);
         Assert.AreEqual(expected, searcher.GetVisited().Any(v => v.Name == location));
+    }
+
+    // World.GetItem/Graph.RegisterItem are not thread-safe and get called while building a
+    // searcher, both to materialize the test inventory and from within the search itself
+    // (e.g. Searcher's BigRedBomb handling). Since the cached randomizers are shared across
+    // parallel test methods, serialize searcher creation per randomizer instance; reading
+    // the finished searcher (GetVisited etc.) doesn't touch shared state.
+    protected static ISearcher GetSearcherForInventory(GameRandomizer randomizer, IWorld world, IEnumerable<string> inventory)
+    {
+        lock (randomizer)
+        {
+            return randomizer.GetSearcherForInventory(world, inventory.Select(world.GetItem), world.Start);
+        }
     }
 
     public static string GetLogicTestDisplayNames(MethodInfo methodInfo, object[] values)

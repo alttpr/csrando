@@ -71,7 +71,9 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
         if (world.Config.Accessibility == AccessibilityOption.Locations)
             return;
 
-        VertexHashSet allVisited = new(world.Graph);
+        // Vertex ids are not assigned yet at this point (Graph.SetVertexIds runs after the
+        // world modifiers), so VertexHashSet cannot be used here.
+        HashSet<BaseVertex> allVisited = [];
         {
             Queue<BaseVertex> vertexQueue = new();
             vertexQueue.Enqueue(world.Start);
@@ -101,7 +103,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
 
                 Queue<BaseVertex> vertexQueue = new();
 
-                VertexHashSet visitedWithoutDoor = new(world.Graph);
+                HashSet<BaseVertex> visitedWithoutDoor = [];
                 vertexQueue.Enqueue(world.Start);
 
                 while (vertexQueue.Count != 0)
@@ -146,7 +148,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
         {
             Queue<BaseVertex> vertexQueue = new();
 
-            VertexHashSet visitedWithoutDoor = new(world.Graph);
+            HashSet<BaseVertex> visitedWithoutDoor = [];
             vertexQueue.Enqueue(world.Start);
 
             while (vertexQueue.Count != 0)

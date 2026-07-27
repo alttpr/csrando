@@ -97,22 +97,36 @@ internal static class PlaythroughGenerator
         var persistentEntryPaths = new Dictionary<Vertex, List<RouteStep>>();
         var collectedPickups = new HashSet<(Vertex, IItem)>();
         var collectedAutomaticItems = new HashSet<IItem>();
+        // Items where every copy matters: anything gating an edge by count, and small keys —
+        // keys are consumed on doors, but DoorReplacer rewrites their edge conditions into
+        // per-door unlock items, so they never appear with Count > 1 themselves. Deduplicating
+        // them would key-starve the simulation relative to real play (e.g. two pots holding
+        // the same dungeon key) and stall the playthrough on winnable seeds.
         var countableAutomaticItems = randomizer.Graph.GetVertices()
             .SelectMany(vertex => vertex.Edges)
             .Where(edge => edge.Condition.Count > 1)
             .Select(edge => edge.Condition.Item)
+            .Concat(randomizer.Graph.Doors.Keys)
             .ToHashSet();
         var found = new List<FoundPickup>();
 
+        // Loop invariants, hoisted: the manual-pickup set and the candidate cross-world entry
+        // edges do not change between spheres (for single-world games the edge list is empty).
+        var manualPickupLocations = new HashSet<Vertex>(randomizedLocations);
+        manualPickupLocations.UnionWith(victoryLocations);
+        var crossWorldEntryEdges = randomizer.Graph.GetVertices().SelectMany(vertex => vertex.Edges)
+            .Where(edge => edge.From.World != edge.To.World
+                && !initiallyStartedWorlds.Contains(edge.To.World))
+            .ToList();
+
         for (int sphere = 0; sphere < randomizer.Graph.GetVertices().Count(); sphere++)
         {
+            int persistentStartsBeforeSphere = persistentStarts.Count;
             var reachability = FindReachable(randomizer.Graph, persistentStarts, inventory,
-                [.. randomizedLocations, .. victoryLocations]);
+                manualPickupLocations);
             var paths = BuildPaths(starts, reachability, persistentEntryPaths);
-            foreach (var edge in randomizer.Graph.GetVertices().SelectMany(vertex => vertex.Edges)
-                         .Where(edge => edge.From.World != edge.To.World
-                             && !initiallyStartedWorlds.Contains(edge.To.World)
-                             && reachability.Vertices.Contains(edge.To)
+            foreach (var edge in crossWorldEntryEdges
+                         .Where(edge => reachability.Vertices.Contains(edge.To)
                              && paths.ContainsKey(edge.To)))
             {
                 if (persistentStarts.Add(edge.To))
@@ -143,7 +157,13 @@ internal static class PlaythroughGenerator
                         && !victoryLocations.Contains(location);
                 if (automatic && !countableAutomaticItems.Contains(item)
                     && collectedAutomaticItems.Contains(item))
+                {
+                    // Record the skip: this pair can never be accepted in a later sphere
+                    // (its item stays deduplicated), and leaving it unrecorded would re-list
+                    // it every sphere, preventing the loop from ever running out of pickups.
+                    collectedPickups.Add((location, item));
                     continue;
+                }
                 var path = BuildPath(location, paths, pickup);
                 if (location.World is Games.SuperMetroid.World
                     && item.Name.StartsWith("f_", StringComparison.Ordinal)
@@ -174,6 +194,12 @@ internal static class PlaythroughGenerator
                 inventory.AddItem(item);
 
             if (goals.Count > 0 && goals.All(inventory.Has))
+                break;
+
+            // A sphere that accepted nothing and reached no new world entries cannot change
+            // future reachability: the playthrough is stalled (incomplete), so stop instead
+            // of re-evaluating identical spheres until the loop bound.
+            if (acceptedItems.Count == 0 && persistentStarts.Count == persistentStartsBeforeSphere)
                 break;
         }
 

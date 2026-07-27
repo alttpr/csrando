@@ -185,12 +185,17 @@ public class TurtleRockTest : OpenNoGlitchesLogicTests
 
         var world = randomizer.Worlds[0];
 
-        var vertex = world.GetLocation("Turtle Rock - Entry");
-        vertex.Item = world.GetExistingItem("TurtleRockEntryEther");
+        // The randomizer is shared with concurrently-running tests; take the same lock
+        // searcher creation uses so they see this item placement consistently.
+        lock (randomizer)
+        {
+            var vertex = world.GetLocation("Turtle Rock - Entry");
+            vertex.Item = world.GetExistingItem("TurtleRockEntryEther");
+        }
 
         var inventory = new[] { "Hammer", "MoonPearl", "Ether", "ProgressiveSword", "OcarinaActive", "MagicMirror", "TitansMitt", "CaneOfSomaria", "KeyD7", "KeyD7" };
 
-        var searcher = randomizer.GetSearcherForInventory(world,inventory.Select(world.GetItem), world.Start);
+        var searcher = GetSearcherForInventory(randomizer, world, inventory);
         Assert.AreEqual(true, searcher.GetVisited().Any(v => v.Name == "Turtle Rock - Big Key Chest"));
     }
 }

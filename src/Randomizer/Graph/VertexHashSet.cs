@@ -1,29 +1,30 @@
-﻿namespace Randomizer.Graph;
+namespace Randomizer.Graph;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
+/// <summary>
+/// Set of vertices, stored as a bitmask indexed by <see cref="Vertex.Id"/>. Set operations are
+/// word-wise bit operations over a ulong array; Clone is a flat array copy. This is the central
+/// data structure of the search, cloned and intersected heavily by the key-door search.
+/// </summary>
 public class VertexHashSet : ICollection<Vertex>
 {
-    private int _count = -1;
+    // Cached population count; -1 after a bulk set operation invalidates it.
+    private int _count;
+    private readonly ulong[] _words;
+
+    public Graph Graph { get; }
+
     public int Count
     {
         get
         {
             if (_count >= 0) return _count;
-            if (_bitArray == null) return 0;
 
-            uint[] ints = new uint[(_bitArray.Count >> 5) + 1];
-            _bitArray.CopyTo(ints, 0);
-            int count = 0;
-            for (int i = 0; i < ints.Length; i++)
-            {
-                count += BitOperations.PopCount(ints[i]);
-            }
-
+            int count = BitOps.PopCount(_words);
             _count = count;
 
             return count;
@@ -32,50 +33,60 @@ public class VertexHashSet : ICollection<Vertex>
 
     public bool IsReadOnly => false;
 
-    public Graph Graph { get; }
-    private BitArray? _bitArray;
-
     public VertexHashSet(Graph graph)
     {
         Graph = graph;
+        // Sized to the graph's vertex id space (+1 mirrors the historical sizing; it also keeps
+        // at least one word for graphs whose ids are not assigned yet).
+        _words = new ulong[(Graph.VertexCount + 64) >> 6];
         _count = 0;
-    }
-
-    [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_bitArray))]
-    private void AllocateBitArray()
-    {
-        int maxId = Graph.GetVertices().Count();
-        _bitArray = new BitArray(maxId + 1);
     }
 
     public VertexHashSet(VertexHashSet other)
     {
         Graph = other.Graph;
-        _bitArray = (BitArray?)other._bitArray?.Clone();
+        // Measurably faster than array.Clone() (which goes through MemberwiseClone), and this
+        // copy is the single hottest allocation of the key-door search.
+        _words = GC.AllocateUninitializedArray<ulong>(other._words.Length);
+        Array.Copy(other._words, _words, _words.Length);
         _count = other._count;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(Vertex item)
     {
-        if (_bitArray == null) AllocateBitArray();
+        Add(item.Id);
+    }
 
-        bool previous = _bitArray[item.Id];
-        _bitArray.Set(item.Id, true);
-        if (!previous && _count != -1)
-            _count++;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Add(int vertexId)
+    {
+        ref ulong word = ref _words[vertexId >> 6];
+        ulong bit = 1UL << vertexId;
+        if ((word & bit) == 0)
+        {
+            word |= bit;
+            if (_count != -1)
+                _count++;
+        }
     }
 
     public void Clear()
     {
-        _bitArray?.SetAll(false);
+        Array.Clear(_words);
         _count = 0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Contains(Vertex item)
     {
-        return _bitArray != null && _bitArray[item.Id];
+        return Contains(item.Id);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Contains(int vertexId)
+    {
+        return (_words[vertexId >> 6] & (1UL << vertexId)) != 0;
     }
 
     public void CopyTo(Vertex[] array, int arrayIndex)
@@ -90,24 +101,27 @@ public class VertexHashSet : ICollection<Vertex>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void IntersectWith(VertexHashSet other)
     {
-        if (_bitArray == null || other._bitArray == null)
+        if (other._count == 0)
         {
             Clear();
             return;
         }
 
-        _bitArray.And(other._bitArray);
+        BitOps.And(_words, other._words);
         _count = -1;
     }
 
     public bool Remove(Vertex item)
     {
-        if (_bitArray == null) return false;
-
-        bool previous = _bitArray[item.Id];
-        _bitArray.Set(item.Id, false);
-        if (previous && _count != -1)
-            _count--;
+        ref ulong word = ref _words[item.Id >> 6];
+        ulong bit = 1UL << item.Id;
+        bool previous = (word & bit) != 0;
+        if (previous)
+        {
+            word &= ~bit;
+            if (_count != -1)
+                _count--;
+        }
 
         return previous;
     }
@@ -115,41 +129,56 @@ public class VertexHashSet : ICollection<Vertex>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void UnionWith(VertexHashSet other)
     {
-        if (other._bitArray == null) return;
+        if (other._count == 0) return;
 
-        if (_bitArray == null) AllocateBitArray();
-
-        _bitArray.Or(other._bitArray);
+        BitOps.Or(_words, other._words);
         _count = -1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ExceptWith(VertexHashSet other)
     {
-        if (other._bitArray == null) return;
+        if (other._count == 0) return;
 
-        if (_bitArray == null) AllocateBitArray();
-
-        var otherBitCopy = new BitArray(other._bitArray);
-        otherBitCopy.Not();
-        _bitArray.And(otherBitCopy);
+        BitOps.AndNot(_words, other._words);
         _count = -1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SymmetricExceptWith(VertexHashSet other)
     {
-        if (other._bitArray == null) return;
+        if (other._count == 0) return;
 
-        if (_bitArray == null) AllocateBitArray();
-
-        _bitArray.Xor(other._bitArray);
+        BitOps.Xor(_words, other._words);
         _count = -1;
     }
 
     public VertexHashSet Clone()
     {
         return new VertexHashSet(this);
+    }
+
+    /// <summary>Overwrite this set's contents with another set's, without allocating.</summary>
+    public void CopyFrom(VertexHashSet other)
+    {
+        Array.Copy(other._words, _words, _words.Length);
+        _count = other._count;
+    }
+
+    /// <summary>Overwrite this set with <paramref name="from"/> minus <paramref name="except"/>, in one pass without allocating.</summary>
+    public void CopyFromExcept(VertexHashSet from, VertexHashSet except)
+    {
+        BitOps.AndNotInto(_words, from._words, except._words);
+        _count = -1;
+    }
+
+    /// <summary>Build a new set containing <paramref name="from"/> minus <paramref name="except"/>, in one pass (fused Clone + ExceptWith).</summary>
+    public static VertexHashSet AndNot(VertexHashSet from, VertexHashSet except)
+    {
+        var result = new VertexHashSet(from.Graph);
+        BitOps.AndNotInto(result._words, from._words, except._words);
+        result._count = -1;
+        return result;
     }
 
     public IEnumerator<Vertex> GetEnumerator()
@@ -164,6 +193,8 @@ public class VertexHashSet : ICollection<Vertex>
 
     private struct Enumerator(VertexHashSet vertices) : IEnumerator, IEnumerator<Vertex>
     {
+        private int _wordIndex = -1;
+        private ulong _remaining = 0;
         private int _position = -1;
 
         public readonly Vertex Current => vertices.Graph.GetVertex(_position);
@@ -176,20 +207,31 @@ public class VertexHashSet : ICollection<Vertex>
 
         public bool MoveNext()
         {
-            if (vertices._bitArray is not { } bitArray)
-                return false;
-
-            for (; ; )
+            ulong remaining = _remaining;
+            var words = vertices._words;
+            int wordIndex = _wordIndex;
+            while (remaining == 0)
             {
-                _position++;
-                if (_position == bitArray.Length) break;
-                if (bitArray[_position]) break;
+                wordIndex++;
+                if (wordIndex >= words.Length)
+                {
+                    _wordIndex = wordIndex;
+                    _remaining = 0;
+                    return false;
+                }
+                remaining = words[wordIndex];
             }
-            return _position < bitArray.Length;
+
+            _position = (wordIndex << 6) + BitOperations.TrailingZeroCount(remaining);
+            _remaining = remaining & (remaining - 1);
+            _wordIndex = wordIndex;
+            return true;
         }
 
         public void Reset()
         {
+            _wordIndex = -1;
+            _remaining = 0;
             _position = -1;
         }
     }
