@@ -253,7 +253,9 @@ public class YamlReader
         var yamlData = new List<T>();
         var deserializer = new DeserializerBuilder().Build();
 
-        foreach (var fileName in Directory.GetFiles(path, "*.yml", SearchOption.AllDirectories))
+        // Directory.GetFiles order is filesystem-dependent (arbitrary on Linux); sort so
+        // generation consumes data — and therefore the PRNG stream — identically on every OS.
+        foreach (var fileName in Directory.GetFiles(path, "*.yml", SearchOption.AllDirectories).Order(StringComparer.Ordinal))
         {
             var fileContents = File.ReadAllText(fileName);
             try
