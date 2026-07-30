@@ -171,7 +171,10 @@ describe("POST /api/randomize request handling", () => {
     } as never);
 
     expect((await response.json()).id).toBeTruthy();
-    expect(randomizeCreateMock).toHaveBeenCalledWith(payload);
+    expect(randomizeCreateMock).toHaveBeenCalledWith(
+      payload,
+      expect.any(AbortSignal),
+    );
   });
 
   it("accepts and stores a BPS-only world response", async () => {

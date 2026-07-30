@@ -12,6 +12,7 @@ type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: unknown;
   headers?: HeadersInit;
+  signal?: AbortSignal;
 };
 
 const mockGameIdsByConfigKey: Record<string, string> = {
@@ -48,7 +49,7 @@ export async function callBackendApi<T = unknown>(
   endpoint: string,
   options: RequestOptions = { method: "GET" },
 ): Promise<T> {
-  const { method = "GET", body, headers = {} } = options;
+  const { method = "GET", body, headers = {}, signal } = options;
 
   try {
     const base = (privateEnv.PRIVATE_DOTNET_API_BASE_URL || "").replace(
@@ -66,6 +67,7 @@ export async function callBackendApi<T = unknown>(
         "Content-Type": "application/json",
         ...headers,
       },
+      signal,
     };
 
     if (body) {
@@ -212,7 +214,7 @@ export const randomizeApi = {
   /**
    * Creates a new randomization based on the provided options (or mock response in test mode)
    */
-  create: async (options: unknown) => {
+  create: async (options: unknown, signal?: AbortSignal) => {
     // Check if we're in local test mode
     if (privateEnv.LOCAL_TEST_MODE === "true") {
       const games = deriveMockGameIds(options);
@@ -240,6 +242,7 @@ export const randomizeApi = {
     return await callBackendApi("randomize", {
       method: "POST",
       body: options,
+      signal,
     });
   },
 };

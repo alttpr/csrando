@@ -217,7 +217,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     // Race mode controls public visibility only. Always retain spoilers for admin diagnostics.
     // The Preset attribution block is intentionally NOT forwarded to the generator.
     const generatorRequest = { Seed, IncludeSpoiler: true, Configs };
-    const randomizeResponseRaw = await randomizeApi.create(generatorRequest);
+    const randomizeResponseRaw = await randomizeApi.create(
+      generatorRequest,
+      request.signal,
+    );
 
     const parsedResponse =
       RandomizerResponseSchema.safeParse(randomizeResponseRaw);

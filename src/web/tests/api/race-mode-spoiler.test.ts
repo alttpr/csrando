@@ -158,11 +158,14 @@ describe("race mode spoilers", () => {
 
     expect(response.status).toBe(200);
     expect(payload).not.toHaveProperty("spoilerLog");
-    expect(createRandomizerMock).toHaveBeenCalledWith({
-      Seed: 0,
-      IncludeSpoiler: true,
-      Configs: [config],
-    });
+    expect(createRandomizerMock).toHaveBeenCalledWith(
+      {
+        Seed: 0,
+        IncludeSpoiler: true,
+        Configs: [config],
+      },
+      expect.any(AbortSignal),
+    );
     expect(storedSeed).toMatchObject({
       options: expect.objectContaining({
         IncludeSpoiler: false,
