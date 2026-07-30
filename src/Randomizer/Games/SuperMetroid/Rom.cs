@@ -839,7 +839,9 @@ public class Rom : GameRom
                 .Any(edge => !ReferenceEquals(edge.To.World, world)))
             .ToDictionary(room => room.RoomName);
 
-        for (int i = 0; i < 0x8000; i += 2)
+        // The six randomized map areas occupy $B58000-$B5DFFF. Keep the
+        // remaining $B5E000-$B5FFFF free for code installed by the base patch.
+        for (int i = 0; i < 6 * 0x1000; i += 2)
         {
             Write((SNES)(0xB58000 + i), new byte[] { 0x1F, 0x00 });
         }

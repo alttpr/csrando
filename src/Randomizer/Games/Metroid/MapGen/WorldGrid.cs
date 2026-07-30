@@ -282,6 +282,44 @@ public class WorldGrid
     }
 
     /// <summary>
+    /// Extends a vertical run past its top cap: the old cap becomes a body cell and the
+    /// run gains <paramref name="extra"/> cells above it, starting with a fresh cap. The
+    /// caller must have verified the new coordinates with <see cref="CanPlace"/>. Follows
+    /// the PlaceRun cap convention: no scroll edges on or toward the cap cell.
+    /// </summary>
+    public void ExtendRunUp(Run run, int extra, CellRole bodyRole)
+    {
+        if (run.Axis != Scrolling.Vertical || run.Cells.Count < 2 || run.Cells[0].Role != CellRole.Cap)
+            throw new InvalidOperationException($"run cannot extend up: {run.Cells[0]}");
+
+        var oldCap = run.Cells[0];
+        oldCap.Role = bodyRole;
+        oldCap.SetEdge(Direction.Down, EdgeRequirement.Scroll);
+        run.Cells[1].SetEdge(Direction.Up, EdgeRequirement.Scroll);
+
+        var prev = oldCap;
+        var p = oldCap.Position.Step(Direction.Up);
+        for (int i = 0; i < extra; i++)
+        {
+            bool isCap = i == extra - 1;
+            var cell = new AbstractCell
+            {
+                Position = p, Area = run.Area, Axis = run.Axis, Run = run,
+                Role = isCap ? CellRole.Cap : bodyRole
+            };
+            if (!isCap)
+            {
+                prev.SetEdge(Direction.Up, EdgeRequirement.Scroll);
+                cell.SetEdge(Direction.Down, EdgeRequirement.Scroll);
+            }
+            Place(cell);
+            run.Cells.Insert(0, cell);
+            prev = cell;
+            p = p.Step(Direction.Up);
+        }
+    }
+
+    /// <summary>
     /// Connects two horizontally adjacent cells with a door (sets both facing edges and records the link).
     /// Each cell's own door color gates traversal leaving through it.
     /// </summary>
@@ -354,7 +392,12 @@ public class WorldGrid
 
             switch (required)
             {
-                case EdgeRequirement.Scroll when actual.Type != ConnectorType.Scroll:
+                // Forced cells may satisfy a scroll seam with a tunnel opening: the
+                // generator plants vanilla morph-tunnel triples (0x25|0x24|0x26 etc.)
+                // whose interior seams are tunnel-to-tunnel exactly as in vanilla rooms.
+                // Unforced cells stay strict so the fitter never invents tunnel seams.
+                case EdgeRequirement.Scroll when actual.Type != ConnectorType.Scroll
+                    && !(cell.ForcedScreenId.HasValue && actual.Type == ConnectorType.Tunnel):
                 case EdgeRequirement.Door when actual.Type != ConnectorType.Door:
                 case EdgeRequirement.Elevator when actual.Type != ConnectorType.Elevator:
                     return false;

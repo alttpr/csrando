@@ -1,10 +1,30 @@
 ---
 title: Changelog
 description: Notable updates to the Game Randomizer web app.
-lastUpdated: 2026-07-20
+lastUpdated: 2026-07-30
 ---
 
 # Randomizer Changes
+
+## 2026-07-30
+### Quad Randomizer - Version 0.5.3
+* Systems Changes
+  * Added per-game controller button remapping on the seed page — remap each game's buttons before downloading the patched ROM
+
+* Gameplay Changes
+  * Holding Start+Select+L+R in Super Metroid for 2 seconds now pops up a dialog asking to reset to the last portal location to prevent soft locks by saving in a one-way location
+    * Note that this will revert your saved progress to the point where you last entered SM through a portal
+  * Super Metroid map progress is now permanent and will stay even when progress is reverted
+  * Reworked Metroid 1 Map Shuffle generation for more interesting, less shaft-heavy maps
+    * Kraid, Norfair and Ridley are now built on multi-shaft skeletons instead of growing as one tall shaft with stacked corridors, and shaft length is capped so long empty climbs are gone
+    * Boss rooms usually anchor away from the area's elevator now — hanging off the entrance shaft can still happen, but it is rarer than any other placement
+    * Map stations are placed at a randomized depth into each area instead of always at the farthest possible point
+    * Added single-room door pockets, more loops and mid-shaft branching for a more maze-like feel
+    * Added gated morph passages outside Brinstar: Kraid's morph-pillar passage and the vanilla morph-tunnel sections of Brinstar and Norfair can now appear in generated maps
+    * Item locations are distributed in proportion to area size — Ridley stays sparse like vanilla while Norfair and Kraid carry more of the item pool
+  * Fixed Metroid 1 Map Shuffle room layout issues: physically incompatible screen combinations around the Dessgeega tunnel are excluded, and layouts that cannot be assembled from real screens are detected and retried during generation instead of failing the seed
+  * Fixed Metroid 1 screen data bugs (the Dessgeega Tunnel's internal tunnel connection and Kraid's double-door bottom shaft logic)
+  * Fixed playthrough generator issues that could stall spoiler playthrough generation
 
 ## 2026-07-20
 ### Website presets and administration

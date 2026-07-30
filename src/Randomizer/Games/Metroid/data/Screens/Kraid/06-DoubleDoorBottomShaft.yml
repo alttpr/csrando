@@ -20,7 +20,7 @@ nodes:
 edges:
   undirected:
       fixed:
-          - ["Top", "Bottom"]
-          - ["Left door", "Bottom"]
+          - ["Top", "Left door"]
       CanIBJ:
-          - ["Right door", "Bottom"]
+          - ["Right door", "Left door"]
+          - ["Right door", "Top"]

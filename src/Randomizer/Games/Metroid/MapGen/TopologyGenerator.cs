@@ -1,4 +1,4 @@
-namespace Randomizer.Games.Metroid.MapGen;
+﻿namespace Randomizer.Games.Metroid.MapGen;
 
 using System;
 using System.Collections.Generic;
@@ -45,14 +45,14 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// <summary>
     /// Scales the per-area cell-count goals. 1.0 targets the vanilla area sizes
     /// (Brinstar 130, Norfair 160, Kraid 100, Ridley 87). Targets are aspirational
-    /// (growth stops when space runs out — Ridley in particular rarely reaches vanilla
+    /// (growth stops when space runs out â€” Ridley in particular rarely reaches vanilla
     /// size in the band it gets); the scaled minimums are hard and trigger a retry.
     /// </summary>
     public double SizeScale { get; init; } = 1.0;
 
     /// <summary>
     /// Areas that get a cross-game portal room (see <see cref="DataLoader.PortalRoomAreas"/>
-    /// — always all built; rooms never connected to a portal stay inert dead ends).
+    /// â€” always all built; rooms never connected to a portal stay inert dead ends).
     /// </summary>
     public IReadOnlyList<Area> PortalAreas { get; init; } = [Area.Brinstar];
 
@@ -108,6 +108,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// <summary>Column half-width of a lower area's band, widened for above-vanilla scales.</summary>
     private int AreaHalfWidth => (int)Math.Round(16 * Math.Max(1.0, SizeScale));
 
+    /// <summary>Diagnostics hook: called with the failure reason of every failed attempt.</summary>
+    public Action<string>? AttemptFailed { get; init; }
+
     public GeneratedWorld Generate(int seed)
     {
         var failures = new List<string>();
@@ -131,8 +134,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 BuildTourianComplex();
                 PlaceConstructionZone();
                 BuildLowerArea(Area.Kraid, elevatorScreen: 0x1C, preferRight: false);
-                PlaceKraidLair();
+                BuildMiniSpine(Area.Kraid, Rand(1, 2));
                 BuildLowerArea(Area.Norfair, elevatorScreen: 0x0B, preferRight: true);
+                BuildMiniSpine(Area.Norfair, Rand(1, 2));
 
                 // Let Norfair claim some space before Ridley is hung off one of its shafts;
                 // otherwise Ridley always sits next to the entrance and boxes Norfair in.
@@ -142,13 +146,28 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 GrowArea(Area.Norfair, grid.CellsOf(Area.Norfair).Count() + 20, allowExtend: false);
 
                 BuildRidley();
-                PlaceRidleyLair();
+                BuildMiniSpine(Area.Ridley, 1);
                 PlaceChozoItemRooms();
                 PlacePortalAnchors();
-                GrowAreas();
+
+                // Lairs are placed AFTER targeted growth so the anchor pool holds every
+                // grown shaft, not just the entrance shaft â€” otherwise both boss rooms
+                // always dangle directly off the area's main shaft. Minimums are checked
+                // after the lairs so their complexes count toward area size, like they
+                // did when lairs were placed first. Under Saturate the saturation rounds
+                // then grow around the placed lair complexes (and re-check minimums).
+                GrowAreasTargeted();
+                densityRulesActive = false;
+                PlaceKraidLair();
+                PlaceRidleyLair();
+                if (Saturate)
+                    GrowAreasToSaturation();
+                else
+                    EnforceAreaMinimums();
+
                 PlaceMapStations();
                 EnsureItemCells();
-                PlaceHiddenBombWalls();
+                PlaceBombPassages();
                 ValidateWorld();
 
                 return new GeneratedWorld
@@ -164,6 +183,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
             catch (GenerationException e)
             {
                 failures.Add($"attempt {attempt}: {e.Message}");
+                AttemptFailed?.Invoke(e.Message);
             }
         }
 
@@ -171,6 +191,16 @@ public class TopologyGenerator(ScreenCatalog catalog)
             $"M1 topology generation failed after {MaxAttempts} attempts for seed {seed}. Last failures:\n" +
             string.Join("\n", failures.TakeLast(10)));
     }
+
+    private static int Chebyshev(Point a, Point b) =>
+        Math.Max(Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y));
+
+    /// <summary>
+    /// Score handicap for anchoring a boss lair on the area's entrance shaft. Doubled
+    /// distance plus 0-8 jitter means an entrance row must out-distance every other
+    /// shaft's rows by ~6+ cells to win — possible, but rarer than any other shaft.
+    /// </summary>
+    private const int EntranceAnchorPenalty = 12;
 
     private int Rand(int minInclusive, int maxInclusive) => rng.Next(minInclusive, maxInclusive + 1);
     private T Pick<T>(IReadOnlyList<T> list) => list.Count > 0 ? list[rng.Next(list.Count)]
@@ -181,7 +211,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
     /// <summary>
     /// Shaft cells that can take side doors: interiors (scroll both ways) and run ends
-    /// (one scroll edge) — vanilla constantly puts doors on bottom/top pieces like Ridley
+    /// (one scroll edge) â€” vanilla constantly puts doors on bottom/top pieces like Ridley
     /// 0x0C, and end pieces are the only right-door option in areas whose interior
     /// right-door bodies are internally one-way. Excludes caps and forced cells.
     /// </summary>
@@ -245,6 +275,25 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// <paramref name="doorSide"/> facing a run of <paramref name="neighborKind"/> can be
     /// filled by a real screen of the area.
     /// </summary>
+    /// <summary>
+    /// A plain one-screen room with a single blue door on <paramref name="doorSide"/> and no
+    /// other connectors, whose vanilla door faced a shaft. Boss and structural-item screens
+    /// are excluded (those belong to their dedicated placements).
+    /// </summary>
+    private bool SingleDoorRoomExists(Area area, Direction doorSide) =>
+        catalog.Query(area, Scrolling.Horizontal,
+            EdgeRequirement.Wall, EdgeRequirement.Wall,
+            doorSide == Direction.Left ? EdgeRequirement.Door : EdgeRequirement.Wall,
+            doorSide == Direction.Right ? EdgeRequirement.Door : EdgeRequirement.Wall,
+            leftNeighbor: doorSide == Direction.Left ? RunKind.MultiVertical : null,
+            rightNeighbor: doorSide == Direction.Right ? RunKind.MultiVertical : null)
+        .Any(p => p.Connector(doorSide).Color == DoorType.Blue && !p.HasBossLocation && !p.HasStructuralItem
+            // Truly closed on the other three edges (tunnels are sealed screen
+            // internals): a piece with extra scroll openings only fits while its
+            // neighbors stay empty, which a dense grown grid does not guarantee.
+            && Directions.All.Where(d => d != doorSide).All(d =>
+                p.Connector(d).Type is ConnectorType.None or ConnectorType.Tunnel));
+
     private bool CorridorEndExists(Area area, Direction doorSide, RunKind neighborKind, DoorType color = DoorType.Blue)
     {
         var candidates = doorSide == Direction.Left
@@ -505,7 +554,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
     /// <summary>
     /// The vanilla Construction Zone arrangement: a Brinstar shaft whose top piece (0x18)
-    /// has doors on both sides and a bombable floor — in vanilla it sits right of the start
+    /// has doors on both sides and a bombable floor â€” in vanilla it sits right of the start
     /// room and bombing through its floor is the route down to the Kraid elevator. Placed
     /// between two spine shafts at a shared row, with a short corridor on each side:
     ///
@@ -648,6 +697,112 @@ public class TopologyGenerator(ScreenCatalog catalog)
         throw new GenerationException($"could not place {area} elevator");
     }
 
+    /// <summary>
+    /// Gives a lower area a small spine before growth: extra shafts hung off the existing
+    /// ones via doored corridors, spaced a few columns out. Without this the lower areas
+    /// grow as a single tall comb off the entrance shaft — and the boss lair has nothing
+    /// but the entrance to anchor to. Brinstar reads well precisely because its spine
+    /// spreads it across several medium shafts before growth starts.
+    /// </summary>
+    private void BuildMiniSpine(Area area, int extraShafts)
+    {
+        for (int n = 0; n < extraShafts; n++)
+            if (!TryAddSpineShaft(area))
+                throw new GenerationException($"could not build the {area} mini spine");
+    }
+
+    private bool TryAddSpineShaft(Area area)
+    {
+        var profile = GrowthProfiles[area];
+        var (minX, maxX, minY, maxY) = bounds[area];
+        int topLimit = Math.Max(1, minY - 4);
+        int bottomLimit = Math.Min(30, maxY);
+
+        var preferred = rng.Next(100) < profile.WestPercent ? Direction.Left : Direction.Right;
+        foreach (var dir in new[] { preferred, Directions.Opposite(preferred) })
+        {
+            var nearSide = Directions.Opposite(dir);
+            if (!CorridorEndExists(area, nearSide, RunKind.MultiVertical)
+                || !CorridorEndExists(area, dir, RunKind.MultiVertical)
+                || !catalog.HasPiece(area, Scrolling.Vertical,
+                    EdgeRequirement.Scroll, EdgeRequirement.Scroll,
+                    dir == Direction.Right ? EdgeRequirement.Door : EdgeRequirement.Wall,
+                    dir == Direction.Right ? EdgeRequirement.Wall : EdgeRequirement.Door,
+                    leftNeighbor: dir == Direction.Right ? RunKind.MultiHorizontal : null,
+                    rightNeighbor: dir == Direction.Left ? RunKind.MultiHorizontal : null))
+                continue;
+
+            int sign = dir == Direction.Right ? 1 : -1;
+            foreach (var anchor in Shuffled(ShaftsOf(area).SelectMany(InteriorCells)))
+            {
+                if (!CanAddDoor(anchor, dir, RunKind.MultiHorizontal))
+                    continue;
+
+                // Retry shorter corridors before abandoning the anchor: cramped bands
+                // (Ridley's) rarely fit the long roll, and the spine is a hard
+                // requirement, so a failed roll here is a whole-world retry.
+                List<Point>? corridorCells = null;
+                List<Point>? shaftCells = null;
+                foreach (int corrLen in Enumerable.Range(2, Rand(3, 6) - 1).Reverse())
+                {
+                    var corridorTry = Enumerable.Range(1, corrLen)
+                        .Select(i => new Point(anchor.Position.X + sign * i, anchor.Position.Y)).ToList();
+                    var farEnd = corridorTry[^1].Step(dir);
+
+                    int maxUp = Math.Max(0, anchor.Position.Y - 1 - topLimit);
+                    int maxDown = Math.Max(0, bottomLimit - anchor.Position.Y - 1);
+                    int up = Math.Min(Rand(0, 3), maxUp);
+                    int down = Math.Min(Rand(2, 6), maxDown);
+                    if (up + down < 2)
+                    {
+                        down = Math.Min(2 - up, maxDown);
+                        if (up + down < 2)
+                            up = Math.Min(2 - down, maxUp);
+                    }
+                    if (down < 1 || up + down < 2)
+                        continue;
+                    int yTop = anchor.Position.Y - up - 1;
+                    var column = Enumerable.Range(0, up + down + 3)
+                        .Select(i => new Point(farEnd.X, yTop + i)).ToList();
+
+                    var all = corridorTry.Concat(column);
+                    if (all.Any(p => p.X < minX || p.X > maxX || p.Y < topLimit || p.Y > bottomLimit)
+                        || !all.All(grid.CanPlace))
+                        continue;
+
+                    corridorCells = corridorTry;
+                    shaftCells = column;
+                    break;
+                }
+                if (corridorCells == null)
+                    continue;
+
+                var corridorStart = dir == Direction.Right ? corridorCells[0] : corridorCells[^1];
+                var corridor = grid.PlaceRun(area, Scrolling.Horizontal, corridorStart, corridorCells.Count, CellRole.Corridor);
+                var nearEnd = dir == Direction.Right ? corridor.Cells[0] : corridor.Cells[^1];
+                if (dir == Direction.Right)
+                    grid.LinkDoor(anchor, nearEnd);
+                else
+                    grid.LinkDoor(nearEnd, anchor);
+
+                var shaft = grid.PlaceRun(area, Scrolling.Vertical, shaftCells![0], shaftCells.Count,
+                    CellRole.Shaft, capStart: true, capEnd: true);
+                var doorCell = shaft.Cells[anchor.Position.Y - shaftCells[0].Y];
+                var corridorFar = dir == Direction.Right ? corridor.Cells[^1] : corridor.Cells[0];
+                if (dir == Direction.Right)
+                    grid.LinkDoor(corridorFar, doorCell);
+                else
+                    grid.LinkDoor(doorCell, corridorFar);
+
+                ShaftsOf(area).Add(shaft);
+                MaybePlaceItem(corridor);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>Entrance run below an elevator: 0x01 spacer, 0x02 platform, bodies, bottom cap.</summary>
     private Run PlaceEntranceShaft(Area area, Point top, int length)
     {
@@ -708,27 +863,48 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// </summary>
     private void PlaceKraidLair()
     {
-        foreach (var shaft in Shuffled(ShaftsOf(Area.Kraid)))
+        // Far-from-elevator rows first, with a hefty penalty (not a ban) on the entrance
+        // shaft: even its deepest rows read as "the boss hangs off the main shaft under
+        // the elevator", and pure distance ordering kept picking them — vertical distance
+        // down the same shaft is still the same shaft. The penalty keeps entrance
+        // attachment possible but rarer than any other shaft.
+        var elevator = landmarks["KraidElevator"];
+        foreach (var shaftCell in ShaftsOf(Area.Kraid).SelectMany(InteriorCells)
+            .OrderByDescending(c => 2 * Chebyshev(c.Position, elevator) + rng.Next(9)
+                - (c.Run.Cells[0].ForcedScreenId == 0x01 ? EntranceAnchorPenalty : 0)))
         {
-            foreach (var shaftCell in Shuffled(InteriorCells(shaft)))
             {
                 if (!CanAddDoor(shaftCell, Direction.Left, RunKind.MultiHorizontal))
                     continue;
 
                 int y = shaftCell.Position.Y;
-                int corrLen = Rand(2, 3);
+                // Try every corridor length (shuffled) before giving up on this row: after
+                // growth most rows are partially occupied, and insisting on one rolled shape
+                // would leave the roomy entrance shaft as the only anchor that ever fits.
+                int? fitCorrLen = null;
+                foreach (int candidateLen in Shuffled(new[] { 2, 3 }))
+                {
+                    int candMiniX = shaftCell.Position.X - candidateLen - 1;
+                    int candLairX = candMiniX - 1;
+                    var candNeeded = new List<Point> { new(candLairX, y), new(candMiniX, y), new(candMiniX, y - 1) };
+                    candNeeded.AddRange(Enumerable.Range(candMiniX + 1, candidateLen).Select(x => new Point(x, y)));
+                    if (candLairX - 1 >= 0 && grid.CanPlace(new Point(candLairX - 1, y)) && candNeeded.All(grid.CanPlace))
+                    {
+                        fitCorrLen = candidateLen;
+                        break;
+                    }
+                }
+                if (fitCorrLen == null)
+                    continue;
+
+                int corrLen = fitCorrLen.Value;
                 int miniX = shaftCell.Position.X - corrLen - 1;
                 int lairX = miniX - 1;
-
-                var needed = new List<Point> { new(lairX, y), new(miniX, y), new(miniX, y - 1) };
-                needed.AddRange(Enumerable.Range(miniX + 1, corrLen).Select(x => new Point(x, y)));
 
                 // 0x1D (Kraid's Lair) has no real transition on its west side; the engine still
                 // scrolls Samus off the screen boundary there regardless of exit tiles, so the
                 // cell west of it must stay reserved-empty (matches vanilla's $FF map cell).
                 int westX = lairX - 1;
-                if (lairX < 0 || westX < 0 || !grid.CanPlace(new Point(westX, y)) || !needed.All(grid.CanPlace))
-                    continue;
 
                 var lair = grid.PlaceRun(Area.Kraid, Scrolling.Horizontal, new Point(lairX, y), 1, CellRole.Boss);
                 lair.Cells[0].ForcedScreenId = 0x1D;
@@ -758,24 +934,44 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// </summary>
     private void PlaceRidleyLair()
     {
-        foreach (var shaft in Shuffled(ShaftsOf(Area.Ridley)))
+        // Far-from-elevator rows first, with a hefty penalty (not a ban) on the entrance
+        // shaft: even its deepest rows read as "the boss hangs off the main shaft under
+        // the elevator", and pure distance ordering kept picking them — vertical distance
+        // down the same shaft is still the same shaft. The penalty keeps entrance
+        // attachment possible but rarer than any other shaft.
+        var elevator = landmarks["RidleyElevator"];
+        foreach (var shaftCell in ShaftsOf(Area.Ridley).SelectMany(InteriorCells)
+            .OrderByDescending(c => 2 * Chebyshev(c.Position, elevator) + rng.Next(9)
+                - (c.Run.Cells[0].ForcedScreenId == 0x01 ? EntranceAnchorPenalty : 0)))
         {
-            foreach (var shaftCell in Shuffled(InteriorCells(shaft)))
             {
                 if (!CanAddDoor(shaftCell, Direction.Left, RunKind.MultiHorizontal))
                     continue;
 
                 int y = shaftCell.Position.Y;
-                int eastLen = Rand(2, 4);
-                int lairX = shaftCell.Position.X - eastLen - 1;
-                int tankLen = Rand(2, 3);
-
-                var needed = new List<Point> { new(lairX, y) };
-                needed.AddRange(Enumerable.Range(lairX + 1, eastLen).Select(x => new Point(x, y)));
-                needed.AddRange(Enumerable.Range(lairX - tankLen, tankLen).Select(x => new Point(x, y)));
-
-                if (lairX - tankLen < 0 || !needed.All(grid.CanPlace))
+                // Try every complex shape (shuffled) before giving up on this row: Ridley's
+                // band is cramped, and insisting on one rolled shape would leave the roomy
+                // entrance shaft as the only anchor that ever fits.
+                (int East, int Tank)? fitShape = null;
+                foreach (var shape in Shuffled(
+                    from e in new[] { 2, 3, 4 } from t in new[] { 2, 3 } select (East: e, Tank: t)))
+                {
+                    int candLairX = shaftCell.Position.X - shape.East - 1;
+                    var candNeeded = new List<Point> { new(candLairX, y) };
+                    candNeeded.AddRange(Enumerable.Range(candLairX + 1, shape.East).Select(x => new Point(x, y)));
+                    candNeeded.AddRange(Enumerable.Range(candLairX - shape.Tank, shape.Tank).Select(x => new Point(x, y)));
+                    if (candLairX - shape.Tank >= 0 && candNeeded.All(grid.CanPlace))
+                    {
+                        fitShape = shape;
+                        break;
+                    }
+                }
+                if (fitShape == null)
                     continue;
+
+                int eastLen = fitShape.Value.East;
+                int tankLen = fitShape.Value.Tank;
+                int lairX = shaftCell.Position.X - eastLen - 1;
 
                 var lair = grid.PlaceRun(Area.Ridley, Scrolling.Horizontal, new Point(lairX, y), 1, CellRole.Boss);
                 lair.Cells[0].ForcedScreenId = 0x12;
@@ -852,7 +1048,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// <summary>
     /// The vanilla Varia arrangement: the chozo complex hangs off a two-piece tower instead
     /// of a main shaft. The tower bottom (0x1E) has doors on both sides under a breakable
-    /// ceiling — shoot and jump up, then the middle piece (0x2E) needs HiJump to reach the
+    /// ceiling â€” shoot and jump up, then the middle piece (0x2E) needs HiJump to reach the
     /// chozo corridor's door, exactly the vanilla Varia climb:
     ///
     ///   [cap, chozo] - red doors - [0x1A .. 0x28] - blue door - 0x2E   &lt;- cap above 0x2E
@@ -861,7 +1057,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// 0x1E has doors on both sides, like vanilla, with the tower sitting mid-corridor. The
     /// east door is the entry from the anchor shaft; the west door opens a corridor that
     /// terminates in a fresh shaft, so later growth sprawls Brinstar west off it like any
-    /// other shaft. A door must always be linked to a real room — unlike a scroll opening,
+    /// other shaft. A door must always be linked to a real room â€” unlike a scroll opening,
     /// it is not sealed by the engine against an empty cell.
     /// </summary>
     private bool TryPlaceVariaComplex((int Chozo, int PreWest, int PreEast) spec, AbstractCell shaftCell)
@@ -935,7 +1131,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// Best-effort westward growth for the Varia tower: a corridor running from 0x1E (at
     /// <paramref name="tower1E"/>) west past the chozo complex (columns capX..) into a fresh
     /// two-way vertical shaft, which is registered so <see cref="GrowAreas"/> sprawls Brinstar
-    /// west off it — the tower sitting mid-corridor like vanilla. All-or-nothing: places nothing
+    /// west off it â€” the tower sitting mid-corridor like vanilla. All-or-nothing: places nothing
     /// and returns false if the footprint does not fit (the caller then lays a short capped
     /// stub instead). The chozo must already be committed so the shaft column clears it.
     /// </summary>
@@ -1066,27 +1262,27 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// Places one map-station cell per area except Tourian, holding the fixed map pickup
     /// (custom item $CE) that reveals the area's automap. Runs after growth so depth is
     /// meaningful over the final layout: each station prefers a dedicated dead-end
-    /// corridor hung off a shaft cell far (by room-graph distance) from the area's entry
-    /// point, rewarding exploration. When the grown grid has no space left for a new
-    /// corridor (common near saturation), the deepest existing corridor cell that can
-    /// hold an item screen is converted instead — consuming a corridor cell
-    /// EnsureItemCells could otherwise use; an area too tight for both fails the
-    /// attempt like any other placement failure.
+    /// corridor hung off a shaft cell near a per-area ROLLED target depth â€” between
+    /// halfway and all the way out by room-graph distance from the entry. The station
+    /// still rewards exploration but is no longer always at the absolute far end of the
+    /// area. When the grown grid has no space left for a new corridor (common near
+    /// saturation), the existing corridor cell nearest the target depth that can hold
+    /// an item screen is converted instead â€” consuming a corridor cell EnsureItemCells
+    /// could otherwise use; an area too tight for both fails the attempt like any other
+    /// placement failure.
     /// </summary>
     private void PlaceMapStations()
     {
         foreach (var area in new[] { Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley })
         {
             var depths = AreaDepths(area);
+            int maxDepth = depths.Values.Max();
+            int targetDepth = Rand(maxDepth / 2, maxDepth);
 
-            // The deepest existing corridor cell that could hold the station sets the
-            // depth to beat: a dedicated room is nicer, but not at the cost of sitting
-            // near the entrance when a deeper conversion spot exists.
-            var conversion = DeepestConvertibleCell(area, depths);
-            int floor = conversion != null ? depths.GetValueOrDefault(conversion.Position) : 0;
-
-            if (TryPlaceMapStationRoom(area, depths, floor))
+            if (TryPlaceMapStationRoom(area, depths, targetDepth))
                 continue;
+
+            var conversion = ConvertibleCellNear(area, depths, targetDepth);
             if (conversion == null)
                 throw new GenerationException($"could not place a {area} map station");
 
@@ -1134,28 +1330,28 @@ public class TopologyGenerator(ScreenCatalog catalog)
     }
 
     /// <summary>
-    /// Hangs a dead-end map-station corridor off a deep shaft cell: door, two or three
-    /// walkable cells, solid cap at the far end. The station sits on the fittable cell
-    /// nearest the cap (reward at the end of the detour, like item corridors), and its
-    /// resulting depth (shaft depth + walk) must reach <paramref name="depthFloor"/>.
-    /// A placed corridor whose cells turn out not to fit any item screen simply stays
-    /// a plain dead-end corridor and the search moves on.
+    /// Hangs a dead-end map-station corridor off a shaft cell near the rolled target
+    /// depth: door, two or three walkable cells, solid cap at the far end. The station
+    /// sits on the fittable cell nearest the cap (reward at the end of the detour, like
+    /// item corridors). A placed corridor whose cells turn out not to fit any item
+    /// screen simply stays a plain dead-end corridor and the search moves on.
     /// </summary>
-    private bool TryPlaceMapStationRoom(Area area, Dictionary<Point, int> depths, int depthFloor)
+    private bool TryPlaceMapStationRoom(Area area, Dictionary<Point, int> depths, int targetDepth)
     {
+        // The quarter-depth floor keeps the graceful fallback (nothing fits near the
+        // target) from degrading all the way to a station greeting the player at the
+        // area entrance.
+        int depthFloor = depths.Values.Max() / 4;
         var candidates = ShaftsOf(area).SelectMany(InteriorCells)
-            .OrderByDescending(c => 2 * depths.GetValueOrDefault(c.Position) + rng.Next(4))
+            .Where(c => depths.GetValueOrDefault(c.Position) >= depthFloor)
+            .OrderBy(c => 2 * Math.Abs(depths.GetValueOrDefault(c.Position) - targetDepth) + rng.Next(4))
             .ToList();
 
         foreach (var shaftCell in candidates)
         {
             foreach (var side in Shuffled(new[] { Direction.Left, Direction.Right }))
             {
-                // Stretch a short roll to reach the depth floor rather than abandoning
-                // a side that a three-cell walk would satisfy.
-                int walk = Math.Max(Rand(2, 3), depthFloor - depths.GetValueOrDefault(shaftCell.Position));
-                if (walk > 3)
-                    continue;
+                int walk = Rand(2, 3);
                 int y = shaftCell.Position.Y;
                 var startX = side == Direction.Right ? shaftCell.Position.X + 1 : shaftCell.Position.X - walk - 1;
                 var cells = Enumerable.Range(startX, walk + 1).Select(x => new Point(x, y)).ToList();
@@ -1190,18 +1386,19 @@ public class TopologyGenerator(ScreenCatalog catalog)
         return false;
     }
 
-    /// <summary>The deepest existing corridor cell that could hold the map-station item.</summary>
-    private AbstractCell? DeepestConvertibleCell(Area area, Dictionary<Point, int> depths) =>
+    /// <summary>The existing corridor cell nearest the target depth that could hold the map-station item.</summary>
+    private AbstractCell? ConvertibleCellNear(Area area, Dictionary<Point, int> depths, int targetDepth) =>
         grid.CellsOf(area)
-            .Where(c => c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue)
-            .OrderByDescending(c => depths.GetValueOrDefault(c.Position))
+            .Where(c => c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue
+                && depths.GetValueOrDefault(c.Position) >= depths.Values.Max() / 4)
+            .OrderBy(c => Math.Abs(depths.GetValueOrDefault(c.Position) - targetDepth))
             .FirstOrDefault(c => catalog.ForArea(area).Any(p => p.HasItemLocation && grid.FitsStrict(catalog, p, c)));
 
     // ---------------------------------------------------------------- filler growth
 
     /// <summary>
     /// Per-area growth character. Connector corridors make dense vanilla-style ladder
-    /// blocks — Norfair's identity, but the reason Kraid and Ridley came out boxy, so they
+    /// blocks â€” Norfair's identity, but the reason Kraid and Ridley came out boxy, so they
     /// trade connectors for long reaching corridors. The west bias sends Kraid sprawling
     /// into the open quadrant below Tourian; Ridley leans the other way.
     /// </summary>
@@ -1210,28 +1407,45 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// <param name="LongCorridorPercent">Chance a branch corridor uses the long length range.</param>
     /// <param name="SpacedBranches">Reject branches directly above/below an existing parallel
     /// corridor, so growth makes spread-out trees instead of stacked ladder blocks.</param>
-    private sealed record GrowthProfile(int ConnectorPercent, int WestPercent, int LongCorridorPercent, bool SpacedBranches);
+    /// <param name="PocketPercent">Chance a branch iteration places a one-screen room behind a
+    /// door directly off the shaft (vanilla's item-room pattern) instead of a corridor â€”
+    /// door-gated pockets that read as maze texture.</param>
+    /// <param name="CycleDivisor">Cells per allowed loop (TryConnectShafts full connectors);
+    /// smaller means more loops.</param>
+    /// <param name="DeadEndDemotePercent">Chance a repeat connector between an already-joined
+    /// shaft pair demotes to a dead-end room instead of forming another loop.</param>
+    private sealed record GrowthProfile(int ConnectorPercent, int WestPercent, int LongCorridorPercent,
+        bool SpacedBranches, int PocketPercent, int CycleDivisor, int DeadEndDemotePercent);
 
     private static readonly Dictionary<Area, GrowthProfile> GrowthProfiles = new()
     {
-        [Area.Brinstar] = new(ConnectorPercent: 35, WestPercent: 50, LongCorridorPercent: 10, SpacedBranches: false),
-        // Norfair keeps its ladder blocks but rolls more long corridors, so at vanilla
-        // size it forms several connected blocks instead of one compact one.
-        [Area.Norfair] = new(ConnectorPercent: 30, WestPercent: 50, LongCorridorPercent: 35, SpacedBranches: false),
-        [Area.Kraid] = new(ConnectorPercent: 15, WestPercent: 70, LongCorridorPercent: 35, SpacedBranches: true),
-        // No spaced branches for Ridley: it grows in the cramped band above the bottom
-        // edge, where the spacing rule starves it below its size minimum.
-        [Area.Ridley] = new(ConnectorPercent: 25, WestPercent: 30, LongCorridorPercent: 25, SpacedBranches: false),
+        [Area.Brinstar] = new(ConnectorPercent: 35, WestPercent: 50, LongCorridorPercent: 10, SpacedBranches: false,
+            PocketPercent: 15, CycleDivisor: 16, DeadEndDemotePercent: 50),
+        // Norfair keeps its ladder blocks (connectors are exempt from branch spacing) but
+        // spaces its BRANCH corridors so dead-end combs stop stacking into solid slabs.
+        [Area.Norfair] = new(ConnectorPercent: 30, WestPercent: 50, LongCorridorPercent: 35, SpacedBranches: true,
+            PocketPercent: 12, CycleDivisor: 15, DeadEndDemotePercent: 50),
+        // Kraid keeps the high demotion: its long corridors make repeat connectors read
+        // as one solid chamber between two shafts, the exact look the demotion exists for.
+        [Area.Kraid] = new(ConnectorPercent: 15, WestPercent: 70, LongCorridorPercent: 35, SpacedBranches: true,
+            PocketPercent: 15, CycleDivisor: 20, DeadEndDemotePercent: 70),
+        // Spaced branches historically starved Ridley below its minimum, but with the
+        // band-clamped shaft spawns, upward extensions and the mini spine it now has the
+        // room — and its stacked corridor combs were the loudest player complaint. West
+        // bias at 45: west-frontier shafts have open west rows, which is what gives the
+        // lair complex (always west-extending) anchors besides the entrance shaft.
+        [Area.Ridley] = new(ConnectorPercent: 25, WestPercent: 45, LongCorridorPercent: 25, SpacedBranches: true,
+            PocketPercent: 15, CycleDivisor: 18, DeadEndDemotePercent: 50),
     };
 
-    private void GrowAreas()
+    /// <summary>
+    /// Grows every area toward its size target. Runs in Saturate mode too (before the
+    /// saturation rounds) so boss lairs can be placed against a mostly-grown map.
+    /// Minimums are NOT checked here â€” the boss lair complexes placed afterwards count
+    /// toward area size, so <see cref="EnforceAreaMinimums"/> runs after them.
+    /// </summary>
+    private void GrowAreasTargeted()
     {
-        if (Saturate)
-        {
-            GrowAreasToSaturation();
-            return;
-        }
-
         // Ridley first: it lives in the cramped bottom band and Norfair's shaft extensions
         // would dig into it before it gets a turn. Norfair right after (biggest vanilla area,
         // competes with Brinstar for the rows below the spine); Brinstar last since its
@@ -1240,11 +1454,18 @@ public class TopologyGenerator(ScreenCatalog catalog)
         {
             var (min, target) = GoalFor(area);
             // Goals are aspirational (growth stops when space runs out; only min is hard),
-            // so the floor sits at two thirds of the target — otherwise a low roll leaves an
+            // so the floor sits at two thirds of the target â€” otherwise a low roll leaves an
             // area hugging its minimum, which reads as starved.
             int floor = Math.Max(min + 5, target * 2 / 3);
-            GrowArea(area, Rand(floor, Math.Max(floor + 1, target)));
+            GrowArea(area, Rand(floor, Math.Max(floor + 1, target)), densityRules: true);
+        }
+    }
 
+    private void EnforceAreaMinimums()
+    {
+        foreach (var area in new[] { Area.Ridley, Area.Norfair, Area.Kraid, Area.Brinstar })
+        {
+            var (min, _) = GoalFor(area);
             if (grid.CellsOf(area).Count() < min)
                 throw new GenerationException($"{area} too small: {grid.CellsOf(area).Count()} < {min}");
         }
@@ -1252,7 +1473,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
     /// <summary>
     /// Nightmare growth: rounds of small growth chunks over all four areas until a full
-    /// round adds nothing anywhere. The round-robin keeps the space split fairly — one
+    /// round adds nothing anywhere. The round-robin keeps the space split fairly â€” one
     /// area growing to exhaustion first would wall the later ones in.
     /// </summary>
     private void GrowAreasToSaturation()
@@ -1289,7 +1510,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 throw new GenerationException($"{area} too small: {grid.CellsOf(area).Count()} < {min}");
         }
 
-        // How far saturation gets depends on the early layout — an unlucky arrangement
+        // How far saturation gets depends on the early layout â€” an unlucky arrangement
         // partitions the grid and walls growth out of whole regions. Nightmare promises
         // "as big as possible", so an under-saturated result retries a new layout.
         int total = grid.Cells.Count();
@@ -1306,15 +1527,19 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// shafts. The connectors are what produce vanilla's dense ladder blocks (parallel
     /// shafts joined by stacked corridor rows, like Norfair's missile rooms).
     /// </summary>
-    private void GrowArea(Area area, int goal, int? iterationBudget = null, bool allowExtend = true)
+    private void GrowArea(Area area, int goal, int? iterationBudget = null, bool allowExtend = true,
+        bool? densityRules = null)
     {
         var profile = GrowthProfiles[area];
         // Generous iteration budget: at vanilla-size goals most late iterations fail on
         // placement (occupied cells, no fitting screen), so attempts are cheap retries.
         int maxIterations = iterationBudget ?? Math.Max(120, goal * 20);
-        // Nightmare trades looks for bulk: the density rules would starve saturation
-        // (cramped areas like Ridley stall well below their minimums with rationed doors).
-        densityRulesActive = !Saturate;
+        // Nightmare trades looks for bulk: the density rules would starve the saturation
+        // rounds (cramped areas like Ridley stall well below their minimums with rationed
+        // doors). The TARGETED phase keeps the rules on even under Saturate â€” its goals
+        // are standard-scale, and rationed doors there leave the row gaps the boss lairs
+        // need before saturation densifies everything.
+        densityRulesActive = densityRules ?? !Saturate;
         for (int i = 0; i < maxIterations && grid.CellsOf(area).Count() < goal; i++)
         {
             int roll = rng.Next(100);
@@ -1336,12 +1561,21 @@ public class TopologyGenerator(ScreenCatalog catalog)
     private int ExtendPercent => SizeScale > 1.0 ? 20 : 12;
 
     /// <summary>
-    /// Extension feature: pops a shaft's bottom cap and deepens the run by a few cells,
-    /// re-capping the end. Extensions replenish the growth frontier — the door-density
+    /// Extension feature: pops a shaft's end cap and lengthens the run by a few cells,
+    /// re-capping the end. Extensions replenish the growth frontier â€” the door-density
     /// rules ration side-door slots per shaft, so without fresh shaft cells growth would
-    /// stall once every shaft's slots are spent — and they stretch areas downward, which
-    /// reads as sprawl instead of a block.
+    /// stall once every shaft's slots are spent â€” and they stretch areas along the grid,
+    /// which reads as sprawl instead of a block. Mostly downward; a 30% upward roll keeps
+    /// bottom-pinned areas (Ridley's shafts start at the band floor) from stalling once
+    /// their downward room is gone.
     /// </summary>
+    /// <summary>
+    /// Extension ceiling: shafts longer than this read as empty transit tubes (few door
+    /// slots per cell, long doorless stretches), which is the "shaft heavy" look player
+    /// feedback keeps flagging. Entrance shafts may roll slightly longer at birth.
+    /// </summary>
+    private const int MaxShaftLength = 11;
+
     private void TryExtendShaft(Area area)
     {
         var areaShafts = ShaftsOf(area);
@@ -1349,12 +1583,30 @@ public class TopologyGenerator(ScreenCatalog catalog)
             return;
 
         var shaft = Pick(areaShafts);
+        if (shaft.Cells.Count >= MaxShaftLength)
+            return;
+
+        var (_, _, minY, maxY) = bounds[area];
+        int extra = Math.Min(Rand(2, 5), MaxShaftLength - shaft.Cells.Count);
+
+        if (rng.Next(100) < 30)
+        {
+            var top = shaft.Cells[0];
+            if (top.Role != CellRole.Cap || top.ForcedScreenId.HasValue)
+                return;
+            int topLimit = Math.Max(1, minY - 4);
+            var upCells = Enumerable.Range(1, extra)
+                .Select(i => new Point(top.Position.X, top.Position.Y - i)).ToList();
+            if (upCells[^1].Y < topLimit || !upCells.All(grid.CanPlace))
+                return;
+            grid.ExtendRunUp(shaft, extra, CellRole.Shaft);
+            return;
+        }
+
         var cap = shaft.Cells[^1];
         if (cap.Role != CellRole.Cap || cap.ForcedScreenId.HasValue)
             return;
 
-        var (_, _, _, maxY) = bounds[area];
-        int extra = Rand(2, 5);
         var newCells = Enumerable.Range(1, extra)
             .Select(i => new Point(cap.Position.X, cap.Position.Y + i)).ToList();
         if (newCells[^1].Y > maxY || !newCells.All(grid.CanPlace))
@@ -1367,7 +1619,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// Connector feature: a corridor between two existing shafts of the area at a shared
     /// interior row. The first connection between a pair is a real two-door passage; once
     /// a pair is connected, further corridors between them become dead-end rooms attached
-    /// to only one of the shafts — stacked fully-connected rows read as one big chamber,
+    /// to only one of the shafts â€” stacked fully-connected rows read as one big chamber,
     /// while dead ends between the same shafts give the map maze-like pockets.
     /// </summary>
     private void TryConnectShafts(Area area)
@@ -1399,9 +1651,11 @@ public class TopologyGenerator(ScreenCatalog catalog)
         // always connected and every full connector here adds one more loop. Mazes are
         // trees plus a few loops: past the per-area cycle budget, connectors demote to
         // dead-end rooms (which keep the item-pocket texture without shortcuts).
-        int cycleBudget = Math.Max(2, grid.CellsOf(area).Count() / 25);
+        var connectProfile = GrowthProfiles[area];
+        int cycleBudget = Math.Max(2, grid.CellsOf(area).Count() / connectProfile.CycleDivisor);
         bool wantDeadEnd = areaCycles.GetValueOrDefault(area) >= cycleBudget
-            || connected >= 2 || (connected >= 1 && rng.Next(100) < 70);
+            || connected >= 2
+            || (connected >= 1 && rng.Next(100) < connectProfile.DeadEndDemotePercent);
         if (wantDeadEnd && len < 3)
             return;
         bool deadEnd = wantDeadEnd;
@@ -1480,12 +1734,42 @@ public class TopologyGenerator(ScreenCatalog catalog)
             return;
 
         // Bias toward the deeper cells of the shaft so areas expand downward into the
-        // unused bottom of the grid instead of clustering at their entrances.
+        // unused bottom of the grid instead of clustering at their entrances â€” but only
+        // half the time, so mid-shaft branches still appear and areas read as maze
+        // rather than bottom-hugging combs.
         var ordered = interior.OrderByDescending(c => c.Position.Y).ToList();
-        var cell = ordered[Math.Min(rng.Next(rng.Next(ordered.Count) + 1), ordered.Count - 1)];
+        var cell = rng.Next(2) == 0
+            ? Pick(ordered)
+            : ordered[Math.Min(rng.Next(rng.Next(ordered.Count) + 1), ordered.Count - 1)];
 
         var profile = GrowthProfiles[area];
         var dir = rng.Next(100) < profile.WestPercent ? Direction.Left : Direction.Right;
+
+        // Single-room pocket: vanilla's item-room pattern â€” a one-screen room behind a
+        // door directly off a shaft cell. One cell, so it fits where corridors cannot
+        // (dense grids, Ridley's band), and the extra doors are what make shafts read
+        // as maze texture instead of a comb of scroll stubs. The pocket's door faced a
+        // shaft in vanilla (context-checked); the shaft side faces a single-cell room,
+        // which any door accepts.
+        if (rng.Next(100) < profile.PocketPercent)
+        {
+            var pocketPos = cell.Position.Step(dir);
+            var (pMinX, pMaxX, pMinY, pMaxY) = bounds[area];
+            if (CanAddDoor(cell, dir, RunKind.SingleCell)
+                && SingleDoorRoomExists(area, dir == Direction.Right ? Direction.Left : Direction.Right)
+                && pocketPos.X >= pMinX && pocketPos.X <= pMaxX && pocketPos.Y >= pMinY && pocketPos.Y <= pMaxY
+                && grid.CanPlace(pocketPos))
+            {
+                var pocket = grid.PlaceRun(area, Scrolling.Horizontal, pocketPos, 1, CellRole.Corridor);
+                if (dir == Direction.Right)
+                    grid.LinkDoor(cell, pocket.Cells[0]);
+                else
+                    grid.LinkDoor(pocket.Cells[0], cell);
+                MaybePlaceItem(pocket);
+            }
+            return;
+        }
+
         if (!CanAddDoor(cell, dir, RunKind.MultiHorizontal))
             return;
 
@@ -1530,6 +1814,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
         var (minX, maxX, minY, maxY) = bounds[area];
         int sign = dir == Direction.Right ? 1 : -1;
 
+        bool Inside(IEnumerable<Point> ps) =>
+            !ps.Any(p => p.X < minX || p.X > maxX || p.Y < minY || p.Y > maxY);
+
         List<Point>? corridorCells = null;
         List<Point>? shaftCells = null;
         int doorRowIndex = 0;
@@ -1538,22 +1825,37 @@ public class TopologyGenerator(ScreenCatalog catalog)
         {
             var cells = Enumerable.Range(1, tryLen)
                 .Select(i => new Point(cell.Position.X + sign * i, cell.Position.Y)).ToList();
+            var farEnd = cells[^1].Step(dir);
 
             // Without a new shaft the corridor ends in a cap cell.
-            var farEnd = cells[^1].Step(dir);
             if (!extendWithShaft)
                 cells.Add(farEnd);
 
-            if (cells.Any(p => p.X < minX || p.X > maxX || p.Y < minY || p.Y > maxY)
-                || !cells.All(grid.CanPlace))
+            if (!Inside(cells) || !cells.All(grid.CanPlace))
                 continue;
 
             if (extendWithShaft)
             {
-                int up = Rand(0, 4);
-                int down = Rand(1, 8);
+                // Clamp the rolled extents to the area band instead of discarding the
+                // feature: cramped bands (Ridley's especially) otherwise roll out-of-bounds
+                // shafts so often that whole areas grow without ever spawning a second
+                // shaft â€” and the boss lair then has nothing but the entrance to anchor to.
+                int topLimit = Math.Max(1, minY - 4);
+                int bottomLimit = Math.Min(30, maxY);
+                int maxUp = Math.Max(0, cell.Position.Y - 1 - topLimit);
+                int maxDown = Math.Max(0, bottomLimit - cell.Position.Y - 1);
+                int up = Math.Min(Rand(0, 4), maxUp);
+                // Cap total length at MaxShaftLength: a freshly rolled 15-tall tube reads
+                // as an empty transit shaft no matter how growth dresses it later.
+                int down = Math.Min(Math.Min(Rand(1, 8), MaxShaftLength - 3 - up), maxDown);
                 if (up + down < 2)
-                    down = 2 - up;
+                {
+                    down = Math.Min(2 - up, maxDown);
+                    if (up + down < 2)
+                        up = Math.Min(2 - down, maxUp);
+                }
+                if (down < 1 || up + down < 2)
+                    continue;
                 int yTop = cell.Position.Y - up - 1;   // -1 for the top cap
                 int total = up + down + 3;             // body + two caps
 
@@ -1620,7 +1922,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (itemCandidates.Count == 0 || (!always && rng.Next(100) >= 75))
             return;
 
-        // In dead-end rooms the item goes to the back, behind the walk past the cap —
+        // In dead-end rooms the item goes to the back, behind the walk past the cap â€”
         // the classic reward-at-the-end-of-the-detour feel.
         var cap = corridor.Cells.FirstOrDefault(c => c.Role == CellRole.Cap);
         var pick = cap == null
@@ -1636,13 +1938,14 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// near vanilla's ~36 locations, while Large and Nightmare maps keep roughly the same
     /// item density instead of spreading the fixed vanilla pool over much larger worlds.
     /// </summary>
+    /// <summary>Hard ceiling on item locations, kept in sync with the ItemPooler's pool.</summary>
+    private int ItemLocationCap => Saturate ? 54 : Math.Max(31, (int)Math.Round(36 * SizeScale));
+
     private void EnsureItemCells()
     {
         const int HardMinimum = 31;
         const int AreaMinimum = 2;
-        int targetMaximum = Saturate
-            ? 54
-            : Math.Max(HardMinimum, (int)Math.Round(36 * SizeScale));
+        int targetMaximum = ItemLocationCap;
         int targetMinimum = Math.Max(HardMinimum, targetMaximum - 3);
         int target = Rand(targetMinimum, targetMaximum);
 
@@ -1677,6 +1980,31 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 throw new GenerationException($"{area} cannot hold {AreaMinimum} item locations");
         }
 
+        // Per-area shares keep the pool where the space is. Without them the edge-biased
+        // Interest ordering hoovers items into Ridley's small bottom band (denser in items
+        // than areas twice its size — player feedback), so Ridley is damped toward its
+        // vanilla sparseness and Norfair/Kraid are favored.
+        var shareWeights = new Dictionary<Area, double>
+        {
+            [Area.Brinstar] = 1.0,
+            [Area.Norfair] = 1.2,
+            [Area.Kraid] = 1.2,
+            [Area.Ridley] = 0.7,
+        };
+        double weightedTotal = shareWeights.Sum(kv => grid.CellsOf(kv.Key).Count() * kv.Value);
+        var areaTarget = shareWeights.ToDictionary(kv => kv.Key, kv =>
+            Math.Max(AreaMinimum,
+                (int)Math.Round(target * grid.CellsOf(kv.Key).Count() * kv.Value / weightedTotal)));
+
+        // Top up per area toward its share first, then fill any global shortfall from
+        // whatever fittable cells remain (share rounding and tight areas leave slack).
+        foreach (var cell in candidates)
+        {
+            if (Count() >= target)
+                break;
+            if (cell.Role == CellRole.Corridor && AreaCount(cell.Area) < areaTarget.GetValueOrDefault(cell.Area))
+                cell.Role = CellRole.Item;
+        }
         foreach (var cell in candidates)
         {
             if (Count() >= target)
@@ -1685,16 +2013,36 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 cell.Role = CellRole.Item;
         }
 
-        // Maps can organically overshoot through the growth rolls: demote surplus back
-        // to plain corridors, least interesting spots first. Forced item cells are
-        // structural (the morph pedestal, chozo rooms) and per-area minimums survive.
+        // Maps can organically overshoot through the growth rolls: demote surplus back to
+        // plain corridors — cells in over-share areas first, then least interesting spots.
+        // Forced item cells are structural (the morph pedestal, chozo rooms) and per-area
+        // minimums survive.
         foreach (var cell in grid.Cells.Where(c => c.Role == CellRole.Item && !c.ForcedScreenId.HasValue)
-            .OrderBy(c => Interest(c) + rng.Next(10)))
+            .OrderByDescending(c => AreaCount(c.Area) - areaTarget.GetValueOrDefault(c.Area, AreaMinimum))
+            .ThenBy(c => Interest(c) + rng.Next(10)))
         {
             if (Count() <= target)
                 break;
             if (AreaCount(cell.Area) > AreaMinimum)
                 cell.Role = CellRole.Corridor;
+        }
+
+        // Growth rolls can also land the right TOTAL in the wrong places (Ridley's
+        // guaranteed red-gate corridors overshoot its small share): move surplus items
+        // from over-share areas into under-share areas at constant total.
+        foreach (var cell in grid.Cells.Where(c => c.Role == CellRole.Item && !c.ForcedScreenId.HasValue)
+            .OrderByDescending(c => AreaCount(c.Area) - areaTarget.GetValueOrDefault(c.Area, AreaMinimum))
+            .ThenBy(c => Interest(c) + rng.Next(10))
+            .ToList())
+        {
+            if (AreaCount(cell.Area) <= Math.Max(AreaMinimum, areaTarget.GetValueOrDefault(cell.Area)))
+                continue;
+            var receiver = candidates.FirstOrDefault(c => c.Role == CellRole.Corridor
+                && AreaCount(c.Area) < areaTarget.GetValueOrDefault(c.Area));
+            if (receiver == null)
+                break;
+            cell.Role = CellRole.Corridor;
+            receiver.Role = CellRole.Item;
         }
 
         if (Count() < HardMinimum)
@@ -1705,50 +2053,137 @@ public class TopologyGenerator(ScreenCatalog catalog)
     }
 
     /// <summary>
-    /// Forces vanilla hidden bomb-block walls (Brinstar 0x1D and friends) into a few
-    /// corridor interiors, like the secret passages in vanilla's top-right corridor. Only
-    /// screens gated in BOTH directions qualify: a wall with a free direction could drop a
-    /// bombless player into a pocket it cannot leave, while a symmetric wall is only ever
-    /// crossed with bombs in inventory. The logic graph picks the requirement up from the
-    /// screen YAML. The start corridor is excluded so the no-equipment start guarantee
-    /// (spawn beside the morph pedestal) survives; Tourian keeps its fixed template.
+    /// Vanilla morph-tunnel triples, forced onto three consecutive corridor body cells.
+    /// Interior seams are tunnel-to-tunnel exactly as the screens sat in their vanilla
+    /// rooms (Brinstar room 0E03: 0x25|0x24|0x26; Norfair room 1614: 0x14|0x06|0x14), so
+    /// no novel seam physics are introduced; the outer seams stay ordinary scroll pairs.
+    /// The Kraid triple (0x13|0x19|0x12) is deliberately absent: 0x13 carries a red door
+    /// and can only anchor red-gated corridor ends, so Kraid relies on 0x12 instead.
+    /// Each entry is one line to disable if emulator verification finds a bad seam.
     /// </summary>
-    private void PlaceHiddenBombWalls()
+    private static readonly Dictionary<Area, int[]> TunnelChains = new()
+    {
+        [Area.Brinstar] = [0x25, 0x24, 0x26],
+        [Area.Norfair] = [0x14, 0x06, 0x14],
+    };
+
+    /// <summary>
+    /// Forces vanilla hidden bomb-block walls and gated morph passages into a few corridor
+    /// interiors, like the secret passages in vanilla's top-right corridor. Only screens
+    /// gated in BOTH directions qualify: a wall with a free direction could drop a
+    /// bombless player into a pocket it cannot leave. Plain walls (Brinstar 0x1D and
+    /// friends) go on corridor cells as before. Item-bearing gated screens (Kraid 0x12,
+    /// Morph one way / bombs back) additionally require a THROUGH run — door links at
+    /// both ends of the corridor — because their two directions need different equipment:
+    /// a player who crosses with only one of them must be able to continue out the other
+    /// side rather than being sealed in a dead end. The logic graph picks the requirements
+    /// up from the screen YAML. The start corridor is excluded so the no-equipment start
+    /// guarantee (spawn beside the morph pedestal) survives; Tourian keeps its template.
+    /// </summary>
+    private void PlaceBombPassages()
     {
         var startRun = grid.Cell(start)!.Run;
         int placed = 0;
 
+        bool SymmetricGated(ScreenProfile p) =>
+            p.Axis == Scrolling.Horizontal
+            && p.Left.Type == ConnectorType.Scroll && p.Right.Type == ConnectorType.Scroll
+            && p.Up.Type == ConnectorType.None && p.Down.Type == ConnectorType.None
+            && p.EdgesConnected(Direction.Left, Direction.Right)
+            && !p.FreeEdgePairs.Contains((Direction.Left, Direction.Right))
+            && !p.FreeEdgePairs.Contains((Direction.Right, Direction.Left))
+            && !p.HasBossLocation && !p.HasStartLocation
+            && !p.HasElevatorPlatform && !p.IsOneWay;
+
+        bool ThroughRun(AbstractCell c) =>
+            c.Run.Cells[0].Left == EdgeRequirement.Door
+            && c.Run.Cells[^1].Right == EdgeRequirement.Door;
+
         foreach (var area in new[] { Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley })
         {
-            var walls = catalog.ForArea(area).Where(p =>
-                p.Axis == Scrolling.Horizontal
-                && p.Left.Type == ConnectorType.Scroll && p.Right.Type == ConnectorType.Scroll
-                && p.Up.Type == ConnectorType.None && p.Down.Type == ConnectorType.None
-                && p.EdgesConnected(Direction.Left, Direction.Right)
-                && !p.FreeEdgePairs.Contains((Direction.Left, Direction.Right))
-                && !p.FreeEdgePairs.Contains((Direction.Right, Direction.Left))
-                && !p.HasItemLocation && !p.HasBossLocation && !p.HasStartLocation
-                && !p.HasElevatorPlatform && !p.IsOneWay).ToList();
-            if (walls.Count == 0)
-                continue;
+            var walls = catalog.ForArea(area).Where(p => SymmetricGated(p) && !p.HasItemLocation).ToList();
+            var itemWalls = catalog.ForArea(area).Where(p => SymmetricGated(p) && p.HasItemLocation).ToList();
 
             int wanted = Rand(1, 2);
             int areaPlaced = 0;
-            foreach (var cell in Shuffled(grid.CellsOf(area).Where(c =>
-                c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue && c.Run != startRun
-                && c.Left == EdgeRequirement.Scroll && c.Right == EdgeRequirement.Scroll)))
+
+            bool Force(AbstractCell cell, List<ScreenProfile> pieces)
             {
-                if (areaPlaced >= wanted)
-                    break;
-                cell.ForcedScreenId = Pick(walls).ScreenId;
-                landmarks[$"HiddenWall{placed}"] = cell.Position;
+                cell.ForcedScreenId = Pick(pieces).ScreenId;
+                landmarks[$"HiddenWall{area}{areaPlaced}"] = cell.Position;
                 areaPlaced++;
                 placed++;
+                return areaPlaced >= wanted;
             }
+
+            if (walls.Count > 0)
+            {
+                foreach (var cell in Shuffled(grid.CellsOf(area).Where(c =>
+                    c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue && c.Run != startRun
+                    && c.Left == EdgeRequirement.Scroll && c.Right == EdgeRequirement.Scroll)))
+                {
+                    if (Force(cell, walls))
+                        break;
+                }
+            }
+
+            if (itemWalls.Count > 0 && areaPlaced < wanted)
+            {
+                // Prefer an existing item cell on a through run; if none exists, promote a
+                // through-run corridor cell to an item location while the pool cap allows.
+                var candidates = grid.CellsOf(area).Where(c =>
+                    !c.ForcedScreenId.HasValue && c.Run != startRun && ThroughRun(c)
+                    && c.Left == EdgeRequirement.Scroll && c.Right == EdgeRequirement.Scroll);
+                var itemCell = Shuffled(candidates.Where(c => c.Role == CellRole.Item)).FirstOrDefault();
+                if (itemCell == null
+                    // Count like EnsureItemCells: Kraid's boss cell holds the energy tank.
+                    && grid.Cells.Count(c => c.Role == CellRole.Item
+                        || (c.Role == CellRole.Boss && c.ForcedScreenId == 0x1D)) < ItemLocationCap)
+                {
+                    itemCell = Shuffled(candidates.Where(c => c.Role == CellRole.Corridor)).FirstOrDefault();
+                    if (itemCell != null)
+                        itemCell.Role = CellRole.Item;
+                }
+                if (itemCell != null)
+                    Force(itemCell, itemWalls);
+            }
+
+            PlaceTunnelChain(area, startRun);
         }
 
         if (placed == 0)
             throw new GenerationException("no hidden bomb wall placed");
+    }
+
+    /// <summary>
+    /// Forces the area's vanilla morph-tunnel triple onto three consecutive corridor body
+    /// cells (scroll seams on both sides of every cell, so runs need enough interior).
+    /// Best effort: dense grids without a long enough corridor simply go without. The
+    /// gates are symmetric (Morph/bombs both ways in the screen YAML), so either end can
+    /// always back out the way it came; the logic graph carries the requirements.
+    /// </summary>
+    private void PlaceTunnelChain(Area area, Run startRun)
+    {
+        if (!TunnelChains.TryGetValue(area, out var screens))
+            return;
+
+        foreach (var run in Shuffled(grid.Runs.Where(r =>
+            r.Axis == Scrolling.Horizontal && r != startRun
+            && r.Cells.Count >= screens.Length + 2 && r.Cells[0].Area == area)))
+        {
+            foreach (int i in Shuffled(Enumerable.Range(1, run.Cells.Count - screens.Length - 1)))
+            {
+                var span = run.Cells.Skip(i).Take(screens.Length).ToList();
+                if (!span.All(c => c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue
+                    && c.Left == EdgeRequirement.Scroll && c.Right == EdgeRequirement.Scroll))
+                    continue;
+
+                for (int j = 0; j < screens.Length; j++)
+                    span[j].ForcedScreenId = screens[j];
+                landmarks[$"TunnelChain{area}"] = span[screens.Length / 2].Position;
+                return;
+            }
+        }
     }
 
     // ---------------------------------------------------------------- validation
@@ -1759,6 +2194,15 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (fitErrors.Count > 0)
             throw new GenerationException("fittability: " + fitErrors[0] + $" (+{fitErrors.Count - 1} more)");
 
+        // Per-cell fittability is not enough: directional seam exclusions can leave a run
+        // with no compatible screen SEQUENCE (e.g. a length-2 red corridor in Ridley, where
+        // the only red-door piece 0x25 may only neighbor 0x26). Such layouts must retry
+        // here instead of failing later in ScreenFitter, which has no retry.
+        foreach (var run in grid.Runs)
+            if (!ScreenFitter.CanFitRun(grid, catalog, run))
+                throw new GenerationException(
+                    $"no screen sequence fits {run.Area} {run.Axis} run of length {run.Cells.Count}");
+
         var reachProblems = AxisSolver.Validate(grid, start);
         if (reachProblems.Count > 0)
             throw new GenerationException("reachability: " + reachProblems[0] + $" (+{reachProblems.Count - 1} more)");
@@ -1768,7 +2212,8 @@ public class TopologyGenerator(ScreenCatalog catalog)
             throw new GenerationException($"expected 4 elevator links, found {elevators}");
 
         foreach (var required in new[] { "Start", "StatuesGate", "TourianElevator", "MotherBrain", "EscapeShaft",
-                                         "Kraid", "Ridley", "ConstructionZone", "VariaShaft", "HiddenWall0",
+                                         "Kraid", "Ridley", "ConstructionZone", "VariaShaft",
+                                         "HiddenWallBrinstar0", "HiddenWallKraid0",
                                          "BrinstarMapStation", "NorfairMapStation", "KraidMapStation", "RidleyMapStation" })
             if (!landmarks.ContainsKey(required))
                 throw new GenerationException($"missing landmark {required}");

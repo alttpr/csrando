@@ -407,6 +407,30 @@ public class ScreenCatalog
                 connectors[dir] = EdgeConnector.Tunnel;
         }
 
+        // Every edge endpoint must name a declared node. Lookups elsewhere are
+        // case-sensitive and silently create orphan graph vertices on a miss (Ridley
+        // 0x26 shipped with "Left tunnel" vs the declared "Left Tunnel"), so catch
+        // typos here where they fail the whole catalog build.
+        var declaredNodes = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var door in screen.nodes?.doors ?? [])
+            declaredNodes.Add(door.name);
+        foreach (var exit in screen.nodes?.exits ?? [])
+            declaredNodes.Add(exit.name);
+        foreach (var location in screen.nodes?.locations ?? [])
+            declaredNodes.Add(location.name);
+        foreach (var (_, edgeList) in (screen.edges?.undirected ?? [])
+            .Concat(screen.edges?.directed ?? []))
+        {
+            foreach (var edge in edgeList)
+            {
+                foreach (var node in ((List<object>)edge).Cast<string>())
+                {
+                    if (!declaredNodes.Contains(node))
+                        errors.Add($"{id}: edge references undeclared node '{node}'");
+                }
+            }
+        }
+
         var locations = screen.nodes?.locations ?? [];
         var itemLocations = locations.Where(l => l.type == LocationType.Item).ToList();
 

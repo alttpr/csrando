@@ -118,6 +118,36 @@ internal sealed class ItemPooler : IItemPooler
                     new PooledItem(ItemSetName.DefaultSet, 9999, trash),
                     m1Nothing.Count));
             }
+            else if (world.SMWorld != null)
+            {
+                // No Zelda game to supply trash: pad with SM ammo packs instead. The
+                // in-game pickup adds without clamping, so the pack caps here are the
+                // only thing keeping the counters at 255/95/95.
+                var smWorld = world.SMWorld;
+                int Packs(string name) => pool.Count(item =>
+                    ReferenceEquals(item.Item.World, smWorld) && item.Item.Name == name);
+                // Largest-headroom-first keeps the mix roughly proportional without
+                // spending PRNG; ties resolve in array order.
+                var names = new[] { "Missile", "PowerBomb", "Super" };
+                var left = new[]
+                {
+                    SuperMetroid.ItemPooler.MaximumMissilePacks - Packs("Missile"),
+                    SuperMetroid.ItemPooler.MaximumPowerBombPacks - Packs("PowerBomb"),
+                    SuperMetroid.ItemPooler.MaximumSuperPacks - Packs("Super"),
+                };
+                foreach (var nothing in m1Nothing)
+                {
+                    int pick = 0;
+                    for (int i = 1; i < left.Length; i++)
+                        if (left[i] > left[pick])
+                            pick = i;
+                    if (left[pick] <= 0)
+                        break;
+                    left[pick]--;
+                    pool.Remove(nothing);
+                    pool.Add(new PooledItem(ItemSetName.DefaultSet, 9001, smWorld.GetItem(names[pick])));
+                }
+            }
         }
 
         return pool;

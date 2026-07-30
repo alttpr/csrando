@@ -6,6 +6,12 @@ namespace Randomizer.Games.SuperMetroid;
 /// <param name="worlds">worlds to get Item pools for</param>
 internal sealed class ItemPooler : IItemPooler
 {
+    // SM ammo counters cap at 255 missiles and 95 supers / power bombs (the HUD draws
+    // supers and power bombs with two digits). Packs are 5 units each, and the pickup
+    // routine adds without clamping, so pool-side pack caps are the only overflow guard.
+    internal const int MaximumMissilePacks = 51;   // 255 / 5
+    internal const int MaximumSuperPacks = 19;     // 95 / 5
+    internal const int MaximumPowerBombPacks = 19; // 95 / 5
 
     private readonly PRNG _prng;
 

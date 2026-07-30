@@ -83,6 +83,42 @@ public static class ScreenFitter
     }
 
     /// <summary>
+    /// Existence check used by topology validation: is there ANY compatible screen sequence
+    /// for the run? Directional seam exclusions make some per-cell-fittable runs unfittable
+    /// as a sequence (e.g. a short red-door corridor whose only red piece has a single legal
+    /// neighbor), and topology must retry such layouts rather than die in the fitter.
+    /// </summary>
+    public static bool CanFitRun(WorldGrid grid, ScreenCatalog catalog, Run run)
+    {
+        var failedStates = new HashSet<(int Index, int? PreviousScreen)>();
+
+        bool Fits(int index, ScreenProfile? previous)
+        {
+            if (index == run.Cells.Count)
+                return true;
+            if (failedStates.Contains((index, previous?.ScreenId)))
+                return false;
+
+            var cell = run.Cells[index];
+            foreach (var candidate in catalog.ForArea(cell.Area))
+            {
+                if (!grid.FitsStrict(catalog, candidate, cell))
+                    continue;
+                if (previous != null && !catalog.ScreensCanConnect(previous,
+                        run.Axis == Scrolling.Horizontal ? Direction.Right : Direction.Down, candidate))
+                    continue;
+                if (Fits(index + 1, candidate))
+                    return true;
+            }
+
+            failedStates.Add((index, previous?.ScreenId));
+            return false;
+        }
+
+        return Fits(0, null);
+    }
+
+    /// <summary>
     /// Counts the cell's committed edge pairs the screen only connects with items or in
     /// one direction — fall pieces and freeze-to-climb shafts. They are legal (the logic
     /// graph carries the requirements), but a shaft built out of them plays as one-way or

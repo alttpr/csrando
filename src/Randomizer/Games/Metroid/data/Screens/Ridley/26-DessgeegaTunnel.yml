@@ -26,6 +26,6 @@ edges:
   undirected:
       fixed:
           - ["Left", "Right"]
-          - ["Left tunnel", "Right tunnel"]
+          - ["Left Tunnel", "Right Tunnel"]
       UseBombs:
           - ["Right", "Left Tunnel"]

@@ -162,9 +162,13 @@ public sealed class PortalTests
                 "map-rando logic must start in the same room as the ROM");
 
             var rom = new MemoryRom();
+            byte[] mapPersistenceCode = [0x22, 0x34, 0x12, 0xB5];
+            rom.Write((SNES)0xB5F07F, mapPersistenceCode);
             Randomizer.Games.SuperMetroid.RomWriter.Write(rom, sm, new PRNG(42));
 
             CollectionAssert.AreEqual(Words(1), rom.Read(0x3F020C, 2), "map randomization flag");
+            CollectionAssert.AreEqual(mapPersistenceCode, rom.Read((SNES)0xB5F07F, mapPersistenceCode.Length),
+                "map generation must preserve base-patch code in unused bank B5 map space");
 
             // The initial SRAM template selects the new Crateria station and the generated
             // map area containing the map room.

@@ -13,14 +13,21 @@ using Z3Config = Randomizer.Games.Alttp.Config;
 [DoNotParallelize]
 public sealed class ComboCombinationTest
 {
-    private static WorldConfig CreateConfig(bool alttp, bool sm, bool z1, bool m1) => new()
+    private static WorldConfig CreateConfig(
+        bool alttp, bool sm, bool z1, bool m1, M1Config? metroid = null) => new()
     {
         Game = RandomizerTarget.Combo,
         Combo = new ComboConfig(),
         Alttp = alttp ? new Z3Config() : null,
         SuperMetroid = sm ? new SMConfig() : null,
         Zelda1 = z1 ? new Z1Config { Triforces = "8" } : null,
-        Metroid = m1 ? new M1Config() : null,
+        Metroid = m1 ? metroid ?? new M1Config() : null,
+    };
+
+    private static M1Config NightmareMapConfig => new()
+    {
+        MapShuffle = true,
+        MapSize = Randomizer.Games.Metroid.MapSizeOption.Nightmare,
     };
 
     [TestMethod]
@@ -55,15 +62,16 @@ public sealed class ComboCombinationTest
     }
 
     [TestMethod]
-    [DataRow(true, false, "FiveRupees")]
-    [DataRow(false, true, "Rupee5")]
-    [DataRow(false, false, "Nothing")]
+    [DataRow(true, true, false, "FiveRupees")]
+    [DataRow(false, true, true, "Rupee5")]
+    [DataRow(false, true, false, "Missile")]
+    [DataRow(false, false, false, "Nothing")]
     public void M1Padding_UsesGlobalTrashWhenAvailable(
-        bool alttp, bool z1, string expectedFiller)
+        bool alttp, bool sm, bool z1, string expectedFiller)
     {
         var graph = new Randomizer.Graph.Graph();
         var world = new Randomizer.Games.Combo.World(
-            0, CreateConfig(alttp, sm: true, z1, m1: true), graph, new PRNG(1337));
+            0, CreateConfig(alttp, sm, z1, m1: true), graph, new PRNG(1337));
         var pooler = new Randomizer.Games.Combo.ItemPooler([world], new PRNG(1337));
         int emptyLocations = pooler.SetLocations[ItemSetName.DefaultSet]
             .Distinct()
@@ -88,6 +96,64 @@ public sealed class ComboCombinationTest
             Assert.IsTrue(pooler.Pool.Count(item => item.Item.Name == expectedFiller)
                 >= m1Padding);
         }
+    }
+
+    private static int SmAmmoPacks(
+        Randomizer.Games.Combo.ItemPooler pooler, IWorld smWorld, string name) =>
+        pooler.Pool.Count(item =>
+            ReferenceEquals(item.Item.World, smWorld) && item.Item.Name == name);
+
+    [TestMethod]
+    public void M1Padding_ConvertsToSmAmmoUpToCaps()
+    {
+        var config = CreateConfig(alttp: false, sm: true, z1: false, m1: true, NightmareMapConfig);
+        var graph = new Randomizer.Graph.Graph();
+        var world = new Randomizer.Games.Combo.World(0, config, graph, new PRNG(1337));
+        var pooler = new Randomizer.Games.Combo.ItemPooler([world], new PRNG(1337));
+        int emptyLocations = pooler.SetLocations[ItemSetName.DefaultSet]
+            .Distinct()
+            .Count(location => location.Item == null);
+        int m1Padding = Math.Max(0,
+            world.M1World!.GetLocationsOfType(VertexType.Item).Count()
+                - Randomizer.Games.Metroid.ItemPooler.MaximumNonNothingItems);
+
+        Assert.IsTrue(m1Padding > 0, "Nightmare maps should need padding");
+        Assert.AreEqual(emptyLocations, pooler.Pool.Length);
+        Assert.IsFalse(pooler.Pool.Any(item =>
+            ReferenceEquals(item.Item.World, world.M1World)
+            && item.Item.Name == "Nothing"));
+
+        int missiles = SmAmmoPacks(pooler, world.SMWorld!, "Missile");
+        int supers = SmAmmoPacks(pooler, world.SMWorld!, "Super");
+        int powerBombs = SmAmmoPacks(pooler, world.SMWorld!, "PowerBomb");
+        Assert.IsTrue(missiles <= Randomizer.Games.SuperMetroid.ItemPooler.MaximumMissilePacks,
+            $"{missiles} missile packs exceed the 255-unit cap");
+        Assert.IsTrue(supers <= Randomizer.Games.SuperMetroid.ItemPooler.MaximumSuperPacks,
+            $"{supers} super packs exceed the 95-unit cap");
+        Assert.IsTrue(powerBombs <= Randomizer.Games.SuperMetroid.ItemPooler.MaximumPowerBombPacks,
+            $"{powerBombs} power bomb packs exceed the 95-unit cap");
+        Assert.AreEqual(66 + m1Padding, missiles + supers + powerBombs,
+            "every padded slot should become an SM ammo pack (base SM pool is 41+15+10)");
+    }
+
+    [TestMethod]
+    public void M1Padding_PrefersRupeesOverSmAmmo()
+    {
+        var config = CreateConfig(alttp: true, sm: true, z1: true, m1: true, NightmareMapConfig);
+        var graph = new Randomizer.Graph.Graph();
+        var world = new Randomizer.Games.Combo.World(0, config, graph, new PRNG(1337));
+        var pooler = new Randomizer.Games.Combo.ItemPooler([world], new PRNG(1337));
+        int m1Padding = Math.Max(0,
+            world.M1World!.GetLocationsOfType(VertexType.Item).Count()
+                - Randomizer.Games.Metroid.ItemPooler.MaximumNonNothingItems);
+
+        Assert.IsTrue(m1Padding > 0, "Nightmare maps should need padding");
+        Assert.AreEqual(66,
+            SmAmmoPacks(pooler, world.SMWorld!, "Missile")
+                + SmAmmoPacks(pooler, world.SMWorld!, "Super")
+                + SmAmmoPacks(pooler, world.SMWorld!, "PowerBomb"),
+            "Zelda trash takes priority: the SM ammo pool must stay at its base 41+15+10");
+        Assert.IsTrue(pooler.Pool.Count(item => item.Item.Name == "FiveRupees") >= m1Padding);
     }
 
     [TestMethod]

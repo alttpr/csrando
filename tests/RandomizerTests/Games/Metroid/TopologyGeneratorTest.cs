@@ -183,18 +183,19 @@ public sealed class TopologyGeneratorTest
                 Assert.AreEqual(CellRole.MapStation, cell.Role, $"seed {seed}: {area}");
                 Assert.AreEqual(area, cell.Area, $"seed {seed}: {area} station in the wrong area");
 
-                // Depth check: the station must sit beyond the median room-graph distance
-                // from the area entry (start cell / elevator platform), so it rewards
-                // exploring rather than greeting the player at the entrance.
+                // Depth check: the station targets a rolled depth between half and all of
+                // the area's max, so it can land mid-area but must never greet the player
+                // at the entrance. 30% of max leaves slack under the 50% roll floor for
+                // fallback conversions near a shallow target.
                 var entry = area == Area.Brinstar
                     ? world.Start
                     : grid.Links.Where(l => l.Type == LinkType.Elevator)
                         .Select(l => l.B.Step(Direction.Down))
                         .First(p => grid.Cell(p)?.Area == area);
                 var depths = Bfs(grid, entry, area);
-                var median = depths.Values.Order().ElementAt(depths.Count / 2);
-                Assert.IsTrue(depths[pos] >= median,
-                    $"seed {seed}: {area} station depth {depths[pos]} below the median {median}");
+                var maxDepth = depths.Values.Max();
+                Assert.IsTrue(depths[pos] * 10 >= maxDepth * 3,
+                    $"seed {seed}: {area} station depth {depths[pos]} below 30% of max depth {maxDepth}");
             }
 
             Assert.IsFalse(grid.CellsOf(Area.Tourian).Any(c => c.Role == CellRole.MapStation),
@@ -451,13 +452,115 @@ public sealed class TopologyGeneratorTest
     }
 
     [TestMethod]
+    public void Generate_BossLairsAttachToVariedShafts()
+    {
+        // Lairs are placed after growth so their host shaft is drawn from every grown
+        // shaft. Attaching to the entrance shaft stays possible, but must no longer be
+        // what always happens (the pre-change behavior was 100% entrance-attached).
+        // Ridley's cramped band rarely grows a second shaft at all, so its floor is
+        // structural: "sometimes" rather than "often"; the row spread within the shaft
+        // does the rest of the perceived variety there.
+        const int seeds = 60;
+        int kraidVaried = 0, ridleyVaried = 0;
+        for (int seed = 1; seed <= seeds; seed++)
+        {
+            var world = Generate(seed);
+            if (!LairAttachedToEntranceShaft(world, Area.Kraid, world.Landmarks["Kraid"]))
+                kraidVaried++;
+            if (!LairAttachedToEntranceShaft(world, Area.Ridley, world.Landmarks["Ridley"]))
+                ridleyVaried++;
+        }
+
+        Assert.IsTrue(kraidVaried >= seeds / 5,
+            $"Kraid's lair attached to a non-entrance shaft only {kraidVaried}/{seeds} times");
+        Assert.IsTrue(ridleyVaried >= seeds / 20,
+            $"Ridley's lair attached to a non-entrance shaft only {ridleyVaried}/{seeds} times");
+    }
+
+    private static bool LairAttachedToEntranceShaft(GeneratedWorld world, Area area, Point lairPos)
+    {
+        // Host shaft: scanning east along the lair's row, the first vertical run with more
+        // than two cells (skips Kraid's forced two-cell mini shaft) is the shaft the lair
+        // complex doors into.
+        Run? host = null;
+        for (int x = lairPos.X + 1; x <= 31 && host == null; x++)
+        {
+            var cell = world.Grid.Cell(new Point(x, lairPos.Y));
+            if (cell != null && cell.Run.Axis == Scrolling.Vertical && cell.Run.Cells.Count > 2)
+                host = cell.Run;
+        }
+        Assert.IsNotNull(host, $"no host shaft east of the {area} lair at {lairPos}");
+
+        // Entrance shaft: the vertical run in the area holding an elevator link endpoint.
+        Run? entrance = null;
+        foreach (var link in world.Grid.Links.Where(l => l.Type == LinkType.Elevator))
+            foreach (var endpoint in new[] { link.A, link.B })
+            {
+                var cell = world.Grid.Cell(endpoint);
+                if (cell != null && cell.Area == area && cell.Run.Axis == Scrolling.Vertical)
+                    entrance = cell.Run;
+            }
+        Assert.IsNotNull(entrance, $"no entrance shaft found for {area}");
+
+        return host!.Id == entrance!.Id;
+    }
+
+    [TestMethod]
+    public void Generate_PlacesVanillaTunnelChains()
+    {
+        // Best-effort feature: the vanilla morph-tunnel triples (Brinstar 0x25|0x24|0x26,
+        // Norfair 0x14|0x06|0x14) need three consecutive corridor body cells, so not every
+        // seed can host them — but they must appear regularly and always structurally
+        // correct (forced triple inside one run, scroll seams committed on every cell).
+        var templates = new Dictionary<Area, int[]>
+        {
+            [Area.Brinstar] = [0x25, 0x24, 0x26],
+            [Area.Norfair] = [0x14, 0x06, 0x14],
+        };
+        int seedsWithChain = 0;
+        for (int seed = 1; seed <= 20; seed++)
+        {
+            var world = Generate(seed);
+            bool any = false;
+            foreach (var (area, screens) in templates)
+            {
+                if (!world.Landmarks.TryGetValue($"TunnelChain{area}", out var mid))
+                    continue;
+                any = true;
+
+                var midCell = world.Grid.Cell(mid)!;
+                var run = midCell.Run;
+                int start = run.Cells.FindIndex(c => c.Position == mid) - screens.Length / 2;
+                Assert.IsTrue(start >= 1 && start + screens.Length <= run.Cells.Count - 1,
+                    $"seed {seed}: {area} chain not in run interior");
+                for (int j = 0; j < screens.Length; j++)
+                {
+                    var cell = run.Cells[start + j];
+                    Assert.AreEqual(screens[j], cell.ForcedScreenId,
+                        $"seed {seed}: {area} chain cell {j}");
+                    Assert.AreEqual(EdgeRequirement.Scroll, cell.Left, $"seed {seed}: {area} chain cell {j}");
+                    Assert.AreEqual(EdgeRequirement.Scroll, cell.Right, $"seed {seed}: {area} chain cell {j}");
+                }
+            }
+            if (any)
+                seedsWithChain++;
+        }
+
+        Assert.IsTrue(seedsWithChain >= 5,
+            $"tunnel chains appeared in only {seedsWithChain}/20 seeds");
+    }
+
+    [TestMethod]
     public void Generate_PlacesHiddenBombWalls()
     {
         for (int seed = 1; seed <= 20; seed++)
         {
             var world = Generate(seed);
             var walls = world.Landmarks.Where(kv => kv.Key.StartsWith("HiddenWall")).ToList();
-            Assert.IsTrue(walls.Count >= 1, $"seed {seed}: no hidden bomb walls");
+            Assert.IsTrue(walls.Any(kv => kv.Key.StartsWith("HiddenWallBrinstar")),
+                $"seed {seed}: no Brinstar hidden bomb wall");
+            Assert.IsTrue(walls.Any(kv => kv.Key.StartsWith("HiddenWallKraid")),
+                $"seed {seed}: no Kraid gated passage");
 
             var startRun = world.Grid.Cell(world.Start)!.Run;
             foreach (var (name, pos) in walls.Select(kv => (kv.Key, kv.Value)))
@@ -468,13 +571,25 @@ public sealed class TopologyGeneratorTest
                 Assert.AreEqual(EdgeRequirement.Scroll, cell.Right, $"seed {seed}: {name}");
                 Assert.AreNotEqual(startRun, cell.Run, $"seed {seed}: {name} in the start corridor");
 
-                // Both directions must be bomb-gated (never free) so a player cannot fall
-                // into a pocket without the bombs to leave it.
+                // Both directions must be gated (never free) so a player cannot fall
+                // into a pocket without the equipment to leave it.
                 var profile = Catalog.Value.Find(cell.Area, cell.ForcedScreenId!.Value)!;
                 Assert.IsFalse(profile.EdgesFreelyConnected(Direction.Left, Direction.Right),
                     $"seed {seed}: {name} screen 0x{profile.ScreenId:X2} has a free direction");
                 Assert.IsTrue(profile.EdgesConnected(Direction.Left, Direction.Right),
                     $"seed {seed}: {name} screen 0x{profile.ScreenId:X2} not passable with full inventory");
+
+                // Item-bearing gated passages (Kraid 0x12) need different equipment per
+                // direction, so their host run must be a through corridor: door links at
+                // both ends, never a dead end that could seal a half-equipped player in.
+                if (profile.HasItemLocation)
+                {
+                    Assert.AreEqual(CellRole.Item, cell.Role, $"seed {seed}: {name} must sit on an item cell");
+                    Assert.AreEqual(EdgeRequirement.Door, cell.Run.Cells[0].Left,
+                        $"seed {seed}: {name} host run has no west door");
+                    Assert.AreEqual(EdgeRequirement.Door, cell.Run.Cells[^1].Right,
+                        $"seed {seed}: {name} host run has no east door");
+                }
             }
         }
     }
