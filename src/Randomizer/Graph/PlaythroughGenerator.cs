@@ -59,6 +59,9 @@ internal static class PlaythroughGenerator
         List<RouteStep> Path,
         bool IsAutomaticEvent);
 
+    /// <summary>Temporary diagnostics hook for debugging stalled playthroughs.</summary>
+    internal static Action<string>? DebugTrace;
+
     public static PlaythroughData Generate(GameRandomizer randomizer)
     {
         var inventory = randomizer.PlaythroughStartingItems;
@@ -109,13 +112,14 @@ internal static class PlaythroughGenerator
             .Concat(randomizer.Graph.Doors.Keys)
             .ToHashSet();
         var found = new List<FoundPickup>();
+        var manualLocations = new HashSet<Vertex>([.. randomizedLocations, .. victoryLocations]);
 
         for (int sphere = 0; sphere < randomizer.Graph.GetVertices().Count(); sphere++)
         {
             GenerationContext.ThrowIfCancellationRequested();
             int persistentStartsBeforeSphere = persistentStarts.Count;
             var reachability = FindReachable(randomizer.Graph, persistentStarts, inventory,
-                [.. randomizedLocations, .. victoryLocations]);
+                manualLocations, collectedPickups);
             var paths = BuildPaths(starts, reachability, persistentEntryPaths);
             foreach (var edge in randomizer.Graph.GetVertices().SelectMany(vertex => vertex.Edges)
                          .Where(edge => edge.From.World != edge.To.World
@@ -139,6 +143,7 @@ internal static class PlaythroughGenerator
                 .ThenBy(pair => pair.pickup.Item.Name)
                 .ToList();
 
+            DebugTrace?.Invoke($"sphere {sphere}: candidate pickups {pickups.Count}");
             if (pickups.Count == 0)
                 break;
 
@@ -168,7 +173,10 @@ internal static class PlaythroughGenerator
                         randomizer.Graph, persistentStarts, inventory, location,
                         pickup, paths);
                     if (viablePath == null)
+                    {
+                        DebugTrace?.Invoke($"  skip (no SM path without the pickup itself): {location.Name} -> {item.Name}");
                         continue;
+                    }
                     path = viablePath;
                 }
                 collectedPickups.Add((location, item));
@@ -182,6 +190,7 @@ internal static class PlaythroughGenerator
                     automatic));
                 acceptedItems.Add(item);
             }
+
             // Keep sphere evaluation simultaneous: only recorded pickups enter the
             // inventory, and none can affect another pickup's path in this sphere.
             foreach (var item in acceptedItems)
@@ -193,8 +202,12 @@ internal static class PlaythroughGenerator
             // A sphere that accepted nothing and reached no new world entries cannot change
             // future reachability: the playthrough is stalled (incomplete), so stop instead
             // of re-evaluating identical spheres until the loop bound.
+            DebugTrace?.Invoke($"  accepted {acceptedItems.Count}: {string.Join(", ", acceptedItems.Select(i => i.Name))}");
             if (acceptedItems.Count == 0 && persistentStarts.Count == persistentStartsBeforeSphere)
+            {
+                DebugTrace?.Invoke($"  STALLED at sphere {sphere}");
                 break;
+            }
         }
 
         var pickupsByItem = IndexPickupsByItem(found);
@@ -231,8 +244,21 @@ internal static class PlaythroughGenerator
     }
 
     private static Reachability FindReachable(Graph graph, IEnumerable<Vertex> initialStarts,
-        Inventory inventory, HashSet<Vertex> manualPickupLocations)
+        Inventory inventory, HashSet<Vertex> manualPickupLocations,
+        HashSet<(Vertex, IItem)>? alreadyCollected = null)
     {
+        // Super Metroid reachability must match what the winnability search (and a real
+        // player) does: resources refill ALONG THE WAY at pickups the player already
+        // owns. Locations the sphere loop has granted therefore stay collectible — the
+        // stateful searcher tops current resources up there (clamped at the maximums the
+        // pre-loaded inventory provides), without which deep resource routes (Lower
+        // Norfair, the Maridia sand holes) are unreachable to the playthrough on seeds
+        // the winnability search completes, stalling them. Ungranted manual locations
+        // remain uncollected: they are this sphere's candidates.
+        bool CollectAt(Randomizer.Graph.Vertex vertex) =>
+            !manualPickupLocations.Contains(vertex)
+            || (vertex.Item != null
+                && (alreadyCollected?.Contains(((Vertex)vertex, vertex.Item)) ?? false));
         var starts = initialStarts.ToHashSet();
         var reachable = new HashSet<Vertex>();
         var availableInventories = new Dictionary<IWorld, Inventory>();
@@ -244,17 +270,29 @@ internal static class PlaythroughGenerator
             previousStartCount = starts.Count;
             foreach (var group in starts.GroupBy(vertex => vertex.World).ToList())
             {
-                var groupStarts = group.ToList();
+                // Deterministic start order with the world's true start first: the set is
+                // hash-ordered, and which vertex seeds the searcher (vs. being resumed)
+                // affects stateful exploration.
+                var groupStarts = group
+                    .OrderBy(vertex => ReferenceEquals(vertex, vertex.World.Start) ? 0 : 1)
+                    .ThenBy(vertex => vertex.Name, StringComparer.Ordinal)
+                    .ToList();
                 if (group.Key is Games.SuperMetroid.World)
                 {
+                    // The sphere inventory stays pre-loaded (resource CAPACITY derives
+                    // from it), while granted locations remain collectible: re-collecting
+                    // them tops the state's CURRENT resources up, clamped at the maximum —
+                    // which is exactly the mid-route refill a real player gets from the
+                    // pickups they already own on that route.
+                    var smInventory = inventory.Clone();
                     var smSearcher = new Games.SuperMetroid.StatefulSearcher(
                         graph,
                         (Games.SuperMetroid.Vertex)groupStarts[0],
-                        inventory.Clone(),
-                        collectItemAt: vertex => !manualPickupLocations.Contains(vertex),
+                        smInventory,
+                        collectItemAt: CollectAt,
                         capturePath: true);
                     if (groupStarts.Count > 1)
-                        smSearcher.ResumeSearch(groupStarts.Skip(1), inventory);
+                        smSearcher.ResumeSearch(groupStarts.Skip(1), smInventory);
                     reachable.UnionWith(((ISearcher)smSearcher).GetVisited());
                     starts.UnionWith(smSearcher.GetOtherWorld());
                     availableInventories[group.Key] = smSearcher.GetInventory();
@@ -278,6 +316,9 @@ internal static class PlaythroughGenerator
                     continue;
                 }
 
+                // Non-stateful worlds count items purely from the inventory, which already
+                // holds every granted pickup — re-collecting would double count-gated
+                // requirements (M1's Missile x15), so manual locations stay uncollected.
                 var searcher = new Searcher(graph, groupStarts[0], inventory.Clone(),
                     world: group.Key, collectItemAt: vertex => !manualPickupLocations.Contains(vertex));
                 if (groupStarts.Count > 1)
