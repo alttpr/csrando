@@ -64,6 +64,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     public bool Saturate { get; init; }
 
     private Random rng = new(0);
+    private CancellationToken cancellationToken;
     private WorldGrid grid = new();
     private readonly Dictionary<Area, List<Run>> shafts = [];
     private readonly Dictionary<Area, (int MinX, int MaxX, int MinY, int MaxY)> bounds = [];
@@ -110,9 +111,11 @@ public class TopologyGenerator(ScreenCatalog catalog)
     public GeneratedWorld Generate(int seed)
     {
         var failures = new List<string>();
+        cancellationToken = GenerationContext.CancellationToken;
 
         for (int attempt = 1; attempt <= MaxAttempts; attempt++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             rng = new Random(unchecked(seed * 1000003 + attempt));
             grid = new WorldGrid();
             shafts.Clear();
@@ -1268,6 +1271,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
         bool progress = true;
         while (progress)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             progress = false;
             foreach (var area in areas)
             {

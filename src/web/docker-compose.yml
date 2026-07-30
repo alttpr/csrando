@@ -46,6 +46,8 @@ services:
     image: ${API_IMAGE}
     environment:
       - ASPNETCORE_URLS=http://+:8080
+      - GenerationLimits__TimeoutSeconds=${GENERATION_TIMEOUT_SECONDS:-120}
+      - GenerationLimits__MaxConcurrency=${GENERATION_MAX_CONCURRENCY:-2}
     labels:
       - traefik.enable=false
     restart: unless-stopped

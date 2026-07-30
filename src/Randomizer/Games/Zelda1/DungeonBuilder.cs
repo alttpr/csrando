@@ -352,6 +352,7 @@ internal class DungeonBuilder
     private readonly HashSet<int> _killShutterScreens;
     private readonly HashSet<int> _pushBlockShutterScreens;
     private readonly HashSet<int> _pushBlockStairsScreens;
+    private readonly CancellationToken _cancellationToken;
     private int[] _itemPositionSlots = [0x97, 0x97, 0x97, 0x97];
     private List<YamlReader.UnderworldMap>? _vanillaLevelMaps;
     private int[]? _defaultRoomPalettes;
@@ -370,6 +371,7 @@ internal class DungeonBuilder
     public DungeonBuilder(DungeonConfig config, YamlReader.YamlData yamlData, int level, PRNG prng)
     {
         _config = config;
+        _cancellationToken = GenerationContext.CancellationToken;
         _rnd = new Random(prng.GetRandomInt(int.MaxValue));
         _map = new Map(_config.Width, _config.Height);
         _data = yamlData;
@@ -990,6 +992,7 @@ internal class DungeonBuilder
         int attempts = 0;
         while (attempts < maxAttempts)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             try
             {
                 PlaceSegments(segments);
@@ -1497,11 +1500,13 @@ internal class DungeonBuilder
         int attempts = 0;
         while (attempts < 10)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             for (int i = 0; i < segments.Length; i++)
             {
                 int segAttempts = 0;
                 while (!PlaceSegment(i, segments[i], loopChance, dfsChance) && segAttempts < 100)
                 {
+                    _cancellationToken.ThrowIfCancellationRequested();
                     ResetMap(i);
                     segAttempts++;
                 }

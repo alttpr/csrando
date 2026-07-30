@@ -9,11 +9,13 @@ internal sealed class RandomAssumedFiller
 
     private readonly GameRandomizer _randomizer;
     private readonly PRNG _prng;
+    private readonly CancellationToken _cancellationToken;
 
     public RandomAssumedFiller(GameRandomizer randomizer, PRNG prng)
     {
         _randomizer = randomizer;
         _prng = prng;
+        _cancellationToken = GenerationContext.CancellationToken;
     }
 
     /// <summary>
@@ -79,6 +81,7 @@ internal sealed class RandomAssumedFiller
 
         foreach (var itemKey in flatItemsArray)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             var (itemSet, itemWeight, item) = itemKey;
             if (itemWeight > 9000)
                 break;
@@ -109,6 +112,7 @@ internal sealed class RandomAssumedFiller
             var location = _prng.GetRandomElement(locations);
             while (!backtrackCheck)
             {
+                _cancellationToken.ThrowIfCancellationRequested();
                 if (location.World is Games.SuperMetroid.World)
                 {
                     var statefulSearcher = searchers[location.World.Id] switch

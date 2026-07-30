@@ -45,6 +45,7 @@ public class StatefulSearcher : ISearcher
     // Path-only searches can suppress the event they are trying to explain so a
     // later, post-event route cannot be mistaken for the acquisition route.
     private readonly IItem? _excludedPickup;
+    private readonly CancellationToken _cancellationToken;
 
     // Implement the same interface as the generic Searcher, but with a stateful implementation that can track
     // energy, ammo, and other stateful information during traversal of the graph.
@@ -53,6 +54,7 @@ public class StatefulSearcher : ISearcher
         Func<Randomizer.Graph.Vertex, bool>? collectItemAt = null,
         bool capturePath = false, IItem? excludedPickup = null)
     {
+        _cancellationToken = GenerationContext.CancellationToken;
         _inventory = inventory;
         _target = target;
         _start = start;
@@ -98,6 +100,7 @@ public class StatefulSearcher : ISearcher
 
         do
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             z++;
             foundItems = InternalSearch(_startStates, _inventory, _target);
             //newItems = new(foundItems);
@@ -260,6 +263,7 @@ public class StatefulSearcher : ISearcher
 
         while (_queue.Count > 0)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
 
             var (current, state, incomingStep) = DequeueState()!.Value;
 

@@ -22,6 +22,7 @@ public static class ScreenFitter
     {
         var rng = new Random(unchecked(seed * 48271 + 11));
         var errors = new List<string>();
+        var cancellationToken = GenerationContext.CancellationToken;
 
         foreach (var run in grid.Runs)
         {
@@ -29,6 +30,7 @@ public static class ScreenFitter
 
             bool FitCell(int index, ScreenProfile? previous)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 if (index == run.Cells.Count)
                     return true;
                 if (failedStates.Contains((index, previous?.ScreenId)))

@@ -3,9 +3,11 @@ namespace Randomizer.ConsoleCommands;
 using System.CommandLine;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Randomizer.ApiControllers;
 
 internal sealed class ApiServer : Command
 {
@@ -26,6 +28,13 @@ internal sealed class ApiServer : Command
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
         builder.Services.AddLogging();
+
+        var generationLimits = new GenerationLimitsOptions();
+        builder.Configuration
+            .GetSection(GenerationLimitsOptions.SectionName)
+            .Bind(generationLimits);
+        builder.Services.AddSingleton(generationLimits);
+        builder.Services.AddSingleton<GenerationLimiter>();
 
         builder.Services.AddCors(options =>
         {

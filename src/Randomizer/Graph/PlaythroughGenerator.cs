@@ -106,6 +106,7 @@ internal static class PlaythroughGenerator
 
         for (int sphere = 0; sphere < randomizer.Graph.GetVertices().Count(); sphere++)
         {
+            GenerationContext.ThrowIfCancellationRequested();
             var reachability = FindReachable(randomizer.Graph, persistentStarts, inventory,
                 [.. randomizedLocations, .. victoryLocations]);
             var paths = BuildPaths(starts, reachability, persistentEntryPaths);

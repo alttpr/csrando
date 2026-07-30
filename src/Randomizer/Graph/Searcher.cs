@@ -17,6 +17,7 @@ public class Searcher : ISearcher
     private readonly VertexHashSet _otherWorldLocations;
     private readonly IWorld? _world;
     private readonly Func<Vertex, bool> _collectItemAt;
+    private readonly CancellationToken _cancellationToken;
 
     /// <summary>
     /// I'm a jerk and don't like useful messages.
@@ -27,6 +28,7 @@ public class Searcher : ISearcher
     public Searcher(Graph graph, Vertex start, Inventory inventory, SetLocations? setLocations = null,
         IWorld? world = null, Func<Vertex, bool>? collectItemAt = null)
     {
+        _cancellationToken = GenerationContext.CancellationToken;
         _world = world;
         _collectItemAt = collectItemAt ?? (_ => true);
         _graph = graph;
@@ -40,6 +42,7 @@ public class Searcher : ISearcher
         bool newItemsFound;
         do
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             do
             {
                 var (newlyVisited, newSearchStarts) = InternalSearch(inventory, _visited, _searchStarts);
@@ -69,6 +72,7 @@ public class Searcher : ISearcher
         bool newItemsFound;
         do
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             do
             {
                 var (newlyVisited, newSearchStarts) = InternalSearch(_inventory, _visited, _searchStarts);
