@@ -164,6 +164,8 @@ public sealed class PortalTests
             var rom = new MemoryRom();
             Randomizer.Games.SuperMetroid.RomWriter.Write(rom, sm, new PRNG(42));
 
+            CollectionAssert.AreEqual(Words(1), rom.Read(0x3F020C, 2), "map randomization flag");
+
             // The initial SRAM template selects the new Crateria station and the generated
             // map area containing the map room.
             const int initialSram = 0x799000; // SA-1-mapped $F9:9000

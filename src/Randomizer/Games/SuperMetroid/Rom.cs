@@ -109,6 +109,11 @@ public class Rom : GameRom
         }
     }
 
+    public void WriteMapRandomizationFlag(World world)
+    {
+        Write(0x3F020C, UshortBytes((ushort)(world.Map != null ? 1 : 0)));
+    }
+
     public void WriteSpawnAllItems(World world)
     {
         if (world.Config.SpawnAllItems)

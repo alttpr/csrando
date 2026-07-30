@@ -13,6 +13,7 @@
 		cleanupPatcher,
 	} from "$lib/services/patching";
 	import SpriteSelect from "$lib/components/ui/SpriteSelect.svelte";
+	import ControllerMapping from "$lib/components/seed/ControllerMapping.svelte";
 	import Progressbar from "$lib/components/ui/Progressbar.svelte";
 	import Button from "$lib/components/ui/Button.svelte";
 	import SeedOptionsViewer from "$lib/components/seed/SeedOptionsViewer.svelte";
@@ -31,6 +32,13 @@
 		presetConfigPath,
 		seedSettingsPath,
 	} from "$lib/config/preset-links";
+	import {
+		assignControllerButton,
+		isControllerMappingOption,
+		normalizeControllerMappings,
+		restoreControllerDefaults,
+		withControllerMappings,
+	} from "$lib/controller-mappings";
 
 	import { gameStaticInfo } from "$lib/game-static-info";
 
@@ -112,7 +120,7 @@
 	let spriteSelections = $state<Record<string, string>>({});
 
 	// Post-Generation Settings Interfaces
-	import type { GamePostGenConfig } from "$lib/types";
+	import type { GamePostGenConfig, SelectPostGenSetting } from "$lib/types";
 	let gameIdToPostGenConfigMap = $state(new Map<string, GamePostGenConfig>());
 	let selectedPostGenByGameId = $state(
 		new Map<string, Record<string, string | boolean>>(),
@@ -168,6 +176,55 @@
 		if (import.meta.env.DEV) {
 			console.debug("[postgen] persisted selection", { gameId, values });
 		}
+	}
+
+	function updatePostGenSelection(
+		gameId: string,
+		optionId: string,
+		value: string | boolean,
+	) {
+		let current = {
+			...(selectedPostGenByGameId.get(gameId) || {}),
+		};
+		const config = gameIdToPostGenConfigMap.get(gameId);
+		const option = config?.options.find((entry) => entry.id === optionId);
+		if (
+			typeof value === "string" &&
+			config &&
+			option?.type === "select" &&
+			isControllerMappingOption(option)
+		) {
+			const updated = assignControllerButton(
+				config,
+				current,
+				optionId,
+				value,
+			);
+			if (!updated) return;
+			current = updated;
+		} else {
+			current[optionId] = value;
+		}
+		selectedPostGenByGameId.set(gameId, current);
+		postGenSelections[gameId] = current;
+		selectedPostGenByGameId = selectedPostGenByGameId;
+		postGenSelections = { ...postGenSelections };
+		void persistPostGenSelection(gameId, current);
+	}
+
+	function restoreDefaultControllerMappings(gameId: string) {
+		const config = gameIdToPostGenConfigMap.get(gameId);
+		if (!config) return;
+
+		const restored = restoreControllerDefaults(
+			config,
+			selectedPostGenByGameId.get(gameId) || {},
+		);
+		selectedPostGenByGameId.set(gameId, restored);
+		postGenSelections[gameId] = restored;
+		selectedPostGenByGameId = selectedPostGenByGameId;
+		postGenSelections = { ...postGenSelections };
+		void persistPostGenSelection(gameId, restored);
 	}
 
 	async function loadPostGenSelection(
@@ -597,9 +654,35 @@
 						}
 					}
 
+					if (resolvedRandomizerIdNormalized === "combo") {
+						baseCfg = withControllerMappings(gameId, baseCfg);
+					}
+
 					newPostGenInfoMapProvisional.set(gameId, baseCfg);
 				}
 				gameIdToPostGenConfigMap = newPostGenInfoMapProvisional; // Assign to $state variable
+
+				// Discard stale or manually edited controller mappings that contain
+				// invalid buttons or assign the same button more than once.
+				let normalizedControllerSelections = false;
+				for (const [gameId, selections] of selectedPostGenByGameId) {
+					const config = gameIdToPostGenConfigMap.get(gameId);
+					if (!config) continue;
+					const normalized = normalizeControllerMappings(
+						config,
+						selections,
+					);
+					if (normalized !== selections) {
+						selectedPostGenByGameId.set(gameId, normalized);
+						postGenSelections[gameId] = normalized;
+						void persistPostGenSelection(gameId, normalized);
+						normalizedControllerSelections = true;
+					}
+				}
+				if (normalizedControllerSelections) {
+					selectedPostGenByGameId = selectedPostGenByGameId;
+					postGenSelections = { ...postGenSelections };
+				}
 
 				// Load persisted sprite selections (if any) and apply only if still valid.
 				try {
@@ -689,8 +772,10 @@
 										valid[k] = v as string | boolean;
 									}
 								}
-								selectedPostGenByGameId.set(gid, valid);
-								postGenSelections[gid] = valid;
+								const normalized =
+									normalizeControllerMappings(cfg, valid);
+								selectedPostGenByGameId.set(gid, normalized);
+								postGenSelections[gid] = normalized;
 								changed = true;
 							}
 						}
@@ -1440,6 +1525,16 @@
 						{@const postGenConfig =
 							gameIdToPostGenConfigMap.get(gameId)}
 						{@const postGenOptions = postGenConfig?.options ?? []}
+						{@const controllerOptions = postGenOptions.filter(
+							(option): option is SelectPostGenSetting =>
+								option.type === "select" &&
+								isControllerMappingOption(option),
+						)}
+						{@const regularPostGenOptions = postGenOptions.filter(
+							(option) =>
+								option.type !== "select" ||
+								!isControllerMappingOption(option),
+						)}
 						{@const hasSpriteOptions =
 							spriteOptionsForGame.length > 0}
 						{@const hasPostGenOptions = postGenOptions.length > 0}
@@ -1503,8 +1598,27 @@
 									</div>
 								{/if}
 
+								{#if controllerOptions.length > 0}
+									<ControllerMapping
+										{gameId}
+										gameName={gameDisplayName}
+										options={controllerOptions}
+										selections={postGenSelections[gameId] || {}}
+										onchange={(optionId, value) =>
+											updatePostGenSelection(
+												gameId,
+												optionId,
+												value,
+											)}
+										onrestore={() =>
+											restoreDefaultControllerMappings(
+												gameId,
+											)}
+									/>
+								{/if}
+
 								{#if hasPostGenOptions}
-									{#each postGenOptions as opt (opt.id)}
+									{#each regularPostGenOptions as opt (opt.id)}
 										{#if opt.type === "toggle"}
 											<div class="space-y-1">
 												<label

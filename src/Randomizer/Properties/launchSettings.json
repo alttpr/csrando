@@ -2,7 +2,7 @@
   "profiles": {
     "Randomizer": {
       "commandName": "Project",
-      "commandLineArgs": "api"
+      "commandLineArgs": "randomize seed=1234 bulk=1 multiworld=1"
     }
   }
 }

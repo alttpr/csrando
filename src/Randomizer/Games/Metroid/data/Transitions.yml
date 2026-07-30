@@ -1087,6 +1087,24 @@
 
 - area: Ridley
   from:
+    screen: 0x0F
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x10
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
     screen: 0x11
     direction: Right
   to:
@@ -1098,6 +1116,24 @@
 
 - area: Ridley
   from:
+    screen: 0x14
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x15
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
     screen: 0x17
     direction: Left
   to:
@@ -1105,6 +1141,15 @@
     direction: Right
   requirements:
     - [Morph, Bombs]
+
+- area: Ridley
+  from:
+    screen: 0x17
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
 
 - area: Ridley
   from:
@@ -1148,10 +1193,28 @@
 - area: Ridley
   from:
     screen: 0x18
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x18
     direction: Right
   to:
     screen: 0x1F
     direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x19
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
   impossible: true
 
 - area: Ridley
@@ -1166,10 +1229,28 @@
 - area: Ridley
   from:
     screen: 0x1A
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1A
     direction: Right
   to:
     screen: 0x1F
     direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1B
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
   impossible: true
 
 - area: Ridley
@@ -1210,6 +1291,15 @@
     direction: Left
   requirements:
     - Morph
+
+- area: Ridley
+  from:
+    screen: 0x1D
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
 
 - area: Ridley
   from:
@@ -1246,6 +1336,15 @@
     direction: Left
   to:
     screen: 0x23
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1E
+    direction: Left
+  to:
+    screen: 0x25
     direction: Right
   impossible: true
 
@@ -1302,6 +1401,15 @@
 - area: Ridley
   from:
     screen: 0x1F
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x1F
     direction: Right
   to:
     screen: 0x17
@@ -1350,6 +1458,24 @@
 
 - area: Ridley
   from:
+    screen: 0x21
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x22
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
     screen: 0x23
     direction: Right
   to:
@@ -1365,4 +1491,166 @@
   to:
     screen: 0x1E
     direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x24
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x0F
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x10
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x14
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x15
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x17
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x18
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x19
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x1A
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x1B
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x1D
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x1E
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x1F
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x21
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x22
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x24
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x25
+    direction: Right
+  to:
+    screen: 0x27
+    direction: Left
+  impossible: true
+
+- area: Ridley
+  from:
+    screen: 0x27
+    direction: Left
+  to:
+    screen: 0x25
+    direction: Right
   impossible: true

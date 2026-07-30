@@ -12,6 +12,7 @@ public static class RomWriter
         rom.WriteEventFlags(world);
         rom.WriteBossesNeeded(world);
         rom.WriteKeycardFlag(world);
+        rom.WriteMapRandomizationFlag(world);
         rom.WritePlms(world);
         rom.WriteMiscPatches(world);
         rom.WriteStartingLocation(world);
