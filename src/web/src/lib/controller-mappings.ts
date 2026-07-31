@@ -34,13 +34,13 @@ const CONTROLLER_ACTIONS: Record<string, ControllerAction[]> = {
     {
       id: "shoot",
       name: "Shoot",
-      defaultButton: "b",
+      defaultButton: "y",
       targetAddress: M1_INITIAL_CONTROLS_PC,
     },
     {
       id: "jump",
       name: "Jump",
-      defaultButton: "y",
+      defaultButton: "b",
       targetAddress: M1_INITIAL_CONTROLS_PC + 0x02,
     },
     {

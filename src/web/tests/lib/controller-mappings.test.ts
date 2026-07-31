@@ -35,18 +35,18 @@ describe("controller mapping post-generation settings", () => {
     const options = controllerOptions("metroid");
 
     expect(options.map((option) => [option.id, option.default])).toEqual([
-      ["controller_shoot", "b"],
-      ["controller_jump", "y"],
+      ["controller_shoot", "y"],
+      ["controller_jump", "b"],
       ["controller_item_select", "select"],
       ["controller_map", "x"],
     ]);
-    expect(selectedPatch(options[0], "b")).toEqual({
+    expect(selectedPatch(options[0], "y")).toEqual({
       targetAddress: 0x792400,
-      data: [0x00, 0x80],
-    });
-    expect(selectedPatch(options[1], "y")).toEqual({
-      targetAddress: 0x792402,
       data: [0x00, 0x40],
+    });
+    expect(selectedPatch(options[1], "b")).toEqual({
+      targetAddress: 0x792402,
+      data: [0x00, 0x80],
     });
     expect(selectedPatch(options[3], "x")).toEqual({
       targetAddress: 0x792406,
@@ -155,8 +155,8 @@ describe("controller mapping post-generation settings", () => {
 
     expect(restoreControllerDefaults(config, custom)).toEqual({
       unrelated_setting: true,
-      controller_shoot: "b",
-      controller_jump: "y",
+      controller_shoot: "y",
+      controller_jump: "b",
       controller_item_select: "select",
       controller_map: "x",
     });
