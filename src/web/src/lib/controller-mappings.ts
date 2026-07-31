@@ -90,13 +90,13 @@ const CONTROLLER_ACTIONS: Record<string, ControllerAction[]> = {
     {
       id: "angle_down",
       name: "Angle Down",
-      defaultButton: "r",
+      defaultButton: "l",
       targetAddress: SM_INITIAL_CONTROLS_PC + 0x0a,
     },
     {
       id: "angle_up",
       name: "Angle Up",
-      defaultButton: "l",
+      defaultButton: "r",
       targetAddress: SM_INITIAL_CONTROLS_PC + 0x0c,
     },
   ],

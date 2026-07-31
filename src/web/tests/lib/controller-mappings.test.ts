@@ -44,6 +44,10 @@ describe("controller mapping post-generation settings", () => {
       targetAddress: 0x792400,
       data: [0x00, 0x80],
     });
+    expect(selectedPatch(options[1], "y")).toEqual({
+      targetAddress: 0x792402,
+      data: [0x00, 0x40],
+    });
     expect(selectedPatch(options[3], "x")).toEqual({
       targetAddress: 0x792406,
       data: [0x40, 0x00],
@@ -59,16 +63,20 @@ describe("controller mapping post-generation settings", () => {
       ["controller_dash", "b"],
       ["controller_item_cancel", "y"],
       ["controller_item_select", "select"],
-      ["controller_angle_down", "r"],
-      ["controller_angle_up", "l"],
+      ["controller_angle_down", "l"],
+      ["controller_angle_up", "r"],
     ]);
     expect(selectedPatch(options[0], "x")).toEqual({
       targetAddress: 0x799020,
       data: [0x40, 0x00],
     });
-    expect(selectedPatch(options[6], "l")).toEqual({
-      targetAddress: 0x79902c,
+    expect(selectedPatch(options[5], "l")).toEqual({
+      targetAddress: 0x79902a,
       data: [0x20, 0x00],
+    });
+    expect(selectedPatch(options[6], "r")).toEqual({
+      targetAddress: 0x79902c,
+      data: [0x10, 0x00],
     });
   });
 
@@ -168,8 +176,8 @@ describe("controller mapping post-generation settings", () => {
       controller_dash: "b",
       controller_item_cancel: "y",
       controller_item_select: "select",
-      controller_angle_down: "r",
-      controller_angle_up: "l",
+      controller_angle_down: "l",
+      controller_angle_up: "r",
       unrelated_setting: "kept",
     });
   });
