@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <!-- MSTest broke inherited IgnoreAttribute with 3.5.x (see dotnet/testfx#3681), so sticking to 3.4.x until it is fixed. -->
     <PackageReference Include="MSTest.TestAdapter" Version="4.3.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="4.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.3.3" />
     <PackageReference Include="coverlet.collector" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
