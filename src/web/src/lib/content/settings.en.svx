@@ -176,6 +176,23 @@ together with Zelda 1, Super Metroid and Metroid 1.
 * **Early Morph Ball** — Forces Morph Ball into an early reachable location. Use this when
   you want Morph Ball available near the start rather than relying on normal item placement.
 * **Map Randomizer** — *None* uses the vanilla map; *Standard* enables map randomization.
+* **Starting Location** — *(WIP; requires Map Randomizer, and only available on seeds
+  containing nothing but Super Metroid and Metroid 1)* The save station Samus
+  starts and initially respawns at; *Random* picks one. A moved start makes Super Metroid
+  the seed's starting game (random tie-break if Metroid 1 also moves its start). Whether a
+  station works depends on the shuffled map, so it is checked per seed and failed attempts
+  are retried automatically.
+* **Tiered Items** — *(WIP; requires Map Randomizer, and only available on seeds containing
+  nothing but Super Metroid and Metroid 1)* Item dots on the pause map and minimap show
+  their tier: major items get a filled icon, medium items (energy/reserve tanks) a hollow
+  ring, and minor items keep the plain dot. Items from the other game follow their own
+  game's classification.
+  * *Off* — All items use the plain dot. (Default.)
+  * *On* — The standard classification from the item data.
+  * *Custom* — Starts from all-plain-dots and applies your override list:
+    * **Custom Item Tiers** — Comma-separated `game:ItemName=tier` entries, where tier is
+      `minor`, `medium` or `major` — e.g. `sm:Charge=medium, m1:IceBeam=major`. Invalid
+      entries reject the generation request with an error naming them.
 * **Spawn All Items** — Spawn every item immediately regardless of game state (e.g. without
   needing to kill bosses such as Phantoon).
 
@@ -197,6 +214,11 @@ together with Zelda 1, Super Metroid and Metroid 1.
   available.
 * **Early Morph Ball** — Forces Morph Ball into an early reachable location. Use this when
   you want Morph Ball available near the start rather than relying on normal item placement.
+* **Starting Area** — *(WIP; only available on seeds containing nothing but Super Metroid
+  and Metroid 1)* The area Samus starts in: the vanilla elevator arrival cell, or a corridor
+  generated inside the area when Map Shuffle is on; *Random* picks one (Tourian cannot be a
+  start — it is sealed behind the statue bridge). A moved start makes Metroid 1 the seed's
+  starting game (random tie-break if Super Metroid also moves its start).
 * **Map Shuffle** — Generates a completely new randomized world map instead of the vanilla
   one. *(Early testing — expect possible bugs and balance quirks.)* On generated maps, a
   Map Station reveals the layout for its current area; vanilla-map seeds start with all areas
@@ -206,6 +228,12 @@ together with Zelda 1, Super Metroid and Metroid 1.
     * *Standard* — A vanilla-sized world. (Default.)
     * *Large* — A bigger, more sprawling world.
     * *Nightmare* — Saturates the grid, growing every area until nothing more fits.
+* **Tiered Items** — *(WIP; only available on seeds containing nothing but Super Metroid
+  and Metroid 1)* Item cells on the automap show their tier: major items get a filled
+  icon, medium items (Energy Tanks) a hollow ring, and minor items the plain marker. Works on both
+  the vanilla and shuffled map. Items from the other game follow their own game's
+  classification. Modes and the **Custom Item Tiers** override list work exactly as
+  described for Super Metroid above.
 
 ---
 

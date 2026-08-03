@@ -44,6 +44,15 @@ public class Rom : GameRom
         238, // Mother Brain
     ];
 
+    private static readonly HashSet<int> CreClobberingRoomIds =
+    [
+        84,  // Kraid Room
+        122, // Crocomire's Room
+    ];
+
+    // The Toilet passes through other rooms on the map.
+    private const int ToiletRoomId = 321;
+
 
     public Rom(IRom rom, int offset) : base(rom, offset)
     {
@@ -136,6 +145,27 @@ public class Rom : GameRom
     /// </summary>
     public void WriteStartingLocation(World world)
     {
+        // A chosen start station only needs the initial SRAM template to point at it:
+        // the station's vanilla 14-byte load table row is already in the ROM, and the
+        // map randomizer rewires every row's entrance door when it shuffles the world.
+        if (world.StartStation is { } station)
+        {
+            const int startStationSram = 0x799000;
+            Write(startStationSram + 0x166, UshortBytes((ushort)station.Slot));
+            Write(startStationSram + 0x168, UshortBytes((ushort)station.Area));
+
+            int mapArea = station.Area;
+            if (world.Map != null)
+            {
+                int roomIndex = world.Map.room_id.FindIndex(id => id == station.RoomId);
+                if (roomIndex < 0)
+                    throw new InvalidOperationException($"Map-randomizer map has no {station.RoomName}");
+                mapArea = world.Map.room_area[roomIndex];
+            }
+            Write(startStationSram + 0x96E, UshortBytes((ushort)mapArea));
+            return;
+        }
+
         if (world.Map == null)
             return;
 
@@ -339,6 +369,15 @@ public class Rom : GameRom
 
                 var bidirectional = world.Map.conn_bidirectional[i];
 
+                if (CreClobberingRoomIds.Contains(from_room_id))
+                {
+                    SetCreReloadFlag(toGeo);
+                }
+                if (bidirectional == true && CreClobberingRoomIds.Contains(to_room_id))
+                {
+                    SetCreReloadFlag(fromGeo);
+                }
+
                 ushort fromRoomId = (ushort)(int.Parse(fromRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
                 ushort toRoomId = (ushort)(int.Parse(toRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
 
@@ -480,6 +519,13 @@ public class Rom : GameRom
             // Converts the tourian save station into a map station
             WriteTourianMapStation();
         }
+    }
+
+    private void SetCreReloadFlag(RoomGeometry geo)
+    {
+        var address = (Address)(geo.rom_address + 8);
+        byte bitset = Read(address, 1)[0];
+        Write(address, [(byte)(bitset | 0x02)]);
     }
 
     private void WriteMiniMapPalettes(World world)
@@ -832,6 +878,21 @@ public class Rom : GameRom
     private void WriteMiniMapData(World world)
     {
         var mapStations = new List<(int Area, int X, int Y, bool? PortalOnLeft)>();
+
+        // Tiered map icons: resolve each placed item's tier up front, keyed by the
+        // region-json node address, which room_geometry's item entries share. The
+        // combo item writer nulls location.Addresses before this runs, so the node
+        // address is the only join that survives.
+        var tierResolver = ItemTiers.CreateResolver(world.Config.TieredItems, world.Config.CustomItemTiers);
+        var tiersByNodeAddress = new Dictionary<int, ItemTier>();
+        if (tierResolver != null)
+        {
+            foreach (var location in world.GetLocationsOfType(VertexType.Item))
+            {
+                if (location is Vertex { Node.NodeAddress: string nodeAddress } && location.Item != null)
+                    tiersByNodeAddress[Convert.ToInt32(nodeAddress, 16)] = tierResolver(location.Item);
+            }
+        }
         // A converted room is only emitted when its vertex participates in a cross-game
         // edge. Merely preparing or resolving an unused conversion must not alter its map.
         var activePortalRooms = world.PortalRooms
@@ -856,7 +917,12 @@ public class Rom : GameRom
 
         Dictionary<(int, int, int), bool> mapTileWrites = new Dictionary<(int, int, int), bool>();
 
-        for (int i = 0; i < world.Map!.room_id.Count(); i++)
+        // Map tile writes are first-write-wins per cell. The Toilet overlaps the
+        // rooms it passes through, so write it last: its shaft tiles then only
+        // appear in cells no real room has claimed.
+        var roomOrder = Enumerable.Range(0, world.Map!.room_id.Count())
+            .OrderBy(i => world.Map.room_id[i] == ToiletRoomId ? 1 : 0);
+        foreach (int i in roomOrder)
         {
             var mapRoom = world.Map.room_id[i];
             var mapRoomX = world.Map.room_x[i];
@@ -882,6 +948,18 @@ public class Rom : GameRom
             activePortalRooms.TryGetValue(roomGeometry.name, out var portalRoom);
             bool isBossRoom = BossRoomIds.Contains(mapRoom);
 
+            // Room-local tile coord -> tier of the item(s) there; a shared tile
+            // (doubleItem rooms) shows its most significant item.
+            var tileTiers = new Dictionary<(int X, int Y), ItemTier>();
+            foreach (var geometryItem in roomGeometry.items ?? [])
+            {
+                if (tiersByNodeAddress.TryGetValue(geometryItem.addr, out var tier)
+                    && (!tileTiers.TryGetValue((geometryItem.x, geometryItem.y), out var existing) || tier > existing))
+                {
+                    tileTiers[(geometryItem.x, geometryItem.y)] = tier;
+                }
+            }
+
             foreach (var tile in mapTiles.MapTiles)
             {
                 var tileBytes = isBossRoom
@@ -889,6 +967,12 @@ public class Rom : GameRom
                     : portalRoom == null
                         ? tile.GetBytes()
                         : tile.GetPortalBytes(portalRoom.PortalOnLeft);
+
+                if (!isBossRoom && tileTiers.TryGetValue((tile.Coords[0], tile.Coords[1]), out var tileTier))
+                {
+                    ushort tileWord = MapTile.ApplyTier((ushort)(tileBytes[0] | (tileBytes[1] << 8)), tileTier);
+                    tileBytes = [(byte)tileWord, (byte)(tileWord >> 8)];
+                }
 
                 ushort palette = MapTile.Red;
                 if (mapTiles.Heated == true)
@@ -900,7 +984,9 @@ public class Rom : GameRom
                     palette = MapTile.Green;
                 }
 
-                tileBytes[1] = (byte)((tileBytes[1] | ((palette >> 8) & 0x1F)));
+                // Mask only the palette bits: bits 8-9 of the word are character bits
+                // now that the tiered icon pages use 10-bit characters ($300+).
+                tileBytes[1] = (byte)((tileBytes[1] | ((palette >> 8) & 0x1C)));
 
                 if (mapTileWrites.ContainsKey((mapArea, offsetX + tile.Coords[0], offsetY + tile.Coords[1])))
                 {
@@ -1102,19 +1188,6 @@ public class Rom : GameRom
                     "up" => (0, -1),
                     _ => (0, 0)
                 };
-
-                if (doorGeometry!.subtype == "elevator")
-                {
-                    var elevatorHeight = roomGeometry!.map.Count();
-                    if (doorGeometry!.direction == "up")
-                    {
-                        y += (elevatorHeight - 1);
-                    }
-                    else if (doorGeometry!.direction == "down")
-                    {
-                        y -= (elevatorHeight - 1);
-                    }
-                }
 
                 var markerCoordinates = ((x + dx) - areaXOffsets[roomMapArea], (y + dy) - areaYOffsets[roomMapArea]);
                 areaDecoInstructions[roomMapArea].Add((areaInstructions[node.Item2], markerCoordinates.Item1, markerCoordinates.Item2));

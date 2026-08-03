@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Randomizer.Graph;
 
 namespace Randomizer.Games.SuperMetroid.Model
 {
@@ -28,6 +29,33 @@ namespace Randomizer.Games.SuperMetroid.Model
         public const ushort Yellow = 0x1400;
         public const ushort Orange = 0x1800;
         public const ushort Grey = 0x1C00;
+
+        // ---------- Tiered item icons (pause_map_tiles2.asm) ----------
+        // The second tile page carries one major and one energy icon per item-dot
+        // shape, laid out in ascending order of the original chars, so the tiered
+        // char is the base char's position in this table plus the page base.
+        private static readonly ushort[] TieredItemChars = [
+            0x051, 0x053, 0x055, 0x05E, 0x06E, 0x06F, 0x076, 0x077, 0x08E, 0x08F, 0x095, 0x098,
+            0x09E, 0x09F, 0x0A5, 0x0A8, 0x0AE, 0x0AF, 0x0B9, 0x0BA, 0x0CC, 0x0CD, 0x144, 0x150,
+            0x151, 0x160, 0x16B, 0x16D, 0x1B9, 0x1BB, 0x1BF, 0x1CF, 0x1D9, 0x1F5, 0x1F7, 0x1F8];
+        public const ushort MajorIconBase = 0x300;  // $300-$323
+        public const ushort EnergyIconBase = 0x330; // $330-$353
+
+        /// <summary>
+        /// Swaps an item-dot character for its major/energy icon on the second tile
+        /// page, preserving flips. Words whose character is not an item dot (stations,
+        /// refills, portal glyphs, plain rooms) pass through untouched.
+        /// </summary>
+        public static ushort ApplyTier(ushort tileWord, ItemTier tier)
+        {
+            if (tier == ItemTier.Minor)
+                return tileWord;
+            int index = Array.IndexOf(TieredItemChars, (ushort)(tileWord & 0x3FF));
+            if (index < 0)
+                return tileWord;
+            ushort iconBase = tier == ItemTier.Major ? MajorIconBase : EnergyIconBase;
+            return (ushort)((iconBase + index) | (tileWord & (HFlip | VFlip)));
+        }
 
         // Tile coordinates: (X = Coords[0], Y = Coords[1])
         public required int[] Coords { get; set; } = Array.Empty<int>();
@@ -300,7 +328,7 @@ namespace Randomizer.Games.SuperMetroid.Model
 
             // Vertical: open TOP & BOTTOM; Empty L+R
             Def(E.EP, E.EP, E.D, E.D, Symmetry.None,
-                Ids(@default: 0x015F, items: 0x0152), priority: 580),
+                Ids(@default: 0x015F, items: 0x0160), priority: 580),
 
             // -- Triple-opening (item vs default) --
             // Base: open LEFT & RIGHT & BOTTOM; Empty TOP, upside-down via V

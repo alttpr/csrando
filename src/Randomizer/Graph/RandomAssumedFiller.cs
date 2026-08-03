@@ -168,14 +168,29 @@ internal sealed class RandomAssumedFiller
     private void FrontFillMorph(
         IWorld searchWorld, IWorld morphWorld, List<PooledItem> flatItems)
     {
-        var morph = morphWorld.GetItem("Morph");
-        var flatMorph = flatItems.FirstOrDefault(item => ReferenceEquals(item.Item, morph));
-        if (flatMorph == default)
+        // Morph does not open every Metroid start: a Ridley start's single itemless
+        // slot needs High Jump or Ice Beam, and a Morph placed there strands
+        // everything else. Place the item that actually widens the pocket first;
+        // Morph then goes into the locations it unlocked.
+        if (morphWorld is Games.Metroid.World metroidWorld
+            && metroidWorld.FindStartOpener(flatItems.Select(item => item.Item)) is { } opener
+            && opener.Name != "Morph")
+        {
+            FrontFillPoolItem(searchWorld, opener, flatItems);
+        }
+
+        FrontFillPoolItem(searchWorld, morphWorld.GetItem("Morph"), flatItems);
+    }
+
+    private void FrontFillPoolItem(IWorld searchWorld, IItem item, List<PooledItem> flatItems)
+    {
+        var pooled = flatItems.FirstOrDefault(candidate => ReferenceEquals(candidate.Item, item));
+        if (pooled == default)
             return;
 
         FrontFillCrossWorld(searchWorld, searchWorld.StartingItems,
-            _randomizer.Graph, flatMorph);
-        flatItems.Remove(flatMorph);
+            _randomizer.Graph, pooled);
+        flatItems.Remove(pooled);
     }
 
     // Finds a location available with only the starting items and fills it, without checking if it's a good candidate

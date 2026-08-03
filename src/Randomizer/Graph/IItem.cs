@@ -7,6 +7,8 @@ public interface IItem
     IWorld World { get; }
     /// <summary>The permanent health value this item grants the player. Use <c>0</c> (zero) to indicate this item does not add health.</summary>
     float HealthValue { get; }
+    /// <summary>Coarse gameplay classification from the game's item data; <see cref="ItemTier.Major"/> when undeclared.</summary>
+    ItemTier Tier { get; }
     byte[]? Bytes { get; set; }
 
     /// <summary>

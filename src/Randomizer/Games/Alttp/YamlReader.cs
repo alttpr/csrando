@@ -350,6 +350,8 @@ public class YamlItem
     public List<byte> Bytes { get; set; } = new();
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
+    [YamlMember(Alias = "tier")]
+    public string? Tier { get; set; }
 }
 
 public class YamlSprite

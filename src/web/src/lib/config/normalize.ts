@@ -426,6 +426,13 @@ export function buildRandomizePayload(
     return Object.fromEntries(entries);
   };
 
+  // A setting gated to an explicit game list (onlyWithGames) is omitted as soon
+  // as the selection includes any game outside that list; the stored form value
+  // survives, so narrowing the selection back restores it.
+  const violatesGameGate = (setting: MetadataSetting): boolean =>
+    !!setting.onlyWithGames &&
+    config.selectedGames.some((game) => !setting.onlyWithGames!.includes(game));
+
   const gameSettings: Record<string, Record<string, unknown>> = {};
 
   for (const gameId of config.selectedGames) {
@@ -433,6 +440,12 @@ export function buildRandomizePayload(
 
     if (currentGameOptions) {
       const validGameOptions = filterNonNullValues(currentGameOptions);
+
+      for (const setting of metadata?.gameSettings?.[gameId]?.settings ?? []) {
+        if (setting.key in validGameOptions && violatesGameGate(setting)) {
+          delete validGameOptions[setting.key];
+        }
+      }
 
       if (Object.keys(validGameOptions).length > 0) {
         gameSettings[gameId] = validGameOptions;

@@ -12,7 +12,9 @@ import {
 import {
   defaultFormStateFixture as defaultFormState,
   loadMetadataFixture as loadMetadata,
+  rawMetadataFixture,
 } from "../fixtures/metadata";
+import { parseMetadata } from "$lib/schemas/metadata";
 
 // Verbatim copy of the config page's former inline submit serialization,
 // kept here as the parity oracle for buildRandomizePayload.
@@ -406,5 +408,64 @@ describe("getDefaultValue", () => {
     const metadata = loadMetadata();
     const game = metadata.settings.find((s) => s.key === "Game");
     expect(getDefaultValue(game!)).toBe("Combo");
+  });
+});
+
+describe("onlyWithGames game-selection gate", () => {
+  // The shared fixture stays gate-free (its parity oracle predates the gate);
+  // this local variant adds a Wip setting only meaningful on Sm-only seeds.
+  function loadGatedMetadata(): Metadata {
+    const raw = structuredClone(rawMetadataFixture) as {
+      gameSettings: Record<string, { settings: unknown[] }>;
+    };
+    raw.gameSettings.Sm.settings.push({
+      key: "TieredItems",
+      name: "Tiered Items",
+      type: "SingleChoice",
+      values: { Off: "Off", On: "On" },
+      default: "Off",
+      visibility: "Wip",
+      onlyWithGames: ["Sm"],
+    });
+    const parsed = parseMetadata(raw);
+    if (!parsed.success) throw new Error("gated fixture metadata failed to parse");
+    return parsed.data;
+  }
+
+  it("omits the gated setting when the selection includes another game", () => {
+    const metadata = loadGatedMetadata();
+    const form = defaultFormState(metadata);
+    form.perGame.Sm.TieredItems = "On";
+    const snapshot = normalizeConfig(form, metadata);
+    const payload = buildRandomizePayload(snapshot, metadata, {
+      includeSpoiler: true,
+    });
+    expect(payload.Configs[0].Sm as Record<string, unknown>).not.toHaveProperty(
+      "TieredItems",
+    );
+  });
+
+  it("keeps the gated setting when only allowed games are selected", () => {
+    const metadata = loadGatedMetadata();
+    const form = defaultFormState(metadata);
+    form.selectedGames = ["Sm"];
+    form.perGame.Sm.TieredItems = "On";
+    const snapshot = normalizeConfig(form, metadata);
+    const payload = buildRandomizePayload(snapshot, metadata, {
+      includeSpoiler: true,
+    });
+    expect(
+      (payload.Configs[0].Sm as Record<string, unknown>).TieredItems,
+    ).toBe("On");
+  });
+
+  it("preserves the stored value across normalization while gated off", () => {
+    const metadata = loadGatedMetadata();
+    const form = defaultFormState(metadata);
+    form.perGame.Sm.TieredItems = "On";
+    // Selection includes Alttpr and Combo: the payload drops the setting but the
+    // canonical config keeps it, so re-narrowing the selection restores it.
+    const normalized = normalizeConfig(form, metadata);
+    expect(normalized.perGame.Sm.TieredItems).toBe("On");
   });
 });

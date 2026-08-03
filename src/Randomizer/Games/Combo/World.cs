@@ -37,6 +37,13 @@ public sealed class World : World<Item>
             World = this,
         });
 
+        // Resolve initial game depending on config (random starts can select a random game)
+        _startInitialGame = ResolveStartInitialGame(randomizerConfig, prng);
+        if (randomizerConfig.SuperMetroid is { } smConfig)
+            smConfig.ApplyStartLocation = _startInitialGame is null or "sm";
+        if (randomizerConfig.Metroid is { } m1Config)
+            m1Config.ApplyStartArea = _startInitialGame is null or "m1";
+
         StartingItems = new Inventory([GetItem("fixed")]);
 
 
@@ -69,6 +76,11 @@ public sealed class World : World<Item>
 
         // Fail at graph-build time if any cross-game edge cannot become a portal.
         DerivePortalEdges();
+
+        // Station viability includes reaching a cross-game portal from the bare start
+        // pocket, so the configured SM start can only resolve now that the portal
+        // edges exist.
+        SMWorld?.ApplyConfiguredStartStation(prng);
     }
 
     /// <summary>
@@ -191,11 +203,37 @@ public sealed class World : World<Item>
         return index;
     }
 
+    /// <summary>The game that won the moved-start selection, or null when no game
+    /// requested a moved start.</summary>
+    private readonly string? _startInitialGame;
+
     /// <summary>
-    /// The game the seed starts in: the configured initial game when that game is
-    /// present, otherwise the first present game in sm, alttp, z1, m1 order.
+    /// One game id among those whose configs request a moved start (random tie-break
+    /// when several do), or null when none does. Uses the raw config requests — not
+    /// the resolved stations/areas — so it can run before the game worlds exist.
     /// </summary>
-    public string EffectiveInitialGame => Config.InitialGame switch
+    private static string? ResolveStartInitialGame(WorldConfig config, PRNG prng)
+    {
+        List<string> candidates = [];
+        if (config.SuperMetroid?.StartLocationRequested == true)
+            candidates.Add("sm");
+        if (config.Metroid?.StartAreaRequested == true)
+            candidates.Add("m1");
+
+        return candidates.Count switch
+        {
+            0 => null,
+            1 => candidates[0],
+            _ => prng.GetRandomElement(candidates),
+        };
+    }
+
+    /// <summary>
+    /// The game the seed starts in: the game whose moved-start request won the
+    /// selection, otherwise the configured initial game when that game is present,
+    /// otherwise the first present game in sm, alttp, z1, m1 order.
+    /// </summary>
+    public string EffectiveInitialGame => _startInitialGame ?? Config.InitialGame switch
     {
         "" => FirstPresentGame(),
         "sm" when SMWorld != null => "sm",

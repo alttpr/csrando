@@ -12,7 +12,13 @@ nodes:
         type: Scroll
         direction: Right
 
+  locations:
+      - name: "Spawn Platform"
+        type: Start
+        position: [0x08, 0x0B]
+
 edges:
   undirected:
       fixed:
           - ["Left", "Right"]
+          - ["Left", "Spawn Platform"]

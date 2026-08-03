@@ -35,6 +35,7 @@ public sealed class Item : Randomizer.Graph.Item
             itemType = ItemType.Meta;
         Type = itemType;
         Bytes = yamlItem?.Bytes.ToArray();
+        Tier = ItemTiers.ParseDeclaration(yamlItem?.Tier);
 
         if (Name.StartsWith("HeartContainer"))
             HealthValue = 1f;

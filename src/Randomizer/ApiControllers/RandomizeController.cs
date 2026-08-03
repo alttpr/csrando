@@ -25,6 +25,11 @@ public sealed class RandomizeController(
         if (request.Configs is not [_, ..])
             return Results.Problem("At least one world config is required.");
 
+        // Deterministic config errors are rejected before the retry loop: they would
+        // fail identically on every attempt and must not burn generation retries.
+        if (WorldConfigValidator.Validate(request.Configs) is { } configError)
+            return Results.Problem(configError, statusCode: StatusCodes.Status400BadRequest);
+
         logger.LogTrace("Seed {Seed} called with {Settings}", seed, request.Configs);
 
         var worldConfigs = request.Configs;
@@ -33,10 +38,8 @@ public sealed class RandomizeController(
         string stage = "waiting for a generation slot";
         var stopwatch = Stopwatch.StartNew();
 
-        // A pinned seed is deterministic, so retrying it would only repeat the same
-        // failure; randomly-seeded requests get a few attempts because some settings
-        // (e.g. SM map rando) produce a fraction of unfillable or unwinnable seeds.
-        int maxAttempts = seed == null ? 5 : 1;
+        // If the start location is moved, allow for more retries
+        int maxAttempts = seed != null ? 1 : RequestsMovedStart(worldConfigs) ? 10 : 5;
 
         using var timeoutSource = new CancellationTokenSource(generationLimiter.Timeout);
         using var cancellationSource = CancellationTokenSource.CreateLinkedTokenSource(
@@ -48,54 +51,54 @@ public sealed class RandomizeController(
             generationLease = await generationLimiter.EnterAsync(cancellationSource.Token);
             using (generationLease)
             using (GenerationContext.Begin(cancellationSource.Token))
-            for (int attempt = 1; ; attempt++)
-            {
-                currentAttempt = attempt;
-                try
+                for (int attempt = 1; ; attempt++)
                 {
-                    stage = "creating worlds";
-                    var randomizer = RandomizerFactory.Create(worldConfigs, seed);
-                    activeSeed = randomizer.PRNG.Seed;
-                    stage = "placing items";
-                    randomizer.Randomize();
-                    stage = "validating the game";
-                    if (!randomizer.IsWinnable())
+                    currentAttempt = attempt;
+                    try
                     {
-                        if (attempt == maxAttempts)
+                        stage = "creating worlds";
+                        var randomizer = RandomizerFactory.Create(worldConfigs, seed);
+                        activeSeed = randomizer.PRNG.Seed;
+                        stage = "placing items";
+                        randomizer.Randomize();
+                        stage = "validating the game";
+                        if (!randomizer.IsWinnable())
                         {
-                            logger.LogError("API generated unwinnable game for seed: {Seed}", randomizer.PRNG.Seed);
-                            return Results.Problem("Generated game is unwinnable.");
+                            if (attempt == maxAttempts)
+                            {
+                                logger.LogError("API generated unwinnable game for seed: {Seed}", randomizer.PRNG.Seed);
+                                return Results.Problem("Generated game is unwinnable.");
+                            }
+
+                            logger.LogWarning("Randomization attempt {Attempt}/{MaxAttempts} generated an unwinnable game for seed {Seed}, retrying", attempt, maxAttempts, randomizer.PRNG.Seed);
+                            continue;
                         }
 
-                        logger.LogWarning("Randomization attempt {Attempt}/{MaxAttempts} generated an unwinnable game for seed {Seed}, retrying", attempt, maxAttempts, randomizer.PRNG.Seed);
-                        continue;
+                        // ROM writing is part of generation from the API caller's perspective and
+                        // can expose settings-dependent failures too, so keep it inside the retry
+                        // boundary rather than returning an error after a successful fill.
+                        stage = "writing patches";
+                        var loggedRomBroker = new LoggedRomBroker();
+                        randomizer.Write(loggedRomBroker);
+
+                        var response = new RandomizeResponse(
+                            randomizer.PRNG.Seed,
+                            loggedRomBroker.Worlds.ToDictionary(k => k.Key, v => new RandomizerWorldPatches(toBase64(v.Value.BpsPatch), toBase64(v.Value.IpsPatch))),
+                            request.IncludeSpoiler ? randomizer.SpoilerLog?.Spoiler : null
+                        );
+
+                        logger.LogInformation("API randomization successful for seed: {Seed} on attempt {Attempt}/{MaxAttempts}", response.Seed, attempt, maxAttempts);
+                        return Results.Ok(response);
                     }
-
-                    // ROM writing is part of generation from the API caller's perspective and
-                    // can expose settings-dependent failures too, so keep it inside the retry
-                    // boundary rather than returning an error after a successful fill.
-                    stage = "writing patches";
-                    var loggedRomBroker = new LoggedRomBroker();
-                    randomizer.Write(loggedRomBroker);
-
-                    var response = new RandomizeResponse(
-                        randomizer.PRNG.Seed,
-                        loggedRomBroker.Worlds.ToDictionary(k => k.Key, v => new RandomizerWorldPatches(toBase64(v.Value.BpsPatch), toBase64(v.Value.IpsPatch))),
-                        request.IncludeSpoiler ? randomizer.SpoilerLog?.Spoiler : null
-                    );
-
-                    logger.LogInformation("API randomization successful for seed: {Seed} on attempt {Attempt}/{MaxAttempts}", response.Seed, attempt, maxAttempts);
-                    return Results.Ok(response);
+                    catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
+                    catch (Exception ex) when (attempt < maxAttempts)
+                    {
+                        logger.LogWarning(ex, "Randomization attempt {Attempt}/{MaxAttempts} failed, retrying", attempt, maxAttempts);
+                    }
                 }
-                catch (OperationCanceledException)
-                {
-                    throw;
-                }
-                catch (Exception ex) when (attempt < maxAttempts)
-                {
-                    logger.LogWarning(ex, "Randomization attempt {Attempt}/{MaxAttempts} failed, retrying", attempt, maxAttempts);
-                }
-            }
         }
         catch (OperationCanceledException) when (requestAborted.IsCancellationRequested)
         {
@@ -139,6 +142,10 @@ public sealed class RandomizeController(
             return Convert.ToBase64String(patchData);
         }
     }
+
+    private static bool RequestsMovedStart(WorldConfig[] configs) => configs.Any(config =>
+        config.SuperMetroid?.StartLocationRequested == true
+        || config.Metroid?.StartAreaRequested == true);
 }
 
 public record RandomizeRequest(

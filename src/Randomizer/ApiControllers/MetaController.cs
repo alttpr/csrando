@@ -76,8 +76,27 @@ public sealed partial class MetaController : ControllerBase
             dependsOn = new MetaDependsOn(dependsOnAttr.PropertyName, dependsOnAttr.Values);
         }
 
-        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor, metaCategory, subcategory, dependsOn);
+        string[]? onlyWithGames = property.GetCustomAttribute<OnlyWithGamesAttribute>() is { Games.Length: > 0 } onlyWith
+            ? [.. onlyWith.Games.Select(GameKey)]
+            : null;
+
+        return new MetaSetting(property.Name, Name(property), description, type, range, possibleValues, defaultValue, visibility, optionsFor, metaCategory, subcategory, dependsOn, onlyWithGames);
     }
+
+    /// <summary>
+    /// The TargetSettings dictionary key a game's settings are published under (the
+    /// WorldConfig property name), which is also how the web identifies selected
+    /// games — so OnlyWithGames lists are emitted in the same vocabulary.
+    /// </summary>
+    private static string GameKey(Game game) =>
+        gameKeys.Value.TryGetValue(game, out string? key) ? key
+            : throw new InvalidOperationException($"no {nameof(WorldConfig)} property exists for game {game}");
+
+    private static readonly Lazy<Dictionary<Game, string>> gameKeys = new(() =>
+        typeof(WorldConfig).GetProperties()
+            .Select(p => (Game: p.PropertyType.GetCustomAttribute<TargetGameAttribute>()?.Game, p.Name))
+            .Where(pair => pair.Game != null)
+            .ToDictionary(pair => pair.Game!.Value, pair => pair.Name));
     private static IEnumerable<string> NonNull(params IEnumerable<string?> values)
     {
         foreach (string? value in values)
@@ -232,7 +251,8 @@ public sealed record MetaSetting(
     string? OptionsFor = null,
     MetaCategory? Category = null,
     string? Subcategory = null,
-    MetaDependsOn? DependsOn = null
+    MetaDependsOn? DependsOn = null,
+    string[]? OnlyWithGames = null
 );
 public enum MetaSettingsType { Input, SingleChoice, MultipleChoice, Toggle, Slider };
 public sealed record MetaSettingsRange(int From, int To);

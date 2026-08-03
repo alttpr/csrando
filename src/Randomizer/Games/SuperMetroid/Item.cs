@@ -11,6 +11,14 @@ public sealed class Item : Randomizer.Graph.Item
 {
     public ItemType Type { get; }
 
+    // items.json is an upstream sm-json-data snapshot, so tier declarations live in
+    // a sidecar file instead. Unlisted names (upgrades, keycards, tokens, flags)
+    // keep the Major default from the base class.
+    private static readonly Lazy<Dictionary<string, string>> tierData = new(() =>
+        System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(
+            File.ReadAllText(Path.Combine(Model.JsonReader.DataRoot, "item_tiers.json")))
+            ?? []);
+
     /// <summary>
     /// Create a new Item.
     /// </summary>
@@ -20,13 +28,6 @@ public sealed class Item : Randomizer.Graph.Item
     public Item(string name, IWorld world)
         : base(name, world)
     {
-
-        //var yamlItems = YamlReader.LoadItems();
-        //var yamlItem = yamlItems.GetValueOrDefault(name);
-        //string typeString = yamlItem?.Type ?? "Meta";
-        //if (!Enum.TryParse<ItemType>(typeString, out var itemType))
-        //    itemType = ItemType.Meta;
-        //Type = itemType;
-        //Bytes = yamlItem?.Bytes;
+        Tier = ItemTiers.ParseDeclaration(tierData.Value.GetValueOrDefault(name));
     }
 }

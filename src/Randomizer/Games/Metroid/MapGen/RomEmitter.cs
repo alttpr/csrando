@@ -340,34 +340,51 @@ public static class RomEmitter
         bool respawnAtPortal)
     {
         var grid = world.Grid;
+        var startArea = grid.Cell(world.Start)!.Area;
 
-        // Continuing a game respawns Samus at the current area's $95D7/$95D8 map position:
-        // the spawn cell for Brinstar, the elevator platform for the lower areas.
-        var respawn = new Dictionary<Area, Point> { [Area.Brinstar] = world.Start };
+        // Continuing a game respawns Samus at the current area's $95D7/$95D8 map
+        // position: the spawn cell for the start area, the elevator platform for areas
+        // entered from above. Brinstar is never an elevator destination, so when the
+        // start is elsewhere it falls back to a Brinstar-side elevator host cell.
+        var respawn = new Dictionary<Area, Point> { [startArea] = world.Start };
         foreach (var link in grid.Links.Where(l => l.Type == LinkType.Elevator))
         {
             var lower = grid.Cell(link.B)!.Area;
             respawn.TryAdd(lower, link.B.Step(Direction.Down));
         }
+        bool brinstarFallback = !respawn.ContainsKey(Area.Brinstar);
+        if (brinstarFallback)
+            respawn[Area.Brinstar] = grid.Links
+                .First(l => l.Type == LinkType.Elevator && grid.Cell(l.A)!.Area == Area.Brinstar).A;
 
-        // Combo seeds enter M1 through the portal, so a Brinstar death respawns in the
-        // portal room itself rather than at the generated start cell — continuing keeps
-        // the player where they came into the map. The third byte ($95D9) is the
-        // in-screen spawn height: the engine drops Samus at center X falling from this Y,
-        // so mid-screen $6E (the value every vanilla elevator-area respawn uses) clears
-        // the room's ceiling and lands her on the floor. Without the portal override the
-        // patch stays two bytes, keeping vanilla's $B0 for the spawn platform screen.
+        // Combo seeds that don't cold-boot into M1 are entered through the portal, so a
+        // Brinstar death respawns in the portal room itself rather than at the start
+        // cell — continuing keeps the player where they came into the map.
         bool portalRespawn = respawnAtPortal && world.Landmarks.ContainsKey("Portal0");
         if (portalRespawn)
             respawn[Area.Brinstar] = world.Landmarks["Portal0"];
 
+        // The third byte ($95D9) is the in-screen spawn height: the engine drops Samus
+        // at center X falling from this Y. Mid-screen $6E (the vanilla value in every
+        // non-Brinstar bank, so those areas need only 2 bytes) clears the ceiling and
+        // lands her on the floor; Brinstar's vanilla $B0 only suits the spawn-platform
+        // screen, so any other Brinstar respawn cell overrides it.
         foreach (var area in TableAreas)
         {
-            if (!respawn.TryGetValue(area, out var point))
-                throw new InvalidOperationException($"no respawn position for {area}");
-            patches[NesToPc(area, StartPositionNes)] = area == Area.Brinstar && portalRespawn
+            var point = respawn[area];
+            patches[NesToPc(area, StartPositionNes)] = area == Area.Brinstar && (portalRespawn || brinstarFallback)
                 ? [(byte)point.X, (byte)point.Y, 0x6E]
                 : [(byte)point.X, (byte)point.Y];
         }
+
+        // The boot config: the area the seed cold-starts into, and each area's respawn
+        // room orientation (0 horizontal, 1 vertical — SamusInit picks scroll direction
+        // and PPU mirroring from it on every spawn). Indexed by the InArea/enum order,
+        // NOT by TableAreas, whose bank order swaps Kraid and Tourian.
+        patches[RomWriter.StartAreaConfigAddress] = [(byte)startArea];
+        var orientation = new byte[5];
+        foreach (var (area, point) in respawn)
+            orientation[(int)area] = grid.Cell(point)!.Run.Axis == Scrolling.Vertical ? (byte)1 : (byte)0;
+        patches[RomWriter.StartAreaConfigAddress + 1] = orientation;
     }
 }

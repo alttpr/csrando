@@ -50,8 +50,18 @@ public sealed class AutomapTiles
     public int BytesPerArea { get; }
     public int AreaCount { get; }
 
+    /// <summary>First tile number of the plain item glyph group and the number of tiles in it.
+    /// The energy/major groups mirror the item group tile-for-tile, so
+    /// <c>base + (char - ItemTileBase)</c> converts an item glyph to its tiered variant.</summary>
+    public int ItemTileBase { get; }
+    public int ItemTileCount { get; }
+    public int EnergyTileBase { get; }
+    public int MajorTileBase { get; }
+
     private readonly Dictionary<int, ushort> topology;
     private readonly Dictionary<int, ushort> items;
+    private readonly Dictionary<int, ushort> energyItems;
+    private readonly Dictionary<int, ushort> majorItems;
     private readonly Dictionary<int, ushort> portals;
     private readonly Dictionary<int, ushort> mapStations;
     private readonly Dictionary<(int Connections, int Doors), ushort> doors;
@@ -74,7 +84,9 @@ public sealed class AutomapTiles
     private sealed record BossDto(int Doors, int Word);
     private sealed record ElevatorDto(string Kind, string? SideDoor, int Word);
     private sealed record FeaturesDto(
-        List<GlyphDto> Item, List<GlyphDto> Portal, List<GlyphDto> Mapstation);
+        List<GlyphDto> Item, List<GlyphDto> Portal, List<GlyphDto> Mapstation,
+        List<GlyphDto> Energy, List<GlyphDto> Major);
+    private sealed record GroupTilesDto(int Item, int Energy, int Major);
     private sealed record RomMapDto(
         int HeaderSnesAddress, int AreaBoundsOffset, int TilemapsSnesAddress,
         int Width, int Height, int EntryBytes, int AreaBytes, List<string> AreaOrder);
@@ -85,6 +97,8 @@ public sealed class AutomapTiles
         public required RomMapDto RomMap { get; init; }
         public required ConnectionBitsDto ConnectionBits { get; init; }
         public required TilemapWordDto TilemapWord { get; init; }
+        public required GroupTilesDto GroupTileBases { get; init; }
+        public required GroupTilesDto GroupTileCounts { get; init; }
         public required List<GlyphDto> Topology { get; init; }
         public required FeaturesDto Features { get; init; }
         public required List<ElevatorDto> Elevators { get; init; }
@@ -127,8 +141,17 @@ public sealed class AutomapTiles
         // exploration state. Priority keeps the map above the dimmed game layer.
         Attributes = (ushort)(file.TilemapWord.PriorityMask | 3 << file.TilemapWord.PaletteShift);
 
+        ItemTileBase = file.GroupTileBases.Item;
+        ItemTileCount = file.GroupTileCounts.Item;
+        EnergyTileBase = file.GroupTileBases.Energy;
+        MajorTileBase = file.GroupTileBases.Major;
+        if (file.GroupTileCounts.Energy != ItemTileCount || file.GroupTileCounts.Major != ItemTileCount)
+            throw new InvalidDataException("m1_map_tiles.json energy/major glyph groups do not mirror the item group");
+
         topology = file.Topology.ToDictionary(g => g.Connections, g => (ushort)g.Word);
         items = file.Features.Item.ToDictionary(g => g.Connections, g => (ushort)g.Word);
+        energyItems = file.Features.Energy.ToDictionary(g => g.Connections, g => (ushort)g.Word);
+        majorItems = file.Features.Major.ToDictionary(g => g.Connections, g => (ushort)g.Word);
         portals = file.Features.Portal.ToDictionary(g => g.Connections, g => (ushort)g.Word);
         mapStations = file.Features.Mapstation.ToDictionary(g => g.Connections, g => (ushort)g.Word);
         doors = file.Doors.ToDictionary(d => (d.Connections, d.Doors), d => (ushort)d.Word);
@@ -149,6 +172,8 @@ public sealed class AutomapTiles
 
     public ushort Topology(int connections) => Require(topology, connections, "topology");
     public ushort Item(int connections) => Require(items, connections, "item");
+    public ushort Energy(int connections) => Require(energyItems, connections, "energy item");
+    public ushort Major(int connections) => Require(majorItems, connections, "major item");
     public ushort Portal(int connections) => Require(portals, connections, "portal");
     public ushort MapStation(int connections) => Require(mapStations, connections, "map station");
 

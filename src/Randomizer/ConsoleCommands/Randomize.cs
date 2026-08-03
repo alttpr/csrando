@@ -38,18 +38,18 @@ internal sealed class Randomize : Command
         Add(_settingsFile);
         Add(_dumpSpoiler);
 
-        _multiworld.Validators.Add(r =>
-        {
-            if (r.GetValueOrDefault<int>() <= 0)
-                r.AddError("Multiworld player count needs to be at least 1");
-        });
-        _bulk.Validators.Add(r =>
-        {
-            if (r.GetValueOrDefault<int>() <= 0)
-                r.AddError("Bulk count needs to be at least 1");
-        });
+        Validators.Add(Validate);
 
         SetAction(Handle);
+    }
+
+    private void Validate(CommandResult result)
+    {
+        if (result.GetValue(_multiworld) <= 0)
+            result.AddError("Multiworld player count needs to be at least 1");
+
+        if (result.GetValue(_bulk) <= 0)
+            result.AddError("Bulk count needs to be at least 1");
     }
 
     /// <summary>Execute the console command.</summary>

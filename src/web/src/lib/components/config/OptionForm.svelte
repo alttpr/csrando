@@ -7,6 +7,7 @@
 		values?: { [key: string]: unknown };
 		title: string;
 		visibility?: Array<string>;
+		selectedGames?: Array<string>;
 	}
 
 	let {
@@ -14,6 +15,7 @@
 		values = $bindable({}),
 		title,
 		visibility = [],
+		selectedGames = [],
 	}: Props = $props();
 
 	const hasOptionsFor = (
@@ -26,6 +28,7 @@
 		opts: MetadataSetting[],
 		vals: { [key: string]: unknown },
 		vis: Array<string>,
+		selected: Array<string>,
 	) => {
 		return opts.filter((option) => {
 			// 1. Respect the requested visibility level for this option.
@@ -35,6 +38,15 @@
 				return vis.includes(option.visibility);
 			})();
 			if (!isVisibilityLevelMet) return false;
+
+			// 1b. Game-selection gate: hide as soon as any selected game falls
+			// outside the option's allow-list.
+			if (
+				option.onlyWithGames &&
+				selected.some((game) => !option.onlyWithGames!.includes(game))
+			) {
+				return false;
+			}
 
 			// 2. Enforce dependsOn relationships against the normalized schema shape ({ key, values }).
 			if (option.dependsOn?.key) {
@@ -59,7 +71,7 @@
 	};
 
 	const visibleOptions = $derived(
-		getVisibleOptions(options, values, visibility),
+		getVisibleOptions(options, values, visibility, selectedGames),
 	);
 
 	const topLevelOptions = $derived(

@@ -16,7 +16,9 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     public WorldConfig WorldConfig { get; } = worldConfig;
 
     // derived class is responsible for setting those; but more often than not they can't just pass it into the base ctor.
-    public Vertex Start { get; protected init; } = null!;
+    // Start is settable past construction: SM moves it to a configured save station
+    // once the combo portal edges exist.
+    public Vertex Start { get; protected set; } = null!;
     public Inventory StartingItems { get; protected init; } = null!;
 
     protected readonly Dictionary<string, TItem> _allItems = [];

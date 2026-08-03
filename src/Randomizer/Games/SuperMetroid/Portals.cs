@@ -35,7 +35,7 @@ public static class Portals
     // argument to three bits, so save rooms must use 6 or 7. Map/refill portal rooms only
     // need an arrival autosave entry and preferentially use 0x10-0x11, preserving 6/7.
     // Slots 8-0xF belong to the map rando's own stations.
-    private static readonly int[] SaveStationAreaOffsets = [0x44C5, 0x45CF, 0x46D9, 0x481B, 0x4917, 0xCA2F];
+    private static readonly int[] SaveStationAreaOffsets = [0x44C5, 0x45CF, 0x46D9, 0x481B, 0x4917, 0x4A2F];
     private static readonly int[] ManualSaveSlots = [6, 7];
     private static readonly int[] AutosaveOnlySlots = [0x10, 0x11];
 

@@ -543,6 +543,7 @@
 					values={formValues.global}
 					title={m.config_global_options_header()}
 					visibility={selectedVisibility}
+					{selectedGames}
 				/>
 			{/if}
 			<!-- Game-specific Options Component -->

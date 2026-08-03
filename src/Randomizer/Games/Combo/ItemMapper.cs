@@ -1875,4 +1875,11 @@ public class ItemMapper
         return itemBytes;
     }
 
+    /// <summary>All item names the combo mapper knows for a source game; empty for unknown games.</summary>
+    public static IReadOnlyCollection<string> KnownItemNames(string gameId) =>
+        _itemBytes.GetValueOrDefault(gameId)?.Keys ?? (IReadOnlyCollection<string>)[];
+
+    /// <summary>The source game ids the combo mapper has item tables for.</summary>
+    public static IReadOnlyCollection<string> KnownGameIds => _itemBytes.Keys;
+
 }

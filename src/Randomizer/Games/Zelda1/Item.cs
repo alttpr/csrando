@@ -28,5 +28,6 @@ public sealed class Item : Randomizer.Graph.Item
             itemType = ItemType.Meta;
         Type = itemType;
         Bytes = [yamlItem?.Byte ?? 0];
+        Tier = ItemTiers.ParseDeclaration(yamlItem?.Tier);
     }
 }

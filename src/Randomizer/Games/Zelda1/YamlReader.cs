@@ -1632,4 +1632,6 @@ public class YamlItem
     public byte Byte { get; set; }
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
+    [YamlMember(Alias = "tier")]
+    public string? Tier { get; set; }
 }

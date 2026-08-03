@@ -86,6 +86,7 @@
 					bind:values={formValues.perGame[activeGameTab]}
 					title={`${getGameName(activeGameTab)} ${m.config_options()}`}
 					{visibility}
+					{selectedGames}
 				/>
 			{/key}
 		{:else if activeGameTab}

@@ -202,6 +202,94 @@ public sealed class TopologyStatsTempTest
         File.WriteAllText(Path.Combine(FindRepoRoot(), "TestResults", "m1fill-failures.txt"), output);
     }
 
+    [TestMethod]
+    public void DebugStalledPlaythroughSeed8()
+    {
+        string sourceDataRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "../../../../../src/Randomizer/Games/SuperMetroid/data"));
+        if (!Directory.Exists(Path.Combine(sourceDataRoot, "maps")))
+            Assert.Inconclusive("Requires the local SM map-rando Avro corpus.");
+
+        var trace = new StringBuilder();
+        string oldDataRoot = Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot;
+        try
+        {
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = sourceDataRoot;
+            Randomizer.Graph.PlaythroughGenerator.DebugTrace = line => trace.AppendLine(line);
+            var config = new Randomizer.Games.WorldConfig
+            {
+                Combo = new Randomizer.Games.Combo.Config { InitialGame = "sm" },
+                SuperMetroid = new Randomizer.Games.SuperMetroid.Config
+                {
+                    MapRandomizer = Randomizer.Games.SuperMetroid.MapRandomizerSetting.Standard,
+                },
+                Metroid = new Config { MapShuffle = true },
+            };
+            var randomizer = new Randomizer.Games.Combo.GameRandomizer(
+                [config], new Randomizer.Graph.PRNG(8));
+            randomizer.Randomize();
+            trace.AppendLine($"winnable: {randomizer.IsWinnable()}");
+        }
+        finally
+        {
+            Randomizer.Graph.PlaythroughGenerator.DebugTrace = null;
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = oldDataRoot;
+        }
+        File.WriteAllText(Path.Combine(FindRepoRoot(), "TestResults", "m1sm-stall-trace.txt"), trace.ToString());
+    }
+
+    [TestMethod]
+    public void ScanForEmptyPlaythroughs()
+    {
+        string sourceDataRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "../../../../../src/Randomizer/Games/SuperMetroid/data"));
+        if (!Directory.Exists(Path.Combine(sourceDataRoot, "maps")))
+            Assert.Inconclusive("Requires the local SM map-rando Avro corpus.");
+
+        var sb = new StringBuilder();
+        string oldDataRoot = Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot;
+        try
+        {
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = sourceDataRoot;
+            for (int seed = 1; seed <= 12; seed++)
+            {
+                var config = new Randomizer.Games.WorldConfig
+                {
+                    Combo = new Randomizer.Games.Combo.Config { InitialGame = "sm" },
+                    SuperMetroid = new Randomizer.Games.SuperMetroid.Config
+                    {
+                        MapRandomizer = Randomizer.Games.SuperMetroid.MapRandomizerSetting.Standard,
+                    },
+                    Metroid = new Config { MapShuffle = true },
+                };
+                try
+                {
+                    var randomizer = new Randomizer.Games.Combo.GameRandomizer(
+                        [config], new Randomizer.Graph.PRNG(seed));
+                    randomizer.Randomize();
+                    bool winnable = randomizer.IsWinnable();
+                    using var playthrough = System.Text.Json.JsonDocument.Parse(
+                        randomizer.SpoilerLog!.Spoiler["playthrough"]["data"]);
+                    var root = playthrough.RootElement;
+                    bool complete = root.GetProperty("complete").GetBoolean();
+                    int spheres = root.GetProperty("spheres").GetArrayLength();
+                    sb.AppendLine($"seed {seed}: winnable={winnable} complete={complete} spheres={spheres}"
+                        + (winnable && spheres == 0 ? "  <-- BUG" : ""));
+                }
+                catch (Exception e)
+                {
+                    sb.AppendLine($"seed {seed}: EXCEPTION {e.Message.Split('\n')[0]}");
+                }
+            }
+        }
+        finally
+        {
+            Randomizer.Games.SuperMetroid.Model.JsonReader.DataRoot = oldDataRoot;
+        }
+        TestContext.WriteLine(sb.ToString());
+        File.WriteAllText(Path.Combine(FindRepoRoot(), "TestResults", "m1sm-playthrough-scan.txt"), sb.ToString());
+    }
+
     private static string Normalize(string reason) => Regex.Replace(reason, "[0-9]+", "#");
 
     private static string FindRepoRoot()

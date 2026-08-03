@@ -117,6 +117,11 @@ public static class RoomBuilder
                 if (cell.Role == CellRole.Start && screen.StartLocationName != null)
                     startLocationName = $"{room.area} - {room.name} - {screen.Name} ({index}) - {screen.StartLocationName}";
 
+                // An elevator-arrival start has no Start-role cell; its start vertex is
+                // the platform location the elevator screen already exposes.
+                else if (cell.Position == world.Start && screen.ElevatorLocationNames.Count > 0)
+                    startLocationName = $"{room.area} - {room.name} - {screen.Name} ({index}) - {screen.ElevatorLocationNames[0]}";
+
                 // Portal rooms anchor cross-game transitions through their door vertex.
                 if (cell.Role == CellRole.Portal)
                 {

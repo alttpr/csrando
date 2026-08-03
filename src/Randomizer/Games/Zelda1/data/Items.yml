@@ -1,7 +1,9 @@
 Nothing:
   byte: 0x00
+  tier: minor
 Bombs:
   byte: 0x00
+  tier: minor
 SwordL1:
   byte: 0x01
 SwordL2:
@@ -18,6 +20,7 @@ RedCandle:
   byte: 0x07
 Arrows:
   byte: 0x08
+  tier: minor
 SilverArrows:
   byte: 0x09
 Bow:
@@ -30,8 +33,10 @@ StepLadder:
   byte: 0x0d
 Unused1:
   byte: 0x0e
+  tier: minor
 Rupee5:
   byte: 0x0f
+  tier: minor
 Rod:
   byte: 0x10
 Book:
@@ -46,14 +51,19 @@ Letter:
   byte: 0x15
 Compass:
   byte: 0x16
+  tier: minor
 Map:
   byte: 0x17
+  tier: minor
 Rupee:
   byte: 0x18
+  tier: minor
 Key:
   byte: 0x19
+  tier: minor
 HeartContainer:
   byte: 0x1a
+  tier: medium
 Triforce:
   byte: 0x1b
 MagicShield:
@@ -64,11 +74,16 @@ MagicBoomerang:
   byte: 0x1e
 BluePotion:
   byte: 0x1f
+  tier: medium
 RedPotion:
   byte: 0x20
+  tier: medium
 Clock:
   byte: 0x21
+  tier: minor
 Heart:
   byte: 0x22
+  tier: medium
 Fairy:
   byte: 0x23
+  tier: medium

@@ -169,8 +169,110 @@ public class Config
     public MapRandomizerSetting MapRandomizer { get; init; } = MapRandomizerSetting.None;
 
     [Category("Gameplay")]
+    [Name("Tiered Items")]
+    [Wip("Tiered item map icons are being play-tested")]
+    [OnlyWithGames(Game.SuperMetroid, Game.Metroid)]
+    [DependsOn(nameof(MapRandomizer), MapRandomizerSetting.Standard)]
+    [Description("Item dots on the map show their tier: major, medium, or minor items. Custom starts from all-minor and applies the override list.")]
+    public TieredItemsSetting TieredItems { get; init; } = TieredItemsSetting.Off;
+
+    [Category("Gameplay")]
+    [Name("Custom Item Tiers")]
+    [Wip("Tiered item map icons are being play-tested")]
+    [OnlyWithGames(Game.SuperMetroid, Game.Metroid)]
+    [DependsOn(nameof(TieredItems), TieredItemsSetting.Custom)]
+    [Description("Comma-separated overrides: game:ItemName=tier (tier: minor, medium, major). Example: sm:Charge=medium, m1:IceBeam=major")]
+    public string CustomItemTiers { get; init; } = "";
+
+    [Category("Gameplay")]
     [Description("Spawn all items directly no matter the state of events. (For example killing bosses like Phantoon)")]
     public bool SpawnAllItems { get; init; } = false;
+
+    /// <summary>The value of <see cref="StartLocation"/> that keeps the vanilla start.</summary>
+    public const string VanillaStartLocation = "Ship";
+
+    /// <summary>The <see cref="StartLocation"/> value that resolves to a random station.</summary>
+    public const string RandomStartLocation = "Random";
+
+    /// <summary>
+    /// Every selectable start location; the "Random" pool is this list without Ship.
+    /// A test keeps it in sync with the data-derived
+    /// <see cref="SaveStations.EligibleStartStations"/> and with the [Values] list on
+    /// <see cref="StartLocation"/>, which must repeat the names literally.
+    /// </summary>
+    public static readonly string[] StartLocationValues =
+    [
+        VanillaStartLocation,
+        "Crateria Save Room",
+        "Big Pink Save Room",
+        "Green Brinstar Main Shaft Save Room",
+        "Etecoon Save Room",
+        "Kraid Save Room",
+        "Caterpillar Save Room",
+        "Post Crocomire Save Room",
+        "Bubble Mountain Save Room",
+        "Frog Savestation",
+        "Crocomire Save Room",
+        "Lower Norfair Elevator Save Room",
+        "Red Kihunter Shaft Save Room",
+        "Wrecked Ship Save Room",
+        "Glass Tunnel Save Room",
+        "Forgotten Highway Save Room",
+        "Aqueduct Save Room",
+        "Draygon Save Room",
+    ];
+
+    private string? _startLocation;
+
+    // "Random" is a literal value (not the omit-the-property convention) so configs
+    // that never mention the setting keep the vanilla start.
+    [Category("Gameplay")]
+    [Name("Starting Location")]
+    [Wip("Random starts are being play-tested")]
+    [OnlyWithGames(Game.SuperMetroid, Game.Metroid)]
+    [DependsOn(nameof(MapRandomizer), MapRandomizerSetting.Standard)]
+    [Description("The save station Samus starts and initially respawns at; requires the Map Randomizer, which decides "
+        + "per seed whether a station can reach items and a portal with an empty inventory (Random draws only from "
+        + "stations that can). A moved start makes Super Metroid the seed's starting game (random tie-break when "
+        + "Metroid also moves its start).")]
+    [Values("Ship", "Random",
+        "Crateria Save Room",
+        "Big Pink Save Room",
+        "Green Brinstar Main Shaft Save Room",
+        "Etecoon Save Room",
+        "Kraid Save Room",
+        "Caterpillar Save Room",
+        "Post Crocomire Save Room",
+        "Bubble Mountain Save Room",
+        "Frog Savestation",
+        "Crocomire Save Room",
+        "Lower Norfair Elevator Save Room",
+        "Red Kihunter Shaft Save Room",
+        "Wrecked Ship Save Room",
+        "Glass Tunnel Save Room",
+        "Forgotten Highway Save Room",
+        "Aqueduct Save Room",
+        "Draygon Save Room",
+        Default = "Ship")]
+    public string StartLocation
+    {
+        get => _startLocation ?? VanillaStartLocation;
+        set => _startLocation = value;
+    }
+
+    /// <summary>Whether the config asks to move the start; the combo world picks the
+    /// seed's starting game from this. Requires the map randomizer — on the vanilla
+    /// layout no station passes the itemless-pocket viability check.</summary>
+    [Ignore("Derived from StartLocation")]
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool StartLocationRequested =>
+        MapRandomizer == MapRandomizerSetting.Standard && StartLocation != VanillaStartLocation;
+
+    /// <summary>Cleared by the combo world on every game that did not win the
+    /// starting-game selection, so only the seed's starting game moves its start.</summary>
+    [Ignore("Internal starting-game selection state, not a setting")]
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool ApplyStartLocation { get; set; } = true;
 
     [RandomizedOptionsFor(nameof(Bosses))]
     [Values("0", "1", "2", "3", "4")]

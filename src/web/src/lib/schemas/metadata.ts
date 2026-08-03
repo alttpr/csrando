@@ -23,6 +23,9 @@ const SettingBaseSchema = z.object({
       values: z.array(z.any()).min(1),
     })
     .optional(),
+  // Game-selection gate: the setting only applies when every selected game is in
+  // this list; selecting any other game hides it and drops it from the payload.
+  onlyWithGames: z.array(z.string()).optional(),
   // Subcategory supports the same dual-shape as category.
   subcategory: z
     .union([

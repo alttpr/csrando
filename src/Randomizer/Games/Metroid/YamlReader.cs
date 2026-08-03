@@ -781,4 +781,6 @@ public class YamlItem
     public required byte[] Bytes { get; set; }
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
+    [YamlMember(Alias = "tier")]
+    public string? Tier { get; set; }
 }

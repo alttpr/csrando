@@ -1,4 +1,5 @@
 Nothing:
+  tier: minor
   bytes: [0x5A]
   type: Meta
 L1Sword:
@@ -34,6 +35,7 @@ Boomerang:
 Powder:
   bytes: [0x0D]
 Bee:
+  tier: minor
   bytes: [0x0E]
 Bombos:
   bytes: [0x0F]
@@ -42,21 +44,27 @@ Ether:
 Quake:
   bytes: [0x11]
 MireEntryBombos:
+  tier: minor
   bytes: [0x00, 0x31, 0x80, 0x00]
   type: Meta
 MireEntryEther:
+  tier: minor
   bytes: [0x01, 0x13, 0x9F, 0xF1]
   type: Meta
 MireEntryQuake:
+  tier: minor
   bytes: [0x02, 0x31, 0x88, 0x00]
   type: Meta
 TurtleRockEntryBombos:
+  tier: minor
   bytes: [0x00, 0x31, 0x90, 0x00]
   type: Meta
 TurtleRockEntryEther:
+  tier: minor
   bytes: [0x01, 0x31, 0x98, 0x00]
   type: Meta
 TurtleRockEntryQuake:
+  tier: minor
   bytes: [0x02, 0x14, 0xEF, 0xC4]
   type: Meta
 Lamp:
@@ -72,6 +80,7 @@ Bottle:
 FairyBottle:
   bytes: [0x16]
 PieceOfHeart:
+  tier: medium
   bytes: [0x17]
 CaneOfByrna:
   bytes: [0x18]
@@ -96,16 +105,21 @@ BlueMail:
 RedMail:
   bytes: [0x23]
 Key:
+  tier: minor
   bytes: [0x24]
   type: SmallKey
 Compass:
+  tier: minor
   bytes: [0x25]
   type: Compass
 HeartContainerNoAnimation:
+  tier: medium
   bytes: [0x26]
 Bomb:
+  tier: minor
   bytes: [0x27]
 ThreeBombs:
+  tier: minor
   bytes: [0x28]
 Mushroom:
   bytes: [0x29]
@@ -130,18 +144,23 @@ GreenPotion:
 BluePotion:
   bytes: [0x30]
 TenBombs:
+  tier: minor
   bytes: [0x31]
 BigKey:
   bytes: [0x32]
   type: BigKey
 Map:
+  tier: minor
   bytes: [0x33]
   type: Map
 OneRupee:
+  tier: minor
   bytes: [0x34]
 FiveRupees:
+  tier: minor
   bytes: [0x35]
 TwentyRupees:
+  tier: minor
   bytes: [0x36]
 PendantOfCourage:
   bytes: [0x04, 0x38, 0x62, 0x00, 0x69, 0x37]
@@ -162,26 +181,37 @@ BottleWithFairy:
 FairyBottleWithFairy:
   bytes: [0x3D]
 BossHeartContainer:
+  tier: medium
   bytes: [0x3E]
 HeartContainer:
+  tier: medium
   bytes: [0x3F]
 OneHundredRupees:
+  tier: minor
   bytes: [0x40]
 FiftyRupees:
+  tier: minor
   bytes: [0x41]
 Heart:
+  tier: medium
   bytes: [0x42]
 Arrow:
+  tier: minor
   bytes: [0x43]
 ShopArrow:
+  tier: minor
   bytes: [0x43]
 TenArrows:
+  tier: minor
   bytes: [0x44]
 SmallMagic:
+  tier: minor
   bytes: [0x45]
 ThreeHundredRupees:
+  tier: minor
   bytes: [0x46]
 TwentyRupees2:
+  tier: minor
   bytes: [0x47]
 BottleWithGoldBee:
   bytes: [0x48]
@@ -192,36 +222,49 @@ OcarinaActive:
 PegasusBoots:
   bytes: [0x4B]
 BombUpgrade5:
+  tier: minor
   bytes: [0x51]
 BombUpgrade10:
+  tier: minor
   bytes: [0x52]
 BombUpgrade50:
+  tier: minor
   bytes: [0x4C]
 ArrowUpgrade5:
+  tier: minor
   bytes: [0x53]
 ArrowUpgrade10:
+  tier: minor
   bytes: [0x54]
 ArrowUpgrade70:
+  tier: minor
   bytes: [0x4D]
 HalfMagic:
   bytes: [0x4E]
 QuarterMagic:
   bytes: [0x4F]
 Programmable1:
+  tier: minor
   bytes: [0x55]
 Programmable2:
+  tier: minor
   bytes: [0x56]
 Programmable3:
+  tier: minor
   bytes: [0x57]
 SilverArrowUpgrade:
   bytes: [0x58]
 Rupoor:
+  tier: minor
   bytes: [0x59]
 RedClock:
+  tier: minor
   bytes: [0x5B]
 BlueClock:
+  tier: minor
   bytes: [0x5C]
 GreenClock:
+  tier: minor
   bytes: [0x5D]
 ProgressiveSword:
   bytes: [0x5E]
@@ -248,93 +291,123 @@ PowerStar:
 TriforcePiece:
   bytes: [0x6C]
 MapLW:
+  tier: minor
   bytes: [0x70]
   type: Map
 MapDW:
+  tier: minor
   bytes: [0x71]
   type: Map
 MapA2:
+  tier: minor
   bytes: [0x72]
   type: Map
 MapD7:
+  tier: minor
   bytes: [0x73]
   type: Map
 MapD4:
+  tier: minor
   bytes: [0x74]
   type: Map
 MapP3:
+  tier: minor
   bytes: [0x75]
   type: Map
 MapD5:
+  tier: minor
   bytes: [0x76]
   type: Map
 MapD3:
+  tier: minor
   bytes: [0x77]
   type: Map
 MapD6:
+  tier: minor
   bytes: [0x78]
   type: Map
 MapD1:
+  tier: minor
   bytes: [0x79]
   type: Map
 MapD2:
+  tier: minor
   bytes: [0x7A]
   type: Map
 MapA1:
+  tier: minor
   bytes: [0x7B]
   type: Map
 MapP2:
+  tier: minor
   bytes: [0x7C]
   type: Map
 MapP1:
+  tier: minor
   bytes: [0x7D]
   type: Map
 MapH1:
+  tier: minor
   bytes: [0x7E]
   type: Map
 MapH2:
+  tier: minor
   bytes: [0x7F]
   type: Map
 CompassA2:
+  tier: minor
   bytes: [0x82]
   type: Compass
 CompassD7:
+  tier: minor
   bytes: [0x83]
   type: Compass
 CompassD4:
+  tier: minor
   bytes: [0x84]
   type: Compass
 CompassP3:
+  tier: minor
   bytes: [0x85]
   type: Compass
 CompassD5:
+  tier: minor
   bytes: [0x86]
   type: Compass
 CompassD3:
+  tier: minor
   bytes: [0x87]
   type: Compass
 CompassD6:
+  tier: minor
   bytes: [0x88]
   type: Compass
 CompassD1:
+  tier: minor
   bytes: [0x89]
   type: Compass
 CompassD2:
+  tier: minor
   bytes: [0x8A]
   type: Compass
 CompassA1:
+  tier: minor
   bytes: [0x8B]
   type: Compass
 CompassP2:
+  tier: minor
   bytes: [0x8C]
   type: Compass
 CompassP1:
+  tier: minor
   bytes: [0x8D]
   type: Compass
 CompassH1:
+  tier: minor
   bytes: [0x8E]
   type: Compass
 CompassH2:
+  tier: minor
   bytes: [0x8F]
   type: Compass
 BigKeyA2:
@@ -380,51 +453,67 @@ BigKeyH2:
   bytes: [0x9F]
   type: BigKey
 KeyH2:
+  tier: minor
   bytes: [0xA0]
   type: SmallKey
 KeyH1:
+  tier: minor
   bytes: [0xA1]
   type: SmallKey
 KeyP1:
+  tier: minor
   bytes: [0xA2]
   type: SmallKey
 KeyP2:
+  tier: minor
   bytes: [0xA3]
   type: SmallKey
 KeyA1:
+  tier: minor
   bytes: [0xA4]
   type: SmallKey
 KeyD2:
+  tier: minor
   bytes: [0xA5]
   type: SmallKey
 KeyD1:
+  tier: minor
   bytes: [0xA6]
   type: SmallKey
 KeyD6:
+  tier: minor
   bytes: [0xA7]
   type: SmallKey
 KeyD3:
+  tier: minor
   bytes: [0xA8]
   type: SmallKey
 KeyD5:
+  tier: minor
   bytes: [0xA9]
   type: SmallKey
 KeyP3:
+  tier: minor
   bytes: [0xAA]
   type: SmallKey
 KeyD4:
+  tier: minor
   bytes: [0xAB]
   type: SmallKey
 KeyD7:
+  tier: minor
   bytes: [0xAC]
   type: SmallKey
 KeyA2:
+  tier: minor
   bytes: [0xAD]
   type: SmallKey
 KeyGK:
+  tier: minor
   bytes: [0xAF]
   type: SmallKey
 ShopKey:
+  tier: minor
   bytes: [0xAF]
   type: SmallKey
 # these bytes correspond to the addresses held by type: "prize" items.

@@ -11,6 +11,14 @@ public static class RomWriter
     /// </summary>
     public const int TransitionTableAddress = 0x6C7000;
 
+    /// <summary>
+    /// PC address of config_m1_start_area (SNES $98:FF00, config.asm): the area the
+    /// boot code cold-starts into, in InArea order (0 Brinstar .. 4 Ridley). The
+    /// per-area orientation table follows at +1 and keeps its vanilla defaults as long
+    /// as the start cells stay vanilla.
+    /// </summary>
+    public const int StartAreaConfigAddress = 0x6C7F00;
+
     public static void Write(IRom baseRom, World world, PRNG prng, int offset = 0)
     {
         // Patch data first: under map shuffle it contains the generated item tables with

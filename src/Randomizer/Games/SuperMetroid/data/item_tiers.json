@@ -1,0 +1,8 @@
+{
+  "$comment": "Item tier declarations for tiered map icons. Kept separate from items.json because that file is an upstream sm-json-data snapshot. Unlisted items (all upgrades, keycards, boss tokens/maps) default to major.",
+  "ETank": "medium",
+  "ReserveTank": "medium",
+  "Missile": "minor",
+  "Super": "minor",
+  "PowerBomb": "minor"
+}

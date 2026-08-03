@@ -12,6 +12,11 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
     public YamlReader.YamlData? YamlData { get; set; }
     public Dictionary<int, byte[]>? PatchData { get; set; }
 
+    /// <summary>The area the seed starts in; non-Brinstar values use the area's
+    /// vanilla elevator arrival cell. Map shuffle always places its own Brinstar
+    /// start. Set by <see cref="ResolveStartingArea"/>.</summary>
+    public YamlReader.Area StartingArea { get; private set; }
+
     /// <summary>The generated map when MapShuffle is enabled; drives spoilers and ROM emission.</summary>
     public MapGen.GeneratedWorld? GeneratedMap { get; set; }
 
@@ -128,6 +133,163 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         items.AddRange(Config.StartingEquipment.Select(GetItem));
         StartingItems = new Inventory(items.ToArray());
         Start = DataLoader.Fill(this);
+    }
+
+    /// <summary>Every item that can widen an itemless start pocket (movement items,
+    /// plus beams/missiles/tanks that pass enemy and door gates).</summary>
+    private static readonly string[] StartOpenerCandidates =
+        ["Morph", "Bombs", "HiJump", "IceBeam", "LongBeam", "WaveBeam", "ScrewAttack", "Varia", "Missile", "EnergyTank"];
+
+    /// <summary>
+    /// Resolves <see cref="StartingArea"/>. On the vanilla map this runs once the
+    /// graph exists (viability is a graph property); under map shuffle it runs before
+    /// generation — the generator builds the start into the chosen area, and viability
+    /// comes from the generation and fill retries instead. Draws from the PRNG only
+    /// for a requested random start, so existing configs keep their seeds.
+    /// </summary>
+    internal void ResolveStartingArea()
+    {
+        if (!Config.ApplyStartArea || !Config.StartAreaRequested)
+        {
+            StartingArea = YamlReader.Area.Brinstar;
+            return;
+        }
+
+        if (Config.MapShuffle)
+        {
+            StartingArea = Config.StartArea == Config.RandomStartArea
+                ? Prng.GetRandomElement(Config.StartAreaValues.Select(ParseArea).ToList())
+                : ParseArea(Config.StartArea);
+            return;
+        }
+
+        if (Config.StartArea == Config.RandomStartArea)
+        {
+            var viable = Config.StartAreaValues
+                .Select(ParseArea)
+                .Where(area => IsViableStart(DataLoader.StartLocationFor(area)))
+                .ToList();
+            if (viable.Count == 0)
+                throw new MapGen.GenerationException("no Metroid area is a viable start on this map");
+            StartingArea = Prng.GetRandomElement(viable);
+            return;
+        }
+
+        var chosen = ParseArea(Config.StartArea);
+        if (!IsViableStart(DataLoader.StartLocationFor(chosen)))
+            throw new ArgumentException(
+                $"Metroid start area '{chosen}' cannot reach an item location that some item can open up, "
+                + "so no seed starting there can be filled");
+        StartingArea = chosen;
+    }
+
+    private static YamlReader.Area ParseArea(string area) =>
+        Enum.TryParse(area, out YamlReader.Area parsed) && parsed != YamlReader.Area.Meta
+            ? parsed
+            : throw new ArgumentException($"Unknown Metroid start area '{area}'");
+
+    /// <summary>
+    /// A start is viable when its itemless pocket holds an item location and some item
+    /// widens the pocket beyond it. Otherwise the first placement fills the only slot
+    /// and every later item is stranded.
+    /// </summary>
+    private bool IsViableStart(string vertexName) =>
+        FindOpener(vertexName, StartOpenerCandidates.Select(GetItem)) != null;
+
+    /// <summary>
+    /// The item to place first at this world's start, or null when nothing opens it.
+    /// Prefers Morph whenever Morph opens the pocket, keeping the fill order of every
+    /// previously generatable seed unchanged.
+    /// </summary>
+    public IItem? FindStartOpener(IEnumerable<IItem> availableItems) =>
+        FindOpener(Start.Name, availableItems.Where(item => ReferenceEquals(item.World, this)));
+
+    private IItem? FindOpener(string vertexName, IEnumerable<IItem> candidates)
+    {
+        var start = GetLocation(vertexName);
+        int baseline = ReachableEmptyItemLocations(start, ComputeStartingItems());
+        if (baseline == 0)
+            return null;
+
+        int Opened(IItem item)
+        {
+            var inventory = ComputeStartingItems();
+            inventory.AddItem(item);
+            return ReachableEmptyItemLocations(start, inventory);
+        }
+
+        // Ordinal order keeps the pick deterministic when two items tie.
+        var probes = candidates
+            .Where(item => StartOpenerCandidates.Contains(item.Name))
+            .DistinctBy(item => item.Name)
+            .OrderBy(item => item.Name, StringComparer.Ordinal)
+            .ToList();
+
+        var morph = probes.Find(item => item.Name == "Morph");
+        if (morph != null)
+        {
+            if (Opened(morph) > baseline)
+                return morph;
+            probes.Remove(morph);
+        }
+
+        IItem? best = null;
+        int bestReach = baseline;
+        foreach (var item in probes)
+        {
+            int reach = Opened(item);
+            if (reach > bestReach)
+                (best, bestReach) = (item, reach);
+        }
+
+        return best;
+    }
+
+    /// <summary>
+    /// Item locations still empty and reachable from <paramref name="start"/>.
+    /// Mirrors <see cref="Searcher"/>'s Metroid traversal (BFS over same-world edges
+    /// the inventory satisfies, collecting placed items to a fixpoint) — Searcher
+    /// itself needs graph vertex ids, which don't exist yet while worlds are built.
+    /// </summary>
+    private int ReachableEmptyItemLocations(BaseVertex start, Inventory inventory)
+    {
+        var visited = new HashSet<BaseVertex> { start };
+        var collected = new HashSet<BaseVertex>();
+        var frontier = new Queue<BaseVertex>();
+        frontier.Enqueue(start);
+
+        while (true)
+        {
+            while (frontier.TryDequeue(out var vertex))
+            {
+                foreach (var edge in vertex.Edges)
+                {
+                    if (!ReferenceEquals(edge.To.World, this))
+                        continue;
+                    if (!edge.Condition.IsUnconditional && !inventory.Has(edge.Condition))
+                        continue;
+                    if (visited.Add(edge.To))
+                        frontier.Enqueue(edge.To);
+                }
+            }
+
+            // Collected items can open further edges; repeat until nothing new.
+            var newlyCollected = visited
+                .Where(vertex => vertex.Item != null && !collected.Contains(vertex))
+                .ToList();
+            if (newlyCollected.Count == 0)
+                break;
+
+            foreach (var vertex in newlyCollected)
+            {
+                collected.Add(vertex);
+                inventory.AddItem(vertex.Item!);
+            }
+            foreach (var vertex in visited)
+                frontier.Enqueue(vertex);
+        }
+
+        return visited.Count(vertex => vertex.Type == VertexType.Item && vertex.Item == null);
     }
 
     public Inventory ComputeStartingItems() =>

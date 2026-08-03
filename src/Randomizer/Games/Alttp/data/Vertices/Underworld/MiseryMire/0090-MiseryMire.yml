@@ -13,8 +13,7 @@ rooms:
             - DefeatArrghus
             - DefeatMothula
             - DefeatBlind
-            # Kholdstare and his shell cannot be interacted with in here.
-            #- DefeatKholdstare
+            - DefeatKholdstare
             - DefeatVitreous
             - DefeatTrinexx
           connections:

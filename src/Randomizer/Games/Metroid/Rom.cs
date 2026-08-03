@@ -28,6 +28,12 @@ public class Rom : GameRom
 
     public void WritePatchData(World world)
     {
+        // Tiered map icons must be resolved after the filler but before the automap
+        // patch data reaches the ROM; this is the single point that is post-fill on
+        // both the standalone and combo paths (combo also nulls location addresses
+        // only after this runs).
+        MapGen.MapIconPatcher.Apply(world);
+
         foreach (var (address, data) in world.PatchData ?? [])
         {
             Write((Address)address, data);

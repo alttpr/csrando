@@ -19,8 +19,19 @@ internal static class DataLoader
         YamlReader.Area.Kraid,
     ];
 
-    // Vanilla start location vertex name; map shuffle overrides this with its generated name.
-    private const string VanillaStartLocation = "Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform";
+    // Vanilla-map start vertex per area. Non-Brinstar entries are the vanilla
+    // elevator arrival cells
+    private static readonly Dictionary<YamlReader.Area, string> VanillaStartLocations = new()
+    {
+        [YamlReader.Area.Brinstar] = "Brinstar - Morph Room - Spawn Platform (2) - Spawn Platform",
+        [YamlReader.Area.Norfair] = "Norfair - Elevator Shaft - Elevator Entrance (1) - Elevator Platform",
+        [YamlReader.Area.Kraid] = "Kraid - Elevator Shaft - Elevator Entrance (1) - Elevator Platform",
+        [YamlReader.Area.Tourian] = "Tourian - Elevator Shaft - Elevator Entrance (1) - Elevator Platform",
+        [YamlReader.Area.Ridley] = "Ridley - Elevator Shaft - Elevator Entrance (1) - Elevator Platform",
+    };
+
+    /// <summary>The vanilla-map start vertex for an area (see <see cref="VanillaStartLocations"/>).</summary>
+    internal static string StartLocationFor(YamlReader.Area area) => VanillaStartLocations[area];
 
     public static Vertex Fill(World world)
     {
@@ -29,14 +40,19 @@ internal static class DataLoader
 
         yamlReader.LoadData();
 
-        string startLocationName = VanillaStartLocation;
+        string? generatedStartLocation = null;
 
         if (world.Config.MapShuffle)
         {
+            // Resolved before generation: the generator builds the start (and its
+            // pedestal) into the chosen area. Draws nothing for the default Brinstar,
+            // so existing map-shuffle seeds are unchanged.
+            world.ResolveStartingArea();
+
             // Sets world.PatchData to the generated map's ROM data (grid, item tables,
-            // respawn positions). The vanilla portal room patches are NOT included; generated
-            // portal anchors for combo mode are still to be done.
-            startLocationName = GenerateMap(world, yamlReader.Data!);
+            // respawn positions, boot config). The vanilla portal room patches are NOT
+            // included; generated portal anchors for combo mode are still to be done.
+            generatedStartLocation = GenerateMap(world, yamlReader.Data!);
         }
         else
         {
@@ -57,6 +73,24 @@ internal static class DataLoader
 
         LoadVertices(world, yamlReader.GetVertices(world));
         LoadEdges(world, yamlReader.GetEdges(world));
+
+        string startLocationName;
+        if (generatedStartLocation != null)
+        {
+            startLocationName = generatedStartLocation;
+        }
+        else
+        {
+            // Resolved here rather than in the World constructor: whether an area is a
+            // viable start is a property of the graph, which only exists now.
+            world.ResolveStartingArea();
+            startLocationName = VanillaStartLocations[world.StartingArea];
+
+            // The area the boot code cold-starts into; YamlReader.Area matches the
+            // engine's InArea order. The vanilla orientation table stays correct
+            // because every vanilla start cell keeps its room orientation.
+            world.PatchData![RomWriter.StartAreaConfigAddress] = [(byte)world.StartingArea];
+        }
 
 
         var startingVertex = new Vertex()
@@ -92,6 +126,7 @@ internal static class DataLoader
             },
             Saturate = world.Config.MapSize == MapSizeOption.Nightmare,
             PortalAreas = PortalRoomAreas,
+            StartArea = world.StartingArea,
         };
 
         var generated = generator.Generate(mapSeed);
@@ -116,10 +151,12 @@ internal static class DataLoader
 
         // ROM emission joins vanilla special-item payloads to screens through the vanilla
         // room coordinates, so it must run before ApplyTo replaces the room list. Combo
-        // seeds (the only ones with a Combo config) are entered through the portal, so
-        // Brinstar deaths respawn at the portal room instead of the generated start cell.
+        // seeds are entered through the portal — Brinstar deaths respawn at the portal
+        // room instead of the start cell — unless a moved start makes M1 the seed's
+        // starting game, in which case the boot cell must survive as the respawn.
+        bool bootsIntoMetroid = world.Config.ApplyStartArea && world.Config.StartAreaRequested;
         var emission = RomEmitter.Emit(generated, data.rooms,
-            respawnAtPortal: world.WorldConfig.Combo != null);
+            respawnAtPortal: world.WorldConfig.Combo != null && !bootsIntoMetroid);
         generated.ItemAddresses = emission.ItemAddresses;
         world.PatchData = emission.Patches;
 
@@ -162,7 +199,7 @@ internal static class DataLoader
             var itemset = vtx.TryGetValue("itemset", out var itemsetValue) && itemsetValue is string[] itemsetArray ? itemsetArray : null;
             int? address = vtx.TryGetValue("address", out var addressValue) && addressValue is int addressInt ? addressInt : null;
 
-            if(type == VertexType.Item)
+            if (type == VertexType.Item)
             {
                 address = GetItemLocationAddress(world, name);
             }
@@ -231,7 +268,7 @@ internal static class DataLoader
         { (0x0B, 0x12), 0x6C004B },
         { (0x0E, 0x02), 0x6C0059 },
         { (0x0E, 0x09), 0x6C005F },
-        
+
         // Norfair
         { (0x0A, 0x1B), 0x6C0205 },
         { (0x0A, 0x1C), 0x6C020B },
@@ -250,7 +287,7 @@ internal static class DataLoader
         { (0x15, 0x12), 0x6C02B5 },
         { (0x16, 0x13), 0x6C02C3 },
         { (0x16, 0x14), 0x6C02C9 },
-        
+
         // Kraid
         { (0x15, 0x04), 0x6C0615 },
         { (0x15, 0x09), 0x6C061B },
@@ -266,6 +303,39 @@ internal static class DataLoader
         { (0x1D, 0x0F), 0x6C0825 },
         { (0x1E, 0x14), 0x6C082E },
     };
+
+    // Bank order of the vanilla special-items tables (0x200 stride from the bank-88
+    // window); differs from the Area enum order — Kraid and Tourian swap.
+    private static readonly YamlReader.Area[] VanillaTableBankOrder =
+    [
+        YamlReader.Area.Brinstar,
+        YamlReader.Area.Norfair,
+        YamlReader.Area.Tourian,
+        YamlReader.Area.Kraid,
+        YamlReader.Area.Ridley,
+    ];
+
+    private static readonly Lazy<Dictionary<long, (int Y, int X)>> AddressToCoordMap = new(() =>
+        CoordToAddressMap.ToDictionary(kv => (long)kv.Value, kv => kv.Key));
+
+    /// <summary>
+    /// Inverse of <see cref="CoordToAddressMap"/> for vanilla layouts: resolves an item
+    /// vertex's table address back to the area and world-map cell it renders at. The
+    /// vanilla automap planes use the world-map coordinates directly.
+    /// </summary>
+    internal static bool TryGetVanillaItemCell(long address, out YamlReader.Area area, out MapGen.Point cell)
+    {
+        if (!AddressToCoordMap.Value.TryGetValue(address, out var coord))
+        {
+            area = default;
+            cell = default;
+            return false;
+        }
+
+        area = VanillaTableBankOrder[((int)address - MapGen.RomEmitter.TableAddress) / 0x200];
+        cell = new MapGen.Point(coord.X, coord.Y);
+        return true;
+    }
 
     // TODO: Vanilla path should write its own complete sprite table (as map shuffle does)
     // instead of relying on these hardcoded addresses.

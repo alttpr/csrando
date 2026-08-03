@@ -118,6 +118,15 @@ internal static partial class Spoiler
         {
             metaSection[$"{prefix}games"] = string.Join(", ", includedGames);
         }
+
+        if (comboWorld.SMWorld?.StartStation is { } startStation)
+        {
+            metaSection[$"{prefix}sm_start_location"] = startStation.RoomName;
+        }
+        if (comboWorld.M1World is { StartingArea: not Metroid.YamlReader.Area.Brinstar } m1World)
+        {
+            metaSection[$"{prefix}m1_start_area"] = m1World.StartingArea.ToString();
+        }
     }
 
     private static Dictionary<string, string> GetOrCreateSection(

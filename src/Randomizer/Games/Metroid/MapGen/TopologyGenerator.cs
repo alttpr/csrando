@@ -57,6 +57,26 @@ public class TopologyGenerator(ScreenCatalog catalog)
     public IReadOnlyList<Area> PortalAreas { get; init; } = [Area.Brinstar];
 
     /// <summary>
+    /// The area that hosts the start/pedestal pair. Brinstar keeps its original early
+    /// placement inside <see cref="BuildBrinstarSpine"/> (bit-identical seeds); any
+    /// other area places the pair after growth, when it has corridors to spare.
+    /// </summary>
+    public Area StartArea { get; init; } = Area.Brinstar;
+
+    /// <summary>
+    /// Per-area pedestal screen forced next to the start: an item location reachable
+    /// with zero equipment, which the filler's front fill depends on. Screen ids are
+    /// area-local. Tourian has no item screens and cannot host a start.
+    /// </summary>
+    private static readonly Dictionary<Area, int> StartPedestalScreens = new()
+    {
+        [Area.Brinstar] = 0x17, // Morph Pedestal
+        [Area.Norfair] = 0x19,  // Missile Pillar
+        [Area.Kraid] = 0x10,    // Grey Pillars
+        [Area.Ridley] = 0x0F,   // Grey Item Pillar
+    };
+
+    /// <summary>
     /// Nightmare mode: ignore the size targets and keep growing every area until nothing
     /// fits anymore, saturating the grid. Minimums stay at the SizeScale level (a hard
     /// minimum near saturation would make generation impossible).
@@ -164,6 +184,13 @@ public class TopologyGenerator(ScreenCatalog catalog)
                     GrowAreasToSaturation();
                 else
                     EnforceAreaMinimums();
+
+                // Non-Brinstar starts are placed only now: they claim no new space
+                // (two existing corridor cells are re-roled), and the sparse lower
+                // areas rarely have a qualifying corridor before growth. Must precede
+                // PlaceMapStations, whose depth search is rooted at the start.
+                if (StartArea != Area.Brinstar)
+                    PlaceStart(StartArea, grid.Runs);
 
                 PlaceMapStations();
                 EnsureItemCells();
@@ -348,20 +375,55 @@ public class TopologyGenerator(ScreenCatalog catalog)
         for (int i = 0; i + 1 < columns.Count; i++)
             corridors.Add(ConnectShaftsWithCorridor(ShaftsOf(Area.Brinstar)[i], ShaftsOf(Area.Brinstar)[i + 1]));
 
-        // The start needs two adjacent free-scrolling interior cells: the spawn platform
-        // (0x09) and, like vanilla's Morph Room, an item pedestal (0x17) right next to it.
-        // The pedestal guarantees at least one item location reachable with no equipment,
-        // which the item filler's Morph front-fill depends on.
-        var startPairs = new List<(AbstractCell Spawn, AbstractCell Pedestal)>();
-        foreach (var corridor in corridors)
+        // Brinstar starts pick their pair from the fresh spine corridors, before any
+        // other draw, so existing Brinstar seeds stay bit-identical. Other areas place
+        // theirs after growth (see Generate), when the area has corridors to spare.
+        if (StartArea == Area.Brinstar)
+            PlaceStart(Area.Brinstar, corridors);
+    }
+
+    /// <summary>
+    /// Re-roles two adjacent free-scrolling corridor cells into the start pair: the
+    /// spawn screen and, like vanilla's Morph Room, an item pedestal right next to it.
+    /// The pedestal guarantees at least one item location reachable with no equipment,
+    /// which the item filler's front fill depends on.
+    /// </summary>
+    private void PlaceStart(Area area, IEnumerable<Run> candidateRuns)
+    {
+        if (!StartPedestalScreens.TryGetValue(area, out int pedestalScreen))
+            throw new GenerationException($"{area} cannot host a start (no pedestal screen)");
+
+        // Vanilla-style alternative for the lower areas: start on the elevator arrival
+        // platform, the same cell death/continue respawns use (and the spawn the
+        // engine was built for). Rolled at one-in-three so the corridor-with-pedestal
+        // start stays the common case; also the fallback when no corridor qualifies.
+        // Brinstar is never an elevator destination, so its early placement never
+        // reaches this and stays bit-identical.
+        var elevatorArrivals = grid.Links
+            .Where(l => l.Type == LinkType.Elevator)
+            .Select(l => l.B.Step(Direction.Down))
+            .Where(p => grid.Cell(p)?.Area == area)
+            .ToList();
+        if (elevatorArrivals.Count > 0 && Rand(0, 2) == 0)
         {
-            for (int i = 0; i + 1 < corridor.Cells.Count; i++)
+            start = Pick(elevatorArrivals);
+            landmarks["Start"] = start;
+            return;
+        }
+
+        var startPairs = new List<(AbstractCell Spawn, AbstractCell Pedestal)>();
+        foreach (var run in candidateRuns.Where(r => r.Area == area && r.Axis == Scrolling.Horizontal))
+        {
+            for (int i = 0; i + 1 < run.Cells.Count; i++)
             {
-                var a = corridor.Cells[i];
-                var b = corridor.Cells[i + 1];
+                var a = run.Cells[i];
+                var b = run.Cells[i + 1];
                 if (a.Role == CellRole.Corridor && b.Role == CellRole.Corridor
+                    && !a.ForcedScreenId.HasValue && !b.ForcedScreenId.HasValue
                     && a.Left == EdgeRequirement.Scroll && a.Right == EdgeRequirement.Scroll
-                    && b.Left == EdgeRequirement.Scroll && b.Right == EdgeRequirement.Scroll)
+                    && b.Left == EdgeRequirement.Scroll && b.Right == EdgeRequirement.Scroll
+                    && a.Up == EdgeRequirement.Wall && a.Down == EdgeRequirement.Wall
+                    && b.Up == EdgeRequirement.Wall && b.Down == EdgeRequirement.Wall)
                 {
                     startPairs.Add((a, b));
                     startPairs.Add((b, a));
@@ -369,12 +431,20 @@ public class TopologyGenerator(ScreenCatalog catalog)
             }
         }
         if (startPairs.Count == 0)
-            throw new GenerationException("no corridor with adjacent interior cells for start + pedestal");
+        {
+            if (elevatorArrivals.Count > 0)
+            {
+                start = Pick(elevatorArrivals);
+                landmarks["Start"] = start;
+                return;
+            }
+            throw new GenerationException($"no {area} corridor with adjacent interior cells for start + pedestal");
+        }
 
         var (spawn, pedestal) = Pick(startPairs);
         spawn.Role = CellRole.Start;
         pedestal.Role = CellRole.Item;
-        pedestal.ForcedScreenId = 0x17; // Morph Pedestal: item reachable from both sides with nothing
+        pedestal.ForcedScreenId = pedestalScreen;
         start = spawn.Position;
         landmarks["Start"] = start;
         landmarks["StartPedestal"] = pedestal.Position;
@@ -1293,16 +1363,22 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
     /// <summary>
     /// Room-graph BFS distance of every cell of <paramref name="area"/> from its entry
-    /// point: the start cell for Brinstar, the elevator platform for the lower areas.
-    /// Scroll, door, and intra-area elevator edges all count as one step.
+    /// point: the start cell for the start area, the elevator platform for areas
+    /// entered from above, the elevator host cell for Brinstar when the start is
+    /// elsewhere (Brinstar is never an elevator destination). Scroll, door, and
+    /// intra-area elevator edges all count as one step.
     /// </summary>
     private Dictionary<Point, int> AreaDepths(Area area)
     {
-        var root = area == Area.Brinstar
+        var root = area == StartArea
             ? start
             : grid.Links.Where(l => l.Type == LinkType.Elevator)
                 .Select(l => l.B.Step(Direction.Down))
                 .FirstOrDefault(p => grid.Cell(p)?.Area == area);
+        if (grid.Cell(root)?.Area != area && area == Area.Brinstar)
+            root = grid.Links.Where(l => l.Type == LinkType.Elevator)
+                .Select(l => l.A)
+                .FirstOrDefault(p => grid.Cell(p)?.Area == Area.Brinstar);
         if (grid.Cell(root)?.Area != area)
             throw new GenerationException($"no entry cell for {area} depth search");
 
@@ -2211,12 +2287,19 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (elevators != 4)
             throw new GenerationException($"expected 4 elevator links, found {elevators}");
 
-        foreach (var required in new[] { "Start", "StatuesGate", "TourianElevator", "MotherBrain", "EscapeShaft",
+        var requiredLandmarks = new List<string> { "Start", "StatuesGate", "TourianElevator", "MotherBrain", "EscapeShaft",
                                          "Kraid", "Ridley", "ConstructionZone", "VariaShaft",
                                          "HiddenWallBrinstar0", "HiddenWallKraid0",
-                                         "BrinstarMapStation", "NorfairMapStation", "KraidMapStation", "RidleyMapStation" })
+                                         "BrinstarMapStation", "NorfairMapStation", "KraidMapStation", "RidleyMapStation" };
+        // Elevator-arrival starts have no forced pedestal; corridor starts must.
+        if (grid.Cell(start)?.Role == CellRole.Start)
+            requiredLandmarks.Add("StartPedestal");
+        foreach (var required in requiredLandmarks)
             if (!landmarks.ContainsKey(required))
                 throw new GenerationException($"missing landmark {required}");
+
+        if (grid.Cell(start)?.Area != StartArea)
+            throw new GenerationException($"start cell is not in {StartArea}");
     }
 
     private List<string> BuildDiagnostics(int attempts)
