@@ -371,11 +371,11 @@ public class Rom : GameRom
 
                 if (CreClobberingRoomIds.Contains(from_room_id))
                 {
-                    SetCreReloadFlag(toGeo);
+                    SetCreReloadFlag(world, toGeo);
                 }
                 if (bidirectional == true && CreClobberingRoomIds.Contains(to_room_id))
                 {
-                    SetCreReloadFlag(fromGeo);
+                    SetCreReloadFlag(world, fromGeo);
                 }
 
                 ushort fromRoomId = (ushort)(int.Parse(fromRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
@@ -521,11 +521,22 @@ public class Rom : GameRom
         }
     }
 
-    private void SetCreReloadFlag(RoomGeometry geo)
+    // Room header byte 8 is the special graphics bitflag; bit 1 forces a CRE reload on entry.
+    private const int SpecialGraphicsBitflagOffset = 8;
+    private const byte CreReloadBit = 0x02;
+
+    private void SetCreReloadFlag(World world, RoomGeometry geo)
     {
-        var address = (Address)(geo.rom_address + 8);
-        byte bitset = Read(address, 1)[0];
-        Write(address, [(byte)(bitset | 0x02)]);
+        // Generation produces a patch and never holds a base ROM, so the vanilla bitflag has to
+        // come from room_headers.json rather than a read-modify-write: LoggedRom can only read
+        // back bytes this session already wrote, and nothing else writes this byte. The vanilla
+        // value is not always zero (a few rooms use 0x01 or 0x05), so it must be preserved.
+        var header = world.JsonData.RoomHeaders
+            .First(r => (r.Address & 0xFFFF) == (geo.rom_address & 0xFFFF));
+
+        Write(
+            (Address)(geo.rom_address + SpecialGraphicsBitflagOffset),
+            [(byte)(header.SpecialGraphicsBitflag | CreReloadBit)]);
     }
 
     private void WriteMiniMapPalettes(World world)

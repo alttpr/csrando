@@ -1,5 +1,11 @@
 import { applyPatch } from "$lib/patch/apply";
 import {
+  COMBO_POSTGEN_GAME_ID,
+  clampNumberSetting,
+  numberToLittleEndianBytes,
+} from "$lib/postgen";
+import type { PostGenSelections } from "$lib/types";
+import {
   gameStaticInfo,
   type RomMapping,
   type RdcManifestSegment,
@@ -963,11 +969,27 @@ self.onmessage = async (event) => {
 
     // Apply post-generation settings (90% -> 96%)
     try {
+      // Settings that configure the combined ROM as a whole live under a pseudo game id and
+      // are applied once, against the combined image, after the per-game options.
+      const postGenGameIds: string[] = [...allGameIds];
+      if (
+        isCombined &&
+        getFromMaybe<GamePostGenConfig>(
+          gameIdToPostGenConfigMap,
+          COMBO_POSTGEN_GAME_ID,
+        )
+      ) {
+        postGenGameIds.push(COMBO_POSTGEN_GAME_ID);
+      }
+
       let currentPostGenGame = 0;
-      const totalPostGenGames = allGameIds.length;
-      for (const gameId of allGameIds) {
-        const romToPatch = romBuffers.get(gameId);
-        if (isCombined && !baseOffsetByGame.has(gameId)) {
+      const totalPostGenGames = postGenGameIds.length;
+      for (const gameId of postGenGameIds) {
+        const isComboWide = gameId === COMBO_POSTGEN_GAME_ID;
+        const romToPatch = isComboWide
+          ? romBuffers.get(primaryGameId)
+          : romBuffers.get(gameId);
+        if (!isComboWide && isCombined && !baseOffsetByGame.has(gameId)) {
           currentPostGenGame++;
           continue;
         }
@@ -975,9 +997,10 @@ self.onmessage = async (event) => {
           currentPostGenGame++;
           continue;
         }
-        const cosmeticSelections = getFromMaybe<
-          Record<string, string | boolean>
-        >(selectedPostGenByGameId, gameId);
+        const cosmeticSelections = getFromMaybe<PostGenSelections>(
+          selectedPostGenByGameId,
+          gameId,
+        );
         const postGenConfig: GamePostGenConfig | undefined =
           getFromMaybe<GamePostGenConfig>(gameIdToPostGenConfigMap, gameId);
 
@@ -991,7 +1014,7 @@ self.onmessage = async (event) => {
         }
 
         for (const opt of postGenConfig.options as PostGenSetting[]) {
-          let selectedVal: string | boolean | undefined;
+          let selectedVal: string | boolean | number | undefined;
           if (
             cosmeticSelections &&
             Object.prototype.hasOwnProperty.call(cosmeticSelections, opt.id)
@@ -1093,6 +1116,21 @@ self.onmessage = async (event) => {
               typeof selectedVal === "string" ? selectedVal : opt.default;
             const choice = (opt.choices || []).find((c) => c.value === val);
             if (choice) applyPatchEntries(choice.patches);
+          } else if (opt.type === "number") {
+            const val = clampNumberSetting(opt, selectedVal);
+            for (const entry of opt.patches || []) {
+              const addrRaw = entry.targetAddress as number | string;
+              const addr =
+                typeof addrRaw === "number"
+                  ? addrRaw
+                  : Number.parseInt(addrRaw, 16);
+              if (!Number.isFinite(addr)) continue;
+              writeBytes(
+                romToPatch,
+                addr,
+                numberToLittleEndianBytes(val, entry.length ?? 1),
+              );
+            }
           } else {
             // Unknown type; skip
           }

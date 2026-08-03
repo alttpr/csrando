@@ -1,5 +1,9 @@
 // Types used to communicate with the ROM patching Web Worker
-import type { GameSpriteConfig, GamePostGenConfig } from "$lib/types";
+import type {
+  GameSpriteConfig,
+  GamePostGenConfig,
+  PostGenSelections,
+} from "$lib/types";
 
 export type WorkerRequest = {
   baseRom: ArrayBuffer;
@@ -24,7 +28,7 @@ export type WorkerRequest = {
   allGameIds: string[];
   publicSpritesBaseUrl: string;
   // Post-generation settings support
-  selectedPostGenByGameId?: Map<string, Record<string, string | boolean>>;
+  selectedPostGenByGameId?: Map<string, PostGenSelections>;
   gameIdToPostGenConfigMap?: Map<string, GamePostGenConfig>;
 };
 

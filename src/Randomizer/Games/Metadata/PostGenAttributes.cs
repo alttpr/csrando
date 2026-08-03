@@ -141,6 +141,28 @@ public sealed class OffPatchAttribute : PatchAttributeBase
     }
 }
 
+/// <summary>
+/// Marks a numeric post-generation setting and the address its value is written to.
+/// The selected value is written as <see cref="Length"/> little-endian bytes, so unlike the
+/// toggle/select patches there is no fixed payload declared here.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+public sealed class NumberPatchAttribute : PatchAttributeBase
+{
+    public NumberPatchAttribute(int targetAddress)
+        : base(targetAddress)
+    {
+    }
+
+    public NumberPatchAttribute(RandomizerTarget appliesTo, int targetAddress)
+        : base(appliesTo, targetAddress)
+    {
+    }
+
+    /// <summary>Number of little-endian bytes the value occupies at the target address.</summary>
+    public int Length { get; set; } = 1;
+}
+
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 public sealed class ChoiceAttribute : Attribute
 {

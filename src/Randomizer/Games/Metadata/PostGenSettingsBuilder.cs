@@ -79,6 +79,36 @@ public static class PostGenSettingsBuilder
             };
         }
 
+        if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(byte))
+        {
+            // Only numeric properties that declare where their value goes become settings.
+            var patches = BuildNumberPatches(prop.GetCustomAttributes<NumberPatchAttribute>(), context);
+            if (patches.Count == 0)
+                return null;
+
+            // Without an explicit range a numeric setting covers a single byte; multi-byte
+            // patches must declare their own. ValueRangeAttribute.Default is deliberately not
+            // consulted: like the toggle and select branches, the property initializer is the
+            // source of truth for the default.
+            var range = prop.GetCustomAttribute<ValueRangeAttribute>();
+            var min = range?.MinInclusive ?? 0;
+            var max = range?.MaxInclusive ?? 0xFF;
+            var def = Math.Clamp(Convert.ToInt32(prop.GetValue(instance) ?? min), min, max);
+
+            return new MetaPostGenSetting
+            {
+                Type = "number",
+                Id = id!,
+                Name = name,
+                Description = description,
+                Default = def,
+                Min = min,
+                Max = max,
+                Step = 1,
+                Patches = patches,
+            };
+        }
+
         if (prop.PropertyType.IsEnum)
         {
             var defValue = prop.GetValue(instance);
@@ -143,6 +173,51 @@ public static class PostGenSettingsBuilder
             {
                 TargetAddress = address,
                 Data = attr.Data.Select(b => (int)b).ToList(),
+            });
+        }
+
+        return patches;
+    }
+
+    private static List<MetaPostGenNumberPatch> BuildNumberPatches(
+        IEnumerable<NumberPatchAttribute> attributes,
+        PostGenBuildContext context)
+    {
+        var attrList = attributes.ToList();
+        if (attrList.Count == 0)
+            return new List<MetaPostGenNumberPatch>();
+
+        var target = context.Target;
+
+        // Same target-override handling as BuildPatches: a target-specific patch suppresses the
+        // target-agnostic one it replaces.
+        var replacements = target is null
+            ? new HashSet<int>()
+            : attrList
+                .Where(a => a.AppliesTo == target && a.ReplacesAddress.HasValue)
+                .Select(a => a.ReplacesAddress!.Value)
+                .ToHashSet();
+
+        var patches = new List<MetaPostGenNumberPatch>(attrList.Count);
+        foreach (var attr in attrList)
+        {
+            if (!ShouldEmit(attr, target, replacements))
+                continue;
+
+            // The client schema only accepts 1-4 byte widths; a wider declaration would fail
+            // metadata validation in the browser instead of failing here, so reject it now.
+            if (attr.Length is < 1 or > 4)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(NumberPatchAttribute.Length),
+                    attr.Length,
+                    "Numeric post-generation patches must be 1-4 bytes wide.");
+            }
+
+            patches.Add(new MetaPostGenNumberPatch
+            {
+                TargetAddress = ResolveAddress(attr, context.AddressOffset),
+                Length = attr.Length,
             });
         }
 

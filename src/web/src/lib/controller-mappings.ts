@@ -1,6 +1,7 @@
 import type {
   GamePostGenConfig,
   PostGenPatchEntry,
+  PostGenSelections,
   SelectPostGenSetting,
   TogglePostGenSetting,
 } from "$lib/types";
@@ -188,7 +189,7 @@ function controllerOptions(config: GamePostGenConfig): SelectPostGenSetting[] {
 
 function selectedButton(
   option: SelectPostGenSetting,
-  selections: Record<string, string | boolean>,
+  selections: PostGenSelections,
 ): string | undefined {
   const selected = selections[option.id];
   return typeof selected === "string" ? selected : option.default;
@@ -196,10 +197,10 @@ function selectedButton(
 
 export function assignControllerButton(
   config: GamePostGenConfig,
-  selections: Record<string, string | boolean>,
+  selections: PostGenSelections,
   optionId: string,
   button: string,
-): Record<string, string | boolean> | null {
+): PostGenSelections | null {
   const options = controllerOptions(config);
   const target = options.find((option) => option.id === optionId);
   if (!target) return null;
@@ -221,8 +222,8 @@ export function assignControllerButton(
 
 export function restoreControllerDefaults(
   config: GamePostGenConfig,
-  selections: Record<string, string | boolean>,
-): Record<string, string | boolean> {
+  selections: PostGenSelections,
+): PostGenSelections {
   const restored = { ...selections };
   for (const option of controllerOptions(config)) {
     if (option.default !== undefined) restored[option.id] = option.default;
@@ -232,8 +233,8 @@ export function restoreControllerDefaults(
 
 export function normalizeControllerMappings(
   config: GamePostGenConfig,
-  selections: Record<string, string | boolean>,
-): Record<string, string | boolean> {
+  selections: PostGenSelections,
+): PostGenSelections {
   const options = controllerOptions(config);
   const usedButtons = new Set<string>();
 

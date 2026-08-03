@@ -1,11 +1,14 @@
 <script lang="ts">
-	import type { SelectPostGenSetting } from "$lib/types";
+	import type {
+		PostGenSelections,
+		SelectPostGenSetting,
+	} from "$lib/types";
 
 	interface Props {
 		gameId: string;
 		gameName: string;
 		options: SelectPostGenSetting[];
-		selections: Record<string, string | boolean>;
+		selections: PostGenSelections;
 		onchange: (optionId: string, value: string) => void;
 		onrestore: () => void;
 	}

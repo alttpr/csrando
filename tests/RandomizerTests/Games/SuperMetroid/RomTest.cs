@@ -207,8 +207,47 @@ public sealed class RomTest
         foreach (var geo in world.JsonData.RoomGeometries)
         {
             byte bitset = rom.Read(geo.rom_address + 8, 1)[0];
-            Assert.AreEqual(expectedFlagged.Contains(geo.rom_address), (bitset & 0x02) != 0,
+            bool shouldFlag = expectedFlagged.Contains(geo.rom_address);
+            Assert.AreEqual(shouldFlag, (bitset & 0x02) != 0,
                 $"CRE reload bit on room '{geo.name}'");
+
+            if (!shouldFlag)
+                continue;
+
+            // The whole byte must be the vanilla special graphics bitflag plus the CRE bit.
+            // A few rooms ship non-zero bitflags (0x01, 0x05), and generation cannot read the
+            // current value back out of the ROM, so the vanilla bits come from
+            // room_headers.json and have to survive untouched.
+            var header = world.JsonData.RoomHeaders
+                .First(r => (r.Address & 0xFFFF) == (geo.rom_address & 0xFFFF));
+            Assert.AreEqual((byte)(header.SpecialGraphicsBitflag | 0x02), bitset,
+                $"CRE reload byte on room '{geo.name}'");
+        }
+    }
+
+    [TestMethod]
+    [DoNotParallelize]
+    public void MapRando_WriteMap_NeverReadsBackDataItDidNotWrite()
+    {
+        var (world, _) = GetWrittenMapRandoWorld();
+
+        string sourceDataRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "../../../../../src/Randomizer/Games/SuperMetroid/data"));
+        string oldDataRoot = JsonReader.DataRoot;
+        try
+        {
+            JsonReader.DataRoot = sourceDataRoot;
+
+            // Generation emits a patch and never holds a base ROM, so the real IRom is a
+            // LoggedRom, which serves reads only for bytes the same session already wrote.
+            // Any read-modify-write of vanilla data throws KeyNotFoundException and fails the
+            // whole seed, so WriteMap must source vanilla values from the json data instead.
+            new Rom(new LoggedRom(), 0).WriteMap(world);
+        }
+        finally
+        {
+            JsonReader.DataRoot = oldDataRoot;
         }
     }
 

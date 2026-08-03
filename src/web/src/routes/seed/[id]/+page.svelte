@@ -120,14 +120,20 @@
 	let spriteSelections = $state<Record<string, string>>({});
 
 	// Post-Generation Settings Interfaces
-	import type { GamePostGenConfig, SelectPostGenSetting } from "$lib/types";
+	import type {
+		GamePostGenConfig,
+		PostGenSelections,
+		PostGenSelectionValue,
+		SelectPostGenSetting,
+	} from "$lib/types";
+	import {
+		COMBO_POSTGEN_GAME_ID,
+		COMBO_POSTGEN_GROUP_NAME,
+		clampNumberSetting,
+	} from "$lib/postgen";
 	let gameIdToPostGenConfigMap = $state(new Map<string, GamePostGenConfig>());
-	let selectedPostGenByGameId = $state(
-		new Map<string, Record<string, string | boolean>>(),
-	);
-	let postGenSelections = $state<
-		Record<string, Record<string, string | boolean>>
-	>({});
+	let selectedPostGenByGameId = $state(new Map<string, PostGenSelections>());
+	let postGenSelections = $state<Record<string, PostGenSelections>>({});
 
 	// Persistence helpers for sprite selections
 	function spriteSelectionKey(gameId: string) {
@@ -160,7 +166,7 @@
 
 	async function persistPostGenSelection(
 		gameId: string,
-		values: Record<string, string | boolean>,
+		values: PostGenSelections,
 	) {
 		const key = postGenSelectionKey(gameId);
 		try {
@@ -181,7 +187,7 @@
 	function updatePostGenSelection(
 		gameId: string,
 		optionId: string,
-		value: string | boolean,
+		value: PostGenSelectionValue,
 	) {
 		let current = {
 			...(selectedPostGenByGameId.get(gameId) || {}),
@@ -229,25 +235,20 @@
 
 	async function loadPostGenSelection(
 		gameId: string,
-	): Promise<Record<string, string | boolean> | null> {
+	): Promise<PostGenSelections | null> {
 		const key = postGenSelectionKey(gameId);
 		try {
 			await (
 				localforage as unknown as { ready?: () => Promise<void> }
 			).ready?.();
-			const v =
-				await localforage.getItem<Record<string, string | boolean>>(
-					key,
-				);
+			const v = await localforage.getItem<PostGenSelections>(key);
 			if (v) return v;
 		} catch {
 			/* ignore */
 		}
 		try {
 			const raw = localStorage.getItem(key);
-			return raw
-				? (JSON.parse(raw) as Record<string, string | boolean>)
-				: null;
+			return raw ? (JSON.parse(raw) as PostGenSelections) : null;
 		} catch {
 			return null;
 		}
@@ -339,6 +340,38 @@
 	// Primary game id (first entry) for patcher logic
 	let primaryGameId = $derived(visibleGameOptions[0]?.id?.toLowerCase());
 
+	// Post-generation settings are grouped per game, plus an optional combo-wide group for
+	// options that configure the combined ROM as a whole (e.g. MSU-1 volume). That group is
+	// hidden from the per-game ROM/sprite UI, so it is only rendered when the backend
+	// metadata actually declares options for it.
+	const postGenSelectionGroupIds = [
+		...visibleGameOptions.map((game) => normalizeGameId(game.id)),
+		...(resolvedRandomizerIdNormalized === "combo"
+			? [COMBO_POSTGEN_GAME_ID]
+			: []),
+	];
+	const postGenGroups = $derived([
+		...visibleGameOptions.map((game) => {
+			const gameId = normalizeGameId(game.id);
+			return {
+				id: gameId,
+				displayName:
+					gameIdToStaticInfo.get(gameId)?.displayName ||
+					`Game: ${gameId}`,
+			};
+		}),
+		// Last: these apply to the whole ROM and most players never touch them.
+		...((gameIdToPostGenConfigMap.get(COMBO_POSTGEN_GAME_ID)?.options
+			?.length ?? 0) > 0
+			? [
+					{
+						id: COMBO_POSTGEN_GAME_ID,
+						displayName: COMBO_POSTGEN_GROUP_NAME,
+					},
+				]
+			: []),
+	]);
+
 	interface RomFileData {
 		buffer: ArrayBuffer | null;
 		fileName: string | null;
@@ -424,17 +457,15 @@
 			// Early hydration of post-gen selections (localStorage only) before async fetch of configs
 			try {
 				let changed = false;
-				for (const g of visibleGameOptions) {
-					const gid = g.id.toLowerCase();
+				for (const gid of postGenSelectionGroupIds) {
 					const persisted = localStorage.getItem(
 						postGenSelectionKey(gid),
 					);
 					if (persisted && !selectedPostGenByGameId.has(gid)) {
 						try {
-							const parsed = JSON.parse(persisted) as Record<
-								string,
-								string | boolean
-							>;
+							const parsed = JSON.parse(
+								persisted,
+							) as PostGenSelections;
 							selectedPostGenByGameId.set(gid, parsed);
 							postGenSelections[gid] = parsed;
 							changed = true;
@@ -660,6 +691,23 @@
 
 					newPostGenInfoMapProvisional.set(gameId, baseCfg);
 				}
+
+				// Combo-wide options are not tied to any of the bundled games, so they arrive
+				// under a pseudo game id that never appears in visibleGameOptions.
+				const comboCfg = (metaPostGen as Record<string, unknown>)[
+					COMBO_POSTGEN_GAME_ID
+				];
+				if (
+					resolvedRandomizerIdNormalized === "combo" &&
+					comboCfg &&
+					typeof comboCfg === "object"
+				) {
+					newPostGenInfoMapProvisional.set(
+						COMBO_POSTGEN_GAME_ID,
+						comboCfg as GamePostGenConfig,
+					);
+				}
+
 				gameIdToPostGenConfigMap = newPostGenInfoMapProvisional; // Assign to $state variable
 
 				// Discard stale or manually edited controller mappings that contain
@@ -726,16 +774,14 @@
 				// Load persisted post-generation selections (if any) and apply only if still valid keys
 				try {
 					let changed = false;
-					for (const game of visibleGameOptions) {
-						const gid = game.id.toLowerCase();
+					for (const gid of postGenSelectionGroupIds) {
 						if (selectedPostGenByGameId.has(gid)) continue;
 						const persisted = await loadPostGenSelection(gid);
 						if (persisted) {
 							const cfg = gameIdToPostGenConfigMap.get(gid);
 							if (cfg) {
 								// Only keep entries with matching option ids
-								const valid: Record<string, string | boolean> =
-									{};
+								const valid: PostGenSelections = {};
 								const optionIds = new Set(
 									cfg.options.map((o) => o.id),
 								);
@@ -769,7 +815,7 @@
 										optionIds.has(k) ||
 										extraAllowed.has(k)
 									) {
-										valid[k] = v as string | boolean;
+										valid[k] = v as PostGenSelectionValue;
 									}
 								}
 								const normalized =
@@ -842,11 +888,10 @@
 			gameIdToPostGenConfigMap.size > 0
 		) {
 			let changed = false;
-			for (const game of visibleGameOptions) {
-				const gid = game.id.toLowerCase();
+			for (const gid of postGenSelectionGroupIds) {
 				if (!selectedPostGenByGameId.has(gid)) {
 					const cfg = gameIdToPostGenConfigMap.get(gid);
-					const initial: Record<string, string | boolean> = {};
+					const initial: PostGenSelections = {};
 					if (cfg) {
 						for (const opt of cfg.options) {
 							if (opt.type === "toggle")
@@ -854,6 +899,11 @@
 							else if (opt.type === "select")
 								initial[opt.id] =
 									opt.default ?? opt.choices[0]?.value;
+							else if (opt.type === "number")
+								initial[opt.id] = clampNumberSetting(
+									opt,
+									opt.default,
+								);
 						}
 						// Special defaults for ALTTP palette randomizer nested options
 						if (
@@ -1502,11 +1552,9 @@
 					{m.post_generation_settings_description()}
 				</p>
 				<div class="space-y-4">
-					{#each visibleGameOptions as game (game.id)}
-						{@const gameId = game.id.toLowerCase()}
-						{@const staticInfo = gameIdToStaticInfo.get(gameId)}
-						{@const gameDisplayName =
-							staticInfo?.displayName || `Game: ${gameId}`}
+					{#each postGenGroups as group (group.id)}
+						{@const gameId = group.id}
+						{@const gameDisplayName = group.displayName}
 						{@const gameSpriteConfig =
 							gameIdToSpriteInfoMap.get(gameId)}
 						{@const spriteOptionsForGame =
@@ -1908,6 +1956,94 @@
 														>
 													{/each}
 												</select>
+											</div>
+										{/if}
+										{#if opt.type === "number"}
+											{@const numberValue =
+												clampNumberSetting(
+													opt,
+													postGenSelections[gameId]?.[
+														opt.id
+													],
+												)}
+											<div class="space-y-1">
+												<div
+													class="flex items-baseline justify-between gap-2"
+												>
+													<label
+														class="text-xs font-medium text-slate-900 dark:text-slate-100"
+														for={`postgen-${gameId}-${opt.id}`}
+													>
+														{opt.name}
+													</label>
+													<span
+														class="text-[11px] text-slate-500 dark:text-slate-400"
+													>
+														default {opt.default}
+													</span>
+												</div>
+												{#if opt.description}
+													<p
+														class="text-xs text-slate-500 dark:text-slate-400"
+													>
+														{opt.description}
+													</p>
+												{/if}
+												<div
+													class="flex items-center gap-2"
+												>
+													<input
+														id={`postgen-${gameId}-${opt.id}`}
+														type="range"
+														class="flex-1 accent-indigo-500"
+														min={opt.min}
+														max={opt.max}
+														step={opt.step}
+														value={numberValue}
+														oninput={(e) => {
+															updatePostGenSelection(
+																gameId,
+																opt.id,
+																clampNumberSetting(
+																	opt,
+																	(
+																		e.currentTarget as HTMLInputElement
+																	).valueAsNumber,
+																),
+															);
+														}}
+													/>
+													<input
+														type="number"
+														aria-label={`${opt.name} value`}
+														class="w-16 text-xs text-right border border-slate-300 dark:border-slate-600 rounded p-1 bg-white dark:bg-slate-800"
+														min={opt.min}
+														max={opt.max}
+														step={opt.step}
+														value={numberValue}
+														onchange={(e) => {
+															const input =
+																e.currentTarget as HTMLInputElement;
+															const next =
+																clampNumberSetting(
+																	opt,
+																	input.valueAsNumber,
+																);
+															updatePostGenSelection(
+																gameId,
+																opt.id,
+																next,
+															);
+															// Clearing the box or re-entering an
+															// out-of-range value leaves the typed
+															// text in place when the clamped result
+															// matches the current selection, so write
+															// the applied value back explicitly.
+															input.value =
+																String(next);
+														}}
+													/>
+												</div>
 											</div>
 										{/if}
 									{/each}

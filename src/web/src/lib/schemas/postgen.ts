@@ -56,9 +56,29 @@ export const SelectPostGenSettingSchema = z.object({
     .min(1),
 });
 
+// A numeric setting writes the selected value itself, so its patch entries declare the
+// address and byte width instead of a fixed payload.
+export const NumberPatchEntrySchema = z.object({
+  targetAddress: TargetAddressSchema,
+  length: z.number().int().min(1).max(4).optional().default(1),
+});
+
+export const NumberPostGenSettingSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  type: z.literal("number"),
+  default: z.number().int().optional().default(0),
+  min: z.number().int().optional().default(0),
+  max: z.number().int().optional().default(0xff),
+  step: z.number().int().positive().optional().default(1),
+  patches: z.array(NumberPatchEntrySchema).default([]),
+});
+
 export const PostGenSettingSchema = z.discriminatedUnion("type", [
   TogglePostGenSettingSchema,
   SelectPostGenSettingSchema,
+  NumberPostGenSettingSchema,
 ]);
 
 export const GamePostGenConfigSchema = z.object({

@@ -2,7 +2,11 @@ import { writable } from "svelte/store";
 import { getPublicSpritesBaseUrl } from "$lib/env";
 import * as m from "$lib/paraglide/messages";
 import { fetchWithTimeout } from "$lib/services/http";
-import type { GameSpriteConfig, GamePostGenConfig } from "$lib/types";
+import type {
+  GameSpriteConfig,
+  GamePostGenConfig,
+  PostGenSelections,
+} from "$lib/types";
 
 // Stores for reactive UI updates
 export const isPatching = writable<boolean>(false);
@@ -178,7 +182,7 @@ export interface InitiatePatchingParams {
   };
   selectedSpritesByGameId: Map<string, string>;
   gameIdToSpriteInfoMap: Map<string, GameSpriteConfig>;
-  selectedPostGenByGameId?: Map<string, Record<string, string | boolean>>;
+  selectedPostGenByGameId?: Map<string, PostGenSelections>;
   gameIdToPostGenConfigMap?: Map<string, GamePostGenConfig>;
 }
 

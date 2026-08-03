@@ -26,7 +26,9 @@ import {
   PostGenSettingSchema,
   SelectPostGenSettingSchema,
   TogglePostGenSettingSchema,
+  NumberPostGenSettingSchema,
   PostGenPatchEntrySchema,
+  NumberPatchEntrySchema,
 } from "$lib/schemas/postgen";
 
 export interface User {
@@ -116,4 +118,10 @@ export type GamePostGenConfig = z.infer<typeof GamePostGenConfigSchema>;
 export type PostGenSetting = z.infer<typeof PostGenSettingSchema>;
 export type SelectPostGenSetting = z.infer<typeof SelectPostGenSettingSchema>;
 export type TogglePostGenSetting = z.infer<typeof TogglePostGenSettingSchema>;
+export type NumberPostGenSetting = z.infer<typeof NumberPostGenSettingSchema>;
 export type PostGenPatchEntry = z.infer<typeof PostGenPatchEntrySchema>;
+export type NumberPatchEntry = z.infer<typeof NumberPatchEntrySchema>;
+
+/** Value a post-generation option can hold: toggle, select, and number respectively. */
+export type PostGenSelectionValue = string | boolean | number;
+export type PostGenSelections = Record<string, PostGenSelectionValue>;

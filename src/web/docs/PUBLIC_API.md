@@ -135,7 +135,7 @@ The response contains:
 
 - `settings`: global settings. These map to top-level fields in each object under `Configs`.
 - `gameSettings`: per-game setting groups. Each group maps to a nested object in the world config, for example `Configs[0].Alttp`.
-- `postGenSettings`: optional client-side patching/cosmetic settings. These are not part of seed generation.
+- `postGenSettings`: optional client-side patching/cosmetic settings. These are not part of seed generation. Entries are keyed by game id, with the extra key `combo` holding options that configure the combined ROM as a whole (for example MSU-1 volume) rather than a single game. Each option is a `toggle`, a `select`, or a `number`; `number` options declare `min`/`max`/`step` and write the chosen value itself as little-endian bytes at each entry in `patches`.
 
 Each setting includes a `key`, `name`, `type`, and usually either `default`, `values`, or `range`. External services should prefer metadata defaults and only override settings they intentionally expose to users.
 
