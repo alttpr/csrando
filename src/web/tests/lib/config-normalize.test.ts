@@ -428,7 +428,8 @@ describe("onlyWithGames game-selection gate", () => {
       onlyWithGames: ["Sm"],
     });
     const parsed = parseMetadata(raw);
-    if (!parsed.success) throw new Error("gated fixture metadata failed to parse");
+    if (!parsed.success)
+      throw new Error("gated fixture metadata failed to parse");
     return parsed.data;
   }
 
@@ -454,9 +455,9 @@ describe("onlyWithGames game-selection gate", () => {
     const payload = buildRandomizePayload(snapshot, metadata, {
       includeSpoiler: true,
     });
-    expect(
-      (payload.Configs[0].Sm as Record<string, unknown>).TieredItems,
-    ).toBe("On");
+    expect((payload.Configs[0].Sm as Record<string, unknown>).TieredItems).toBe(
+      "On",
+    );
   });
 
   it("preserves the stored value across normalization while gated off", () => {
