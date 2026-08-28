@@ -32,10 +32,7 @@ maps:
           connections:
             fixed:
               - "Zora's Falls"
-          entrances:
-            - name: "Waterfall of Wishing"
-              entranceid: 0x5B
-              outletid: 0x6C
+              - "Zora's Falls Pool Waterfall Entry"
           warps:
             - name: "Zora's Falls whirlpool"
               position: { x: 0xFF, y: 0xFF }
@@ -59,3 +56,12 @@ maps:
               position: { x: 0x08, y: 0x13 }
               sprite: "Whirlpool"
               state: [1, 2]
+
+        - name: "Zora's Falls Pool Waterfall Entry"
+          connections:
+            Flippers:
+              - "Zora's Falls Pool"
+          entrances:
+            - name: "Waterfall of Wishing"
+              entranceid: 0x5B
+              outletid: 0x6C
