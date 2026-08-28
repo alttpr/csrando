@@ -23,9 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MathNet.Numerics" Version="6.0.0-beta2" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
-    <!-- Transitive package override for Microsoft.AspNetCore.OpenApi. Limited to <3.0.0 until .NET 11 drops. -->
-    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     <PackageReference Include="System.CommandLine" Version="2.0.10" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
