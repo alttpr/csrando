@@ -3,7 +3,11 @@ rooms:
     nodes:
       regions:
         - name: "Pond of Happiness"
+          type: "shop"
+          shopkeeper: 0x04
+          palette: 0x00
           inletid: 0x5d
+          alt_vram: true
           connections:
             UseBomb:
               - "Pond of Happiness - hidden room"
@@ -13,6 +17,19 @@ rooms:
               sprite: "PondActivation"
               allow:
                 - "PondActivation"
+          inventory:
+            - name: "Pond of Happiness - Capacity Upgrade - Arrows"
+              type: "shopitem"
+              item: "ArrowUpgrade5"
+              count: 7
+              cost: 100
+              itemset: ["lw", "shop"]
+            - name: "Pond of Happiness - Capacity Upgrade - Bombs"
+              type: "shopitem"
+              item: "BombUpgrade5"
+              count: 7
+              cost: 100
+              itemset: ["lw", "shop"]
 
         - name: "Pond of Happiness - hidden room"
           connections:

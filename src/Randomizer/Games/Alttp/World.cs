@@ -16,6 +16,7 @@ public sealed class World : World<Item>, IPortalHost
     public Config Config { get; }
     public (byte[] Underworld, byte[] Overworld, byte[] Special, byte[] Sets) SpriteSheets { get; set; } = ([], [], [], []);
     public Dictionary<IItem /* actualKey */, List<(BaseVertex Chest, List<BaseVertex> Regions)>> KeyForKeys { get; } = [];
+    public Shop[]? RandomizedShops { get; internal set; }
 
     /// <summary>
     /// Cross-game portal anchors (see <see cref="Games.PortalAnchor"/>), materialized on
@@ -55,7 +56,6 @@ public sealed class World : World<Item>, IPortalHost
         List<IWorldModifier> modifiers =
         [
             new GameWinnerer(),
-            new ShopFiller(),
             new DoorShuffler(),
             new EntranceShuffler(),
             new DarknessGraphifier(),

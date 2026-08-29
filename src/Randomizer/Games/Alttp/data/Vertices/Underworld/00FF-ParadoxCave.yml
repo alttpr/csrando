@@ -46,8 +46,8 @@ rooms:
 
         - name: "Paradox Cave - Shop"
           type: "shop"
-          shopkeeper: 0xA0
-          shopstyle: 0x03
+          shopkeeper: 0x00
+          palette: 0x05
           connections:
             UseBomb:
               - "Paradox Cave - Bottom Entrance"

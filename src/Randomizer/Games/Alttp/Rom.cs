@@ -573,69 +573,40 @@ public sealed class Rom : GameRom
         Write((SNES)0xB08100, prizes);
     }
 
-    // FIXME: temporary classes until we have something usable from elsewhere
-    public sealed class Shop
-    {
-        public bool Active { get; }
-        // 1 for TakeAny caves (can only get one item, not both), 3 for regular shops
-        public int ObtainableInventorySize { get; }
-        public Shop() => throw new NotImplementedException("This is not a proper shop, but a placeholder.");
-        public void WriteExtraData(Rom rom) => throw new NotImplementedException();
-        public byte[] GetBytes(int sramOffset) => throw new NotImplementedException();
-        public IEnumerable<ShopItem> GetInventory() => throw new NotImplementedException();
-    }
-    public sealed class ShopItem
-    {
-        public byte Id { get; }
-        public ushort Price { get; }
-        public byte Max { get; }
-        public byte ReplaceId { get; } = 0xFF;
-        public ushort ReplacePrice { get; }
-        public ShopItem() => throw new NotImplementedException("This is not a proper shop item, but a placeholder.");
-    }
-    /// <summary>Quick and dirty shop setting code.</summary>
-    /// <param name="shops">shops to write to ROM</param>
     public void SetupCustomShops(Shop[] shops)
     {
-        shops = shops.Where(s => s.Active).ToArray();
+        // the buffer fits 32, but the sentinel at the end takes up one. same for items later.
+        if (shops.Length >= 32)
+            throw new ArgumentException("Can't have more than 31 shops.", nameof(shops));
 
         var shopData = new List<byte>();
         var itemsData = new List<byte>();
         byte shopId = 0x00;
-        int sramOffset = 0x00;
+        byte sramOffset = 0x00;
         foreach (var shop in shops)
         {
-            if (shopId == shops.Length - 1)
-                shopId = 0xFF;
-
-            shop.WriteExtraData(this);
+            // TODO: TakeAny caves are shops; and they need to adjust the overworld entrance too (Overworld_Entrance_ID)
             // TODO: make this clever and reuse when inv is the exact same. (except take any's)
-            shopData.Add(shopId);
-            shopData.AddRange(shop.GetBytes(sramOffset));
+            shopData.AddRange(shop.GetBytes(shopId, sramOffset));
             sramOffset += shop.ObtainableInventorySize;
 
             if (sramOffset > 36)
                 throw new Exception("Exceeded SRAM indexing for shops");
 
-            foreach (var item in shop.GetInventory())
-            {
-                itemsData.Add(shopId);
-                itemsData.Add(item.Id);
-                var price = BitConverter.GetBytes(item.Price);
-                if (!BitConverter.IsLittleEndian)
-                    Array.Reverse(price);
-                itemsData.AddRange(price);
-                itemsData.Add(item.Max);
-                itemsData.Add(item.ReplaceId);
-                var replacePrice = BitConverter.GetBytes(item.ReplacePrice);
-                if (!BitConverter.IsLittleEndian)
-                    Array.Reverse(replacePrice);
-                itemsData.AddRange(replacePrice);
-            }
+            foreach (var item in shop.Inventory)
+                itemsData.AddRange(item.GetBytes(shopId));
+
             ++shopId;
         }
+
+        if (itemsData.Count / 8 >= 224)
+            throw new ArgumentException("Can't have more than 223 items total.", nameof(shops));
+
+        // ShopTable (tables.asm, ends with 8x 0xFF)
+        shopData.AddRange([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]);
         Write((SNES)0xB0C800, [.. shopData]);
 
+        // ShopContentsTable (tables.asm, ends with 8x 0xFF)
         itemsData.AddRange([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]);
         Write((SNES)0xB0C900, [.. itemsData]);
     }
@@ -663,7 +634,7 @@ public sealed class Rom : GameRom
         Write((SNES)0xB0817A, data);
     }
 
-    /// <summary>Set whether Bomb Shop dude updates your map with Red Cyrstals when you talk to him</summary>
+    /// <summary>Set whether Bomb Shop dude updates your map with Red Crystals when you talk to him</summary>
     /// <param name="reveals">bitfield of what he reveals</param>
     public void SetMapRevealBombShop(ushort reveals = 0x0000)
     {

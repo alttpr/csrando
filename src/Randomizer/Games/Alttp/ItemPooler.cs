@@ -7,7 +7,7 @@ namespace Randomizer.Games.Alttp;
 internal sealed class ItemPooler : IItemPooler
 {
     // these are item locations that will ALWAYS receive items, regardless of randomizer options.
-    // TODO: this isn't true at the moment; things like ShopItem should probably only be here during Shop randomizer.
+    // TODO: there's probably a few types in here that shouldn't be, like Event?
     private static readonly HashSet<VertexType> ITEM_LOCATIONS =
     [
         VertexType.BigChest,
@@ -21,7 +21,6 @@ internal sealed class ItemPooler : IItemPooler
         VertexType.Pedestal,
         VertexType.Prize,
         VertexType.Refill,
-        VertexType.ShopItem,
         VertexType.Standing,
     ];
 
@@ -30,10 +29,21 @@ internal sealed class ItemPooler : IItemPooler
 
     public ItemPooler(IWorld[] worlds, PRNG prng)
     {
+        var z3Worlds = worlds.OfType<World>().ToArray();
         _prng = prng;
-        _itemLocationTypes = worlds.ToDictionary(k => k, v => new HashSet<VertexType>(ITEM_LOCATIONS));
-        Pool = [.. worlds.OfType<World>().SelectMany(GetPoolForWorld)];
+        _itemLocationTypes = z3Worlds.ToDictionary(k => (IWorld)k, GetLocationTypesForWorld);
+        Pool = [.. z3Worlds.SelectMany(GetPoolForWorld)];
         SetLocations = BuildLocations(worlds);
+    }
+
+    private static HashSet<VertexType> GetLocationTypesForWorld(World world)
+    {
+        var locationTypes = new HashSet<VertexType>(ITEM_LOCATIONS);
+        // TODO: there's a certain value in randomizing (or not randomizing) the potion shop.
+        //       if we make this an option, this would need to be smart enough to add/remove it.
+        if (world.Config.RegionShopSupply != ShopSupplyOption.Normal)
+            locationTypes.Add(VertexType.ShopItem);
+        return locationTypes;
     }
 
     private SetLocations BuildLocations(IWorld[] worlds)
@@ -44,6 +54,13 @@ internal sealed class ItemPooler : IItemPooler
             var itemType = vertex.SubType ?? vertex.Type;
             if (_itemLocationTypes[vertex.World].Contains(itemType))
             {
+                // FIXME: shops have item in data, but we don't use them yet.
+                //        leaving them in means we don't place another item.
+                //        blindly deleting everything (not limited to shop items) breaks randomization because it deletes placed keys.
+                //        it might be time to rework how the pooler determines locations where items can go
+                //        (and maybe even place all vanilla items, then let it pick them up for the pooled items).
+                if (vertex.Type == VertexType.ShopItem)
+                    vertex.Item = null;
                 setLocations.Add(vertex, [ItemSetName.DefaultSet, .. vertex.ItemSet]);
             }
         }
@@ -371,14 +388,27 @@ internal sealed class ItemPooler : IItemPooler
 
         return
         [
-            // TODO verify these counts, they are definitely wrong
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedPotion")), 6),
+            // we include the potion shop in the shuffle, one of each potion
+            // TODO: we might choose to not include the potion shop. remove these if that's the case.
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BluePotion")), 1),
             .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("GreenPotion")), 1),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BluePotion")), 6),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("Heart")), 10),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TenBombs")), 10),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BlueShield")), 2),
-            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedShield")), 1)
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedPotion")), 1),
+            // almost all shops carry the red potion and 10 bombs
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedPotion")), 8),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TenBombs")), 8),
+            // half the shops have a recovery heart, while the other half has a blue shield
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("Heart")), 4),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BlueShield")), 4),
+            // special case: the Orchard shop has a red shield for sale
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("TenArrows")), 1),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("Bee")), 1),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("RedShield")), 1),
+            // upgrade shop has 7 each
+            // TODO: adding 14 total means 12 extra items in the shuffle.
+            //       the fast fill at the end will then discard 12 random items.
+            //       do we just add 1 each? or do we let the garbage fill do its job leaving 12 unobtainable garbage items?
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("ArrowUpgrade5")), 7),
+            .. Enumerable.Repeat(new PooledItem(ItemSetName.DefaultSet, 9999, world.GetItem("BombUpgrade5")), 7)
         ];
     }
 }
