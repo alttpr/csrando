@@ -9,8 +9,13 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    groups:
+      test-dependencies:
+        patterns:
+          - "MSTest.*"
+          - "Microsoft.NET.Test.Sdk"
     ignore:
-    - dependency-name: "Microsoft.OpenApi"
-      # .NET 10 isn't compatible with the newer 3.x (which comes with .NET 11, see dotnet/aspnetcore#64317).
-      # But since versions below 2.7.5 are affected by a vulnerability, we need to specifically reference it ourselves (and update it).
-      versions: [ "<3.0.0" ]
+      - dependency-name: "Microsoft.OpenApi"
+        # .NET 10 isn't compatible with the newer 3.x (which comes with .NET 11, see dotnet/aspnetcore#64317).
+        # But since versions below 2.7.5 are affected by a vulnerability, we need to specifically reference it ourselves (and update it).
+        versions: [ "<3.0.0" ]
