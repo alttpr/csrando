@@ -6,12 +6,24 @@ namespace Randomizer.Games.Combo;
 /// <param name="worlds">worlds to get Item pools for</param>
 internal sealed class ItemPooler : IItemPooler
 {
+    private readonly Dictionary<IWorld, IItemPooler[]> _poolersForWorld = [];
 
     private readonly PRNG _prng;
 
     public ItemPooler(IWorld[] worlds, PRNG prng)
     {
         _prng = prng;
+        foreach (var world in worlds.OfType<World>())
+        {
+            _poolersForWorld[world] = world.GameWorlds().Select<IWorld, IItemPooler>(w => w switch
+            {
+                Alttp.World alttpWorld => new Alttp.ItemPooler([alttpWorld], _prng),
+                SuperMetroid.World smWorld => new SuperMetroid.ItemPooler([smWorld], _prng),
+                Zelda1.World z1World => new Zelda1.ItemPooler([z1World], _prng),
+                Metroid.World m1World => new Metroid.ItemPooler([m1World], _prng),
+                _ => throw new NotSupportedException("Unsupported world found."),
+            }).ToArray();
+        }
         Pool = [.. worlds.OfType<World>().SelectMany(GetPoolForWorld)];
         SetLocations = BuildLocations(worlds);
     }
@@ -20,57 +32,18 @@ internal sealed class ItemPooler : IItemPooler
     {
         var setLocations = new SetLocations();
 
-        foreach(var world in worlds.OfType<World>())
+        foreach (var world in worlds.OfType<World>())
         {
-            if(world.AlttpWorld != null)
+            if (!_poolersForWorld.TryGetValue(world, out var poolers))
+                continue;
+
+            foreach (var (itemSet, locations) in poolers.SelectMany(pooler => pooler.SetLocations.All()))
             {
-                var alttpPooler = new Alttp.ItemPooler([world.AlttpWorld], _prng);
-                var alttpLocations = alttpPooler.SetLocations.All();
-                foreach (var (itemSet, locations) in alttpLocations)
+                foreach (var location in locations)
                 {
-                    foreach (var location in locations)
-                    {
-                        setLocations.Add(location, itemSet);
-                    }
+                    setLocations.Add(location, itemSet);
                 }
             }
-            if (world.SMWorld != null)
-            {
-                var smPooler = new SuperMetroid.ItemPooler([world.SMWorld], _prng);
-                var smLocations = smPooler.SetLocations.All();
-                foreach (var (itemSet, locations) in smLocations)
-                {
-                    foreach (var location in locations)
-                    {
-                        setLocations.Add(location, itemSet);
-                    }
-                }
-            }
-            if (world.Z1World != null)
-            {
-                var z1Pooler = new Zelda1.ItemPooler([world.Z1World], _prng);
-                var z1Locations = z1Pooler.SetLocations.All();
-                foreach (var (itemSet, locations) in z1Locations)
-                {
-                    foreach (var location in locations)
-                    {
-                        setLocations.Add(location, itemSet);
-                    }
-                }
-            }
-            if (world.M1World != null)
-            {
-                var m1Pooler = new Metroid.ItemPooler([world.M1World], _prng);
-                var m1Locations = m1Pooler.SetLocations.All();
-                foreach (var (itemSet, locations) in m1Locations)
-                {
-                    foreach (var location in locations)
-                    {
-                        setLocations.Add(location, itemSet);
-                    }
-                }
-            }
-            return setLocations;
         }
 
         return setLocations;
@@ -85,13 +58,11 @@ internal sealed class ItemPooler : IItemPooler
     private List<PooledItem> GetPoolForWorld(World world)
     {
         var pool = new List<PooledItem>();
-        pool.AddRange(world.AlttpWorld == null ? [] : new Alttp.ItemPooler([world.AlttpWorld], _prng).Pool);
-        pool.AddRange(world.SMWorld == null ? [] : new SuperMetroid.ItemPooler([world.SMWorld], _prng).Pool);
-        pool.AddRange(world.Z1World == null ? [] : new Zelda1.ItemPooler([world.Z1World], _prng).Pool);
-        pool.AddRange(world.M1World == null ? [] : new Metroid.ItemPooler([world.M1World], _prng).Pool);
+        if (_poolersForWorld.TryGetValue(world, out var poolers))
+            pool.AddRange(poolers.SelectMany(pooler => pooler.Pool));
 
         // Patch item pool for quad
-        if(world.AlttpWorld != null)
+        if (world.AlttpWorld != null)
         {
             pool.RemoveAll(p => p.Item.Name == "ProgressiveBow");
             pool.Add((ItemSetName.DefaultSet, 3, world.AlttpWorld.GetItem("Bow")));

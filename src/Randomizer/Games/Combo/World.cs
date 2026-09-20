@@ -158,7 +158,7 @@ public sealed class World : World<Item>
         return edges.OrderBy(e => PortalOrder(e.From)).ToList();
     }
 
-    private IEnumerable<IWorld> GameWorlds()
+    public IEnumerable<IWorld> GameWorlds()
     {
         if (SMWorld != null)
             yield return SMWorld;
