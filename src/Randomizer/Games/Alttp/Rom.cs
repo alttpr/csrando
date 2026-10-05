@@ -1919,18 +1919,47 @@ public sealed class Rom : GameRom
         Write((SNES)0x02E575, specialSpriteSheets);
     }
 
-    public void WriteSpriteFlags(byte[] spriteHitboxFlags, byte[] spritePrizePackFlags)
+    public void WriteSpriteData(IEnumerable<Sprite> sprites)
     {
-        if (spriteHitboxFlags.Length > 0xF3)
-            throw new Exception($"Trying to write too many sprite hitbox flags (got 0x{spriteHitboxFlags.Length:X02} which exceeds 0xF3)");
-        if (spritePrizePackFlags.Length > 0xF3)
-            throw new Exception($"Trying to write too many sprite prize pack flags (got 0x{spritePrizePackFlags.Length:X02} which exceeds 0xF3)");
 
-        // SpriteData_HitBox
-        Write((SNES)0x0DB44C, spriteHitboxFlags);
-        // SpriteData_PrizePack
-        Write((SNES)0x0DB632, spritePrizePackFlags);
+        foreach (var sprite in sprites) {
+            int id = sprite.Id;
+
+            if (id > 0xF2) {
+                throw new Exception($"Invalid sprite ID: 0x{id:X2} > 0xF2. [{sprite.Name}]");
+            }
+
+            byte hp = sprite.Property_HP;
+            byte bump = sprite.Property_BUMP;
+
+            // we don't want to set values unless the sprite is the main variant
+            if (sprite.OwnsId) {
+                Write((SNES) (0x0DB173 + id), hp); // SpriteData_Health
+                Write((SNES) (0x0DB266 + id), bump); // SpriteData_Bump
+            }
+
+            // handle any oddballs that have their properties initialized somewhere else
+            // this area won't be too overfilled
+            // because there are only a handful of properties that are set outside of the table
+            if (sprite.HpAddresses is not null) {
+                foreach (int addr in sprite.HpAddresses) {
+                    Write((SNES) addr, hp);
+                }
+            }
+
+            if (sprite.BumpAddresses is not null) {
+                foreach (int addr in sprite.BumpAddresses) {
+                    Write((SNES) addr, bump);
+                }
+            }
+
+
+
+        }
+
+
     }
+
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)

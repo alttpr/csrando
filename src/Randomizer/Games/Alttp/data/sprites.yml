@@ -1,25 +1,89 @@
 # comments/names based on values.asm of the JP 1.0 disassembly
 # when they differ from the internally used sprite name (to help discoverability when searching for them.)
+
+
+
+
+
+# SPECCING OUT ENEMIZER IMPROVEMENTS:
 Raven:
   id: 0x00
+  owns_id: true
+
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
   limited_interaction: true
+  
+  harmless: false
+  palette: 4
+  
+  bump: 0x81
+  bump_address: [0x068963]
+
+  hp: 4
+  hp_address: [0x068965]
+
   prize_pack: 0x03
+  prize_pack_address: [0x068967]
+
+
+
+
+
+
 Dacto:
-  alternative: Raven
+  alternative: Raven # maybe this determines who owns the id?
+  owns_id: false # showing both for discussion
+
   id: 0x00
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x19]
   limited_interaction: true
+
+  bump: 0x88
+  bump_address: [0x068964]
+
+  hp: 8
+  hp_address: [0x068966]
+
   prize_pack: 0x03
+  prize_pack_address: [0x068968]
+
+
+
+
+
+
+
 Vulture:
   id: 0x01
+  owns_id: true
+
   flags: Challenge, NoDrop
   sheets: [null, null, 0x12, null]
   limited_interaction: true
   boss_damage_sfx: true
+
   prize_pack: 0x06
+  hp: 6
+  bump: 0x83
+
+
+
+
+
+
+
+
+
+
+
+
+  # DONE SPECCING OUT
+
+
+
+
 FlyingStalfosHead: #STALFOS HEAD
   id: 0x02
   flags: NoDrop

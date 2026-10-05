@@ -22,6 +22,10 @@ public interface IRom : IDisposable
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
     void Write(Address address, in ReadOnlySpan<byte> data);
+
+    void Write(Address address, byte value);
+
+
 }
 
 public readonly struct Address
