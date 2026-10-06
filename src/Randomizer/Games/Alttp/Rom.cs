@@ -1919,11 +1919,11 @@ public sealed class Rom : GameRom
         Write((SNES)0x02E575, specialSpriteSheets);
     }
 
-    public void WriteSpriteData(IEnumerable<Sprite> sprites)
+    public void WriteSpriteData(IEnumerable<SpriteProperties> sprites)
     {
 
         foreach (var sprite in sprites) {
-            int id = sprite.Id;
+            int id = sprite.ID;
 
             if (id > 0xF2) {
                 throw new Exception($"Invalid sprite ID: 0x{id:X2} > 0xF2. [{sprite.Name}]");
@@ -1952,7 +1952,6 @@ public sealed class Rom : GameRom
                     Write((SNES) addr, bump);
                 }
             }
-
 
 
         }
