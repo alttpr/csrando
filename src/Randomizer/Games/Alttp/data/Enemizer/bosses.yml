@@ -42,5 +42,5 @@ Ganon:
 GanonLightTorches:
   - Lamp
   - FireRod
-GanonInvisible:
+GanonStunned:
   - BowAndSilverArrows

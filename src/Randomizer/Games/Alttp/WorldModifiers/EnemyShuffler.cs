@@ -159,7 +159,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                 Item = world.GetItem("DefeatGanon"),
             };
             world.Graph.AddVertex(defeated);
-            foreach (string item in bosses["GanonInvisible"])
+            foreach (string item in bosses["GanonStunned"])
                 torchesLit.Edges.Add(new Edge(torchesLit, defeated, new ItemCondition(world.GetItem(item), 1)));
 
             var darkDefeated = new Vertex

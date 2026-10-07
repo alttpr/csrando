@@ -1,326 +1,202 @@
 # comments/names based on values.asm of the JP 1.0 disassembly
 # when they differ from the internally used sprite name (to help discoverability when searching for them.)
-
-
-
-
-
-# SPECCING OUT ENEMIZER IMPROVEMENTS:
 Raven:
   id: 0x00
   owns_id: true
-
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
-  limited_interaction: true
-  
-  harmless: false
-  palette: 4
-  
-  bump: 0x81
-  bump_address: [0x068963]
-
-  hp: 4
-  hp_address: [0x068965]
-
-  prize_pack: 0x03
-  prize_pack_address: [0x068967]
-
-
-
-
-
-
+  properties: Raven_properties
 Dacto:
   alternative: Raven # maybe this determines who owns the id?
-  owns_id: false # showing both for discussion
-
   id: 0x00
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x19]
-  limited_interaction: true
-
-  bump: 0x88
-  bump_address: [0x068964]
-
-  hp: 8
-  hp_address: [0x068966]
-
-  prize_pack: 0x03
-  prize_pack_address: [0x068968]
-
-
-
-
-
-
-
+  properties: Dacto_properties
 Vulture:
   id: 0x01
-  owns_id: true
-
   flags: Challenge, NoDrop
   sheets: [null, null, 0x12, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-
-  prize_pack: 0x06
-  hp: 6
-  bump: 0x83
-
-
-
-
-
-
-
-
-
-
-
-
-  # DONE SPECCING OUT
-
-
-
-
+  properties: Vulture_properties
 FlyingStalfosHead: #STALFOS HEAD
   id: 0x02
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  limited_interaction: true
-  prize_pack: 0x04
+  properties: FlyingStalfosHead_properties
 Empty: #NULL
   id: 0x03
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
+  properties: Empty_properties
 PullSwitchGood: #CORRECT PULL SWITCH (BAR)
   id: 0x04
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
+  properties: PullSwitchGood_properties
 PullSwitchGoodTongue: #CORRECT PULL SWITCH (TONGUE)
   id: 0x04
   flags: NoPlace
   sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
-PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH (BAR)
+  properties: PullSwitchGood_properties
+PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH
   id: 0x05
   flags: NoPlace
-  sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
-PullSwitchGoodUnusedTongue: #UNUSED CORRECT PULL SWITCH (TONGUE)
-  id: 0x05
-  flags: NoPlace
-  sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
+  sheets: [null, null, null, 0x13]
+  properties: PullSwitchGoodUnused_properties
 PullSwitchBad: #WRONG PULL SWITCH (BAR)
   id: 0x06
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
+  properties: PullSwitchBad_properties
 PullSwitchBadTongue: #WRONG PULL SWITCH (TONGUE)
   id: 0x06
   flags: NoPlace
   sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
-PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH (BAR)
+  properties: PullSwitchBad_properties
+PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH
   id: 0x07
   flags: NoPlace
-  sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
-PullSwitchBadUnusedTongue: #UNUSED WRONG PULL SWITCH (TONGUE)
-  id: 0x07
-  flags: NoPlace
-  sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  limited_interaction: true
+  sheets: [null, null, null, 0x13]
+  properties: PullSwitchBadUnused_properties
 Octorok1: #OKTOROK
   id: 0x08
   flags: Challenge
   sheets: [null, null, 0x0C, null]
-  prize_pack: 0x02
+  properties: Octorok1_properties
 Slarok1: #SLAROK
   alternative: Octorok1
   id: 0x08
   flags: Challenge
   sheets: [null, null, 0x18, null]
-  prize_pack: 0x02
+  properties: Slarok1_properties
 Moldorm:
   id: 0x09
   flags: NoPlace
   sheets: [null, null, 0x30, null]
+  properties: Moldorm_properties
   priority: 100
 Octorok4: #OCTOROK 4WAY
   id: 0x0A
   flags: Challenge
   sheets: [null, null, 0x0C, null]
-  prize_pack: 0x02
+  properties: Octorok4_properties
 Slarok4: #SLAROK 4WAY
   alternative: Octorok4
   id: 0x0A
   flags: Challenge
   sheets: [null, null, 0x18, null]
-  prize_pack: 0x02
+  properties: Slarok4_properties
 Chicken: #CUCCO
   id: 0x0B
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x50]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Chicken_properties
 SkullChicken: #SKULL CUCCO
   alternative: Chicken
   id: 0x0B
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x15]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Chicken_properties
 OctorokStone: #OCTOROK STONE
   id: 0x0C
   flags: NoPlace
   sheets: [null, null, 0x0C, null]
-  hitbox: 0x1C
-  limited_interaction: true
-  shield_blockable: true
+  properties: OctorokStone_properties
 SlarokStone: #SLAROK STONE
   alternative: OctorokStone
   id: 0x0C
   flags: NoPlace
   sheets: [null, null, 0x18, null]
-  hitbox: 0x1C
-  limited_interaction: true
-  shield_blockable: true
+  properties: OctorokStone_properties
 Buzzblob:
   id: 0x0D
   flags: Challenge
   sheets: [null, null, null, 0x11]
-  limited_interaction: true
-  prize_pack: 0x03
+  properties: Buzzblob_properties
 Snapdragon:
   id: 0x0E
   flags: Challenge
   sheets: [0x16, null, 0x17, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x07
+  properties: Snapdragon_properties
 Octoballoon:
   id: 0x0F
   flags: Challenge, NoDrop
   sheets: [null, null, 0x0C, null]
-  hitbox: 0x02
-  limited_interaction: true
+  properties: Octoballoon_properties
   weight: 2
 Octobaby: #OCTOBALLOON BABY
   id: 0x10
   flags: NoPlace
   sheets: [null, null, 0x0C, null]
-  hitbox: 0x01
-  limited_interaction: true
+  properties: Octobaby_properties
 Hinox:
   id: 0x11
   flags: Challenge
   sheets: [0x16, null, null, null]
-  hitbox: 0x03
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x04
+  properties: Hinox_properties
 Moblin:
   id: 0x12
   flags: Challenge
   sheets: [null, null, 0x17, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: Moblin_properties
 MiniHelmasaur: #MINI HELMASAUR
   id: 0x13
   flags: Challenge
   sheets: [null, 0x1E, null, null]
-  prize_pack: 0x07
-ForkGate: #THIEVES TOWN GRATE?
+  properties: MiniHelmasaur_properties
+ForkGate: #THIEVES TOWN GRATE
   id: 0x14
   flags: NoPlace
-  hitbox: 0x03
+  properties: ForkGate_properties
 Antifairy:
   id: 0x15
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Antifairy_properties
 Sahasrahla: #SAHASRAHLA / AGINAH
   id: 0x16
   flags: NoPlace
   sheets: [null, null, 0x4C, null]
-  hitbox: 0x07
+  properties: Sahasrahla_properties
 BushHoarder: #HOARDER
   id: 0x17
   flags: Challenge
   sheets: [null, null, null, 0x11]
-  limited_interaction: true
+  properties: BushHoarder_properties
 BushHoarderAlternative:
   alternative: BushHoarder
   id: 0x17
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  limited_interaction: true
+  properties: BushHoarder_properties
 MiniMoldorm: #MINI MOLDORM
   id: 0x18
   flags: Challenge
   sheets: [null, 0x1E, null, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x02
+  properties: MiniMoldorm_properties
 Poe:
   id: 0x19
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x0E]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x06
+  properties: Poe_properties
 Hyu:
   alternative: Poe
   id: 0x19
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x15]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x06
+  properties: Poe_properties
 DwarfSmith: #SMITHY
   id: 0x1A
   flags: NoPlace
   sheets: [null, 0x4D, null, 0x15]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: DwarfSmith_properties
 SpriteArrow: #ARROW
   id: 0x1B
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x05
-  limited_interaction: true
-  shield_blockable: true
+  properties: SpriteArrow_properties
 Statue:
   id: 0x1C
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x03
+  properties: Statue_properties
   not_with:
     - PushSwitch
     - Statue
@@ -330,8 +206,7 @@ StatueAlternative:
   id: 0x1C
   flags: NoDrop
   sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
-  hitbox: 0x03
+  properties: Statue_properties
   not_with:
     - PushSwitch
     - Statue
@@ -339,11 +214,12 @@ StatueAlternative:
 FluteQuest:
   id: 0x1D
   flags: NoPlace
+  properties: FluteQuest_properties
 CrystalSwitch: #CRYSTAL SWITCH
   id: 0x1E
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
+  properties: CrystalSwitch_properties
   not_with:
     - FallingIce
 CrystalSwitchAlternative: #CRYSTAL SWITCH
@@ -351,1090 +227,887 @@ CrystalSwitchAlternative: #CRYSTAL SWITCH
   id: 0x1E
   flags: NoPlace
   sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
+  properties: CrystalSwitch_properties
   not_with:
     - FallingIce
 SickKid: #SICK KID
   id: 0x1F
   flags: NoPlace
   sheets: [0x51, null, null, null]
-  hitbox: 0x0D
-  limited_interaction: true
+  properties: SickKid_properties
 Sluggula:
   id: 0x20
   flags: Challenge
   sheets: [null, null, 0x25, null]
-  prize_pack: 0x04
+  properties: Sluggula_properties
   weight: 2
 PushSwitch: #WATER SWITCH
   id: 0x21
   flags: NoPlace
   sheets: [null, null, null, 0x53]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: PushSwitch_properties
 Ropa:
   id: 0x22
   flags: Challenge
   sheets: [0x16, null, null, null]
-  limited_interaction: true
-  prize_pack: 0x02
+  properties: Ropa_properties
 RedBari: #RED BARI
   id: 0x23
   flags: Challenge, NoDrop #DR allows them to drop items with fire
   sheets: [0x1F, null, null, null]
-  prize_pack: 0x06
+  properties: RedBari_properties
   weight: 2
 BlueBari: #BLUE BARI
   id: 0x24
   flags: Challenge
   sheets: [0x1F, null, null, null]
-  prize_pack: 0x06
+  properties: BlueBari_properties
 TalkingTree: #TALKING TREE
   id: 0x25
   flags: NoPlace
   sheets: [null, null, null, 0x15]
+  properties: TalkingTree_properties
   weight: 3
-HardhatBeetle: #HARDHAT BEETLE
+# TODO we need to add asm to handle this by subtype
+BlueHardhatBeetle: #HARDHAT BEETLE
   id: 0x26
   flags: Challenge
   sheets: [null, 0x1E, null, null]
+  subtype: 0
+  properties: BlueHardhatBeetle_properties
+RedHardhatBeetle: #HARDHAT BEETLE
+  id: 0x26
+  flags: Challenge
+  sheets: [null, 0x1E, null, null]
+  subtype: 1
+  properties: RedHardhatBeetle_properties
 Deadrock:
   id: 0x27
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  limited_interaction: true
+  properties: Deadrock_properties
 Storyteller: #DARK WORLD HINT NPC
   id: 0x28
   flags: NoPlace
   sheets: [0x4B, 0x4D, null, null]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Storyteller_properties
 AdultThief:
   id: 0x29
   flags: NoPlace
   sheets: [0x0E, null, 0x4A, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Adult_properties
 Adult:
   id: 0x29
   flags: NoPlace
   sheets: [0x4F, null, 0x4A, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Adult_properties
 SweepingLady: #SWEEPING LADY
   id: 0x2A
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: SweepingLady_properties
 Hobo:
   id: 0x2B
   flags: NoPlace
   sheets: [null, null, 0x37, null]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Hobo_properties
 Lumberjack: #LUMBERJACKS
   id: 0x2C
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Lumberjack_properties
 NecklessMan: #used to be TelepathyTile, for its message
   id: 0x2D
   flags: NoPlace
-  hitbox: 0x07
-  limited_interaction: true
+  properties: NecklessMan_properties
 FluteKid: #FLUTE KID
   id: 0x2E
   flags: NoPlace
   sheets: [null, null, 0x4E, 0x4C]
-  hitbox: 0x0D
-  limited_interaction: true
+  properties: FluteKid_properties
 RaceGameLady: #RACE GAME LADY
   id: 0x2F
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
-RaceGameBoy: #RACE GAME GUY?
+  properties: RaceGameLady_properties
+RaceGameBoy: #RACE GAME GUY
   id: 0x30
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: RaceGameBoy_properties
 FortuneTeller: #FORTUNE TELLER
   id: 0x31
   flags: NoPlace
   sheets: [0x4B, 0x4D, null, null]
-  hitbox: 0x07
-  limited_interaction: true
-AngryBrother: #ARGUE BROS?
+  properties: FortuneTeller_properties
+AngryBrother: #ARGUE BROS
   id: 0x32
   flags: NoPlace
   sheets: [0x4F, null, null, null]
-  hitbox: 0x07
-  limited_interaction: true
-PullForRupees: #RUPEE PULL?
+  properties: AngryBrother_properties
+PullForRupees: #RUPEE PULL
   id: 0x33
   flags: NoPlace
-  hitbox: 0x03
-  limited_interaction: true
+  properties: PullForRupees_properties
 YoungSnitch: #YOUNG SNITCH
   id: 0x34
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: YoungSnitch_properties
 Innkeeper:
   id: 0x35
   flags: NoPlace
   sheets: [null, null, null, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Innkeeper_properties
 Witch:
   id: 0x36
   flags: NoPlace
   sheets: [null, null, 0x4C, null]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: Witch_properties
 Waterfall:
   id: 0x37
   flags: NoPlace
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Waterfall_properties
 ArrowTarget: #EYE STATUE
   id: 0x38
   flags: NoPlace
-  hitbox: 0x03
-  limited_interaction: true
-AverageMan: #LOCKSMITH?
+  properties: ArrowTarget_properties
+AverageMan: #LOCKSMITH
   id: 0x39
   flags: NoPlace
   sheets: [null, null, null, 0x11]
-  hitbox: 0x07
-  limited_interaction: true
+  properties: AverageMan_properties
 MagicBat: #MAGIC BAT
   id: 0x3A
   flags: NoPlace
   sheets: [null, null, null, 0x1D]
-  hitbox: 0x0D
-  limited_interaction: true
+  properties: MagicBat_properties
 DashItem: #BONK ITEM
   id: 0x3B
   flags: NoPlace
-  ignored_by_killrooms: true
+  properties: DashItem_properties
 LumberjackTree: #BONK ITEM (Post-Agahnim Lumberjack Tree)
   id: 0x3B
   flags: NoPlace
   sheets: [0x0F, null, null, null]
-  ignored_by_killrooms: true
-VillageKid: #KID IN KAK?
+  properties: DashItem_properties
+VillageKid: #KID IN KAK
   id: 0x3C
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
-  hitbox: 0x07
+  properties: VillageKid_properties
 OldSnitch: #OLD SNITCH
   id: 0x3D
   flags: NoPlace
   sheets: [null, null, null, 0x50]
-  hitbox: 0x07
-  limited_interaction: true
-RockHoarder: #HOARDER?
+  properties: OldSnitch_properties
+RockHoarder: #HOARDER
   id: 0x3E
   flags: Challenge
   sheets: [null, null, null, 0x11]
-  limited_interaction: true
-RockHoarderAlternative: #HOARDER?
+  properties: RockHoarder_properties
+RockHoarderAlternative: #HOARDER
   alternative: RockHoarder
   id: 0x3E
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  limited_interaction: true
+  properties: RockHoarder_properties
 TutorialGuard: #TUTORIAL GUARD
   id: 0x3F
   flags: NoPlace
   sheets: [0x48, 0x49, null, null]
-  limited_interaction: true
-  boss_damage_sfx: true
+  properties: TutorialGuard_properties
 LightningLock: #LIGHTNING GATE
   id: 0x40
   flags: NoPlace
   sheets: [null, null, null, 0x3F]
-  hitbox: 0x09
-  limited_interaction: true
+  properties: LightningLock_properties
 BlueSwordGuard: #BLUE GUARD
   id: 0x41
   flags: Challenge
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard01: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x01
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard01Falling: #BLUE GUARD
   alternative: BlueSwordGuard
   falling: BlueSwordGuard01
   id: 0x41
   subtype: 0x01
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard02: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x02
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard03: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x03
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard03Falling: #BLUE GUARD
   alternative: BlueSwordGuard
   falling: BlueSwordGuard03
   id: 0x41
   subtype: 0x03
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard05: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x05
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard13: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x13
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard15: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x15
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueSwordGuard1B: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x1B
   # this sprite is used in pit rooms in vanilla
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueTaros: #BLUE TAROS
   alternative: BlueSwordGuard
   id: 0x41
   flags: Challenge
   sheets: [null, 0x0D, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 BlueTarosFalling: #BLUE TAROS
   alternative: BlueSwordGuard
   falling: BlueTaros
   id: 0x41
   flags: Challenge
   sheets: [null, 0x0D, 0x29, null] # 0x29 in slot 2 is the falling taros sprite
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BlueSwordGuard_properties
 GreenSwordGuard: #GREEN GUARD
   id: 0x42
   flags: Challenge
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: GreenSwordGuard_properties
 GreenSwordGuardFalling: #GREEN GUARD
   alternative: GreenSwordGuard
   falling: GreenSwordGuard
   id: 0x42
   flags: Challenge
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: GreenSwordGuard_properties
 GreenSwordGuard01: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x01
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: GreenSwordGuard_properties
 GreenSwordGuard03: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x03
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: GreenSwordGuard_properties
 GreenSwordGuard1B: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x1B
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
-RedTaros: #RED TAROS?
+  properties: GreenSwordGuard_properties
+RedTaros: #RED TAROS
   alternative: RedSpearGuard
   id: 0x43
   flags: Challenge
   sheets: [null, 0x0D, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: RedSpearGuard_properties
 RedSpearGuard: #RED SPEAR GUARD
   id: 0x43
   flags: Challenge
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: RedSpearGuard_properties
 AssaultSwordGuard: #BLUESAIN BOLT
   id: 0x44
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x07
+  properties: AssaultSwordGuard_properties
 FastRedSpearGuard: #USAIN BOLT
   id: 0x45
   flags: Challenge
   sheets: [null, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
-FastRedTaros: #USAIN BOLT but dark world?
+  properties: FastRedSpearGuard_properties
+FastRedTaros: #USAIN BOLT but dark world
   alternative: FastRedSpearGuard
   id: 0x45
   flags: Challenge
   sheets: [null, 0x0D, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: FastRedSpearGuard_properties
 BlueArcher: #BLUE ARCHER
   id: 0x46
   flags: Challenge
   sheets: [0x48, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x05
-GreenArcher: #GREEN BUSH GUARD?
+  properties: BlueArcher_properties
+GreenArcher: #GREEN BUSH GUARD
   id: 0x47
   flags: Challenge
   sheets: [0x48, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x05
+  properties: GreenArcher_properties
 RedJavelinGuard: #RED JAVELIN GUARD
   id: 0x48
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x03
-RedJavelinGuard2: #RED BUSH GUARD?
+  properties: 
+RedJavelinGuard2: #RED BUSH GUARD
   id: 0x49
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x07
+  properties: RedBushGuard_properties
 RedBombGuard: #BOMB GUARD
   id: 0x4A
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  hitbox: 0x12
-  boss_damage_sfx: true
-  prize_pack: 0x04
+  properties: RedBombGuard_properties
 GreenGuardRecruit: #GREEN KNIFE GUARD
   id: 0x4B
   flags: Challenge
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the knife guard legs and the falling guard sprite
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: GreenGuardRecruit_properties
 Geldman:
   id: 0x4C
   flags: Challenge
   sheets: [null, null, 0x12, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x02
-Rabbit: #TOPPO?
+  properties: Geldman_properties
+Rabbit: #TOPPO
   id: 0x4D
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
-  ignored_by_killrooms: true
-  limited_interaction: true
-  prize_pack: 0x01
+  properties: Rabbit_properties
 Popo:
   id: 0x4E
   flags: Challenge
   sheets: [null, 0x2C, null, null]
-  limited_interaction: true
-  prize_pack: 0x02
+  properties: Popo_properties
 Popo2: #POPO?
   id: 0x4F
   flags: Challenge
   sheets: [null, 0x2C, null, null]
-  limited_interaction: true
-  prize_pack: 0x02
+  properties: Popo2_properties
 Cannonball:
   id: 0x50
   flags: NoPlace
   sheets: [null, null, 0x2E, null]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Cannonball_properties
 Armos: #ARMOS STATUE
   id: 0x51
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  hitbox: 0x12
-  limited_interaction: true
-  prize_pack: 0x05
+  properties: Armos_properties
 KingZora: #KING ZORA
   id: 0x52
   flags: NoPlace
   sheets: [null, null, null, 0x44]
-  hitbox: 0x09
-  limited_interaction: true
+  properties: KingZora_properties
 ArmosKnight: #ARMOS KNIGHT
   id: 0x53
   flags: NoPlace
   sheets: [null, null, null, 0x1D]
+  properties: ArmosKnight_properties
   # Overlord $07 (ArmosCoordinator) is placed with this one, but Armos Knights come first
   priority: 101
-  hitbox: 0x09
-  limited_interaction: true
 Lanmolas:
   id: 0x54
   flags: NoPlace
   sheets: [null, null, null, 0x31]
+  properties: Lanmolas_properties
   priority: 100
-  limited_interaction: true
-FireballZora: #ZORA / FIREBALL?
+FireballZora: #ZORA / FIREBALL
   id: 0x55
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, 0x0C, null]
-  ignored_by_killrooms: true
-  prize_pack: 0x04
-FireballKu: #KU / FIREBALL?
+  properties: FireballZora_properties
+FireballKu: #KU / FIREBALL
   alternative: FireballZora
   id: 0x55
   flags: NoDrop #TODO: DR has them as "no drop", do they need to be?
   sheets: [null, null, 0x18, null]
-  ignored_by_killrooms: true
-  prize_pack: 0x04
-WalkingZora: #ZORA?
+  properties: FireballZora_properties
+WalkingZora: #ZORA
   id: 0x56
   flags: Challenge
   sheets: [null, null, 0x0C, 0x44]
-  prize_pack: 0x04
-WalkingKu: #KU?
+  properties: WalkingZora_properties
+WalkingKu: #KU
   alternative: WalkingZora
   id: 0x56
   flags: Challenge
   sheets: [null, null, 0x18, 0x44]
-  prize_pack: 0x04
-DesertPalaceBarrier: #DESERT STATUE?
+  properties: WalkingZora_properties
+DesertPalaceBarrier: #DESERT STATUE
   id: 0x57
   flags: NoPlace
   sheets: [null, null, 0x12, null]
-  hitbox: 0x0C
-  limited_interaction: true
+  properties: DesertPalaceBarrier_properties
 Crab:
   id: 0x58
   flags: Challenge
   sheets: [null, null, 0x0C, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: Crab_properties
 Bird: #LOST WOODS BIRD
   id: 0x59
   flags: NoDrop
   sheets: [null, null, null, 0x36]
-  limited_interaction: true
+  properties: Bird_properties
 Squirrel: #LOST WOODS SQUIRREL?
   id: 0x5A
   flags: NoDrop
   sheets: [null, null, null, 0x36]
-  limited_interaction: true
+  properties: Squirrel_properties
 SparkCW: #SPARK CLOCKWISE
   id: 0x5B
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: SparkCW_properties
 SparkCCW: #SPARK COUNTERCLOCKWISE
   id: 0x5C
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: SparkCCW_properties
 RollerVU: #ROLLER VERTICAL UP (placed high, moving downwards first)
   id: 0x5D
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-  ignored_by_killrooms: true
-  hitbox: 0x10
-  limited_interaction: true
+  properties: RollerVU_properties
 RollerVD: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   id: 0x5E
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-  ignored_by_killrooms: true
-  hitbox: 0x10
-  limited_interaction: true
+  properties: RollerVD_properties
 RollerHL: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   id: 0x5F
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-  persist_offscreen: true
-  ignored_by_killrooms: true
-  hitbox: 0x0E
-  limited_interaction: true
+  properties: RollerHL_properties
 RollerHR: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   id: 0x60
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-  persist_offscreen: true
-  ignored_by_killrooms: true
-  hitbox: 0x0E
-  limited_interaction: true
+  properties: RollerHR_properties
 Beamos:
   id: 0x61
   flags: NoDrop
   sheets: [null, 0x2C, null, null]
-  ignored_by_killrooms: true
+  properties: Beamos_properties
   weight: 2
 MasterSword:
   id: 0x62
   flags: NoPlace
   sheets: [null, null, 0x37, 0x36]
-  hitbox: 0x1E
-  limited_interaction: true
+  properties: MasterSword_properties
 DevalantBlue: #DEBIRANDO PIT
   id: 0x63
   sheets: [0x2F, null, null, null]
-  ignored_by_killrooms: true
-  hitbox: 0x13
-  limited_interaction: true
+  properties: DevalantBlue_properties
   weight: 2
 DevalantRed: #DEBIRANDO
   id: 0x64
   flags: Challenge
   sheets: [0x2F, null, null, null]
-  limited_interaction: true
-  prize_pack: 0x02
+  properties: DevalantRed_properties
   weight: 2
 ShootingGalleryNPC: #ARCHERY GUY
   id: 0x65
   flags: NoPlace
   sheets: [0x4B, null, null, null]
-  hitbox: 0x0A
-  limited_interaction: true
-  prize_pack: 0x0A
+  properties: ShootingGalleryNPC_properties
 CannonBallShooterR: #WALL CANNON VERTICAL RIGHT (placed left, shooting right)
   id: 0x66
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: CannonBallShooterR_properties
   weight: 3
 CannonBallShooterL: #WALL CANNON VERTICAL LEFT (placed right, shooting left)
   id: 0x67
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: CannonBallShooterL_properties
   weight: 3
 CannonBallShooterD: #WALL CANNON HORIZONTAL BOTTOM (placed high, shooting downwards)
   id: 0x68
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: CannonBallShooterD_properties
   weight: 3
 CannonBallShooterU: #WALL CANNON HORIZONTAL TOP (placed low, shooting upwards)
   id: 0x69
   flags: NoDrop
   sheets: [0x2F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: CannonBallShooterU_properties
   weight: 3
 BallNChainTrooper: #BALL N CHAIN
   id: 0x6A
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x02
+  properties: 
 CannonGuard: #CANNONBALL / CANNON TROOPER
   id: 0x6B
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  hitbox: 0x12
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: BallNChainTrooper_properties
   weight: 2
 MirrorPortal: #MIRROR PORTAL
   id: 0x6C
   flags: NoPlace
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: MirrorPortal_properties
 Rat: #RAT / CRICKET
   id: 0x6D
   flags: Challenge
   sheets: [null, null, 0x1C, null]
-  limited_interaction: true
-  prize_pack: 0x02
+  properties: 
 Buzz: #BUZZ / CRICKET
   alternative: Rat
   id: 0x6D
   flags: Challenge
   sheets: [null, null, 0x24, null]
-  limited_interaction: true
-  prize_pack: 0x02
-Rope: #SNAKE? ROPE?
+  properties: 
+Rope: #ROPE
   id: 0x6E
   flags: Challenge
   sheets: [null, null, 0x1C, null]
-  limited_interaction: true
-  prize_pack: 0x01
-Skullrope: #SKULL ROPE?
+  properties: Rope_properties
+Skullrope: #STAL ROPE
   alternative: Rope
   id: 0x6E
   flags: Challenge
   sheets: [null, null, 0x24, null]
-  limited_interaction: true
-  prize_pack: 0x01
+  properties: Skullrope_properties
 Keese:
   id: 0x6F
   flags: NoDrop
   sheets: [null, null, 0x1C, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
-  prize_pack: 0x01
+  properties: Keese_properties
 Chasupa:
   alternative: Keese
   id: 0x6F
   flags: NoDrop
   sheets: [null, null, 0x24, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
-  prize_pack: 0x01
+  properties: Chasupa_properties
 HelmasaurFireball: #KING HELMASAUR FIREBALL
   id: 0x70
   flags: NoPlace
   sheets: [null, null, null, 0x3E]
-  hitbox: 0x19
-  limited_interaction: true
+  properties: HelmasaurFireball_properties
 Leever:
   id: 0x71
   flags: Challenge
   sheets: [0x2F, null, null, null]
-  limited_interaction: true
-  prize_pack: 0x01
-PondActivation: #FAIRY POND TRIGGER?
+  properties: Leever_properties
+PondActivation: #FAIRY POND TRIGGER
   id: 0x72
   flags: NoPlace
   sheets: [null, null, null, 0x36]
-  limited_interaction: true
+  properties: 
 Uncle: #UNCLE / PRIEST / MANTLE
   id: 0x73
   flags: NoPlace
   sheets: [0x51, null, null, null]
-  hitbox: 0x0A
-  limited_interaction: true
+  properties: Uncle_properties
 Priest: #UNCLE / PRIEST / MANTLE
   id: 0x73
   flags: NoPlace
   sheets: [0x47, null, null, null]
-  hitbox: 0x0A
-  limited_interaction: true
+  properties: Uncle_properties
 RunningMan: #RUNNING MAN
   id: 0x74
   flags: NoPlace
   sheets: [0x4F, null, null, 0x50]
-  hitbox: 0x0D
-  limited_interaction: true
+  properties: RunningMan_properties
 BottleSalesman: #BOTTLE MERCHANT
   id: 0x75
   flags: NoPlace
   sheets: [null, null, 0x4A, null]
-  hitbox: 0x0A
-  limited_interaction: true
+  properties: BottleSalesman_properties
 Zelda:
   id: 0x76
   flags: NoPlace
-  hitbox: 0x0A
-  limited_interaction: true
-SeparatedAntifairy: # probably from the AntifairyCircle, they change id when separating?
+  properties: Zelda_properties
+UnusedAntifairy: # ANTIFAIRY
   id: 0x77
   flags: NoPlace
-  ignored_by_killrooms: true
-  single_layer_collision: true
-  limited_interaction: true
 SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
   id: 0x78
   flags: NoPlace
   sheets: [0x4B, null, 0x4A, null]
-  hitbox: 0x0A
-  limited_interaction: true
+  properties: SahaWife_properties
 Bee:
   id: 0x79
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x01
-  limited_interaction: true
+  properties: Bee_properties
 Agahnim:
   id: 0x7A
   flags: NoPlace
   sheets: [0x55, 0x1A, 0x42, 0x43]
+  properties: Agahnim_properties
   priority: 100
-  limited_interaction: true
 AgahnimBall: #AGAHNIMS BALLS
   id: 0x7B
   flags: NoPlace
   sheets: [null, null, null, 0x43]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: AgahnimBall_properties
 GreenStalfos: #GREEN STALFOS, DR: Floating Skull
   id: 0x7C
   flags: Challenge
   sheets: [0x1F, null, null, null]
-  limited_interaction: true
-  boss_damage_sfx: true
-  prize_pack: 0x07
-BigSpikeTrap: #BIG SPIKE?
+  properties: GreenStalfos_properties
+BigSpikeTrap: #BIG SPIKE
   id: 0x7D
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x09
-  limited_interaction: true
+  properties: BigSpikeTrap_properties
 FireBarCW: #FIREBAR CLOCKWISE
   id: 0x7E
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: FireBarCW_properties
 FireBarCCW: #FIREBAR COUNTERCLOCKWISE
   id: 0x7F
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: FireBarCCW_properties
 FireSnake:
   id: 0x80
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: FireSnake_properties
 Hover:
   id: 0x81
   flags: Challenge
   sheets: [null, null, 0x22, null]
-  limited_interaction: true
-  water_check: false # allow Hovers to move on land (DR does this too)
-  prize_pack: 0x02
+  properties: Hover_properties
 AntifairyCircle: #ANTIFAIRY CIRCLE
   id: 0x82
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: 
   weight: 4
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   id: 0x83
   flags: Challenge
   sheets: [null, null, 0x2E, null]
-  boss_damage_sfx: true
-  prize_pack: 0x05
+  properties: EyegoreGreen_properties
 MimicGreen: #GREEN EYEGORE / GREEN MIMIC
   alternative: EyegoreGreen
   id: 0x83 #DR uses the unused somaria platform 0xEF
   flags: Challenge
   sheets: [null, null, 0x2E, null]
-  boss_damage_sfx: true
-  prize_pack: 0x05
+  properties: MimicGreen_properties
 EyegoreRed: #RED EYEGORE / RED MIMIC
   id: 0x84
   flags: Challenge
   sheets: [null, null, 0x2E, null]
-  boss_damage_sfx: true
-  prize_pack: 0x05
+  properties: EyegoreRed_properties
 MimicRed: #RED EYEGORE / RED MIMIC
   alternative: EyegoreRed
   id: 0x84 #DR uses the unused somaria platform 0xF0
   flags: Challenge
   sheets: [null, null, 0x2E, null]
-  boss_damage_sfx: true
-  prize_pack: 0x05
-StalfosYellow: #YELLOW STALFOS, DR says it doesnt spawn
+  properties: MimicRed_properties
+StalfosYellow: #YELLOW STALFOS, spawned by overlord
   id: 0x85
   flags: NoDrop
   sheets: [0x1F, null, null, null]
-  ignored_by_killrooms: true
-  boss_damage_sfx: true
-  prize_pack: 0x07
+  properties: StalfosYellow_properties
 Kodongo:
   id: 0x86
   flags: Challenge
   sheets: [null, null, 0x2A, null]
-  single_layer_collision: true # fixes their interaction in multi-layer rooms (which would hang the game)
-  prize_pack: 0x06
+  properties: Kodongo_properties
 Flames: #KONDONGO FIRE
   id: 0x87
   flags: NoPlace
   sheets: [null, null, 0x2A, null]
+  properties: Flames_properties
 Mothula:
   id: 0x88
   flags: NoPlace
   # 0x52/0x53 in slot 3 is for the spikes. because moth spawns them, they're not in data and need to be elsewhere
   sheets: [null, null, 0x38, 0x52]
+  properties: Mothula_properties
   # Overlord $07 (MovingFloor) is placed with this one, but Mothula is first
   priority: 101
-  hitbox: 0x09
-  limited_interaction: true
 MothulaBeam: #MOTHULA BEAM
   id: 0x89
   flags: NoPlace
   sheets: [null, null, 0x38, null]
-  single_layer_collision: true
+  properties: MothulaBeam_properties
 SpikeTrap: #SPIKE BLOCK
   id: 0x8A
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  limited_interaction: true
-  water_check: true
+  properties: SpikeTrap_properties
 SpikeTrapAlternative: #SPIKE BLOCK
   alternative: SpikeTrap
   id: 0x8A
   flags: NoDrop
   sheets: [null, null, null, 0x53]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  limited_interaction: true
-  water_check: true
+  properties: SpikeTrap_properties
 Gibdo:
   id: 0x8B
   flags: Challenge
   sheets: [null, null, 0x23, null]
-  boss_damage_sfx: true
-  prize_pack: 0x03
+  properties: Gibdo_properties
 Arrghus:
   id: 0x8C
   flags: NoPlace
   sheets: [null, null, 0x39, null]
+  properties: Arrghus_properties
   priority: 101
-  ignored_by_killrooms: true
-  water_check: false # enemized Arrghus is allowed on land
 ArrghusSpawn: #ARRGHI
   id: 0x8D
   flags: NoPlace
   sheets: [null, null, 0x39, null]
+  properties: ArrghusSpawn_properties
   priority: 100
 Terrorpin:
   id: 0x8E
   flags: Challenge
   sheets: [null, null, 0x2A, null]
-  prize_pack: 0x02
-Zol: #BLOB?
+  properties: Terrorpin_properties
+Zol: #BLOB
   id: 0x8F
   flags: Challenge
   sheets: [null, 0x20, null, null]
-  single_layer_collision: true
-  prize_pack: 0x06
+  properties: Zol_properties
+PowderBlob: #BLOB
+  id: 0x8F
+  flags: NoPlace
+  sheets: [null, null, null, null]
+  properties: PowderBlob_properties
 Wallmaster:
   id: 0x90
   flags: NoPlace
   sheets: [null, null, 0x23, null]
-  boss_damage_sfx: true
+  properties: Wallmaster_properties
 StalfosKnight: #STALFOS KNIGHT
   id: 0x91
   flags: Challenge
   sheets: [null, 0x20, null, null]
-  boss_damage_sfx: true
-  prize_pack: 0x04
+  properties: StalfosKnight_properties
 Helmasaur: #KING HELMASAUR
   id: 0x92
   flags: NoPlace
   sheets: [null, null, 0x3A, 0x3E]
+  properties: Helmasaur_properties
   priority: 100
-  hitbox: 0x18
 Bumper:
   id: 0x93
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  ignored_by_killrooms: true
-  hitbox: 0x1A
-Pirogusu: #PIROGUSU / TILE ROOM TILE?
+  properties: Bumper_properties
+Pirogusu: #PIROGUSU / TILE ROOM TILE
   id: 0x94
   flags: NoPlace
   sheets: [null, null, 0x22, null]
-  water_check: true
+  properties: Pirogusu_properties
 LaserEyeR: #LASER EYE RIGHT (placed left, shooting right)
   id: 0x95
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x14
+  properties: LaserEyeR_properties
 LaserEyeL: #LASER EYE LEFT (placed right, shooting left)
   id: 0x96
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x14
+  properties: LaserEyeL_properties
 LaserEyeD: #LASER EYE BOTTOM (placed high, shooting down)
   id: 0x97
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x14
+  properties: LaserEyeD_properties
 LaserEyeU: #LASER EYE TOP (placed low, shooting up)
   id: 0x98
   flags: NoPlace
   sheets: [null, null, null, 0x52]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x14
+  properties: LaserEyeU_properties
 Pengator:
   id: 0x99
   flags: Challenge
   sheets: [null, null, 0x26, null]
-  boss_damage_sfx: true
-  prize_pack: 0x03
+  properties: Pengator_properties
 Kyameron:
   id: 0x9A
   flags: NoDrop
   sheets: [null, null, 0x22, null]
-  ignored_by_killrooms: true
-  water_check: true
-  prize_pack: 0x06
+  properties: Kyameron_properties
 Wizzrobe:
   id: 0x9B
   flags: Challenge
   sheets: [null, null, 0x25, null]
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: Wizzrobe_properties
 SkullWizzrobe:
   alternative: Wizzrobe
   id: 0x9B
   flags: Challenge
   sheets: [null, null, 0x29, null]
-  boss_damage_sfx: true
-  prize_pack: 0x01
+  properties: Wizzrobe_properties
+# TODO add babasu version of 0x9C after investigating, etc (it's a valid variant)
 Zoro:
   id: 0x9C
   flags: NoPlace
   sheets: [null, 0x20, null, null]
-  single_layer_collision: true
-  limited_interaction: true
+  properties: Zoro_properties
 Babasu:
   id: 0x9D
   flags: Challenge
   sheets: [null, 0x20, null, null]
-  single_layer_collision: true
-  limited_interaction: true
+  properties: Babasu_properties
 OstrichHG: #HAUNTED GROVE OSTRITCH
   id: 0x9E
   flags: NoDrop
   sheets: [null, null, 0x4E, null]
-  ignored_by_killrooms: true
+  properties: OstrichHG_properties
 RabbitHG: #HAUNTED GROVE RABBIT
   id: 0x9F
   flags: NoDrop
   sheets: [null, null, 0x4E, null]
-  ignored_by_killrooms: true
+  properties: RabbitHG_properties
 BirdHG: #HAUNTED GROVE BIRD
   id: 0xA0
   flags: NoDrop
   sheets: [null, null, 0x4E, null]
-  ignored_by_killrooms: true
+  properties: BirdHG_properties
 Freezor:
   id: 0xA1
   flags: NoPlace
   sheets: [null, null, 0x26, null]
-  boss_damage_sfx: true
+  properties: Freezor_properties
 Kholdstare:
   id: 0xA2
   flags: NoPlace
   sheets: [null, null, 0x3C, null]
+  properties: Kholdstare_properties
   priority: 100
-  hitbox: 0x09
 KholdstareShell: #KHOLDSTARE SHELL
   id: 0xA3
   flags: NoPlace
+  properties: KholdstareShell_properties
   priority: 102
-  hitbox: 0x1D
 FallingIce: #FALLING ICE
   id: 0xA4
   flags: NoPlace
   sheets: [null, null, 0x3C, null]
+  properties: FallingIce_properties
   priority: 101
   weight: 3
   not_with:
@@ -1443,429 +1116,405 @@ ZazakBlue: #BLUE ZAZAK
   id: 0xA5
   flags: Challenge
   sheets: [null, null, 0x28, null]
-  boss_damage_sfx: true
-  prize_pack: 0x06
+  properties: ZazakBlue_properties
 ZazakRed: #RED ZAZAK
   id: 0xA6
   flags: Challenge
   sheets: [null, null, 0x28, null]
-  boss_damage_sfx: true
-  prize_pack: 0x06
+  properties: ZazakRed_properties
 Stalfos:
   id: 0xA7
   flags: Challenge
   sheets: [0x1F, null, null, null]
-  boss_damage_sfx: true
-  prize_pack: 0x06
+  properties: Stalfos_properties
 ZirroGreen: #GREEN ZIRRO
   id: 0xA8
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x1B]
-  limited_interaction: true
-  prize_pack: 0x01
+  properties: ZirroGreen_properties
 ZirroBlue: #BLUE ZIRRO
   id: 0xA9
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x1B]
-  limited_interaction: true
-  prize_pack: 0x07
+  properties: ZirroBlue_properties
 Pikit:
   id: 0xAA
   flags: Challenge
   sheets: [null, null, null, 0x1B]
-  limited_interaction: true
-  prize_pack: 0x02
-Maiden: #CRYSTAL MAIDEN?
+  properties: Pikit_properties
+Maiden: #CRYSTAL MAIDEN
   id: 0xAB
   flags: NoPlace
+  properties: Maiden_properties
 Apple:
   id: 0xAC
   flags: NoPlace
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Apple_properties
 LostOldMan: #OLD MAN
   id: 0xAD
   flags: NoPlace
   sheets: [null, null, 0x1C, null]
-  hitbox: 0x0A
-  limited_interaction: true
+  properties: LostOldMan_properties
 PipeD: #PIPE DOWN
   id: 0xAE
   flags: NoPlace
-  hitbox: 0x1B
+  properties: PipeD_properties
   not_with:
     - FallingIce
 PipeU: #PIPE UP
   id: 0xAF
   flags: NoPlace
-  hitbox: 0x1B
+  properties: PipeU_properties
   not_with:
     - FallingIce
 PipeR: #PIPE RIGHT
   id: 0xB0
   flags: NoPlace
-  hitbox: 0x1B
+  properties: PipeR_properties
   not_with:
     - FallingIce
 PipeL: #PIPE LEFT
   id: 0xB1
   flags: NoPlace
-  hitbox: 0x1B
+  properties: PipeL_properties
   not_with:
     - FallingIce
 BeeGood: #GOOD BEE
   id: 0xB2
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x01
-  limited_interaction: true
-HylianPlaque: #PEDESTAL PLAQUE?
+  properties: BeeGood_properties
+HylianPlaque: #PEDESTAL PLAQUE
   id: 0xB3
   flags: NoPlace
-  limited_interaction: true
+  properties: HylianPlaque
 PurpleChest: #PURPLE CHEST
   id: 0xB4
   flags: NoPlace
   sheets: [null, null, null, 0x15]
-  hitbox: 0x03
+  properties: PurpleChest_properties
 BombSalesman: #BOMB SHOP GUY
   id: 0xB5
   flags: NoPlace
   sheets: [null, 0x4D, null, 0x5A]
-  hitbox: 0x07
+  properties: BombSalesman_properties
 Kiki:
   id: 0xB6
   flags: NoPlace
   sheets: [null, null, null, 0x19]
-  hitbox: 0x07
+  properties: Kiki_properties
 BlindMaiden: #BLIND MAIDEN
   id: 0xB7
   flags: NoPlace
-  hitbox: 0x03
+  properties: BlindMaiden_properties
 DialogueTester: #DIALOGUE TESTER
   id: 0xB8
   flags: NoPlace
-  hitbox: 0x0A
+  properties: DialogueTester_properties
 FeudingFriends: #BULLY / PINK BALL
   id: 0xB9
   flags: NoPlace
   sheets: [null, null, null, 0x14]
+  properties: FeudingFriends_properties
 Whirlpool:
   id: 0xBA
   flags: NoPlace
-  hitbox: 0x01
+  properties: Whirlpool_properties
 Salesman: #SHOPKEEPER / CHEST GAME GUY
   id: 0xBB
   flags: NoPlace
   sheets: [0x4B, 0x4D, null, 0x5A]
-  hitbox: 0x0A
+  properties: Proprieter_properties
 Shopkeeper: #SHOPKEEPER / CHEST GAME GUY
   id: 0xBB
   flags: NoPlace
   sheets: [0x0E, null, 0x4A, null]
-  hitbox: 0x0A
+  properties: Proprieter_properties
 ChestGameGuy: #SHOPKEEPER / CHEST GAME GUY
   id: 0xBB
   flags: NoPlace
   sheets: [0x4F, 0x4D, 0x4A, null]
-  hitbox: 0x0A
+  properties: Proprieter_properties
 BatGuy: #HYPE CAVE GUY
   id: 0xBB
   flags: NoPlace
   sheets: [0x15, null, null, null]
-  hitbox: 0x0A
+  properties: Proprieter_properties
 Drunkard:
   id: 0xBC
   flags: NoPlace
   sheets: [0x4F, null, 0x4A, null]
-  hitbox: 0x0A
+  properties: Drunkard_properties
 Vitreous:
   id: 0xBD
   flags: NoPlace
   sheets: [null, null, null, 0x3D]
+  properties: Vitreous_properties
   priority: 100
-  hitbox: 0x09
 VitreousSmallEyeball: #VITREOUS SMALL EYE
   id: 0xBE
   flags: NoPlace
   sheets: [null, null, null, 0x3D]
+  properties: VitreousSmallEyeball_properties
 Lightning:
   id: 0xBF
   flags: NoPlace
   sheets: [null, null, null, 0x3D]
+  properties: Lightning_properties
 Catfish:
   id: 0xC0
   flags: NoPlace
   sheets: [null, null, 0x18, null]
+  properties: Catfish_properties
 AgahnimCutscene: #CUTSCENE AGAHNIM
   id: 0xC1
   flags: NoPlace
   sheets: [0x55, 0x3D, 0x42, 0x43]
+  properties: AgahnimCutscene_properties
   priority: 100
-SingleBoulder: #TODO: does this sprite appear without the overlord?
+SingleBoulder: # Only spawned by overlord
   id: 0xC2 # this belongs to overlord 0x02
   flags: NoPlace, OverworldOnly
   sheets: [null, null, null, 0x10]
-  hitbox: 0x09
+  properties: SingleBoulder_properties
+Shrapnel: # Only spawned by lanmo can probably ignore/delete this...
+  id: 0xC2
+  flags: NoPlace
+  sheets: [null, null, null, null]
+  properties: SingleBoulder_properties
 Gibo:
   id: 0xC3
   flags: Challenge
   sheets: [null, null, 0x28, null]
-  limited_interaction: true
+  properties: Gibo_properties
   weight: 2
 Thief:
   id: 0xC4
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [0x0E, null, null, null]
-  ignored_by_killrooms: true #TODO: we should revert this if we make them killable
+  properties: Thief_properties
 Pikku:
   alternative: Thief
   id: 0xC4
   flags: NoDrop #TODO: technically those could be made killable and host drops, but they are unkillable at the moment
   sheets: [0x15, null, null, null]
-  ignored_by_killrooms: true #TODO: we should revert this if we make them killable
+  properties: Thief_properties
 Medusa:
   id: 0xC5
   flags: NoPlace
-  ignored_by_killrooms: true
+  properties: Medusa_properties
 YomoMedusa: #4WAY SHOOTER
   id: 0xC6
   flags: NoPlace
-  ignored_by_killrooms: true
+  properties: YomoMedusa_properties
 Pokey:
   id: 0xC7
   flags: Challenge
   sheets: [null, null, 0x27, null]
-  boss_damage_sfx: true
-  prize_pack: 0x07
+  properties: Pokey_properties
 FairyBig: #BIG FAIRY
   id: 0xC8
   flags: NoPlace
   sheets: [null, null, 0x39, null] #TODO: DR has 0x36 in slot 3 (fat fairy)
-Tektite: #TEKTITE / FIREBAT
+  properties: FairyBig_properties
+# TODO we don't have a way to differentiate them by color, since it's decided by coordinate...
+BlueTektite: #TEKTITE / FIREBAT
   id: 0xC9
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  boss_damage_sfx: true
-  prize_pack: 0x02
+  properties: BlueTektite_properties
+RedTektite: #TEKTITE / FIREBAT
+  id: 0xC9
+  flags: Challenge
+  sheets: [null, null, null, 0x10]
+  properties: RedTektite_properties
 ChainChomp: #CHAIN CHOMP
   id: 0xCA
   flags: NoDrop
   sheets: [null, null, 0x27, null]
-  ignored_by_killrooms: true
+  properties: ChainChomp_properties
 Trinexx: #TRINEXX ROCK HEAD
   id: 0xCB
   flags: NoPlace
   sheets: [0x40, null, null, 0x3F]
+  properties: Trinexx_properties
   priority: 102
-  single_layer_collision: true
-  hitbox: 0x09
 TrinexxHeadFire: #TRINEXX FIRE HEAD
   id: 0xCC
   flags: NoPlace
   sheets: [0x40, null, null, null]
+  properties: TrinexxHeadFire_properties
   priority: 101
-  single_layer_collision: true
 TrinexxHeadIce: #TRINEXX ICE HEAD
   id: 0xCD
   flags: NoPlace
   sheets: [0x40, null, null, null]
+  properties: TrinexxHeadIce_properties
   priority: 100
-  single_layer_collision: true
 Blind:
   id: 0xCE
   flags: NoPlace
   # 0x2C in slot 1 is blind's laser, which is spawned by blind and not in data
   sheets: [null, 0x2C, 0x3B, null]
+  properties: Blind_properties
   priority: 100
 Swamola:
   id: 0xCF
-  flags: Challenge, NoDrop
+  flags: NoPlace, Challenge, NoDrop # these guys have proven to be significant problem children in DR, so we'll ban them completely for now
   sheets: [null, null, null, 0x19]
-  hitbox: 0x1C
-  boss_damage_sfx: true
+  properties: Swamola_properties
 Lynel:
   id: 0xD0
   flags: Challenge
   sheets: [null, null, null, 0x14]
-  boss_damage_sfx: true
-  prize_pack: 0x07
+  properties: Lynel_properties
 BunnyBeam: #BUNNYBEAM / SMOKE
   id: 0xD1
   flags: NoPlace
-  ignored_by_killrooms: true
+  properties: BunnyBeam_properties
 FloppingFish: #FLOPPING FISH
   id: 0xD2
   flags: NoDrop
-  ignored_by_killrooms: true
-  water_check: true
+  properties: FloppingFish_properties
 Stal:
   id: 0xD3
   flags: Challenge
-  prize_pack: 0x01
+  properties: Stal_properties
 Landmine:
   id: 0xD4
   flags: OverworldOnly
-  hitbox: 0x1C
+  properties: Landmine_properties
 DiggingGameNPC: #DIG GAME GUY
   id: 0xD5
   flags: NoPlace
   sheets: [null, 0x2A, null, null]
-  hitbox: 0x07
+  properties: DiggingGameNPC_properties
 Ganon:
   id: 0xD6
   flags: NoPlace
   sheets: [0x21, 0x41, 0x45, 0x33]
+  properties: Ganon_properties
   priority: 100
-  hitbox: 0x03
-GanonInvisible:
+GanonStunned:
   id: 0xD7
   flags: NoPlace
   sheets: [0x21, 0x41, 0x45, 0x33]
-  hitbox: 0x03
+  properties: GanonStunned_properties
 Heart:
   id: 0xD8
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: Heart_properties
 RupeeGreen: #GREEN RUPEE
   id: 0xD9
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: RupeeGreen_properties
 RupeeBlue: #BLUE RUPEE
   id: 0xDA
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: RupeeBlue_properties
 RupeeRed: #RED RUPEE
   id: 0xDB
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: RupeeRed_properties
 BombRefill1: #BOMB REFILL 1
   id: 0xDC
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: BombRefill1_properties
 BombRefill4: #BOMB REFILL 4
   id: 0xDD
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: BombRefill4_properties
 BombRefill8: #BOMB REFILL 8
   id: 0xDE
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: BombRefill8_properties
 MagicRefillSmall: #SMALL MAGIC DECANTER
   id: 0xDF
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: MagicRefillSmall_properties
 MagicRefillFull: #LARGE MAGIC DECANTER
   id: 0xE0
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: MagicRefillFull_properties
 ArrowRefill5: #ARROW REFILL 5
   id: 0xE1
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: ArrowRefill5_properties
 ArrowRefill10: #ARROW REFILL 10
   id: 0xE2
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
 Fairy:
   id: 0xE3
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x03
-  water_check: true
+  properties: Fairy_properties
 Key: #SMALL KEY
   id: 0xE4
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x04
+  properties: Key_properties
 BigKey: #BIG KEY
   id: 0xE5
   flags: NoPlace
-  ignored_by_killrooms: true
-  hitbox: 0x03
+  properties: BigKey_properties
 Shield: #STOLEN SHIELD
   id: 0xE6
   flags: NoPlace
   sheets: [null, null, null, 0x1B]
-  ignored_by_killrooms: true
+  properties: Shield_properties
 Mushroom:
   id: 0xE7
   flags: NoPlace
-  single_layer_collision: true
-  ignored_by_killrooms: true
+  properties: Mushroom_properties
 FakeMasterSword: #FAKE MASTER SWORD
   id: 0xE8
   flags: NoDrop # they're more like pots rather than enemies
   sheets: [null, null, null, 0x11]
-  single_layer_collision: true
-  ignored_by_killrooms: true
+  properties: FakeMasterSword_properties
 PotionShop: #MAGIC SHOP ASSISTANT
   id: 0xE9
   flags: NoPlace
   sheets: [0x4B, 0x4D, null, 0x5A]
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x07
+  properties: PotionShop_properties
 HeartContainer: #HEART CONTAINER
   id: 0xEA
   flags: NoPlace
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x03
+  properties: HeartContainer_properties
 HeartPiece: #HEART PIECE
   id: 0xEB
   flags: NoPlace
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  hitbox: 0x03
+  properties: HeartPiece_properties
 Throwable: #THROWN ITEM
   id: 0xEC
   flags: NoPlace
-  single_layer_collision: true
-  ignored_by_killrooms: true
-  limited_interaction: true
+  properties: Throwable_properties
 SomariaPlatform: #SOMARIA PLATFORM
   id: 0xED
   flags: NoPlace
   sheets: [null, null, 0x27, null]
-  hitbox: 0x1B
+  properties: SomariaPlatform_properties
 Mantle: #CASTLE MANTLE
   id: 0xEE
   sheets: [0x5D, null, null, null]
+  properties: 
   flags: NoPlace
-  hitbox: 0x08
 SomariaPlatform1: #UNUSED SOMARIA PLATFORM
   id: 0xEF
   flags: NoPlace
   sheets: [null, null, 0x27, null]
-  hitbox: 0x1B
+  properties: SomariaPlatform1_properties
 SomariaPlatform2: #UNUSED SOMARIA PLATFORM
   id: 0xF0
   flags: NoPlace
   sheets: [null, null, 0x27, null]
-  hitbox: 0x1B
+  properties: SomariaPlatform2_properties
 SomariaPlatform3: #UNUSED SOMARIA PLATFORM
   id: 0xF1
   flags: NoPlace
   sheets: [null, null, 0x27, null]
-  hitbox: 0x1B
+  properties: SomariaPlatform3_properties
 MedallionTablet: #MEDALLION TABLET
   id: 0xF2
   flags: NoPlace
   sheets: [null, null, 0x12, null]
-  hitbox: 0x03
-
+  properties: MedallionTablet_properties
 # overlords
 Position Target: #POSITION TARGET
   id: 0x01
@@ -1874,16 +1523,19 @@ Boulders:
   id: 0x02 # this belongs to sprite 0xC2
   flags: NoPlace, OverworldOnly, Overlord
   sheets: [null, null, null, 0x10]
+  properties: 
 FullRoomCannons: #FULL ROOM CANNONS
   id: 0x02
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x2E, null]
+  properties: 
 VerticalCannon: #VERTICAL CANNON
   id: 0x03
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x2E, null]
+  properties: 
 #UNUSED STALFOS SPAWNER:
 #  id: 0x04
 FallingStalfos: #FALLING STALFOS
@@ -1891,17 +1543,20 @@ FallingStalfos: #FALLING STALFOS
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [0x1F, null, null, null]
+  properties: 
 BadSwitchSnake: #BAD SWITCH SNAKE
   id: 0x06
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x1C, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 BadSwitchSkullRope: #BAD SWITCH SKULL ROPE
   id: 0x06
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x24, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 MovingFloor: #MOVING FLOOR
   id: 0x07
@@ -1913,88 +1568,104 @@ BlobSpawner: #BLOB SPAWNER
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, 0x20, null, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 Wallmaster Overlord: #WALLMASTER
   id: 0x09
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x23, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 FallingSquare: #FALLING SQUARE
   id: 0x0A
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 FallingBridge: #FALLING BRIDGE
   id: 0x0B
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 FallingTilesWestToEast: #FALLING TILES WEST TO EAST
   id: 0x0C
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 FallingTilesNorthToSouth: #FALLING TILES NORTH TO SOUTH
   id: 0x0D
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 FallingTilesEastToWest: #FALLING TILES EAST TO WEST
   id: 0x0E
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 FallingTilesSouthToNorth: #FALLING TILES SOUTH TO NORTH
   id: 0x0F
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 PirogusuSpawnerLeft: #PIROGUSU SPAWNER LEFT
   id: 0x10
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  properties: 
 PirogusuSpawnerRight: #PIROGUSU SPAWNER RIGHT
   id: 0x11
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 PirogusuSpawnerTop: #PIROGUSU SPAWNER TOP
   id: 0x12
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 PirogusuSpawnerBottom: #PIROGUSU SPAWNER BOTTOM
   id: 0x13
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x22, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 TileRoom: #TILE ROOM
   id: 0x14
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, null, 0x52]
+  properties: 
 WizzrobeSpawner: #WIZZROBE SPAWNER
   id: 0x15
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x25, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 SkullWizzrobeSpawner: #SKULL WIZZROBE SPAWNER
   id: 0x15
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, null, 0x29, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 ZoroSpawner: #ZORO SPAWNER
   id: 0x16
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [null, 0x20, null, null]
+  properties: 
   weight: 0 # Not visible by default, ignore for the room budget
 PotTrap: #POT TRAP
   id: 0x17
@@ -2005,11 +1676,13 @@ InvisibleStalfos: #INVISIBLE STALFOS
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [0x1F, null, null, null]
+  properties: 
 ArmosCoordinator: #ARMOS COORDINATOR
   id: 0x19
   flags: NoPlace, Overlord
   subtype: 0x07
   sheets: [0x1F, null, null, null]
+  properties: 
   # Placed together with Sprite $53 (ArmosKnight), but this one is last
   priority: 100
 BadSwitchBomb: #BAD SWITCH BOMB
