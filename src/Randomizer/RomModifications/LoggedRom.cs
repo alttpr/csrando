@@ -1,5 +1,9 @@
 ﻿namespace Randomizer.RomModifications;
 
+using System.Buffers;
+using System.Buffers.Binary;
+using System.Runtime.InteropServices;
+
 /// <summary>
 /// An implementation of a rom that logs write operations to memory.
 /// It can optionally store a base BPS patch.
@@ -306,5 +310,49 @@ public sealed class LoggedRom : IRom
         // BasePatchData is just a byte array, handled by GC.
         // Writes dictionary keys/values are managed types.
         GC.SuppressFinalize(this);
+    }
+
+
+
+
+
+
+
+    public void Write(Address address, byte value)
+    {
+        Write(address, [value]);
+    }
+
+    public void WriteUInt16(Address address, in ReadOnlySpan<ushort> data)
+    {
+        if (BitConverter.IsLittleEndian)
+        {
+            Write(address, MemoryMarshal.AsBytes(data));
+        }
+        else
+        {
+            int len = data.Length * sizeof(ushort);
+            byte[] tmp = ArrayPool<byte>.Shared.Rent(len);
+
+            try
+            {
+                Span<byte> tmpSpan = tmp.AsSpan(0, len);
+
+                var tmpSpanWrite = tmpSpan;
+                foreach (ushort value in data)
+                {
+                    BinaryPrimitives.WriteUInt16LittleEndian(tmpSpanWrite, value);
+                    tmpSpanWrite = tmpSpanWrite[2..];
+                }
+
+                Write(address, tmpSpan);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(tmp);
+            }
+
+        }
+        
     }
 }

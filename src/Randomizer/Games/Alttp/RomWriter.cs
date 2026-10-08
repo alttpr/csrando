@@ -208,9 +208,6 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
-
-        WriteEnemyDamageToRom(world, rom, prng);
-        WriteEnemyHealthToRom(world, rom, prng);
         WriteEnemiesToRom(world, rom);
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
@@ -893,35 +890,8 @@ public static class RomWriter
         rom.WriteEntrances(outlets, entrances, holes, outletToMap);
     }
 
-
-    /// <summary>
-    /// Set enemy damage values based on configuration for world.
-    /// </summary>
-    /// <param name="world">world to pull config from</param>
-    /// <param name="rom">rom to write data to</param>
-    /// <param name="prng">prng to use for randomization</param>
-    private static void WriteEnemyDamageToRom(World world, Rom rom, PRNG prng)
-    {
-        if (world.Config.EnemyDamage == EnemyDamageOption.Default)
-            return;
-
-        var damageBytes = rom.GetEnemyDamageTable();
-
-        var updateTable = world.Config.EnemyDamage switch
-        {
-            EnemyDamageOption.Shuffled => prng.Shuffle(damageBytes.Select(v => v & 0x0F)).ToArray(),
-            _ => Enumerable.Range(0, 0xF3).Select(_ => prng.GetRandomInt(0..9)).ToArray(),
-        };
-
-        for (int i = 0; i < 0xF3; i++)
-        {
-            damageBytes[i] = (byte)((damageBytes[i] & 0xF0) | (byte)updateTable[i]);
-        }
-
-        rom.SetEnemyDamageTable(damageBytes, prng);
-    }
-
     // don't change the health value for those sprites
+    // TODO: kan: I don't think this is necessary other than for khold's shell, which we want to randomize and allow knowing it
     private static readonly HashSet<int> _enemyHealthBlacklist =
     [
         0x70, // King Helmasaur fireball
@@ -933,43 +903,6 @@ public static class RomWriter
         0xBF, // Lightning
         0xCE, // Blind
     ];
-    /// <summary>
-    /// Set enemy health values based on configuration for world.
-    /// </summary>
-    /// <param name="world">world to pull config from</param>
-    /// <param name="rom">rom to write data to</param>
-    /// <param name="prng">prng to use for randomization</param>
-    private static void WriteEnemyHealthToRom(World world, Rom rom, PRNG prng)
-    {
-        if (world.Config.EnemyHealth == EnemyHealthOption.Default)
-            return;
-
-        var healthBytes = rom.GetEnemyHealthTable();
-
-        var lowest = world.Config.EnemyHealth switch
-        {
-            EnemyHealthOption.Expert => 4,
-            EnemyHealthOption.Hard => 2,
-            EnemyHealthOption.Medium => 2,
-            _ => 1,
-        };
-
-        var highest = world.Config.EnemyHealth switch
-        {
-            EnemyHealthOption.Expert => 50,
-            EnemyHealthOption.Hard => 25,
-            EnemyHealthOption.Medium => 15,
-            _ => 4,
-        };
-        for (int i = 0; i < 0xD3; i++)
-        {
-            if (healthBytes[i] == 0xFF || _enemyHealthBlacklist.Contains(i))
-                continue;
-            healthBytes[i] = (byte)prng.GetRandomInt(lowest..highest);
-        }
-
-        rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
-    }
 
     /// <summary>
     /// Write Room headers, and room data for all enemies in game.

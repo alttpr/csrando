@@ -219,7 +219,6 @@ public class YamlReader
     public class GameData
     {
         [YamlMember(Alias = "rooms")] public List<GameRoom> Rooms { get; set; } = new();
-        [YamlMember(Alias = "enemy")] public GameEnemyData Enemy { get; set; } = new();
     }
     public class GameRoom
     {
@@ -235,11 +234,6 @@ public class YamlReader
         [YamlMember(Alias = "door_ptr")] public int DoorPtr { get; set; }
         [YamlMember(Alias = "door_ptr_entry_addr")] public int DoorPtrEntryAddress { get; set; }
         [YamlMember(Alias = "door_data")] public byte[] DoorData { get; set; } = [];
-    }
-    public class GameEnemyData
-    {
-        [YamlMember(Alias = "health")] public List<byte> Health { get; set; } = new();
-        [YamlMember(Alias = "damage")] public List<byte> Damage { get; set; } = new();
     }
     private static readonly Lazy<GameData> _gameData = new(() =>
     {

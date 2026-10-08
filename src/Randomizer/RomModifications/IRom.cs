@@ -2,6 +2,9 @@
 
 public interface IRom : IDisposable
 {
+    public const int CheckSumLocationLorom = 0x7FDC;
+    public const int CheckSumLocationHirom = 0xFFDC;
+
     void ApplyBasePatch(FileInfo baseBPS);
 
     /// <summary>resize ROM to a given size</summary>

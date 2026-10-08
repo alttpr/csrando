@@ -47,10 +47,17 @@ public sealed class RomTest
         {
             Span<byte> tmp = _data.AsSpan(address.Value, data.Length * sizeof(ushort));
 
-            foreach (ushort value in data)
+            if (BitConverter.IsLittleEndian)
             {
-                BinaryPrimitives.WriteUInt16LittleEndian(tmp, value);
-                tmp = tmp[2..];
+                System.Runtime.InteropServices.MemoryMarshal.AsBytes(data).CopyTo(tmp);
+            }
+            else
+            {
+                foreach (ushort value in data)
+                {
+                    BinaryPrimitives.WriteUInt16LittleEndian(tmp, value);
+                    tmp = tmp[2..];
+                }
             }
         }
     }

@@ -24,55 +24,14 @@ public sealed class World : World<Item>, IPortalHost
     /// </summary>
     public List<PortalAnchor> PortalAnchors { get; } = [];
 
-    public readonly Dictionary<string, Sprite> Sprites = CreateSpriteProperties();
+    public readonly Dictionary<string, Sprite> Sprites = [];
+    public readonly Dictionary<string, SpriteProperties> SpriteData = [];
 
-    private static Dictionary<string, Sprite> CreateSpriteProperties()
-    {
-        Dictionary<string, Sprite> ret = new(512);
-
-        var spriteList = YamlReader.LoadSprites();
-        var spriteData = YamlReader.LoadSpriteData();
-
-        foreach (var (name, sprite) in spriteList)
-        {
-            SpriteProperties? props;
-            if (sprite.Properties is string propName)
-            {
-                if (spriteData.TryGetValue(propName, out var propsData)) {
-                    props = SpriteProperties.FromYaml(propName, propsData);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"{name} contains an invalid value for key 'properties': '{propName}");
-                }
-            }
-            else
-            {
-                props = null;
-            }
-
-            Sprite toAdd = new(name, sprite.Id)
-            {
-                Sheets = sprite.Sheets,
-                Flags = sprite.Flags,
-                SubType = sprite.SubType,
-                DefeatName = sprite.AlternativeName ?? name,
-                FallingSpriteFor = sprite.FallingSpriteFor,
-                Priority = sprite.Priority,
-                NotWith = sprite.NotWith,
-                Weight = sprite.Weight,
-                Properties = props,
-            };
-
-            ret.Add(name, toAdd);
-        }
-
-        return ret;
-    }
 
     public Sprite GetSprite(string name)
         => Sprites.GetValueOrDefault(name)
         ?? throw new ArgumentException($"No such sprite: {name}", nameof(name));
+
     public PortalAnchor ResolvePortalAnchor(BaseVertex vertex) => Portals.ResolveVertexAnchor(this, vertex.Name);
 
     /// <summary>Add all the vertices to the graph for this region.</summary>
@@ -120,6 +79,52 @@ public sealed class World : World<Item>, IPortalHost
 
         foreach (var modifier in modifiers)
             modifier.AdjustEdges(this, prng);
+
+
+        // fetch and buildsprite data
+        var sprInfo = Sprites;
+        var sprProp = SpriteData;
+
+        foreach (var (name, sprite) in YamlReader.LoadSpriteData())
+        {
+            SpriteProperties prop = SpriteProperties.FromYaml(name, sprite);
+            sprProp.Add(name, prop); // using Dictionary.Add because we want to detect duplicate keys
+        }
+
+        foreach (var (name, sprite) in YamlReader.LoadSprites())
+        {
+            SpriteProperties? props;
+            if (sprite.Properties is string propName)
+            {
+                if (sprProp.TryGetValue(propName, out var propsData))
+                {
+                    props = propsData;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"{name} contains an invalid value for key 'properties': '{propName}");
+                }
+            }
+            else
+            {
+                props = null;
+            }
+
+            Sprite toAdd = new(name, sprite.Id)
+            {
+                Sheets = sprite.Sheets,
+                Flags = sprite.Flags,
+                SubType = sprite.SubType,
+                DefeatName = sprite.AlternativeName ?? name,
+                FallingSpriteFor = sprite.FallingSpriteFor,
+                Priority = sprite.Priority,
+                NotWith = sprite.NotWith,
+                Weight = sprite.Weight,
+                Properties = props,
+            };
+
+            sprInfo.Add(name, toAdd); // using Dictionary.Add because we want to detect duplicate keys
+        }
     }
 
     public Inventory ComputeStartingItems()
