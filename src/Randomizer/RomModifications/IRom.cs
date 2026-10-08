@@ -25,7 +25,7 @@ public interface IRom : IDisposable
 
     void Write(Address address, byte value);
 
-
+    void WriteUInt16(Address address, in ReadOnlySpan<ushort> data);
 }
 
 public readonly struct Address

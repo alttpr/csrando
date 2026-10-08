@@ -1,5 +1,6 @@
 namespace RandomizerTests.Games.SuperMetroid;
 
+using System.Buffers.Binary;
 using Randomizer.Games;
 using Randomizer.Games.SuperMetroid;
 using Randomizer.Games.SuperMetroid.Model;
@@ -36,6 +37,22 @@ public sealed class RomTest
         public void Resize(int size) { }
         public void UpdateChecksum() { }
         public void Dispose() { }
+
+        public void Write(Address address, byte value)
+        {
+            _data[address.Value] = value;
+        }
+
+        public void WriteUInt16(Address address, in ReadOnlySpan<ushort> data)
+        {
+            Span<byte> tmp = _data.AsSpan(address.Value, data.Length * sizeof(ushort));
+
+            foreach (ushort value in data)
+            {
+                BinaryPrimitives.WriteUInt16LittleEndian(tmp, value);
+                tmp = tmp[2..];
+            }
+        }
     }
 
     [TestMethod]
