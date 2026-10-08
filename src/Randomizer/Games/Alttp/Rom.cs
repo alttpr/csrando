@@ -1670,7 +1670,7 @@ public sealed class Rom : GameRom
             Write((SNES)address, [music]);
     }
 
-    public void WriteLocationSpecificData(Vertex location, Item? item)
+    public void WriteLocationSpecificData(World world, Vertex location, Item? item)
     {
         if (item == null)
             return;
@@ -1683,7 +1683,7 @@ public sealed class Rom : GameRom
                 if (item?.Name != "KeyP3" && location.World.GetLocation("Tower Of Hera - Basement Cage - Key") is Vertex basementCageKey)
                 {
                     // this isn't _really_ a heart piece, but what we'd usually patch over the tile sprite (for boomerang pickups).
-                    basementCageKey.Sprite = Sprite.Get("HeartPiece");
+                    basementCageKey.Sprite = world.GetSprite("HeartPiece");
                 }
                 break;
         }
@@ -1919,10 +1919,14 @@ public sealed class Rom : GameRom
         Write((SNES)0x02E575, specialSpriteSheets);
     }
 
-    public void WriteSpriteData(IEnumerable<SpriteProperties> sprites)
+    public void WriteSpriteData(IEnumerable<Sprite> sprites)
     {
+        foreach (var spritebase in sprites) {
+            if (spritebase.Properties is not SpriteProperties sprite)
+            {
+                continue;
+            }
 
-        foreach (var sprite in sprites) {
             int id = sprite.ID;
 
             if (id > 0xF2) {
@@ -1931,16 +1935,35 @@ public sealed class Rom : GameRom
 
             byte hp = sprite.Property_HP;
             byte bump = sprite.Property_BUMP;
+            byte oamharm = sprite.Property_OAMHarm;
+            byte oamprop = sprite.Property_OAMProp;
+            byte prize = sprite.Property_PRIZE;
+            byte tiledie = sprite.Property_TILEDIE;
+            byte hitbox = sprite.Property_HITBOX;
+            byte deflect = sprite.Property_DEFLECT;
+
 
             // we don't want to set values unless the sprite is the main variant
             if (sprite.OwnsId) {
+                Write((SNES) (0x0DB080 + id), oamharm); // SpriteData_OAMHarm
                 Write((SNES) (0x0DB173 + id), hp); // SpriteData_Health
                 Write((SNES) (0x0DB266 + id), bump); // SpriteData_Bump
+                Write((SNES) (0x0DB359 + id), oamprop); // SpriteData_OAMProp
+                Write((SNES) (0x0DB44C + id), hitbox); // SpriteData_Hitbox
+                Write((SNES) (0x0DB53F + id), tiledie); // SpriteData_TileInteraction
+                Write((SNES) (0x0DB632 + id), prize); // SpriteData_PrizePack
+                Write((SNES) (0x0DB725 + id), deflect); // SpriteData_Deflection
             }
 
             // handle any oddballs that have their properties initialized somewhere else
             // this area won't be too overfilled
             // because there are only a handful of properties that are set outside of the table
+            if (sprite.OamHarmAddresses is not null) {
+                foreach (int addr in sprite.OamHarmAddresses) {
+                    Write((SNES) addr, oamharm);
+                }
+            }
+
             if (sprite.HpAddresses is not null) {
                 foreach (int addr in sprite.HpAddresses) {
                     Write((SNES) addr, hp);
@@ -1950,6 +1973,47 @@ public sealed class Rom : GameRom
             if (sprite.BumpAddresses is not null) {
                 foreach (int addr in sprite.BumpAddresses) {
                     Write((SNES) addr, bump);
+                }
+            }
+
+            if (sprite.OamPropAddresses is not null) {
+                foreach (int addr in sprite.OamPropAddresses) {
+                    Write((SNES) addr, oamprop);
+                }
+            }
+
+            if (sprite.HitboxAddresses is not null) {
+                foreach (int addr in sprite.HitboxAddresses) {
+                    Write((SNES) addr, hitbox);
+                }
+            }
+
+            if (sprite.TileDieAddresses is not null) {
+                foreach (int addr in sprite.TileDieAddresses) {
+                    Write((SNES) addr, tiledie);
+                }
+            }
+
+            if (sprite.PrizeAddresses is not null) {
+                foreach (int addr in sprite.PrizeAddresses) {
+                    Write((SNES) addr, prize);
+                }
+            }
+
+            if (sprite.DeflectAddresses is not null)
+            {
+                foreach (int addr in sprite.DeflectAddresses)
+                {
+                    Write((SNES) addr, deflect);
+                }
+            }
+
+            if (sprite.MiscPaletteAddresses is not null)
+            {
+                byte pal2 = sprite.DrawProperties;
+                foreach (int addr in sprite.MiscPaletteAddresses)
+                {
+                    Write((SNES) addr, pal2);
                 }
             }
 

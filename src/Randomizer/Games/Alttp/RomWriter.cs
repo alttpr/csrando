@@ -57,7 +57,7 @@ public static class RomWriter
                 SetCreditsText(rom, world.WorldConfig, location, location.Item, getText);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
                 SetHintText(rom, world.WorldConfig, location, location.Item, getText);
-                rom.WriteLocationSpecificData(location, itemToWrite);
+                rom.WriteLocationSpecificData(world, location, itemToWrite);
             }
         }
 
@@ -1163,8 +1163,7 @@ public static class RomWriter
         // write new sheet sets
         rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
 
-        // TODO this needs to come from somewhere, probably the World
-        rom.WriteSpriteData([]);
+        rom.WriteSpriteData(world.Sprites.Values);
     }
 }
 

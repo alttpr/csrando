@@ -78,6 +78,7 @@ public sealed record class SpriteProperties
     [PackedBitfield(nameof(IgnoreCollisionWhenRecoiling))]
     [PackedBitfield(nameof(BeeTarget))]
     [PackedBitfield(nameof(ImmuneToPowder))]
+    [PackedBitfield(nameof(SurvivesBossPrep))]
     [PackedBitfield(nameof(BumpDamageClass))]
     [DisassemblyName(FileName = "bank_0D.asm", SymbolName = "SpriteData_Bump", Address = 0x0DB266)]
     public byte Property_BUMP { get; set; } = 0;
@@ -125,7 +126,7 @@ public sealed record class SpriteProperties
     [PackedBitfield(nameof(ShadowIsSmall))]
     [PackedBitfield(nameof(HasAShadow))]
     [PackedBitfield(nameof(InitialPalette))]
-    [PackedBitfield(nameof(UsesSecondNameTable))]
+    [PackedBitfield(nameof(InitialUsesSecondNameTable))]
     [DisassemblyName(FileName = "bank_0D.asm", SymbolName = "SpriteData_OAMProp", Address = 0x0DB359)]
     public byte Property_OAMProp { get; set; }
     public int[]? OamPropAddresses { get; init; } = null;
@@ -167,11 +168,32 @@ public sealed record class SpriteProperties
     }
 
     [PackedBitfieldAccessor(nameof(Property_OAMProp))]
-    public bool UsesSecondNameTable
+    public bool InitialUsesSecondNameTable
     {
         get => Property_OAMProp.BitIsSet(0);
         set => Property_OAMProp = Property_OAMProp.SetBit(0, value);
     }
+
+
+    [PackedBitfield(nameof(Palette))]
+    [PackedBitfield(nameof(UsesSecondNameTable))]
+    public byte DrawProperties { get; set; }
+
+    [PackedBitfieldAccessor(nameof(DrawProperties))]
+    [ValueRange(0, 7)]
+    public byte Palette
+    {
+        get => DrawProperties.GetField(1, 3);
+        set => DrawProperties = DrawProperties.SetField(1, 3, value);
+    }
+
+    [PackedBitfieldAccessor(nameof(DrawProperties))]
+    public bool UsesSecondNameTable
+    {
+        get => DrawProperties.BitIsSet(0);
+        set => DrawProperties = Property_OAMProp.SetBit(0, value);
+    }
+    public int[]? MiscPaletteAddresses { get; init; } = null;
 
 
 
@@ -310,7 +332,7 @@ public sealed record class SpriteProperties
 
 
     [PackedBitfield(nameof(PersistsOffscreenOnOverworld))]
-    [PackedBitfield(nameof(UniqueWaterCheck))]
+    [PackedBitfield(nameof(AlwaysDiesOffscreen))]
     [PackedBitfield(nameof(UnusedStatueMarker))]
     [PackedBitfield(nameof(AncillaeCheckDirectionAgainst))]
     [PackedBitfield(nameof(UsesProjectileCollision))]
@@ -383,6 +405,9 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(0, value);
     }
 
+    // This can't actually be changed easily, but it's useful to know
+    public bool ImmuneToAncillae { get; init; }
+
 
 
     [ValueRange(0, 5)]
@@ -433,4 +458,84 @@ public sealed record class SpriteProperties
     [Values(0, 1, 2, 3, 7)] // yeah... this one is weird and not contiguous
     public byte DamageClassFSubclass { get; set; }
 
+    internal static SpriteProperties FromYaml(string name, YamlSpriteData serial)
+    {
+        Span<byte> damageFallback = stackalloc byte[16];
+        damageFallback.Clear();
+
+        Span<byte> damageSubclasses = serial.DamageSubclasses ?? damageFallback;
+
+        return new()
+        {
+            Name = name,
+            ID = serial.ID,
+            OwnsId = serial.OwnsId,
+            AlwaysDiesOffscreen = serial.AlwaysDiesOffscreen,
+            InvertPitBehavior = serial.InvertPitBehavior,
+            KillWhenOffscreenDuringTileChecks = serial.KillWhenOffscreenDuringTileChecks,
+            PersistsOffscreenOnOverworld = serial.PersistsOffscreenOnOverworld,
+            StaysActiveOffscreen = serial.StaysActiveOffscreen,
+            SurvivesBossPrep = serial.SurvivesBossPrep,
+            UsesAlternateDamageSound = serial.UsesAlternateDamageSound,
+            BeeTarget = serial.BeeTarget,
+            BlockedByShield = serial.BlockedByShield,
+            DiesLikeABoss = serial.DiesLikeABoss,
+            BumpAddresses = serial.BumpAddresses,
+            BumpDamageClass = serial.BumpDamageClass,
+            AncillaeCheckDirectionAgainst = serial.AncillaeCheckDirectionAgainst,
+            HasCustomDeathAnimation = serial.HasCustomDeathAnimation,
+            InitialUsesSecondNameTable = serial.InitialUsesSecondNameTable,
+            InitialPalette = serial.InitialPalette,
+            DeflectAddresses = serial.DeflectAddresses,
+            DeflectsArrows = serial.DeflectsArrows,
+            IsHarmless = serial.IsHarmless,
+            HasAShadow = serial.HasAShadow,
+            Property_HP = serial.Health,
+            Hitbox = serial.Hitbox,
+            HitboxAddresses = serial.HitboxAddresses,
+            HpAddresses = serial.HpAddresses,
+            IgnoreCollisionWhenRecoiling = serial.IgnoreCollisionWhenRecoiling,
+            ImmuneToAncillae = serial.ImmuneToAncillae,
+            ImmuneToSwordAndHammer = serial.ImmuneToSwordAndHammer,
+            IsInvulnerable = serial.IsInvulnerable,
+            BonkableItemMarker = serial.BonkableItemMarker,
+            UsesProjectileCollision = serial.UsesProjectileCollision,
+            UnusedStatueMarker = serial.UnusedStatueMarker,
+            IgnoredByKillRooms = serial.IgnoredByKillRooms,
+            LimitedPitAndConveryorInteractions = serial.LimitedPitAndConveryorInteractions,
+            DoesNotPermanentlyDieInUnderworld = serial.DoesNotPermanentlyDieInUnderworld,
+            OamAllocation = serial.OamAllocation,
+            UsesSecondNameTable = serial.UsesSecondNameTable,
+            OamHarmAddresses = serial.OamHarmAddresses,
+            OamPropAddresses = serial.OamPropAddresses,
+            Palette = serial.Palette,
+            MiscPaletteAddresses = serial.MiscPaletteAddresses,
+            ImmuneToPowder = serial.ImmuneToPowder,
+            PrizeAddresses = serial.PrizeAddresses,
+            PrizePack = serial.PrizePack,
+            RefreshingHits = serial.RefreshingHits,
+            UsesSingleLayerCollision = serial.UsesSingleLayerCollision,
+            ShadowIsSmall = serial.ShadowIsSmall,
+            UseTileHitbox68 = serial.UseTileHitbox68,
+            UniqueWaterCheck = serial.UniqueWaterCheck,
+            TileHitboxOffsets = serial.TileHitboxOffsets,
+            TileDieAddresses = serial.TileDieAddresses,
+            DamageClass0Subclass = damageSubclasses[0x0],
+            DamageClass1Subclass = damageSubclasses[0x1],
+            DamageClass2Subclass = damageSubclasses[0x2],
+            DamageClass3Subclass = damageSubclasses[0x3],
+            DamageClass4Subclass = damageSubclasses[0x4],
+            DamageClass5Subclass = damageSubclasses[0x5],
+            DamageClass6Subclass = damageSubclasses[0x6],
+            DamageClass7Subclass = damageSubclasses[0x7],
+            DamageClass8Subclass = damageSubclasses[0x8],
+            DamageClass9Subclass = damageSubclasses[0x9],
+            DamageClassASubclass = damageSubclasses[0xA],
+            DamageClassBSubclass = damageSubclasses[0xB],
+            DamageClassCSubclass = damageSubclasses[0xC],
+            DamageClassDSubclass = damageSubclasses[0xD],
+            DamageClassESubclass = damageSubclasses[0xE],
+            DamageClassFSubclass = damageSubclasses[0xF],
+        };
+    }
 }

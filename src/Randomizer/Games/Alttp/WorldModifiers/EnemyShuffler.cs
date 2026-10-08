@@ -445,6 +445,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
     private sealed class EnemySprite(Sprite sprite)
     {
         public Sprite Sprite { get; } = sprite;
+        public SpriteProperties? Properties => Sprite.Properties;
         public SheetSet Sheets { get; } = new SheetSet(sprite.Sheets);
     }
     [System.Diagnostics.DebuggerDisplay("[ {_sheets[0]}, {_sheets[1]}, {_sheets[2]}, {_sheets[3]} ]")]
@@ -569,7 +570,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         var enemyRooms = enemyVertices.ToLookup(enemy => enemy.RoomId);
         var enemyOWs = enemyVertices.ToLookup(enemy => enemy.Map);
 
-        var allEnemies = Sprite.All().Select(e => new EnemySprite(e)).ToArray();
+        var allEnemies = world.Sprites.Values.Select(e => new EnemySprite(e)).ToArray();
+
         // Set up sprite sheets
         var sheetableSprites = allEnemies.Where(s => !s.Sheets.IsEmpty);
         // sprites that can be moved to any room as they don't have any sheet

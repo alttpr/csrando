@@ -38,6 +38,7 @@ public class YamlReader
     private const string VerticesPath = "Vertices";
     private const string BossesPath = "Enemizer/bosses.yml";
     private const string EnemiesPath = "Enemizer/enemies.yml";
+    private const string PropertiesPath = "Enemizer/sprite_data.yml";
     private const string TileRoomPatternsPath = "TileRoomPatterns";
 
     private static readonly Lazy<Vertices> _cachedVertices = new(() =>
@@ -90,6 +91,17 @@ public class YamlReader
 
         return result;
     });
+    private static readonly Lazy<Dictionary<string, YamlSpriteData>> _cachedSpriteProperties = new(() =>
+    {
+        string itemsYML = Path.Combine(DataRoot, "PropertiesPath");
+
+        var deserializer = new DeserializerBuilder().Build();
+        using var reader = File.OpenText(itemsYML);
+        var result = deserializer.Deserialize<Dictionary<string, YamlSpriteData>>(reader);
+
+        return result;
+    });
+
     private static readonly Lazy<Dictionary<string, YamlBossSprite[]>> _cachedBossSprites = new(() =>
     {
         string itemsYML = Path.Combine(DataRoot, "bosses.yml");
@@ -106,6 +118,7 @@ public class YamlReader
 
     public static Dictionary<string, YamlItem> LoadItems() => _cachedItems.Value;
     public static Dictionary<string, YamlSprite> LoadSprites() => _cachedSprites.Value;
+    public static Dictionary<string, YamlSpriteData> LoadSpriteData() => _cachedSpriteProperties.Value;
     public static Dictionary<string, YamlBossSprite[]> LoadBossSprites() => _cachedBossSprites.Value;
 
     public static Dictionary<string, DirectedUndirectedPair> LoadEdgesFromTech(string name) => _cachedTechEdges.GetOrAdd(name, name =>
@@ -371,29 +384,75 @@ public class YamlSprite
     public string? FallingSpriteFor { get; set; }
     [YamlMember(Alias = "priority")]
     public int Priority { get; set; }
-    [YamlMember(Alias = "single_layer_collision")]
-    public bool SingleLayerCollision { get; set; }
-    [YamlMember(Alias = "ignored_by_killrooms")]
-    public bool IgnoredByKillRooms { get; set; }
-    [YamlMember(Alias = "persist_offscreen")]
-    public bool PersistOffScreenOW { get; set; }
-    [YamlMember(Alias = "hitbox")]
-    public byte Hitbox { get; set; }
-    [YamlMember(Alias = "limited_interaction")]
-    public bool LimitedPitConveyorInteraction { get; set; }
-    [YamlMember(Alias = "water_check")]
-    public bool WaterCheck { get; set; }
-    [YamlMember(Alias = "shield_blockable")]
-    public bool ShieldBlockable { get; set; }
-    [YamlMember(Alias = "boss_damage_sfx")]
-    public bool BossDamageSFX { get; set; }
-    [YamlMember(Alias = "prize_pack")]
-    public byte PrizePack { get; set; }
     [YamlMember(Alias = "not_with")]
     public string[]? NotWith { get; set; }
+    [YamlMember(Alias = "propreties")]
+    public string? Properties { get; set; }
     [YamlMember(Alias = "weight")]
     public int Weight { get; set; } = 1;
 }
+
+public class YamlSpriteData
+{
+    [YamlMember(Alias = "id")] public byte ID { get; set; }
+    [YamlMember(Alias = "owns_id")] public bool OwnsId { get; set; }
+    [YamlMember(Alias = "die_offscreen_draw")] public bool AlwaysDiesOffscreen { get; set; }
+    [YamlMember(Alias = "pit_behavior")] public bool InvertPitBehavior { get; set; }
+    [YamlMember(Alias = "die_offscreen_tile")] public bool KillWhenOffscreenDuringTileChecks { get; set; }
+    [YamlMember(Alias = "force_active_offscreen")] public bool PersistsOffscreenOnOverworld { get; set; }
+    [YamlMember(Alias = "active_offscreen")] public bool StaysActiveOffscreen { get; set; }
+    [YamlMember(Alias = "survives_boss_prep")] public bool SurvivesBossPrep { get; set; }
+    [YamlMember(Alias = "alternate_damage_sound")] public bool UsesAlternateDamageSound { get; set; }
+    [YamlMember(Alias = "bee_target")] public bool BeeTarget { get; set; }
+    [YamlMember(Alias = "blocked_by_shield")] public bool BlockedByShield { get; set; }
+    [YamlMember(Alias = "boss_death")] public bool DiesLikeABoss { get; set; }
+    [YamlMember(Alias = "bump_addresses")] public int[]? BumpAddresses { get; set; }
+    [YamlMember(Alias = "bump_damage_class")] public byte BumpDamageClass { get; set; }
+    [YamlMember(Alias = "check_ancilla_direction")] public bool AncillaeCheckDirectionAgainst { get; set; }
+    [YamlMember(Alias = "custom_death")] public bool HasCustomDeathAnimation { get; set; }
+    [YamlMember(Alias = "damage_subclasses")] public byte[]? DamageSubclasses { get; set; }
+    [YamlMember(Alias = "initial_second_oam_nametable")] public bool InitialUsesSecondNameTable { get; set; }
+    [YamlMember(Alias = "initial_palette")] public byte InitialPalette { get; set; }
+    [YamlMember(Alias = "deflect_addresses")] public int[]? DeflectAddresses { get; set; }
+    [YamlMember(Alias = "deflect_arrows")] public bool DeflectsArrows { get; set; }
+    [YamlMember(Alias = "harmless")] public bool IsHarmless { get; set; }
+    [YamlMember(Alias = "has_shadow")] public bool HasAShadow { get; set; }
+    [YamlMember(Alias = "health")] public byte Health { get; set; }
+    [YamlMember(Alias = "hitbox")] public byte Hitbox { get; set; }
+    [YamlMember(Alias = "hitbox_addresses")] public int[]? HitboxAddresses { get; set; }
+    [YamlMember(Alias = "hp_addresses")] public int[]? HpAddresses { get; set; }
+    [YamlMember(Alias = "ignore_collision_recoil")] public bool IgnoreCollisionWhenRecoiling { get; set; }
+    [YamlMember(Alias = "immune_to_projectiles")] public bool ImmuneToAncillae { get; set; }
+    [YamlMember(Alias = "immune_to_sword")] public bool ImmuneToSwordAndHammer { get; set; }
+    [YamlMember(Alias = "invulnerable")] public bool IsInvulnerable { get; set; }
+    [YamlMember(Alias = "is_bonkable")] public bool BonkableItemMarker { get; set; }
+    [YamlMember(Alias = "is_projectile")] public bool UsesProjectileCollision { get; set; }
+    [YamlMember(Alias = "is_statue")] public bool UnusedStatueMarker { get; set; }
+    [YamlMember(Alias = "killroom_ignore")] public bool IgnoredByKillRooms { get; set; }
+    [YamlMember(Alias = "limit_pit_interactions")] public bool LimitedPitAndConveryorInteractions { get; set; }
+    [YamlMember(Alias = "no_permadeath")] public bool DoesNotPermanentlyDieInUnderworld { get; set; }
+    [YamlMember(Alias = "oam_allocation")] public byte OamAllocation { get; set; }
+    [YamlMember(Alias = "second_oam_nametable")] public bool UsesSecondNameTable { get; set; }
+    [YamlMember(Alias = "oamharm_addresses")] public int[]? OamHarmAddresses { get; set; }
+    [YamlMember(Alias = "oamprop_addresses")] public int[]? OamPropAddresses { get; set; }
+    [YamlMember(Alias = "palette")] public byte Palette { get; set; }
+    [YamlMember(Alias = "palette_addresses")] public int[]? MiscPaletteAddresses { get; set; }
+    [YamlMember(Alias = "powder_immune")] public bool ImmuneToPowder { get; set; }
+    [YamlMember(Alias = "prize_addresses")] public int[]? PrizeAddresses { get; set; }
+    [YamlMember(Alias = "prize_pack")] public byte PrizePack { get; set; }
+    [YamlMember(Alias = "reset_sword")] public bool RefreshingHits { get; set; }
+    [YamlMember(Alias = "single_layer_collision")] public bool UsesSingleLayerCollision { get; set; }
+    [YamlMember(Alias = "small_shadow")] public bool ShadowIsSmall { get; set; }
+    [YamlMember(Alias = "tile_hitbox_68")] public bool UseTileHitbox68 { get; set; }
+    [YamlMember(Alias = "test_water_collision")] public bool UniqueWaterCheck { get; set; }
+    [YamlMember(Alias = "tile_hitbox")] public byte TileHitboxOffsets { get; set; }
+    [YamlMember(Alias = "tiledie_addresses")] public int[]? TileDieAddresses { get; set; }
+}
+
+
+
+
+
 [Flags]
 public enum YamlSpriteFlags
 {

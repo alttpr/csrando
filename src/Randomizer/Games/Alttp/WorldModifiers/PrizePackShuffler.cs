@@ -49,7 +49,7 @@ internal sealed class PrizePackShuffler : IAlttpWorldModifier
                 if (!randomVanillaPacks.TryPop(out string? spriteName))
                     pack.Sprite = null;
                 else
-                    pack.Sprite = Sprite.Get(spriteName);
+                    pack.Sprite = world.GetSprite(spriteName);
 
                 _logger.LogInformation("[PP] Placing '{Sprite}' in '{PrizePack}'", pack.Sprite?.Name, pack.Name);
             }
@@ -66,7 +66,7 @@ internal sealed class PrizePackShuffler : IAlttpWorldModifier
                 else if (pack.Deny?.Length > 0)
                     prizeSprites = prizeSprites.Except(pack.Deny);
 
-                pack.Sprite = Sprite.Get(prng.GetRandomElement(prizeSprites));
+                pack.Sprite = world.GetSprite(prng.GetRandomElement(prizeSprites));
                 _logger.LogInformation("[PP] Placing '{Sprite}' in '{PrizePack}'", pack.Sprite.Name, pack.Name);
             }
         }
@@ -80,7 +80,7 @@ internal sealed class PrizePackShuffler : IAlttpWorldModifier
             /*
             foreach (var (sprite_name, count) in _world.Config("item.drop", Enumerable.Empty<(string SpriteName, int Count)>()))
             {
-                drops.AddRange(Enumerable.Repeat(Sprite.Get(sprite_name), Math.Min(_world.Config("drop.count." + sprite_name, count), 63)));
+                drops.AddRange(Enumerable.Repeat(world.GetSprite(sprite_name), Math.Min(_world.Config("drop.count." + sprite_name, count), 63)));
             }*/
             var dropPool = new Stack<Sprite>(prng.Shuffle(drops.ToArray()));
 
@@ -94,10 +94,10 @@ internal sealed class PrizePackShuffler : IAlttpWorldModifier
         // hard+ does not allow fairies/full magics
         if (world.Config.RomHardMode >= 2)
         {
-            var fairy = Sprite.Get("Fairy");
-            var heart = Sprite.Get("Heart");
-            var magic = Sprite.Get("MagicRefillFull");
-            var smallMagic = Sprite.Get("MagicRefillSmall");
+            var fairy = world.GetSprite("Fairy");
+            var heart = world.GetSprite("Heart");
+            var magic = world.GetSprite("MagicRefillFull");
+            var smallMagic = world.GetSprite("MagicRefillSmall");
             foreach (var prizepack in prizepacks)
             {
                 if (prizepack.Sprite == fairy)
@@ -109,10 +109,10 @@ internal sealed class PrizePackShuffler : IAlttpWorldModifier
 
         if (world.Config.RomRupeeBow)
         {
-            var arrows5 = Sprite.Get("ArrowRefill5");
-            var arrows10 = Sprite.Get("ArrowRefill10");
-            var rupeeBlue = Sprite.Get("RupeeBlue");
-            var rupeeRed = Sprite.Get("RupeeRed");
+            var arrows5 = world.GetSprite("ArrowRefill5");
+            var arrows10 = world.GetSprite("ArrowRefill10");
+            var rupeeBlue = world.GetSprite("RupeeBlue");
+            var rupeeRed = world.GetSprite("RupeeRed");
             foreach (var prizepack in prizepacks)
             {
                 if (prizepack.Sprite == arrows5)

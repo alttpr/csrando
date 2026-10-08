@@ -908,7 +908,7 @@ EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   properties: EyegoreGreen_properties
 MimicGreen: #GREEN EYEGORE / GREEN MIMIC
   alternative: EyegoreGreen
-  id: 0x83 #DR uses the unused somaria platform 0xEF
+  id: 0xEF #DR uses the unused somaria platform 0xEF
   flags: Challenge
   sheets: [null, null, 0x2E, null]
   properties: MimicGreen_properties
@@ -919,7 +919,7 @@ EyegoreRed: #RED EYEGORE / RED MIMIC
   properties: EyegoreRed_properties
 MimicRed: #RED EYEGORE / RED MIMIC
   alternative: EyegoreRed
-  id: 0x84 #DR uses the unused somaria platform 0xF0
+  id: 0xF0 #DR uses the unused somaria platform 0xF0
   flags: Challenge
   sheets: [null, null, 0x2E, null]
   properties: MimicRed_properties

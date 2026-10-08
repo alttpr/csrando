@@ -6,7 +6,7 @@ Raven_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 4 # 12 in master table
@@ -14,15 +14,16 @@ Raven_properties:
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1 # 0x3 in master table
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -61,7 +62,7 @@ Dacto_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 8 # 12 in master table
@@ -69,15 +70,16 @@ Dacto_properties:
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8 # 0x3 in master table
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -116,7 +118,7 @@ Vulture_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 6
@@ -124,15 +126,16 @@ Vulture_properties:
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -168,7 +171,7 @@ FlyingStalfosHead_properties: #STALFOS HEAD
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 255
@@ -176,15 +179,16 @@ FlyingStalfosHead_properties: #STALFOS HEAD
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -221,7 +225,7 @@ Empty_properties: #NULL
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -229,15 +233,16 @@ Empty_properties: #NULL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $4B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $43
   single_layer_collision: false
@@ -273,7 +278,7 @@ PullSwitchGood_properties: #CORRECT PULL SWITCH
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 3
@@ -281,15 +286,16 @@ PullSwitchGood_properties: #CORRECT PULL SWITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $43
   single_layer_collision: false
@@ -325,7 +331,7 @@ PullSwitchGoodUnused_properties: #UNUSED CORRECT PULL SWITCH
   # OAMHARM: $84
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -333,15 +339,16 @@ PullSwitchGoodUnused_properties: #UNUSED CORRECT PULL SWITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $43
   single_layer_collision: false
@@ -377,7 +384,7 @@ id: 0x06
   # OAMHARM: $84
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -385,15 +392,16 @@ id: 0x06
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $43
   single_layer_collision: false
@@ -429,7 +437,7 @@ PullSwitchBadUnused_properties: #UNUSED WRONG PULL SWITCH
   # OAMHARM: $84
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -437,15 +445,16 @@ PullSwitchBadUnused_properties: #UNUSED WRONG PULL SWITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $43
   single_layer_collision: false
@@ -481,7 +490,7 @@ Octorok1_properties: #OKTOROK
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 2 # 2 in master table
@@ -489,15 +498,16 @@ Octorok1_properties: #OKTOROK
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -535,7 +545,7 @@ Slarok1_properties: #SLAROK
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 4 # 2 in master table
@@ -543,15 +553,16 @@ Slarok1_properties: #SLAROK
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -589,7 +600,7 @@ Moldorm_properties:
   # OAMHARM: $0F
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0F
   # HEALTH
   health: 12
@@ -597,15 +608,16 @@ Moldorm_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x13
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -642,23 +654,24 @@ Octorok4_properties: #OCTOROK 4WAY
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 2 # 4 in master table
-  # BUMP: $03 ; $01 in master table
+  # BUMP: $03 # $01 in master table
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
-  bump_damage_class: 0x3 ; 0x1 in master table
+  survives_boss_prep: false
+  bump_damage_class: 0x3 # 0x1 in master table
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -696,23 +709,24 @@ Slarok4_properties: #SLAROK 4WAY
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 4 # 4 in master table
-  # BUMP: $05 ; $01 in master table
+  # BUMP: $05 # $01 in master table
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
-  bump_damage_class: 0x5 ; 0x1 in master table
+  survives_boss_prep: false
+  bump_damage_class: 0x5 # 0x1 in master table
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -750,7 +764,7 @@ Chicken_properties: #CUCCO
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 255
@@ -758,15 +772,16 @@ Chicken_properties: #CUCCO
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -802,7 +817,7 @@ OctorokStone_properties: #OCTOROK STONE
   # OAMHARM: $20
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -810,15 +825,16 @@ OctorokStone_properties: #OCTOROK STONE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $8D
   custom_death: true
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1C
   single_layer_collision: false
@@ -854,7 +870,7 @@ Buzzblob_properties:
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 3
@@ -862,15 +878,16 @@ Buzzblob_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -906,7 +923,7 @@ Snapdragon_properties:
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 12
@@ -914,15 +931,16 @@ Snapdragon_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -958,7 +976,7 @@ Octoballoon_properties:
   # OAMHARM: $84
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 2
@@ -966,15 +984,16 @@ Octoballoon_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $9D
   custom_death: true
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $02
   single_layer_collision: false
@@ -1010,7 +1029,7 @@ Octobaby_properties: #OCTOBALLOON BABY
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -1018,15 +1037,16 @@ Octobaby_properties: #OCTOBALLOON BABY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $3D
   custom_death: false
   invulnerable: false
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $01
   single_layer_collision: false
@@ -1062,7 +1082,7 @@ Hinox_properties:
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 20
@@ -1070,15 +1090,16 @@ Hinox_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $03
   single_layer_collision: false
@@ -1114,7 +1135,7 @@ Moblin_properties:
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 4
@@ -1122,15 +1143,16 @@ Moblin_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1166,7 +1188,7 @@ MiniHelmasaur_properties: #MINI HELMASAUR
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 4
@@ -1174,15 +1196,16 @@ MiniHelmasaur_properties: #MINI HELMASAUR
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $11
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1218,7 +1241,7 @@ ForkGate_properties: #THIEVES TOWN GRATE
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -1226,15 +1249,16 @@ ForkGate_properties: #THIEVES TOWN GRATE
   ignore_collision_recoil: false
   bee_target: true
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $40
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $03
   single_layer_collision: false
@@ -1270,7 +1294,7 @@ Antifairy_properties:
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 255
@@ -1278,15 +1302,16 @@ Antifairy_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $C0
   single_layer_collision: true
@@ -1322,7 +1347,7 @@ Sahasrahla_properties: #SAHASRAHLA / AGINAH
   # OAMHARM: $A2
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -1330,15 +1355,16 @@ Sahasrahla_properties: #SAHASRAHLA / AGINAH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -1374,7 +1400,7 @@ BushHoarder_properties: #HOARDER
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 2
@@ -1382,15 +1408,16 @@ BushHoarder_properties: #HOARDER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1426,7 +1453,7 @@ MiniMoldorm_properties: #MINI MOLDORM
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -1434,15 +1461,16 @@ MiniMoldorm_properties: #MINI MOLDORM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $07
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1478,7 +1506,7 @@ Poe_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 8
@@ -1486,15 +1514,16 @@ Poe_properties:
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1530,7 +1559,7 @@ DwarfSmith_properties: #SMITHY
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -1538,15 +1567,16 @@ DwarfSmith_properties: #SMITHY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $59
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -1582,7 +1612,7 @@ SpriteArrow_properties: #ARROW
   # OAMHARM: $62
   harmless: false
   die_offscreen_tile: true
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -1590,15 +1620,16 @@ SpriteArrow_properties: #ARROW
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $80
   custom_death: true
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $45
   single_layer_collision: false
@@ -1634,7 +1665,7 @@ Statue_properties:
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -1642,15 +1673,16 @@ Statue_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $43
   single_layer_collision: false
@@ -1686,7 +1718,7 @@ FluteQuest_properties:
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -1694,15 +1726,16 @@ FluteQuest_properties:
   ignore_collision_recoil: false
   bee_target: true
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $40
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -1738,7 +1771,7 @@ CrystalSwitch_properties: #CRYSTAL SWITCH
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -1746,15 +1779,16 @@ CrystalSwitch_properties: #CRYSTAL SWITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -1790,7 +1824,7 @@ SickKid_properties: #SICK KID
   # OAMHARM: $85
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 0
@@ -1798,15 +1832,16 @@ SickKid_properties: #SICK KID
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0D
   single_layer_collision: false
@@ -1842,7 +1877,7 @@ Sluggula_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 8
@@ -1850,15 +1885,16 @@ Sluggula_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1894,7 +1930,7 @@ PushSwitch_properties: #WATER SWITCH
   # OAMHARM: $A5
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x05
   # HEALTH
   health: 3
@@ -1902,15 +1938,16 @@ PushSwitch_properties: #WATER SWITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1946,7 +1983,7 @@ Ropa_properties:
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 8
@@ -1954,15 +1991,16 @@ Ropa_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $03
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -1998,7 +2036,7 @@ RedBari_properties: #RED BARI
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 2
@@ -2006,15 +2044,16 @@ RedBari_properties: #RED BARI
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $13
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -2050,7 +2089,7 @@ BlueBari_properties: #BLUE BARI
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 2
@@ -2058,15 +2097,16 @@ BlueBari_properties: #BLUE BARI
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $15
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -2102,7 +2142,7 @@ TalkingTree_properties: #TALKING TREE
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -2110,15 +2150,16 @@ TalkingTree_properties: #TALKING TREE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -2154,7 +2195,7 @@ BlueHardhatBeetle_properties: #HARDHAT BEETLE
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 6 # 3 in master table
@@ -2162,15 +2203,16 @@ BlueHardhatBeetle_properties: #HARDHAT BEETLE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3 # 0x0 in master table
   # OAMPROP: $18
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4 # 4 in master table
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1 # 0 in master table
   # HITBOX: $00
   single_layer_collision: false
@@ -2183,12 +2225,12 @@ BlueHardhatBeetle_properties: #HARDHAT BEETLE
   reset_sword: false
   boss_death: false
   pit_behavior: false
-  # PRIZEPACK: $06 ; $00 in master table
+  # PRIZEPACK: $06 # $00 in master table
   limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
   alternate_damage_sound: false
-  prize_pack: 0x6 ; 0x0 in master table
+  prize_pack: 0x6 # 0x0 in master table
   # DEFLECT: $00
   force_active_offscreen: false
   die_offscreen_draw: false
@@ -2210,7 +2252,7 @@ RedHardhatBeetle_properties: #HARDHAT BEETLE
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 32 # 3 in master table
@@ -2218,15 +2260,16 @@ RedHardhatBeetle_properties: #HARDHAT BEETLE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5 # 0x0 in master table
   # OAMPROP: $18
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $08
+  initial_palette: 3 # $08
   palette: 3 # 4 in master table
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1 # 0 in master table
   # HITBOX: $00
   single_layer_collision: false
@@ -2239,12 +2282,12 @@ RedHardhatBeetle_properties: #HARDHAT BEETLE
   reset_sword: false
   boss_death: false
   pit_behavior: false
-  # PRIZEPACK: $02 ; $00 in master table
+  # PRIZEPACK: $02 # $00 in master table
   limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
   alternate_damage_sound: false
-  prize_pack: 0x2 ; 0x0 in master table
+  prize_pack: 0x2 # 0x0 in master table
   # DEFLECT: $00
   force_active_offscreen: false
   die_offscreen_draw: false
@@ -2266,7 +2309,7 @@ Deadrock_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 255
@@ -2274,15 +2317,16 @@ Deadrock_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -2318,7 +2362,7 @@ Storyteller_properties: #DARK WORLD HINT NPC
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -2326,15 +2370,16 @@ Storyteller_properties: #DARK WORLD HINT NPC
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2370,7 +2415,7 @@ Adult_properties:
   # OAMHARM: $A2
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -2378,15 +2423,16 @@ Adult_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2422,7 +2468,7 @@ SweepingLady_properties: #SWEEPING LADY
   # OAMHARM: $A2
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -2430,15 +2476,16 @@ SweepingLady_properties: #SWEEPING LADY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $0F
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 7 # $0E
+  initial_palette: 7 # $0E
   palette: 7
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2474,7 +2521,7 @@ Hobo_properties:
   # OAMHARM: $A3
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x03
   # HEALTH
   health: 3
@@ -2482,15 +2529,16 @@ Hobo_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2526,7 +2574,7 @@ Lumberjack_properties: #LUMBERJACKS
   # OAMHARM: $AA
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x0A
   # HEALTH
   health: 3
@@ -2534,15 +2582,16 @@ Lumberjack_properties: #LUMBERJACKS
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2578,7 +2627,7 @@ NecklessMan_properties: #used to be TelepathyTile, for its message
   # OAMHARM: $A3
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x03
   # HEALTH
   health: 3
@@ -2586,15 +2635,16 @@ NecklessMan_properties: #used to be TelepathyTile, for its message
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2630,7 +2680,7 @@ FluteKid_properties: #FLUTE KID
   # OAMHARM: $A4
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -2638,15 +2688,16 @@ FluteKid_properties: #FLUTE KID
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0D
   single_layer_collision: false
@@ -2682,7 +2733,7 @@ RaceGameLady_properties: #RACE GAME LADY
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -2690,15 +2741,16 @@ RaceGameLady_properties: #RACE GAME LADY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2734,7 +2786,7 @@ RaceGameBoy_properties: #RACE GAME GUY
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -2742,15 +2794,16 @@ RaceGameBoy_properties: #RACE GAME GUY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2786,7 +2839,7 @@ FortuneTeller_properties: #FORTUNE TELLER
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -2794,15 +2847,16 @@ FortuneTeller_properties: #FORTUNE TELLER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2838,7 +2892,7 @@ AngryBrother_properties: #ARGUE BROS
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -2846,15 +2900,16 @@ AngryBrother_properties: #ARGUE BROS
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2890,7 +2945,7 @@ PullForRupees_properties: #RUPEE PULL
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -2898,15 +2953,16 @@ PullForRupees_properties: #RUPEE PULL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $40
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $03
   single_layer_collision: false
@@ -2942,7 +2998,7 @@ YoungSnitch_properties: #YOUNG SNITCH
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -2950,15 +3006,16 @@ YoungSnitch_properties: #YOUNG SNITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -2994,7 +3051,7 @@ Innkeeper_properties:
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -3002,15 +3059,16 @@ Innkeeper_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -3046,7 +3104,7 @@ Witch_properties:
   # OAMHARM: $A5
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x05
   # HEALTH
   health: 3
@@ -3054,15 +3112,16 @@ Witch_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -3098,7 +3157,7 @@ Waterfall_properties:
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -3106,15 +3165,16 @@ Waterfall_properties:
   ignore_collision_recoil: false
   bee_target: true
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -3150,7 +3210,7 @@ ArrowTarget_properties: #EYE STATUE
   # OAMHARM: $A4
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -3158,15 +3218,16 @@ ArrowTarget_properties: #EYE STATUE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $74
   custom_death: false
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $03
   single_layer_collision: false
@@ -3202,7 +3263,7 @@ AverageMan_properties: #LOCKSMITH
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -3210,15 +3271,16 @@ AverageMan_properties: #LOCKSMITH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -3254,7 +3316,7 @@ MagicBat_properties: #MAGIC BAT
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -3262,15 +3324,16 @@ MagicBat_properties: #MAGIC BAT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $5B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0D
   single_layer_collision: false
@@ -3306,7 +3369,7 @@ DashItem_properties: #BONK ITEM
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -3314,15 +3377,16 @@ DashItem_properties: #BONK ITEM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $58
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -3358,7 +3422,7 @@ VillageKid_properties: #KID IN KAK
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -3366,15 +3430,16 @@ VillageKid_properties: #KID IN KAK
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $51
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -3407,7 +3472,7 @@ OldSnitch_properties: #OLD SNITCH
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 3
@@ -3415,15 +3480,16 @@ OldSnitch_properties: #OLD SNITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -3459,7 +3525,7 @@ RockHoarder_properties: #HOARDER
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 2
@@ -3467,15 +3533,16 @@ RockHoarder_properties: #HOARDER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -3511,7 +3578,7 @@ TutorialGuard_properties: #TUTORIAL GUARD
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 255
@@ -3519,15 +3586,16 @@ TutorialGuard_properties: #TUTORIAL GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $5D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -3563,7 +3631,7 @@ LightningLock_properties: #LIGHTNING GATE
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 2
@@ -3571,15 +3639,16 @@ LightningLock_properties: #LIGHTNING GATE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $03
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -3615,7 +3684,7 @@ BlueSwordGuard_properties: #BLUE GUARD
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 6
@@ -3623,15 +3692,16 @@ BlueSwordGuard_properties: #BLUE GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3667,7 +3737,7 @@ GreenSwordGuard_properties: #GREEN GUARD
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 4
@@ -3675,15 +3745,16 @@ GreenSwordGuard_properties: #GREEN GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3719,7 +3790,7 @@ RedSpearGuard_properties: #RED SPEAR GUARD
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 8
@@ -3727,15 +3798,16 @@ RedSpearGuard_properties: #RED SPEAR GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3771,7 +3843,7 @@ AssaultSwordGuard_properties: #BLUESAIN BOLT
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 6
@@ -3779,15 +3851,16 @@ AssaultSwordGuard_properties: #BLUESAIN BOLT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3823,7 +3896,7 @@ FastRedSpearGuard_properties: #USAIN BOLT
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 8
@@ -3831,15 +3904,16 @@ FastRedSpearGuard_properties: #USAIN BOLT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3875,7 +3949,7 @@ BlueArcher_properties: #BLUE ARCHER
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 6
@@ -3883,15 +3957,16 @@ BlueArcher_properties: #BLUE ARCHER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3927,7 +4002,7 @@ GreenArcher_properties: #GREEN BUSH GUARD
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 4
@@ -3935,15 +4010,16 @@ GreenArcher_properties: #GREEN BUSH GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -3979,7 +4055,7 @@ RedJavelinGuard_properties: #RED JAVELIN GUARD
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 8
@@ -3987,15 +4063,16 @@ RedJavelinGuard_properties: #RED JAVELIN GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -4031,7 +4108,7 @@ RedBushGuard_properties:
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 8
@@ -4039,15 +4116,16 @@ RedBushGuard_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -4083,7 +4161,7 @@ RedBombGuard_properties: #BOMB GUARD
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 8
@@ -4091,15 +4169,16 @@ RedBombGuard_properties: #BOMB GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -4136,7 +4215,7 @@ SpriteBomb_properties: #BOMB GUARD
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 0 # 8 in master table
@@ -4144,15 +4223,16 @@ SpriteBomb_properties: #BOMB GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $18 # $17 in master table
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4
+  initial_palette: 4
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $12
   single_layer_collision: false
@@ -4191,7 +4271,7 @@ GreenGuardRecruit_properties: #GREEN KNIFE GUARD
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 4
@@ -4199,15 +4279,16 @@ GreenGuardRecruit_properties: #GREEN KNIFE GUARD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -4243,7 +4324,7 @@ Geldman_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 4
@@ -4251,15 +4332,16 @@ Geldman_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4295,7 +4377,7 @@ Rabbit_properties: #TOPPO
   # OAMHARM: $22
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 2
@@ -4303,15 +4385,16 @@ Rabbit_properties: #TOPPO
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4347,7 +4430,7 @@ Popo_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 2
@@ -4355,15 +4438,16 @@ Popo_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4399,7 +4483,7 @@ Popo2_properties: #POPO
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 2
@@ -4407,15 +4491,16 @@ Popo2_properties: #POPO
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4451,7 +4536,7 @@ Cannonball_properties:
   # OAMHARM: $20
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -4459,15 +4544,16 @@ Cannonball_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -4503,7 +4589,7 @@ Armos_properties: #ARMOS STATUE
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 8
@@ -4511,15 +4597,16 @@ Armos_properties: #ARMOS STATUE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $5D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -4555,7 +4642,7 @@ KingZora_properties: #KING ZORA
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 255
@@ -4563,15 +4650,16 @@ KingZora_properties: #KING ZORA
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $5B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -4607,7 +4695,7 @@ ArmosKnight_properties: #ARMOS KNIGHT
   # OAMHARM: $85
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 48
@@ -4615,15 +4703,16 @@ ArmosKnight_properties: #ARMOS KNIGHT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x11
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -4659,7 +4748,7 @@ Lanmolas_properties:
   # OAMHARM: $0F
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0F
   # HEALTH
   health: 16
@@ -4667,15 +4756,16 @@ Lanmolas_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x14
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4711,7 +4801,7 @@ FireballZora_properties: #ZORA / FIREBALL
   # OAMHARM: $21
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 8
@@ -4719,15 +4809,16 @@ FireballZora_properties: #ZORA / FIREBALL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $03
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -4763,7 +4854,7 @@ Fireball_properties: #FIREBALL
   # OAMHARM: $20
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x00
   # HEALTH
   health: 8
@@ -4771,15 +4862,16 @@ Fireball_properties: #FIREBALL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $42
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $54
   single_layer_collision: false
@@ -4820,7 +4912,7 @@ WalkingZora_properties: #ZORA
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 8
@@ -4828,15 +4920,16 @@ WalkingZora_properties: #ZORA
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $13
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4872,7 +4965,7 @@ DesertPalaceBarrier_properties: #DESERT STATUE?
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -4880,15 +4973,16 @@ DesertPalaceBarrier_properties: #DESERT STATUE?
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0C
   single_layer_collision: false
@@ -4924,7 +5018,7 @@ Crab_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 2
@@ -4932,15 +5026,16 @@ Crab_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -4976,7 +5071,7 @@ Bird_properties: #LOST WOODS BIRD
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -4984,15 +5079,16 @@ Bird_properties: #LOST WOODS BIRD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $5B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -5028,7 +5124,7 @@ Squirrel_properties: #LOST WOODS SQUIRREL
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -5036,15 +5132,16 @@ Squirrel_properties: #LOST WOODS SQUIRREL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $5D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -5080,7 +5177,7 @@ SparkCW_properties: #SPARK CLOCKWISE
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 255
@@ -5088,15 +5185,16 @@ SparkCW_properties: #SPARK CLOCKWISE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -5132,7 +5230,7 @@ SparkCCW_properties: #SPARK COUNTERCLOCKWISE
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 255
@@ -5140,15 +5238,16 @@ SparkCCW_properties: #SPARK COUNTERCLOCKWISE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -5184,7 +5283,7 @@ RollerVU_properties: #ROLLER VERTICAL UP (placed high, moving downwards first)
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 255
@@ -5192,15 +5291,16 @@ RollerVU_properties: #ROLLER VERTICAL UP (placed high, moving downwards first)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $10
   single_layer_collision: false
@@ -5236,7 +5336,7 @@ RollerVD_properties: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 255
@@ -5244,15 +5344,16 @@ RollerVD_properties: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $10
   single_layer_collision: false
@@ -5288,7 +5389,7 @@ RollerHL_properties: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 255
@@ -5296,15 +5397,16 @@ RollerHL_properties: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $2E
   single_layer_collision: false
@@ -5340,7 +5442,7 @@ RollerHR_properties: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 255
@@ -5348,15 +5450,16 @@ RollerHR_properties: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x8
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $2E
   single_layer_collision: false
@@ -5392,7 +5495,7 @@ Beamos_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -5400,15 +5503,16 @@ Beamos_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -5444,7 +5548,7 @@ MasterSword_properties:
   # OAMHARM: $85
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 255
@@ -5452,15 +5556,16 @@ MasterSword_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1E
   single_layer_collision: false
@@ -5496,7 +5601,7 @@ DevalantBlue_properties: #DEBIRANDO PIT
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -5504,15 +5609,16 @@ DevalantBlue_properties: #DEBIRANDO PIT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $53
   single_layer_collision: false
@@ -5550,7 +5656,7 @@ DevalantRed_properties: #DEBIRANDO
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 4
@@ -5558,15 +5664,16 @@ DevalantRed_properties: #DEBIRANDO
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -5604,7 +5711,7 @@ ShootingGalleryNPC_properties: #ARCHERY GUY
   # OAMHARM: $A4
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x04
   # HEALTH
   health: 4
@@ -5612,15 +5719,16 @@ ShootingGalleryNPC_properties: #ARCHERY GUY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -5656,7 +5764,7 @@ CannonBallShooterR_properties: #WALL CANNON VERTICAL RIGHT (placed left, shootin
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -5664,15 +5772,16 @@ CannonBallShooterR_properties: #WALL CANNON VERTICAL RIGHT (placed left, shootin
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -5708,7 +5817,7 @@ CannonBallShooterL_properties: #WALL CANNON VERTICAL LEFT (placed right, shootin
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -5716,15 +5825,16 @@ CannonBallShooterL_properties: #WALL CANNON VERTICAL LEFT (placed right, shootin
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -5760,7 +5870,7 @@ CannonBallShooterD_properties: #WALL CANNON HORIZONTAL BOTTOM (placed high, shoo
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -5768,15 +5878,16 @@ CannonBallShooterD_properties: #WALL CANNON HORIZONTAL BOTTOM (placed high, shoo
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -5812,7 +5923,7 @@ CannonBallShooterU_properties: #WALL CANNON HORIZONTAL TOP (placed low, shooting
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -5820,15 +5931,16 @@ CannonBallShooterU_properties: #WALL CANNON HORIZONTAL TOP (placed low, shooting
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -5864,7 +5976,7 @@ BallNChainTrooper_properties: #BALL N CHAIN
   # OAMHARM: $09
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x09
   # HEALTH
   health: 16
@@ -5872,15 +5984,16 @@ BallNChainTrooper_properties: #BALL N CHAIN
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -5916,7 +6029,7 @@ CannonGuard_properties: #CANNONBALL / CANNON TROOPER
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 3
@@ -5924,15 +6037,16 @@ CannonGuard_properties: #CANNONBALL / CANNON TROOPER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $12
   single_layer_collision: false
@@ -5968,7 +6082,7 @@ MirrorPortal_properties: #MIRROR PORTAL
   # OAMHARM: $A0
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -5976,15 +6090,16 @@ MirrorPortal_properties: #MIRROR PORTAL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C4
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $40
   single_layer_collision: false
@@ -6020,7 +6135,7 @@ Rat_properties: #RAT / CRICKET
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 2 # 2 in master table
@@ -6028,15 +6143,16 @@ Rat_properties: #RAT / CRICKET
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0 # 0x0 in master table
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6074,7 +6190,7 @@ Buzz_properties: #BUZZ / CRICKET
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 8 # 2 in master table
@@ -6082,15 +6198,16 @@ Buzz_properties: #BUZZ / CRICKET
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5 # 0x0 in master table
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6128,7 +6245,7 @@ Rope_properties: #ROPE
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 4 # 4 in master table
@@ -6136,15 +6253,16 @@ Rope_properties: #ROPE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1 # 0x1 in master table
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6183,7 +6301,7 @@ Skullrope_properties: #STAL ROPE
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 8 # 4 in master table
@@ -6191,15 +6309,16 @@ Skullrope_properties: #STAL ROPE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5 # 0x1 in master table
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6238,7 +6357,7 @@ Keese_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 1 # 1 in master table
@@ -6246,15 +6365,16 @@ Keese_properties:
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0 # 0x0 in master table
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -6293,7 +6413,7 @@ Chasupa_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 4 # 1 in master table
@@ -6301,15 +6421,16 @@ Chasupa_properties:
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5 # 0x0 in master table
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -6348,7 +6469,7 @@ HelmasaurFireball_properties: #KING HELMASAUR FIREBALL
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -6356,15 +6477,16 @@ HelmasaurFireball_properties: #KING HELMASAUR FIREBALL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $03
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $19
   single_layer_collision: false
@@ -6400,7 +6522,7 @@ Leever_properties:
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 4
@@ -6408,15 +6530,16 @@ Leever_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $03
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6453,7 +6576,7 @@ PondActivation_properties: #FAIRY POND TRIGGER
   # OAMHARM: $8B
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0B
   # HEALTH
   health: 255
@@ -6461,15 +6584,16 @@ PondActivation_properties: #FAIRY POND TRIGGER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6505,7 +6629,7 @@ Uncle_properties: #UNCLE / PRIEST / MANTLE
   # OAMHARM: $86
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 0
@@ -6513,15 +6637,16 @@ Uncle_properties: #UNCLE / PRIEST / MANTLE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -6557,7 +6682,7 @@ RunningMan_properties: #RUNNING MAN
   # OAMHARM: $C2
   harmless: true
   die_offscreen_tile: true
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -6565,15 +6690,16 @@ RunningMan_properties: #RUNNING MAN
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0D
   single_layer_collision: false
@@ -6609,7 +6735,7 @@ BottleSalesman_properties: #BOTTLE MERCHANT
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -6617,15 +6743,16 @@ BottleSalesman_properties: #BOTTLE MERCHANT
   ignore_collision_recoil: false
   bee_target: true
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -6661,7 +6788,7 @@ Zelda_properties:
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -6669,15 +6796,16 @@ Zelda_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -6713,7 +6841,7 @@ UnusedAntifairy_properties: # ANTIFAIRY
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 255
@@ -6721,15 +6849,16 @@ UnusedAntifairy_properties: # ANTIFAIRY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -6765,7 +6894,7 @@ SahaWife_properties: #SAHASRAHLAS WIFE / DR: Grandma
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -6773,15 +6902,16 @@ SahaWife_properties: #SAHASRAHLAS WIFE / DR: Grandma
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $47
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -6817,7 +6947,7 @@ Bee_properties:
   # OAMHARM: $21
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -6825,15 +6955,16 @@ Bee_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $36
   custom_death: false
   invulnerable: false
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $41
   single_layer_collision: false
@@ -6869,7 +7000,7 @@ Agahnim_properties:
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 96
@@ -6877,15 +7008,16 @@ Agahnim_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x14
   # OAMPROP: $8B
   custom_death: true
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -6922,7 +7054,7 @@ AgahnimBall_properties: #AGAHNIMS BALLS
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -6930,15 +7062,16 @@ AgahnimBall_properties: #AGAHNIMS BALLS
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -6974,7 +7107,7 @@ GreenStalfos_properties: #GREEN STALFOS, DR: Floating Skull
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 24
@@ -6982,15 +7115,16 @@ GreenStalfos_properties: #GREEN STALFOS, DR: Floating Skull
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7026,7 +7160,7 @@ BigSpikeTrap_properties: #BIG SPIKE
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -7034,15 +7168,16 @@ BigSpikeTrap_properties: #BIG SPIKE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $49
   single_layer_collision: false
@@ -7078,7 +7213,7 @@ FireBarCW_properties: #FIREBAR CLOCKWISE
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -7086,15 +7221,16 @@ FireBarCW_properties: #FIREBAR CLOCKWISE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7130,7 +7266,7 @@ FireBarCCW_properties: #FIREBAR COUNTERCLOCKWISE
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -7138,15 +7274,16 @@ FireBarCCW_properties: #FIREBAR COUNTERCLOCKWISE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7182,7 +7319,7 @@ FireSnake_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 3
@@ -7190,15 +7327,16 @@ FireSnake_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $C0
   single_layer_collision: true
@@ -7234,7 +7372,7 @@ Hover_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 4
@@ -7242,15 +7380,16 @@ Hover_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7286,7 +7425,7 @@ AntifairyCircle_properties: #ANTIFAIRY CIRCLE
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 255
@@ -7294,15 +7433,16 @@ AntifairyCircle_properties: #ANTIFAIRY CIRCLE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -7338,7 +7478,7 @@ EyegoreGreen_properties: #GREEN EYEGORE / GREEN MIMIC
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 16
@@ -7346,15 +7486,16 @@ EyegoreGreen_properties: #GREEN EYEGORE / GREEN MIMIC
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7390,7 +7531,7 @@ EyegoreRed_properties: #RED EYEGORE / RED MIMIC
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 8
@@ -7398,15 +7539,16 @@ EyegoreRed_properties: #RED EYEGORE / RED MIMIC
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $07
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7436,17 +7578,13 @@ EyegoreRed_properties: #RED EYEGORE / RED MIMIC
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ]
-MimicGreen_properties: #GREEN EYEGORE / GREEN MIMIC
-# TODO PROPERTIES ELIDED UNTIL WE COMMIT TO AN ID SOLUTION
-MimicRed_properties: #RED EYEGORE / RED MIMIC
-# TODO PROPERTIES ELIDED UNTIL WE COMMIT TO AN ID SOLUTION
 StalfosYellow_properties: #YELLOW STALFOS
   id: 0x85
   owns_id: true
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 8
@@ -7454,15 +7592,16 @@ StalfosYellow_properties: #YELLOW STALFOS
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -7498,7 +7637,7 @@ Kodongo_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -7506,15 +7645,16 @@ Kodongo_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false # TODO supposedly fixes hardlocks, but let's investigate the asm first
@@ -7550,7 +7690,7 @@ Flames_properties: #KONDONGO FIRE
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 255
@@ -7558,15 +7698,16 @@ Flames_properties: #KONDONGO FIRE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7602,7 +7743,7 @@ Mothula_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 32
@@ -7610,15 +7751,16 @@ Mothula_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -7654,7 +7796,7 @@ MothulaBeam_properties: #MOTHULA BEAM
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 32
@@ -7662,15 +7804,16 @@ MothulaBeam_properties: #MOTHULA BEAM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $43
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -7706,7 +7849,7 @@ SpikeTrap_properties: #SPIKE BLOCK
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 32
@@ -7714,15 +7857,16 @@ SpikeTrap_properties: #SPIKE BLOCK
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $C0
   single_layer_collision: true
@@ -7758,7 +7902,7 @@ Gibdo_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 32
@@ -7766,15 +7910,16 @@ Gibdo_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $1D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7810,7 +7955,7 @@ Arrghus_properties:
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 32
@@ -7818,15 +7963,16 @@ Arrghus_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -7862,7 +8008,7 @@ ArrghusSpawn_properties: #ARRGHI
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 8
@@ -7870,15 +8016,16 @@ ArrghusSpawn_properties: #ARRGHI
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7914,7 +8061,7 @@ Terrorpin_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 8
@@ -7922,15 +8069,16 @@ Terrorpin_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -7966,7 +8114,7 @@ Zol_properties: #BLOB
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 4
@@ -7974,15 +8122,16 @@ Zol_properties: #BLOB
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -8018,7 +8167,7 @@ PowderBlob_properties: #BLOB
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -8026,15 +8175,16 @@ PowderBlob_properties: #BLOB
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $1B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $0A
+  initial_palette: 4 # $0A
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $80
   single_layer_collision: true
@@ -8074,7 +8224,7 @@ Wallmaster_properties:
   # OAMHARM: $87
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 8
@@ -8082,15 +8232,16 @@ Wallmaster_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $0A
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -8126,7 +8277,7 @@ StalfosKnight_properties: #STALFOS KNIGHT
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 64
@@ -8134,15 +8285,16 @@ StalfosKnight_properties: #STALFOS KNIGHT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -8178,7 +8330,7 @@ Helmasaur_properties: #KING HELMASAUR
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 48
@@ -8186,15 +8338,16 @@ Helmasaur_properties: #KING HELMASAUR
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 1
   # HITBOX: $18
   single_layer_collision: false
@@ -8230,7 +8383,7 @@ Bumper_properties:
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 255
@@ -8238,15 +8391,16 @@ Bumper_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $05
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $5A
   single_layer_collision: false
@@ -8282,7 +8436,7 @@ Pirogusu_properties: #PIROGUSU / TILE ROOM TILE
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 2
@@ -8290,15 +8444,16 @@ Pirogusu_properties: #PIROGUSU / TILE ROOM TILE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -8334,22 +8489,23 @@ FlyingTile_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 0
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $0C
+  initial_palette: 0 # $0C
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   single_layer_collision: false
   killroom_ignore: false
@@ -8390,7 +8546,7 @@ LaserEyeR_properties: #LASER EYE RIGHT (placed left, shooting right)
   # OAMHARM: $22
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 255
@@ -8398,15 +8554,16 @@ LaserEyeR_properties: #LASER EYE RIGHT (placed left, shooting right)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $D4
   single_layer_collision: true
@@ -8442,7 +8599,7 @@ LaserEyeL_properties: #LASER EYE LEFT (placed right, shooting left)
   # OAMHARM: $22
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 255
@@ -8450,15 +8607,16 @@ LaserEyeL_properties: #LASER EYE LEFT (placed right, shooting left)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $D4
   single_layer_collision: true
@@ -8494,7 +8652,7 @@ LaserEyeD_properties: #LASER EYE BOTTOM (placed high, shooting down)
   # OAMHARM: $22
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 255
@@ -8502,15 +8660,16 @@ LaserEyeD_properties: #LASER EYE BOTTOM (placed high, shooting down)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $D4
   single_layer_collision: true
@@ -8546,7 +8705,7 @@ LaserEyeU_properties: #LASER EYE TOP (placed low, shooting up)
   # OAMHARM: $22
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x02
   # HEALTH
   health: 255
@@ -8554,15 +8713,16 @@ LaserEyeU_properties: #LASER EYE TOP (placed low, shooting up)
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $D4
   single_layer_collision: true
@@ -8598,7 +8758,7 @@ Pengator_properties:
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 16
@@ -8606,15 +8766,16 @@ Pengator_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -8650,7 +8811,7 @@ Kyameron_properties:
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 4
@@ -8658,15 +8819,16 @@ Kyameron_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $05
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -8702,7 +8864,7 @@ Wizzrobe_properties:
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 2
@@ -8710,15 +8872,16 @@ Wizzrobe_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -8754,7 +8917,7 @@ Zoro_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 4
@@ -8762,15 +8925,16 @@ Zoro_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -8806,7 +8970,7 @@ Babasu_properties:
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 4
@@ -8814,15 +8978,16 @@ Babasu_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -8858,7 +9023,7 @@ OstrichHG_properties: #HAUNTED GROVE OSTRITCH
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 8
@@ -8866,15 +9031,16 @@ OstrichHG_properties: #HAUNTED GROVE OSTRITCH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $07
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -8910,7 +9076,7 @@ RabbitHG_properties: #HAUNTED GROVE RABBIT
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 8
@@ -8918,15 +9084,16 @@ RabbitHG_properties: #HAUNTED GROVE RABBIT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -8962,7 +9129,7 @@ BirdHG_properties: #HAUNTED GROVE BIRD
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 8
@@ -8970,15 +9137,16 @@ BirdHG_properties: #HAUNTED GROVE BIRD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -9014,7 +9182,7 @@ Freezor_properties:
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 16
@@ -9022,15 +9190,16 @@ Freezor_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9066,7 +9235,7 @@ Kholdstare_properties:
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 64
@@ -9074,15 +9243,16 @@ Kholdstare_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x17
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -9118,7 +9288,7 @@ KholdstareShell_properties: #KHOLDSTARE SHELL
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 64
@@ -9126,15 +9296,16 @@ KholdstareShell_properties: #KHOLDSTARE SHELL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $80
   custom_death: true
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $1D
   single_layer_collision: false
@@ -9170,7 +9341,7 @@ FallingIce_properties: #FALLING ICE
   # OAMHARM: $21
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 8
@@ -9178,15 +9349,16 @@ FallingIce_properties: #FALLING ICE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9222,7 +9394,7 @@ ZazakBlue_properties: #BLUE ZAZAK
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 4
@@ -9230,15 +9402,16 @@ ZazakBlue_properties: #BLUE ZAZAK
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9274,7 +9447,7 @@ ZazakRed_properties: #RED ZAZAK
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 8
@@ -9282,15 +9455,16 @@ ZazakRed_properties: #RED ZAZAK
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $17
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9326,7 +9500,7 @@ Stalfos_properties:
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 4
@@ -9334,15 +9508,16 @@ Stalfos_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x1
   # OAMPROP: $19
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9378,7 +9553,7 @@ ZirroGreen_properties: #GREEN ZIRRO
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 4
@@ -9386,15 +9561,16 @@ ZirroGreen_properties: #GREEN ZIRRO
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9430,7 +9606,7 @@ ZirroBlue_properties: #BLUE ZIRRO
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 8
@@ -9438,15 +9614,16 @@ ZirroBlue_properties: #BLUE ZIRRO
   ignore_collision_recoil: true
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $09
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9482,7 +9659,7 @@ Pikit_properties:
   # OAMHARM: $08
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x08
   # HEALTH
   health: 12
@@ -9490,15 +9667,16 @@ Pikit_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -9534,7 +9712,7 @@ Maiden_properties: #CRYSTAL MAIDEN
   # OAMHARM: $8F
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0F
   # HEALTH
   health: 16
@@ -9542,15 +9720,16 @@ Maiden_properties: #CRYSTAL MAIDEN
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $4A
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -9586,7 +9765,7 @@ Apple_properties:
   # OAMHARM: $A1
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -9594,15 +9773,16 @@ Apple_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $12
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -9638,7 +9818,7 @@ LostOldMan_properties: #OLD MAN
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -9646,15 +9826,16 @@ LostOldMan_properties: #OLD MAN
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -9690,7 +9871,7 @@ PipeD_properties: #PIPE DOWN
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -9698,15 +9879,16 @@ PipeD_properties: #PIPE DOWN
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C3
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1B
   single_layer_collision: false
@@ -9742,7 +9924,7 @@ PipeU_properties: #PIPE UP
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -9750,15 +9932,16 @@ PipeU_properties: #PIPE UP
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C3
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1B
   single_layer_collision: false
@@ -9794,7 +9977,7 @@ PipeR_properties: #PIPE RIGHT
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -9802,15 +9985,16 @@ PipeR_properties: #PIPE RIGHT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C3
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1B
   single_layer_collision: false
@@ -9846,7 +10030,7 @@ PipeL_properties: #PIPE LEFT
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -9854,15 +10038,16 @@ PipeL_properties: #PIPE LEFT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C3
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1B
   single_layer_collision: false
@@ -9898,7 +10083,7 @@ BeeGood_properties: #GOOD BEE
   # OAMHARM: $A1
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -9906,15 +10091,16 @@ BeeGood_properties: #GOOD BEE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $76
   custom_death: false
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $41
   single_layer_collision: false
@@ -9950,7 +10136,7 @@ HylianPlaque_properties: #PEDESTAL PLAQUE
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -9958,15 +10144,16 @@ HylianPlaque_properties: #PEDESTAL PLAQUE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $40
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -10002,7 +10189,7 @@ PurpleChest_properties: #PURPLE CHEST
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -10010,15 +10197,16 @@ PurpleChest_properties: #PURPLE CHEST
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $59
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $03
   single_layer_collision: false
@@ -10054,7 +10242,7 @@ BombSalesman_properties: #BOMB SHOP GUY
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -10062,15 +10250,16 @@ BombSalesman_properties: #BOMB SHOP GUY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -10106,7 +10295,7 @@ Kiki_properties:
   # OAMHARM: $86
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 0
@@ -10114,15 +10303,16 @@ Kiki_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $58
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $07
   single_layer_collision: false
@@ -10158,7 +10348,7 @@ BlindMaiden_properties: #BLIND MAIDEN
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -10166,15 +10356,16 @@ BlindMaiden_properties: #BLIND MAIDEN
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4F
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 7 # $0E
+  initial_palette: 7 # $0E
   palette: 7
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $03
   single_layer_collision: false
@@ -10210,7 +10401,7 @@ DialogueTester_properties: #DIALOGUE TESTER
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -10218,15 +10409,16 @@ DialogueTester_properties: #DIALOGUE TESTER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $73
   custom_death: false
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -10262,7 +10454,7 @@ FeudingFriends_properties: #BULLY / PINK BALL
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -10270,15 +10462,16 @@ FeudingFriends_properties: #BULLY / PINK BALL
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $5B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10314,7 +10507,7 @@ Whirlpool_properties:
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -10322,15 +10515,16 @@ Whirlpool_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $44
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $01
   single_layer_collision: false
@@ -10366,7 +10560,7 @@ Proprieter_properties: #SHOPKEEPER / CHEST GAME GUY
   # OAMHARM: $80
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -10374,15 +10568,16 @@ Proprieter_properties: #SHOPKEEPER / CHEST GAME GUY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -10418,7 +10613,7 @@ Drunkard_properties:
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -10426,15 +10621,16 @@ Drunkard_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $51
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $0A
   single_layer_collision: false
@@ -10470,7 +10666,7 @@ Vitreous_properties:
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 128
@@ -10478,15 +10674,16 @@ Vitreous_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x17
   # OAMPROP: $0A
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -10522,7 +10719,7 @@ VitreousSmallEyeball_properties: #VITREOUS SMALL EYE
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 48
@@ -10530,15 +10727,16 @@ VitreousSmallEyeball_properties: #VITREOUS SMALL EYE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x17
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10574,7 +10772,7 @@ Lightning_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 255
@@ -10582,15 +10780,16 @@ Lightning_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10626,7 +10825,7 @@ Catfish_properties:
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 255
@@ -10634,15 +10833,16 @@ Catfish_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $4B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10678,7 +10878,7 @@ AgahnimCutscene_properties: #CUTSCENE AGAHNIM
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 255
@@ -10686,15 +10886,16 @@ AgahnimCutscene_properties: #CUTSCENE AGAHNIM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x5
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10730,7 +10931,7 @@ SingleBoulder_properties: # Only spawned by overlord
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 255
@@ -10738,15 +10939,16 @@ SingleBoulder_properties: # Only spawned by overlord
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x4
   # OAMPROP: $40
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 1
   # HITBOX: $09
   single_layer_collision: false
@@ -10782,7 +10984,7 @@ Gibo_properties:
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 8
@@ -10790,15 +10992,16 @@ Gibo_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $5B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10834,7 +11037,7 @@ Thief_properties:
   # OAMHARM: $02
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -10842,15 +11045,16 @@ Thief_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x2
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -10886,7 +11090,7 @@ Medusa_properties:
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -10894,15 +11098,16 @@ Medusa_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x10
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $40
   single_layer_collision: false
@@ -10938,7 +11143,7 @@ YomoMedusa_properties: #4WAY SHOOTER
   # OAMHARM: $00
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -10946,15 +11151,16 @@ YomoMedusa_properties: #4WAY SHOOTER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $40
   single_layer_collision: false
@@ -10990,7 +11196,7 @@ Pokey_properties:
   # OAMHARM: $05
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 32
@@ -10998,15 +11204,16 @@ Pokey_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11042,7 +11249,7 @@ FairyBig_properties: #BIG FAIRY
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 0
@@ -11050,15 +11257,16 @@ FairyBig_properties: #BIG FAIRY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $4B
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11094,7 +11302,7 @@ BlueTektite_properties: #TEKTITE / FIREBAT
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 8 # 8 in master table
@@ -11102,15 +11310,16 @@ BlueTektite_properties: #TEKTITE / FIREBAT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3 # 0x5 in master table
   # OAMPROP: $0B # $0B in master table
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $0B
+  initial_palette: 4 # $0B
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11149,7 +11358,7 @@ RedTektite_properties: #TEKTITE / FIREBAT
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 8 # 8 in master table
@@ -11157,15 +11366,16 @@ RedTektite_properties: #TEKTITE / FIREBAT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3 # 0x5 in master table
   # OAMPROP: $07 # $0B in master table
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $07
+  initial_palette: 3 # $07
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11205,7 +11415,7 @@ ChainChomp_properties: #CHAIN CHOMP
   # OAMHARM: $07
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x07
   # HEALTH
   health: 5
@@ -11213,15 +11423,16 @@ ChainChomp_properties: #CHAIN CHOMP
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x7
   # OAMPROP: $59
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11257,7 +11468,7 @@ Trinexx_properties: #TRINEXX ROCK HEAD
   # OAMHARM: $0B
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0B
   # HEALTH
   health: 40
@@ -11265,15 +11476,16 @@ Trinexx_properties: #TRINEXX ROCK HEAD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x17
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $89
   single_layer_collision: true
@@ -11309,7 +11521,7 @@ TrinexxHeadFire_properties: #TRINEXX FIRE HEAD
   # OAMHARM: $0C
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0C
   # HEALTH
   health: 40
@@ -11317,15 +11529,16 @@ TrinexxHeadFire_properties: #TRINEXX FIRE HEAD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x17
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 5 # $0A
+  initial_palette: 5 # $0A
   palette: 5
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -11361,7 +11574,7 @@ TrinexxHeadIce_properties: #TRINEXX ICE HEAD
   # OAMHARM: $0C
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x0C
   # HEALTH
   health: 40
@@ -11369,15 +11582,16 @@ TrinexxHeadIce_properties: #TRINEXX ICE HEAD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x17
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $80
   single_layer_collision: true
@@ -11413,7 +11627,7 @@ Blind_properties:
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 90
@@ -11421,15 +11635,16 @@ Blind_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x15
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11465,7 +11680,7 @@ Swamola_properties:
   # OAMHARM: $06
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x06
   # HEALTH
   health: 16
@@ -11473,15 +11688,16 @@ Swamola_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x7
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1C
   single_layer_collision: false
@@ -11517,7 +11733,7 @@ Lynel_properties:
   # OAMHARM: $03
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 24
@@ -11525,15 +11741,16 @@ Lynel_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x6
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $00
   single_layer_collision: false
@@ -11569,7 +11786,7 @@ BunnyBeam_properties: #BUNNYBEAM / SMOKE
   # OAMHARM: $A4
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x04
   # HEALTH
   health: 64
@@ -11577,15 +11794,16 @@ BunnyBeam_properties: #BUNNYBEAM / SMOKE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x10
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $40
   single_layer_collision: false
@@ -11621,7 +11839,7 @@ FloppingFish_properties: #FLOPPING FISH
   # OAMHARM: $04
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x04
   # HEALTH
   health: 0
@@ -11629,15 +11847,16 @@ FloppingFish_properties: #FLOPPING FISH
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $50
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -11673,7 +11892,7 @@ Stal_properties:
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 4
@@ -11681,15 +11900,16 @@ Stal_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $4C
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $00
   single_layer_collision: false
@@ -11725,7 +11945,7 @@ Landmine_properties:
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -11733,15 +11953,16 @@ Landmine_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x3
   # OAMPROP: $44
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $1C
   single_layer_collision: false
@@ -11777,7 +11998,7 @@ DiggingGameNPC_properties: #DIG GAME GUY
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -11785,15 +12006,16 @@ DiggingGameNPC_properties: #DIG GAME GUY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $51
   custom_death: false
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $07
   single_layer_collision: false
@@ -11829,7 +12051,7 @@ Ganon_properties:
   # OAMHARM: $10
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x10
   # HEALTH
   health: 255
@@ -11837,15 +12059,16 @@ Ganon_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x19
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $03
   single_layer_collision: false
@@ -11881,7 +12104,7 @@ GanonStunned_properties:
   # OAMHARM: $10
   harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x10
   # HEALTH
   health: 255
@@ -11889,15 +12112,16 @@ GanonStunned_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x19
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $03
   single_layer_collision: false
@@ -11933,7 +12157,7 @@ Heart_properties:
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -11941,15 +12165,16 @@ Heart_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F2
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -11985,7 +12210,7 @@ RupeeGreen_properties: #GREEN RUPEE
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -11993,15 +12218,16 @@ RupeeGreen_properties: #GREEN RUPEE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F8
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12037,7 +12263,7 @@ RupeeBlue_properties: #BLUE RUPEE
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -12045,15 +12271,16 @@ RupeeBlue_properties: #BLUE RUPEE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F4
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12090,7 +12317,7 @@ RupeeRed_properties: #RED RUPEE
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -12098,15 +12325,16 @@ RupeeRed_properties: #RED RUPEE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F2
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12142,7 +12370,7 @@ BombRefill1_properties: #BOMB REFILL 1
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -12150,15 +12378,16 @@ BombRefill1_properties: #BOMB REFILL 1
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $D4
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12194,7 +12423,7 @@ BombRefill4_properties: #BOMB REFILL 4
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -12202,15 +12431,16 @@ BombRefill4_properties: #BOMB REFILL 4
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $D4
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12246,7 +12476,7 @@ BombRefill8_properties: #BOMB REFILL 8
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -12254,15 +12484,16 @@ BombRefill8_properties: #BOMB REFILL 8
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $D4
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12298,7 +12529,7 @@ MagicRefillSmall_properties: #SMALL MAGIC DECANTER
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12306,15 +12537,16 @@ MagicRefillSmall_properties: #SMALL MAGIC DECANTER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F8
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12350,7 +12582,7 @@ MagicRefillFull_properties: #LARGE MAGIC DECANTER
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -12358,15 +12590,16 @@ MagicRefillFull_properties: #LARGE MAGIC DECANTER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F8
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12402,7 +12635,7 @@ ArrowRefill5_properties: #ARROW REFILL 5
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -12410,15 +12643,16 @@ ArrowRefill5_properties: #ARROW REFILL 5
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F4
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12454,7 +12688,7 @@ ArrowRefill10_properties: #ARROW REFILL 10
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -12462,15 +12696,16 @@ ArrowRefill10_properties: #ARROW REFILL 10
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F4
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 2 # $04
+  initial_palette: 2 # $04
   palette: 2
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12506,7 +12741,7 @@ Fairy_properties:
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12514,15 +12749,16 @@ Fairy_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: true
   bump_damage_class: 0x10
   # OAMPROP: $D8
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $43
   single_layer_collision: false
@@ -12558,7 +12794,7 @@ Key_properties: #SMALL KEY
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -12566,15 +12802,16 @@ Key_properties: #SMALL KEY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $F8
   custom_death: true
   invulnerable: true
   small_shadow: true
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $44
   single_layer_collision: false
@@ -12610,7 +12847,7 @@ BigKey_properties: #BIG KEY
   # OAMHARM: $81
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12618,15 +12855,16 @@ BigKey_properties: #BIG KEY
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $D8
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $43
   single_layer_collision: false
@@ -12662,7 +12900,7 @@ Shield_properties: #STOLEN SHIELD
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x02
   # HEALTH
   health: 0
@@ -12670,15 +12908,16 @@ Shield_properties: #STOLEN SHIELD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $DF
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 7 # $0E
+  initial_palette: 7 # $0E
   palette: 7
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $40
   single_layer_collision: false
@@ -12714,7 +12953,7 @@ Mushroom_properties:
   # OAMHARM: $A0
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x00
   # HEALTH
   health: 0
@@ -12722,15 +12961,16 @@ Mushroom_properties:
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C8
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $C0
   single_layer_collision: true
@@ -12766,7 +13006,7 @@ FakeMasterSword_properties: #FAKE MASTER SWORD
   # OAMHARM: $A1
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12774,15 +13014,16 @@ FakeMasterSword_properties: #FAKE MASTER SWORD
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $69
   custom_death: false
   invulnerable: true
   small_shadow: true
   has_shadow: false
-  default_oam_palette: 4 # $08
+  initial_palette: 4 # $08
   palette: 4
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $C0
   single_layer_collision: true
@@ -12818,7 +13059,7 @@ PotionShop_properties: #MAGIC SHOP ASSISTANT
   # OAMHARM: $A3
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -12826,15 +13067,16 @@ PotionShop_properties: #MAGIC SHOP ASSISTANT
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C1
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $C7
   single_layer_collision: true
@@ -12870,7 +13112,7 @@ HeartContainer_properties: #HEART CONTAINER
   # OAMHARM: $A1
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12878,15 +13120,16 @@ HeartContainer_properties: #HEART CONTAINER
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $D2
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $C3
   single_layer_collision: true
@@ -12922,7 +13165,7 @@ HeartPiece_properties: #HEART PIECE
   # OAMHARM: $A1
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12930,15 +13173,16 @@ HeartPiece_properties: #HEART PIECE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $D2
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 1 # $02
+  initial_palette: 1 # $02
   palette: 1
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $C3
   single_layer_collision: true
@@ -12974,7 +13218,7 @@ Throwable_properties: #THROWN ITEM
   # OAMHARM: $A1
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: true
+  tile_hitbox_68: true
   oam_allocation: 0x01
   # HEALTH
   health: 0
@@ -12982,15 +13226,16 @@ Throwable_properties: #THROWN ITEM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $DC
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: true
-  default_oam_palette: 6 # $0C
+  initial_palette: 6 # $0C
   palette: 6
-  default_oam_nametable: 0
+  initial_second_oam_nametable: false
   oam_nametable: 0
   # HITBOX: $C0
   single_layer_collision: true
@@ -13026,7 +13271,7 @@ SomariaPlatform_properties: #SOMARIA PLATFORM
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -13034,15 +13279,16 @@ SomariaPlatform_properties: #SOMARIA PLATFORM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C7
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1B
   single_layer_collision: false
@@ -13078,7 +13324,7 @@ Mantle_properties: #CASTLE MANTLE
   # OAMHARM: $85
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x05
   # HEALTH
   health: 0
@@ -13086,15 +13332,16 @@ Mantle_properties: #CASTLE MANTLE
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C1
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $08
   single_layer_collision: false
@@ -13124,117 +13371,119 @@ Mantle_properties: #CASTLE MANTLE
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-SomariaPlatform1_properties: #UNUSED SOMARIA PLATFORM
+MimicGreen_properties: #GREEN EYEGORE / GREEN MIMIC
   id: 0xEF
   owns_id: true
-  # OAMHARM: $83
-  harmless: true
+  # OAMHARM: $05
+  harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
-  oam_allocation: 0x03
+  tile_hitbox_68: false
+  oam_allocation: 0x05
   # HEALTH
-  health: 0
-  # BUMP: $00
+  health: 16
+  # BUMP: $04
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
-  bump_damage_class: 0x0
-  # OAMPROP: $C7
-  custom_death: true
-  invulnerable: true
+  survives_boss_prep: false
+  bump_damage_class: 0x4
+  # OAMPROP: $0D
+  custom_death: false
+  invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
-  palette: 3
-  default_oam_nametable: 1
+  initial_palette: 6 # $0C
+  palette: 6
+  initial_second_oam_nametable: true
   oam_nametable: 1
-  # HITBOX: $1B
+  # HITBOX: $00
   single_layer_collision: false
-  killroom_ignore: true # false in vanilla
+  killroom_ignore: false
   active_offscreen: false
-  hitbox: 0x1B
+  hitbox: 0x00
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
+  deflect_arrows: false
   reset_sword: false
-  boss_death: true
-  pit_behavior: true
-  # PRIZEPACK: $00
+  boss_death: false
+  pit_behavior: false
+  # PRIZEPACK: $15
   limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
-  alternate_damage_sound: false
-  prize_pack: 0x0
-  # DEFLECT: $80
-  force_active_offscreen: true
+  alternate_damage_sound: true
+  prize_pack: 0x5
+  # DEFLECT: $04
+  force_active_offscreen: false
   die_offscreen_draw: false
   is_statue: false
   check_ancilla_direction: false
   is_projectile: false
-  immune_to_sword: false
+  immune_to_sword: true
   is_bonkable: false
   no_permadeath: false
   immune_to_projectiles: false
-  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-SomariaPlatform2_properties: #UNUSED SOMARIA PLATFORM
+  damage_subclasses: [ 0, 1, 1, 2, 2, 1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0 ]
+MimicRed_properties: #RED EYEGORE / RED MIMIC
   id: 0xF0
   owns_id: true
-  # OAMHARM: $83
-  harmless: true
+  # OAMHARM: $05
+  harmless: false
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
-  oam_allocation: 0x03
+  tile_hitbox_68: false
+  oam_allocation: 0x05
   # HEALTH
-  health: 0
-  # BUMP: $00
+  health: 8
+  # BUMP: $04
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
-  bump_damage_class: 0x0
-  # OAMPROP: $C7
-  custom_death: true
-  invulnerable: true
+  survives_boss_prep: false
+  bump_damage_class: 0x4
+  # OAMPROP: $07
+  custom_death: false
+  invulnerable: false
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
-  # HITBOX: $1B
+  # HITBOX: $00
   single_layer_collision: false
-  killroom_ignore: true # false in vanilla
+  killroom_ignore: false
   active_offscreen: false
-  hitbox: 0x1B
+  hitbox: 0x00
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
+  deflect_arrows: false
   reset_sword: false
-  boss_death: true
-  pit_behavior: true
-  # PRIZEPACK: $00
+  boss_death: false
+  pit_behavior: false
+  # PRIZEPACK: $15
   limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
-  alternate_damage_sound: false
-  prize_pack: 0x0
-  # DEFLECT: $80
-  force_active_offscreen: true
+  alternate_damage_sound: true
+  prize_pack: 0x5
+  # DEFLECT: $04
+  force_active_offscreen: false
   die_offscreen_draw: false
   is_statue: false
   check_ancilla_direction: false
   is_projectile: false
-  immune_to_sword: false
+  immune_to_sword: true
   is_bonkable: false
   no_permadeath: false
   immune_to_projectiles: false
-  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ]
 SomariaPlatform3_properties: #UNUSED SOMARIA PLATFORM
   id: 0xF1
   owns_id: true
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -13242,15 +13491,16 @@ SomariaPlatform3_properties: #UNUSED SOMARIA PLATFORM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C7
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $1B
   single_layer_collision: false
@@ -13286,7 +13536,7 @@ MedallionTablet_properties: #MEDALLION TABLET
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -13294,15 +13544,16 @@ MedallionTablet_properties: #MEDALLION TABLET
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C1
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 0 # $00
+  initial_palette: 0 # $00
   palette: 0
-  default_oam_nametable: 1
+  initial_second_oam_nametable: true
   oam_nametable: 1
   # HITBOX: $03
   single_layer_collision: false
