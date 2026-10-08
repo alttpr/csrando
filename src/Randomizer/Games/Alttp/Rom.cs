@@ -1765,10 +1765,10 @@ public sealed class Rom : GameRom
 
         Range range = world.Config.EnemyHealth switch
         {
-            EnemyHealthOption.Expert => 4..50,
-            EnemyHealthOption.Hard => 2..25,
-            EnemyHealthOption.Medium => 2..15,
             EnemyHealthOption.Easy => 1..4,
+            EnemyHealthOption.Medium => 2..15,
+            EnemyHealthOption.Hard => 2..25,
+            EnemyHealthOption.Expert => 4..50,
             _ => 1..1,
         };
 

@@ -111,43 +111,4 @@ public sealed class FileRom : IRom
     {
         _rom.Dispose();
     }
-
-
-    public void Write(Address address, byte value)
-    {
-        Write(address, [value]);
-    }
-
-    public void WriteUInt16(Address address, in ReadOnlySpan<ushort> data)
-    {
-        if (BitConverter.IsLittleEndian)
-        {
-            Write(address, MemoryMarshal.AsBytes(data));
-        }
-        else
-        {
-            int len = data.Length * sizeof(ushort);
-            byte[] tmp = ArrayPool<byte>.Shared.Rent(len);
-
-            try
-            {
-                Span<byte> tmpSpan = tmp.AsSpan(0, len);
-
-                var tmpSpanWrite = tmpSpan;
-                foreach (ushort value in data)
-                {
-                    BinaryPrimitives.WriteUInt16LittleEndian(tmpSpanWrite, value);
-                    tmpSpanWrite = tmpSpanWrite[2..];
-                }
-
-                Write(address, tmpSpan);
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(tmp);
-            }
-
-        }
-
-    }
 }

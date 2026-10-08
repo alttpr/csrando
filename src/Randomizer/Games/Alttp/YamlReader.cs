@@ -93,7 +93,7 @@ public class YamlReader
     });
     private static readonly Lazy<Dictionary<string, YamlSpriteData>> _cachedSpriteProperties = new(() =>
     {
-        string itemsYML = Path.Combine(DataRoot, "PropertiesPath");
+        string itemsYML = Path.Combine(DataRoot, PropertiesPath);
 
         var deserializer = new DeserializerBuilder().Build();
         using var reader = File.OpenText(itemsYML);

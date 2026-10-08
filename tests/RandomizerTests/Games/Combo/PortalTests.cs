@@ -29,28 +29,6 @@ public sealed class PortalTests
         public void Resize(int size) { }
         public void UpdateChecksum() { }
         public void Dispose() { }
-        public void Write(Address address, byte value)
-        {
-            _data[address.Value] = value;
-        }
-
-        public void WriteUInt16(Address address, in ReadOnlySpan<ushort> data)
-        {
-            Span<byte> tmp = _data.AsSpan(address.Value, data.Length * sizeof(ushort));
-
-            if (BitConverter.IsLittleEndian)
-            {
-                System.Runtime.InteropServices.MemoryMarshal.AsBytes(data).CopyTo(tmp);
-            }
-            else
-            {
-                foreach (ushort value in data)
-                {
-                    BinaryPrimitives.WriteUInt16LittleEndian(tmp, value);
-                    tmp = tmp[2..];
-                }
-            }
-        }
     }
 
     private static ComboWorld CreateWorld(bool alttp = false, bool sm = false, bool z1 = false, bool m1 = false,

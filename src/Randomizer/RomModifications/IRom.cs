@@ -1,5 +1,7 @@
 ﻿namespace Randomizer.RomModifications;
 
+using System.Buffers;
+
 public interface IRom : IDisposable
 {
     public const int CheckSumLocationLorom = 0x7FDC;
@@ -25,11 +27,54 @@ public interface IRom : IDisposable
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
     void Write(Address address, in ReadOnlySpan<byte> data);
-
-    void Write(Address address, byte value);
-
-    void WriteUInt16(Address address, in ReadOnlySpan<ushort> data);
 }
+
+
+public static class RomExtensions
+{
+    extension(IRom rom)
+    {
+        public void WriteUInt16(Address address, in ReadOnlySpan<ushort> data)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                rom.Write(address, System.Runtime.InteropServices.MemoryMarshal.AsBytes(data));
+            }
+            else
+            {
+                int len = data.Length * sizeof(ushort);
+                byte[] tmp = ArrayPool<byte>.Shared.Rent(len);
+
+                try
+                {
+                    Span<byte> tmpSpan = tmp.AsSpan(0, len);
+
+                    var tmpSpanWrite = tmpSpan;
+                    foreach (ushort value in data)
+                    {
+                        System.Buffers.Binary.BinaryPrimitives.WriteUInt16LittleEndian(tmpSpanWrite, value);
+                        tmpSpanWrite = tmpSpanWrite[2..];
+                    }
+
+                    rom.Write(address, tmpSpan);
+                }
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(tmp);
+                }
+
+            }
+
+        }
+    }
+}
+
+
+
+
+
+
+
 
 public readonly struct Address
 {
