@@ -215,7 +215,7 @@ public static class RomWriter
 
         rom.SetOldManRespawnBehavior(
             (config.Glitches is GlitchesOption.None)
-            ? OldManRespawnOption.SpawnSelect2
+            ? OldManRespawnOption.SpawnSelect3
             : OldManRespawnOption.Vanilla
         );
 
