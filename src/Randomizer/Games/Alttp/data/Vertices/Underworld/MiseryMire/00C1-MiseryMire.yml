@@ -63,7 +63,7 @@ rooms:
           mobs:
             - name: "Misery Mire - Octagon - Stalfos 1"
               position: { x: 0x06, y: 0x0b, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 - "RollerVU"
                 - "RollerHL"
@@ -93,4 +93,4 @@ rooms:
               sprite: "Medusa"
             - name: "Misery Mire - 4 Rails - Stalfos 2"
               position: { x: 0x15, y: 0x0b, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"

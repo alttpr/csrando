@@ -70,7 +70,7 @@ rooms:
               sprite: "FallingStalfos"
             - name: "Eastern Palace - Main Room - Stalfos 1"
               position: { x: 0x0a, y: 0x10, z: 0x01 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Eastern Palace - Main Room - Stalfos 2"
               position: { x: 0x14, y: 0x10, z: 0x01 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"

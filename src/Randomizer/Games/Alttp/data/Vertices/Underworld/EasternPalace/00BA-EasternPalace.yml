@@ -96,10 +96,10 @@ rooms:
           mobs:
             - name: "Eastern Palace - Dark Stalfos - Stalfos 1"
               position: { x: 0x14, y: 0x04, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Eastern Palace - Dark Stalfos - Stalfos 2"
               position: { x: 0x18, y: 0x06, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Eastern Palace - Dark Stalfos - Stalfos 3"
               position: { x: 0x18, y: 0x0a, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"

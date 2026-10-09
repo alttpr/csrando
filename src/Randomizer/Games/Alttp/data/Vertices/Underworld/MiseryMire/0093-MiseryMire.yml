@@ -52,10 +52,10 @@ rooms:
           mobs:
             - name: "Misery Mire - Big Block - Stalfos 1"
               position: { x: 0x04, y: 0x15, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Misery Mire - Big Block - Stalfos 2"
               position: { x: 0x0c, y: 0x1c, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Misery Mire - Big Block - Antifairy"
               position: { x: 0x04, y: 0x1c, z: 0x00 }
               sprite: "Antifairy"

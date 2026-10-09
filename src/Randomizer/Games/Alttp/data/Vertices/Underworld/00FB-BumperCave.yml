@@ -14,7 +14,7 @@ rooms:
               sprite: "Bumper"
             - name: "Bumper Cave Bottom - Hardhat Beetle 1"
               position: { x: 0x19, y: 0x0a, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"
             - name: "Bumper Cave Bottom - Hardhat Beetle 2"
               position: { x: 0x15, y: 0x12, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"

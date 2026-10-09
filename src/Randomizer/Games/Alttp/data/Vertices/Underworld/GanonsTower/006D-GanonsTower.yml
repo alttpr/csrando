@@ -55,7 +55,7 @@ rooms:
               trophy: "GanonsTowerGauntletFiveTrophy"
             - name: "Ganon's Tower - Gauntlet 5 - Stalfos"
               position: { x: 0x05, y: 0x18, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "GanonsTowerGauntletFiveTrophy"
             - name: "Ganon's Tower - Gauntlet 5 - Red Zazak"
               position: { x: 0x0a, y: 0x18, z: 0x00 }

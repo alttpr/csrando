@@ -9494,7 +9494,7 @@ ZazakRed_properties: #RED ZAZAK
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 3, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 3, 3, 3, 1, 3 ]
-Stalfos_properties:
+BlueStalfos_properties:
   id: 0xA7
   owns_id: true
   # OAMHARM: $03
@@ -9547,6 +9547,60 @@ Stalfos_properties:
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 3, 2, 7 ]
+RedStalfos_properties:
+  id: 0xA7
+  owns_id: false
+  # OAMHARM: $03
+  harmless: false
+  die_offscreen_tile: false
+  tile_hitbox_68: false
+  oam_allocation: 0x03
+  # HEALTH
+  health: 4
+  # BUMP: $01
+  ignore_collision_recoil: false
+  bee_target: false
+  powder_immune: false
+  survives_boss_prep: false
+  bump_damage_class: 0x1
+  # OAMPROP: $19
+  custom_death: false
+  invulnerable: false
+  small_shadow: false
+  has_shadow: true
+  initial_palette: 3 # $08
+  palette: 3
+  initial_second_oam_nametable: true
+  oam_nametable: 1
+  # HITBOX: $00
+  single_layer_collision: false
+  killroom_ignore: false
+  active_offscreen: false
+  hitbox: 0x00
+  # TILEHITBOX: $00
+  tile_hitbox: 0x0 # $00
+  deflect_arrows: false
+  reset_sword: false
+  boss_death: false
+  pit_behavior: false
+  # PRIZEPACK: $16
+  limit_pit_interactions: false
+  test_water_collision: false
+  blocked_by_shield: false
+  alternate_damage_sound: true
+  prize_pack: 0x6
+  # DEFLECT: $00
+  force_active_offscreen: false
+  die_offscreen_draw: false
+  is_statue: false
+  check_ancilla_direction: false
+  is_projectile: false
+  immune_to_sword: false
+  is_bonkable: false
+  no_permadeath: false
+  immune_to_projectiles: false
+  damage_subclasses: [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 3, 2, 7 ]
+  palette_addresses: [0x0690F2]
 ZirroGreen_properties: #GREEN ZIRRO
   id: 0xA8
   owns_id: true

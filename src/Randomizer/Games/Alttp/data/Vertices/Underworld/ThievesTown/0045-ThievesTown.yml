@@ -34,7 +34,7 @@ rooms:
               trophy: "ThievesTownBlockTotemTrophy"
             - name: "Thieves' Town - Basement Block Totems - Stalfos"
               position: { x: 0x0b, y: 0x0b, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "ThievesTownBlockTotemTrophy"
 
         - name: "Thieves' Town - Basement Block Totems Bottom"

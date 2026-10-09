@@ -16,7 +16,7 @@ rooms:
               trophy: "GanonsTowerGauntletOneTrophy"
             - name: "Ganon's Tower - Gauntlet 1 - Stalfos L"
               position: { x: 0x17, y: 0x08, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "GanonsTowerGauntletOneTrophy"
             - name: "Ganon's Tower - Gauntlet 1 - Blue Zazak"
               position: { x: 0x19, y: 0x08, z: 0x00 }
@@ -24,7 +24,7 @@ rooms:
               trophy: "GanonsTowerGauntletOneTrophy"
             - name: "Ganon's Tower - Gauntlet 1 - Stalfos R"
               position: { x: 0x1b, y: 0x08, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "GanonsTowerGauntletOneTrophy"
 
         - name: "Ganon's Tower - Gauntlet 2"
@@ -48,7 +48,7 @@ rooms:
           mobs:
             - name: "Ganon's Tower - Gauntlet 2 - Stalfos T"
               position: { x: 0x07, y: 0x05, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "GanonsTowerGauntletTwoTrophy"
             - name: "Ganon's Tower - Gauntlet 2 - Beamos"
               position: { x: 0x08, y: 0x06, z: 0x00 }
@@ -56,11 +56,11 @@ rooms:
               trophy: "GanonsTowerGauntletTwoTrophy"
             - name: "Ganon's Tower - Gauntlet 2 - Stalfos L"
               position: { x: 0x03, y: 0x08, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "GanonsTowerGauntletTwoTrophy"
             - name: "Ganon's Tower - Gauntlet 2 - Stalfos B"
               position: { x: 0x07, y: 0x0b, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               trophy: "GanonsTowerGauntletTwoTrophy"
 
         - name: "Ganon's Tower - Gauntlet 3"

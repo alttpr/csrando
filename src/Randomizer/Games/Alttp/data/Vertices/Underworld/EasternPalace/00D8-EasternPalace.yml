@@ -30,11 +30,11 @@ rooms:
                 - "Bumper"
             - name: "Eastern Palace - Kill Room 1 - Stalfos T"
               position: { x: 0x18, y: 0x16, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               trophy: "EasternPalaceKillRoomOneTrophy"
             - name: "Eastern Palace - Kill Room 1 - Stalfos B"
               position: { x: 0x18, y: 0x1b, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               trophy: "EasternPalaceKillRoomOneTrophy"
 
         # North room

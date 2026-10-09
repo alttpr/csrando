@@ -22,14 +22,14 @@ rooms:
           mobs:
             - name: "Thieves' Town - Torch Hallway - Stalfos 2"
               position: { x: 0x17, y: 0x0a, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               deny:
                 - "AntifairyCircle"
                 - "SpikeTrap"
                 - "Bumper"
             - name: "Thieves' Town - Torch Hallway - Stalfos 3"
               position: { x: 0x18, y: 0x11, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 - "AntifairyCircle"
                 - "BigSpikeTrap"
@@ -37,7 +37,7 @@ rooms:
                 - "Bumper"
             - name: "Thieves' Town - Torch Hallway - Stalfos 4"
               position: { x: 0x16, y: 0x16, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 - "RollerVU"
                 - "RollerVD"
@@ -123,7 +123,7 @@ rooms:
               sprite: "ZazakBlue"
             - name: "Thieves' Town - Toilet - Stalfos 1"
               position: { x: 0x0c, y: 0x05, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Thieves' Town - Toilet - Spike Trap 1"
               position: { x: 0x08, y: 0x06, z: 0x00 }
               sprite: "SpikeTrap"

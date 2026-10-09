@@ -61,7 +61,7 @@ rooms:
                 - "StatueAlternative"
             - name: "Swamp Palace - East Moat - Stalfos 3"
               position: { x: 0x17, y: 0x17, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               deny:
                 # Statues seem to mess with the push switch
                 - "Statue"
@@ -127,14 +127,14 @@ rooms:
           mobs:
             - name: "Swamp Palace - Hammer Switch - Stalfos 1"
               position: { x: 0x05, y: 0x06, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               deny:
                 # Statues seem to mess with the push switch
                 - "Statue"
                 - "StatueAlternative"
             - name: "Swamp Palace - Hammer Switch - Stalfos 2"
               position: { x: 0x0c, y: 0x09, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 # Statues seem to mess with the push switch
                 - "Statue"

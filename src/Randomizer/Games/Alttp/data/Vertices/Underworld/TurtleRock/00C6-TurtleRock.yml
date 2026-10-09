@@ -51,7 +51,7 @@ rooms:
           mobs:
             - name: "Turtle Rock - Lobby - Stalfos 1"
               position: { x: 0x0b, y: 0x04, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
 
         - name: "Turtle Rock - Lobby NNE"
           pit: true
@@ -63,7 +63,7 @@ rooms:
           mobs:
             - name: "Turtle Rock - Lobby - Stalfos 2"
               position: { x: 0x15, y: 0x04, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
 
         - name: "Turtle Rock - Lobby ENE"
           pit: true

@@ -97,7 +97,7 @@ rooms:
               allow: ["CrystalSwitch"]
             - name: "Ganon's Tower - Bonk Pits - Stalfos"
               position: { x: 0x07, y: 0x18, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
 
         # Only accessible from the switch area, used to allow transitioning as orange
         # to the bottom area

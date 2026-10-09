@@ -49,22 +49,22 @@ maps:
           mobs:
             - name: "West Death Mountain - Tektite 1"
               position: { x: 0x10, y: 0x1a }
-              sprite: "Tektite"
+              sprite: "BlueTektite"
               state: [2]
 
             - name: "West Death Mountain - Tektite 2"
               position: { x: 0x1a, y: 0x1e }
-              sprite: "Tektite"
+              sprite: "BlueTektite"
               state: [2]
 
             - name: "West Death Mountain - Tektite 3"
               position: { x: 0x2c, y: 0x15 }
-              sprite: "Tektite"
+              sprite: "BlueTektite"
               state: [2]
 
             - name: "West Death Mountain - Tektite 4"
               position: { x: 0x28, y: 0x19 }
-              sprite: "Tektite"
+              sprite: "BlueTektite"
               state: [2]
 
             - name: "West Death Mountain - Boulders"

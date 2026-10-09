@@ -65,10 +65,10 @@ rooms:
                 - "CrystalSwitch"
             - name: "Tower Of Hera - Basement Corner - Stalfos 2"
               position: { x: 0x19, y: 0x18, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Tower Of Hera - Basement Corner - Stalfos 4"
               position: { x: 0x15, y: 0x1c, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
 
         - name: "Tower Of Hera - Moldorm Cage"
           connections:
@@ -89,10 +89,10 @@ rooms:
                 - "Key"
             - name: "Tower Of Hera - Basement Cage - Stalfos 1"
               position: { x: 0x0b, y: 0x17, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Tower Of Hera - Basement Cage - Stalfos 3"
               position: { x: 0x04, y: 0x19, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Tower Of Hera - Basement Cage - Mini Moldorm 4"
               position: { x: 0x06, y: 0x19, z: 0x00 }
               sprite: "MiniMoldorm"

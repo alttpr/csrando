@@ -52,11 +52,11 @@ maps:
           mobs:
             - name: "East Death Mountain Summit - Tektite 3"
               position: { x: 0x1e, y: 0x31 }
-              sprite: "Tektite"
+              sprite: "BlueTektite"
               state: [1, 2]
             - name: "East Death Mountain Summit - Tektite 4"
               position: { x: 0x35, y: 0x2a }
-              sprite: "Tektite"
+              sprite: "RedTektite"
               state: [1, 2]
             - name: "East Death Mountain Summit - Deadrock 4"
               position: { x: 0x2a, y: 0x2f }
@@ -64,7 +64,7 @@ maps:
               state: [1, 2]
             - name: "East Death Mountain Summit - Tektite 5"
               position: { x: 0x2f, y: 0x2f }
-              sprite: "Tektite"
+              sprite: "RedTektite"
               state: [1, 2]
             - name: "East Death Mountain Summit - Deadrock 5"
               position: { x: 0x29, y: 0x36 }
@@ -110,7 +110,7 @@ maps:
               state: [2]
             - name: "East Death Mountain Summit - Tektite 6"
               position: { x: 0x08, y: 0x0d }
-              sprite: "Tektite"
+              sprite: "BlueTektite"
               state: [2]
             - name: "East Death Mountain Summit - Deadrock 1"
               position: { x: 0x1e, y: 0x0e }
@@ -118,7 +118,7 @@ maps:
               state: [1, 2]
             - name: "East Death Mountain Summit - Tektite 1"
               position: { x: 0x1f, y: 0x0f }
-              sprite: "Tektite"
+              sprite: "RedTektite"
               state: [1, 2]
             - name: "East Death Mountain Summit - Deadrock 2"
               position: { x: 0x35, y: 0x0d }
@@ -126,7 +126,7 @@ maps:
               state: [1, 2]
             - name: "East Death Mountain Summit - Tektite 2"
               position: { x: 0x29, y: 0x0f }
-              sprite: "Tektite"
+              sprite: "RedTektite"
               state: [1, 2]
             - name: "East Death Mountain Summit - Deadrock 3"
               position: { x: 0x35, y: 0x0f }

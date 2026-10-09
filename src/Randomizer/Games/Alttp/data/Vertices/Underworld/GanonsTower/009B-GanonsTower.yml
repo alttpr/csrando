@@ -118,11 +118,11 @@ rooms:
           mobs:
             - name: "Ganon's Tower - Beetle Pits - Hardhat Beetle 1"
               position: { x: 0x17, y: 0x1a, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"
 
             - name: "Ganon's Tower - Beetle Pits - Hardhat Beetle 2"
               position: { x: 0x13, y: 0x1b, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"
 
         # TODO: Do we want any logic to get back to the left side to kill enemies? Boots only
         - name: "Ganon's Tower - Beetle Pits Right"

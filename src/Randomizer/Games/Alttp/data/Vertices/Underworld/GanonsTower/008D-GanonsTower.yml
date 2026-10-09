@@ -76,7 +76,7 @@ rooms:
                 - "Bumper"
             - name: "Ganon's Tower - Long Torch Puzzle - Stalfos"
               position: { x: 0x17, y: 0x14, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               deny:
                 - "RollerVD"
                 - "RollerHL"

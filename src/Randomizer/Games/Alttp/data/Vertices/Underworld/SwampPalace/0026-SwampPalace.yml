@@ -69,10 +69,10 @@ rooms:
               sprite: "RedBari"
             - name: "Swamp Palace - Forgotten Room - Stalfos 1"
               position: { x: 0x09, y: 0x06, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Swamp Palace - Forgotten Room - Stalfos 2"
               position: { x: 0x04, y: 0x09, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Swamp Palace - Forgotten Room - Medusa 2"
               position: { x: 0x0c, y: 0x0c, z: 0x00 }
               sprite: "Medusa"

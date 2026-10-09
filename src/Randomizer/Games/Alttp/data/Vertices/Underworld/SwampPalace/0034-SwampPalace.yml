@@ -75,7 +75,7 @@ rooms:
               sprite: "BlueBari"
             - name: "Swamp Palace - West Wing - Stalfos"
               position: { x: 0x16, y: 0x1a, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
 
         - name: "Swamp Palace - West Wing Left Ledge"
           connections:

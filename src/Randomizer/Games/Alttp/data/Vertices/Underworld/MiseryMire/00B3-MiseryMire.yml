@@ -30,7 +30,7 @@ rooms:
           mobs:
             - name: "Misery Mire - Spike Room - Stalfos 1"
               position: { x: 0x03, y: 0x15, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
               deny:
                 - "RollerVU"
                 - "RollerHR"
@@ -38,7 +38,7 @@ rooms:
                 - "SpikeTrap"
             - name: "Misery Mire - Spike Room - Stalfos 2"
               position: { x: 0x0b, y: 0x15, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Misery Mire - Spike Room - Beamos"
               position: { x: 0x06, y: 0x18, z: 0x00 }
               sprite: "Beamos"
@@ -61,7 +61,7 @@ rooms:
                 - "Bumper"
             - name: "Misery Mire - Spike Room - Stalfos 3"
               position: { x: 0x07, y: 0x1c, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
 
         - name: "Misery Mire - Mesh Bridge"
           connections:

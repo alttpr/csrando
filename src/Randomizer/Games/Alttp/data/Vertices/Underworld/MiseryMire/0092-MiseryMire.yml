@@ -109,7 +109,7 @@ rooms:
               sprite: "ZoroSpawner"
             - name: "Misery Mire - Air Lock - Stalfos"
               position: { x: 0x0a, y: 0x16, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 - "RollerHL"
 

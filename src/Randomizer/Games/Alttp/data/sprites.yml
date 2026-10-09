@@ -268,18 +268,17 @@ TalkingTree: #TALKING TREE
   sheets: [null, null, null, 0x15]
   properties: TalkingTree_properties
   weight: 3
-# TODO we need to add asm to handle this by subtype
 BlueHardhatBeetle: #HARDHAT BEETLE
   id: 0x26
   flags: Challenge
   sheets: [null, 0x1E, null, null]
-  subtype: 0
+  subtype: 0x00
   properties: BlueHardhatBeetle_properties
 RedHardhatBeetle: #HARDHAT BEETLE
   id: 0x26
   flags: Challenge
   sheets: [null, 0x1E, null, null]
-  subtype: 1
+  subtype: 0x01
   properties: RedHardhatBeetle_properties
 Deadrock:
   id: 0x27
@@ -568,7 +567,7 @@ RedJavelinGuard: #RED JAVELIN GUARD
   id: 0x48
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  properties: 
+  properties: RedJavelinGuard_properties
 RedJavelinGuard2: #RED BUSH GUARD
   id: 0x49
   flags: Challenge
@@ -759,12 +758,12 @@ BallNChainTrooper: #BALL N CHAIN
   id: 0x6A
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  properties: 
+  properties: BallNChainTrooper_properties
 CannonGuard: #CANNONBALL / CANNON TROOPER
   id: 0x6B
   flags: Challenge
   sheets: [0x46, 0x49, null, null]
-  properties: BallNChainTrooper_properties
+  properties: CannonGuard_properties
   weight: 2
 MirrorPortal: #MIRROR PORTAL
   id: 0x6C
@@ -774,13 +773,13 @@ Rat: #RAT / CRICKET
   id: 0x6D
   flags: Challenge
   sheets: [null, null, 0x1C, null]
-  properties: 
+  properties: Rat_properties
 Buzz: #BUZZ / CRICKET
   alternative: Rat
   id: 0x6D
   flags: Challenge
   sheets: [null, null, 0x24, null]
-  properties: 
+  properties: Buzz_properties
 Rope: #ROPE
   id: 0x6E
   flags: Challenge
@@ -817,7 +816,7 @@ PondActivation: #FAIRY POND TRIGGER
   id: 0x72
   flags: NoPlace
   sheets: [null, null, null, 0x36]
-  properties: 
+  properties: PondActivation_properties
 Uncle: #UNCLE / PRIEST / MANTLE
   id: 0x73
   flags: NoPlace
@@ -899,7 +898,7 @@ AntifairyCircle: #ANTIFAIRY CIRCLE
   id: 0x82
   flags: NoDrop
   sheets: [null, null, null, 0x52]
-  properties: 
+  properties: AntifairyCircle_properties
   weight: 4
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   id: 0x83
@@ -1122,11 +1121,18 @@ ZazakRed: #RED ZAZAK
   flags: Challenge
   sheets: [null, null, 0x28, null]
   properties: ZazakRed_properties
-Stalfos:
+BlueStalfos:
   id: 0xA7
   flags: Challenge
+  subtype: 0x00
   sheets: [0x1F, null, null, null]
-  properties: Stalfos_properties
+  properties: BlueStalfos_properties
+RedStalfos:
+  id: 0xA7
+  flags: Challenge
+  subtype: 0x01
+  sheets: [0x1F, null, null, null]
+  properties: RedStalfos_properties
 ZirroGreen: #GREEN ZIRRO
   id: 0xA8
   flags: Challenge, NoDrop
@@ -1493,7 +1499,7 @@ SomariaPlatform: #SOMARIA PLATFORM
 Mantle: #CASTLE MANTLE
   id: 0xEE
   sheets: [0x5D, null, null, null]
-  properties: 
+  properties: Mantle_properties
   flags: NoPlace
 SomariaPlatform1: #UNUSED SOMARIA PLATFORM
   id: 0xEF

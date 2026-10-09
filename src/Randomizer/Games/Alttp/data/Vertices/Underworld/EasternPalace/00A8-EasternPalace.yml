@@ -12,19 +12,19 @@ rooms:
           mobs:
             - name: "Eastern Palace - West Wing - Top - Stalfos 1"
               position: { x: 0x16, y: 0x0e, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Eastern Palace - West Wing - Top - Stalfos 2"
               position: { x: 0x1a, y: 0x0e, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 - "RollerVU"
                 - "RollerHL"
             - name: "Eastern Palace - West Wing - Top - Stalfos 3"
               position: { x: 0x16, y: 0x12, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Eastern Palace - West Wing - Top - Stalfos 4"
               position: { x: 0x1a, y: 0x12, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
               deny:
                 - "RollerVD"
                 - "RollerHL"

@@ -78,10 +78,10 @@ rooms:
               sprite: "Medusa"
             - name: "Misery Mire - Fish Room - blue - Stalfos 1"
               position: { x: 0x15, y: 0x19, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Misery Mire - Fish Room - blue - Bunny Beam"
               position: { x: 0x17, y: 0x19, z: 0x00 }
               sprite: "BunnyBeam"
             - name: "Misery Mire - Fish Room - blue - Stalfos 2"
               position: { x: 0x1b, y: 0x19, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"

@@ -22,10 +22,10 @@ rooms:
               sprite: "SparkCW"
             - name: "Ganon's Tower - Torch Room - Stalfos 1"
               position: { x: 0x0b, y: 0x09, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Ganon's Tower - Torch Room - Stalfos 2"
               position: { x: 0x03, y: 0x0b, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Ganon's Tower - Torch Room - Dash Item"
               position: { x: 0x09, y: 0x07, z: 0x00 }
               sprite: "DashItem"

@@ -65,11 +65,11 @@ rooms:
 
             - name: "Tower Of Hera - Bumper Room - Hardhat Beetle 1"
               position: { x: 0x15, y: 0x07, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"
 
             - name: "Tower Of Hera - Bumper Room - Hardhat Beetle 2"
               position: { x: 0x0b, y: 0x09, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"
 
             - name: "Tower Of Hera - Bumper Room - Fire Bar (Clockwise)"
               position: { x: 0x06, y: 0x11, z: 0x00 }
@@ -82,12 +82,12 @@ rooms:
 
             - name: "Tower Of Hera - Bumper Room - Hardhat Beetle 3"
               position: { x: 0x12, y: 0x11, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "RedHardhatBeetle"
 
             - name: "Tower Of Hera - Bumper Room - Hardhat Beetle 4"
               position: { x: 0x0b, y: 0x17, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"
 
             - name: "Tower Of Hera - Bumper Room - Hardhat Beetle 5"
               position: { x: 0x17, y: 0x17, z: 0x00 }
-              sprite: "HardhatBeetle"
+              sprite: "BlueHardhatBeetle"

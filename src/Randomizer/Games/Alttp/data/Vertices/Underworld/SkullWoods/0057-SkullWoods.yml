@@ -37,7 +37,7 @@ rooms:
               sprite: "Gibdo"
             - name: "Skull Woods - Pot Prison Room - Stalfos 3"
               position: { x: 0x15, y: 0x15, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Skull Woods - Pot Prison Room - Gibdo 6"
               position: { x: 0x13, y: 0x17, z: 0x00 }
               sprite: "Gibdo"
@@ -131,10 +131,10 @@ rooms:
                 - "Bumper"
             - name: "Skull Woods - Big Key Room - Stalfos 1"
               position: { x: 0x04, y: 0x07, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "BlueStalfos"
             - name: "Skull Woods - Big Key Room - Stalfos 2"
               position: { x: 0x03, y: 0x0c, z: 0x00 }
-              sprite: "Stalfos"
+              sprite: "RedStalfos"
             - name: "Skull Woods - Big Key Room - Gibdo 1"
               position: { x: 0x0c, y: 0x0c, z: 0x00 }
               sprite: "Gibdo"
