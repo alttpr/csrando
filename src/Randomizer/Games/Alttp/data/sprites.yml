@@ -1325,11 +1325,13 @@ FairyBig: #BIG FAIRY
 # TODO we don't have a way to differentiate them by color, since it's decided by coordinate...
 BlueTektite: #TEKTITE / FIREBAT
   id: 0xC9
+  subtpe: 0x00
   flags: Challenge
   sheets: [null, null, null, 0x10]
   properties: BlueTektite_properties
 RedTektite: #TEKTITE / FIREBAT
   id: 0xC9
+  subtpe: 0x01
   flags: Challenge
   sheets: [null, null, null, 0x10]
   properties: RedTektite_properties

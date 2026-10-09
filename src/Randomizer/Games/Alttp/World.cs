@@ -69,6 +69,7 @@ public sealed class World : World<Item>, IPortalHost
             new DarknessGraphifier(),
             // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
             // (and placing bosses in their respective rooms already)
+            new EnemyStatRandomizer(),
             new BossShuffler(),
             new EnemyShuffler(),
             new BunnyGraphifier(),
