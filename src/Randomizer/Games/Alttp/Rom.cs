@@ -329,6 +329,11 @@ public sealed class Rom : GameRom
     public void SetSmithyFreeTravel(bool enable = false)
         => Write((SNES)0xB0804C, [(byte)(enable ? 0x01 : 0x00)]);
 
+    public void SetOldManRespawnBehavior(OldManRespawnOption option)
+    {
+        Write((SNES) 0xB0F033, [(byte) option]);
+    }
+
     /// <summary>Set Programmable 1 item.</summary>
     public void SetProgrammable1(string custom)
     {

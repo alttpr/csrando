@@ -100,6 +100,10 @@ public class Config
         _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
+
+
+
+
     [Category("Goal")]
     [ValueRange(1, 150, Default = 50)]
     [DependsOn(nameof(Goal), GoalOption.TriforceHunt, GoalOption.Trifecta)]
@@ -188,6 +192,9 @@ public class Config
     [DependsOn(nameof(State), StateOption.Standard)]
     [Description("Provides unlimited magic, arrows or bombs during escape if Uncle gives you a weapon requiring resources.")]
     public bool EscapeAssist { get; init; } = false;
+
+    public OldManRespawnOption OldManRespawn { get; init; } = OldManRespawnOption.Vanilla;
+
     public bool PseudoBoots { get; init; } = false;
     [Ignore("Is there even a reason to turn this off?")]
     public bool FastRom { get; init; } = true;
@@ -276,6 +283,8 @@ public enum TechOption
 {
     DungeonBunnyRevival,
 }
+public enum OldManRespawnOption { Vanilla = 0x00, SpawnSelect2 = 0x01, SpawnSelect3 = 0x02 };
+
 public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
 public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
 public enum BossShuffleOption { None, Simple, Full, Random }
