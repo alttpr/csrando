@@ -355,7 +355,10 @@ public class StatefulSearcher : ISearcher
                 }
                 else if (_capturePath && _recordedUnlocks.Contains(current)
                     && _predecessors[current] != null)
+                {
                     unlockRecordedOnIncoming = true;
+                }
+
                 if (current.Node!.NodeType == "door")
                 {
                     state = state.WithDoorUnlocked(current.NodeId);
@@ -401,9 +404,11 @@ public class StatefulSearcher : ISearcher
                 }
 
                 if (_capturePath && current.Item != null)
+                {
                     _pickupDetails.TryAdd((current, current.Item),
                         new StatefulPickup(current.Item, unlockStrategy,
                             unlockRequirements!, unlockResources!));
+                }
 
                 if (current.Item != null && !ReferenceEquals(current.Item, _excludedPickup)
                     && _collectItemAt(current))
@@ -942,19 +947,23 @@ public class StatefulSearcher : ISearcher
         foreach (var location in _visitedItemLocations.Keys)
         {
             if (location.Item != null)
+            {
                 yield return (location, _pickupDetails.GetValueOrDefault(
                     (location, location.Item),
                     new StatefulPickup(location.Item, null, new Dictionary<IItem, int>(),
                         new Dictionary<string, int>())));
+            }
         }
 
         foreach (var ((location, item), _) in _prevItems)
         {
             if (!ReferenceEquals(location.Item, item))
+            {
                 yield return (location, _pickupDetails.GetValueOrDefault(
                     (location, item),
                     new StatefulPickup(item, null, new Dictionary<IItem, int>(),
                         new Dictionary<string, int>())));
+            }
         }
     }
 }

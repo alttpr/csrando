@@ -1730,7 +1730,10 @@ public sealed class FreeSpaceManager
                 prev.End = Math.Max(prev.End, cur.End);
                 list.RemoveAt(i);
             }
-            else i++;
+            else
+            {
+                i++;
+            }
         }
     }
 }

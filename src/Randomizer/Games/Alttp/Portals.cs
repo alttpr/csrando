@@ -84,8 +84,10 @@ public static class Portals
 
         int destination = destinationId ?? AllocateDestinationId(world);
         if (destination is < 0x0200 or > LastDestinationId)
+        {
             throw new ArgumentOutOfRangeException(nameof(destinationId),
                 $"Destination id 0x{destination:X4} outside the RoomToOutlet extension rows");
+        }
 
         var anchor = PortalAnchor.Alttp(entranceName,
             (uint)roomId,

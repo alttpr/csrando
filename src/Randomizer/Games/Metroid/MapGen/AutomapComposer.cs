@@ -122,13 +122,19 @@ public sealed class AutomapTiles
         // snapshot and the composer disagree and the payload would be garbage.
         if (file.RomMap.Width != WorldGrid.Size || file.RomMap.Height != WorldGrid.Size
             || file.RomMap.EntryBytes != 2 || BytesPerArea != WorldGrid.Size * WorldGrid.Size * 2)
+        {
             throw new InvalidDataException("m1_map_tiles.json map dimensions do not match the 32x32 word grid");
+        }
 
         AreaCount = file.RomMap.AreaOrder.Count;
         for (int i = 0; i < AreaCount; i++)
+        {
             if (!Enum.TryParse<Area>(file.RomMap.AreaOrder[i], out var area) || (int)area != i)
+            {
                 throw new InvalidDataException(
                     $"m1_map_tiles.json area order '{file.RomMap.AreaOrder[i]}' does not match Area enum index {i}");
+            }
+        }
 
         NorthBit = file.ConnectionBits.North;
         EastBit = file.ConnectionBits.East;
@@ -384,8 +390,11 @@ public static class AutomapComposer
     {
         uint hash = 2166136261u;
         foreach (var buffer in buffers)
+        {
             foreach (byte b in buffer)
                 hash = (hash ^ b) * 16777619u;
+        }
+
         return hash;
     }
 }

@@ -284,8 +284,10 @@ internal class DungeonBuilder
         {
             Rooms = new Room[width, height];
             for (int x = 0; x < width; x++)
+            {
                 for (int y = 0; y < height; y++)
                     Rooms[x, y] = new Room { X = x, Y = y };
+            }
         }
 
         public IEnumerable<Room> AllRooms => Rooms.Cast<Room>();
@@ -661,8 +663,11 @@ internal class DungeonBuilder
     private static int GetItemPositionSlot(IReadOnlyList<int> slots, YamlReader.Screen? screen)
     {
         for (int i = 0; i < slots.Count; i++)
+        {
             if (IsValidItemPosition(screen, slots[i]))
                 return i;
+        }
+
         throw new Exception($"No valid item position slot for screen {screen?.screen:X2}");
     }
 
@@ -1059,7 +1064,9 @@ internal class DungeonBuilder
             foreach (var dir in checkRoom.Doors.Keys.ToList())
             {
                 if (dir == "S")
+                {
                     checkRoom.Doors[dir] = YamlReader.DoorType.Open;
+                }
                 else
                 {
                     checkRoom.Doors[dir] = YamlReader.DoorType.Shutter;
@@ -1236,8 +1243,10 @@ internal class DungeonBuilder
         // so DataLoader retries with a fresh layout instead of failing globally during item
         // placement. (Small configs like Minimal can run out of eligible rooms on unlucky seeds.)
         if (itemsPlaced < requiredItems)
+        {
             throw new InvalidOperationException(
                 $"Level {_level}: only {itemsPlaced} item rooms could be placed, but the item pool needs {requiredItems}.");
+        }
     }
 
     // Early places the Map within roughly this fraction of the dungeon's depth (BFS radius) from
@@ -1899,10 +1908,14 @@ internal class DungeonBuilder
 
                     double modifier = 0.0;
                     if (onCritical)
+                    {
                         modifier = -0.2;
+                    }
                     else if (criticalPathDistances.TryGetValue(room, out int distRoom) &&
                              criticalPathDistances.TryGetValue(neighbor, out int distNeighbor))
+                    {
                         modifier = (distRoom + distNeighbor) * 0.05;
+                    }
 
                     double nonOpen = Math.Clamp(baseNonOpen + modifier, 0.05, 0.90);
                     double lockedProb = nonOpen * lockedShare;
@@ -2540,7 +2553,9 @@ internal class DungeonBuilder
         // otherwise the walled-off middle (and its item/enemies) is unreachable.
         if (BlockedPassageScreenDoors.TryGetValue(screen.screen, out var passageDoors)
             && !passageDoors.Any(directions.Contains))
+        {
             return false;
+        }
 
         // A dead-end room (single connection) is only usable on a screen that lets you enter
         // and leave through that same edge. Without this check, push-style screens (which only

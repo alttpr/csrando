@@ -144,13 +144,17 @@ public sealed class World : World<Item>
 
             var exit = fromWorld.GetLocation(fromAnchor.ExitVertexName);
             if (!ReferenceEquals(exit, from))
+            {
                 throw new Exception(
                     $"Cross-game edge '{from.Name}' -> '{to.Name}' does not start at portal exit vertex '{exit.Name}'");
+            }
 
             var entry = toWorld.GetLocation(toAnchor.EntryVertexName);
             if (!ReferenceEquals(entry, to))
+            {
                 throw new Exception(
                     $"Cross-game edge '{from.Name}' -> '{to.Name}' does not lead to portal entry vertex '{entry.Name}'");
+            }
 
             edges.Add(new PortalEdge(fromAnchor, toAnchor));
         }

@@ -122,18 +122,24 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         {
             var viable = stations.Where(IsViableStart).ToList();
             if (viable.Count == 0)
+            {
                 throw new InvalidOperationException(
                     "No save station is a viable start under the current logic and map");
+            }
+
             return prng.GetRandomElement(viable);
         }
 
         var station = stations.Find(s => s.RoomName == Config.StartLocation)
             ?? throw new ArgumentException($"Unknown Super Metroid start location '{Config.StartLocation}'");
         if (!IsViableStart(station))
+        {
             throw new ArgumentException(
                 $"Start location '{station.RoomName}' cannot reach an item location (and, in combo seeds, "
                 + $"a cross-game portal) with an empty inventory under {Config.Logic} logic, "
                 + "so no seed from it can be filled");
+        }
+
         return station;
     }
 

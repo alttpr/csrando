@@ -435,8 +435,11 @@ public class RequirementHandler
                 // If we get here, we can kill at least one enemy in each group
                 var enemyKillResult = RequirementResult.Success(RequirementCost.ZeroCost);
                 foreach (var weapon in usedWeapons)
+                {
                     enemyKillResult.MergeSuccess(HandleRequirement(
                         weapon.UseRequires, state, inventory, world, weapons));
+                }
+
                 return enemyKillResult;
 
 
@@ -761,8 +764,10 @@ public class RequirementHandler
                 {
                     var (item, count) = RequiredExpansion(c.Type, c.Count);
                     if (count > 0)
+                    {
                         capacityResult.UsedItems[item] = Math.Max(
                             capacityResult.UsedItems.GetValueOrDefault(item), count);
+                    }
                 }
                 return capacityResult;
 

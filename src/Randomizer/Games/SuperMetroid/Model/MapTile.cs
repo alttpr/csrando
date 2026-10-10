@@ -457,17 +457,23 @@ namespace Randomizer.Games.SuperMetroid.Model
             // H mirror
             if (d.Sym.HasFlag(Symmetry.H) &&
                 Matches(d.L, a.R) && Matches(d.R, a.L) && Matches(d.T, a.T) && Matches(d.B, a.B))
+            {
                 return Resolve(d, g, HFlip, out tileValue);
+            }
 
             // V mirror
             if (d.Sym.HasFlag(Symmetry.V) &&
                 Matches(d.L, a.L) && Matches(d.R, a.R) && Matches(d.T, a.B) && Matches(d.B, a.T))
+            {
                 return Resolve(d, g, VFlip, out tileValue);
+            }
 
             // H+V
             if (d.Sym.HasFlag(Symmetry.H) && d.Sym.HasFlag(Symmetry.V) &&
                 Matches(d.L, a.R) && Matches(d.R, a.L) && Matches(d.T, a.B) && Matches(d.B, a.T))
+            {
                 return Resolve(d, g, (ushort)(HFlip | VFlip), out tileValue);
+            }
 
             return false;
         }

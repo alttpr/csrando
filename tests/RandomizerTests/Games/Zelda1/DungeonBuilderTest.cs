@@ -341,11 +341,15 @@ public sealed class DungeonBuilderTest
                     bool Open(int i) => (YamlReader.DoorType)room.doors[i] != YamlReader.DoorType.Wall;
 
                     if (room.screen == 0x0E)
+                    {
                         Assert.IsTrue(Open(0) || Open(1),
                             $"Seed {seed} L{level} room {room.local_room_id:X2}: screen 0x0E needs a N/S door to reach its central passage.");
+                    }
                     else if (room.screen == 0x0F)
+                    {
                         Assert.IsTrue(Open(2) || Open(3),
                             $"Seed {seed} L{level} room {room.local_room_id:X2}: screen 0x0F needs a W/E door to reach its central passage.");
+                    }
                 }
             }
         }
@@ -744,11 +748,13 @@ public sealed class DungeonBuilderTest
 
             // Connected rooms can also reach each other through this cellar
             for (int i = 0; i < connections.Count; i++)
+            {
                 for (int j = i + 1; j < connections.Count; j++)
                 {
                     adjacency[connections[i]].Add(connections[j]);
                     adjacency[connections[j]].Add(connections[i]);
                 }
+            }
         }
 
         // BFS from start room
@@ -957,18 +963,23 @@ public sealed class DungeonBuilderTest
         var adjacency = rooms.ToDictionary(r => (r.X, r.Y), _ => new HashSet<(int, int)>());
 
         foreach (var room in rooms.Where(r => !r.Roles.Contains("Cellar")))
+        {
             foreach (var (dir, doorType) in room.Doors)
             {
                 if (blocked.Contains(doorType) || !DoorOffsets.TryGetValue(dir, out var off)) continue;
                 var n = (room.X + off.dx, room.Y + off.dy);
                 if (roomByPos.ContainsKey(n)) adjacency[(room.X, room.Y)].Add(n);
             }
+        }
+
         foreach (var cellar in rooms.Where(r => r.Roles.Contains("Cellar") && r.ConnectedTo != null))
+        {
             foreach (var c in cellar.ConnectedTo!.Select(c => (c[0], c[1])))
             {
                 adjacency[(cellar.X, cellar.Y)].Add(c);
                 adjacency[c].Add((cellar.X, cellar.Y));
             }
+        }
 
         var start = rooms.First(r => r.Roles.Contains("Start"));
         var dist = new Dictionary<(int, int), int> { [(start.X, start.Y)] = 0 };
@@ -1059,14 +1070,18 @@ public sealed class DungeonBuilderTest
                 var tagged = rooms.Where(r => r.Roles.Contains("MapEarly")).ToList();
 
                 if (itemRooms.Any(Free))
+                {
                     Assert.IsTrue(tagged.Any(Free),
                         $"L{level} seed {seed} ({placement}): a bomb/key-free item room exists, so at least one " +
                         "tagged MapEarly room must be bomb/key-free (a reachable home for the Map).");
+                }
 
                 if (bandCandidates.Any(Free))
+                {
                     Assert.IsTrue(tagged.All(Free),
                         $"L{level} seed {seed} ({placement}): the entrance band has a bomb/key-free room, so no " +
                         "tagged MapEarly room should be gated behind a bombable wall or locked door.");
+                }
             }
         }
     }

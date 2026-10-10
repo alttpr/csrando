@@ -107,8 +107,10 @@ public sealed class PortalTests
             "Brinstar - Construction Zone - Right Door",
         ];
         foreach (var doorName in preopenedDoors)
+        {
             Assert.AreEqual("blue", ((Randomizer.Games.SuperMetroid.Vertex)world.SMWorld!.GetLocation(doorName)).Node!.NodeSubType,
                 $"{doorName} should be blue in logic");
+        }
     }
 
     [TestMethod]
@@ -447,8 +449,10 @@ public sealed class PortalTests
             // M1's portal rooms are physical map content, always all built so the
             // layout can reassign endpoints when a partner game is missing.
             if (m1)
+            {
                 Assert.AreEqual(Randomizer.Games.Metroid.DataLoader.PortalRoomAreas.Length,
                     world.M1World!.PortalRooms.Count, $"alttp={alttp} sm={sm} z1={z1}: m1 portal rooms");
+            }
 
             // Anchors exist only because an edge needed them: every materialized anchor
             // participates in at least one portal edge.
@@ -461,8 +465,10 @@ public sealed class PortalTests
                 .. world.M1World?.PortalAnchors ?? [],
             ];
             foreach (var anchor in all)
+            {
                 Assert.IsTrue(connected.Contains(anchor),
                     $"alttp={alttp} sm={sm} z1={z1} m1={m1}: anchor '{anchor.Name}' materialized without an edge");
+            }
 
             foreach (var edge in portalEdges)
                 Assert.AreNotEqual(edge.From.GameId, edge.To.GameId, "portal edge does not cross games");
@@ -492,8 +498,10 @@ public sealed class PortalTests
             var presentGames = PresentGames(alttp, sm, z1, m1);
 
             foreach (var expected in GamePairs(presentGames))
+            {
                 Assert.IsTrue(portalEdges.Any(edge => SameGamePair(edge, expected)),
                     $"alttp={alttp} sm={sm} z1={z1} m1={m1}: missing {expected.A}<->{expected.B} portal");
+            }
 
             var anchors = new List<PortalAnchor>();
             foreach (var anchor in portalEdges.SelectMany(edge => new[] { edge.From, edge.To }))

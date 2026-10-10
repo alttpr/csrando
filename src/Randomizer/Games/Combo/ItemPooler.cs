@@ -110,8 +110,11 @@ internal sealed class ItemPooler : IItemPooler
                 {
                     int pick = 0;
                     for (int i = 1; i < left.Length; i++)
+                    {
                         if (left[i] > left[pick])
                             pick = i;
+                    }
+
                     if (left[pick] <= 0)
                         break;
                     left[pick]--;
