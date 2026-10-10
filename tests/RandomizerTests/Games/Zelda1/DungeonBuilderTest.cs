@@ -704,7 +704,10 @@ public sealed class DungeonBuilderTest
         // Door-based connections (non-cellar rooms)
         var dirOffsets = new Dictionary<string, (int dx, int dy)>
         {
-            ["N"] = (0, -1), ["S"] = (0, 1), ["W"] = (-1, 0), ["E"] = (1, 0)
+            ["N"] = (0, -1),
+            ["S"] = (0, 1),
+            ["W"] = (-1, 0),
+            ["E"] = (1, 0)
         };
 
         foreach (var room in rooms.Where(r => !r.Roles.Contains("Cellar")))
@@ -935,7 +938,10 @@ public sealed class DungeonBuilderTest
 
     private static readonly Dictionary<string, (int dx, int dy)> DoorOffsets = new()
     {
-        ["N"] = (0, -1), ["S"] = (0, 1), ["W"] = (-1, 0), ["E"] = (1, 0)
+        ["N"] = (0, -1),
+        ["S"] = (0, 1),
+        ["W"] = (-1, 0),
+        ["E"] = (1, 0)
     };
 
     /// <summary>

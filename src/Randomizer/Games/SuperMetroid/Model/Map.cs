@@ -45,7 +45,7 @@ public class MapInfo
     public Map MapData { get; init; }
     public List<MapRoom> Rooms { get; init; }
     public List<MapConnection> Connections { get; init; }
-    
+
     public MapInfo(Map mapData, List<RoomGeometry> roomGeometries)
     {
         MapData = mapData;
@@ -69,7 +69,7 @@ public class MapInfo
             var toRoom = Rooms.First(r => r.Id == toRoomId);
             var fromDoor = fromRoom.Room.doors[fromDoorId];
             var toDoor = toRoom.Room.doors[toDoorId];
-            
+
             return new MapConnection
             {
                 FromRoomId = fromRoomId,

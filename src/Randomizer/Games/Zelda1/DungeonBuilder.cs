@@ -208,6 +208,7 @@ internal class DungeonBuilder
     [Flags]
     private enum RoomRole
     {
+#pragma warning disable format
         None           = 0,
         Start          = 1 << 0,
         End            = 1 << 1,
@@ -219,6 +220,7 @@ internal class DungeonBuilder
         LevelNineCheck = 1 << 7,
         SegmentStart   = 1 << 8,
         MapEarly       = 1 << 9,
+#pragma warning restore format
     }
 
     // Common role combinations
@@ -317,20 +319,28 @@ internal class DungeonBuilder
 
     private static string OppositeDirection(string dir) => dir switch
     {
-        "N" => "S", "S" => "N", "W" => "E", "E" => "W", _ => ""
+        "N" => "S",
+        "S" => "N",
+        "W" => "E",
+        "E" => "W",
+        _ => ""
     };
 
     private static YamlReader.Direction StringToYamlDirection(string dir) => dir switch
     {
-        "N" => YamlReader.Direction.Up, "S" => YamlReader.Direction.Down,
-        "W" => YamlReader.Direction.Left, "E" => YamlReader.Direction.Right,
+        "N" => YamlReader.Direction.Up,
+        "S" => YamlReader.Direction.Down,
+        "W" => YamlReader.Direction.Left,
+        "E" => YamlReader.Direction.Right,
         _ => throw new ArgumentException($"Invalid direction: {dir}")
     };
 
     private static string YamlDirectionToString(YamlReader.Direction dir) => dir switch
     {
-        YamlReader.Direction.Up => "N", YamlReader.Direction.Down => "S",
-        YamlReader.Direction.Left => "W", YamlReader.Direction.Right => "E",
+        YamlReader.Direction.Up => "N",
+        YamlReader.Direction.Down => "S",
+        YamlReader.Direction.Left => "W",
+        YamlReader.Direction.Right => "E",
         _ => ""
     };
 

@@ -210,7 +210,7 @@ public record RoomEnvironment
 );
 
 
-[JsonConverter(typeof(EntranceConditionConverter))] 
+[JsonConverter(typeof(EntranceConditionConverter))]
 abstract public record EntranceCondition
 {
     public record ComeInNormally() : EntranceCondition;
@@ -306,7 +306,7 @@ public class EntranceConditionConverter : JsonConverter<EntranceCondition>
                 entranceCondition.Value.GetProperty("unusableTiles").GetDecimal()),
             "comeInWithMockball" => new EntranceCondition.ComeInWithMockball(
                 entranceCondition.Value.TryGetProperty("adjacentMinTiles", out var adjacentMinTiles) ? adjacentMinTiles.GetDecimal() : null,
-                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray()).ToArray() : null),                
+                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray()).ToArray() : null),
             "comeInWithSpringBallBounce" => new EntranceCondition.ComeInWithSpringBallBounce(
                 entranceCondition.Value.GetProperty("movementType").GetString() ?? "",
                 entranceCondition.Value.TryGetProperty("adjacentMinTiles", out var adjacentMinTiles) ? adjacentMinTiles.GetDecimal() : null,

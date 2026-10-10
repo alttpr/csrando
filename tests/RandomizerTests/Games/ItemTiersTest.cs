@@ -132,20 +132,20 @@ public sealed class ItemTiersTest
         TieredItemsSetting m1 = TieredItemsSetting.Off,
         string customList = "",
         bool withZelda = false) => new()
-    {
-        Game = RandomizerTarget.Combo,
-        SuperMetroid = new SuperMetroidConfig
         {
-            TieredItems = sm,
-            CustomItemTiers = customList,
-            // SM tiered icons only exist under map randomization (DependsOn), so the
-            // setting is inert — and not validated — without it.
-            MapRandomizer = MapRandomizerSetting.Standard,
-        },
-        Metroid = new MetroidConfig { TieredItems = m1, CustomItemTiers = customList },
-        Alttp = withZelda ? new AlttpConfig() : null,
-        Zelda1 = withZelda ? new Zelda1Config() : null,
-    };
+            Game = RandomizerTarget.Combo,
+            SuperMetroid = new SuperMetroidConfig
+            {
+                TieredItems = sm,
+                CustomItemTiers = customList,
+                // SM tiered icons only exist under map randomization (DependsOn), so the
+                // setting is inert — and not validated — without it.
+                MapRandomizer = MapRandomizerSetting.Standard,
+            },
+            Metroid = new MetroidConfig { TieredItems = m1, CustomItemTiers = customList },
+            Alttp = withZelda ? new AlttpConfig() : null,
+            Zelda1 = withZelda ? new Zelda1Config() : null,
+        };
 
     [TestMethod]
     public void Validate_AllowsMetroidOnlySeeds()

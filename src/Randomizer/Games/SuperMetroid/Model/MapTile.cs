@@ -494,7 +494,7 @@ namespace Randomizer.Games.SuperMetroid.Model
                 SpecialTileType.SlopeUpCeilingLow => 0x0014 | HFlip,
                 _ => 0
             };
-           
+
             return value != 0;
         }
 
@@ -508,7 +508,7 @@ namespace Randomizer.Games.SuperMetroid.Model
             var a = (ToSet(Left), ToSet(Right), ToSet(Top), ToSet(Bottom));
             var g = Classify(Interior);
 
-            if(TryGetSlopeTileValue(SpecialType ?? 0, out var slopeVal))
+            if (TryGetSlopeTileValue(SpecialType ?? 0, out var slopeVal))
                 return slopeVal;
 
             // Highest priority first

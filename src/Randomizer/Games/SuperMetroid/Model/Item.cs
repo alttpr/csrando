@@ -1,4 +1,5 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
+
 using System.Collections.Generic;
 
 public record Item(

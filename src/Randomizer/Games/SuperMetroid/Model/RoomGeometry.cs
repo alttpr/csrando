@@ -1,4 +1,5 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
+
 public record GeometryDoor(
     string direction,
     int x,

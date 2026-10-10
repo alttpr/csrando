@@ -190,7 +190,7 @@ public class TurtleRockTest : OpenNoGlitchesLogicTests
 
         var inventory = new[] { "Hammer", "MoonPearl", "Ether", "ProgressiveSword", "OcarinaActive", "MagicMirror", "TitansMitt", "CaneOfSomaria", "KeyD7", "KeyD7" };
 
-        var searcher = randomizer.GetSearcherForInventory(world,inventory.Select(world.GetItem), world.Start);
+        var searcher = randomizer.GetSearcherForInventory(world, inventory.Select(world.GetItem), world.Start);
         Assert.AreEqual(true, searcher.GetVisited().Any(v => v.Name == "Turtle Rock - Big Key Chest"));
     }
 }

@@ -811,15 +811,15 @@ public class RequirementHandler
 
     internal static (string Item, int Count) RequiredExpansion(
         string resourceType, int resourceCount) => resourceType switch
-    {
-        "Energy" or "RegularEnergy" =>
-            ("ETank", Math.Max(0, (int)Math.Ceiling((resourceCount - 99) / 100m))),
-        "ReserveEnergy" => ("ReserveTank", (int)Math.Ceiling(resourceCount / 100m)),
-        "Missile" => ("Missile", (int)Math.Ceiling(resourceCount / 5m)),
-        "Super" => ("Super", (int)Math.Ceiling(resourceCount / 5m)),
-        "PowerBomb" => ("PowerBomb", (int)Math.Ceiling(resourceCount / 5m)),
-        _ => ("", 0),
-    };
+        {
+            "Energy" or "RegularEnergy" =>
+                ("ETank", Math.Max(0, (int)Math.Ceiling((resourceCount - 99) / 100m))),
+            "ReserveEnergy" => ("ReserveTank", (int)Math.Ceiling(resourceCount / 100m)),
+            "Missile" => ("Missile", (int)Math.Ceiling(resourceCount / 5m)),
+            "Super" => ("Super", (int)Math.Ceiling(resourceCount / 5m)),
+            "PowerBomb" => ("PowerBomb", (int)Math.Ceiling(resourceCount / 5m)),
+            _ => ("", 0),
+        };
 
     public static int ObstacleMaskFromArray(string[] obstacles)
     {
