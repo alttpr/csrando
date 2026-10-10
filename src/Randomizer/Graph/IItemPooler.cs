@@ -24,6 +24,6 @@ public sealed class SetLocations
             _setLocations[itemSet].Add(vertex);
         }
     }
-    
+
     public Dictionary<ItemSetName, List<Vertex>> All() => _setLocations;
 }

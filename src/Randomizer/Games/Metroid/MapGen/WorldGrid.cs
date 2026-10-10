@@ -266,7 +266,10 @@ public class WorldGrid
             bool isCap = i == extra - 1;
             var cell = new AbstractCell
             {
-                Position = p, Area = run.Area, Axis = run.Axis, Run = run,
+                Position = p,
+                Area = run.Area,
+                Axis = run.Axis,
+                Run = run,
                 Role = isCap ? CellRole.Cap : bodyRole
             };
             if (!isCap)
@@ -304,7 +307,10 @@ public class WorldGrid
             bool isCap = i == extra - 1;
             var cell = new AbstractCell
             {
-                Position = p, Area = run.Area, Axis = run.Axis, Run = run,
+                Position = p,
+                Area = run.Area,
+                Axis = run.Axis,
+                Run = run,
                 Role = isCap ? CellRole.Cap : bodyRole
             };
             if (!isCap)

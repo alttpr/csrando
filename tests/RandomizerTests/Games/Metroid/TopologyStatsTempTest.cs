@@ -44,8 +44,7 @@ public sealed class TopologyStatsTempTest
         var shaftCounts = new Dictionary<Area, List<int>>();
         var shaftLengths = new List<int>();
         var shaftDoorCoverage = new List<double>();
-        var lairElevatorDistance = new Dictionary<string, List<int>>
-            { ["Kraid"] = [], ["Ridley"] = [] };
+        var lairElevatorDistance = new Dictionary<string, List<int>> { ["Kraid"] = [], ["Ridley"] = [] };
         var lairOnEntrance = new Dictionary<string, int> { ["Kraid"] = 0, ["Ridley"] = 0 };
 
         for (int seed = 1; seed <= Seeds; seed++)

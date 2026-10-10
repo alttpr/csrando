@@ -123,7 +123,7 @@ public class MapRandomizer
 
             if (fromNode is null || toNode is null)
             {
-                if(fromRoom.Name == "Pants Room" && toRoom.Name == "Pants Room")
+                if (fromRoom.Name == "Pants Room" && toRoom.Name == "Pants Room")
                 {
                     // Don't warn about this vanilla connection
                     continue;

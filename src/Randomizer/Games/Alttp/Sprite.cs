@@ -1,4 +1,5 @@
 namespace Randomizer.Games.Alttp;
+
 public record class Sprite(string Name, byte Id)
 {
     private static readonly Lazy<Dictionary<string, Sprite>> _sprites = new(() => LoadSprites().ToDictionary(k => k.Name));

@@ -1,4 +1,5 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
+
 public record BossScenarioCollection(BossScenario[] Scenarios);
 
 public record BossScenario

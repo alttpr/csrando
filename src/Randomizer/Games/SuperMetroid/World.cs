@@ -14,7 +14,7 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
     public JsonReader JsonData { get; set; }
     public List<string> AllowedTechs { get; init; }
     public Map? Map { get; set; }
-    public MapInfo ? MapInfo { get; set; }
+    public MapInfo? MapInfo { get; set; }
     public RequirementHandler RequirementHandler { get; } = new();
 
     /// <summary>The save station the seed starts at, or null for the default start

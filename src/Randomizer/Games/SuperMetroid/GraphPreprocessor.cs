@@ -55,13 +55,13 @@ public class GraphPreprocessor
         foreach (var vtx in _graph.Vertices)
         {
             _world.Graph.AddVertex(vtx);
-            foreach(var edge in _graph.GetEdges(vtx))
+            foreach (var edge in _graph.GetEdges(vtx))
             {
                 vtx.Edges.Add(edge);
             }
         }
 
-    //// Find all doors that are not blue
+        //// Find all doors that are not blue
         //var doors = _graph.Vertices.OfType<SuperMetroid.Vertex>().Where(v => v.Node!.NodeType == "door" && v.Node!.NodeSubType != "elevator");
         //var doorData = DoorReader.ReadDoorData();
 
@@ -466,10 +466,10 @@ public class GraphPreprocessor
                 {
                     var toVtx = _graph.Vertices.First(v => v.RoomId == room.Id && v.Node!.Id == linkTo.Id);
                     var linkStrats = room.Strats.Where(s => s.Link![0] == link.From && s.Link![1] == linkTo.Id && (s.ExitCondition == null || s.ExitCondition is ExitCondition.LeaveNormally || s.ExitCondition is ExitCondition.LeaveWithRunway) &&
-                        (s.EntranceCondition == null || 
+                        (s.EntranceCondition == null ||
                          s.EntranceCondition is EntranceCondition.ComeInNormally ||
                          s.EntranceCondition is EntranceCondition.ComesThroughToilet));
-                    
+
                     if (linkStrats.Any())
                     {
                         //var optimizedStrats = linkStrats.Select(s => s with { Requires = OptimizeRequirement(s.Requires) }).Where(s => s.Requires is not Requirement.Never);
@@ -533,7 +533,7 @@ public class GraphPreprocessor
         List<Strat> toStrats = toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null).ToList();
         Requirement? unlockReq = null;
 
-        if(fromNode.NodeType == "door" && fromNode.UseImplicitDoorUnlocks == null || fromNode.UseImplicitDoorUnlocks == true)
+        if (fromNode.NodeType == "door" && fromNode.UseImplicitDoorUnlocks == null || fromNode.UseImplicitDoorUnlocks == true)
         {
             unlockReq = fromNode.NodeSubType switch
             {

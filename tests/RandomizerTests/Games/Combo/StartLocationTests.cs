@@ -33,13 +33,13 @@ public sealed class StartLocationTests
 
     private static WorldConfig CreateConfig(
         bool alttp = false, SMConfig? sm = null, M1Config? m1 = null) => new()
-    {
-        Game = RandomizerTarget.Combo,
-        Combo = new ComboConfig(),
-        Alttp = alttp ? new Z3Config() : null,
-        SuperMetroid = sm,
-        Metroid = m1,
-    };
+        {
+            Game = RandomizerTarget.Combo,
+            Combo = new ComboConfig(),
+            Alttp = alttp ? new Z3Config() : null,
+            SuperMetroid = sm,
+            Metroid = m1,
+        };
 
     private static ComboWorld CreateWorld(WorldConfig config, int seed = 42) =>
         new(0, config, new Graph(), new PRNG(seed));
