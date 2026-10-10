@@ -466,7 +466,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
             var rightCell = grid.Cell(rx, y)!;
             if (!CanAddDoor(leftCell, Direction.Right, RunKind.MultiHorizontal)
                 || !CanAddDoor(rightCell, Direction.Left, RunKind.MultiHorizontal))
+            {
                 continue;
+            }
 
             int len = rx - lx - 1;
             var cells = Enumerable.Range(lx + 1, len).Select(x => new Point(x, y));
@@ -544,7 +546,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
             if (needed.Distinct().Count() != needed.Count
                 || !needed.All(grid.CanPlace) || !grid.CanPlace(new Point(escX, escTop - 1)))
+            {
                 continue;
+            }
 
             // Gate corridor: 0x27 (left red door) west end, a right-door piece east end.
             var corrG = grid.PlaceRun(Area.Brinstar, Scrolling.Horizontal, new Point(gateX + 1, gy), gLen, CellRole.Corridor);
@@ -671,7 +675,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 if (!CanAddDoor(leftCell, Direction.Right, lenA == 1 ? RunKind.SingleCell : RunKind.MultiHorizontal)
                     || !CanAddDoor(rightCell, Direction.Left, lenB == 1 ? RunKind.SingleCell : RunKind.MultiHorizontal)
                     || !SideExists(lenA) || !SideExists(lenB))
+                {
                     continue;
+                }
 
                 int depth = Math.Min(Rand(4, 8), maxY - y + 1); // 0x18 + bodies + bottom cap
                 if (depth < 4)
@@ -740,7 +746,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
                 if (entranceCells[^1].Y > 29 || !corridorCells.All(grid.CanPlace)
                     || !grid.CanPlace(ePos) || !entranceCells.All(grid.CanPlace))
+                {
                     continue;
+                }
 
                 AbstractCell doorNeighbor = shaftCell;
                 if (needsCorridor)
@@ -777,8 +785,10 @@ public class TopologyGenerator(ScreenCatalog catalog)
     private void BuildMiniSpine(Area area, int extraShafts)
     {
         for (int n = 0; n < extraShafts; n++)
+        {
             if (!TryAddSpineShaft(area))
                 throw new GenerationException($"could not build the {area} mini spine");
+        }
     }
 
     private bool TryAddSpineShaft(Area area)
@@ -800,7 +810,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                     dir == Direction.Right ? EdgeRequirement.Wall : EdgeRequirement.Door,
                     leftNeighbor: dir == Direction.Right ? RunKind.MultiHorizontal : null,
                     rightNeighbor: dir == Direction.Left ? RunKind.MultiHorizontal : null))
+            {
                 continue;
+            }
 
             int sign = dir == Direction.Right ? 1 : -1;
             foreach (var anchor in Shuffled(ShaftsOf(area).SelectMany(InteriorCells)))
@@ -838,7 +850,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                     var all = corridorTry.Concat(column);
                     if (all.Any(p => p.X < minX || p.X > maxX || p.Y < topLimit || p.Y > bottomLimit)
                         || !all.All(grid.CanPlace))
+                    {
                         continue;
+                    }
 
                     corridorCells = corridorTry;
                     shaftCells = column;
@@ -1160,7 +1174,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (capX < 0 || westCorrStartX < minX || !needed.All(grid.CanPlace)
             || !CorridorEndExists(Area.Brinstar, Direction.Left, RunKind.MultiVertical)
             || !CorridorEndExists(Area.Brinstar, Direction.Right, RunKind.MultiVertical))
+        {
             return false;
+        }
 
         var tower = grid.PlaceRun(Area.Brinstar, Scrolling.Vertical, new Point(tx, y - 2), 3, CellRole.Shaft, capStart: true);
         tower.Cells[1].ForcedScreenId = 0x2E; // Left Door Empty Shaft: HiJump to the door
@@ -1221,7 +1237,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (!catalog.HasPiece(Area.Brinstar, Scrolling.Vertical,
                 EdgeRequirement.Scroll, EdgeRequirement.Scroll, EdgeRequirement.Wall, EdgeRequirement.Door,
                 rightNeighbor: RunKind.MultiHorizontal))
+        {
             return false;
+        }
 
         // The shaft's top cap sits one row above the door row (column < capX, so it clears the
         // chozo). Try a deep shaft first, then shorter ones so it can still squeeze into a tight
@@ -1300,7 +1318,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 var portalPos = shaftCell.Position.Step(Direction.Right);
                 if (!grid.CanPlace(portalPos) || !grid.CanPlace(portalPos.Step(Direction.Right))
                     || !CanAddDoor(shaftCell, Direction.Right, RunKind.SingleCell))
+                {
                     continue;
+                }
 
                 var portalRun = grid.PlaceRun(area, Scrolling.Horizontal, portalPos, 1, CellRole.Portal);
                 portalRun.Cells[0].ForcedScreenId = PortalScreenFor(area);
@@ -1376,9 +1396,12 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 .Select(l => l.B.Step(Direction.Down))
                 .FirstOrDefault(p => grid.Cell(p)?.Area == area);
         if (grid.Cell(root)?.Area != area && area == Area.Brinstar)
+        {
             root = grid.Links.Where(l => l.Type == LinkType.Elevator)
                 .Select(l => l.A)
                 .FirstOrDefault(p => grid.Cell(p)?.Area == Area.Brinstar);
+        }
+
         if (grid.Cell(root)?.Area != area)
             throw new GenerationException($"no entry cell for {area} depth search");
 
@@ -1396,7 +1419,10 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 var neighbor = grid.Cell(p.Step(dir));
                 if (neighbor == null || neighbor.Area != area || neighbor.Role == CellRole.Cap
                     || depths.ContainsKey(neighbor.Position))
+                {
                     continue;
+                }
+
                 depths[neighbor.Position] = depths[p] + 1;
                 queue.Enqueue(neighbor.Position);
             }
@@ -1435,7 +1461,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 if (cells[0].X < 1 || cells[^1].X > 30 || !cells.All(grid.CanPlace)
                     || !CanAddDoor(shaftCell, side, RunKind.MultiHorizontal)
                     || !CorridorEndExists(area, Directions.Opposite(side), RunKind.MultiVertical))
+                {
                     continue;
+                }
 
                 var corridor = grid.PlaceRun(area, Scrolling.Horizontal, cells[0], walk + 1, CellRole.Corridor,
                     capStart: side == Direction.Left, capEnd: side == Direction.Right);
@@ -1718,7 +1746,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
         if (!CorridorEndExists(area, Direction.Left, RunKind.MultiVertical)
             || !CorridorEndExists(area, Direction.Right, RunKind.MultiVertical))
+        {
             return;
+        }
 
         var pairKey = (Math.Min(left.Id, right.Id), Math.Max(left.Id, right.Id));
         int connected = fullConnections.GetValueOrDefault(pairKey);
@@ -1772,7 +1802,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
             if (!CanAddDoor(leftCell, Direction.Right, RunKind.MultiHorizontal)
                 || !CanAddDoor(rightCell, Direction.Left, RunKind.MultiHorizontal))
+            {
                 continue;
+            }
 
             var cells = Enumerable.Range(lx + 1, len).Select(x => new Point(x, y));
             if (!cells.All(grid.CanPlace))
@@ -1859,7 +1891,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 grid.Cell(p) is { } n && n.Run.Axis == Scrolling.Horizontal && n.Area == area;
             if (ParallelCorridor(firstCorridorCell.Step(Direction.Up))
                 || ParallelCorridor(firstCorridorCell.Step(Direction.Down)))
+            {
                 return;
+            }
         }
 
         // The corridor's near end doors back into the existing shaft; the far end (when a
@@ -1938,7 +1972,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 var candidate = Enumerable.Range(0, total).Select(i => new Point(farEnd.X, yTop + i)).ToList();
                 if (candidate.Any(p => p.X < minX || p.X > maxX || p.Y < Math.Max(1, minY - 4) || p.Y > Math.Min(30, maxY))
                     || !candidate.All(grid.CanPlace))
+                {
                     continue;
+                }
 
                 shaftCells = candidate;
                 doorRowIndex = up + 1;
@@ -2124,8 +2160,10 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (Count() < HardMinimum)
             throw new GenerationException($"only {Count()} item locations, need {HardMinimum}");
         if (Count() > targetMaximum)
+        {
             throw new GenerationException(
                 $"{Count()} item locations exceed the {targetMaximum}-item target");
+        }
     }
 
     /// <summary>
@@ -2252,7 +2290,9 @@ public class TopologyGenerator(ScreenCatalog catalog)
                 var span = run.Cells.Skip(i).Take(screens.Length).ToList();
                 if (!span.All(c => c.Role == CellRole.Corridor && !c.ForcedScreenId.HasValue
                     && c.Left == EdgeRequirement.Scroll && c.Right == EdgeRequirement.Scroll))
+                {
                     continue;
+                }
 
                 for (int j = 0; j < screens.Length; j++)
                     span[j].ForcedScreenId = screens[j];
@@ -2275,9 +2315,13 @@ public class TopologyGenerator(ScreenCatalog catalog)
         // the only red-door piece 0x25 may only neighbor 0x26). Such layouts must retry
         // here instead of failing later in ScreenFitter, which has no retry.
         foreach (var run in grid.Runs)
+        {
             if (!ScreenFitter.CanFitRun(grid, catalog, run))
+            {
                 throw new GenerationException(
                     $"no screen sequence fits {run.Area} {run.Axis} run of length {run.Cells.Count}");
+            }
+        }
 
         var reachProblems = AxisSolver.Validate(grid, start);
         if (reachProblems.Count > 0)
@@ -2295,8 +2339,10 @@ public class TopologyGenerator(ScreenCatalog catalog)
         if (grid.Cell(start)?.Role == CellRole.Start)
             requiredLandmarks.Add("StartPedestal");
         foreach (var required in requiredLandmarks)
+        {
             if (!landmarks.ContainsKey(required))
                 throw new GenerationException($"missing landmark {required}");
+        }
 
         if (grid.Cell(start)?.Area != StartArea)
             throw new GenerationException($"start cell is not in {StartArea}");

@@ -272,8 +272,10 @@ public sealed class WorldTest
             var searcher = new Searcher(world.Graph, world.Start!, FullInventory(world));
 
             foreach (var eventItem in new[] { "KraidDefeated", "RidleyDefeated", "DefeatedSilverTwo", "DefeatedMotherBrain" })
+            {
                 Assert.IsTrue(searcher.HasFound(world.GetItem(eventItem)),
                     $"seed {seed}: {eventItem} not reachable");
+            }
         }
     }
 }

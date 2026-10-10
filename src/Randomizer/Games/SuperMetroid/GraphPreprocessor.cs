@@ -141,7 +141,9 @@ public class GraphPreprocessor
         var bossRequirement = BossRequirement(int.Parse(_world.Config.Bosses));
         foreach (var statuesCutscene in statuesRoom.Strats.Where(strat =>
                      strat.Name == "Statues Cutscene"))
+        {
             statuesCutscene.Requires = bossRequirement;
+        }
     }
 
     private static Requirement BossRequirement(int requiredBosses)
@@ -599,8 +601,11 @@ public class GraphPreprocessor
                 var newFromStrat = (Strat)strat.Clone();
                 var requirements = new List<Requirement> { strat.Requires };
                 if (strat.ExitCondition is ExitCondition.LeaveWithRunway runway)
+                {
                     requirements.Add(RunwayEntranceRequirement(
                         runway, targetStrat.EntranceCondition!, fromRoom, fromNode));
+                }
+
                 if (unlockReq != null)
                     requirements.Add(unlockReq);
                 if (blockedMotherBrainConnection)
@@ -644,14 +649,20 @@ public class GraphPreprocessor
             case EntranceCondition.ComeInRunning running:
                 if (effectiveLength < running.MinTiles ||
                     running.MaxTiles is { } runningMax && runningMax < running.MinTiles)
+                {
                     return new Requirement.Never();
+                }
+
                 speedBooster = running.SpeedBooster;
                 break;
 
             case EntranceCondition.ComeInJumping jumping:
                 if (effectiveLength < jumping.MinTiles ||
                     jumping.MaxTiles is { } jumpingMax && jumpingMax < jumping.MinTiles)
+                {
                     return new Requirement.Never();
+                }
+
                 speedBooster = jumping.SpeedBooster;
                 break;
 
@@ -668,7 +679,10 @@ public class GraphPreprocessor
                     return new Requirement.Never();
                 if (!speedBooster.Equals("false", StringComparison.OrdinalIgnoreCase) &&
                     minimum > 0x20)
+                {
                     requirements.Add(new Requirement.Single("SpeedBooster"));
+                }
+
                 break;
 
             default:
@@ -682,7 +696,9 @@ public class GraphPreprocessor
 
         if (fromNode.DoorEnvironments?.Any(environment =>
                 environment.Physics.Equals("water", StringComparison.OrdinalIgnoreCase)) == true)
+        {
             requirements.Add(new Requirement.Single("Gravity"));
+        }
 
         // Implicit heat cost depends on runway use and whether the exit strat
         // starts at this door. Until that calculation is modeled, require Varia

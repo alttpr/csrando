@@ -106,7 +106,10 @@ public static class ScreenFitter
                     continue;
                 if (previous != null && !catalog.ScreensCanConnect(previous,
                         run.Axis == Scrolling.Horizontal ? Direction.Right : Direction.Down, candidate))
+                {
                     continue;
+                }
+
                 if (Fits(index + 1, candidate))
                     return true;
             }
@@ -128,14 +131,21 @@ public static class ScreenFitter
     {
         var committed = new List<Direction>(4);
         foreach (var dir in Directions.All)
+        {
             if (cell.Edge(dir) != EdgeRequirement.Wall)
                 committed.Add(dir);
+        }
 
         int count = 0;
         for (int i = 0; i < committed.Count; i++)
+        {
             for (int j = i + 1; j < committed.Count; j++)
+            {
                 if (!profile.EdgesFreelyConnected(committed[i], committed[j]))
                     count++;
+            }
+        }
+
         return count;
     }
 

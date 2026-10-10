@@ -256,8 +256,10 @@ public sealed class PlaythroughTest
         var state = new VisitedState { Energy = 99 };
 
         foreach (var gate in gates)
+        {
             Assert.IsFalse(world.RequirementHandler.HandleRequirement(
                 gate, state, inventory, world, []).Met);
+        }
 
         inventory.AddItem(world.GetItem(MajorBossFlags[1]));
         foreach (var gate in gates)

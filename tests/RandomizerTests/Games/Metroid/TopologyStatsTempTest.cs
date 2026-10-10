@@ -111,10 +111,12 @@ public sealed class TopologyStatsTempTest
                     shaftLengths.Add(shaft.Cells.Count);
                     var interior = shaft.Cells.Where(c => c.Role != CellRole.Cap).ToList();
                     if (interior.Count > 0)
+                    {
                         shaftDoorCoverage.Add(interior.Count(c =>
                             c.Left == EdgeRequirement.Door || c.Right == EdgeRequirement.Door
                             || c.Up == EdgeRequirement.Elevator || c.Down == EdgeRequirement.Elevator)
                             / (double)interior.Count);
+                    }
                 }
             }
 
@@ -122,12 +124,15 @@ public sealed class TopologyStatsTempTest
             {
                 if (world.Landmarks.TryGetValue(lair, out var lairPos)
                     && world.Landmarks.TryGetValue(elevator, out var elevPos))
+                {
                     lairElevatorDistance[lair].Add(
                         Math.Max(Math.Abs(lairPos.X - elevPos.X), Math.Abs(lairPos.Y - elevPos.Y)));
+                }
 
                 // Host shaft: first vertical run (>2 cells, skipping Kraid's 2-cell mini
                 // shaft) scanning east along the lair's row. Entrance = forced 0x01 top.
                 if (world.Landmarks.TryGetValue(lair, out var pos))
+                {
                     for (int x = pos.X + 1; x <= 31; x++)
                     {
                         var cell = grid.Cell(new Point(x, pos.Y));
@@ -137,6 +142,7 @@ public sealed class TopologyStatsTempTest
                             lairOnEntrance[lair]++;
                         break;
                     }
+                }
             }
         }
 
@@ -146,16 +152,22 @@ public sealed class TopologyStatsTempTest
         sb.AppendLine($"attempts:    {Summary(attempts)}");
         sb.AppendLine($"total cells: {Summary(totals)}");
         foreach (var (area, list) in areaCells)
+        {
             sb.AppendLine($"  {area,-8} cells: {Summary(list)}  shafts: {Summary(shaftCounts[area])}  " +
                 $"items: {Summary(areaItems[area])} (per100cells {(list.Count == 0 ? 0 : areaItems[area].Zip(list, (i, c) => 100.0 * i / c).Average()):F1})");
+        }
+
         sb.AppendLine($"cycles/100 cells: {(totals.Count == 0 ? 0 : cycles.Zip(totals, (c, t) => 100.0 * c / t).Average()):F2}");
         sb.AppendLine($"shaft length: {Summary(shaftLengths)}");
         sb.AppendLine($"shaft interior door coverage: mean {shaftDoorCoverage.DefaultIfEmpty(0).Average():P0}");
         sb.AppendLine($"single-room door pockets: {Summary(pockets)}");
         sb.AppendLine($"tunnel chains (of 2): {Summary(tunnelChains)}");
         foreach (var (name, list) in lairElevatorDistance)
+        {
             sb.AppendLine($"{name} lair Chebyshev distance from elevator: {Summary(list)}  " +
                 $"on entrance shaft: {lairOnEntrance[name]}/{list.Count}");
+        }
+
         sb.AppendLine("failed attempts by reason:");
         foreach (var (reason, count) in failureTally.OrderByDescending(kv => kv.Value))
             sb.AppendLine($"  {count,6}  {reason}");
@@ -294,8 +306,11 @@ public sealed class TopologyStatsTempTest
     private static string FindRepoRoot()
     {
         for (var dir = new DirectoryInfo(Directory.GetCurrentDirectory()); dir != null; dir = dir.Parent)
+        {
             if (Directory.Exists(Path.Combine(dir.FullName, ".git")))
                 return dir.FullName;
+        }
+
         return Directory.GetCurrentDirectory();
     }
 }

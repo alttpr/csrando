@@ -49,7 +49,9 @@ internal sealed class RandomAssumedFiller
                 };
                 if (ShouldFrontFillMorph(earlyMorph,
                         comboWorld.EffectiveInitialGame, morphWorld.GameId))
+                {
                     FrontFillMorph(comboWorld, morphWorld, flatItems);
+                }
             }
         }
         else

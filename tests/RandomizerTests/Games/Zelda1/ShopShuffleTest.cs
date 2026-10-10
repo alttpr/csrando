@@ -184,8 +184,10 @@ public sealed class ShopShuffleTest
         {
             var world = RandomizeWorld(shop, seed);
             foreach (var loc in TakeAnyLocations(world))
+            {
                 Assert.IsTrue(TakeAnyItems.Contains(loc.Item?.Name),
                     $"shop {shop}, seed {seed}: take-any {loc.Name} should not hold unsafe item {loc.Item?.Name}.");
+            }
         }
     }
 
@@ -319,8 +321,10 @@ public sealed class ShopShuffleTest
             var world = RandomizeWorld(ShopShuffleOption.Full, seed);
             var repeatableShopItems = ShopLocations(world).Where(v => CaveIdOf(v) < 0x24);
             foreach (var loc in repeatableShopItems)
+            {
                 Assert.IsFalse(CountItems.Contains(loc.Item?.Name),
                     $"seed {seed}: repeatable shop {loc.Name} must not hold count item {loc.Item?.Name}.");
+            }
         }
     }
 
