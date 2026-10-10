@@ -325,59 +325,59 @@ PullSwitchGood_properties: #CORRECT PULL SWITCH
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-PullSwitchGoodUnused_properties: #UNUSED CORRECT PULL SWITCH
+MimicGreen_properties: #GREEN EYEGORE / GREEN MIMIC - Commandeering unused pull switch
   id: 0x05
   owns_id: true
-  # OAMHARM: $84
-  harmless: true
+  # OAMHARM: $05
+  harmless: false
   die_offscreen_tile: false
   tile_hitbox_68: false
-  oam_allocation: 0x04
+  oam_allocation: 0x05
   # HEALTH
-  health: 3
-  # BUMP: $02
+  health: 16
+  # BUMP: $04
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
   survives_boss_prep: false
-  bump_damage_class: 0x2
-  # OAMPROP: $41
+  bump_damage_class: 0x4
+  # OAMPROP: $0D
   custom_death: false
-  invulnerable: true
+  invulnerable: false
   small_shadow: false
   has_shadow: false
-  initial_palette: 0 # $00
-  palette: 0
+  initial_palette: 6 # $0C
+  palette: 6
   initial_second_oam_nametable: true
   oam_nametable: 1
-  # HITBOX: $43
+  # HITBOX: $00
   single_layer_collision: false
-  killroom_ignore: true
+  killroom_ignore: false
   active_offscreen: false
-  hitbox: 0x03
+  hitbox: 0x00
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
   reset_sword: false
-  boss_death: true
-  pit_behavior: true
-  # PRIZEPACK: $80
-  limit_pit_interactions: true
+  boss_death: false
+  pit_behavior: false
+  # PRIZEPACK: $15
+  limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
-  alternate_damage_sound: false
-  prize_pack: 0x0
-  # DEFLECT: $20
+  alternate_damage_sound: true
+  prize_pack: 0x5
+  # DEFLECT: $04
   force_active_offscreen: false
   die_offscreen_draw: false
-  is_statue: true
+  is_statue: false
   check_ancilla_direction: false
   is_projectile: false
-  immune_to_sword: false
+  immune_to_sword: true
   is_bonkable: false
   no_permadeath: false
   immune_to_projectiles: false
-  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+  damage_subclasses: [ 0, 1, 1, 2, 2, 1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0 ]
 PullSwitchBad_properties: #WRONG PULL SWITCH
 id: 0x06
   owns_id: true
@@ -431,59 +431,59 @@ id: 0x06
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-PullSwitchBadUnused_properties: #UNUSED WRONG PULL SWITCH
+MimicRed_properties: #RED EYEGORE / RED MIMIC - Commandeering unused switch
   id: 0x07
   owns_id: true
-  # OAMHARM: $84
-  harmless: true
+  # OAMHARM: $05
+  harmless: false
   die_offscreen_tile: false
   tile_hitbox_68: false
-  oam_allocation: 0x04
+  oam_allocation: 0x05
   # HEALTH
-  health: 3
-  # BUMP: $02
+  health: 8
+  # BUMP: $04
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
   survives_boss_prep: false
-  bump_damage_class: 0x2
-  # OAMPROP: $4D
+  bump_damage_class: 0x4
+  # OAMPROP: $07
   custom_death: false
-  invulnerable: true
+  invulnerable: false
   small_shadow: false
   has_shadow: false
-  initial_palette: 6 # $0C
-  palette: 6
+  initial_palette: 3 # $06
+  palette: 3
   initial_second_oam_nametable: true
   oam_nametable: 1
-  # HITBOX: $43
+  # HITBOX: $00
   single_layer_collision: false
-  killroom_ignore: true
+  killroom_ignore: false
   active_offscreen: false
-  hitbox: 0x03
+  hitbox: 0x00
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
   reset_sword: false
-  boss_death: true
-  pit_behavior: true
-  # PRIZEPACK: $80
-  limit_pit_interactions: true
+  boss_death: false
+  pit_behavior: false
+  # PRIZEPACK: $15
+  limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
-  alternate_damage_sound: false
-  prize_pack: 0x0
-  # DEFLECT: $20
+  alternate_damage_sound: true
+  prize_pack: 0x5
+  # DEFLECT: $04
   force_active_offscreen: false
   die_offscreen_draw: false
-  is_statue: true
+  is_statue: false
   check_ancilla_direction: false
   is_projectile: false
-  immune_to_sword: false
+  immune_to_sword: true
   is_bonkable: false
   no_permadeath: false
   immune_to_projectiles: false
-  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ]
 Octorok1_properties: #OKTOROK
   id: 0x08
   owns_id: true
@@ -13425,112 +13425,110 @@ Mantle_properties: #CASTLE MANTLE
   no_permadeath: false
   immune_to_projectiles: false
   damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-MimicGreen_properties: #GREEN EYEGORE / GREEN MIMIC
+SomariaPlatform1_properties: #UNUSED SOMARIA PLATFORM
   id: 0xEF
   owns_id: true
-  # OAMHARM: $05
-  harmless: false
+  # OAMHARM: $83
+  harmless: true
   die_offscreen_tile: false
-  tile_hitbox_68: false
-  oam_allocation: 0x05
+  smaller_tile_hitbox: false
+  oam_allocation: 0x03
   # HEALTH
-  health: 16
-  # BUMP: $04
+  health: 0
+  # BUMP: $00
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
-  survives_boss_prep: false
-  bump_damage_class: 0x4
-  # OAMPROP: $0D
-  custom_death: false
-  invulnerable: false
+  bump_damage_class: 0x0
+  # OAMPROP: $C7
+  custom_death: true
+  invulnerable: true
   small_shadow: false
   has_shadow: false
-  initial_palette: 6 # $0C
-  palette: 6
-  initial_second_oam_nametable: true
+  default_oam_palette: 3 # $06
+  palette: 3
+  default_oam_nametable: 1
   oam_nametable: 1
-  # HITBOX: $00
+  # HITBOX: $1B
   single_layer_collision: false
-  killroom_ignore: false
+  killroom_ignore: true # false in vanilla
   active_offscreen: false
-  hitbox: 0x00
+  hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: false
+  deflect_arrows: true
   reset_sword: false
-  boss_death: false
-  pit_behavior: false
-  # PRIZEPACK: $15
+  boss_death: true
+  pit_behavior: true
+  # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
-  alternate_damage_sound: true
-  prize_pack: 0x5
-  # DEFLECT: $04
-  force_active_offscreen: false
+  alternate_damage_sound: false
+  prize_pack: 0x0
+  # DEFLECT: $80
+  force_active_offscreen: true
   die_offscreen_draw: false
   is_statue: false
   check_ancilla_direction: false
   is_projectile: false
-  immune_to_sword: true
+  immune_to_sword: false
   is_bonkable: false
   no_permadeath: false
   immune_to_projectiles: false
-  damage_subclasses: [ 0, 1, 1, 2, 2, 1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0 ]
-MimicRed_properties: #RED EYEGORE / RED MIMIC
+  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+SomariaPlatform2_properties: #UNUSED SOMARIA PLATFORM
   id: 0xF0
   owns_id: true
-  # OAMHARM: $05
-  harmless: false
+  # OAMHARM: $83
+  harmless: true
   die_offscreen_tile: false
-  tile_hitbox_68: false
-  oam_allocation: 0x05
+  smaller_tile_hitbox: false
+  oam_allocation: 0x03
   # HEALTH
-  health: 8
-  # BUMP: $04
+  health: 0
+  # BUMP: $00
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
-  survives_boss_prep: false
-  bump_damage_class: 0x4
-  # OAMPROP: $07
-  custom_death: false
-  invulnerable: false
+  bump_damage_class: 0x0
+  # OAMPROP: $C7
+  custom_death: true
+  invulnerable: true
   small_shadow: false
   has_shadow: false
-  initial_palette: 3 # $06
+  default_oam_palette: 3 # $06
   palette: 3
-  initial_second_oam_nametable: true
+  default_oam_nametable: 1
   oam_nametable: 1
-  # HITBOX: $00
+  # HITBOX: $1B
   single_layer_collision: false
-  killroom_ignore: false
+  killroom_ignore: true # false in vanilla
   active_offscreen: false
-  hitbox: 0x00
+  hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: false
+  deflect_arrows: true
   reset_sword: false
-  boss_death: false
-  pit_behavior: false
-  # PRIZEPACK: $15
+  boss_death: true
+  pit_behavior: true
+  # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
   blocked_by_shield: false
-  alternate_damage_sound: true
-  prize_pack: 0x5
-  # DEFLECT: $04
-  force_active_offscreen: false
+  alternate_damage_sound: false
+  prize_pack: 0x0
+  # DEFLECT: $80
+  force_active_offscreen: true
   die_offscreen_draw: false
   is_statue: false
   check_ancilla_direction: false
   is_projectile: false
-  immune_to_sword: true
+  immune_to_sword: false
   is_bonkable: false
   no_permadeath: false
   immune_to_projectiles: false
-  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ]
+  damage_subclasses: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 SomariaPlatform3_properties: #UNUSED SOMARIA PLATFORM
   id: 0xF1
   owns_id: true

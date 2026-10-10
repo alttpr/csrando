@@ -36,11 +36,11 @@ PullSwitchGoodTongue: #CORRECT PULL SWITCH (TONGUE)
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   properties: PullSwitchGood_properties
-PullSwitchGoodUnused: #UNUSED CORRECT PULL SWITCH
-  id: 0x05
-  flags: NoPlace
-  sheets: [null, null, null, 0x13]
-  properties: PullSwitchGoodUnused_properties
+MimicGreen: #GREEN EYEGORE / GREEN MIMIC - Commandeering UNUSED CORRECT PULL SWITCH
+  id: 0x05 #DR uses the unused somaria platform 0xEF
+  flags: Challenge
+  sheets: [null, null, 0x2E, null]
+  properties: MimicGreen_properties
 PullSwitchBad: #WRONG PULL SWITCH (BAR)
   id: 0x06
   flags: NoPlace
@@ -51,11 +51,11 @@ PullSwitchBadTongue: #WRONG PULL SWITCH (TONGUE)
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   properties: PullSwitchBad_properties
-PullSwitchBadUnused: #UNUSED WRONG PULL SWITCH
-  id: 0x07
-  flags: NoPlace
-  sheets: [null, null, null, 0x13]
-  properties: PullSwitchBadUnused_properties
+MimicRed: #RED EYEGORE / RED MIMIC - Commandeering UNUSED WRONG PULL SWITCH
+  id: 0x07 #DR uses the unused somaria platform 0xF0
+  flags: Challenge
+  sheets: [null, null, 0x2E, null]
+  properties: MimicRed_properties
 Octorok1: #OKTOROK
   id: 0x08
   flags: Challenge
@@ -905,23 +905,11 @@ EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
   flags: Challenge
   sheets: [null, null, 0x2E, null]
   properties: EyegoreGreen_properties
-MimicGreen: #GREEN EYEGORE / GREEN MIMIC
-  alternative: EyegoreGreen
-  id: 0xEF #DR uses the unused somaria platform 0xEF
-  flags: Challenge
-  sheets: [null, null, 0x2E, null]
-  properties: MimicGreen_properties
 EyegoreRed: #RED EYEGORE / RED MIMIC
   id: 0x84
   flags: Challenge
   sheets: [null, null, 0x2E, null]
   properties: EyegoreRed_properties
-MimicRed: #RED EYEGORE / RED MIMIC
-  alternative: EyegoreRed
-  id: 0xF0 #DR uses the unused somaria platform 0xF0
-  flags: Challenge
-  sheets: [null, null, 0x2E, null]
-  properties: MimicRed_properties
 StalfosYellow: #YELLOW STALFOS, spawned by overlord
   id: 0x85
   flags: NoDrop
