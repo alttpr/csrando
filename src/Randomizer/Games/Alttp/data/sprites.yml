@@ -268,18 +268,18 @@ TalkingTree: #TALKING TREE
   sheets: [null, null, null, 0x15]
   properties: TalkingTree_properties
   weight: 3
-BlueHardhatBeetle: #HARDHAT BEETLE
+HardhatBeetleBlue: #HARDHAT BEETLE
   id: 0x26
   flags: Challenge
   sheets: [null, 0x1E, null, null]
   subtype: 0x00
-  properties: BlueHardhatBeetle_properties
-RedHardhatBeetle: #HARDHAT BEETLE
+  properties: HardhatBeetleBlue_properties
+HardhatBeetleRed: #HARDHAT BEETLE
   id: 0x26
   flags: Challenge
   sheets: [null, 0x1E, null, null]
   subtype: 0x01
-  properties: RedHardhatBeetle_properties
+  properties: HardhatBeetleRed_properties
 Deadrock:
   id: 0x27
   flags: Challenge
@@ -598,11 +598,11 @@ Popo:
   flags: Challenge
   sheets: [null, 0x2C, null, null]
   properties: Popo_properties
-Popo2: #POPO?
+PopoFast: #POPO?
   id: 0x4F
   flags: Challenge
   sheets: [null, 0x2C, null, null]
-  properties: Popo2_properties
+  properties: PopoFast_properties
 Cannonball:
   id: 0x50
   flags: NoPlace
@@ -1109,18 +1109,18 @@ ZazakRed: #RED ZAZAK
   flags: Challenge
   sheets: [null, null, 0x28, null]
   properties: ZazakRed_properties
-BlueStalfos:
+StalfosBlue:
   id: 0xA7
   flags: Challenge
   subtype: 0x00
   sheets: [0x1F, null, null, null]
-  properties: BlueStalfos_properties
-RedStalfos:
+  properties: StalfosBlue_properties
+StalfosRed:
   id: 0xA7
   flags: Challenge
   subtype: 0x01
   sheets: [0x1F, null, null, null]
-  properties: RedStalfos_properties
+  properties: StalfosRed_properties
 ZirroGreen: #GREEN ZIRRO
   id: 0xA8
   flags: Challenge, NoDrop
@@ -1311,18 +1311,18 @@ FairyBig: #BIG FAIRY
   sheets: [null, null, 0x39, null] #TODO: DR has 0x36 in slot 3 (fat fairy)
   properties: FairyBig_properties
 # TODO we don't have a way to differentiate them by color, since it's decided by coordinate...
-BlueTektite: #TEKTITE / FIREBAT
+TektiteBlue: #TEKTITE / FIREBAT
   id: 0xC9
   subtpe: 0x00
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  properties: BlueTektite_properties
-RedTektite: #TEKTITE / FIREBAT
+  properties: TektiteBlue_properties
+TektiteRed: #TEKTITE / FIREBAT
   id: 0xC9
   subtpe: 0x01
   flags: Challenge
   sheets: [null, null, null, 0x10]
-  properties: RedTektite_properties
+  properties: TektiteRed_properties
 ChainChomp: #CHAIN CHOMP
   id: 0xCA
   flags: NoDrop

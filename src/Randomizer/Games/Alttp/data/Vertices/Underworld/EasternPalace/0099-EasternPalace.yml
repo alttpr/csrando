@@ -36,16 +36,16 @@ rooms:
               sprite: "Popo"
             - name: "Eastern Palace - Dark Popos - Popo B 2"
               position: { x: 0x0e, y: 0x19, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
             - name: "Eastern Palace - Dark Popos - Popo B 3"
               position: { x: 0x0f, y: 0x19, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
             - name: "Eastern Palace - Dark Popos - Popo B 4"
               position: { x: 0x10, y: 0x19, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
             - name: "Eastern Palace - Dark Popos - Popo B 5"
               position: { x: 0x11, y: 0x19, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
 
         - name: "Eastern Palace - Dark Cash"
           connections:

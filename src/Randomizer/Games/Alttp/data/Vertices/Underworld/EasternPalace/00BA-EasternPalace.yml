@@ -40,7 +40,7 @@ rooms:
                 - "Bumper"
             - name: "Eastern Palace - Dark Antifairy Circle - Popo B 1"
               position: { x: 0x0c, y: 0x09, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
               deny:
                 - "RollerVU"
                 - "RollerVD"
@@ -53,7 +53,7 @@ rooms:
                 - "Bumper"
             - name: "Eastern Palace - Dark Antifairy Circle - Popo B 2"
               position: { x: 0x08, y: 0x0c, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
               deny:
                 - "RollerVU"
                 - "RollerVD"
@@ -96,10 +96,10 @@ rooms:
           mobs:
             - name: "Eastern Palace - Dark Stalfos - Stalfos 1"
               position: { x: 0x14, y: 0x04, z: 0x00 }
-              sprite: "BlueStalfos"
+              sprite: "StalfosBlue"
             - name: "Eastern Palace - Dark Stalfos - Stalfos 2"
               position: { x: 0x18, y: 0x06, z: 0x00 }
-              sprite: "BlueStalfos"
+              sprite: "StalfosBlue"
             - name: "Eastern Palace - Dark Stalfos - Stalfos 3"
               position: { x: 0x18, y: 0x0a, z: 0x00 }
-              sprite: "BlueStalfos"
+              sprite: "StalfosBlue"
