@@ -13,10 +13,7 @@ public abstract class GameRom(IRom rom, int offset) {
     /// <param name="length">Number of bytes to read.</param>
     protected byte[] Read(Address address, int length) => rom.Read(address.Value + offset, length);
 
-
-
     protected void Write(Address address, byte value) => rom.Write(address.Value + offset, [value]);
-
 
     protected void WriteUInt16(Address address, scoped ReadOnlySpan<ushort> data) => rom.WriteUInt16(address.Value + offset, data);
 }

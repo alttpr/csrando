@@ -1828,6 +1828,25 @@ public sealed class Rom : GameRom
                 Write((SNES) (0x0DB53F + id), tiledie); // SpriteData_TileInteraction
                 Write((SNES) (0x0DB632 + id), prize); // SpriteData_PrizePack
                 Write((SNES) (0x0DB725 + id), deflect); // SpriteData_Deflection
+
+                Write((SNES) (0xB1C800 + (id * 16)), [
+                    sprite.DamageClass0Subclass,
+                    sprite.DamageClass1Subclass,
+                    sprite.DamageClass2Subclass,
+                    sprite.DamageClass3Subclass,
+                    sprite.DamageClass4Subclass,
+                    sprite.DamageClass5Subclass,
+                    sprite.DamageClass6Subclass,
+                    sprite.DamageClass7Subclass,
+                    sprite.DamageClass8Subclass,
+                    sprite.DamageClass9Subclass,
+                    sprite.DamageClassASubclass,
+                    sprite.DamageClassBSubclass,
+                    sprite.DamageClassCSubclass,
+                    sprite.DamageClassDSubclass,
+                    sprite.DamageClassESubclass,
+                    sprite.DamageClassFSubclass
+                ]);
             }
 
             // handle any oddballs that have their properties initialized somewhere else
