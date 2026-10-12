@@ -2,12 +2,11 @@
 # when they differ from the internally used sprite name (to help discoverability when searching for them.)
 Raven:
   id: 0x00
-  owns_id: true
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x11]
   properties: Raven_properties
 Dacto:
-  alternative: Raven # maybe this determines who owns the id?
+  alternative: Raven
   id: 0x00
   flags: Challenge, NoDrop
   sheets: [null, null, null, 0x19]
@@ -1180,7 +1179,7 @@ BeeGood: #GOOD BEE
 HylianPlaque: #PEDESTAL PLAQUE
   id: 0xB3
   flags: NoPlace
-  properties: HylianPlaque
+  properties: HylianPlaque_properties
 PurpleChest: #PURPLE CHEST
   id: 0xB4
   flags: NoPlace
@@ -1313,13 +1312,13 @@ FairyBig: #BIG FAIRY
 # TODO we don't have a way to differentiate them by color, since it's decided by coordinate...
 TektiteBlue: #TEKTITE / FIREBAT
   id: 0xC9
-  subtpe: 0x00
+  subtype: 0x00
   flags: Challenge
   sheets: [null, null, null, 0x10]
   properties: TektiteBlue_properties
 TektiteRed: #TEKTITE / FIREBAT
   id: 0xC9
-  subtpe: 0x01
+  subtype: 0x01
   flags: Challenge
   sheets: [null, null, null, 0x10]
   properties: TektiteRed_properties

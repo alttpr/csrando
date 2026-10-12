@@ -380,7 +380,7 @@ public class YamlSprite
     public int Priority { get; set; }
     [YamlMember(Alias = "not_with")]
     public string[]? NotWith { get; set; }
-    [YamlMember(Alias = "propreties")]
+    [YamlMember(Alias = "properties")]
     public string? Properties { get; set; }
     [YamlMember(Alias = "weight")]
     public int Weight { get; set; } = 1;

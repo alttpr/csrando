@@ -24,7 +24,7 @@ Raven_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -80,7 +80,7 @@ Dacto_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -136,7 +136,7 @@ Vulture_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -189,7 +189,7 @@ FlyingStalfosHead_properties: #STALFOS HEAD
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -221,7 +221,6 @@ FlyingStalfosHead_properties: #STALFOS HEAD
 Empty_properties: #NULL
   id: 0x03
   owns_id: true
-  name: Null sprite
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
@@ -243,7 +242,7 @@ Empty_properties: #NULL
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $43
   single_layer_collision: false
   killroom_ignore: true
@@ -296,7 +295,7 @@ PullSwitchGood_properties: #CORRECT PULL SWITCH
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $43
   single_layer_collision: false
   killroom_ignore: true
@@ -349,7 +348,7 @@ MimicGreen_properties: #GREEN EYEGORE / GREEN MIMIC - Commandeering unused pull 
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -402,7 +401,7 @@ PullSwitchBad_properties: #WRONG PULL SWITCH
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $43
   single_layer_collision: false
   killroom_ignore: true
@@ -455,7 +454,7 @@ MimicRed_properties: #RED EYEGORE / RED MIMIC - Commandeering unused switch
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -508,7 +507,7 @@ Octorok1_properties: #OKTOROK
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -563,7 +562,7 @@ Slarok1_properties: #SLAROK
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -618,7 +617,7 @@ Moldorm_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -672,7 +671,7 @@ Octorok4_properties: #OCTOROK 4WAY
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -727,7 +726,7 @@ Slarok4_properties: #SLAROK 4WAY
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -782,7 +781,7 @@ Chicken_properties: #CUCCO
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -835,7 +834,7 @@ OctorokStone_properties: #OCTOROK STONE
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1C
   single_layer_collision: false
   killroom_ignore: false
@@ -888,7 +887,7 @@ Buzzblob_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -941,7 +940,7 @@ Snapdragon_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -994,7 +993,7 @@ Octoballoon_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $02
   single_layer_collision: false
   killroom_ignore: false
@@ -1047,7 +1046,7 @@ Octobaby_properties: #OCTOBALLOON BABY
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $01
   single_layer_collision: false
   killroom_ignore: false
@@ -1100,7 +1099,7 @@ Hinox_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: false
@@ -1153,7 +1152,7 @@ Moblin_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -1206,7 +1205,7 @@ MiniHelmasaur_properties: #MINI HELMASAUR
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -1259,7 +1258,7 @@ ForkGate_properties: #THIEVES TOWN GRATE
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -1312,7 +1311,7 @@ Antifairy_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $C0
   single_layer_collision: true
   killroom_ignore: true
@@ -1365,7 +1364,7 @@ Sahasrahla_properties: #SAHASRAHLA / AGINAH
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -1418,7 +1417,7 @@ BushHoarder_properties: #HOARDER
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -1471,7 +1470,7 @@ MiniMoldorm_properties: #MINI MOLDORM
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -1524,7 +1523,7 @@ Poe_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -1577,7 +1576,7 @@ DwarfSmith_properties: #SMITHY
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -1630,7 +1629,7 @@ SpriteArrow_properties: #ARROW
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $45
   single_layer_collision: false
   killroom_ignore: true
@@ -1683,7 +1682,7 @@ Statue_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $43
   single_layer_collision: false
   killroom_ignore: true
@@ -1736,7 +1735,7 @@ FluteQuest_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -1789,7 +1788,7 @@ CrystalSwitch_properties: #CRYSTAL SWITCH
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -1842,7 +1841,7 @@ SickKid_properties: #SICK KID
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0D
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -1895,7 +1894,7 @@ Sluggula_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -1948,7 +1947,7 @@ PushSwitch_properties: #WATER SWITCH
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2001,7 +2000,7 @@ Ropa_properties:
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -2054,7 +2053,7 @@ RedBari_properties: #RED BARI
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -2107,7 +2106,7 @@ BlueBari_properties: #BLUE BARI
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -2160,7 +2159,7 @@ TalkingTree_properties: #TALKING TREE
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2213,7 +2212,7 @@ HardhatBeetleBlue_properties: #HARDHAT BEETLE
   initial_palette: 4 # $08
   palette: 4 # 4 in master table
   initial_second_oam_nametable: true
-  oam_nametable: 1 # 0 in master table
+  second_oam_nametable: true # 0 in master table
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -2270,7 +2269,7 @@ HardhatBeetleRed_properties: #HARDHAT BEETLE
   initial_palette: 3 # $08
   palette: 3 # 4 in master table
   initial_second_oam_nametable: true
-  oam_nametable: 1 # 0 in master table
+  second_oam_nametable: true # 0 in master table
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -2327,7 +2326,7 @@ Deadrock_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -2380,7 +2379,7 @@ Storyteller_properties: #DARK WORLD HINT NPC
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2433,7 +2432,7 @@ Adult_properties:
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2486,7 +2485,7 @@ SweepingLady_properties: #SWEEPING LADY
   initial_palette: 7 # $0E
   palette: 7
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2539,7 +2538,7 @@ Hobo_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2592,7 +2591,7 @@ Lumberjack_properties: #LUMBERJACKS
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2645,7 +2644,7 @@ NecklessMan_properties: #used to be TelepathyTile, for its message
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2698,7 +2697,7 @@ FluteKid_properties: #FLUTE KID
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0D
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2751,7 +2750,7 @@ RaceGameLady_properties: #RACE GAME LADY
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2804,7 +2803,7 @@ RaceGameBoy_properties: #RACE GAME GUY
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2857,7 +2856,7 @@ FortuneTeller_properties: #FORTUNE TELLER
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2910,7 +2909,7 @@ AngryBrother_properties: #ARGUE BROS
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -2963,7 +2962,7 @@ PullForRupees_properties: #RUPEE PULL
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3016,7 +3015,7 @@ YoungSnitch_properties: #YOUNG SNITCH
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3069,7 +3068,7 @@ Innkeeper_properties:
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3122,7 +3121,7 @@ Witch_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3175,7 +3174,7 @@ Waterfall_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -3228,7 +3227,7 @@ ArrowTarget_properties: #EYE STATUE
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: false
@@ -3281,7 +3280,7 @@ AverageMan_properties: #LOCKSMITH
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3334,7 +3333,7 @@ MagicBat_properties: #MAGIC BAT
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0D
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3387,7 +3386,7 @@ DashItem_properties: #BONK ITEM
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3440,7 +3439,7 @@ VillageKid_properties: #KID IN KAK
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3490,7 +3489,7 @@ OldSnitch_properties: #OLD SNITCH
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3543,7 +3542,7 @@ RockHoarder_properties: #HOARDER
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -3596,7 +3595,7 @@ TutorialGuard_properties: #TUTORIAL GUARD
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -3649,7 +3648,7 @@ LightningLock_properties: #LIGHTNING GATE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: false
@@ -3702,7 +3701,7 @@ BlueSwordGuard_properties: #BLUE GUARD
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -3755,7 +3754,7 @@ GreenSwordGuard_properties: #GREEN GUARD
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -3808,7 +3807,7 @@ RedSpearGuard_properties: #RED SPEAR GUARD
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -3861,7 +3860,7 @@ AssaultSwordGuard_properties: #BLUESAIN BOLT
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -3914,7 +3913,7 @@ FastRedSpearGuard_properties: #USAIN BOLT
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -3967,7 +3966,7 @@ BlueArcher_properties: #BLUE ARCHER
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4020,7 +4019,7 @@ GreenArcher_properties: #GREEN BUSH GUARD
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4073,7 +4072,7 @@ RedJavelinGuard_properties: #RED JAVELIN GUARD
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4126,7 +4125,7 @@ RedBushGuard_properties:
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4179,7 +4178,7 @@ RedBombGuard_properties: #BOMB GUARD
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4233,7 +4232,7 @@ SpriteBomb_properties: #BOMB GUARD
   initial_palette: 4
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4289,7 +4288,7 @@ GreenGuardRecruit_properties: #GREEN KNIFE GUARD
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4342,7 +4341,7 @@ Geldman_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -4395,7 +4394,7 @@ Rabbit_properties: #TOPPO
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -4448,7 +4447,7 @@ Popo_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -4501,7 +4500,7 @@ PopoFast_properties: #POPO
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -4554,7 +4553,7 @@ Cannonball_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: true # false in vanilla
@@ -4607,7 +4606,7 @@ Armos_properties: #ARMOS STATUE
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -4660,7 +4659,7 @@ KingZora_properties: #KING ZORA
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -4713,7 +4712,7 @@ ArmosKnight_properties: #ARMOS KNIGHT
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: false
@@ -4766,7 +4765,7 @@ Lanmolas_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -4819,7 +4818,7 @@ FireballZora_properties: #ZORA / FIREBALL
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -4872,7 +4871,7 @@ Fireball_properties: #FIREBALL
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $54
   single_layer_collision: false
   killroom_ignore: true
@@ -4930,7 +4929,7 @@ WalkingZora_properties: #ZORA
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -4983,7 +4982,7 @@ DesertPalaceBarrier_properties: #DESERT STATUE?
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0C
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5036,7 +5035,7 @@ Crab_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -5089,7 +5088,7 @@ Bird_properties: #LOST WOODS BIRD
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5142,7 +5141,7 @@ Squirrel_properties: #LOST WOODS SQUIRREL
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5195,7 +5194,7 @@ SparkCW_properties: #SPARK CLOCKWISE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -5248,7 +5247,7 @@ SparkCCW_properties: #SPARK COUNTERCLOCKWISE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -5301,7 +5300,7 @@ RollerVU_properties: #ROLLER VERTICAL UP (placed high, moving downwards first)
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $10
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5354,7 +5353,7 @@ RollerVD_properties: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $10
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5407,7 +5406,7 @@ RollerHL_properties: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $2E
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5460,7 +5459,7 @@ RollerHR_properties: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $2E
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5513,7 +5512,7 @@ Beamos_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -5566,7 +5565,7 @@ MasterSword_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1E
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5619,7 +5618,7 @@ DevalantBlue_properties: #DEBIRANDO PIT
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $53
   single_layer_collision: false
   killroom_ignore: true
@@ -5674,7 +5673,7 @@ DevalantRed_properties: #DEBIRANDO
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -5729,7 +5728,7 @@ ShootingGalleryNPC_properties: #ARCHERY GUY
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5782,7 +5781,7 @@ CannonBallShooterR_properties: #WALL CANNON VERTICAL RIGHT (placed left, shootin
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5835,7 +5834,7 @@ CannonBallShooterL_properties: #WALL CANNON VERTICAL LEFT (placed right, shootin
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5888,7 +5887,7 @@ CannonBallShooterD_properties: #WALL CANNON HORIZONTAL BOTTOM (placed high, shoo
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5941,7 +5940,7 @@ CannonBallShooterU_properties: #WALL CANNON HORIZONTAL TOP (placed low, shooting
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -5994,7 +5993,7 @@ BallNChainTrooper_properties: #BALL N CHAIN
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -6047,7 +6046,7 @@ CannonGuard_properties: #CANNONBALL / CANNON TROOPER
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $12
   single_layer_collision: false
   killroom_ignore: false
@@ -6100,7 +6099,7 @@ MirrorPortal_properties: #MIRROR PORTAL
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -6153,7 +6152,7 @@ Rat_properties: #RAT / CRICKET
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -6208,7 +6207,7 @@ Buzz_properties: #BUZZ / CRICKET
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -6263,7 +6262,7 @@ Rope_properties: #ROPE
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -6297,7 +6296,7 @@ Rope_properties: #ROPE
   prize_addresses: [0x0688A8]
 Skullrope_properties: #STAL ROPE
   id: 0x6E
-  owns_id: fallse
+  owns_id: false
   # OAMHARM: $01
   harmless: false
   die_offscreen_tile: false
@@ -6319,7 +6318,7 @@ Skullrope_properties: #STAL ROPE
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -6375,7 +6374,7 @@ Keese_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -6431,7 +6430,7 @@ Chasupa_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -6487,7 +6486,7 @@ HelmasaurFireball_properties: #KING HELMASAUR FIREBALL
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $19
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6540,7 +6539,7 @@ Leever_properties:
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -6594,7 +6593,7 @@ PondActivation_properties: #FAIRY POND TRIGGER
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6647,7 +6646,7 @@ Uncle_properties: #UNCLE / PRIEST / MANTLE
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6700,7 +6699,7 @@ RunningMan_properties: #RUNNING MAN
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0D
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6753,7 +6752,7 @@ BottleSalesman_properties: #BOTTLE MERCHANT
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6806,7 +6805,7 @@ Zelda_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6859,7 +6858,7 @@ UnusedAntifairy_properties: # ANTIFAIRY
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -6912,7 +6911,7 @@ SahaWife_properties: #SAHASRAHLAS WIFE / DR: Grandma
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -6965,7 +6964,7 @@ Bee_properties:
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $41
   single_layer_collision: false
   killroom_ignore: true
@@ -7018,7 +7017,7 @@ Agahnim_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7072,7 +7071,7 @@ AgahnimBall_properties: #AGAHNIMS BALLS
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -7125,7 +7124,7 @@ GreenStalfos_properties: #GREEN STALFOS, DR: Floating Skull
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7178,7 +7177,7 @@ BigSpikeTrap_properties: #BIG SPIKE
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $49
   single_layer_collision: false
   killroom_ignore: true
@@ -7231,7 +7230,7 @@ FireBarCW_properties: #FIREBAR CLOCKWISE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -7284,7 +7283,7 @@ FireBarCCW_properties: #FIREBAR COUNTERCLOCKWISE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -7337,7 +7336,7 @@ FireSnake_properties:
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $C0
   single_layer_collision: true
   killroom_ignore: true
@@ -7390,7 +7389,7 @@ Hover_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7443,7 +7442,7 @@ AntifairyCircle_properties: #ANTIFAIRY CIRCLE
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -7496,7 +7495,7 @@ EyegoreGreen_properties: #GREEN EYEGORE / GREEN MIMIC
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7549,7 +7548,7 @@ EyegoreRed_properties: #RED EYEGORE / RED MIMIC
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7602,7 +7601,7 @@ StalfosYellow_properties: #YELLOW STALFOS
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -7655,7 +7654,7 @@ Kodongo_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false # TODO supposedly fixes hardlocks, but let's investigate the asm first
   killroom_ignore: false
@@ -7708,7 +7707,7 @@ Flames_properties: #KONDONGO FIRE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7761,7 +7760,7 @@ Mothula_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: false
@@ -7814,7 +7813,7 @@ MothulaBeam_properties: #MOTHULA BEAM
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -7867,7 +7866,7 @@ SpikeTrap_properties: #SPIKE BLOCK
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $C0
   single_layer_collision: true
   killroom_ignore: true
@@ -7920,7 +7919,7 @@ Gibdo_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -7973,7 +7972,7 @@ Arrghus_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -8026,7 +8025,7 @@ ArrghusSpawn_properties: #ARRGHI
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8079,7 +8078,7 @@ Terrorpin_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8132,7 +8131,7 @@ Zol_properties: #BLOB
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -8185,7 +8184,7 @@ PowderBlob_properties: #BLOB
   initial_palette: 4 # $0A
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -8242,7 +8241,7 @@ Wallmaster_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: false
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8295,7 +8294,7 @@ StalfosKnight_properties: #STALFOS KNIGHT
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8348,7 +8347,7 @@ Helmasaur_properties: #KING HELMASAUR
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $18
   single_layer_collision: false
   killroom_ignore: false
@@ -8401,7 +8400,7 @@ Bumper_properties:
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $5A
   single_layer_collision: false
   killroom_ignore: true
@@ -8454,7 +8453,7 @@ Pirogusu_properties: #PIROGUSU / TILE ROOM TILE
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8506,7 +8505,7 @@ FlyingTile_properties:
   initial_palette: 0 # $0C
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   single_layer_collision: false
   killroom_ignore: false
   active_offscreen: false
@@ -8564,7 +8563,7 @@ LaserEyeR_properties: #LASER EYE RIGHT (placed left, shooting right)
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $D4
   single_layer_collision: true
   killroom_ignore: true
@@ -8617,7 +8616,7 @@ LaserEyeL_properties: #LASER EYE LEFT (placed right, shooting left)
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $D4
   single_layer_collision: true
   killroom_ignore: true
@@ -8670,7 +8669,7 @@ LaserEyeD_properties: #LASER EYE BOTTOM (placed high, shooting down)
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $D4
   single_layer_collision: true
   killroom_ignore: true
@@ -8723,7 +8722,7 @@ LaserEyeU_properties: #LASER EYE TOP (placed low, shooting up)
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $D4
   single_layer_collision: true
   killroom_ignore: true
@@ -8776,7 +8775,7 @@ Pengator_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8829,7 +8828,7 @@ Kyameron_properties:
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -8882,7 +8881,7 @@ Wizzrobe_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -8935,7 +8934,7 @@ Zoro_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -8988,7 +8987,7 @@ Babasu_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -9041,7 +9040,7 @@ OstrichHG_properties: #HAUNTED GROVE OSTRITCH
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -9094,7 +9093,7 @@ RabbitHG_properties: #HAUNTED GROVE RABBIT
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -9147,7 +9146,7 @@ BirdHG_properties: #HAUNTED GROVE BIRD
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -9200,7 +9199,7 @@ Freezor_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9253,7 +9252,7 @@ Kholdstare_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: false
@@ -9306,7 +9305,7 @@ KholdstareShell_properties: #KHOLDSTARE SHELL
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $1D
   single_layer_collision: false
   killroom_ignore: false
@@ -9359,7 +9358,7 @@ FallingIce_properties: #FALLING ICE
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -9412,7 +9411,7 @@ ZazakBlue_properties: #BLUE ZAZAK
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9465,7 +9464,7 @@ ZazakRed_properties: #RED ZAZAK
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9518,7 +9517,7 @@ StalfosBlue_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9571,7 +9570,7 @@ StalfosRed_properties:
   initial_palette: 3 # $08
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9625,7 +9624,7 @@ ZirroGreen_properties: #GREEN ZIRRO
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9678,7 +9677,7 @@ ZirroBlue_properties: #BLUE ZIRRO
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9731,7 +9730,7 @@ Pikit_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -9784,7 +9783,7 @@ Maiden_properties: #CRYSTAL MAIDEN
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -9837,7 +9836,7 @@ Apple_properties:
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -9890,7 +9889,7 @@ LostOldMan_properties: #OLD MAN
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -9943,7 +9942,7 @@ PipeD_properties: #PIPE DOWN
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -9996,7 +9995,7 @@ PipeU_properties: #PIPE UP
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10049,7 +10048,7 @@ PipeR_properties: #PIPE RIGHT
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10102,7 +10101,7 @@ PipeL_properties: #PIPE LEFT
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10155,7 +10154,7 @@ BeeGood_properties: #GOOD BEE
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $41
   single_layer_collision: false
   killroom_ignore: true
@@ -10208,7 +10207,7 @@ HylianPlaque_properties: #PEDESTAL PLAQUE
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10261,7 +10260,7 @@ PurpleChest_properties: #PURPLE CHEST
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10314,7 +10313,7 @@ BombSalesman_properties: #BOMB SHOP GUY
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10367,7 +10366,7 @@ Kiki_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10420,7 +10419,7 @@ BlindMaiden_properties: #BLIND MAIDEN
   initial_palette: 7 # $0E
   palette: 7
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10473,7 +10472,7 @@ DialogueTester_properties: #DIALOGUE TESTER
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10526,7 +10525,7 @@ FeudingFriends_properties: #BULLY / PINK BALL
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10579,7 +10578,7 @@ Whirlpool_properties:
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $01
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10632,7 +10631,7 @@ Proprieter_properties: #SHOPKEEPER / CHEST GAME GUY
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10685,7 +10684,7 @@ Drunkard_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $0A
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10738,7 +10737,7 @@ Vitreous_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: false
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: false
@@ -10791,7 +10790,7 @@ VitreousSmallEyeball_properties: #VITREOUS SMALL EYE
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -10844,7 +10843,7 @@ Lightning_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10897,7 +10896,7 @@ Catfish_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -10950,7 +10949,7 @@ AgahnimCutscene_properties: #CUTSCENE AGAHNIM
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -11003,7 +11002,7 @@ SingleBoulder_properties: # Only spawned by overlord
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $09
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -11056,7 +11055,7 @@ Gibo_properties:
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -11109,7 +11108,7 @@ Thief_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -11162,7 +11161,7 @@ Medusa_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -11215,7 +11214,7 @@ YomoMedusa_properties: #4WAY SHOOTER
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -11268,7 +11267,7 @@ Pokey_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -11321,7 +11320,7 @@ FairyBig_properties: #BIG FAIRY
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -11374,7 +11373,7 @@ TektiteBlue_properties: #TEKTITE / FIREBAT
   initial_palette: 4 # $0B
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -11430,7 +11429,7 @@ TektiteRed_properties: #TEKTITE / FIREBAT
   initial_palette: 3 # $07
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -11487,7 +11486,7 @@ ChainChomp_properties: #CHAIN CHOMP
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -11540,7 +11539,7 @@ Trinexx_properties: #TRINEXX ROCK HEAD
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $89
   single_layer_collision: true
   killroom_ignore: false
@@ -11593,7 +11592,7 @@ TrinexxHeadFire_properties: #TRINEXX FIRE HEAD
   initial_palette: 5 # $0A
   palette: 5
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -11646,7 +11645,7 @@ TrinexxHeadIce_properties: #TRINEXX ICE HEAD
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $80
   single_layer_collision: true
   killroom_ignore: false
@@ -11699,7 +11698,7 @@ Blind_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -11752,7 +11751,7 @@ Swamola_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1C
   single_layer_collision: false
   killroom_ignore: false
@@ -11805,7 +11804,7 @@ Lynel_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -11858,7 +11857,7 @@ BunnyBeam_properties: #BUNNYBEAM / SMOKE
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -11911,7 +11910,7 @@ FloppingFish_properties: #FLOPPING FISH
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -11964,7 +11963,7 @@ Stal_properties:
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $00
   single_layer_collision: false
   killroom_ignore: false
@@ -12017,7 +12016,7 @@ Landmine_properties:
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $1C
   single_layer_collision: false
   killroom_ignore: false
@@ -12070,7 +12069,7 @@ DiggingGameNPC_properties: #DIG GAME GUY
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $07
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -12123,7 +12122,7 @@ Ganon_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: false
@@ -12176,7 +12175,7 @@ GanonStunned_properties:
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: false
@@ -12229,7 +12228,7 @@ Heart_properties:
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12282,7 +12281,7 @@ RupeeGreen_properties: #GREEN RUPEE
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12335,7 +12334,7 @@ RupeeBlue_properties: #BLUE RUPEE
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12367,7 +12366,6 @@ RupeeBlue_properties: #BLUE RUPEE
 RupeeRed_properties: #RED RUPEE
   id: 0xDB
   owns_id: true
-  name: Red rupee
   # OAMHARM: $82
   harmless: true
   die_offscreen_tile: false
@@ -12389,7 +12387,7 @@ RupeeRed_properties: #RED RUPEE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12442,7 +12440,7 @@ BombRefill1_properties: #BOMB REFILL 1
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12495,7 +12493,7 @@ BombRefill4_properties: #BOMB REFILL 4
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12548,7 +12546,7 @@ BombRefill8_properties: #BOMB REFILL 8
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12601,7 +12599,7 @@ MagicRefillSmall_properties: #SMALL MAGIC DECANTER
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12654,7 +12652,7 @@ MagicRefillFull_properties: #LARGE MAGIC DECANTER
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12707,7 +12705,7 @@ ArrowRefill5_properties: #ARROW REFILL 5
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12760,7 +12758,7 @@ ArrowRefill10_properties: #ARROW REFILL 10
   initial_palette: 2 # $04
   palette: 2
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12813,7 +12811,7 @@ Fairy_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $43
   single_layer_collision: false
   killroom_ignore: true
@@ -12866,7 +12864,7 @@ Key_properties: #SMALL KEY
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $44
   single_layer_collision: false
   killroom_ignore: true
@@ -12919,7 +12917,7 @@ BigKey_properties: #BIG KEY
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $43
   single_layer_collision: false
   killroom_ignore: true
@@ -12972,7 +12970,7 @@ Shield_properties: #STOLEN SHIELD
   initial_palette: 7 # $0E
   palette: 7
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $40
   single_layer_collision: false
   killroom_ignore: true
@@ -13025,7 +13023,7 @@ Mushroom_properties:
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $C0
   single_layer_collision: true
   killroom_ignore: true
@@ -13078,7 +13076,7 @@ FakeMasterSword_properties: #FAKE MASTER SWORD
   initial_palette: 4 # $08
   palette: 4
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $C0
   single_layer_collision: true
   killroom_ignore: true
@@ -13131,7 +13129,7 @@ PotionShop_properties: #MAGIC SHOP ASSISTANT
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $C7
   single_layer_collision: true
   killroom_ignore: true
@@ -13184,7 +13182,7 @@ HeartContainer_properties: #HEART CONTAINER
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $C3
   single_layer_collision: true
   killroom_ignore: true
@@ -13237,7 +13235,7 @@ HeartPiece_properties: #HEART PIECE
   initial_palette: 1 # $02
   palette: 1
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $C3
   single_layer_collision: true
   killroom_ignore: true
@@ -13290,7 +13288,7 @@ Throwable_properties: #THROWN ITEM
   initial_palette: 6 # $0C
   palette: 6
   initial_second_oam_nametable: false
-  oam_nametable: 0
+  second_oam_nametable: false
   # HITBOX: $C0
   single_layer_collision: true
   killroom_ignore: true
@@ -13343,7 +13341,7 @@ SomariaPlatform_properties: #SOMARIA PLATFORM
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -13396,7 +13394,7 @@ Mantle_properties: #CASTLE MANTLE
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $08
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -13431,7 +13429,7 @@ SomariaPlatform1_properties: #UNUSED SOMARIA PLATFORM
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -13439,16 +13437,17 @@ SomariaPlatform1_properties: #UNUSED SOMARIA PLATFORM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C7
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
-  oam_nametable: 1
+  initial_second_oam_nametable: true
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -13483,7 +13482,7 @@ SomariaPlatform2_properties: #UNUSED SOMARIA PLATFORM
   # OAMHARM: $83
   harmless: true
   die_offscreen_tile: false
-  smaller_tile_hitbox: false
+  tile_hitbox_68: false
   oam_allocation: 0x03
   # HEALTH
   health: 0
@@ -13491,16 +13490,17 @@ SomariaPlatform2_properties: #UNUSED SOMARIA PLATFORM
   ignore_collision_recoil: false
   bee_target: false
   powder_immune: false
+  survives_boss_prep: false
   bump_damage_class: 0x0
   # OAMPROP: $C7
   custom_death: true
   invulnerable: true
   small_shadow: false
   has_shadow: false
-  default_oam_palette: 3 # $06
+  initial_palette: 3 # $06
   palette: 3
-  default_oam_nametable: 1
-  oam_nametable: 1
+  initial_second_oam_nametable: true
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -13553,7 +13553,7 @@ SomariaPlatform3_properties: #UNUSED SOMARIA PLATFORM
   initial_palette: 3 # $06
   palette: 3
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $1B
   single_layer_collision: false
   killroom_ignore: true # false in vanilla
@@ -13606,7 +13606,7 @@ MedallionTablet_properties: #MEDALLION TABLET
   initial_palette: 0 # $00
   palette: 0
   initial_second_oam_nametable: true
-  oam_nametable: 1
+  second_oam_nametable: true
   # HITBOX: $03
   single_layer_collision: false
   killroom_ignore: true # false in vanilla

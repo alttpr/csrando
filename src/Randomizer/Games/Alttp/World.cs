@@ -56,7 +56,52 @@ public sealed class World : World<Item>, IPortalHost
         }
 
         items.AddRange(Config.StartingEquipment.Select(GetItem));
-        StartingItems = new Inventory(items.ToArray());
+        StartingItems = new Inventory([.. items]);
+
+        // fetch and build sprite data
+        var sprInfo = Sprites;
+        var sprProp = SpriteData;
+
+        foreach (var (name, sprite) in YamlReader.LoadSpriteData())
+        {
+            SpriteProperties prop = SpriteProperties.FromYaml(name, sprite);
+            sprProp.Add(name, prop); // using Dictionary.Add because we want to detect duplicate keys
+        }
+
+        foreach (var (name, sprite) in YamlReader.LoadSprites())
+        {
+            SpriteProperties? props;
+            if (sprite.Properties is string propName)
+            {
+                if (sprProp.TryGetValue(propName, out var propsData))
+                {
+                    props = propsData;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"{name} contains an invalid value for key 'properties': '{propName}'");
+                }
+            }
+            else
+            {
+                props = null;
+            }
+
+            Sprite toAdd = new(name, sprite.Id)
+            {
+                Sheets = sprite.Sheets,
+                Flags = sprite.Flags,
+                SubType = sprite.SubType,
+                DefeatName = sprite.AlternativeName ?? name,
+                FallingSpriteFor = sprite.FallingSpriteFor,
+                Priority = sprite.Priority,
+                NotWith = sprite.NotWith,
+                Weight = sprite.Weight,
+                Properties = props,
+            };
+
+            sprInfo.Add(name, toAdd); // using Dictionary.Add because we want to detect duplicate keys
+        }
 
         Start = DataLoader.Fill(this);
 
@@ -80,52 +125,6 @@ public sealed class World : World<Item>, IPortalHost
 
         foreach (var modifier in modifiers)
             modifier.AdjustEdges(this, prng);
-
-
-        // fetch and buildsprite data
-        var sprInfo = Sprites;
-        var sprProp = SpriteData;
-
-        foreach (var (name, sprite) in YamlReader.LoadSpriteData())
-        {
-            SpriteProperties prop = SpriteProperties.FromYaml(name, sprite);
-            sprProp.Add(name, prop); // using Dictionary.Add because we want to detect duplicate keys
-        }
-
-        foreach (var (name, sprite) in YamlReader.LoadSprites())
-        {
-            SpriteProperties? props;
-            if (sprite.Properties is string propName)
-            {
-                if (sprProp.TryGetValue(propName, out var propsData))
-                {
-                    props = propsData;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"{name} contains an invalid value for key 'properties': '{propName}");
-                }
-            }
-            else
-            {
-                props = null;
-            }
-
-            Sprite toAdd = new(name, sprite.Id)
-            {
-                Sheets = sprite.Sheets,
-                Flags = sprite.Flags,
-                SubType = sprite.SubType,
-                DefeatName = sprite.AlternativeName ?? name,
-                FallingSpriteFor = sprite.FallingSpriteFor,
-                Priority = sprite.Priority,
-                NotWith = sprite.NotWith,
-                Weight = sprite.Weight,
-                Properties = props,
-            };
-
-            sprInfo.Add(name, toAdd); // using Dictionary.Add because we want to detect duplicate keys
-        }
     }
 
     public Inventory ComputeStartingItems()
