@@ -33,7 +33,7 @@ public sealed record class SpriteProperties
     public int[]? OamHarmAddresses { get; init; } = null;
 
     /// <summary>
-    /// Gets or sets whether or not the sprite is completely harmless to the player.
+    /// When <see langword="true"/> this sprite cannot damage the player.
     /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMHarm))]
     public bool IsHarmless
@@ -43,7 +43,7 @@ public sealed record class SpriteProperties
     }
 
     /// <summary>
-    /// Gets or sets whether a sprite dies off screen during tile checks.
+    /// When <see langword="true"/> this sprite dies off screen specifically during tile collision checks.
     /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMHarm))]
     public bool KillWhenOffscreenDuringTileChecks
@@ -53,7 +53,8 @@ public sealed record class SpriteProperties
     }
 
     /// <summary>
-    /// When set, this sprite will use a special hardcoded tile collision check.
+    /// When <see langword="true"/> this sprite uses a hard-coded set of tile hitbox offsets,
+    /// ignoring <see cref="TileHitboxOffsets"/>.
     /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMHarm))]
     public bool UseTileHitbox68
@@ -72,9 +73,6 @@ public sealed record class SpriteProperties
         set => Property_OAMHarm = Property_OAMHarm.SetField(0, 5, value);
     }
 
-
-
-
     [PackedBitfield(nameof(IgnoreCollisionWhenRecoiling))]
     [PackedBitfield(nameof(BeeTarget))]
     [PackedBitfield(nameof(ImmuneToPowder))]
@@ -84,6 +82,9 @@ public sealed record class SpriteProperties
     public byte Property_BUMP { get; set; } = 0;
     public int[]? BumpAddresses { get; init; } = null;
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will ignore all collision while recoiling from damage.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_BUMP))]
     public bool IgnoreCollisionWhenRecoiling
     {
@@ -91,6 +92,9 @@ public sealed record class SpriteProperties
         set => Property_BUMP = Property_BUMP.SetBit(7, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite becomes a high priority target for play bees to attack.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_BUMP))]
     public bool BeeTarget
     {
@@ -98,14 +102,22 @@ public sealed record class SpriteProperties
         set => Property_BUMP = Property_BUMP.SetBit(6, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> powder can never hit this sprite.
+    /// </summary>
+    /// <remarks>
+    /// This property is unused in vanilla.
+    /// </remarks>
     [PackedBitfieldAccessor(nameof(Property_BUMP))]
-    [ValueRange(0, 9)]
     public bool ImmuneToPowder
     {
         get => Property_BUMP.BitIsSet(5);
         set => Property_BUMP = Property_BUMP.SetBit(5, value);
     }
 
+    /// <summary>
+    /// When <see langword="false"/> this sprite will die if they exist when a boss spawns.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_BUMP))]
     public bool SurvivesBossPrep
     {
@@ -113,13 +125,16 @@ public sealed record class SpriteProperties
         set => Property_BUMP = Property_BUMP.SetBit(4, value);
     }
 
+    /// <summary>
+    /// Bump damage class.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_BUMP))]
+    [ValueRange(0, 9)]
     public byte BumpDamageClass
     {
         get => Property_BUMP.GetField(0, 4);
         set => Property_BUMP = Property_BUMP.SetField(0, 4, value);
     }
-
 
     [PackedBitfield(nameof(HasCustomDeathAnimation))]
     [PackedBitfield(nameof(IsInvulnerable))]
@@ -131,6 +146,9 @@ public sealed record class SpriteProperties
     public byte Property_OAMProp { get; set; }
     public int[]? OamPropAddresses { get; init; } = null;
 
+    /// <summary>
+    /// When <see langword="true"/> the death poof of this sprite is elided.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMProp))]
     public bool HasCustomDeathAnimation
     {
@@ -145,6 +163,10 @@ public sealed record class SpriteProperties
         set => Property_OAMProp = Property_OAMProp.SetBit(6, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> a sprite that has a shadow will draw a small shadow
+    /// if it is using the default shadow routine.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMProp))]
     public bool ShadowIsSmall
     {
@@ -152,6 +174,10 @@ public sealed record class SpriteProperties
         set => Property_OAMProp = Property_OAMProp.SetBit(5, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will draw a shadow if it
+    /// is drawn with a default drawing routine.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMProp))]
     public bool HasAShadow
     {
@@ -159,6 +185,11 @@ public sealed record class SpriteProperties
         set => Property_OAMProp = Property_OAMProp.SetBit(4, value);
     }
 
+    /// <summary>
+    /// The sprite's initial palette.
+    /// This is often immediately written to the used palette,
+    /// but in some cases, that may be changed during initialization.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMProp))]
     [ValueRange(0, 7)]
     public byte InitialPalette
@@ -167,6 +198,11 @@ public sealed record class SpriteProperties
         set => Property_OAMProp = Property_OAMProp.SetField(1, 3, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> the sprite's initial table will be page 2.
+    /// This is often immediately written to the used value,
+    /// but in some cases, that may be changed during initialization.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_OAMProp))]
     public bool InitialUsesSecondNameTable
     {
@@ -174,11 +210,18 @@ public sealed record class SpriteProperties
         set => Property_OAMProp = Property_OAMProp.SetBit(0, value);
     }
 
-
+    /// <summary>
+    /// Misc OAM properties.
+    /// <para id="miscpal">This only gets written to the addresses in <see cref="MiscPaletteAddresses"/>.</para>
+    /// </summary>
     [PackedBitfield(nameof(Palette))]
     [PackedBitfield(nameof(UsesSecondNameTable))]
     public byte DrawProperties { get; set; }
 
+    /// <summary>
+    /// A sprite's used palette.
+    /// <inheritdoc cref="DrawProperties" path="//summary/para[@id='miscpal']"/>
+    /// </summary>
     [PackedBitfieldAccessor(nameof(DrawProperties))]
     [ValueRange(0, 7)]
     public byte Palette
@@ -187,6 +230,10 @@ public sealed record class SpriteProperties
         set => DrawProperties = DrawProperties.SetField(1, 3, value);
     }
 
+    /// <summary>
+    /// A sprite's used nametable.
+    /// <inheritdoc cref="DrawProperties" path="//summary/para[@id='miscpal']"/>
+    /// </summary>
     [PackedBitfieldAccessor(nameof(DrawProperties))]
     public bool UsesSecondNameTable
     {
@@ -194,8 +241,6 @@ public sealed record class SpriteProperties
         set => DrawProperties = Property_OAMProp.SetBit(0, value);
     }
     public int[]? MiscPaletteAddresses { get; init; } = null;
-
-
 
     [PackedBitfield(nameof(UsesSingleLayerCollision))]
     [PackedBitfield(nameof(IgnoredByKillRooms))]
@@ -205,7 +250,9 @@ public sealed record class SpriteProperties
     public byte Property_HITBOX { get; set; }
     public int[]? HitboxAddresses { get; init; } = null;
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite only check one layer of collision.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_HITBOX))]
     public bool UsesSingleLayerCollision
     {
@@ -213,7 +260,9 @@ public sealed record class SpriteProperties
         set => Property_HITBOX = Property_HITBOX.SetBit(7, value);
     }
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite does not need to be defeated for kill puzzles.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_HITBOX))]
     public bool IgnoredByKillRooms
     {
@@ -221,7 +270,9 @@ public sealed record class SpriteProperties
         set => Property_HITBOX = Property_HITBOX.SetBit(6, value);
     }
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite will be active even if it is too far off screen.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_HITBOX))]
     public bool StaysActiveOffscreen
     {
@@ -229,7 +280,10 @@ public sealed record class SpriteProperties
         set => Property_HITBOX = Property_HITBOX.SetBit(5, value);
     }
 
-    [PackedBitfieldAccessor(nameof(Property_OAMProp))]
+    /// <summary>
+    /// Sprite hitbox ID.
+    /// </summary>
+    [PackedBitfieldAccessor(nameof(Property_HITBOX))]
     [ValueRange(0x00, 0x1F)]
     public byte Hitbox
     {
@@ -237,23 +291,32 @@ public sealed record class SpriteProperties
         set => Property_OAMProp = Property_OAMProp.SetField(0, 5, value);
     }
 
-
     [PackedBitfield(nameof(TileHitboxOffsets))]
     [PackedBitfield(nameof(DeflectsArrows))]
-    [PackedBitfield(nameof(RefreshingHits))]
+    [PackedBitfield(nameof(AllowNondamagingHits))]
     [PackedBitfield(nameof(DiesLikeABoss))]
     [PackedBitfield(nameof(InvertPitBehavior))]
     [DisassemblyName(FileName = "bank_0D.asm", SymbolName = "SpriteData_TileInteraction", Address = 0x0DB53F)]
     public byte Property_TILEDIE { get; set; }
     public int[]? TileDieAddresses { get; init; } = null;
 
+    /// <summary>
+    /// Tile hitbox offsets (see disassembly).
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_TILEDIE))]
+    [DisassemblyName(FileName = "bank_06.asm", SymbolName = "CheckSpriteTileProperty", Address = 0x06E651)]
     public byte TileHitboxOffsets
     {
         get => Property_TILEDIE.GetField(4, 4);
         set => Property_TILEDIE = Property_OAMProp.SetField(4, 4, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will deflect arrows.
+    /// </summary>
+    /// <remarks>
+    /// There is also a special case for sprite 1B (the sprite arrow).
+    /// </remarks>
     [PackedBitfieldAccessor(nameof(Property_TILEDIE))]
     public bool DeflectsArrows
     {
@@ -261,13 +324,23 @@ public sealed record class SpriteProperties
         set => Property_TILEDIE = Property_TILEDIE.SetBit(3, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will allow hits to connect
+    /// even if the source of the hit deals 0 damage.
+    /// This does not apply to powder, due to the way the code is written.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_TILEDIE))]
-    public bool RefreshingHits
+    public bool AllowNondamagingHits
     {
         get => Property_TILEDIE.BitIsSet(2);
         set => Property_TILEDIE = Property_TILEDIE.SetBit(2, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will
+    /// use the boss damage sound effect when hit and
+    /// explode when it dies.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_TILEDIE))]
     public bool DiesLikeABoss
     {
@@ -275,6 +348,21 @@ public sealed record class SpriteProperties
         set => Property_TILEDIE = Property_TILEDIE.SetBit(1, value);
     }
 
+    /// <summary>
+    /// This property does two separate and contradictory things:
+    /// <list type="bullet">
+    /// <item>
+    /// For thrown sprites,
+    /// when this is <see langword="true"/> they will ignore pits;
+    /// otherwise, they will fall.
+    /// </item>
+    /// <item>
+    /// For regular sprites,
+    /// when this is <see langword="true"/> they will see pits as pits and fall;
+    /// otherwise, they will treat is as a solid wall.
+    /// </item>
+    /// </list>
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_TILEDIE))]
     public bool InvertPitBehavior
     {
@@ -291,7 +379,9 @@ public sealed record class SpriteProperties
     public byte Property_PRIZE { get; set; }
     public int[]? PrizeAddresses { get; init; } = null;
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite sprites will elide checks for conveyors and pits.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_PRIZE))]
     public bool LimitedPitAndConveryorInteractions
     {
@@ -299,6 +389,9 @@ public sealed record class SpriteProperties
         set => Property_PRIZE = Property_PRIZE.SetBit(7, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite perform extra checks for water tiles.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_PRIZE))]
     public bool UniqueWaterCheck
     {
@@ -306,6 +399,10 @@ public sealed record class SpriteProperties
         set => Property_PRIZE = Property_PRIZE.SetBit(6, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will die
+    /// if it hits Link when he has a shield and is facing the sprite.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_PRIZE))]
     public bool BlockedByShield
     {
@@ -313,6 +410,9 @@ public sealed record class SpriteProperties
         set => Property_PRIZE = Property_PRIZE.SetBit(5, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite uses a different damage sound.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_PRIZE))]
     public bool UsesAlternateDamageSound
     {
@@ -320,6 +420,9 @@ public sealed record class SpriteProperties
         set => Property_PRIZE = Property_PRIZE.SetBit(4, value);
     }
 
+    /// <summary>
+    /// Prize pack ID.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_PRIZE))]
     [ValueRange(0, 7)]
     public byte PrizePack
@@ -327,9 +430,6 @@ public sealed record class SpriteProperties
         get => Property_PRIZE.GetField(0, 4);
         set => Property_PRIZE = Property_PRIZE.SetField(0, 4, value);
     }
-
-
-
 
     [PackedBitfield(nameof(PersistsOffscreenOnOverworld))]
     [PackedBitfield(nameof(AlwaysDiesOffscreen))]
@@ -343,7 +443,11 @@ public sealed record class SpriteProperties
     public byte Property_DEFLECT { get; set; }
     public int[]? DeflectAddresses { get; init; } = null;
 
-
+    // GC.KeepAlive(sprite); lol
+    /// <summary>
+    /// When <see langword="true"/> this sprite is not garbage collected
+    /// when it is off screen on the overworld.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool PersistsOffscreenOnOverworld
     {
@@ -351,7 +455,9 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(7, value);
     }
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite will immediately die when it's off screen.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool AlwaysDiesOffscreen
     {
@@ -359,7 +465,10 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(6, value);
     }
 
-
+    /// <summary>
+    /// This property is not used anywhere in the game, but it seems to have been a marker
+    /// for objects like statues, switches, etc.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool UnusedStatueMarker
     {
@@ -367,7 +476,13 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(5, value);
     }
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite forces a direction check
+    /// on ancillae that collide with it.
+    /// </summary>
+    /// <remarks>
+    /// This flag is not set on any sprite in vanilla.
+    /// </remarks>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool AncillaeCheckDirectionAgainst
     {
@@ -375,7 +490,10 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(4, value);
     }
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite uses a different collision table
+    /// that allows it to fly over "short" walls.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool UsesProjectileCollision
     {
@@ -383,7 +501,9 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(3, value);
     }
 
-
+    /// <summary>
+    /// When <see langword="true"/> this sprite is immune to sword and hammer attacks.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool ImmuneToSwordAndHammer
     {
@@ -391,6 +511,11 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(2, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite is not deleted by boss prep,
+    /// similar to <see cref="SurvivesBossPrep"/>, but this is also used as a flag
+    /// for bonkable items and allows them to be acknowledged by ancillae with a tracked slot.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool BonkableItemMarker
     {
@@ -398,6 +523,10 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(1, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite will not flag its slot in the death table
+    /// when it dies in the underworld.
+    /// </summary>
     [PackedBitfieldAccessor(nameof(Property_DEFLECT))]
     public bool DoesNotPermanentlyDieInUnderworld
     {
@@ -405,6 +534,13 @@ public sealed record class SpriteProperties
         set => Property_DEFLECT = Property_DEFLECT.SetBit(0, value);
     }
 
+    /// <summary>
+    /// When <see langword="true"/> this sprite completely ignores all ancillae.
+    /// </summary>
+    /// <remarks>
+    /// This property is only set by code and cannot be randomized,
+    /// but is tracked for utility purposes.
+    /// </remarks>
     // This can't actually be changed easily, but it's useful to know
     public bool ImmuneToAncillae { get; init; }
 
@@ -513,7 +649,7 @@ public sealed record class SpriteProperties
             ImmuneToPowder = serial.ImmuneToPowder,
             PrizeAddresses = serial.PrizeAddresses,
             PrizePack = serial.PrizePack,
-            RefreshingHits = serial.RefreshingHits,
+            AllowNondamagingHits = serial.AllowNondamagingHits,
             UsesSingleLayerCollision = serial.UsesSingleLayerCollision,
             ShadowIsSmall = serial.ShadowIsSmall,
             UseTileHitbox68 = serial.UseTileHitbox68,

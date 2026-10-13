@@ -434,7 +434,7 @@ public class YamlSpriteData
     [YamlMember(Alias = "powder_immune")] public bool ImmuneToPowder { get; set; }
     [YamlMember(Alias = "prize_addresses")] public int[]? PrizeAddresses { get; set; }
     [YamlMember(Alias = "prize_pack")] public byte PrizePack { get; set; }
-    [YamlMember(Alias = "reset_sword")] public bool RefreshingHits { get; set; }
+    [YamlMember(Alias = "allow_nondamaging_hits")] public bool AllowNondamagingHits { get; set; }
     [YamlMember(Alias = "single_layer_collision")] public bool UsesSingleLayerCollision { get; set; }
     [YamlMember(Alias = "small_shadow")] public bool ShadowIsSmall { get; set; }
     [YamlMember(Alias = "tile_hitbox_68")] public bool UseTileHitbox68 { get; set; }

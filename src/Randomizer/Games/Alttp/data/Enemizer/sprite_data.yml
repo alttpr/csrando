@@ -33,7 +33,7 @@ Raven_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $06 # $83 in master table
@@ -89,7 +89,7 @@ Dacto_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $02 # $83 in master table
@@ -145,7 +145,7 @@ Vulture_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $96
@@ -198,7 +198,7 @@ FlyingStalfosHead_properties: #STALFOS HEAD
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $84
@@ -251,9 +251,9 @@ Empty_properties: #NULL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -304,9 +304,9 @@ PullSwitchGood_properties: #CORRECT PULL SWITCH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -357,7 +357,7 @@ MimicGreen_properties: #GREEN EYEGORE / GREEN MIMIC - Commandeering unused pull 
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $15
@@ -410,9 +410,9 @@ PullSwitchBad_properties: #WRONG PULL SWITCH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -463,7 +463,7 @@ MimicRed_properties: #RED EYEGORE / RED MIMIC - Commandeering unused switch
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $15
@@ -516,7 +516,7 @@ Octorok1_properties: #OKTOROK
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $02
@@ -571,7 +571,7 @@ Slarok1_properties: #SLAROK
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $02
@@ -625,9 +625,9 @@ Moldorm_properties:
   hitbox: 0x00
   # TILEHITBOX: $0A
   tile_hitbox: 0x0 # $00
-  deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  deflect_arrows: true
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -680,7 +680,7 @@ Octorok4_properties: #OCTOROK 4WAY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $02
@@ -735,7 +735,7 @@ Slarok4_properties: #SLAROK 4WAY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $02
@@ -790,9 +790,9 @@ Chicken_properties: #CUCCO
   # TILEHITBOX: $01
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: false
+  pit_behavior: true
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -842,8 +842,8 @@ OctorokStone_properties: #OCTOROK STONE
   hitbox: 0x1C
   # TILEHITBOX: $30
   tile_hitbox: 0x3 # $30
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $A0
@@ -896,7 +896,7 @@ Buzzblob_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $83
@@ -949,7 +949,7 @@ Snapdragon_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $97
@@ -1002,8 +1002,8 @@ Octoballoon_properties:
   # TILEHITBOX: $20
   tile_hitbox: 0x2 # $20
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -1055,9 +1055,9 @@ Octobaby_properties: #OCTOBALLOON BABY
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -1108,9 +1108,9 @@ Hinox_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $94
   limit_pit_interactions: true
   test_water_collision: false
@@ -1161,7 +1161,7 @@ Moblin_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $91
@@ -1214,9 +1214,9 @@ MiniHelmasaur_properties: #MINI HELMASAUR
   # TILEHITBOX: $01
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: false
+  pit_behavior: true
   # PRIZEPACK: $07
   limit_pit_interactions: false
   test_water_collision: false
@@ -1267,9 +1267,9 @@ ForkGate_properties: #THIEVES TOWN GRATE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -1320,7 +1320,7 @@ Antifairy_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -1373,9 +1373,9 @@ Sahasrahla_properties: #SAHASRAHLA / AGINAH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -1426,7 +1426,7 @@ BushHoarder_properties: #HOARDER
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -1479,7 +1479,7 @@ MiniMoldorm_properties: #MINI MOLDORM
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $92
@@ -1532,7 +1532,7 @@ Poe_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $96
@@ -1585,9 +1585,9 @@ DwarfSmith_properties: #SMITHY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -1637,10 +1637,10 @@ SpriteArrow_properties: #ARROW
   hitbox: 0x05
   # TILEHITBOX: $08
   tile_hitbox: 0x0 # $00
-  deflect_arrows: false
-  reset_sword: true
+  deflect_arrows: true
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $A0
   limit_pit_interactions: true
   test_water_collision: false
@@ -1691,9 +1691,9 @@ Statue_properties:
   # TILEHITBOX: $20
   tile_hitbox: 0x2 # $20
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -1744,7 +1744,7 @@ FluteQuest_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -1797,7 +1797,7 @@ CrystalSwitch_properties: #CRYSTAL SWITCH
   # TILEHITBOX: $04
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: true
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -1849,10 +1849,10 @@ SickKid_properties: #SICK KID
   hitbox: 0x0D
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -1903,7 +1903,7 @@ Sluggula_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $04
@@ -1956,7 +1956,7 @@ PushSwitch_properties: #WATER SWITCH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -2009,7 +2009,7 @@ Ropa_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -2062,7 +2062,7 @@ RedBari_properties: #RED BARI
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $06
@@ -2115,7 +2115,7 @@ BlueBari_properties: #BLUE BARI
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $06
@@ -2168,7 +2168,7 @@ TalkingTree_properties: #TALKING TREE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -2221,9 +2221,9 @@ HardhatBeetleBlue_properties: #HARDHAT BEETLE
   # TILEHITBOX: $01
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: false
+  pit_behavior: true
   # PRIZEPACK: $06 # $00 in master table
   limit_pit_interactions: false
   test_water_collision: false
@@ -2278,9 +2278,9 @@ HardhatBeetleRed_properties: #HARDHAT BEETLE
   # TILEHITBOX: $01
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: false
+  pit_behavior: true
   # PRIZEPACK: $02 # $00 in master table
   limit_pit_interactions: false
   test_water_collision: false
@@ -2335,7 +2335,7 @@ Deadrock_properties:
   # TILEHITBOX: $04
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: true
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -2388,9 +2388,9 @@ Storyteller_properties: #DARK WORLD HINT NPC
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2441,9 +2441,9 @@ Adult_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2494,9 +2494,9 @@ SweepingLady_properties: #SWEEPING LADY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2547,9 +2547,9 @@ Hobo_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2600,9 +2600,9 @@ Lumberjack_properties: #LUMBERJACKS
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2653,9 +2653,9 @@ NecklessMan_properties: #used to be TelepathyTile, for its message
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2705,10 +2705,10 @@ FluteKid_properties: #FLUTE KID
   hitbox: 0x0D
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2759,9 +2759,9 @@ RaceGameLady_properties: #RACE GAME LADY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2812,9 +2812,9 @@ RaceGameBoy_properties: #RACE GAME GUY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2865,9 +2865,9 @@ FortuneTeller_properties: #FORTUNE TELLER
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2918,9 +2918,9 @@ AngryBrother_properties: #ARGUE BROS
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -2971,9 +2971,9 @@ PullForRupees_properties: #RUPEE PULL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3024,9 +3024,9 @@ YoungSnitch_properties: #YOUNG SNITCH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3077,9 +3077,9 @@ Innkeeper_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3130,9 +3130,9 @@ Witch_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3183,7 +3183,7 @@ Waterfall_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -3236,9 +3236,9 @@ ArrowTarget_properties: #EYE STATUE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3289,9 +3289,9 @@ AverageMan_properties: #LOCKSMITH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3341,10 +3341,10 @@ MagicBat_properties: #MAGIC BAT
   hitbox: 0x0D
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3395,7 +3395,7 @@ DashItem_properties: #BONK ITEM
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -3448,9 +3448,9 @@ VillageKid_properties: #KID IN KAK
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -3498,9 +3498,9 @@ OldSnitch_properties: #OLD SNITCH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3551,7 +3551,7 @@ RockHoarder_properties: #HOARDER
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -3603,8 +3603,8 @@ TutorialGuard_properties: #TUTORIAL GUARD
   hitbox: 0x00
   # TILEHITBOX: $68
   tile_hitbox: 0x6 # $60
-  deflect_arrows: false
-  reset_sword: false
+  deflect_arrows: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $90
@@ -3656,10 +3656,10 @@ LightningLock_properties: #LIGHTNING GATE
   hitbox: 0x09
   # TILEHITBOX: $60
   tile_hitbox: 0x6 # $60
-  deflect_arrows: true
-  reset_sword: false
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -3710,9 +3710,9 @@ BlueSwordGuard_properties: #BLUE GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $91
   limit_pit_interactions: true
   test_water_collision: false
@@ -3763,9 +3763,9 @@ GreenSwordGuard_properties: #GREEN GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $91
   limit_pit_interactions: true
   test_water_collision: false
@@ -3816,9 +3816,9 @@ RedSpearGuard_properties: #RED SPEAR GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $91
   limit_pit_interactions: true
   test_water_collision: false
@@ -3869,9 +3869,9 @@ AssaultSwordGuard_properties: #BLUESAIN BOLT
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $97
   limit_pit_interactions: true
   test_water_collision: false
@@ -3922,9 +3922,9 @@ FastRedSpearGuard_properties: #USAIN BOLT
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $91
   limit_pit_interactions: true
   test_water_collision: false
@@ -3975,9 +3975,9 @@ BlueArcher_properties: #BLUE ARCHER
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $95
   limit_pit_interactions: true
   test_water_collision: false
@@ -4028,9 +4028,9 @@ GreenArcher_properties: #GREEN BUSH GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $95
   limit_pit_interactions: true
   test_water_collision: false
@@ -4081,9 +4081,9 @@ RedJavelinGuard_properties: #RED JAVELIN GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $93
   limit_pit_interactions: true
   test_water_collision: false
@@ -4134,9 +4134,9 @@ RedBushGuard_properties:
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $97
   limit_pit_interactions: true
   test_water_collision: false
@@ -4187,9 +4187,9 @@ RedBombGuard_properties: #BOMB GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $14
   limit_pit_interactions: false
   test_water_collision: false
@@ -4241,9 +4241,9 @@ SpriteBomb_properties: #BOMB GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $14
   limit_pit_interactions: false
   test_water_collision: false
@@ -4297,9 +4297,9 @@ GreenGuardRecruit_properties: #GREEN KNIFE GUARD
   # TILEHITBOX: $61
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: true
   # PRIZEPACK: $91
   limit_pit_interactions: true
   test_water_collision: false
@@ -4350,7 +4350,7 @@ Geldman_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $92
@@ -4403,7 +4403,7 @@ Rabbit_properties: #TOPPO
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $81
@@ -4456,7 +4456,7 @@ Popo_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -4509,7 +4509,7 @@ PopoFast_properties: #POPO
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -4562,7 +4562,7 @@ Cannonball_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -4615,8 +4615,8 @@ Armos_properties: #ARMOS STATUE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $85
   limit_pit_interactions: true
@@ -4667,10 +4667,10 @@ KingZora_properties: #KING ZORA
   hitbox: 0x09
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -4720,10 +4720,10 @@ ArmosKnight_properties: #ARMOS KNIGHT
   hitbox: 0x09
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -4774,8 +4774,8 @@ Lanmolas_properties:
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -4827,7 +4827,7 @@ FireballZora_properties: #ZORA / FIREBALL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $04
@@ -4880,7 +4880,7 @@ Fireball_properties: #FIREBALL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -4938,7 +4938,7 @@ WalkingZora_properties: #ZORA
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $04
@@ -4990,8 +4990,8 @@ DesertPalaceBarrier_properties: #DESERT STATUE?
   hitbox: 0x0C
   # TILEHITBOX: $70
   tile_hitbox: 0x7 # $70
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5044,7 +5044,7 @@ Crab_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $91
@@ -5097,7 +5097,7 @@ Bird_properties: #LOST WOODS BIRD
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5150,7 +5150,7 @@ Squirrel_properties: #LOST WOODS SQUIRREL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5203,7 +5203,7 @@ SparkCW_properties: #SPARK CLOCKWISE
   # TILEHITBOX: $90
   tile_hitbox: 0x9 # $90
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5256,7 +5256,7 @@ SparkCCW_properties: #SPARK COUNTERCLOCKWISE
   # TILEHITBOX: $90
   tile_hitbox: 0x9 # $90
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5309,7 +5309,7 @@ RollerVU_properties: #ROLLER VERTICAL UP (placed high, moving downwards first)
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5362,7 +5362,7 @@ RollerVD_properties: #ROLLER VERTICAL DOWN (placed low, moving upwards first)
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5414,9 +5414,9 @@ RollerHL_properties: #ROLLER HORIZONTAL LEFT (placed left, moving right first)
   hitbox: 0x0E
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -5467,9 +5467,9 @@ RollerHR_properties: #ROLLER HORIZONTAL RIGHT (placed right, moving left first)
   hitbox: 0x0E
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -5521,7 +5521,7 @@ Beamos_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -5573,9 +5573,9 @@ MasterSword_properties:
   hitbox: 0x1E
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -5627,9 +5627,9 @@ DevalantBlue_properties: #DEBIRANDO PIT
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -5682,7 +5682,7 @@ DevalantRed_properties: #DEBIRANDO
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -5736,9 +5736,9 @@ ShootingGalleryNPC_properties: #ARCHERY GUY
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $8A
   limit_pit_interactions: true
@@ -5790,7 +5790,7 @@ CannonBallShooterR_properties: #WALL CANNON VERTICAL RIGHT (placed left, shootin
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5843,7 +5843,7 @@ CannonBallShooterL_properties: #WALL CANNON VERTICAL LEFT (placed right, shootin
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5896,7 +5896,7 @@ CannonBallShooterD_properties: #WALL CANNON HORIZONTAL BOTTOM (placed high, shoo
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -5949,7 +5949,7 @@ CannonBallShooterU_properties: #WALL CANNON HORIZONTAL TOP (placed low, shooting
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -6002,8 +6002,8 @@ BallNChainTrooper_properties: #BALL N CHAIN
   # TILEHITBOX: $60
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $92
   limit_pit_interactions: true
@@ -6055,8 +6055,8 @@ CannonGuard_properties: #CANNONBALL / CANNON TROOPER
   # TILEHITBOX: $60
   tile_hitbox: 0x6 # $60
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $91
   limit_pit_interactions: true
@@ -6108,7 +6108,7 @@ MirrorPortal_properties: #MIRROR PORTAL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -6161,7 +6161,7 @@ Rat_properties: #RAT / CRICKET
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -6216,7 +6216,7 @@ Buzz_properties: #BUZZ / CRICKET
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -6271,7 +6271,7 @@ Rope_properties: #ROPE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $01 # $81 in master table
@@ -6327,7 +6327,7 @@ Skullrope_properties: #STAL ROPE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $07 # $81 in master table
@@ -6383,7 +6383,7 @@ Keese_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00 # $81 in master table
@@ -6439,7 +6439,7 @@ Chasupa_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $07 # $81 in master table
@@ -6494,10 +6494,10 @@ HelmasaurFireball_properties: #KING HELMASAUR FIREBALL
   hitbox: 0x19
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -6548,7 +6548,7 @@ Leever_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $81
@@ -6602,7 +6602,7 @@ PondActivation_properties: #FAIRY POND TRIGGER
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -6654,9 +6654,9 @@ Uncle_properties: #UNCLE / PRIEST / MANTLE
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -6707,10 +6707,10 @@ RunningMan_properties: #RUNNING MAN
   hitbox: 0x0D
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -6760,9 +6760,9 @@ BottleSalesman_properties: #BOTTLE MERCHANT
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -6813,9 +6813,9 @@ Zelda_properties:
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -6867,7 +6867,7 @@ UnusedAntifairy_properties: # ANTIFAIRY
   # TILEHITBOX: $80
   tile_hitbox: 0x8 # $80
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -6919,9 +6919,9 @@ SahaWife_properties: #SAHASRAHLAS WIFE / DR: Grandma
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -6973,9 +6973,9 @@ Bee_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -7026,8 +7026,8 @@ Agahnim_properties:
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -7080,7 +7080,7 @@ AgahnimBall_properties: #AGAHNIMS BALLS
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -7133,7 +7133,7 @@ GreenStalfos_properties: #GREEN STALFOS, DR: Floating Skull
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $97
@@ -7185,10 +7185,10 @@ BigSpikeTrap_properties: #BIG SPIKE
   hitbox: 0x09
   # TILEHITBOX: $70
   tile_hitbox: 0x7 # $70
-  deflect_arrows: true
-  reset_sword: false
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -7239,7 +7239,7 @@ FireBarCW_properties: #FIREBAR CLOCKWISE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -7292,7 +7292,7 @@ FireBarCCW_properties: #FIREBAR COUNTERCLOCKWISE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -7345,7 +7345,7 @@ FireSnake_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -7398,7 +7398,7 @@ Hover_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $C2
@@ -7451,7 +7451,7 @@ AntifairyCircle_properties: #ANTIFAIRY CIRCLE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -7504,7 +7504,7 @@ EyegoreGreen_properties: #GREEN EYEGORE / GREEN MIMIC
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $15
@@ -7557,7 +7557,7 @@ EyegoreRed_properties: #RED EYEGORE / RED MIMIC
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $15
@@ -7610,7 +7610,7 @@ StalfosYellow_properties: #YELLOW STALFOS
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $17
@@ -7663,7 +7663,7 @@ Kodongo_properties:
   # TILEHITBOX: $B0
   tile_hitbox: 0xB # $B0
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $06
@@ -7716,7 +7716,7 @@ Flames_properties: #KONDONGO FIRE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -7768,10 +7768,10 @@ Mothula_properties:
   hitbox: 0x09
   # TILEHITBOX: $C2
   tile_hitbox: 0xC # $C0
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -7822,7 +7822,7 @@ MothulaBeam_properties: #MOTHULA BEAM
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -7875,7 +7875,7 @@ SpikeTrap_properties: #SPIKE BLOCK
   # TILEHITBOX: $20
   tile_hitbox: 0x2 # $20
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $C0
@@ -7928,7 +7928,7 @@ Gibdo_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $13
@@ -7981,8 +7981,8 @@ Arrghus_properties:
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $40
   limit_pit_interactions: false
@@ -8034,7 +8034,7 @@ ArrghusSpawn_properties: #ARRGHI
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -8087,7 +8087,7 @@ Terrorpin_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $02
@@ -8140,7 +8140,7 @@ Zol_properties: #BLOB
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $06
@@ -8193,7 +8193,7 @@ PowderBlob_properties: #BLOB
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $06
@@ -8250,7 +8250,7 @@ Wallmaster_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $10
@@ -8303,7 +8303,7 @@ StalfosKnight_properties: #STALFOS KNIGHT
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $14
@@ -8355,9 +8355,9 @@ Helmasaur_properties: #KING HELMASAUR
   hitbox: 0x18
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -8408,9 +8408,9 @@ Bumper_properties:
   hitbox: 0x1A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -8462,7 +8462,7 @@ Pirogusu_properties: #PIROGUSU / TILE ROOM TILE
   # TILEHITBOX: $B0
   tile_hitbox: 0xB # $B0
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $40
@@ -8513,7 +8513,7 @@ FlyingTile_properties:
   # TILEHITBOX: $B0
   tile_hitbox: 0xB # $B0
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $40
@@ -8572,7 +8572,7 @@ LaserEyeR_properties: #LASER EYE RIGHT (placed left, shooting right)
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -8625,7 +8625,7 @@ LaserEyeL_properties: #LASER EYE LEFT (placed right, shooting left)
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -8678,7 +8678,7 @@ LaserEyeD_properties: #LASER EYE BOTTOM (placed high, shooting down)
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -8731,7 +8731,7 @@ LaserEyeU_properties: #LASER EYE TOP (placed low, shooting up)
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -8784,7 +8784,7 @@ Pengator_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $13
@@ -8837,7 +8837,7 @@ Kyameron_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $46
@@ -8890,7 +8890,7 @@ Wizzrobe_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $11
@@ -8943,7 +8943,7 @@ Zoro_properties:
   # TILEHITBOX: $A0
   tile_hitbox: 0xA # $A0
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -8996,7 +8996,7 @@ Babasu_properties:
   # TILEHITBOX: $A0
   tile_hitbox: 0xA # $A0
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -9049,7 +9049,7 @@ OstrichHG_properties: #HAUNTED GROVE OSTRITCH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -9102,7 +9102,7 @@ RabbitHG_properties: #HAUNTED GROVE RABBIT
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -9155,7 +9155,7 @@ BirdHG_properties: #HAUNTED GROVE BIRD
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -9208,7 +9208,7 @@ Freezor_properties:
   # TILEHITBOX: $04
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: true
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $10
@@ -9260,10 +9260,10 @@ Kholdstare_properties:
   hitbox: 0x09
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -9313,10 +9313,10 @@ KholdstareShell_properties: #KHOLDSTARE SHELL
   hitbox: 0x1D
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -9367,7 +9367,7 @@ FallingIce_properties: #FALLING ICE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -9420,7 +9420,7 @@ ZazakBlue_properties: #BLUE ZAZAK
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $16
@@ -9473,7 +9473,7 @@ ZazakRed_properties: #RED ZAZAK
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $16
@@ -9526,7 +9526,7 @@ StalfosBlue_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $16
@@ -9579,7 +9579,7 @@ StalfosRed_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $16
@@ -9633,7 +9633,7 @@ ZirroGreen_properties: #GREEN ZIRRO
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $81
@@ -9686,7 +9686,7 @@ ZirroBlue_properties: #BLUE ZIRRO
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $87
@@ -9739,7 +9739,7 @@ Pikit_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $82
@@ -9792,7 +9792,7 @@ Maiden_properties: #CRYSTAL MAIDEN
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -9845,7 +9845,7 @@ Apple_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -9897,9 +9897,9 @@ LostOldMan_properties: #OLD MAN
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
@@ -9950,10 +9950,10 @@ PipeD_properties: #PIPE DOWN
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10003,10 +10003,10 @@ PipeU_properties: #PIPE UP
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10056,10 +10056,10 @@ PipeR_properties: #PIPE RIGHT
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10109,10 +10109,10 @@ PipeL_properties: #PIPE LEFT
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10163,9 +10163,9 @@ BeeGood_properties: #GOOD BEE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $80
   limit_pit_interactions: true
   test_water_collision: false
@@ -10216,7 +10216,7 @@ HylianPlaque_properties: #PEDESTAL PLAQUE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -10269,9 +10269,9 @@ PurpleChest_properties: #PURPLE CHEST
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10322,9 +10322,9 @@ BombSalesman_properties: #BOMB SHOP GUY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10375,9 +10375,9 @@ Kiki_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10428,9 +10428,9 @@ BlindMaiden_properties: #BLIND MAIDEN
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10480,9 +10480,9 @@ DialogueTester_properties: #DIALOGUE TESTER
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -10534,7 +10534,7 @@ FeudingFriends_properties: #BULLY / PINK BALL
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -10587,9 +10587,9 @@ Whirlpool_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10639,9 +10639,9 @@ Proprieter_properties: #SHOPKEEPER / CHEST GAME GUY
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -10692,9 +10692,9 @@ Drunkard_properties:
   hitbox: 0x0A
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -10745,10 +10745,10 @@ Vitreous_properties:
   hitbox: 0x09
   # TILEHITBOX: $C2
   tile_hitbox: 0xC # $C0
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -10799,7 +10799,7 @@ VitreousSmallEyeball_properties: #VITREOUS SMALL EYE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -10852,7 +10852,7 @@ Lightning_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -10905,7 +10905,7 @@ Catfish_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -10958,7 +10958,7 @@ AgahnimCutscene_properties: #CUTSCENE AGAHNIM
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11010,10 +11010,10 @@ SingleBoulder_properties: # Only spawned by overlord
   hitbox: 0x09
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -11064,7 +11064,7 @@ Gibo_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -11117,7 +11117,7 @@ Thief_properties:
   # TILEHITBOX: $04
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: true
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11170,7 +11170,7 @@ Medusa_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11223,7 +11223,7 @@ YomoMedusa_properties: #4WAY SHOOTER
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11276,7 +11276,7 @@ Pokey_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $17
@@ -11329,7 +11329,7 @@ FairyBig_properties: #BIG FAIRY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11382,7 +11382,7 @@ TektiteBlue_properties: #TEKTITE / FIREBAT
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $12
@@ -11438,7 +11438,7 @@ TektiteRed_properties: #TEKTITE / FIREBAT
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $12
@@ -11495,7 +11495,7 @@ ChainChomp_properties: #CHAIN CHOMP
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11547,10 +11547,10 @@ Trinexx_properties: #TRINEXX ROCK HEAD
   hitbox: 0x09
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: false
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -11601,8 +11601,8 @@ TrinexxHeadFire_properties: #TRINEXX FIRE HEAD
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -11654,8 +11654,8 @@ TrinexxHeadIce_properties: #TRINEXX ICE HEAD
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -11707,8 +11707,8 @@ Blind_properties:
   # TILEHITBOX: $02
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: false
+  allow_nondamaging_hits: false
+  boss_death: true
   pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
@@ -11759,8 +11759,8 @@ Swamola_properties:
   hitbox: 0x1C
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $10
@@ -11813,7 +11813,7 @@ Lynel_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $17
@@ -11866,7 +11866,7 @@ BunnyBeam_properties: #BUNNYBEAM / SMOKE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -11919,7 +11919,7 @@ FloppingFish_properties: #FLOPPING FISH
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $40
@@ -11972,7 +11972,7 @@ Stal_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $01
@@ -12024,8 +12024,8 @@ Landmine_properties:
   hitbox: 0x1C
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12078,9 +12078,9 @@ DiggingGameNPC_properties: #DIG GAME GUY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -12130,10 +12130,10 @@ Ganon_properties:
   hitbox: 0x03
   # TILEHITBOX: $0A
   tile_hitbox: 0x0 # $00
-  deflect_arrows: false
-  reset_sword: false
+  deflect_arrows: true
+  allow_nondamaging_hits: false
   boss_death: true
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -12183,10 +12183,10 @@ GanonStunned_properties:
   hitbox: 0x03
   # TILEHITBOX: $0A
   tile_hitbox: 0x0 # $00
-  deflect_arrows: false
-  reset_sword: false
+  deflect_arrows: true
+  allow_nondamaging_hits: false
   boss_death: true
-  pit_behavior: true
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -12237,7 +12237,7 @@ Heart_properties:
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12290,7 +12290,7 @@ RupeeGreen_properties: #GREEN RUPEE
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12343,7 +12343,7 @@ RupeeBlue_properties: #BLUE RUPEE
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12396,7 +12396,7 @@ RupeeRed_properties: #RED RUPEE
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12449,7 +12449,7 @@ BombRefill1_properties: #BOMB REFILL 1
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12502,7 +12502,7 @@ BombRefill4_properties: #BOMB REFILL 4
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12555,7 +12555,7 @@ BombRefill8_properties: #BOMB REFILL 8
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12608,7 +12608,7 @@ MagicRefillSmall_properties: #SMALL MAGIC DECANTER
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12661,7 +12661,7 @@ MagicRefillFull_properties: #LARGE MAGIC DECANTER
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12714,7 +12714,7 @@ ArrowRefill5_properties: #ARROW REFILL 5
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12767,7 +12767,7 @@ ArrowRefill10_properties: #ARROW REFILL 10
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12820,9 +12820,9 @@ Fairy_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $40
   limit_pit_interactions: false
   test_water_collision: true
@@ -12873,7 +12873,7 @@ Key_properties: #SMALL KEY
   # TILEHITBOX: $10
   tile_hitbox: 0x1 # $10
   deflect_arrows: false
-  reset_sword: true
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -12926,9 +12926,9 @@ BigKey_properties: #BIG KEY
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -12979,7 +12979,7 @@ Shield_properties: #STOLEN SHIELD
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -13032,7 +13032,7 @@ Mushroom_properties:
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -13085,7 +13085,7 @@ FakeMasterSword_properties: #FAKE MASTER SWORD
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -13138,9 +13138,9 @@ PotionShop_properties: #MAGIC SHOP ASSISTANT
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: true
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13191,9 +13191,9 @@ HeartContainer_properties: #HEART CONTAINER
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13244,9 +13244,9 @@ HeartPiece_properties: #HEART PIECE
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13297,7 +13297,7 @@ Throwable_properties: #THROWN ITEM
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $80
@@ -13349,10 +13349,10 @@ SomariaPlatform_properties: #SOMARIA PLATFORM
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13402,8 +13402,8 @@ Mantle_properties: #CASTLE MANTLE
   hitbox: 0x08
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
+  deflect_arrows: false
+  allow_nondamaging_hits: false
   boss_death: false
   pit_behavior: false
   # PRIZEPACK: $00
@@ -13455,10 +13455,10 @@ SomariaPlatform1_properties: #UNUSED SOMARIA PLATFORM
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13508,10 +13508,10 @@ SomariaPlatform2_properties: #UNUSED SOMARIA PLATFORM
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13561,10 +13561,10 @@ SomariaPlatform3_properties: #UNUSED SOMARIA PLATFORM
   hitbox: 0x1B
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
-  deflect_arrows: true
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  deflect_arrows: false
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
@@ -13615,9 +13615,9 @@ MedallionTablet_properties: #MEDALLION TABLET
   # TILEHITBOX: $00
   tile_hitbox: 0x0 # $00
   deflect_arrows: false
-  reset_sword: false
-  boss_death: true
-  pit_behavior: true
+  allow_nondamaging_hits: false
+  boss_death: false
+  pit_behavior: false
   # PRIZEPACK: $00
   limit_pit_interactions: false
   test_water_collision: false
