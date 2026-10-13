@@ -1796,7 +1796,8 @@ public sealed class Rom : GameRom
 
     public void WriteSpriteData(IEnumerable<Sprite> sprites)
     {
-        foreach (var spritebase in sprites) {
+        foreach (var spritebase in sprites)
+        {
             if (spritebase.Properties is not SpriteProperties sprite)
             {
                 continue;
@@ -1804,7 +1805,8 @@ public sealed class Rom : GameRom
 
             int id = sprite.ID;
 
-            if (id > 0xF2) {
+            if (id > 0xF2)
+            {
                 throw new Exception($"Invalid sprite ID: 0x{id:X2} > 0xF2. [{sprite.Name}]");
             }
 
@@ -1819,7 +1821,8 @@ public sealed class Rom : GameRom
 
 
             // we don't want to set values unless the sprite is the main variant
-            if (sprite.OwnsId) {
+            if (sprite.OwnsId)
+            {
                 Write((SNES) (0x0DB080 + id), oamharm); // SpriteData_OAMHarm
                 Write((SNES) (0x0DB173 + id), hp); // SpriteData_Health
                 Write((SNES) (0x0DB266 + id), bump); // SpriteData_Bump
@@ -1852,44 +1855,58 @@ public sealed class Rom : GameRom
             // handle any oddballs that have their properties initialized somewhere else
             // this area won't be too overfilled
             // because there are only a handful of properties that are set outside of the table
-            if (sprite.OamHarmAddresses is not null) {
-                foreach (int addr in sprite.OamHarmAddresses) {
+            if (sprite.OamHarmAddresses is not null)
+            {
+                foreach (int addr in sprite.OamHarmAddresses)
+                {
                     Write((SNES) addr, oamharm);
                 }
             }
 
-            if (sprite.HpAddresses is not null) {
-                foreach (int addr in sprite.HpAddresses) {
+            if (sprite.HpAddresses is not null)
+            {
+                foreach (int addr in sprite.HpAddresses)
+                {
                     Write((SNES) addr, hp);
                 }
             }
 
-            if (sprite.BumpAddresses is not null) {
-                foreach (int addr in sprite.BumpAddresses) {
+            if (sprite.BumpAddresses is not null)
+            {
+                foreach (int addr in sprite.BumpAddresses)
+                {
                     Write((SNES) addr, bump);
                 }
             }
 
-            if (sprite.OamPropAddresses is not null) {
-                foreach (int addr in sprite.OamPropAddresses) {
+            if (sprite.OamPropAddresses is not null)
+            {
+                foreach (int addr in sprite.OamPropAddresses)
+                {
                     Write((SNES) addr, oamprop);
                 }
             }
 
-            if (sprite.HitboxAddresses is not null) {
-                foreach (int addr in sprite.HitboxAddresses) {
+            if (sprite.HitboxAddresses is not null)
+            {
+                foreach (int addr in sprite.HitboxAddresses)
+                {
                     Write((SNES) addr, hitbox);
                 }
             }
 
-            if (sprite.TileDieAddresses is not null) {
-                foreach (int addr in sprite.TileDieAddresses) {
+            if (sprite.TileDieAddresses is not null)
+            {
+                foreach (int addr in sprite.TileDieAddresses)
+                {
                     Write((SNES) addr, tiledie);
                 }
             }
 
-            if (sprite.PrizeAddresses is not null) {
-                foreach (int addr in sprite.PrizeAddresses) {
+            if (sprite.PrizeAddresses is not null)
+            {
+                foreach (int addr in sprite.PrizeAddresses)
+                {
                     Write((SNES) addr, prize);
                 }
             }

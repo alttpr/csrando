@@ -238,7 +238,7 @@ public sealed record class SpriteProperties
     public bool UsesSecondNameTable
     {
         get => DrawProperties.BitIsSet(0);
-        set => DrawProperties = Property_OAMProp.SetBit(0, value);
+        set => DrawProperties = DrawProperties.SetBit(0, value);
     }
     public int[]? MiscPaletteAddresses { get; init; } = null;
 
@@ -287,8 +287,8 @@ public sealed record class SpriteProperties
     [ValueRange(0x00, 0x1F)]
     public byte Hitbox
     {
-        get => Property_OAMProp.GetField(0, 5);
-        set => Property_OAMProp = Property_OAMProp.SetField(0, 5, value);
+        get => Property_HITBOX.GetField(0, 5);
+        set => Property_HITBOX = Property_HITBOX.SetField(0, 5, value);
     }
 
     [PackedBitfield(nameof(TileHitboxOffsets))]
@@ -308,7 +308,7 @@ public sealed record class SpriteProperties
     public byte TileHitboxOffsets
     {
         get => Property_TILEDIE.GetField(4, 4);
-        set => Property_TILEDIE = Property_OAMProp.SetField(4, 4, value);
+        set => Property_TILEDIE = Property_TILEDIE.SetField(4, 4, value);
     }
 
     /// <summary>
@@ -543,8 +543,6 @@ public sealed record class SpriteProperties
     /// </remarks>
     // This can't actually be changed easily, but it's useful to know
     public bool ImmuneToAncillae { get; init; }
-
-
 
     [ValueRange(0, 5)]
     public byte DamageClass0Subclass { get; set; }

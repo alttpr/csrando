@@ -38,7 +38,7 @@ PullSwitchGoodTongue: #CORRECT PULL SWITCH (TONGUE)
 MimicGreen: #GREEN EYEGORE / GREEN MIMIC - Commandeering UNUSED CORRECT PULL SWITCH
   id: 0x05 #DR uses the unused somaria platform 0xEF
   flags: Challenge
-  sheets: [null, null, 0x2E, null]
+  sheets: [null, 0x2C, null, null]
   properties: MimicGreen_properties
 PullSwitchBad: #WRONG PULL SWITCH (BAR)
   id: 0x06
@@ -53,7 +53,7 @@ PullSwitchBadTongue: #WRONG PULL SWITCH (TONGUE)
 MimicRed: #RED EYEGORE / RED MIMIC - Commandeering UNUSED WRONG PULL SWITCH
   id: 0x07 #DR uses the unused somaria platform 0xF0
   flags: Challenge
-  sheets: [null, null, 0x2E, null]
+  sheets: [null, 0x2C, null, null]
   properties: MimicRed_properties
 Octorok1: #OKTOROK
   id: 0x08

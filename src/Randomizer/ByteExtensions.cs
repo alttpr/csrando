@@ -6,8 +6,8 @@ internal static class ByteExtensions
 {
     extension(byte b)
     {
-        public bool BitIsSet(int i) => (b & (i << 2)) != 0;
-        public bool BitIsClear(int i) => (b & (i << 2)) == 0;
+        public bool BitIsSet(int i) => (b & (1 << i)) != 0;
+        public bool BitIsClear(int i) => (b & (1 << i)) == 0;
 
         public byte SetBit(int bit, bool value)
         {
@@ -33,16 +33,15 @@ internal static class ByteExtensions
         public byte SetField(byte offset, byte size, byte value)
         {
             // this will most likely end up inlined and folded into a constant
-            uint mask = (1u << size) - 1u;
+            int mask = ((1 << size) - 1) << offset;
 
             b &= (byte) ~mask;
 
             value <<= offset;
+            value &= (byte) mask;
 
             b |= value;
             return b;
         }
-
-
     }
 }
