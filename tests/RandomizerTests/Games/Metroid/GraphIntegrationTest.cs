@@ -155,8 +155,10 @@ public sealed class GraphIntegrationTest
             while (queue.Count > 0)
             {
                 foreach (var next in adjacency.GetValueOrDefault(queue.Dequeue()) ?? [])
+                {
                     if (reachedNames.Add(next))
                         queue.Enqueue(next);
+                }
             }
 
             // Map vertex names back to grid coordinates: "{area} - {room} - {screen} ({i}) - {node}".
@@ -175,13 +177,17 @@ public sealed class GraphIntegrationTest
             var allVertices = reader.GetVertices(null!).Select(v => (string)v["name"]!).ToList();
             var coordsWithVertices = new HashSet<Point>();
             foreach (var name in allVertices)
+            {
                 if (CoordOf(name) is { } p)
                     coordsWithVertices.Add(p);
+            }
 
             var graphReached = new HashSet<Point>();
             foreach (var name in reachedNames)
+            {
                 if (CoordOf(name) is { } p)
                     graphReached.Add(p);
+            }
 
             // Physical solver reach (excluding caps, which produce no vertices anyway). Pass the
             // catalog so one-way impossible transitions block the same crossings the graph omits.

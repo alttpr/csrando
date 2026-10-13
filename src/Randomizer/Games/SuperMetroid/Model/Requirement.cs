@@ -123,15 +123,15 @@ public class RequirementConverter : JsonConverter<Requirement>
 
     public Requirement? ParseElement(JsonElement element)
     {
-        if(element.ValueKind == JsonValueKind.String)
+        if (element.ValueKind == JsonValueKind.String)
         {
             return new Requirement.Single(element.GetString()!);
         }
-        else if(element.ValueKind == JsonValueKind.Array)
+        else if (element.ValueKind == JsonValueKind.Array)
         {
             return new Requirement.And(element.EnumerateArray().Select(req => ParseElement(req)!).ToArray());
         }
-        else if(element.ValueKind == JsonValueKind.Object)
+        else if (element.ValueKind == JsonValueKind.Object)
         {
             // Get the first property of the object
             var property = element.EnumerateObject().First();
@@ -167,7 +167,7 @@ public class RequirementConverter : JsonConverter<Requirement>
                 "metroidFrames" => new Requirement.MetroidFrames(property.Value.GetInt32()),
                 "energyAtMost" => new Requirement.EnergyAtMost(property.Value.GetInt32()),
                 "autoReserveTrigger" => new Requirement.AutoReserveTrigger(
-                    property.Value.TryGetProperty("minReserveEnergy", out var minReserveEnergy) ? minReserveEnergy.GetInt32() : 1, 
+                    property.Value.TryGetProperty("minReserveEnergy", out var minReserveEnergy) ? minReserveEnergy.GetInt32() : 1,
                     property.Value.TryGetProperty("maxReserveEnergy", out var maxReserveEnergy) ? maxReserveEnergy.GetInt32() : 400
                 ),
                 "spikeHits" => new Requirement.SpikeHits(property.Value.GetInt32()),

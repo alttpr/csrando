@@ -107,7 +107,9 @@ public sealed class TopologyGeneratorTest
             var world = Generate(seed);
             foreach (var landmark in new[] { "Start", "StatuesGate", "TourianElevator", "MotherBrain", "EscapeShaft",
                                              "Kraid", "Ridley", "KraidElevator", "NorfairElevator", "RidleyElevator" })
+            {
                 Assert.IsTrue(world.Landmarks.ContainsKey(landmark), $"seed {seed}: missing {landmark}");
+            }
 
             Assert.AreEqual(4, world.Grid.Links.Count(l => l.Type == LinkType.Elevator), $"seed {seed}");
 
@@ -231,8 +233,10 @@ public sealed class TopologyGeneratorTest
         {
             var world = Generate(seed);
             foreach (var area in new[] { Area.Brinstar, Area.Norfair, Area.Kraid, Area.Ridley })
+            {
                 Assert.IsTrue(world.Grid.CellsOf(area).Any(c => c.Role == CellRole.Item),
                     $"seed {seed}: no item cells in {area}");
+            }
         }
     }
 
@@ -289,9 +293,11 @@ public sealed class TopologyGeneratorTest
                 foreach (var dir in new[] { Direction.Up, Direction.Down, Direction.Left, Direction.Right })
                 {
                     if (screen.Connector(dir).Type == ConnectorType.Elevator)
+                    {
                         Assert.AreEqual(EdgeRequirement.Elevator, cell.Edge(dir),
                             $"seed {seed}: {cell.Area} screen 0x{screen.ScreenId:X2} at {cell.Position} " +
                             $"({cell.Role}) has an elevator opening {dir} on a {cell.Edge(dir)} edge");
+                    }
                 }
             }
         }
@@ -494,12 +500,15 @@ public sealed class TopologyGeneratorTest
         // Entrance shaft: the vertical run in the area holding an elevator link endpoint.
         Run? entrance = null;
         foreach (var link in world.Grid.Links.Where(l => l.Type == LinkType.Elevator))
+        {
             foreach (var endpoint in new[] { link.A, link.B })
             {
                 var cell = world.Grid.Cell(endpoint);
                 if (cell != null && cell.Area == area && cell.Run.Axis == Scrolling.Vertical)
                     entrance = cell.Run;
             }
+        }
+
         Assert.IsNotNull(entrance, $"no entrance shaft found for {area}");
 
         return host!.Id == entrance!.Id;

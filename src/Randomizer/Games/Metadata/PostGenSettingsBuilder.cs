@@ -279,7 +279,10 @@ public static class PostGenSettingsBuilder
                 (char.IsDigit(c) && char.IsLetter(pascal[i - 1])) ||
                 (char.IsUpper(c) && char.IsDigit(pascal[i - 1]))
             ))
+            {
                 result.Append('-');
+            }
+
             result.Append(char.ToLowerInvariant(c));
         }
         return result.ToString();

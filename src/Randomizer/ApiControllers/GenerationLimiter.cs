@@ -26,11 +26,16 @@ public sealed class GenerationLimiter
     public GenerationLimiter(GenerationLimitsOptions options)
     {
         if (options.TimeoutSeconds <= 0)
+        {
             throw new ArgumentOutOfRangeException(
                 nameof(options.TimeoutSeconds), "Generation timeout must be positive.");
+        }
+
         if (options.MaxConcurrency <= 0)
+        {
             throw new ArgumentOutOfRangeException(
                 nameof(options.MaxConcurrency), "Generation concurrency must be positive.");
+        }
 
         Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
         _slots = new SemaphoreSlim(options.MaxConcurrency, options.MaxConcurrency);

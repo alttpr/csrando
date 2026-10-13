@@ -15,14 +15,14 @@ public sealed class ComboCombinationTest
 {
     private static WorldConfig CreateConfig(
         bool alttp, bool sm, bool z1, bool m1, M1Config? metroid = null) => new()
-    {
-        Game = RandomizerTarget.Combo,
-        Combo = new ComboConfig(),
-        Alttp = alttp ? new Z3Config() : null,
-        SuperMetroid = sm ? new SMConfig() : null,
-        Zelda1 = z1 ? new Z1Config { Triforces = "8" } : null,
-        Metroid = m1 ? metroid ?? new M1Config() : null,
-    };
+        {
+            Game = RandomizerTarget.Combo,
+            Combo = new ComboConfig(),
+            Alttp = alttp ? new Z3Config() : null,
+            SuperMetroid = sm ? new SMConfig() : null,
+            Zelda1 = z1 ? new Z1Config { Triforces = "8" } : null,
+            Metroid = m1 ? metroid ?? new M1Config() : null,
+        };
 
     private static M1Config NightmareMapConfig => new()
     {

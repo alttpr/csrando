@@ -371,7 +371,10 @@ internal static class PlaythroughGenerator
                 {
                     if (!reachability.SuperMetroidPredecessors.TryGetValue(edge.To, out var smStep)
                         || smStep == null || !ReferenceEquals(smStep.Edge, edge))
+                    {
                         continue;
+                    }
+
                     step = new RouteStep(edge, smStep.Strategy, smStep.Requirements,
                         smStep.ResourcesSpent);
                 }
@@ -380,7 +383,10 @@ internal static class PlaythroughGenerator
                     if (!reachability.AvailableInventories.TryGetValue(
                             edge.From.World, out var availableInventory)
                         || !availableInventory.Has(edge.Condition))
+                    {
                         continue;
+                    }
+
                     var condition = LogicalCondition(edge);
                     var requirements = condition.IsUnconditional
                         ? new Dictionary<IItem, int>()
@@ -419,8 +425,11 @@ internal static class PlaythroughGenerator
         while (previous[target] is { } step)
         {
             if (!visited.Add(target))
+            {
                 throw new InvalidOperationException(
                     $"Cycle detected while building a playthrough path at '{target.Name}'.");
+            }
+
             path.Add(step);
             target = step.Edge.From;
         }
@@ -475,7 +484,10 @@ internal static class PlaythroughGenerator
             path = ApplyPickupDetails(path, acquisition);
             if (path.SelectMany(step => step.Requirements.Keys)
                 .Any(requirement => SameLogicalItem(requirement, pickup.Item)))
+            {
                 continue;
+            }
+
             if (best == null || path.Count < best.Count)
                 best = path;
         }
@@ -525,7 +537,9 @@ internal static class PlaythroughGenerator
             Add(pickup.Item, pickup);
             if (pickup.Item.LogicalItem is { } logicalItem
                 && !ReferenceEquals(logicalItem, pickup.Item))
+            {
                 Add(logicalItem, pickup);
+            }
         }
         return index;
 
@@ -556,7 +570,9 @@ internal static class PlaythroughGenerator
                     continue;
                 foreach (var dependency in candidates.Where(candidate =>
                              CanBeDependency(candidate, pickup)).Take(needed))
+                {
                     queue.Enqueue(dependency);
+                }
             }
         }
         return required;

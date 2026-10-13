@@ -191,9 +191,13 @@ public class WorldGrid
         get
         {
             for (int y = 0; y < Size; y++)
+            {
                 for (int x = 0; x < Size; x++)
+                {
                     if (cells[x, y] != null)
                         yield return cells[x, y]!;
+                }
+            }
         }
     }
 
@@ -266,7 +270,10 @@ public class WorldGrid
             bool isCap = i == extra - 1;
             var cell = new AbstractCell
             {
-                Position = p, Area = run.Area, Axis = run.Axis, Run = run,
+                Position = p,
+                Area = run.Area,
+                Axis = run.Axis,
+                Run = run,
                 Role = isCap ? CellRole.Cap : bodyRole
             };
             if (!isCap)
@@ -304,7 +311,10 @@ public class WorldGrid
             bool isCap = i == extra - 1;
             var cell = new AbstractCell
             {
-                Position = p, Area = run.Area, Axis = run.Axis, Run = run,
+                Position = p,
+                Area = run.Area,
+                Axis = run.Axis,
+                Run = run,
                 Role = isCap ? CellRole.Cap : bodyRole
             };
             if (!isCap)
@@ -413,7 +423,10 @@ public class WorldGrid
                     var doorNeighbor = Cell(cell.Position.Step(dir));
                     if (doorNeighbor != null && !cell.ForcedScreenId.HasValue
                         && !catalog.DoorAccepts(profile, dir, doorNeighbor.Run.Kind))
+                    {
                         return false;
+                    }
+
                     break;
 
                 case EdgeRequirement.Wall:
@@ -431,7 +444,10 @@ public class WorldGrid
                     var facing = Cell(cell.Position.Step(dir));
                     if (facing != null && facing.Role != CellRole.Cap
                         && actual.Type is ConnectorType.Scroll or ConnectorType.Door)
+                    {
                         return false;
+                    }
+
                     break;
             }
         }
@@ -445,13 +461,19 @@ public class WorldGrid
         {
             var committed = new List<Direction>(4);
             foreach (var dir in Directions.All)
+            {
                 if (cell.Edge(dir) != EdgeRequirement.Wall)
                     committed.Add(dir);
+            }
 
             for (int i = 0; i < committed.Count; i++)
+            {
                 for (int j = i + 1; j < committed.Count; j++)
+                {
                     if (!profile.EdgesConnected(committed[i], committed[j]))
                         return false;
+                }
+            }
         }
 
         // Screens that draw the item orb into their structure (e.g. Brinstar 0x2A) only belong
@@ -459,7 +481,9 @@ public class WorldGrid
         // behind it. Forced cells pick their own screen, so they are exempt.
         if (profile.HasStructuralItem && cell.Role is not (CellRole.Item or CellRole.MapStation)
             && !cell.ForcedScreenId.HasValue)
+        {
             return false;
+        }
 
         return cell.Role switch
         {

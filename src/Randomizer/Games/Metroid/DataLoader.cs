@@ -146,8 +146,10 @@ internal static class DataLoader
         }
 
         if (stranded.Count > 0)
+        {
             throw new GenerationException("post-fit reachability: " + stranded[0]
                 + $" (+{stranded.Count - 1} more)");
+        }
 
         // ROM emission joins vanilla special-item payloads to screens through the vanilla
         // room coordinates, so it must run before ApplyTo replaces the room list. Combo

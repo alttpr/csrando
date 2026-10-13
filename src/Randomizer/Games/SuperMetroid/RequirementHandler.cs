@@ -435,8 +435,11 @@ public class RequirementHandler
                 // If we get here, we can kill at least one enemy in each group
                 var enemyKillResult = RequirementResult.Success(RequirementCost.ZeroCost);
                 foreach (var weapon in usedWeapons)
+                {
                     enemyKillResult.MergeSuccess(HandleRequirement(
                         weapon.UseRequires, state, inventory, world, weapons));
+                }
+
                 return enemyKillResult;
 
 
@@ -761,8 +764,10 @@ public class RequirementHandler
                 {
                     var (item, count) = RequiredExpansion(c.Type, c.Count);
                     if (count > 0)
+                    {
                         capacityResult.UsedItems[item] = Math.Max(
                             capacityResult.UsedItems.GetValueOrDefault(item), count);
+                    }
                 }
                 return capacityResult;
 
@@ -811,15 +816,15 @@ public class RequirementHandler
 
     internal static (string Item, int Count) RequiredExpansion(
         string resourceType, int resourceCount) => resourceType switch
-    {
-        "Energy" or "RegularEnergy" =>
-            ("ETank", Math.Max(0, (int)Math.Ceiling((resourceCount - 99) / 100m))),
-        "ReserveEnergy" => ("ReserveTank", (int)Math.Ceiling(resourceCount / 100m)),
-        "Missile" => ("Missile", (int)Math.Ceiling(resourceCount / 5m)),
-        "Super" => ("Super", (int)Math.Ceiling(resourceCount / 5m)),
-        "PowerBomb" => ("PowerBomb", (int)Math.Ceiling(resourceCount / 5m)),
-        _ => ("", 0),
-    };
+        {
+            "Energy" or "RegularEnergy" =>
+                ("ETank", Math.Max(0, (int)Math.Ceiling((resourceCount - 99) / 100m))),
+            "ReserveEnergy" => ("ReserveTank", (int)Math.Ceiling(resourceCount / 100m)),
+            "Missile" => ("Missile", (int)Math.Ceiling(resourceCount / 5m)),
+            "Super" => ("Super", (int)Math.Ceiling(resourceCount / 5m)),
+            "PowerBomb" => ("PowerBomb", (int)Math.Ceiling(resourceCount / 5m)),
+            _ => ("", 0),
+        };
 
     public static int ObstacleMaskFromArray(string[] obstacles)
     {

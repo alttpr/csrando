@@ -55,13 +55,13 @@ public class GraphPreprocessor
         foreach (var vtx in _graph.Vertices)
         {
             _world.Graph.AddVertex(vtx);
-            foreach(var edge in _graph.GetEdges(vtx))
+            foreach (var edge in _graph.GetEdges(vtx))
             {
                 vtx.Edges.Add(edge);
             }
         }
 
-    //// Find all doors that are not blue
+        //// Find all doors that are not blue
         //var doors = _graph.Vertices.OfType<SuperMetroid.Vertex>().Where(v => v.Node!.NodeType == "door" && v.Node!.NodeSubType != "elevator");
         //var doorData = DoorReader.ReadDoorData();
 
@@ -141,7 +141,9 @@ public class GraphPreprocessor
         var bossRequirement = BossRequirement(int.Parse(_world.Config.Bosses));
         foreach (var statuesCutscene in statuesRoom.Strats.Where(strat =>
                      strat.Name == "Statues Cutscene"))
+        {
             statuesCutscene.Requires = bossRequirement;
+        }
     }
 
     private static Requirement BossRequirement(int requiredBosses)
@@ -466,10 +468,10 @@ public class GraphPreprocessor
                 {
                     var toVtx = _graph.Vertices.First(v => v.RoomId == room.Id && v.Node!.Id == linkTo.Id);
                     var linkStrats = room.Strats.Where(s => s.Link![0] == link.From && s.Link![1] == linkTo.Id && (s.ExitCondition == null || s.ExitCondition is ExitCondition.LeaveNormally || s.ExitCondition is ExitCondition.LeaveWithRunway) &&
-                        (s.EntranceCondition == null || 
+                        (s.EntranceCondition == null ||
                          s.EntranceCondition is EntranceCondition.ComeInNormally ||
                          s.EntranceCondition is EntranceCondition.ComesThroughToilet));
-                    
+
                     if (linkStrats.Any())
                     {
                         //var optimizedStrats = linkStrats.Select(s => s with { Requires = OptimizeRequirement(s.Requires) }).Where(s => s.Requires is not Requirement.Never);
@@ -533,7 +535,7 @@ public class GraphPreprocessor
         List<Strat> toStrats = toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null).ToList();
         Requirement? unlockReq = null;
 
-        if(fromNode.NodeType == "door" && fromNode.UseImplicitDoorUnlocks == null || fromNode.UseImplicitDoorUnlocks == true)
+        if (fromNode.NodeType == "door" && fromNode.UseImplicitDoorUnlocks == null || fromNode.UseImplicitDoorUnlocks == true)
         {
             unlockReq = fromNode.NodeSubType switch
             {
@@ -599,8 +601,11 @@ public class GraphPreprocessor
                 var newFromStrat = (Strat)strat.Clone();
                 var requirements = new List<Requirement> { strat.Requires };
                 if (strat.ExitCondition is ExitCondition.LeaveWithRunway runway)
+                {
                     requirements.Add(RunwayEntranceRequirement(
                         runway, targetStrat.EntranceCondition!, fromRoom, fromNode));
+                }
+
                 if (unlockReq != null)
                     requirements.Add(unlockReq);
                 if (blockedMotherBrainConnection)
@@ -644,14 +649,20 @@ public class GraphPreprocessor
             case EntranceCondition.ComeInRunning running:
                 if (effectiveLength < running.MinTiles ||
                     running.MaxTiles is { } runningMax && runningMax < running.MinTiles)
+                {
                     return new Requirement.Never();
+                }
+
                 speedBooster = running.SpeedBooster;
                 break;
 
             case EntranceCondition.ComeInJumping jumping:
                 if (effectiveLength < jumping.MinTiles ||
                     jumping.MaxTiles is { } jumpingMax && jumpingMax < jumping.MinTiles)
+                {
                     return new Requirement.Never();
+                }
+
                 speedBooster = jumping.SpeedBooster;
                 break;
 
@@ -668,7 +679,10 @@ public class GraphPreprocessor
                     return new Requirement.Never();
                 if (!speedBooster.Equals("false", StringComparison.OrdinalIgnoreCase) &&
                     minimum > 0x20)
+                {
                     requirements.Add(new Requirement.Single("SpeedBooster"));
+                }
+
                 break;
 
             default:
@@ -682,7 +696,9 @@ public class GraphPreprocessor
 
         if (fromNode.DoorEnvironments?.Any(environment =>
                 environment.Physics.Equals("water", StringComparison.OrdinalIgnoreCase)) == true)
+        {
             requirements.Add(new Requirement.Single("Gravity"));
+        }
 
         // Implicit heat cost depends on runway use and whether the exit strat
         // starts at this door. Until that calculation is modeled, require Varia

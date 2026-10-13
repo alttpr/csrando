@@ -177,9 +177,12 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
 
         var chosen = ParseArea(Config.StartArea);
         if (!IsViableStart(DataLoader.StartLocationFor(chosen)))
+        {
             throw new ArgumentException(
                 $"Metroid start area '{chosen}' cannot reach an item location that some item can open up, "
                 + "so no seed starting there can be filled");
+        }
+
         StartingArea = chosen;
     }
 

@@ -167,8 +167,11 @@ internal sealed class ItemPooler : IItemPooler
                 return false;
             int effectiveId = (m.enemy_mode << 6) | m.enemy_id;
             if (effectiveId >= 0x62) // enemy list: check its members
+            {
                 return data.enemies.enemy_lists.FirstOrDefault(l => l.id == effectiveId - 0x62)
                     ?.data.Any(blockingIds.Contains) == true;
+            }
+
             return blockingIds.Contains(effectiveId);
         });
     }

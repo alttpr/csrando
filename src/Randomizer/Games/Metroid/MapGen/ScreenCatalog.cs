@@ -200,8 +200,10 @@ public class ScreenCatalog
             var key = (transition.area, transition.from.screen, transition.from.direction,
                 transition.to.screen, transition.to.direction);
             if (!transitionKeys.Add(key))
+            {
                 errors.Add($"Duplicate transition: {transition.area} 0x{transition.from.screen:X2} " +
                     $"{transition.from.direction} -> 0x{transition.to.screen:X2} {transition.to.direction}");
+            }
 
             if (transition.impossible && transition.requirements.Count > 0)
             {
@@ -221,8 +223,10 @@ public class ScreenCatalog
             }
 
             if (transition.impossible)
+            {
                 catalog.impossibleTransitions.Add((transition.area, transition.from.screen,
                     transition.from.direction, transition.to.screen, transition.to.direction));
+            }
         }
 
         catalog.Validate(errors);
@@ -640,7 +644,9 @@ public class ScreenCatalog
 
         if (!(EdgeOk(profile.Up, up) && EdgeOk(profile.Down, down)
             && EdgeOk(profile.Left, left) && EdgeOk(profile.Right, right)))
+        {
             return false;
+        }
 
         // Every pair of committed edges must be internally connected both ways, or the
         // screen would sever the run/door chain it is placed into.
@@ -651,9 +657,13 @@ public class ScreenCatalog
         if (right != EdgeRequirement.Wall) committed.Add(Direction.Right);
 
         for (int i = 0; i < committed.Count; i++)
+        {
             for (int j = i + 1; j < committed.Count; j++)
+            {
                 if (!profile.EdgesConnected(committed[i], committed[j]))
                     return false;
+            }
+        }
 
         return true;
 

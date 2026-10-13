@@ -142,8 +142,10 @@ public static class RomEmitter
             }
 
             if (specials.Extras.TryGetValue((cell.Area, screen.ScreenId), out var extras))
+            {
                 foreach (var extra in extras)
                     entry.Payload.AddRange(extra);
+            }
 
             if (entry.Payload.Count > 0)
                 entries[cell.Area][cell.Position] = entry;
@@ -159,8 +161,11 @@ public static class RomEmitter
         var itemAddresses = new Dictionary<Point, int>();
         var blob = SerializeTables(entries, patches, itemAddresses);
         if (blob.Length > TableLimit)
+        {
             throw new InvalidOperationException(
                 $"special-items blob is 0x{blob.Length:X} bytes, over the reserved 0x{TableLimit:X} window");
+        }
+
         patches[TableAddress] = blob;
 
         AddStartPositions(world, patches, respawnAtPortal);
@@ -205,8 +210,10 @@ public static class RomEmitter
         foreach (var entry in VanillaSpecialItems.Entries)
         {
             if (!screenAt.TryGetValue((entry.Area, entry.X, entry.Y), out var screen))
+            {
                 throw new InvalidOperationException(
                     $"vanilla special item at {entry.Area} ({entry.X},{entry.Y}) is outside every vanilla room");
+            }
 
             var extra = entry.Payload[0] == 0x02 ? entry.Payload[3..] : entry.Payload;
             if (extra.Length == 0)
@@ -354,8 +361,10 @@ public static class RomEmitter
         }
         bool brinstarFallback = !respawn.ContainsKey(Area.Brinstar);
         if (brinstarFallback)
+        {
             respawn[Area.Brinstar] = grid.Links
                 .First(l => l.Type == LinkType.Elevator && grid.Cell(l.A)!.Area == Area.Brinstar).A;
+        }
 
         // Combo seeds that don't cold-boot into M1 are entered through the portal, so a
         // Brinstar death respawns in the portal room itself rather than at the start

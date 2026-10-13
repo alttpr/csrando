@@ -129,8 +129,11 @@ internal static class OverworldTilemap
         var squares = DecodeSquares(prg, uniqueRoomId);
         var tiles = new int[Columns, Rows];
         for (int c = 0; c < Columns; c++)
+        {
             for (int r = 0; r < Rows; r++)
                 tiles[c, r] = prg[PrimarySquaresOW + squares[c, r]];
+        }
+
         return tiles;
     }
 
@@ -140,8 +143,11 @@ internal static class OverworldTilemap
         var tiles = DecodePrimaryTiles(prg, uniqueRoomId);
         var walk = new bool[Columns, Rows];
         for (int c = 0; c < Columns; c++)
+        {
             for (int r = 0; r < Rows; r++)
                 walk[c, r] = IsTileWalkable(tiles[c, r]);
+        }
+
         return walk;
     }
 
@@ -155,9 +161,14 @@ internal static class OverworldTilemap
         var tiles = DecodePrimaryTiles(prg, uniqueRoomId);
         var result = new List<(int, int)>();
         for (int c = 0; c < Columns; c++)
+        {
             for (int r = 0; r < Rows; r++)
+            {
                 if (EntrancePrimaryTiles.Contains(tiles[c, r]))
                     result.Add((c, r));
+            }
+        }
+
         return result;
     }
 

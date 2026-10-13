@@ -89,7 +89,9 @@ internal static class DefaultPortalLayout
         foreach (var link in canonicalLinks)
         {
             if (link.A.World != null && link.B.World != null)
+            {
                 links.Add(link);
+            }
             else
             {
                 if (link.A.World != null)

@@ -1,4 +1,5 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
+
 public record EnemyCollection(Enemy[] Enemies);
 
 public record Enemy

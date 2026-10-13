@@ -51,6 +51,7 @@ public sealed class RandomizeController(
             generationLease = await generationLimiter.EnterAsync(cancellationSource.Token);
             using (generationLease)
             using (GenerationContext.Begin(cancellationSource.Token))
+            {
                 for (int attempt = 1; ; attempt++)
                 {
                     currentAttempt = attempt;
@@ -99,6 +100,7 @@ public sealed class RandomizeController(
                         logger.LogWarning(ex, "Randomization attempt {Attempt}/{MaxAttempts} failed, retrying", attempt, maxAttempts);
                     }
                 }
+            }
         }
         catch (OperationCanceledException) when (requestAborted.IsCancellationRequested)
         {

@@ -166,8 +166,10 @@ public sealed class RomEmitterTest
                     // Elevator mirrors legitimately sit on the upper area's cell; everything
                     // else must be on a cell of the table's own area.
                     if (cell.Area != area)
+                    {
                         Assert.IsTrue(entry.Payloads.All(p => p[0] == 0x04),
                             $"seed {seed}: {area} non-elevator entry on {cell.Area} cell at ({entry.X},{entry.Y})");
+                    }
                 }
             }
         }

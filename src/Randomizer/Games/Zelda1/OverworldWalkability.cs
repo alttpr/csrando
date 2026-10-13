@@ -71,8 +71,10 @@ internal static class OverworldWalkability
             {
                 if (col < 0 || col >= Columns) continue;
                 foreach (int row in RowsByDistanceFrom(5))
+                {
                     if (IsWalkable(grid, col, row))
                         return RowToObjY(row);
+                }
             }
         }
 

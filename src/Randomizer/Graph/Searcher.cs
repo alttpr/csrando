@@ -252,9 +252,9 @@ public class Searcher : ISearcher
 
             foreach (var edge in CollectionsMarshal.AsSpan(vertex.Edges))
             {
-                if(edge.To.World != vertex.World)
+                if (edge.To.World != vertex.World)
                 {
-                    _otherWorldLocations.Add(edge.To);                    
+                    _otherWorldLocations.Add(edge.To);
                     continue;
                 }
 

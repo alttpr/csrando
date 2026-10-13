@@ -1,4 +1,5 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
+
 public record ConnectionCollection(Connection[] Connections);
 
 public record Connection

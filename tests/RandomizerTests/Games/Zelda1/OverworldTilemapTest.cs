@@ -39,8 +39,11 @@ public sealed class OverworldTilemapTest
         // Sanity: the interior has a substantial walkable area.
         int walkableCount = 0;
         for (int c = 0; c < OverworldTilemap.Columns; c++)
+        {
             for (int r = 0; r < OverworldTilemap.Rows; r++)
                 if (walk[c, r]) walkableCount++;
+        }
+
         Assert.IsTrue(walkableCount > 40, $"Expected a sizeable walkable area, got {walkableCount}.");
     }
 
