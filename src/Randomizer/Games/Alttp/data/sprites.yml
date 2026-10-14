@@ -1437,6 +1437,7 @@ ArrowRefill5: #ARROW REFILL 5
 ArrowRefill10: #ARROW REFILL 10
   id: 0xE2
   flags: NoPlace
+  properties: ArrowRefill10_properties
 Fairy:
   id: 0xE3
   flags: NoPlace
