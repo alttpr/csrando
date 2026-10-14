@@ -194,7 +194,7 @@ public sealed class Rom : GameRom
     /// <summary>Set the number of goal items to collect</summary>
     public void SetGoalRequiredCount(ushort goal = 0)
     {
-        WriteUInt16((SNES) 0xB08167, [goal]);
+        WriteUInt16((SNES)0xB08167, [goal]);
     }
 
     /// <summary>Set the goal item icon</summary>
@@ -331,7 +331,7 @@ public sealed class Rom : GameRom
 
     public void SetOldManRespawnBehavior(OldManRespawnOption option)
     {
-        Write((SNES) 0xB0F033, [(byte) option]);
+        Write((SNES)0xB0F033, [(byte)option]);
     }
 
     /// <summary>Set Programmable 1 item.</summary>
@@ -1147,24 +1147,24 @@ public sealed class Rom : GameRom
         Write((SNES)0xB08340, [0x7B]); // ExtraHole_Entrance
 
         // prioritize retreat Bat and use 3rd sprite group
-        Write((SNES) 0x1AF504, [0x8B, 0x14]);
-        Write((SNES) 0x1AF50C, [0x9B, 0x14]);
-        Write((SNES) 0x1AF514, [0xA4, 0x14]);
-        Write((SNES) 0x1AF51C, [0x89, 0x14]);
-        Write((SNES) 0x1AF524, [0xAC, 0x14]);
-        Write((SNES) 0x1AF52C, [0xAC, 0x54]);
-        Write((SNES) 0x1AF534, [0x8C, 0x14]);
-        Write((SNES) 0x1AF53C, [0x8C, 0x54]);
-        Write((SNES) 0x1AF544, [0x84, 0x14]);
-        Write((SNES) 0x1AF54C, [0x84, 0x54]);
-        Write((SNES) 0x1AF554, [0xA2, 0x14]);
-        Write((SNES) 0x1AF55C, [0xA2, 0x54]);
-        Write((SNES) 0x1AF564, [0xA0, 0x14]);
-        Write((SNES) 0x1AF56C, [0xA0, 0x54]);
-        Write((SNES) 0x1AF574, [0x8E, 0x14]);
-        Write((SNES) 0x1AF57C, [0x8E, 0x54]);
-        Write((SNES) 0x1AF584, [0xAE, 0x14]);
-        Write((SNES) 0x1AF58C, [0xAE, 0x54]);
+        Write((SNES)0x1AF504, [0x8B, 0x14]);
+        Write((SNES)0x1AF50C, [0x9B, 0x14]);
+        Write((SNES)0x1AF514, [0xA4, 0x14]);
+        Write((SNES)0x1AF51C, [0x89, 0x14]);
+        Write((SNES)0x1AF524, [0xAC, 0x14]);
+        Write((SNES)0x1AF52C, [0xAC, 0x54]);
+        Write((SNES)0x1AF534, [0x8C, 0x14]);
+        Write((SNES)0x1AF53C, [0x8C, 0x54]);
+        Write((SNES)0x1AF544, [0x84, 0x14]);
+        Write((SNES)0x1AF54C, [0x84, 0x54]);
+        Write((SNES)0x1AF554, [0xA2, 0x14]);
+        Write((SNES)0x1AF55C, [0xA2, 0x54]);
+        Write((SNES)0x1AF564, [0xA0, 0x14]);
+        Write((SNES)0x1AF56C, [0xA0, 0x54]);
+        Write((SNES)0x1AF574, [0x8E, 0x14]);
+        Write((SNES)0x1AF57C, [0x8E, 0x54]);
+        Write((SNES)0x1AF584, [0xAE, 0x14]);
+        Write((SNES)0x1AF58C, [0xAE, 0x54]);
 
         // Make retreat bat gfx available in Hyrule castle.
         Write((SNES)0x00DB9D, [0x1A]); // sprite set 1, section 3
@@ -1819,20 +1819,19 @@ public sealed class Rom : GameRom
             byte hitbox = sprite.Property_HITBOX;
             byte deflect = sprite.Property_DEFLECT;
 
-
             // we don't want to set values unless the sprite is the main variant
             if (sprite.OwnsId)
             {
-                Write((SNES) (0x0DB080 + id), oamharm); // SpriteData_OAMHarm
-                Write((SNES) (0x0DB173 + id), hp); // SpriteData_Health
-                Write((SNES) (0x0DB266 + id), bump); // SpriteData_Bump
-                Write((SNES) (0x0DB359 + id), oamprop); // SpriteData_OAMProp
-                Write((SNES) (0x0DB44C + id), hitbox); // SpriteData_Hitbox
-                Write((SNES) (0x0DB53F + id), tiledie); // SpriteData_TileInteraction
-                Write((SNES) (0x0DB632 + id), prize); // SpriteData_PrizePack
-                Write((SNES) (0x0DB725 + id), deflect); // SpriteData_Deflection
+                Write((SNES)(0x0DB080 + id), oamharm); // SpriteData_OAMHarm
+                Write((SNES)(0x0DB173 + id), hp); // SpriteData_Health
+                Write((SNES)(0x0DB266 + id), bump); // SpriteData_Bump
+                Write((SNES)(0x0DB359 + id), oamprop); // SpriteData_OAMProp
+                Write((SNES)(0x0DB44C + id), hitbox); // SpriteData_Hitbox
+                Write((SNES)(0x0DB53F + id), tiledie); // SpriteData_TileInteraction
+                Write((SNES)(0x0DB632 + id), prize); // SpriteData_PrizePack
+                Write((SNES)(0x0DB725 + id), deflect); // SpriteData_Deflection
 
-                Write((SNES) (0xB1C800 + (id * 16)), [
+                Write((SNES)(0xB1C800 + (id * 16)), [
                     sprite.DamageClass0Subclass,
                     sprite.DamageClass1Subclass,
                     sprite.DamageClass2Subclass,
@@ -1859,7 +1858,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.OamHarmAddresses)
                 {
-                    Write((SNES) addr, oamharm);
+                    Write((SNES)addr, oamharm);
                 }
             }
 
@@ -1867,7 +1866,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.HpAddresses)
                 {
-                    Write((SNES) addr, hp);
+                    Write((SNES)addr, hp);
                 }
             }
 
@@ -1875,7 +1874,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.BumpAddresses)
                 {
-                    Write((SNES) addr, bump);
+                    Write((SNES)addr, bump);
                 }
             }
 
@@ -1883,7 +1882,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.OamPropAddresses)
                 {
-                    Write((SNES) addr, oamprop);
+                    Write((SNES)addr, oamprop);
                 }
             }
 
@@ -1891,7 +1890,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.HitboxAddresses)
                 {
-                    Write((SNES) addr, hitbox);
+                    Write((SNES)addr, hitbox);
                 }
             }
 
@@ -1899,7 +1898,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.TileDieAddresses)
                 {
-                    Write((SNES) addr, tiledie);
+                    Write((SNES)addr, tiledie);
                 }
             }
 
@@ -1907,7 +1906,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.PrizeAddresses)
                 {
-                    Write((SNES) addr, prize);
+                    Write((SNES)addr, prize);
                 }
             }
 
@@ -1915,7 +1914,7 @@ public sealed class Rom : GameRom
             {
                 foreach (int addr in sprite.DeflectAddresses)
                 {
-                    Write((SNES) addr, deflect);
+                    Write((SNES)addr, deflect);
                 }
             }
 
@@ -1924,7 +1923,7 @@ public sealed class Rom : GameRom
                 byte pal2 = sprite.DrawProperties;
                 foreach (int addr in sprite.MiscPaletteAddresses)
                 {
-                    Write((SNES) addr, pal2);
+                    Write((SNES)addr, pal2);
                 }
             }
         }

@@ -23,7 +23,6 @@ internal sealed class EnemyStatRandomizer : IAlttpWorldModifier
             return;
         }
 
-
         var sprites = world.SpriteData.Values;
 
         if (opt is EnemyDamageOption.Shuffled)
@@ -49,15 +48,17 @@ internal sealed class EnemyStatRandomizer : IAlttpWorldModifier
                 {
                     sprite.BumpDamageClass = dmg[i++];
                 }
-            } finally
+            }
+            finally
             {
                 ArrayPool<byte>.Shared.Return(tmp);
             }
-        } else if (opt is EnemyDamageOption.Random)
+        }
+        else if (opt is EnemyDamageOption.Random)
         {
             foreach (var sprite in sprites)
             {
-                sprite.BumpDamageClass = (byte) prng.GetRandomInt(10);
+                sprite.BumpDamageClass = (byte)prng.GetRandomInt(10);
             }
         }
     }
@@ -84,7 +85,7 @@ internal sealed class EnemyStatRandomizer : IAlttpWorldModifier
             // TODO only sprite worth skipping right now; nothing else from the previous banned list was necessary
             if (sprite.ID is 0xA3) continue; // Kholdstare shell
 
-            sprite.Property_HP = (byte) prng.GetRandomInt(range);
+            sprite.Property_HP = (byte)prng.GetRandomInt(range);
         }
     }
 }

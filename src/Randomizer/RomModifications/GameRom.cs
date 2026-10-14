@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.RomModifications;
 
-public abstract class GameRom(IRom rom, int offset) {
+public abstract class GameRom(IRom rom, int offset)
+{
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>

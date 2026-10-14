@@ -63,7 +63,7 @@ public sealed class FileRom : IRom
             }
         }
 
-        ushort checksum = (ushort) sum;
+        ushort checksum = (ushort)sum;
         ushort inverse = (ushort)(checksum ^ 0xFFFF);
 
         Span<byte> data = stackalloc byte[4];

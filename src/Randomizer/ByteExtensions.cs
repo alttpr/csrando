@@ -13,20 +13,19 @@ internal static class ByteExtensions
         {
             bit = 1 << bit;
 
-            return (byte) (value ? b | bit : b & ~bit);
+            return (byte)(value ? b | bit : b & ~bit);
         }
-
 
         public byte GetField(byte offset, byte size)
         {
             if (Bmi1.IsSupported)
             {
-                return (byte) Bmi1.BitFieldExtract(b, offset, size);
+                return (byte)Bmi1.BitFieldExtract(b, offset, size);
             }
 
             int mask = (1 << size) - 1;
             b >>= offset;
-            b &= (byte) mask;
+            b &= (byte)mask;
             return b;
         }
 
@@ -35,10 +34,10 @@ internal static class ByteExtensions
             // this will most likely end up inlined and folded into a constant
             int mask = ((1 << size) - 1) << offset;
 
-            b &= (byte) ~mask;
+            b &= (byte)~mask;
 
             value <<= offset;
-            value &= (byte) mask;
+            value &= (byte)mask;
 
             b |= value;
             return b;
