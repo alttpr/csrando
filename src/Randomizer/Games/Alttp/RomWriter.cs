@@ -213,11 +213,7 @@ public static class RomWriter
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
         rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);
 
-        rom.SetOldManRespawnBehavior(
-            (config.Glitches is GlitchesOption.None)
-            ? OldManRespawnOption.SpawnSelect3
-            : OldManRespawnOption.Vanilla
-        );
+        rom.SetOldManRespawnBehavior(config.OldManRespawn);
 
         if (config.EntranceShuffle != EntranceShuffleOption.None)
             rom.PreOpenBombableWalls();

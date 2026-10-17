@@ -189,6 +189,8 @@ public class Config
     [Description("Provides unlimited magic, arrows or bombs during escape if Uncle gives you a weapon requiring resources.")]
     public bool EscapeAssist { get; init; } = false;
 
+    [Category("Gameplay")]
+    [Description("Sets whether the old man on Death Mountain allows you to escape his forced spawn point.")]
     public OldManRespawnOption OldManRespawn { get; init; } = OldManRespawnOption.Vanilla;
 
     public bool PseudoBoots { get; init; } = false;
@@ -286,7 +288,8 @@ public enum OldManRespawnOption
     [Name("Link's House/Sanctuary")]
     [Description("Allows Save&Quit to either Link's House or Sanctuary, cancelling the escort mission")]
     SpawnSelect2 = 0x01,
-    [Name("Link's House/Sanctuary/Third location I can't think of")]
+    [Name("Link's House/Sanctuary/Old Man Cave")]
+    [Description("Allows Save&Quit to either Link's House or Sanctuary, cancelling the escort mission, or continuing the mission.")]
     SpawnSelect3 = 0x02
 };
 
