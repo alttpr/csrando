@@ -27,7 +27,6 @@ public sealed class World : World<Item>, IPortalHost
     public readonly Dictionary<string, Sprite> Sprites = [];
     public readonly Dictionary<string, SpriteProperties> SpriteData = [];
 
-
     public Sprite GetSprite(string name)
         => Sprites.GetValueOrDefault(name)
         ?? throw new ArgumentException($"No such sprite: {name}", nameof(name));
@@ -112,6 +111,8 @@ public sealed class World : World<Item>, IPortalHost
             new DoorShuffler(),
             new EntranceShuffler(),
             new DarknessGraphifier(),
+            // The order of these next three items must be maintained.
+            // BossShuffler potentially relies on stat changes
             // EnemyShuffler will adjust sprite sheets, which relies on the BossShuffler running first
             // (and placing bosses in their respective rooms already)
             new EnemyStatRandomizer(),

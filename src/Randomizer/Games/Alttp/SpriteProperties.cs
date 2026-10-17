@@ -22,8 +22,6 @@ public sealed record class SpriteProperties
     public byte Property_HP { get; set; }
     public int[]? HpAddresses { get; init; }
 
-
-
     [PackedBitfield(nameof(IsHarmless))]
     [PackedBitfield(nameof(KillWhenOffscreenDuringTileChecks))]
     [PackedBitfield(nameof(UseTileHitbox68))]

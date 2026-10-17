@@ -897,20 +897,6 @@ public static class RomWriter
         rom.WriteEntrances(outlets, entrances, holes, outletToMap);
     }
 
-    // don't change the health value for those sprites
-    // TODO: kan: I don't think this is necessary other than for khold's shell, which we want to randomize and allow knowing it
-    private static readonly HashSet<int> _enemyHealthBlacklist =
-    [
-        0x70, // King Helmasaur fireball
-        0x7A, // Agahnim
-        0x7B, // Agahnim's balls
-        0x89, // Mothula beam
-        0xA3, // Kholdstare shell
-        0xA4, // Falling ice
-        0xBF, // Lightning
-        0xCE, // Blind
-    ];
-
     /// <summary>
     /// Write Room headers, and room data for all enemies in game.
     /// </summary>
