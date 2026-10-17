@@ -1,6 +1,5 @@
 ﻿namespace RandomizerTests.Games.Combo;
 
-using System.Buffers.Binary;
 using Randomizer.Games;
 using Randomizer.Games.Combo;
 using Randomizer.Graph;
