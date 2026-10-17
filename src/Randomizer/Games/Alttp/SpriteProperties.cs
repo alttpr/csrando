@@ -20,7 +20,7 @@ public sealed record class SpriteProperties
     [DisassemblyName(FileName = "bank_0D.asm", SymbolName = "SpriteData_Health", Address = 0x0DB173)]
     [ValueRange(0, 255)]
     public byte Property_HP { get; set; }
-    public int[]? HpAddresses { get; init; } = null;
+    public int[]? HpAddresses { get; init; }
 
 
 

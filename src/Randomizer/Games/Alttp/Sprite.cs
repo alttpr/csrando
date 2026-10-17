@@ -13,5 +13,5 @@ public record class Sprite(string Name, byte Id)
     public bool IgnoredByKillRooms => Properties?.IgnoredByKillRooms ?? false;
     public byte Health => Properties?.Property_HP ?? 0;
 
-    public SpriteProperties? Properties { get; init; } = null;
+    public SpriteProperties? Properties { get; init; }
 }

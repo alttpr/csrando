@@ -100,10 +100,6 @@ public class Config
         _molderp ??= prng.GetRandomElement(MolderpChoices);
     }
 
-
-
-
-
     [Category("Goal")]
     [ValueRange(1, 150, Default = 50)]
     [DependsOn(nameof(Goal), GoalOption.TriforceHunt, GoalOption.Trifecta)]
@@ -283,7 +279,16 @@ public enum TechOption
 {
     DungeonBunnyRevival,
 }
-public enum OldManRespawnOption { Vanilla = 0x00, SpawnSelect2 = 0x01, SpawnSelect3 = 0x02 };
+public enum OldManRespawnOption
+{
+    [Description("Vanilla behavior, locked to Death Mountain until he's home")]
+    Vanilla = 0x00,
+    [Name("Link's House/Sanctuary")]
+    [Description("Allows Save&Quit to either Link's House or Sanctuary, cancelling the escort mission")]
+    SpawnSelect2 = 0x01,
+    [Name("Link's House/Sanctuary/Third location I can't think of")]
+    SpawnSelect3 = 0x02
+};
 
 public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
 public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }

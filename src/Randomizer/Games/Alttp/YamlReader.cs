@@ -93,10 +93,10 @@ public class YamlReader
     });
     private static readonly Lazy<Dictionary<string, YamlSpriteData>> _cachedSpriteProperties = new(() =>
     {
-        string itemsYML = Path.Combine(DataRoot, PropertiesPath);
+        string spriteDataYML = Path.Combine(DataRoot, PropertiesPath);
 
         var deserializer = new DeserializerBuilder().Build();
-        using var reader = File.OpenText(itemsYML);
+        using var reader = File.OpenText(spriteDataYML);
         var result = deserializer.Deserialize<Dictionary<string, YamlSpriteData>>(reader);
 
         return result;
@@ -442,10 +442,6 @@ public class YamlSpriteData
     [YamlMember(Alias = "tile_hitbox")] public byte TileHitboxOffsets { get; set; }
     [YamlMember(Alias = "tiledie_addresses")] public int[]? TileDieAddresses { get; set; }
 }
-
-
-
-
 
 [Flags]
 public enum YamlSpriteFlags

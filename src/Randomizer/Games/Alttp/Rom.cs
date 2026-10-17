@@ -10,8 +10,6 @@ public sealed class Rom : GameRom
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    [Obsolete(message: "Avoid excessive NOP usage in favor of baserom changes and switches.")]
-    private const byte NOP = 0xEA;
 
     private readonly Text _text;
     private readonly Credits _credits;

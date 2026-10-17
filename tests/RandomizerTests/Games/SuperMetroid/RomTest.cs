@@ -1,6 +1,5 @@
 namespace RandomizerTests.Games.SuperMetroid;
 
-using System.Buffers.Binary;
 using Randomizer.Games;
 using Randomizer.Games.SuperMetroid;
 using Randomizer.Games.SuperMetroid.Model;

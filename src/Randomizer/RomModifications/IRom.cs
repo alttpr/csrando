@@ -62,19 +62,10 @@ public static class RomExtensions
                 {
                     ArrayPool<byte>.Shared.Return(tmp);
                 }
-
             }
-
         }
     }
 }
-
-
-
-
-
-
-
 
 public readonly struct Address
 {
