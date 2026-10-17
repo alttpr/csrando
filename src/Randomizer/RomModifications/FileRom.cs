@@ -35,35 +35,39 @@ public sealed class FileRom : IRom
 
     /// <summary>Update the ROM's checksum to be proper</summary>
     // TODO: this checksum isn't what emulators expect, but fortunately they ignore it.
+    // TODO add a flag so that front ends can skip checksum when they calculate their own
+    // TODO use Futaba.Snes.RomHeader.CalculateChecksum once we bring that in for building
     public void UpdateChecksum()
     {
+        int loc = IRom.CheckSumLocationLorom;
+
+        // dummy checksum to satisfy summing
+        Write(loc, [0xFF, 0xFF, 0x00, 0x00]);
+
         _rom.Seek(0, SeekOrigin.Begin);
 
-        int sum = 0x1FE;
+        uint sum = 0;
+
         Span<byte> block = stackalloc byte[1024];
         for (int i = 0; i < _rom.Length; i += block.Length)
         {
             int bytesRead = _rom.Read(block);
-            if (bytesRead == 0)
-                throw new Exception("Could not read block.");
 
-            for (int j = 0; j < bytesRead; ++j)
+            if (bytesRead == 0) throw new Exception("Could not read block.");
+
+            foreach (byte b in block[..bytesRead])
             {
-                // this skips checksum/inverse in LoROM; HiROM has those at 0xFFDC - 0xFFDF
-                // during calculation, they assume 0x0000 and 0xFFFF (which is the initial 0x1FE sum)
-                if (j + i is >= 0x7FDC and < 0x7FE0)
-                    continue;
-                sum += block[j];
+                sum += b;
             }
         }
 
-        ushort checksum = (ushort)(sum & 0xFFFF);
+        ushort checksum = (ushort)sum;
         ushort inverse = (ushort)(checksum ^ 0xFFFF);
 
         Span<byte> data = stackalloc byte[4];
         BinaryPrimitives.WriteUInt16LittleEndian(data, inverse);
         BinaryPrimitives.WriteUInt16LittleEndian(data[2..], checksum);
-        Write(0x7FDC, data);
+        Write(loc, data);
     }
 
     /// <summary>Save the changes to this output file</summary>

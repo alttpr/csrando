@@ -1,5 +1,6 @@
 ﻿namespace Randomizer.Games.Alttp;
 
+using System.Buffers;
 using System.Buffers.Binary;
 using Microsoft.Extensions.Logging;
 using Randomizer.Graph;
@@ -9,7 +10,6 @@ public sealed class Rom : GameRom
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-    private const byte NOP = 0xEA;
 
     private readonly Text _text;
     private readonly Credits _credits;
@@ -42,9 +42,7 @@ public sealed class Rom : GameRom
     /// <summary>Set the Rupoor value to take rupees</summary>
     public void SetRupoorValue(ushort value = 10)
     {
-        Span<byte> data = stackalloc byte[2];
-        BinaryPrimitives.WriteUInt16LittleEndian(data, value);
-        Write((SNES)0xB08036, data);
+        WriteUInt16((SNES)0xB08036, [value]);
     }
 
     /// <summary>Set Cane of Byrna Cave spike floor damage</summary>
@@ -194,9 +192,7 @@ public sealed class Rom : GameRom
     /// <summary>Set the number of goal items to collect</summary>
     public void SetGoalRequiredCount(ushort goal = 0)
     {
-        Span<byte> data = stackalloc byte[2];
-        BinaryPrimitives.WriteUInt16LittleEndian(data, goal);
-        Write((SNES)0xB08167, data);
+        WriteUInt16((SNES)0xB08167, [goal]);
     }
 
     /// <summary>Set the goal item icon</summary>
@@ -306,14 +302,7 @@ public sealed class Rom : GameRom
         var (pointers, data) = _credits.GetBinaryData();
 
         Write((SNES)0xB09500, data);
-        Span<byte> p = stackalloc byte[pointers.Length * 2];
-        var dataP = p;
-        foreach (ushort pointer in pointers)
-        {
-            BinaryPrimitives.WriteUInt16LittleEndian(dataP, pointer);
-            dataP = dataP[2..];
-        }
-        Write((SNES)0x0EECC0, p);
+        WriteUInt16((SNES)0x0EECC0, pointers);
     }
 
     /// <summary>Set Menu Speed</summary>
@@ -337,6 +326,11 @@ public sealed class Rom : GameRom
     /// <param name="enable">switch on or off</param>
     public void SetSmithyFreeTravel(bool enable = false)
         => Write((SNES)0xB0804C, [(byte)(enable ? 0x01 : 0x00)]);
+
+    public void SetOldManRespawnBehavior(OldManRespawnOption option)
+    {
+        Write((SNES)0xB0F033, [(byte)option]);
+    }
 
     /// <summary>Set Programmable 1 item.</summary>
     public void SetProgrammable1(string custom)
@@ -603,6 +597,7 @@ public sealed class Rom : GameRom
         var itemsData = new List<byte>();
         byte shopId = 0x00;
         int sramOffset = 0x00;
+
         foreach (var shop in shops)
         {
             if (shopId == shops.Length - 1)
@@ -621,12 +616,14 @@ public sealed class Rom : GameRom
             {
                 itemsData.Add(shopId);
                 itemsData.Add(item.Id);
+                // TODO let's stackalloc this instead of allocating an array
                 var price = BitConverter.GetBytes(item.Price);
                 if (!BitConverter.IsLittleEndian)
                     Array.Reverse(price);
                 itemsData.AddRange(price);
                 itemsData.Add(item.Max);
                 itemsData.Add(item.ReplaceId);
+                // TODO let's stackalloc this instead of allocating an array
                 var replacePrice = BitConverter.GetBytes(item.ReplacePrice);
                 if (!BitConverter.IsLittleEndian)
                     Array.Reverse(replacePrice);
@@ -658,6 +655,7 @@ public sealed class Rom : GameRom
     /// <param name="reveals">bitfield of what he reveals</param>
     public void SetMapRevealSahasrahla(ushort reveals = 0x0000)
     {
+        // TODO WriteUInt16
         Span<byte> data = stackalloc byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(data, reveals);
         Write((SNES)0xB0817A, data);
@@ -667,6 +665,7 @@ public sealed class Rom : GameRom
     /// <param name="reveals">bitfield of what he reveals</param>
     public void SetMapRevealBombShop(ushort reveals = 0x0000)
     {
+        // TODO WriteUInt16
         Span<byte> data = stackalloc byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(data, reveals);
         Write((SNES)0xB0817C, data);
@@ -704,7 +703,7 @@ public sealed class Rom : GameRom
         Write((SNES)0xB0804E, [flags]);
         Span<byte> data = stackalloc byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(data, rupees);
-        Write((SNES)0xB08183, data);
+        Write((SNES)0xB08183, data); // TODO WriteUInt16
     }
 
     /// <summary>Set Uncle Refills on respawn</summary>
@@ -946,6 +945,8 @@ public sealed class Rom : GameRom
         // fix trock doors for reverse entrances
         PreOpenBombableWalls();
 
+        // TODO add special handler for entrances/exits
+
         // Dark Death Mountain Healer Fairy => Old Man Cave (East)
         Write((SNES)(0x1BBB73 + 0x6F), [0x07]);
         Write((SNES)(0x02DAEE + 2 * 0x18), [0xf1, 0x00]);
@@ -1116,83 +1117,23 @@ public sealed class Rom : GameRom
         ]);
 
         // redefine some map16 tiles
-        Write((SNES)0x0FF1C8, [
-            0x0F,
-            0x19,
-            0x0F,
-            0x19,
-            0x0F,
-            0x19,
-            0x4C,
-            0x19,
-            0x0F,
-            0x19,
-            0x4B,
-            0x19,
-            0x0F,
-            0x19,
-            0x5C,
-            0x19,
-            0x4B,
-            0x59,
-            0x4C,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0x4B,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0x4B,
-            0x59,
-            0x0F,
-            0x19,
-            0x5C,
-            0x59,
-            0x0F,
-            0x19,
-            0x0F,
-            0x19,
-            0x5B,
-            0x19,
-            0x0F,
-            0x19,
-            0x0F,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0x5C,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0xEE,
-            0x19,
-            0x5C,
-            0x59,
-            0x5B,
-            0x59,
-            0x0F,
-            0x19,
-            0x0F,
-            0x19,
-            0x0F,
-            0x19
+        WriteUInt16((SNES)0x0FF1C8, [
+            0x190F, 0x190F, 0x190F, 0x194C,
+            0x190F, 0x194B, 0x190F, 0x195C,
+            0x594B, 0x194C, 0x19EE, 0x19EE,
+            0x194B, 0x19EE, 0x19EE, 0x19EE,
+            0x594B, 0x190F, 0x595C, 0x190F,
+            0x190F, 0x195B, 0x190F, 0x190F,
+            0x19EE, 0x19EE, 0x195C, 0x19EE,
+            0x19EE, 0x19EE, 0x19EE, 0x595C,
+            0x595B, 0x190F, 0x190F, 0x190F
         ]);
 
         // Redefine more map16 tiles
-        Write((SNES)0x0FA480, [0x0F, 0x19, 0x6B, 0x19, 0x04, 0x9D, 0x04, 0x9D, 0x6B, 0x19, 0x0F, 0x19, 0x04, 0x9D, 0x04, 0x9D]);
+        WriteUInt16((SNES)0x0FA480, [
+            0x190F, 0x196B, 0x9D04, 0x9D04,
+            0x196B, 0x190F, 0x9D04, 0x9D04
+        ]);
 
         // update pyramid hole entrances
         Write((SNES)0x1bb810, [0xBE, 0x00, 0xC0, 0x00, 0x3E, 0x01]);
@@ -1204,24 +1145,24 @@ public sealed class Rom : GameRom
         Write((SNES)0xB08340, [0x7B]); // ExtraHole_Entrance
 
         // prioritize retreat Bat and use 3rd sprite group
-        Write((SNES)0x1af504, [0x8B, 0x14]);
-        Write((SNES)0x1af50c, [0x9B, 0x14]);
-        Write((SNES)0x1af514, [0xA4, 0x14]);
-        Write((SNES)0x1af51c, [0x89, 0x14]);
-        Write((SNES)0x1af524, [0xAC, 0x14]);
-        Write((SNES)0x1af52c, [0xAC, 0x54]);
-        Write((SNES)0x1af534, [0x8C, 0x14]);
-        Write((SNES)0x1af53c, [0x8C, 0x54]);
-        Write((SNES)0x1af544, [0x84, 0x14]);
-        Write((SNES)0x1af54c, [0x84, 0x54]);
-        Write((SNES)0x1af554, [0xA2, 0x14]);
-        Write((SNES)0x1af55c, [0xA2, 0x54]);
-        Write((SNES)0x1af564, [0xA0, 0x14]);
-        Write((SNES)0x1af56c, [0xA0, 0x54]);
-        Write((SNES)0x1af574, [0x8E, 0x14]);
-        Write((SNES)0x1af57c, [0x8E, 0x54]);
-        Write((SNES)0x1af584, [0xAE, 0x14]);
-        Write((SNES)0x1af58c, [0xAE, 0x54]);
+        Write((SNES)0x1AF504, [0x8B, 0x14]);
+        Write((SNES)0x1AF50C, [0x9B, 0x14]);
+        Write((SNES)0x1AF514, [0xA4, 0x14]);
+        Write((SNES)0x1AF51C, [0x89, 0x14]);
+        Write((SNES)0x1AF524, [0xAC, 0x14]);
+        Write((SNES)0x1AF52C, [0xAC, 0x54]);
+        Write((SNES)0x1AF534, [0x8C, 0x14]);
+        Write((SNES)0x1AF53C, [0x8C, 0x54]);
+        Write((SNES)0x1AF544, [0x84, 0x14]);
+        Write((SNES)0x1AF54C, [0x84, 0x54]);
+        Write((SNES)0x1AF554, [0xA2, 0x14]);
+        Write((SNES)0x1AF55C, [0xA2, 0x54]);
+        Write((SNES)0x1AF564, [0xA0, 0x14]);
+        Write((SNES)0x1AF56C, [0xA0, 0x54]);
+        Write((SNES)0x1AF574, [0x8E, 0x14]);
+        Write((SNES)0x1AF57C, [0x8E, 0x54]);
+        Write((SNES)0x1AF584, [0xAE, 0x14]);
+        Write((SNES)0x1AF58C, [0xAE, 0x54]);
 
         // Make retreat bat gfx available in Hyrule castle.
         Write((SNES)0x00DB9D, [0x1A]); // sprite set 1, section 3
@@ -1229,8 +1170,8 @@ public sealed class Rom : GameRom
 
         // use new castle hole graphics (The values are the SNES address of the graphics: 31e000)
         Write((SNES)0x00D009, [0x31]);
-        Write((SNES)0x00D0e8, [0xE0]);
-        Write((SNES)0x00D1c7, [0x00]);
+        Write((SNES)0x00D0E8, [0xE0]);
+        Write((SNES)0x00D1C7, [0x00]);
         Write((SNES)0x1BE8DA, [0xAD, 0x39]); // add color for shading for castle hole
 
         Write((SNES)0xB08169, [0x02]); // lock aga door
@@ -1593,7 +1534,7 @@ public sealed class Rom : GameRom
     {
         Span<byte> data = stackalloc byte[2];
         BinaryPrimitives.WriteUInt16LittleEndian(data, count);
-        Write((SNES)0xB08196, data);
+        Write((SNES)0xB08196, data); // TODO WriteUInt16
     }
 
     /// <summary>Set Zelda Save and Quit Mirror Fix</summary>
@@ -1670,7 +1611,7 @@ public sealed class Rom : GameRom
             Write((SNES)address, [music]);
     }
 
-    public void WriteLocationSpecificData(Vertex location, Item? item)
+    public void WriteLocationSpecificData(World world, Vertex location, Item? item)
     {
         if (item == null)
             return;
@@ -1683,7 +1624,7 @@ public sealed class Rom : GameRom
                 if (item?.Name != "KeyP3" && location.World.GetLocation("Tower Of Hera - Basement Cage - Key") is Vertex basementCageKey)
                 {
                     // this isn't _really_ a heart piece, but what we'd usually patch over the tile sprite (for boomerang pickups).
-                    basementCageKey.Sprite = Sprite.Get("HeartPiece");
+                    basementCageKey.Sprite = world.GetSprite("HeartPiece");
                 }
                 break;
         }
@@ -1725,109 +1666,41 @@ public sealed class Rom : GameRom
             if (outletOverrides.X.HasValue)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.X.Value + pixelMapX));
-                Write((SNES)(0xAB893A + (outletId * 2)), data);
+                Write((SNES)(0xAB893A + (outletId * 2)), data); // TODO WriteUInt16
             }
             // NewOutletData_y_coordinate
             if (outletOverrides.Y.HasValue)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.Y.Value + pixelMapY));
-                Write((SNES)(0xAB873C + (outletId * 2)), data);
+                Write((SNES)(0xAB873C + (outletId * 2)), data); // TODO WriteUInt16
             }
 
             // NewOutletData_camera_trigger_x
             if (outletOverrides.CameraX.HasValue)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.CameraX.Value + pixelMapX));
-                Write((SNES)(0xAB8D36 + (outletId * 2)), data);
+                Write((SNES)(0xAB8D36 + (outletId * 2)), data); // TODO WriteUInt16
             }
             // NewOutletData_camera_trigger_y
             if (outletOverrides.CameraY.HasValue)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.CameraY.Value + pixelMapY));
-                Write((SNES)(0xAB8B38 + (outletId * 2)), data);
+                Write((SNES)(0xAB8B38 + (outletId * 2)), data); // TODO WriteUInt16
             }
 
             // NewOutletData_horizontal_scroll
             if (outletOverrides.ScrollX.HasValue)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.ScrollX.Value + pixelMapX));
-                Write((SNES)(0xAB853E + (outletId * 2)), data);
+                Write((SNES)(0xAB853E + (outletId * 2)), data); // TODO WriteUInt16
             }
             // NewOutletData_vertical_scroll
             if (outletOverrides.ScrollY.HasValue)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(data, (short)(outletOverrides.ScrollY.Value + pixelMapY));
-                Write((SNES)(0xAB8340 + (outletId * 2)), data);
+                Write((SNES)(0xAB8340 + (outletId * 2)), data); // TODO WriteUInt16
             }
         }
-    }
-
-    /// <summary>
-    /// Reads the enemy damage table from the ROM and returns it.
-    /// </summary>
-    public byte[] GetEnemyDamageTable()
-        => _gameData.Enemy.Damage.ToArray();
-
-    /// <summary>
-    /// Writes the enemy damage table to the ROM.
-    /// </summary>
-    /// <param name="damageTable">The damage table to write.</param>
-    public void SetEnemyDamageTable(byte[] damageTable, PRNG prng)
-    {
-        // Vanilla "bump" damage table (SpriteData_Bump, bank_0D.asm)
-        Write((SNES)0x0DB266, damageTable);
-
-        // SpritePrep_Rat_damage (sprite 0x6D)
-        Write((SNES)0x068874, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // SpritePrep_Keese_damage (sprite 0x6F)
-        Write((SNES)0x068888, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // SpritePrep_Rope_damage (sprite 0x6E)
-        Write((SNES)0x0688A4, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // SpritePrep_Raven_damage (sprite 0x00)
-        Write((SNES)0x068963, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // SpritePrep_Tektite_damage (sprite 0xC9)
-        Write((SNES)0x068D99, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // SpritePrep_Octorok_damage (sprites 0x08/0x0A)
-        Write((SNES)0x068F74, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // SpritePrep_HardhatBeetle_bump (sprite 0x26)
-        Write((SNES)0x069127, [(byte)prng.GetRandomInt(0..9), (byte)prng.GetRandomInt(0..9)]);
-        // patch the damage value for powdered blobs (sprite 0x8D)
-        Write((SNES)0x06EE0B, [(byte)prng.GetRandomInt(0..9)]);
-    }
-
-    /// <summary>
-    /// Reads the enemy health table from the ROM and returns it.
-    /// </summary>
-    public byte[] GetEnemyHealthTable()
-        => _gameData.Enemy.Health.ToArray();
-
-    /// <summary>
-    /// Writes the enemy health table to the ROM.
-    /// </summary>
-    /// <param name="healthTable">The health table to write.</param>
-    /// <param name="lowest">The lowest of the range of health values to use.</param>
-    /// <param name="highest">The highest of the range of health values to use.</param>
-    /// <param name="prng">The PRNG to use for randomization.</param>
-    public void SetEnemyHealthTable(byte[] healthTable, int lowest, int highest, PRNG prng)
-    {
-        // Vanilla health table (SpriteData_Health, bank_0D.asm)
-        Write((SNES)0x0DB173, healthTable);
-
-        // Health values for sprites that appear in both light/dark world
-        // SpritePrep_Rat_hp (sprite 0x6D)
-        Write((SNES)0x068876, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
-        // SpritePrep_Keese_hp (sprite 0x6F)
-        Write((SNES)0x06888A, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
-        // SpritePrep_Rope_hp (sprite 0x6E)
-        Write((SNES)0x0688A6, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
-        // SpritePrep_Raven_hp (sprite 0x00)
-        Write((SNES)0x068965, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
-        // SpritePrep_Tektite_health (sprite 0xC9)
-        Write((SNES)0x068D97, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
-        // SpritePrep_Octorok_health (sprites 0x08/0x0A)
-        Write((SNES)0x068F76, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
-        // SpritePrep_HardhatBeetle_health (sprite 0x26)
-        Write((SNES)0x06911F, [(byte)prng.GetRandomInt(lowest..highest), (byte)prng.GetRandomInt(lowest..highest)]);
     }
 
     public void BlindIsNotInThievesTown()
@@ -1919,18 +1792,141 @@ public sealed class Rom : GameRom
         Write((SNES)0x02E575, specialSpriteSheets);
     }
 
-    public void WriteSpriteFlags(byte[] spriteHitboxFlags, byte[] spritePrizePackFlags)
+    public void WriteSpriteData(IEnumerable<Sprite> sprites)
     {
-        if (spriteHitboxFlags.Length > 0xF3)
-            throw new Exception($"Trying to write too many sprite hitbox flags (got 0x{spriteHitboxFlags.Length:X02} which exceeds 0xF3)");
-        if (spritePrizePackFlags.Length > 0xF3)
-            throw new Exception($"Trying to write too many sprite prize pack flags (got 0x{spritePrizePackFlags.Length:X02} which exceeds 0xF3)");
+        foreach (var spritebase in sprites)
+        {
+            if (spritebase.Properties is not SpriteProperties sprite)
+            {
+                continue;
+            }
 
-        // SpriteData_HitBox
-        Write((SNES)0x0DB44C, spriteHitboxFlags);
-        // SpriteData_PrizePack
-        Write((SNES)0x0DB632, spritePrizePackFlags);
+            int id = sprite.ID;
+
+            if (id > 0xF2)
+            {
+                throw new Exception($"Invalid sprite ID: 0x{id:X2} > 0xF2. [{sprite.Name}]");
+            }
+
+            byte hp = sprite.Property_HP;
+            byte bump = sprite.Property_BUMP;
+            byte oamharm = sprite.Property_OAMHarm;
+            byte oamprop = sprite.Property_OAMProp;
+            byte prize = sprite.Property_PRIZE;
+            byte tiledie = sprite.Property_TILEDIE;
+            byte hitbox = sprite.Property_HITBOX;
+            byte deflect = sprite.Property_DEFLECT;
+
+            // we don't want to set values unless the sprite is the main variant
+            if (sprite.OwnsId)
+            {
+                Write((SNES)(0x0DB080 + id), oamharm); // SpriteData_OAMHarm
+                Write((SNES)(0x0DB173 + id), hp); // SpriteData_Health
+                Write((SNES)(0x0DB266 + id), bump); // SpriteData_Bump
+                Write((SNES)(0x0DB359 + id), oamprop); // SpriteData_OAMProp
+                Write((SNES)(0x0DB44C + id), hitbox); // SpriteData_Hitbox
+                Write((SNES)(0x0DB53F + id), tiledie); // SpriteData_TileInteraction
+                Write((SNES)(0x0DB632 + id), prize); // SpriteData_PrizePack
+                Write((SNES)(0x0DB725 + id), deflect); // SpriteData_Deflection
+
+                Write((SNES)(0xB1C800 + (id * 16)), [
+                    sprite.DamageClass0Subclass,
+                    sprite.DamageClass1Subclass,
+                    sprite.DamageClass2Subclass,
+                    sprite.DamageClass3Subclass,
+                    sprite.DamageClass4Subclass,
+                    sprite.DamageClass5Subclass,
+                    sprite.DamageClass6Subclass,
+                    sprite.DamageClass7Subclass,
+                    sprite.DamageClass8Subclass,
+                    sprite.DamageClass9Subclass,
+                    sprite.DamageClassASubclass,
+                    sprite.DamageClassBSubclass,
+                    sprite.DamageClassCSubclass,
+                    sprite.DamageClassDSubclass,
+                    sprite.DamageClassESubclass,
+                    sprite.DamageClassFSubclass
+                ]);
+            }
+
+            // handle any oddballs that have their properties initialized somewhere else
+            // this area won't be too overfilled
+            // because there are only a handful of properties that are set outside of the table
+            if (sprite.OamHarmAddresses is not null)
+            {
+                foreach (int addr in sprite.OamHarmAddresses)
+                {
+                    Write((SNES)addr, oamharm);
+                }
+            }
+
+            if (sprite.HpAddresses is not null)
+            {
+                foreach (int addr in sprite.HpAddresses)
+                {
+                    Write((SNES)addr, hp);
+                }
+            }
+
+            if (sprite.BumpAddresses is not null)
+            {
+                foreach (int addr in sprite.BumpAddresses)
+                {
+                    Write((SNES)addr, bump);
+                }
+            }
+
+            if (sprite.OamPropAddresses is not null)
+            {
+                foreach (int addr in sprite.OamPropAddresses)
+                {
+                    Write((SNES)addr, oamprop);
+                }
+            }
+
+            if (sprite.HitboxAddresses is not null)
+            {
+                foreach (int addr in sprite.HitboxAddresses)
+                {
+                    Write((SNES)addr, hitbox);
+                }
+            }
+
+            if (sprite.TileDieAddresses is not null)
+            {
+                foreach (int addr in sprite.TileDieAddresses)
+                {
+                    Write((SNES)addr, tiledie);
+                }
+            }
+
+            if (sprite.PrizeAddresses is not null)
+            {
+                foreach (int addr in sprite.PrizeAddresses)
+                {
+                    Write((SNES)addr, prize);
+                }
+            }
+
+            if (sprite.DeflectAddresses is not null)
+            {
+                foreach (int addr in sprite.DeflectAddresses)
+                {
+                    Write((SNES)addr, deflect);
+                }
+            }
+
+            if (sprite.MiscPaletteAddresses is not null)
+            {
+                byte pal2 = sprite.DrawProperties;
+                foreach (int addr in sprite.MiscPaletteAddresses)
+                {
+                    Write((SNES)addr, pal2);
+                }
+            }
+        }
     }
+
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)

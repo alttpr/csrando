@@ -188,6 +188,11 @@ public class Config
     [DependsOn(nameof(State), StateOption.Standard)]
     [Description("Provides unlimited magic, arrows or bombs during escape if Uncle gives you a weapon requiring resources.")]
     public bool EscapeAssist { get; init; } = false;
+
+    [Category("Gameplay")]
+    [Description("Sets whether the old man on Death Mountain allows you to escape his forced spawn point.")]
+    public OldManRespawnOption OldManRespawn { get; init; } = OldManRespawnOption.Vanilla;
+
     public bool PseudoBoots { get; init; } = false;
     [Ignore("Is there even a reason to turn this off?")]
     public bool FastRom { get; init; } = true;
@@ -276,6 +281,18 @@ public enum TechOption
 {
     DungeonBunnyRevival,
 }
+public enum OldManRespawnOption
+{
+    [Description("Vanilla behavior, locked to Death Mountain until he's home")]
+    Vanilla = 0x00,
+    [Name("Link's House/Sanctuary")]
+    [Description("Allows Save&Quit to either Link's House or Sanctuary, cancelling the escort mission")]
+    SpawnSelect2 = 0x01,
+    [Name("Link's House/Sanctuary/Old Man Cave")]
+    [Description("Allows Save&Quit to either Link's House or Sanctuary, cancelling the escort mission, or continuing the mission.")]
+    SpawnSelect3 = 0x02
+};
+
 public enum WeaponOption { Randomized, Assured, Vanilla, Swordless }
 public enum EntranceShuffleOption { None, Simple, Restricted, Full, Crossed, Insanity }
 public enum BossShuffleOption { None, Simple, Full, Random }

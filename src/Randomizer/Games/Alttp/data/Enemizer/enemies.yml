@@ -56,13 +56,12 @@ Vulture:
   - FireRod
   - IceRod
   - ActiveBombos
+# These could potentially be fixed, since they just fly off screen
 FlyingStalfosHead:
   - Boomerang
   - RedBoomerang
-  - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
-  - Hammer
 Octorok1:
   - L1Sword
   - CaneOfSomaria
@@ -291,7 +290,14 @@ BlueBari:
   - IceRod
   - ActiveBombos
   - ActiveEther
-HardhatBeetle:
+HardhatBeetleRed:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndSilverArrows
+  - ActiveBombos
+HardhatBeetleBlue:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -471,7 +477,7 @@ Popo:
   - FireRod
   - ActiveBombos
   - ActiveQuake
-Popo2:
+PopoFast:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna
@@ -697,7 +703,18 @@ EyegoreGreen:
   - BowAndArrows
   - UseBomb
   - BowAndSilverArrows
+MimicGreen:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
 EyegoreRed:
+  - BowAndArrows
+  - BowAndSilverArrows
+MimicRed:
   - BowAndArrows
   - BowAndSilverArrows
 StalfosYellow:
@@ -875,7 +892,23 @@ ZazakRed:
   - BowAndSilverArrows
   - FireRod
   - ActiveBombos
-Stalfos:
+StalfosRed:
+  - Boomerang
+  - RedBoomerang
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - Powder
+  - FireRod
+  - IceRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+StalfosBlue:
   - Boomerang
   - RedBoomerang
   - L1Sword
@@ -944,9 +977,6 @@ BeeGood:
   - ActiveBombos
   - ActiveEther
   - ActiveQuake
-Mimic:
-  - BowAndArrows
-  - BowAndSilverArrows
 Gibo:
   - L1Sword
   - CaneOfSomaria
@@ -971,7 +1001,19 @@ Pokey:
   - FireRod
   - IceRod
   - ActiveBombos
-Tektite:
+TektiteRed:
+  - L1Sword
+  - CaneOfSomaria
+  - CaneOfByrna
+  - Hammer
+  - BowAndArrows
+  - UseBomb
+  - BowAndSilverArrows
+  - FireRod
+  - ActiveBombos
+  - ActiveEther
+  - ActiveQuake
+TektiteBlue:
   - L1Sword
   - CaneOfSomaria
   - CaneOfByrna

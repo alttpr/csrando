@@ -27,12 +27,12 @@ rooms:
           mobs:
             - name: "Eastern Palace - Popo Switch - Popo B 1"
               position: { x: 0x10, y: 0x05, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
 
             - name: "Eastern Palace - Popo Switch - Popo B 2"
               position: { x: 0x0f, y: 0x06, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"
 
             - name: "Eastern Palace - Popo Switch - Popo B 3"
               position: { x: 0x10, y: 0x07, z: 0x00 }
-              sprite: "Popo2"
+              sprite: "PopoFast"

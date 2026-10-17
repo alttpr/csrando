@@ -57,7 +57,7 @@ public static class RomWriter
                 SetCreditsText(rom, world.WorldConfig, location, location.Item, getText);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
                 SetHintText(rom, world.WorldConfig, location, location.Item, getText);
-                rom.WriteLocationSpecificData(location, itemToWrite);
+                rom.WriteLocationSpecificData(world, location, itemToWrite);
             }
         }
 
@@ -208,13 +208,13 @@ public static class RomWriter
 
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
-
-        WriteEnemyDamageToRom(world, rom, prng);
-        WriteEnemyHealthToRom(world, rom, prng);
         WriteEnemiesToRom(world, rom);
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
         rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);
+
+        rom.SetOldManRespawnBehavior(config.OldManRespawn);
+
         if (config.EntranceShuffle != EntranceShuffleOption.None)
             rom.PreOpenBombableWalls();
 
@@ -893,84 +893,6 @@ public static class RomWriter
         rom.WriteEntrances(outlets, entrances, holes, outletToMap);
     }
 
-
-    /// <summary>
-    /// Set enemy damage values based on configuration for world.
-    /// </summary>
-    /// <param name="world">world to pull config from</param>
-    /// <param name="rom">rom to write data to</param>
-    /// <param name="prng">prng to use for randomization</param>
-    private static void WriteEnemyDamageToRom(World world, Rom rom, PRNG prng)
-    {
-        if (world.Config.EnemyDamage == EnemyDamageOption.Default)
-            return;
-
-        var damageBytes = rom.GetEnemyDamageTable();
-
-        var updateTable = world.Config.EnemyDamage switch
-        {
-            EnemyDamageOption.Shuffled => prng.Shuffle(damageBytes.Select(v => v & 0x0F)).ToArray(),
-            _ => Enumerable.Range(0, 0xF3).Select(_ => prng.GetRandomInt(0..9)).ToArray(),
-        };
-
-        for (int i = 0; i < 0xF3; i++)
-        {
-            damageBytes[i] = (byte)((damageBytes[i] & 0xF0) | (byte)updateTable[i]);
-        }
-
-        rom.SetEnemyDamageTable(damageBytes, prng);
-    }
-
-    // don't change the health value for those sprites
-    private static readonly HashSet<int> _enemyHealthBlacklist =
-    [
-        0x70, // King Helmasaur fireball
-        0x7A, // Agahnim
-        0x7B, // Agahnim's balls
-        0x89, // Mothula beam
-        0xA3, // Kholdstare shell
-        0xA4, // Falling ice
-        0xBF, // Lightning
-        0xCE, // Blind
-    ];
-    /// <summary>
-    /// Set enemy health values based on configuration for world.
-    /// </summary>
-    /// <param name="world">world to pull config from</param>
-    /// <param name="rom">rom to write data to</param>
-    /// <param name="prng">prng to use for randomization</param>
-    private static void WriteEnemyHealthToRom(World world, Rom rom, PRNG prng)
-    {
-        if (world.Config.EnemyHealth == EnemyHealthOption.Default)
-            return;
-
-        var healthBytes = rom.GetEnemyHealthTable();
-
-        var lowest = world.Config.EnemyHealth switch
-        {
-            EnemyHealthOption.Expert => 4,
-            EnemyHealthOption.Hard => 2,
-            EnemyHealthOption.Medium => 2,
-            _ => 1,
-        };
-
-        var highest = world.Config.EnemyHealth switch
-        {
-            EnemyHealthOption.Expert => 50,
-            EnemyHealthOption.Hard => 25,
-            EnemyHealthOption.Medium => 15,
-            _ => 4,
-        };
-        for (int i = 0; i < 0xD3; i++)
-        {
-            if (healthBytes[i] == 0xFF || _enemyHealthBlacklist.Contains(i))
-                continue;
-            healthBytes[i] = (byte)prng.GetRandomInt(lowest..highest);
-        }
-
-        rom.SetEnemyHealthTable(healthBytes, lowest, highest, prng);
-    }
-
     /// <summary>
     /// Write Room headers, and room data for all enemies in game.
     /// </summary>
@@ -1163,122 +1085,7 @@ public static class RomWriter
         // write new sheet sets
         rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
 
-        WriteSpriteFlags(rom);
-    }
-
-    private static void WriteSpriteFlags(Rom rom)
-    {
-        var spriteData = YamlReader.LoadSprites().Values.Where(s => !s.Flags.HasFlag(YamlSpriteFlags.Overlord) && !s.Flags.HasFlag(YamlSpriteFlags.UnderPots)).ToLookup(s => s.Id);
-        // hitbox/collision
-        byte[] spriteHitboxFlags = new byte[0xF3];
-        // prize packs and interaction
-        byte[] spritePrizePackFlags = new byte[0xF3];
-        for (byte spriteId = 0; spriteId < spriteHitboxFlags.Length; spriteId++)
-        {
-            bool collisionOnSingleLayer = false;
-            bool killRoomValidity = false;
-            bool overworldActiveness = false;
-            byte hitbox = 0x00;
-
-            var collisionOnSingleLayerEntries = spriteData[spriteId].ToLookup(s => s.SingleLayerCollision);
-            if (collisionOnSingleLayerEntries.Count == 1)
-                collisionOnSingleLayer = collisionOnSingleLayerEntries.First().Key;
-#if DEBUG
-            else if (collisionOnSingleLayerEntries.Count > 1)
-                throw new Exception($"Mismatched SingleLayerCollision for sprite 0x{spriteId:x02}: {string.Join(", ", collisionOnSingleLayerEntries.Select(k => k.Key))}");
-#endif
-            var killRoomValidityEntries = spriteData[spriteId].ToLookup(s => s.IgnoredByKillRooms);
-            if (killRoomValidityEntries.Count == 1)
-                killRoomValidity = killRoomValidityEntries.First().Key;
-#if DEBUG
-            else if (killRoomValidityEntries.Count > 1)
-                throw new Exception($"Mismatched IgnoredByKillRooms for sprite 0x{spriteId:x02}: {string.Join(", ", killRoomValidityEntries.Select(k => k.Key))}");
-#endif
-            var overworldActivenessEntries = spriteData[spriteId].ToLookup(s => s.PersistOffScreenOW);
-            if (overworldActivenessEntries.Count == 1)
-                overworldActiveness = overworldActivenessEntries.First().Key;
-#if DEBUG
-            else if (overworldActivenessEntries.Count > 1)
-                throw new Exception($"Mismatched PersistOffScreenOW for sprite 0x{spriteId:x02}: {string.Join(", ", overworldActivenessEntries.Select(k => k.Key))}");
-#endif
-            var hitboxEntries = spriteData[spriteId].ToLookup(s => s.Hitbox);
-            if (hitboxEntries.Count == 1)
-                hitbox = hitboxEntries.First().Key;
-#if DEBUG
-            else if (hitboxEntries.Count > 1)
-                throw new Exception($"Mismatched Hitbox for sprite 0x{spriteId:x02}: {string.Join(", ", hitboxEntries.Select(k => k.Key))}");
-#endif
-
-            bool limitedPitConveyorInteraction = false;
-            bool waterCheck = false;
-            bool shieldBlockable = false;
-            bool bossDamageSFX = false;
-            byte prizePack = 0x00;
-
-            var limitedPitConveyorInteractionEntries = spriteData[spriteId].ToLookup(s => s.LimitedPitConveyorInteraction);
-            if (limitedPitConveyorInteractionEntries.Count == 1)
-                limitedPitConveyorInteraction = limitedPitConveyorInteractionEntries.First().Key;
-#if DEBUG
-            else if (limitedPitConveyorInteractionEntries.Count > 1)
-                throw new Exception($"Mismatched LimitedPitConveyorInteraction for sprite 0x{spriteId:x02}: {string.Join(", ", limitedPitConveyorInteractionEntries.Select(k => k.Key))}");
-#endif
-            var waterCheckEntries = spriteData[spriteId].ToLookup(s => s.WaterCheck);
-            if (waterCheckEntries.Count == 1)
-                waterCheck = waterCheckEntries.First().Key;
-#if DEBUG
-            else if (waterCheckEntries.Count > 1)
-                throw new Exception($"Mismatched WaterCheck for sprite 0x{spriteId:x02}: {string.Join(", ", waterCheckEntries.Select(k => k.Key))}");
-#endif
-            var shieldBlockableEntries = spriteData[spriteId].ToLookup(s => s.ShieldBlockable);
-            if (shieldBlockableEntries.Count == 1)
-                shieldBlockable = shieldBlockableEntries.First().Key;
-#if DEBUG
-            else if (shieldBlockableEntries.Count > 1)
-                throw new Exception($"Mismatched ShieldBlockable for sprite 0x{spriteId:x02}: {string.Join(", ", shieldBlockableEntries.Select(k => k.Key))}");
-#endif
-            var bossDamageSFXEntries = spriteData[spriteId].ToLookup(s => s.BossDamageSFX);
-            if (bossDamageSFXEntries.Count == 1)
-                bossDamageSFX = bossDamageSFXEntries.First().Key;
-#if DEBUG
-            else if (bossDamageSFXEntries.Count > 1)
-                throw new Exception($"Mismatched BossDamageSFX for sprite 0x{spriteId:x02}: {string.Join(", ", bossDamageSFXEntries.Select(k => k.Key))}");
-#endif
-            var prizePackEntries = spriteData[spriteId].ToLookup(s => s.PrizePack);
-            if (prizePackEntries.Count == 1)
-                prizePack = prizePackEntries.First().Key;
-#if DEBUG
-            else if (prizePackEntries.Count > 1)
-                throw new Exception($"Mismatched PrizePack for sprite 0x{spriteId:x02}: {string.Join(", ", prizePackEntries.Select(k => k.Key))}");
-#endif
-
-            // isph hhhh
-            //   i - run collision on a single layer
-            //   s - kill room validity (0: sprite counts | 1: ignored by kill rooms)
-            //   p - overworld activeness (0: die off screen | 1: persists)
-            //   h - hitbox
-            spriteHitboxFlags[spriteId] = (byte)(
-                (collisionOnSingleLayer ? 0b1000_0000 : 0) |
-                (killRoomValidity ? 0b0100_0000 : 0) |
-                (overworldActiveness ? 0b0010_0000 : 0) |
-                (hitbox & 0b0001_1111)
-            );
-
-            // iwbs pppp
-            //   i - limits pit and conveyor interaction
-            //   w - check for water uniquely (0: skip | 1: check water)
-            //   b - blockable by shield
-            //   s - damage SFX (0: normal | 1: boss)
-            //   p - prize pack
-            spritePrizePackFlags[spriteId] = (byte)(
-                (limitedPitConveyorInteraction ? 0b1000_0000 : 0) |
-                (waterCheck ? 0b0100_0000 : 0) |
-                (shieldBlockable ? 0b0010_0000 : 0) |
-                (bossDamageSFX ? 0b0001_0000 : 0) |
-                (prizePack & 0b0000_1111)
-            );
-        }
-
-        rom.WriteSpriteFlags(spriteHitboxFlags, spritePrizePackFlags);
+        rom.WriteSpriteData(world.Sprites.Values);
     }
 }
 

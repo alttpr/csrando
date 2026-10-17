@@ -159,7 +159,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                 Item = world.GetItem("DefeatGanon"),
             };
             world.Graph.AddVertex(defeated);
-            foreach (string item in bosses["GanonInvisible"])
+            foreach (string item in bosses["GanonStunned"])
                 torchesLit.Edges.Add(new Edge(torchesLit, defeated, new ItemCondition(world.GetItem(item), 1)));
 
             var darkDefeated = new Vertex
@@ -445,6 +445,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
     private sealed class EnemySprite(Sprite sprite)
     {
         public Sprite Sprite { get; } = sprite;
+        public SpriteProperties? Properties => Sprite.Properties;
         public SheetSet Sheets { get; } = new SheetSet(sprite.Sheets);
     }
     [System.Diagnostics.DebuggerDisplay("[ {_sheets[0]}, {_sheets[1]}, {_sheets[2]}, {_sheets[3]} ]")]
@@ -569,7 +570,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         var enemyRooms = enemyVertices.ToLookup(enemy => enemy.RoomId);
         var enemyOWs = enemyVertices.ToLookup(enemy => enemy.Map);
 
-        var allEnemies = Sprite.All().Select(e => new EnemySprite(e)).ToArray();
+        var allEnemies = world.Sprites.Values.Select(e => new EnemySprite(e)).ToArray();
+
         // Set up sprite sheets
         var sheetableSprites = allEnemies.Where(s => !s.Sheets.IsEmpty);
         // sprites that can be moved to any room as they don't have any sheet
@@ -817,4 +819,138 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         static bool isAllowed(Vertex target, EnemySprite sprite) => target.Allow is null || target.Allow.Length == 0 || target.Allow.Contains(sprite.Sprite.DefeatName);
         static bool isDenied(Vertex target, EnemySprite sprite) => target.Deny is not null && target.Deny.Length > 0 && target.Deny.Contains(sprite.Sprite.DefeatName);
     }
+
+    // TODO this is going to need some extra work, including discussion on how to handle
+    // properties that need to be initialized a certain way but can change later
+    // for example
+    //      Eyegores are immune to sword/hammer when they spawn
+    //      but they remove that immunity during their wake phase
+    //      which means this isn't completely reliable as an edge generator
+    public static Dictionary<string, List<string>> GenerateDefeatEdges(World world)
+    {
+        Dictionary<string, List<string>> ret = [];
+        foreach (var (name, sprite) in world.Sprites)
+        {
+            if (sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace))
+            {
+                ret.Add(name, ["fixed"]);
+                continue;
+            }
+
+            if (sprite.Properties is not SpriteProperties props)
+            {
+                ret.Add(name, ["fixed"]);
+                continue;
+            }
+
+            if (props.IsInvulnerable)
+            {
+                continue;
+            }
+
+            List<string> killEdges = new(64);
+
+            var removalCandidates = DamageTable.DamageSubclassesCanRemove(props);
+
+            if (!props.ImmuneToSwordAndHammer)
+            {
+                if (removalCandidates[0x1])
+                {
+                    killEdges.Add("L1Sword");
+                }
+
+                if (removalCandidates[0x2])
+                {
+                    killEdges.Add("L2Sword");
+                }
+
+                if (removalCandidates[0x3])
+                {
+                    killEdges.Add("L3Sword");
+                    killEdges.Add("Hammer");
+                }
+
+                if (removalCandidates[0x4])
+                {
+                    killEdges.Add("L4Sword");
+                }
+            }
+
+            if (!props.ImmuneToAncillae)
+            {
+                if (removalCandidates[0x0])
+                {
+                    if (!props.ImmuneToSwordAndHammer)
+                    {
+                        killEdges.Add("Boomerang");
+                        killEdges.Add("RedBoomerang");
+                    }
+                }
+
+                if (removalCandidates[0x1])
+                {
+                    killEdges.Add("CaneOfSomaria");
+                    killEdges.Add("CaneOfByrna");
+                    killEdges.Add("L2Sword"); // maybe? for sword beams
+
+                }
+
+                if (!props.DeflectsArrows)
+                {
+                    if (removalCandidates[0x6])
+                    {
+                        killEdges.Add("BowAndArrows");
+                    }
+
+                    if (removalCandidates[0x9])
+                    {
+                        killEdges.Add("BowAndSilverArrows");
+                    }
+                }
+
+                if (removalCandidates[0x7])
+                {
+                    killEdges.Add("Hookshot");
+                }
+
+                if (removalCandidates[0x8])
+                {
+                    killEdges.Add("UseBomb");
+                }
+
+                if (!props.ImmuneToPowder && removalCandidates[0xA])
+                {
+                    killEdges.Add("Powder");
+                }
+
+                if (removalCandidates[0xB])
+                {
+                    killEdges.Add("FireRod");
+                }
+
+                if (removalCandidates[0xC])
+                {
+                    killEdges.Add("IceRod");
+                }
+
+                if (removalCandidates[0xD])
+                {
+                    killEdges.Add("ActiveBombos");
+                }
+
+                if (removalCandidates[0xE])
+                {
+                    killEdges.Add("ActiveEther");
+                }
+
+                if (removalCandidates[0xF])
+                {
+                    killEdges.Add("ActiveQuake");
+                }
+            }
+        }
+
+        return ret;
+    }
+
 }

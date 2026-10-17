@@ -214,7 +214,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                 RoomId = bossVertex.RoomId,
                 RoomOAM = bossVertex.RoomOAM,
                 Sheets = bossVertex.Sheets,
-                Sprite = Sprite.Get(bossSprite.Sprite),
+                Sprite = world.GetSprite(bossSprite.Sprite),
                 // required to force this sprite, even when enemizer is on
                 Allow = [bossSprite.Sprite],
             });

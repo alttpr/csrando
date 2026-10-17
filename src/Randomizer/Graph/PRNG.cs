@@ -21,6 +21,25 @@ public class PRNG
         return source.OrderBy(_ => _random.Next());
     }
 
+    public void ShuffleSpan<T>(scoped Span<T> source)
+    {
+        // TODO these numbers can be tuned
+        int iterations = source.Length switch
+        {
+            < 1000 => source.Length * 10,
+            < 10000 => source.Length * 3,
+            _ => source.Length,
+        };
+
+        while (iterations-- > 0)
+        {
+            int a = _random.Next(source.Length);
+            int b = _random.Next(source.Length);
+
+            (source[a], source[b]) = (source[b], source[a]);
+        }
+    }
+
     public int GetRandomInt(Range range) => GetRandomInt(range.Start.Value, range.End.Value + 1);
     public int GetRandomInt(int maxExclusive)
     {
