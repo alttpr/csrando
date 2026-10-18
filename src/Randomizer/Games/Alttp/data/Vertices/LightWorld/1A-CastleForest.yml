@@ -14,9 +14,9 @@ maps:
               sprite: "Fairy"
               state: [1, 2]
 
-            - name: "Castle Forest - Heart"
+            - name: "Castle Forest - Bonk Bomb"
               position: { x: 0x0a, y: 0x18 }
-              sprite: "Heart"
+              sprite: "BonkBomb"
               state: [1, 2]
 
             - name: "Castle Forest - Blue Guard"
