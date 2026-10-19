@@ -14,7 +14,7 @@ public abstract class GameRom(IRom rom, int offset)
     /// <summary>Writes <paramref name="data"/> to <paramref name="address"/>.</summary>
     /// <param name="address">ROM address, defaults to PC. Use <c>(SNES)address</c> to indicate SNES addressing.</param>
     /// <param name="data">Data to write.</param>
-    protected void WriteUInt16(Address address, scoped ReadOnlySpan<ushort> data) => rom.WriteUInt16(address.Value + offset, data);
+    protected void WriteUInt16(Address address, params ReadOnlySpan<ushort> data) => rom.WriteUInt16(address.Value + offset, data);
 
     /// <summary>
     /// Reads the data at <paramref name="address"/> and returns it.

@@ -28,18 +28,18 @@ internal class OutletData(byte id)
     public ushort ScrollModY { get; set; }
     public ushort ScrollModX { get; set; }
 
-/* TODO this isn't ready yet and needs some investigation...
- * A lot of these properties should be derivable, and that's a good eventually goal.
+    /*
+     * TODO this isn't ready yet and needs some investigation...
+     * A lot of these properties should be derivable, and that's a good eventually goal.
 
-    /// <summary>
-    /// Places Link at the given coordinates on the given screen
-    /// then automatically recalculates all other properties from this.
-    /// </summary>
-    public void RecalculateProperties()
-    {
-    }
-*/
-
+        /// <summary>
+        /// Places Link at the given coordinates on the given screen
+        /// then automatically recalculates all other properties from this.
+        /// </summary>
+        public void RecalculateProperties()
+        {
+        }
+    */
     private void RecalculateCamera()
     {
     }

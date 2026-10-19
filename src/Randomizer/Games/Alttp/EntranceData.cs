@@ -136,18 +136,18 @@ internal class EntranceData(byte id)
         CameraTriggerX = triggerX;
         CameraTriggerY = triggerY;
 
-        ushort cameraX = (ushort) (triggerX + (posX & PositionResolutionMask));
-        ushort cameraY = (ushort) (triggerY + (posY & PositionResolutionMask));
+        ushort cameraX = (ushort)(triggerX + (posX & PositionResolutionMask));
+        ushort cameraY = (ushort)(triggerY + (posY & PositionResolutionMask));
 
         // make sure camera is locked to inside the room
-        cameraX = (ushort) ((cameraX & 0x1FF) switch
+        cameraX = (ushort)((cameraX & 0x1FF) switch
         {
             <= 150 => posX & PositionResolutionMask,
             >= 350 => (posX & PositionResolutionMask) + 256 + 16,
             _ => cameraX - 112,
         });
 
-        cameraY = (ushort) ((cameraY & 0x1FF) switch
+        cameraY = (ushort)((cameraY & 0x1FF) switch
         {
             <= 150 => posY & PositionResolutionMask,
             >= 350 => (posY & PositionResolutionMask) + 256 + 16,
