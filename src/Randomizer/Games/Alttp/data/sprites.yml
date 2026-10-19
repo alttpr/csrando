@@ -1398,7 +1398,7 @@ Heart:
   id: 0xD8
   flags: NoPlace
   properties: Heart_properties
-BombInTree: #Same ID as heart with hardcoded behavior change in the overworld.
+BonkBomb: #Same ID as heart with hardcoded behavior change in the overworld.
   id: 0xD8
   flags: NoPlace, OverworldOnly, BonkPrize
   properties: Heart_properties
