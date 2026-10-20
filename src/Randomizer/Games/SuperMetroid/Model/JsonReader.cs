@@ -133,7 +133,7 @@ public class JsonReader
         AddEdge(from, to, requirement, true);
     }
 
-    private List<T> LoadFiles<T>(string path)
+    private static List<T> LoadFiles<T>(string path)
     {
         var jsonData = new List<T>();
 
@@ -166,7 +166,7 @@ public class JsonReader
         return jsonData;
     }
 
-    private T? LoadFile<T>(string path)
+    private static T? LoadFile<T>(string path)
     {
         try
         {

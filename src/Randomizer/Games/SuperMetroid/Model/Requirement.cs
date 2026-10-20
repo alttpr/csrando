@@ -121,7 +121,7 @@ public class RequirementConverter : JsonConverter<Requirement>
         return ParseElement(doc.RootElement);
     }
 
-    public Requirement? ParseElement(JsonElement element)
+    public static Requirement? ParseElement(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.String)
         {

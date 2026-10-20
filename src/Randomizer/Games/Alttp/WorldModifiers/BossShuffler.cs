@@ -218,7 +218,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
                 // required to force this sprite, even when enemizer is on
                 Allow = [bossSprite.Sprite],
             });
-            world.Graph.AddDirected(bossVertex, spriteVertex, fixedCondition);
+            Graph.Graph.AddDirected(bossVertex, spriteVertex, fixedCondition);
         }
 
         bossEdge.Condition = new ItemCondition(worldBossItem, 1);

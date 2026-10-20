@@ -244,7 +244,7 @@ abstract public record EntranceCondition
 
 public class EntranceConditionConverter : JsonConverter<EntranceCondition>
 {
-    public EntranceCondition? ParseElement(JsonElement element)
+    public static EntranceCondition? ParseElement(JsonElement element)
     {
         var entranceCondition = element.EnumerateObject().First();
         return entranceCondition.Name switch
@@ -370,7 +370,7 @@ abstract public record ExitCondition
 
 public class ExitConditionConverter : JsonConverter<ExitCondition>
 {
-    public ExitCondition? ParseElement(JsonElement element)
+    public static ExitCondition? ParseElement(JsonElement element)
     {
         var exitCondition = element.EnumerateObject().First();
         return exitCondition.Name switch

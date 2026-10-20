@@ -1611,7 +1611,7 @@ public sealed class Rom : GameRom
             Write((SNES)address, [music]);
     }
 
-    public void WriteLocationSpecificData(World world, Vertex location, Item? item)
+    public static void WriteLocationSpecificData(World world, Vertex location, Item? item)
     {
         if (item == null)
             return;

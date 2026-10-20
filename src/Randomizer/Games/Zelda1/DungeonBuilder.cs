@@ -773,7 +773,7 @@ internal class DungeonBuilder
 
     // Level 9 helpers
 
-    private Room? GetLevelNineCheckRoom(Room startRoom)
+    private static Room? GetLevelNineCheckRoom(Room startRoom)
     {
         var northNeighbor = startRoom.Neighbors.FirstOrDefault(n =>
             !n.HasAnyRole(RoomRole.Cellar) && n.X == startRoom.X && n.Y == startRoom.Y - 1);
@@ -798,7 +798,7 @@ internal class DungeonBuilder
     /// ensuring the only way into the dungeon is through the triforce check.
     /// Orphaned rooms are reconnected through the check room when possible.
     /// </summary>
-    private void IsolateStartRoomForLevelNine(Room startRoom, Room checkRoom)
+    private static void IsolateStartRoomForLevelNine(Room startRoom, Room checkRoom)
     {
         var toDisconnect = startRoom.Neighbors
             .Where(n => n != checkRoom && !n.HasAnyRole(RoomRole.Cellar))
@@ -1392,7 +1392,7 @@ internal class DungeonBuilder
         _ => false,
     };
 
-    private void ReplaceShutters(Room room, YamlReader.DoorType replacement)
+    private static void ReplaceShutters(Room room, YamlReader.DoorType replacement)
     {
         foreach (var direction in room.Doors
             .Where(kvp => kvp.Value == YamlReader.DoorType.Shutter)
@@ -1473,7 +1473,7 @@ internal class DungeonBuilder
     /// distance to every reachable room. Doors are checked from the current room's side, mirroring
     /// GetAccessibleRoomsWithoutKeys (door types are symmetric between neighbours).
     /// </summary>
-    private Dictionary<Room, int> DoorReachableDistances(Room startRoom, params YamlReader.DoorType[] blockedDoors)
+    private static Dictionary<Room, int> DoorReachableDistances(Room startRoom, params YamlReader.DoorType[] blockedDoors)
     {
         var blocked = new HashSet<YamlReader.DoorType>(blockedDoors);
         var distances = new Dictionary<Room, int> { [startRoom] = 0 };
@@ -2401,7 +2401,7 @@ internal class DungeonBuilder
 
     /// <summary>True if the room's item position on the given screen sits in a region reachable
     /// from one of the room's doors (walking all edges, i.e. assuming every item is owned).</summary>
-    private bool ItemReachableOnScreen(YamlReader.Screen screen, Room room, HashSet<string> doorDirs, IReadOnlyList<int> slots)
+    private static bool ItemReachableOnScreen(YamlReader.Screen screen, Room room, HashSet<string> doorDirs, IReadOnlyList<int> slots)
     {
         if (!TryGetItemPosition(slots, screen, out int pos))
             return false; // no slot is even walkable here — Write would throw, so this screen is unusable
@@ -2576,7 +2576,7 @@ internal class DungeonBuilder
 
     // Graph utilities
 
-    private List<(int dist, Room room)> Distances(Room startRoom, bool withinSegment = false)
+    private static List<(int dist, Room room)> Distances(Room startRoom, bool withinSegment = false)
     {
         var visited = new HashSet<Room> { startRoom };
         var queue = new Queue<(int dist, Room room)>();
@@ -2597,7 +2597,7 @@ internal class DungeonBuilder
         return result;
     }
 
-    private List<Room> GetShortestPath(Room start, Room target)
+    private static List<Room> GetShortestPath(Room start, Room target)
     {
         var visited = new HashSet<Room> { start };
         var queue = new Queue<Room>();

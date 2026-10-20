@@ -250,13 +250,13 @@ public class GraphPreprocessor
         }
     }
 
-    private void BuildRunways()
+    private static void BuildRunways()
     {
         //TODO: Resolve runways to enable shinesparking requirements
 
     }
 
-    private void PruneGraph()
+    private static void PruneGraph()
     {
         //TODO: Prune edges that can't be fullfilled or have invalid strats or no strats
 
@@ -633,7 +633,7 @@ public class GraphPreprocessor
             EntranceCondition.ComeInJumping or
             EntranceCondition.ComeInSpinning;
 
-    private Requirement RunwayEntranceRequirement(ExitCondition.LeaveWithRunway runway,
+    private static Requirement RunwayEntranceRequirement(ExitCondition.LeaveWithRunway runway,
         EntranceCondition entrance, Room fromRoom, Node fromNode)
     {
         var requirements = new List<Requirement>();
@@ -743,7 +743,7 @@ public class GraphPreprocessor
         return speeds[tiles];
     }
 
-    public Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
+    public static Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
     {
         if (node.Name == nameToPatch)
         {

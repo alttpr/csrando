@@ -1410,7 +1410,7 @@ public class Rom : GameRom
     }
 
     // Builds a door header entry
-    private byte[] BuildDoorData(ushort roomHeader, byte[] doorProps, ushort distance = 0x8000, ushort asmPtr = 0x0000)
+    private static byte[] BuildDoorData(ushort roomHeader, byte[] doorProps, ushort distance = 0x8000, ushort asmPtr = 0x0000)
     {
         if (doorProps == null || doorProps.Length != 6)
         {
@@ -1426,7 +1426,7 @@ public class Rom : GameRom
     }
 
     // Builds a door out list entry table
-    private byte[] BuildDoorList(params ushort[] doorPtrs)
+    private static byte[] BuildDoorList(params ushort[] doorPtrs)
     {
         var buf = new List<byte>(2 * doorPtrs.Length);
         foreach (var p in doorPtrs)
@@ -1438,7 +1438,7 @@ public class Rom : GameRom
 
 
     // Builds a PLM list entry table
-    private byte[] BuildPlmList(params PlmEntry[] entries)
+    private static byte[] BuildPlmList(params PlmEntry[] entries)
     {
         var buf = new List<byte>(entries.Length * 6 + 2);
         foreach (var e in entries)

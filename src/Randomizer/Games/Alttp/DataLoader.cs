@@ -32,7 +32,7 @@ internal static class DataLoader
                         $"({edgeData[0]}, {edgeData[1]}) => " +
                         $"({from}, {to})");
                 }
-                graph.AddDirected(from, to, condition);
+                Graph.Graph.AddDirected(from, to, condition);
             }
         }
 

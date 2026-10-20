@@ -130,7 +130,7 @@ internal static class DataLoader
                     world.Graph.AddVertex(transition);
                     originalEdge.To = transition;
                     world.Graph.AddDirected(targetRoom, transition, world.GetItem("fixed"));
-                    world.Graph.AddDirected(transition, targetRoom, condition);
+                    Graph.AddDirected(transition, targetRoom, condition);
 
                     if (edgesToModify.Count() > 1)
                         throw new Exception("Uh oh, is the code really correct there?");

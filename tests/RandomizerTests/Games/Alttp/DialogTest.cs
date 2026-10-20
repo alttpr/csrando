@@ -111,7 +111,7 @@ public sealed class DialogTest
     public void TestConvertDialogCompressed(string input, byte[] expectedOutput)
     {
         var dialog = new Dialog();
-        var actual = dialog.ConvertDialogCompressed(input);
+        var actual = Dialog.ConvertDialogCompressed(input);
         CollectionAssert.AreEqual(expectedOutput, actual);
     }
 

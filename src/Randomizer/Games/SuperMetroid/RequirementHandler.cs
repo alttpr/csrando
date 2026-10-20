@@ -933,7 +933,7 @@ public class RequirementHandler
         };
     }
 
-    private bool IsStrategyAllowed(NotableStrategy strategy, Logic logic) =>
+    private static bool IsStrategyAllowed(NotableStrategy strategy, Logic logic) =>
         strategy.Difficulty switch
         {
             "Basic" => logic == Logic.Basic,

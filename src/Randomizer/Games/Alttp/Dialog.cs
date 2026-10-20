@@ -5,7 +5,7 @@ public sealed class Dialog
     /// <summary>Convert string to byte array for Dialog Box that can be written to ROM</summary>
     /// <param name="str">string to convert</param>
     /// <param name="maxBytes">maximum bytes to return</param>
-    public byte[] ConvertDialog(string str, int maxBytes = 256)
+    public static byte[] ConvertDialog(string str, int maxBytes = 256)
     {
         var newString = new List<byte>();
         string[] lines = str.Split('\n');
@@ -66,7 +66,7 @@ public sealed class Dialog
     /// <param name="pause">whether to pause for input</param>
     /// <param name="maxBytes">maximum bytes to return</param>
     /// <param name="wrap">if greater than 0 wrap lines to this value</param>
-    public byte[] ConvertDialogCompressed(string str, bool pause = true, int maxBytes = 2046, int wrap = 19)
+    public static byte[] ConvertDialogCompressed(string str, bool pause = true, int maxBytes = 2046, int wrap = 19)
     {
         bool padOut = false;
         List<byte> newString = [0xFB];

@@ -143,7 +143,7 @@ internal sealed class AssembleBaseRoms : Command
         };
     }
 
-    private void RunAsar(string workingDirectory, IEnumerable<string> asarArgs, string? asarRootDirectory = null)
+    private static void RunAsar(string workingDirectory, IEnumerable<string> asarArgs, string? asarRootDirectory = null)
     {
         string asarExecutable = GetAsarExecutable();
         string asarDirectory = asarRootDirectory ?? workingDirectory;
@@ -169,7 +169,7 @@ internal sealed class AssembleBaseRoms : Command
         }
     }
 
-    private void CreateBPSPatch(FileInfo[] originalFiles, string modifiedFile, string outputPatchFile)
+    private static void CreateBPSPatch(FileInfo[] originalFiles, string modifiedFile, string outputPatchFile)
     {
         // If we get an array of input filenames, we need to combine them into a single original file in the order they were given
         byte[] original;

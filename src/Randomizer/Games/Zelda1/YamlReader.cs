@@ -348,7 +348,7 @@ public class YamlReader
         public required List<int> allowed_levels;
     }
 
-    private List<T> LoadFiles<T>(string path)
+    private static List<T> LoadFiles<T>(string path)
     {
         var yamlData = new List<T>();
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
@@ -372,7 +372,7 @@ public class YamlReader
         return yamlData;
     }
 
-    private T LoadFile<T>(string path)
+    private static T LoadFile<T>(string path)
     {
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         try

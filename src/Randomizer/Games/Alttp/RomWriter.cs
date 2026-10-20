@@ -56,7 +56,7 @@ public static class RomWriter
                 SetCreditsText(rom, world.WorldConfig, location, location.Item, getText);
                 rom.WriteDungeonMusic(location, itemToWrite, prng);
                 SetHintText(rom, world.WorldConfig, location, location.Item, getText);
-                rom.WriteLocationSpecificData(world, location, itemToWrite);
+                Rom.WriteLocationSpecificData(world, location, itemToWrite);
             }
         }
 
