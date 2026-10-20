@@ -329,9 +329,9 @@ public class StatefulSearcher : ISearcher
             var (unlockState, yields, unlockStrategy, unlockResult) =
                 UnlockNode(inventory, current, state, currentNode);
             Dictionary<IItem, int>? unlockRequirements =
-                _capturePath ? new Dictionary<IItem, int>() : null;
+                _capturePath ? [] : null;
             Dictionary<string, int>? unlockResources =
-                _capturePath ? new Dictionary<string, int>() : null;
+                _capturePath ? [] : null;
             bool unlockRecordedOnIncoming = false;
             if (unlockState != null)
             {
@@ -456,10 +456,10 @@ public class StatefulSearcher : ISearcher
                         ? new StatefulPathStep(edge,
                             unlockRecordedOnIncoming ? null : unlockStrategy,
                             unlockRecordedOnIncoming
-                                ? new Dictionary<IItem, int>()
+                                ? []
                                 : unlockRequirements!,
                             unlockRecordedOnIncoming
-                                ? new Dictionary<string, int>()
+                                ? []
                                 : unlockResources!)
                         : null);
                     continue;
@@ -579,7 +579,7 @@ public class StatefulSearcher : ISearcher
                             bestStrat.Name), requirements,
                         MergeResources(
                             unlockRecordedOnIncoming
-                                ? new Dictionary<string, int>()
+                                ? []
                                 : unlockResources!,
                             ResourcesSpent(state, bestState)));
                 }

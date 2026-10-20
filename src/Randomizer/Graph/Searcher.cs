@@ -324,7 +324,7 @@ public class Searcher : ISearcher
             if (inventory.Has(door.Key))
                 continue;
 
-            List<Vertex> newVerticesFromDoor = new();
+            List<Vertex> newVerticesFromDoor = [];
             foreach (var (a, b) in door.Value)
             {
                 bool seenA = visitedBeforeDoors.Contains(a);
@@ -410,7 +410,7 @@ public class Searcher : ISearcher
             return (!onlyReachable || _visited.Contains(vertex)) && vertex.Item == null;
         }).OrderBy(v => v.Name).ToList();
 
-        itemSets ??= new();
+        itemSets ??= [];
         foreach (var (setName, setCount) in itemSets)
         {
             if (setName.World == null)

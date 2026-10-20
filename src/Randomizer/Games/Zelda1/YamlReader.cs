@@ -334,7 +334,7 @@ public class YamlReader
         public required string name;
         public required List<int> allowed_levels;
         [YamlMember(Alias = "kill_items")]
-        public List<string> kill_items { get; set; } = new();
+        public List<string> kill_items { get; set; } = [];
 
         [YamlMember(Alias = "blocks_passage")]
         public bool blocks_passage { get; set; }
@@ -544,7 +544,7 @@ public class YamlReader
             convertedScreen.nodes.exits.Add(exitNode);
 
             // Create a new meta node for the old scroll node that links to both exit/entrance nodes
-            convertedScreen.nodes.meta ??= new List<Meta>();
+            convertedScreen.nodes.meta ??= [];
             convertedScreen.nodes.meta.Add(new Meta
             {
                 name = node.name,
@@ -553,7 +553,7 @@ public class YamlReader
             });
 
             // Route the entrance through the meta node and on to the exit (entrance -> meta -> exit)
-            convertedScreen.edges.directed ??= new Dictionary<string, List<object>>();
+            convertedScreen.edges.directed ??= [];
             if (!convertedScreen.edges.directed.TryGetValue("fixed", out var directedEdges))
             {
                 directedEdges = [];

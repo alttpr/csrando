@@ -389,7 +389,7 @@ internal static class PlaythroughGenerator
 
                     var condition = LogicalCondition(edge);
                     var requirements = condition.IsUnconditional
-                        ? new Dictionary<IItem, int>()
+                        ? []
                         : new Dictionary<IItem, int> { [condition.Item] = condition.Count };
                     step = new RouteStep(edge, null, requirements,
                         new Dictionary<string, int>());

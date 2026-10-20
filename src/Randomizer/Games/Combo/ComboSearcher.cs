@@ -26,7 +26,7 @@ public class ComboSearcher : ISearcher
         _inventory = inventory;
 
         Inventory prevInventory;
-        HashSet<Randomizer.Graph.Vertex> otherWorldVertices = new();
+        HashSet<Randomizer.Graph.Vertex> otherWorldVertices = [];
 
 
         var initialGame = _world.EffectiveInitialGame;

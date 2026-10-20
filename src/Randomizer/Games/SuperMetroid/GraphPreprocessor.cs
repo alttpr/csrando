@@ -764,14 +764,14 @@ public class GraphPreprocessor
 
 public class SmGraph
 {
-    public List<Vertex> Vertices { get; } = new();
-    public List<BaseEdge> Edges { get; } = new();
-    public Dictionary<Vertex, List<BaseEdge>> AdjecencyList { get; } = new();
+    public List<Vertex> Vertices { get; } = [];
+    public List<BaseEdge> Edges { get; } = [];
+    public Dictionary<Vertex, List<BaseEdge>> AdjecencyList { get; } = [];
 
     public Vertex AddVertex(Vertex vertex)
     {
         Vertices.Add(vertex);
-        AdjecencyList.Add(vertex, new());
+        AdjecencyList.Add(vertex, []);
         return vertex;
     }
 

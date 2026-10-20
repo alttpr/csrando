@@ -31,7 +31,7 @@ public sealed partial class GameRandomizer : BaseGameRandomizer
                 var group = parts.Length > 1 ? parts[0] : "Locations";
                 if (!spoiler.TryGetValue(group, out var section))
                 {
-                    section = new Dictionary<string, string>();
+                    section = [];
                     spoiler[group] = section;
                 }
                 section[location.Name] = location.Item?.Name ?? "Nothing";

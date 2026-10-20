@@ -12,7 +12,7 @@ namespace Randomizer.Games.SuperMetroid.Model
     {
         public int RoomId { get; set; }
         public required string RoomName { get; set; } = string.Empty;
-        public List<MapTile> MapTiles { get; set; } = new();
+        public List<MapTile> MapTiles { get; set; } = [];
 
         [JsonInclude] public string? LiquidType { get; set; }
         [JsonInclude] public decimal? LiquidLevel { get; set; }

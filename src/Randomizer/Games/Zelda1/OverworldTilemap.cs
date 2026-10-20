@@ -48,14 +48,14 @@ internal static class OverworldTilemap
     // Tiles the engine normalizes to walkable ($26) for Link before the threshold compare
     // (WalkableTiles, Z_07.asm:2132).
     private static readonly HashSet<int> AlwaysWalkableTiles =
-        new() { 0x8D, 0x91, 0x9C, 0xAC, 0xAD, 0xCC, 0xD2, 0xD5, 0xDF };
+        [0x8D, 0x91, 0x9C, 0xAC, 0xAD, 0xCC, 0xD2, 0xD5, 0xDF];
 
     private static bool IsTileWalkable(int tile) => AlwaysWalkableTiles.Contains(tile) || tile < FirstBlockingTile;
 
     // Entrance squares produced by the secret/cave layout transform (Z_05.asm:5916-5942):
     // tree $E7 → stairs, rock wall $E6 → cave, special armos $EA → stairs. $F3 is the
     // baked dungeon/cave-entrance primary tile.
-    private static readonly HashSet<int> EntrancePrimaryTiles = new() { 0x70, 0xF3, 0xE7, 0xE6, 0xEA };
+    private static readonly HashSet<int> EntrancePrimaryTiles = [0x70, 0xF3, 0xE7, 0xE6, 0xEA];
 
     private static int Bank5NesToFile(int nesAddr) => Bank5FileBase + (nesAddr - Bank5NesBase);
 

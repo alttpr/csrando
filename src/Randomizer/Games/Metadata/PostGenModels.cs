@@ -8,12 +8,12 @@ using System.Text.Json.Serialization;
 public sealed class MetaPostGenPatch
 {
     [JsonPropertyName("targetAddress")] public int TargetAddress { get; init; }
-    [JsonPropertyName("data")] public List<int> Data { get; init; } = new();
+    [JsonPropertyName("data")] public List<int> Data { get; init; } = [];
 }
 
 public sealed class MetaPostGenPatchGroup
 {
-    [JsonPropertyName("patches")] public List<MetaPostGenPatch> Patches { get; init; } = new();
+    [JsonPropertyName("patches")] public List<MetaPostGenPatch> Patches { get; init; } = [];
 }
 
 public sealed class MetaPostGenNumberPatch
@@ -28,7 +28,7 @@ public sealed class MetaPostGenSelectChoice
 {
     [JsonPropertyName("value")] public string Value { get; init; } = string.Empty;
     [JsonPropertyName("label")] public string Label { get; init; } = string.Empty;
-    [JsonPropertyName("patches")] public List<MetaPostGenPatch> Patches { get; init; } = new();
+    [JsonPropertyName("patches")] public List<MetaPostGenPatch> Patches { get; init; } = [];
 }
 
 public sealed class MetaPostGenSetting
@@ -57,5 +57,5 @@ public sealed class MetaPostGenSetting
 
 public sealed class MetaPostGenGameOptions
 {
-    [JsonPropertyName("options")] public List<MetaPostGenSetting> Options { get; init; } = new();
+    [JsonPropertyName("options")] public List<MetaPostGenSetting> Options { get; init; } = [];
 }

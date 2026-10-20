@@ -36,7 +36,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
 
             if (!doorsForKey.TryGetValue(unlockItem, out var vertices))
             {
-                vertices = new();
+                vertices = [];
                 doorsForKey.Add(unlockItem, vertices);
             }
             vertices.Add((first, second));
@@ -178,7 +178,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
             {
                 if (!world.KeyForKeys.TryGetValue(bigkey, out var keyForKeys))
                 {
-                    keyForKeys = new();
+                    keyForKeys = [];
                     world.KeyForKeys.Add(bigkey, keyForKeys);
                 }
                 var chest = behindDoor.Where(v => v.Type == VertexType.Item && v.SubType == VertexType.BigChest && v.Item == null).First();

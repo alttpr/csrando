@@ -6,7 +6,7 @@ using Randomizer.Games.Metadata;
 public class Config
 {
     [Ignore("Starting equipment is too advanced to be represented with simple attributes")]
-    public List<string> StartingEquipment { get; init; } = new();
+    public List<string> StartingEquipment { get; init; } = [];
 
     [Category("Gameplay")]
     public Logic Logic { get; init; } = Logic.Basic;

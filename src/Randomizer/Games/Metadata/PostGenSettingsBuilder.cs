@@ -151,7 +151,7 @@ public static class PostGenSettingsBuilder
     {
         var attrList = attributes.ToList();
         if (attrList.Count == 0)
-            return new List<MetaPostGenPatch>();
+            return [];
 
         var patches = new List<MetaPostGenPatch>(attrList.Count);
         var target = context.Target;
@@ -184,7 +184,7 @@ public static class PostGenSettingsBuilder
     {
         var attrList = attributes.ToList();
         if (attrList.Count == 0)
-            return new List<MetaPostGenNumberPatch>();
+            return [];
 
         var target = context.Target;
 

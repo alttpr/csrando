@@ -406,7 +406,7 @@ public class YamlReader
             };
 
             // Add and connect the doors for this screen
-            foreach (var door in screen.nodes?.doors ?? new List<Door>())
+            foreach (var door in screen.nodes?.doors ?? [])
             {
                 var doorName = $"{screenName} - {door.name}";
                 var doorNode = FindOrCreateNode(doorName);
@@ -528,7 +528,7 @@ public class YamlReader
             }
 
             // Create location nodes
-            foreach (var location in screen.nodes?.locations ?? new List<Location>())
+            foreach (var location in screen.nodes?.locations ?? [])
             {
                 var locationName = $"{screenName} - {location.name}";
                 var locationNode = FindOrCreateNode(locationName, location.item);
@@ -550,8 +550,8 @@ public class YamlReader
                 }
             }
 
-            var allEdges = screen.edges?.undirected?.Select(u => ("undirected", u.Key, u.Value)).ToList() ?? new();
-            allEdges.AddRange(screen.edges?.directed?.Select(d => ("directed", d.Key, d.Value)).ToList() ?? new());
+            var allEdges = screen.edges?.undirected?.Select(u => ("undirected", u.Key, u.Value)).ToList() ?? [];
+            allEdges.AddRange(screen.edges?.directed?.Select(d => ("directed", d.Key, d.Value)).ToList() ?? []);
 
             // Create all edges
             foreach (var (type, weight, edges) in allEdges)
@@ -562,7 +562,7 @@ public class YamlReader
                 if (config.MapShuffle && weight.Contains(":NoShuffle"))
                     continue;
 
-                foreach (var edge in edges ?? new())
+                foreach (var edge in edges ?? [])
                 {
                     var edgeNames = ((List<object>)edge).Cast<string>().ToList();
                     var fromNodeName = $"{screenName} - {edgeNames[0]}";
@@ -770,9 +770,9 @@ public class YamlReader
 public class DirectedUndirectedPair
 {
     [YamlMember(Alias = "directed")]
-    public List<List<string>> Directed { get; set; } = new();
+    public List<List<string>> Directed { get; set; } = [];
     [YamlMember(Alias = "undirected")]
-    public List<List<string>> Undirected { get; set; } = new();
+    public List<List<string>> Undirected { get; set; } = [];
 }
 
 public class YamlItem

@@ -926,7 +926,7 @@ public class Rom : GameRom
             area_y_offsets[i] = world.Map!.room_y.Select((r, idx) => (r, idx)).Where(r => world.Map.room_area[r.idx] == i).Min(r => r.r);
         }
 
-        Dictionary<(int, int, int), bool> mapTileWrites = new Dictionary<(int, int, int), bool>();
+        Dictionary<(int, int, int), bool> mapTileWrites = [];
 
         // Map tile writes are first-write-wins per cell. The Toilet overlaps the
         // rooms it passes through, so write it last: its shaft tiles then only
@@ -1136,7 +1136,7 @@ public class Rom : GameRom
         List<(int, int, int)>[] areaDecoInstructions = new List<(int, int, int)>[6];
         for (int i = 0; i < 6; i++)
         {
-            areaDecoInstructions[i] = new List<(int, int, int)>();
+            areaDecoInstructions[i] = [];
         }
 
 
@@ -1662,7 +1662,7 @@ public sealed class FreeSpaceManager
         public Segment(int s, int e) { Start = s; End = e; }
     }
 
-    private readonly Dictionary<byte, List<Segment>> _free = new();
+    private readonly Dictionary<byte, List<Segment>> _free = [];
 
     public FreeSpaceManager()
     {
@@ -1679,7 +1679,7 @@ public sealed class FreeSpaceManager
         if (b0 != b1) throw new ArgumentException("Free range must be in a single bank.");
 
         if (!_free.TryGetValue(b0, out var list))
-            _free[b0] = list = new List<Segment>();
+            _free[b0] = list = [];
 
         list.Add(new Segment(startLong, endLong));
         Coalesce(list);
