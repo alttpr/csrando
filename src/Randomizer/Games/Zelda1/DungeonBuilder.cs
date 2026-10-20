@@ -1069,8 +1069,7 @@ internal class DungeonBuilder
                     checkRoom.Doors[dir] = YamlReader.DoorType.Shutter;
                     // Neighbor side is also shutter (graph reads from.level_nine_check for the requirement)
                     var neighbor = checkRoom.Neighbors.FirstOrDefault(n => GetDirection(checkRoom, n) == dir);
-                    if (neighbor != null)
-                        neighbor.Doors[OppositeDirection(dir)] = YamlReader.DoorType.Shutter;
+                    neighbor?.Doors[OppositeDirection(dir)] = YamlReader.DoorType.Shutter;
                 }
             }
 

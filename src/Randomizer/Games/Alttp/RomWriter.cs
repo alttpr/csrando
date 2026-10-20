@@ -45,8 +45,7 @@ public static class RomWriter
                 .Where(v => v.Item?.Name == "ProgressiveBow")
                 .Skip(1)
                 .FirstOrDefault();
-            if (alternateBowLocation != null)
-                alternateBowLocation.Item = world.GetItem("ProgressiveBowAlternate");
+            alternateBowLocation?.Item = world.GetItem("ProgressiveBowAlternate");
 
             var nothing = world.GetItem("Nothing");
             foreach (var location in itemLocations.OfType<Vertex>())

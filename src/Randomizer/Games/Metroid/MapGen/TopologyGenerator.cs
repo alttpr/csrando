@@ -2255,8 +2255,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
                         || (c.Role == CellRole.Boss && c.ForcedScreenId == 0x1D)) < ItemLocationCap)
                 {
                     itemCell = Shuffled(candidates.Where(c => c.Role == CellRole.Corridor)).FirstOrDefault();
-                    if (itemCell != null)
-                        itemCell.Role = CellRole.Item;
+                    itemCell?.Role = CellRole.Item;
                 }
                 if (itemCell != null)
                     Force(itemCell, itemWalls);
