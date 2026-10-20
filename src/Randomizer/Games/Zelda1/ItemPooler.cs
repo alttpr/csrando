@@ -16,7 +16,7 @@ internal sealed class ItemPooler : IItemPooler
         SetLocations = BuildLocations(worlds);
     }
 
-    private SetLocations BuildLocations(IWorld[] worlds)
+    private static SetLocations BuildLocations(IWorld[] worlds)
     {
         var setLocations = new SetLocations();
         foreach (var vertex in worlds.SelectMany(world => world.GetLocations()).OfType<Vertex>())
@@ -36,7 +36,7 @@ internal sealed class ItemPooler : IItemPooler
 
     private static readonly int[] VanillaKeyCounts = [4, 3, 4, 3, 5, 4, 3, 4, 2];
 
-    private int GetKeyCountForLevel(World world, int level)
+    private static int GetKeyCountForLevel(World world, int level)
     {
         if (!world.Config.DungeonShuffle || world.YamlData == null)
             return VanillaKeyCounts[level - 1];

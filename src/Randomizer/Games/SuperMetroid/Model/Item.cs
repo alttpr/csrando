@@ -38,6 +38,6 @@ public class Items
 {
     public static List<Item> Parse(string fileName)
     {
-        return new List<Item>();
+        return [];
     }
 }

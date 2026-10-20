@@ -781,8 +781,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         var underworldSheets = roomSheets.Select(s => s.Freeze(prng)).ToArray();
 
         // grab indices for the map headers from that set.
-        byte[] mapSheetBytes = overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
-        byte[] specialSheetBytes = specialOverworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s)).ToArray();
+        byte[] mapSheetBytes = [.. overworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s))];
+        byte[] specialSheetBytes = [.. specialOverworldSheets.Select(s => (byte)uniqueSheets.IndexOf(s))];
 
         specialSheetBytes = [
             specialSheetBytes[0], specialSheetBytes[0], specialSheetBytes[1], specialSheetBytes[1],
@@ -792,8 +792,8 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         ];
 
         // flatten at the end, since this is a contiguous table in ROM
-        byte[] flatSheetSets = uniqueSheets.SelectMany(s => s.Flatten()).ToArray();
-        byte[] roomSheetBytes4 = underworldSheets.SelectMany(s => s.Flatten()).ToArray();
+        byte[] flatSheetSets = [.. uniqueSheets.SelectMany(s => s.Flatten())];
+        byte[] roomSheetBytes4 = [.. underworldSheets.SelectMany(s => s.Flatten())];
 
         world.SpriteSheets = (
             Underworld: roomSheetBytes4,

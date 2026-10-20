@@ -32,7 +32,7 @@ internal static class DataLoader
                         $"({edgeData[0]}, {edgeData[1]}) => " +
                         $"({from}, {to})");
                 }
-                graph.AddDirected(from, to, condition);
+                Graph.Graph.AddDirected(from, to, condition);
             }
         }
 
@@ -45,7 +45,7 @@ internal static class DataLoader
     {
         foreach (var v in world.GetLocations())
         {
-            v.Edges = v.Edges.Where(e => !e.Condition.Item.Name.StartsWith("ConfigWorld") || world.StartingItems.Has(e.Condition.Item)).ToList();
+            v.Edges = [.. v.Edges.Where(e => !e.Condition.Item.Name.StartsWith("ConfigWorld") || world.StartingItems.Has(e.Condition.Item))];
         }
     }
 
@@ -158,8 +158,8 @@ internal static class DataLoader
                     World = world,
                     Addresses = prizepack.Addresses,
                     Sprite = world.GetSprite(prizepack.Sprite),
-                    Deny = prizepack.Deny.ToArray(),
-                    Allow = prizepack.Allow.ToArray(),
+                    Deny = [.. prizepack.Deny],
+                    Allow = [.. prizepack.Allow],
                 });
             }
             foreach (var region in map.Nodes.Regions)
@@ -189,12 +189,12 @@ internal static class DataLoader
                         Map = map.MapMap,
                         Sprite = world.GetSprite(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
-                        State = mob.State.ToArray(),
-                        ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
+                        State = [.. mob.State],
+                        ItemSet = [.. mob.ItemSet.Select(v => new ItemSetName(v, world))],
                         Trophy = world.GetItemOrNull(mob.Trophy),
                         Position = mob.Position,
-                        Deny = mob.Deny.ToArray(),
-                        Allow = mob.Allow.ToArray(),
+                        Deny = [.. mob.Deny],
+                        Allow = [.. mob.Allow],
                         MightFall = region.Pit,
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
@@ -243,8 +243,8 @@ internal static class DataLoader
                         World = world,
                         Map = map.MapMap,
                         Item = world.GetItemOrNull(item.Item),
-                        ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
-                        Addresses = item.Addresses.ToArray(),
+                        ItemSet = [.. item.ItemSet.Select(v => new ItemSetName(v, world))],
+                        Addresses = [.. item.Addresses],
                     };
                     structuredVertices.Add(item.Name, itemVertex);
                     foreach (var condition in item.Conditions.DefaultIfEmpty("fixed"))
@@ -261,7 +261,7 @@ internal static class DataLoader
                         Name = hole.Name,
                         World = world,
                         Map = map.MapMap,
-                        EntranceIds = hole.EntranceIds.ToArray(),
+                        EntranceIds = [.. hole.EntranceIds],
                         MoonPearl = regionVertex.MoonPearl,
                     };
                     structuredVertices.Add(hole.Name, holeVertex);
@@ -360,12 +360,12 @@ internal static class DataLoader
                         Group = room.Group.GetValueOrDefault(0),
                         Sprite = world.GetSprite(mob.Sprite),
                         Item = world.GetItemOrNull(mob.Item),
-                        State = mob.State.ToArray(),
-                        ItemSet = mob.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
+                        State = [.. mob.State],
+                        ItemSet = [.. mob.ItemSet.Select(v => new ItemSetName(v, world))],
                         Trophy = world.GetItemOrNull(mob.Trophy),
                         Position = mob.Position,
-                        Deny = mob.Deny.ToArray(),
-                        Allow = mob.Allow.ToArray(),
+                        Deny = [.. mob.Deny],
+                        Allow = [.. mob.Allow],
                         MightFall = region.Pit,
                     };
                     structuredVertices.Add(mob.Name, mobVertex);
@@ -386,8 +386,8 @@ internal static class DataLoader
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(item.Item),
-                        ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
-                        Addresses = item.Addresses.ToArray(),
+                        ItemSet = [.. item.ItemSet.Select(v => new ItemSetName(v, world))],
+                        Addresses = [.. item.Addresses],
                     };
                     structuredVertices.Add(item.Name, itemVertex);
 
@@ -408,7 +408,7 @@ internal static class DataLoader
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(item.Item),
                         Cost = item.Cost,
-                        ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
+                        ItemSet = [.. item.ItemSet.Select(v => new ItemSetName(v, world))],
                     };
                     structuredVertices.Add(item.Name, inventoryVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, inventoryVertex, new ItemCondition(world.GetItem("BuyItem"), 1)));
@@ -424,11 +424,11 @@ internal static class DataLoader
                         RoomId = room.Roomid,
                         Group = room.Group.GetValueOrDefault(0),
                         Item = world.GetItemOrNull(pot.Item),
-                        State = pot.State.ToArray(),
-                        ItemSet = pot.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
+                        State = [.. pot.State],
+                        ItemSet = [.. pot.ItemSet.Select(v => new ItemSetName(v, world))],
                         Trophy = world.GetItemOrNull(pot.Trophy),
-                        Deny = pot.Deny.ToArray(),
-                        Allow = pot.Allow.ToArray(),
+                        Deny = [.. pot.Deny],
+                        Allow = [.. pot.Allow],
                     };
                     structuredVertices.Add(pot.Name, potVertex);
                     regionVertex.Edges.Add(new Edge(regionVertex, potVertex, new ItemCondition(world.GetItem("LiftPot"), 1)));
@@ -454,8 +454,8 @@ internal static class DataLoader
                     RoomId = room.Roomid,
                     Group = room.Group.GetValueOrDefault(0),
                     Item = world.GetItemOrNull(item.Item),
-                    ItemSet = item.ItemSet.Select(v => new ItemSetName(v, world)).ToArray(),
-                    Addresses = item.Addresses.ToArray(),
+                    ItemSet = [.. item.ItemSet.Select(v => new ItemSetName(v, world))],
+                    Addresses = [.. item.Addresses],
                 });
             }
         }

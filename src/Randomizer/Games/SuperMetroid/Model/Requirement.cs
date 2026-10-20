@@ -104,8 +104,8 @@ public abstract record Requirement
         {
             // Check if all obstacles is in the obstaclesCleared list, in that case return Always, otherwise Never
             ObstaclesCleared obstacles => obstacles.Obstacles.All(obstacle => obstaclesCleared.Contains(obstacle)) ? new Always() : new Never(),
-            And reqs => new And(reqs.Reqs.Select(req => req.ModifyObstacleState(obstaclesCleared)).ToArray()),
-            Or reqs => new Or(reqs.Reqs.Select(req => req.ModifyObstacleState(obstaclesCleared)).ToArray()),
+            And reqs => new And([.. reqs.Reqs.Select(req => req.ModifyObstacleState(obstaclesCleared))]),
+            Or reqs => new Or([.. reqs.Reqs.Select(req => req.ModifyObstacleState(obstaclesCleared))]),
             _ => this
         };
     }
@@ -121,7 +121,7 @@ public class RequirementConverter : JsonConverter<Requirement>
         return ParseElement(doc.RootElement);
     }
 
-    public Requirement? ParseElement(JsonElement element)
+    public static Requirement? ParseElement(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.String)
         {
@@ -129,7 +129,7 @@ public class RequirementConverter : JsonConverter<Requirement>
         }
         else if (element.ValueKind == JsonValueKind.Array)
         {
-            return new Requirement.And(element.EnumerateArray().Select(req => ParseElement(req)!).ToArray());
+            return new Requirement.And([.. element.EnumerateArray().Select(req => ParseElement(req)!)]);
         }
         else if (element.ValueKind == JsonValueKind.Object)
         {
@@ -139,18 +139,18 @@ public class RequirementConverter : JsonConverter<Requirement>
             {
                 "always" => new Requirement.Always(),
                 "never" => new Requirement.Never(),
-                "and" => new Requirement.And(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToArray()),
+                "and" => new Requirement.And([.. property.Value.EnumerateArray().Select(req => ParseElement(req)!)]),
                 "not" => new Requirement.Not(ParseElement(property.Value)!),
-                "or" => new Requirement.Or(property.Value.EnumerateArray().Select(req => ParseElement(req)!).ToArray()),
+                "or" => new Requirement.Or([.. property.Value.EnumerateArray().Select(req => ParseElement(req)!)]),
                 "ammo" => new Requirement.Ammo(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
                 "ammoDrain" => new Requirement.AmmoDrain(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("count").GetInt32()),
-                "refill" => new Requirement.Refill(property.Value.EnumerateArray().Select(r => r.GetString()!).ToArray()),
+                "refill" => new Requirement.Refill([.. property.Value.EnumerateArray().Select(r => r.GetString()!)]),
                 "partialRefill" => new Requirement.PartialRefill(property.Value.GetProperty("type").GetString()!, property.Value.GetProperty("limit").GetInt32()),
                 "enemyKill" => new Requirement.EnemyKill(
-                    property.Value.GetProperty("enemies").EnumerateArray().Select(e => e.EnumerateArray().Select(ee => ee.GetString()!).ToArray()).ToArray(),
-                    property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? explicitWeapons.EnumerateArray().Select(e => e.GetString()!).ToHashSet() : null!,
-                    property.Value.TryGetProperty("excludedWeapons", out var excludedWeapons) ? excludedWeapons.EnumerateArray().Select(e => e.GetString()!).ToHashSet() : null!,
-                    property.Value.TryGetProperty("farmableAmmo", out var farmableAmmo) ? farmableAmmo.EnumerateArray().Select(e => e.GetString()!).ToArray() : null!),
+                    [.. property.Value.GetProperty("enemies").EnumerateArray().Select(e => e.EnumerateArray().Select(ee => ee.GetString()!).ToArray())],
+                    property.Value.TryGetProperty("explicitWeapons", out var explicitWeapons) ? [.. explicitWeapons.EnumerateArray().Select(e => e.GetString()!)] : null!,
+                    property.Value.TryGetProperty("excludedWeapons", out var excludedWeapons) ? [.. excludedWeapons.EnumerateArray().Select(e => e.GetString()!)] : null!,
+                    property.Value.TryGetProperty("farmableAmmo", out var farmableAmmo) ? [.. farmableAmmo.EnumerateArray().Select(e => e.GetString()!)] : null!),
                 "acidFrames" => new Requirement.AcidFrames(property.Value.GetInt32()),
                 "gravitylessAcidFrames" => new Requirement.GravitylessAcidFrames(property.Value.GetInt32()),
                 "draygonElectricityFrames" => new Requirement.DraygonElectricityFrames(property.Value.GetInt32()),
@@ -158,7 +158,7 @@ public class RequirementConverter : JsonConverter<Requirement>
                 "heatFrames" => new Requirement.HeatFrames(property.Value.GetInt32()),
                 "heatFramesWithEnergyDrops" => new Requirement.HeatFramesWithEnergyDrops(
                     property.Value.GetProperty("frames").GetInt32(),
-                    property.Value.GetProperty("drops").EnumerateArray().Select(d => new Drop(d.GetProperty("enemy").GetString()!, d.GetProperty("count").GetInt32())).ToArray()),
+                    [.. property.Value.GetProperty("drops").EnumerateArray().Select(d => new Drop(d.GetProperty("enemy").GetString()!, d.GetProperty("count").GetInt32()))]),
                 "gravitylessHeatFrames" => new Requirement.GravitylessHeatFrames(property.Value.GetInt32()),
                 "hibashiHits" => new Requirement.HibashiHits(property.Value.GetInt32()),
                 "lavaFrames" => new Requirement.LavaFrames(property.Value.GetInt32()),
@@ -174,12 +174,12 @@ public class RequirementConverter : JsonConverter<Requirement>
                 "thornHits" => new Requirement.ThornHits(property.Value.GetInt32()),
                 "electricityHits" => new Requirement.ElectricityHits(property.Value.GetInt32()),
                 "doorUnlockedAtNode" => new Requirement.DoorUnlockedAtNode(property.Value.GetInt32()),
-                "obstaclesCleared" => new Requirement.ObstaclesCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToArray()),
-                "obstaclesNotCleared" => new Requirement.ObstaclesNotCleared(property.Value.EnumerateArray().Select(o => o.GetString()!).ToArray()),
-                "resourceCapacity" => new Requirement.ResourceCapacity(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
-                "resourceAvailable" => new Requirement.ResourceAvailable(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
-                "resourceMissingAtMost" => new Requirement.ResourceMissingAtMost(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
-                "resourceAtMost" => new Requirement.ResourceAtMost(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
+                "obstaclesCleared" => new Requirement.ObstaclesCleared([.. property.Value.EnumerateArray().Select(o => o.GetString()!)]),
+                "obstaclesNotCleared" => new Requirement.ObstaclesNotCleared([.. property.Value.EnumerateArray().Select(o => o.GetString()!)]),
+                "resourceCapacity" => new Requirement.ResourceCapacity([.. property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32()))]),
+                "resourceAvailable" => new Requirement.ResourceAvailable([.. property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32()))]),
+                "resourceMissingAtMost" => new Requirement.ResourceMissingAtMost([.. property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32()))]),
+                "resourceAtMost" => new Requirement.ResourceAtMost([.. property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32()))]),
                 "canShineCharge" => new Requirement.CanShineCharge(
                     property.Value.GetProperty("usedTiles").GetDecimal(),
                     property.Value.GetProperty("openEnd").GetDecimal(),
@@ -207,8 +207,8 @@ public class RequirementConverter : JsonConverter<Requirement>
                 "shinespark" => new Requirement.Shinespark(property.Value.GetProperty("frames").GetInt32(), property.Value.TryGetProperty("excessFrames", out var excessFrames) ? excessFrames.GetInt32() : null!),
                 "shineChargeFrames" => new Requirement.ShineChargeFrames(property.Value.GetInt32()),
                 "resetRoom" => new Requirement.ResetRoom(
-                    property.Value.GetProperty("nodes").EnumerateArray().Select(n => n.GetInt32()).ToArray(),
-                    property.Value.TryGetProperty("nodesToAvoid", out var nodesToAvoid) ? nodesToAvoid.EnumerateArray().Select(n => n.GetInt32()).ToArray() : null!,
+                    [.. property.Value.GetProperty("nodes").EnumerateArray().Select(n => n.GetInt32())],
+                    property.Value.TryGetProperty("nodesToAvoid", out var nodesToAvoid) ? [.. nodesToAvoid.EnumerateArray().Select(n => n.GetInt32())] : null!,
                     property.Value.TryGetProperty("mustStayPut", out var mustStayPut) ? mustStayPut.GetBoolean() : null!),
                 "itemNotCollectedAtNode" => new Requirement.ItemNotCollectedAtNode(property.Value.GetInt32()),
                 "gainFlashSuit" => new Requirement.GainFlashSuit(),
@@ -217,7 +217,7 @@ public class RequirementConverter : JsonConverter<Requirement>
                 "tech" => new Requirement.Tech(property.Value.GetString()!),
                 "notable" => new Requirement.Notable(property.Value.GetString()!),
                 "disableEquipment" => new Requirement.DisableEquipment(property.Value.GetString()!),
-                "resourceConsumed" => new Requirement.ResourceConsumed(property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32())).ToArray()),
+                "resourceConsumed" => new Requirement.ResourceConsumed([.. property.Value.EnumerateArray().Select(r => new ResourceTypeCount(r.GetProperty("type").GetString()!, r.GetProperty("count").GetInt32()))]),
                 "cycleFrames" => new Requirement.CycleFrames(property.Value.GetInt32()),
 
                 _ => throw new Exception($"Unknown requirement: {property.Name}")

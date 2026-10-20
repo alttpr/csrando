@@ -69,7 +69,7 @@ public sealed class Graph
     /// <param name="from">source Vertex</param>
     /// <param name="to">target Vertex</param>
     /// <param name="condition">ItemCondition required to traverse edge</param>
-    public Edge AddDirected(Vertex from, Vertex to, ItemCondition condition)
+    public static Edge AddDirected(Vertex from, Vertex to, ItemCondition condition)
     {
         var edge = new Edge(from, to, condition);
         from.Edges.Add(edge);

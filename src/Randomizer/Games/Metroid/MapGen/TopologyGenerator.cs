@@ -232,7 +232,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
     private int Rand(int minInclusive, int maxInclusive) => rng.Next(minInclusive, maxInclusive + 1);
     private T Pick<T>(IReadOnlyList<T> list) => list.Count > 0 ? list[rng.Next(list.Count)]
         : throw new GenerationException("empty pick list");
-    private List<T> Shuffled<T>(IEnumerable<T> source) => source.OrderBy(_ => rng.Next()).ToList();
+    private List<T> Shuffled<T>(IEnumerable<T> source) => [.. source.OrderBy(_ => rng.Next())];
 
     private List<Run> ShaftsOf(Area area) => shafts.TryGetValue(area, out var list) ? list : shafts[area] = [];
 
@@ -243,8 +243,8 @@ public class TopologyGenerator(ScreenCatalog catalog)
     /// right-door bodies are internally one-way. Excludes caps and forced cells.
     /// </summary>
     private static List<AbstractCell> InteriorCells(Run shaft) =>
-        shaft.Cells.Where(c => (c.Up == EdgeRequirement.Scroll || c.Down == EdgeRequirement.Scroll)
-            && c.Role != CellRole.Cap && !c.ForcedScreenId.HasValue).ToList();
+        [.. shaft.Cells.Where(c => (c.Up == EdgeRequirement.Scroll || c.Down == EdgeRequirement.Scroll)
+            && c.Role != CellRole.Cap && !c.ForcedScreenId.HasValue)];
 
     /// <summary>
     /// True if adding a door of <paramref name="newColor"/> on <paramref name="side"/>
@@ -726,7 +726,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
 
         var ordered = preferRight
             ? ShaftsOf(Area.Brinstar).OrderByDescending(s => s.Cells[0].Position.X).ToList()
-            : ShaftsOf(Area.Brinstar).OrderBy(s => s.Cells[0].Position.X).ToList();
+            : [.. ShaftsOf(Area.Brinstar).OrderBy(s => s.Cells[0].Position.X)];
 
         foreach (var shaft in ordered)
         {
@@ -1372,10 +1372,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
             if (TryPlaceMapStationRoom(area, depths, targetDepth))
                 continue;
 
-            var conversion = ConvertibleCellNear(area, depths, targetDepth);
-            if (conversion == null)
-                throw new GenerationException($"could not place a {area} map station");
-
+            var conversion = ConvertibleCellNear(area, depths, targetDepth) ?? throw new GenerationException($"could not place a {area} map station");
             conversion.Role = CellRole.MapStation;
             landmarks[$"{area}MapStation"] = conversion.Position;
         }
@@ -2255,8 +2252,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
                         || (c.Role == CellRole.Boss && c.ForcedScreenId == 0x1D)) < ItemLocationCap)
                 {
                     itemCell = Shuffled(candidates.Where(c => c.Role == CellRole.Corridor)).FirstOrDefault();
-                    if (itemCell != null)
-                        itemCell.Role = CellRole.Item;
+                    itemCell?.Role = CellRole.Item;
                 }
                 if (itemCell != null)
                     Force(itemCell, itemWalls);

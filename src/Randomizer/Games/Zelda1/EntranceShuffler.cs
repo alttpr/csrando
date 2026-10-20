@@ -28,8 +28,8 @@ internal class EntranceShuffler
         var maps = _data.overworld_maps.Where(m => !portalMapIds.Contains(m.map) && m.cave > 0 && (m.secret[0] == 1 || m.secret[1] == 0)).ToList();
 
         /* Shuffle the caves */
-        caveIds = _prng.Shuffle(caveIds).ToList();
-        maps = _prng.Shuffle(maps).ToList();
+        caveIds = [.. _prng.Shuffle(caveIds)];
+        maps = [.. _prng.Shuffle(maps)];
 
         /* Assign the shuffled caves to the world */
         var caveQueue = new Queue<int>(caveIds);

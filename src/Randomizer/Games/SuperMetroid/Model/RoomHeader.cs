@@ -165,10 +165,7 @@ public class HexStringConverter<T> : JsonConverter<T>
 
     public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var rawValue = reader.GetString();
-        if (rawValue is null)
-            throw new JsonException("Expected hexadecimal string value.");
-
+        var rawValue = reader.GetString() ?? throw new JsonException("Expected hexadecimal string value.");
         string hexString = rawValue.Replace("0x", "");
         return _parser(hexString, _numberStyles);
     }

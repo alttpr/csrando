@@ -132,7 +132,7 @@ internal sealed class Randomize : Command
                 if (singleConfig != null)
                 {
                     _logger.LogInformation("Read single world from passed config file.");
-                    return Enumerable.Repeat(singleConfig, parseResult.GetValue(_multiworld)).ToArray();
+                    return [.. Enumerable.Repeat(singleConfig, parseResult.GetValue(_multiworld))];
                 }
             }
             catch { }

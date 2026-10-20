@@ -477,7 +477,7 @@ internal class DungeonBuilder
 
         int rotation = Mod(amount, values.Count);
         if (rotation == 0)
-            return values.ToArray();
+            return [.. values];
 
         var rotated = new int[values.Count];
         for (int i = 0; i < values.Count; i++)
@@ -562,19 +562,16 @@ internal class DungeonBuilder
     {
         if (_vanillaLevelMaps != null) return _vanillaLevelMaps;
         var levelRooms = _levelData.rooms.ToHashSet();
-        _vanillaLevelMaps = _data.underworld_maps
-            .Where(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && levelRooms.Contains(m.map))
-            .ToList();
+        _vanillaLevelMaps = [.. _data.underworld_maps.Where(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && levelRooms.Contains(m.map))];
         return _vanillaLevelMaps;
     }
 
     private HashSet<int> GetVanillaScreensForBehaviours(params YamlReader.RoomBehaviour[] behaviours)
     {
         var behaviourSet = behaviours.Select(b => (int)b).ToHashSet();
-        return _data.underworld_maps
+        return [.. _data.underworld_maps
             .Where(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && !m.passage && behaviourSet.Contains(m.behaviour))
-            .Select(m => m.screen)
-            .ToHashSet();
+            .Select(m => m.screen)];
     }
 
     private int[] GetDefaultRoomPalettes()
@@ -776,7 +773,7 @@ internal class DungeonBuilder
 
     // Level 9 helpers
 
-    private Room? GetLevelNineCheckRoom(Room startRoom)
+    private static Room? GetLevelNineCheckRoom(Room startRoom)
     {
         var northNeighbor = startRoom.Neighbors.FirstOrDefault(n =>
             !n.HasAnyRole(RoomRole.Cellar) && n.X == startRoom.X && n.Y == startRoom.Y - 1);
@@ -801,7 +798,7 @@ internal class DungeonBuilder
     /// ensuring the only way into the dungeon is through the triforce check.
     /// Orphaned rooms are reconnected through the check room when possible.
     /// </summary>
-    private void IsolateStartRoomForLevelNine(Room startRoom, Room checkRoom)
+    private static void IsolateStartRoomForLevelNine(Room startRoom, Room checkRoom)
     {
         var toDisconnect = startRoom.Neighbors
             .Where(n => n != checkRoom && !n.HasAnyRole(RoomRole.Cellar))
@@ -968,8 +965,8 @@ internal class DungeonBuilder
 
     private void UpdateLevelData(List<int> itemPositionSlots)
     {
-        _levelData.rooms = _map.UsedRooms.Select(r => GetMapId(r)).ToArray();
-        _levelData.cellar_room_id_array = _map.FindRooms(RoomRole.Cellar).Select(r => GetMapId(r)).ToArray();
+        _levelData.rooms = [.. _map.UsedRooms.Select(r => GetMapId(r))];
+        _levelData.cellar_room_id_array = [.. _map.FindRooms(RoomRole.Cellar).Select(r => GetMapId(r))];
 
         var startRoom = _map.FindRoom(RoomRole.Start);
         var bossRoom = _map.FindRoom(RoomRole.Boss);
@@ -1029,7 +1026,7 @@ internal class DungeonBuilder
         var endRoom = _map.FindRoom(RoomRole.End);
 
         var criticalPath = GetShortestPath(startRoom, endRoom);
-        var criticalPathDistances = CalculateDistancesFromPath(criticalPath.ToHashSet());
+        var criticalPathDistances = CalculateDistancesFromPath([.. criticalPath]);
 
         CreateItemCellars(criticalPathDistances);
 
@@ -1072,8 +1069,7 @@ internal class DungeonBuilder
                     checkRoom.Doors[dir] = YamlReader.DoorType.Shutter;
                     // Neighbor side is also shutter (graph reads from.level_nine_check for the requirement)
                     var neighbor = checkRoom.Neighbors.FirstOrDefault(n => GetDirection(checkRoom, n) == dir);
-                    if (neighbor != null)
-                        neighbor.Doors[OppositeDirection(dir)] = YamlReader.DoorType.Shutter;
+                    neighbor?.Doors[OppositeDirection(dir)] = YamlReader.DoorType.Shutter;
                 }
             }
 
@@ -1113,10 +1109,9 @@ internal class DungeonBuilder
             int[][]? connectedTo = null;
             if (room.HasAnyRole(RoomRole.Cellar))
             {
-                connectedTo = room.Neighbors
+                connectedTo = [.. room.Neighbors
                     .Where(n => !n.HasAnyRole(RoomRole.Cellar))
-                    .Select(n => new[] { n.X, n.Y })
-                    .ToArray();
+                    .Select(n => new[] { n.X, n.Y })];
             }
 
             rooms.Add(new RoomSpoilerData(
@@ -1397,7 +1392,7 @@ internal class DungeonBuilder
         _ => false,
     };
 
-    private void ReplaceShutters(Room room, YamlReader.DoorType replacement)
+    private static void ReplaceShutters(Room room, YamlReader.DoorType replacement)
     {
         foreach (var direction in room.Doors
             .Where(kvp => kvp.Value == YamlReader.DoorType.Shutter)
@@ -1469,8 +1464,8 @@ internal class DungeonBuilder
     }
 
     private List<Room> GetAccessibleRoomsWithoutKeys()
-        => DoorReachableDistances(_map.FindRoom(RoomRole.Start),
-            YamlReader.DoorType.Locked, YamlReader.DoorType.Locked2).Keys.ToList();
+        => [.. DoorReachableDistances(_map.FindRoom(RoomRole.Start),
+            YamlReader.DoorType.Locked, YamlReader.DoorType.Locked2).Keys];
 
     /// <summary>
     /// BFS over the room graph from <paramref name="startRoom"/>, traversing doors but refusing to
@@ -1478,7 +1473,7 @@ internal class DungeonBuilder
     /// distance to every reachable room. Doors are checked from the current room's side, mirroring
     /// GetAccessibleRoomsWithoutKeys (door types are symmetric between neighbours).
     /// </summary>
-    private Dictionary<Room, int> DoorReachableDistances(Room startRoom, params YamlReader.DoorType[] blockedDoors)
+    private static Dictionary<Room, int> DoorReachableDistances(Room startRoom, params YamlReader.DoorType[] blockedDoors)
     {
         var blocked = new HashSet<YamlReader.DoorType>(blockedDoors);
         var distances = new Dictionary<Room, int> { [startRoom] = 0 };
@@ -1772,7 +1767,7 @@ internal class DungeonBuilder
 
             startCandidates = deadEndL9.Length > 0
                 ? deadEndL9
-                : startCandidates.Where(r => GetLevelNineCheckRoom(r) != null).ToArray();
+                : [.. startCandidates.Where(r => GetLevelNineCheckRoom(r) != null)];
         }
 
         if (startCandidates.Length == 0)
@@ -1834,34 +1829,32 @@ internal class DungeonBuilder
             .ToArray();
 
         if (forceOtherSegment && candidates.Any(r => r.Segment != startRoom.Segment))
-            candidates = candidates.Where(r => r.Segment != startRoom.Segment).ToArray();
+            candidates = [.. candidates.Where(r => r.Segment != startRoom.Segment)];
 
         // Fallback 1: any dead-end room, ordered by distance
         if (candidates.Length == 0)
         {
-            candidates = distances
+            candidates = [.. distances
                 .Where(d => d.room.Neighbors.Count == 1 &&
                             !d.room.HasAnyRole(EndCandidateExcludedRoles))
                 .OrderByDescending(d => d.dist)
                 .Select(d => d.room)
-                .Take(3)
-                .ToArray();
+                .Take(3)];
         }
 
         // Fallback 2: any non-start, non-cellar room farthest from start
         if (candidates.Length == 0)
         {
-            candidates = distances
+            candidates = [.. distances
                 .Where(d => !d.room.HasAnyRole(EndCandidateExcludedRoles))
                 .OrderByDescending(d => d.dist)
                 .Select(d => d.room)
-                .Take(3)
-                .ToArray();
+                .Take(3)];
         }
 
         // Level 9: end room must be directly above boss room
         if (_level == 9)
-            candidates = candidates.Where(r => r.Neighbors.Count == 1 && r.Neighbors.First().Y > r.Y).ToArray();
+            candidates = [.. candidates.Where(r => r.Neighbors.Count == 1 && r.Neighbors.First().Y > r.Y)];
 
         return candidates;
     }
@@ -1983,7 +1976,7 @@ internal class DungeonBuilder
     private HashSet<int> GetValidEnemyLevels() => _config.EnemyPlacement switch
     {
         EnemyPlacementOption.Vanilla => [_level],
-        EnemyPlacementOption.Progressive => EnemyTiers.First(t => t.Contains(_level)).ToHashSet(),
+        EnemyPlacementOption.Progressive => [.. EnemyTiers.First(t => t.Contains(_level))],
         EnemyPlacementOption.Random => [1, 2, 3, 4, 5, 6, 7, 8, 9],
         _ => [_level],
     };
@@ -2191,7 +2184,7 @@ internal class DungeonBuilder
 
             bool needsClearableRoom = room.Doors.Values.Any(d => d == YamlReader.DoorType.Shutter) && !RoomSupportsPushBlockShutters(room);
             if (needsClearableRoom)
-                candidates = candidates.Where(TemplateHasKillableEnemies).ToArray();
+                candidates = [.. candidates.Where(TemplateHasKillableEnemies)];
 
             if (candidates.Length == 0 || (!needsClearableRoom && _rnd.NextDouble() < _config.EmptyRoomChance))
                 continue;
@@ -2408,7 +2401,7 @@ internal class DungeonBuilder
 
     /// <summary>True if the room's item position on the given screen sits in a region reachable
     /// from one of the room's doors (walking all edges, i.e. assuming every item is owned).</summary>
-    private bool ItemReachableOnScreen(YamlReader.Screen screen, Room room, HashSet<string> doorDirs, IReadOnlyList<int> slots)
+    private static bool ItemReachableOnScreen(YamlReader.Screen screen, Room room, HashSet<string> doorDirs, IReadOnlyList<int> slots)
     {
         if (!TryGetItemPosition(slots, screen, out int pos))
             return false; // no slot is even walkable here — Write would throw, so this screen is unusable
@@ -2583,7 +2576,7 @@ internal class DungeonBuilder
 
     // Graph utilities
 
-    private List<(int dist, Room room)> Distances(Room startRoom, bool withinSegment = false)
+    private static List<(int dist, Room room)> Distances(Room startRoom, bool withinSegment = false)
     {
         var visited = new HashSet<Room> { startRoom };
         var queue = new Queue<(int dist, Room room)>();
@@ -2604,7 +2597,7 @@ internal class DungeonBuilder
         return result;
     }
 
-    private List<Room> GetShortestPath(Room start, Room target)
+    private static List<Room> GetShortestPath(Room start, Room target)
     {
         var visited = new HashSet<Room> { start };
         var queue = new Queue<Room>();

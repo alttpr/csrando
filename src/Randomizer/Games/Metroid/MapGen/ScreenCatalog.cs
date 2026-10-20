@@ -189,10 +189,10 @@ public class ScreenCatalog
         }
 
         foreach (var area in PlayableAreas)
-            catalog.byArea[area] = catalog.profiles.Where(p => p.Area == area).ToList();
+            catalog.byArea[area] = [.. catalog.profiles.Where(p => p.Area == area)];
 
         if (vanillaRooms != null)
-            catalog.BuildDoorContexts(vanillaRooms.ToList());
+            catalog.BuildDoorContexts([.. vanillaRooms]);
 
         var transitionKeys = new HashSet<(Area, int, Direction, int, Direction)>();
         foreach (var transition in transitions ?? [])
@@ -457,8 +457,8 @@ public class ScreenCatalog
             HasStartLocation = locations.Any(l => l.type == LocationType.Start),
             HasElevatorPlatform = locations.Any(l => l.type == LocationType.Elevator),
             HasMetaLocation = locations.Any(l => l.type == LocationType.Meta),
-            ItemLocationNames = itemLocations.Select(l => l.name).ToList(),
-            ElevatorLocationNames = locations.Where(l => l.type == LocationType.Elevator).Select(l => l.name).ToList(),
+            ItemLocationNames = [.. itemLocations.Select(l => l.name)],
+            ElevatorLocationNames = [.. locations.Where(l => l.type == LocationType.Elevator).Select(l => l.name)],
             StartLocationName = locations.FirstOrDefault(l => l.type == LocationType.Start)?.name,
             ItemPosition = itemLocations.FirstOrDefault()?.position is [var ix, var iy]
                 ? (byte)(iy << 4 | ix) : null,
@@ -689,11 +689,10 @@ public class ScreenCatalog
         EdgeRequirement up, EdgeRequirement down, EdgeRequirement left, EdgeRequirement right,
         bool requireTwoWay = true, RunKind? leftNeighbor = null, RunKind? rightNeighbor = null)
     {
-        return ForArea(area)
+        return [.. ForArea(area)
             .Where(p => Satisfies(p, axis, up, down, left, right, requireTwoWay)
                 && (left != EdgeRequirement.Door || leftNeighbor == null || DoorAccepts(p, Direction.Left, leftNeighbor.Value))
-                && (right != EdgeRequirement.Door || rightNeighbor == null || DoorAccepts(p, Direction.Right, rightNeighbor.Value)))
-            .ToList();
+                && (right != EdgeRequirement.Door || rightNeighbor == null || DoorAccepts(p, Direction.Right, rightNeighbor.Value)))];
     }
 
     public bool HasPiece(Area area, Scrolling axis,

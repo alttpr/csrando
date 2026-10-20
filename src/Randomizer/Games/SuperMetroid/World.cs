@@ -53,7 +53,7 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
 
         List<IItem> items = [GetItem("fixed")];
         items.AddRange(Config.StartingEquipment.Select(GetItem));
-        StartingItems = new Inventory(items.ToArray());
+        StartingItems = new Inventory([.. items]);
         StartingItems.AddItem(GetItem("f_ZebesAwake"));
 
         JsonData = new JsonReader(Config);
@@ -75,7 +75,7 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
         }
 
 
-        AllowedTechs = Config.LogicTechs[Config.Logic].Concat(Config.CustomTech).ToList();
+        AllowedTechs = [.. Config.LogicTechs[Config.Logic], .. Config.CustomTech];
         RequirementHandler.Initialize(JsonData, this);
 
         if (Config.MapRandomizer == MapRandomizerSetting.Standard)

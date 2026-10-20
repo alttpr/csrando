@@ -72,7 +72,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         return fallbackHint;
     }
 
-    private void SetComboSpecificGameFlags(World world, IRom rom)
+    private static void SetComboSpecificGameFlags(World world, IRom rom)
     {
         // Make sure the Keycard flag is written to the ALTTP free text config area if both games are present and SM keycards are set to All
         if (world.AlttpWorld != null && world.SMWorld != null && world.SMWorld.Config.Keycards == SuperMetroid.Keycards.All)
@@ -95,12 +95,12 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         }
     }
 
-    private void WriteSeed(World world, IRom rom)
+    private static void WriteSeed(World world, IRom rom)
     {
         rom.Write(0x7ffff0, BitConverter.GetBytes(world.Prng.Seed));
     }
 
-    private void WriteGameFlags(World world, IRom rom)
+    private static void WriteGameFlags(World world, IRom rom)
     {
         byte startingGame = world.EffectiveInitialGame switch
         {
@@ -118,7 +118,7 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
         rom.Write(0x7fffe8, [(byte)(world.M1World == null ? 0x00 : 0x01)]);
     }
 
-    private void WriteItemsToRom(World world, IRom rom)
+    private static void WriteItemsToRom(World world, IRom rom)
     {
         // Replace all the item bytes to write with the combo specific item bytes depending on target game and write it to the rom
         var itemLocations = world.GetLocationsOfType(VertexType.Item).Where(x => x.Item != null);
@@ -218,7 +218,6 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     public static byte[] ConvertStringToByteArray(string input)
     {
-        return input.Select(c => charToByteMap.TryGetValue(c, out byte value) ? value : (byte)0)
-                    .ToArray();
+        return [.. input.Select(c => charToByteMap.TryGetValue(c, out byte value) ? value : (byte)0)];
     }
 }

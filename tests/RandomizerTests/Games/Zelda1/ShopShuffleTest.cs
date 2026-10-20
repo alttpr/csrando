@@ -40,14 +40,10 @@ public sealed class ShopShuffleTest
     }
 
     private static System.Collections.Generic.List<Vertex> ShopLocations(World world) =>
-        world.GetLocationsOfType(VertexType.Item)
-            .Where(v => v.Name.Contains(" - Shop - "))
-            .ToList();
+        [.. world.GetLocationsOfType(VertexType.Item).Where(v => v.Name.Contains(" - Shop - "))];
 
     private static System.Collections.Generic.List<Vertex> TakeAnyLocations(World world) =>
-        world.GetLocationsOfType(VertexType.Item)
-            .Where(v => v.Name.Contains(" - Take Any Item - "))
-            .ToList();
+        [.. world.GetLocationsOfType(VertexType.Item).Where(v => v.Name.Contains(" - Take Any Item - "))];
 
     // Count-accumulating items that must never appear in a repeatable (multi-purchase) shop. In
     // standalone Z1 only HeartContainer accumulates (a Heart refill is fine to rebuy).

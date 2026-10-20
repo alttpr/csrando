@@ -271,8 +271,7 @@ public sealed class RomEmitterTest
         var parsed = TableAreas.ToDictionary(a => a, a => ParseTable(emission, a));
 
         List<byte[]> ElevatorsAt(Area area, Point p) =>
-            parsed[area].Where(e => e.X == p.X && e.Y == p.Y)
-                .SelectMany(e => e.Payloads.Where(pl => pl[0] == 0x04)).ToList();
+            [.. parsed[area].Where(e => e.X == p.X && e.Y == p.Y).SelectMany(e => e.Payloads.Where(pl => pl[0] == 0x04))];
 
         var links = world.Grid.Links.Where(l => l.Type == LinkType.Elevator).ToList();
         Assert.AreEqual(4, links.Count, "expected the four area elevators");

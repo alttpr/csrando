@@ -55,7 +55,7 @@ public static class Spoiler
 
         var data = new MapSpoilerData
         {
-            Cells = generated.Grid.Cells.Select(BuildCell).ToList(),
+            Cells = [.. generated.Grid.Cells.Select(BuildCell)],
             ItemPlacements = BuildItemPlacements(world, generated, itemName ?? (item => item.Name)),
             Landmarks = new Dictionary<string, string>(
                 generated.Landmarks.Select(kv =>

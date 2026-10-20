@@ -151,17 +151,16 @@ public static class PostGenSettingsBuilder
     {
         var attrList = attributes.ToList();
         if (attrList.Count == 0)
-            return new List<MetaPostGenPatch>();
+            return [];
 
         var patches = new List<MetaPostGenPatch>(attrList.Count);
         var target = context.Target;
 
         var replacements = target is null
             ? new HashSet<int>()
-            : attrList
+            : [.. attrList
                 .Where(a => a.AppliesTo == target && a.ReplacesAddress.HasValue)
-                .Select(a => a.ReplacesAddress!.Value)
-                .ToHashSet();
+                .Select(a => a.ReplacesAddress!.Value)];
 
         foreach (var attr in attrList)
         {
@@ -172,7 +171,7 @@ public static class PostGenSettingsBuilder
             patches.Add(new MetaPostGenPatch
             {
                 TargetAddress = address,
-                Data = attr.Data.Select(b => (int)b).ToList(),
+                Data = [.. attr.Data.Select(b => (int)b)],
             });
         }
 
@@ -185,7 +184,7 @@ public static class PostGenSettingsBuilder
     {
         var attrList = attributes.ToList();
         if (attrList.Count == 0)
-            return new List<MetaPostGenNumberPatch>();
+            return [];
 
         var target = context.Target;
 
@@ -193,10 +192,9 @@ public static class PostGenSettingsBuilder
         // target-agnostic one it replaces.
         var replacements = target is null
             ? new HashSet<int>()
-            : attrList
+            : [.. attrList
                 .Where(a => a.AppliesTo == target && a.ReplacesAddress.HasValue)
-                .Select(a => a.ReplacesAddress!.Value)
-                .ToHashSet();
+                .Select(a => a.ReplacesAddress!.Value)];
 
         var patches = new List<MetaPostGenNumberPatch>(attrList.Count);
         foreach (var attr in attrList)

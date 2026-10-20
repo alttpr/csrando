@@ -49,7 +49,7 @@ public class MapInfo
     public MapInfo(Map mapData, List<RoomGeometry> roomGeometries)
     {
         MapData = mapData;
-        Rooms = MapData.room_id.Select((id, index) => new MapRoom
+        Rooms = [.. MapData.room_id.Select((id, index) => new MapRoom
         {
             Id = id,
             X = MapData.room_x[index],
@@ -58,9 +58,9 @@ public class MapInfo
             SubArea = MapData.room_subarea[index],
             SubSubArea = MapData.room_subsubarea[index],
             Room = roomGeometries.First(rg => rg.room_id == id)
-        }).ToList();
+        })];
 
-        Connections = MapData.conn_from_room_id.Select((fromRoomId, index) =>
+        Connections = [.. MapData.conn_from_room_id.Select((fromRoomId, index) =>
         {
             var toRoomId = MapData.conn_to_room_id[index];
             var fromDoorId = MapData.conn_from_door_id[index];
@@ -82,7 +82,7 @@ public class MapInfo
                 ToDoor = toDoor,
                 Bidirectional = MapData.conn_bidirectional[index]
             };
-        }).ToList();
+        })];
     }
 
     public MapRoom? GetRoomById(int id) => Rooms.FirstOrDefault(r => r.Id == id);

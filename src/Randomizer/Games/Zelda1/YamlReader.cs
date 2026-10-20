@@ -334,7 +334,7 @@ public class YamlReader
         public required string name;
         public required List<int> allowed_levels;
         [YamlMember(Alias = "kill_items")]
-        public List<string> kill_items { get; set; } = new();
+        public List<string> kill_items { get; set; } = [];
 
         [YamlMember(Alias = "blocks_passage")]
         public bool blocks_passage { get; set; }
@@ -348,7 +348,7 @@ public class YamlReader
         public required List<int> allowed_levels;
     }
 
-    private List<T> LoadFiles<T>(string path)
+    private static List<T> LoadFiles<T>(string path)
     {
         var yamlData = new List<T>();
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
@@ -372,7 +372,7 @@ public class YamlReader
         return yamlData;
     }
 
-    private T LoadFile<T>(string path)
+    private static T LoadFile<T>(string path)
     {
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         try
@@ -501,7 +501,7 @@ public class YamlReader
     // room-to-room connections can be modelled as directed edges (enter one room, leave another).
     private List<Screen> ConvertUnderworldExits(IEnumerable<Screen> screens)
     {
-        return screens.Select(ConvertScrollNodes).ToList();
+        return [.. screens.Select(ConvertScrollNodes)];
     }
 
     private Screen ConvertScrollNodes(Screen screen)
@@ -544,7 +544,7 @@ public class YamlReader
             convertedScreen.nodes.exits.Add(exitNode);
 
             // Create a new meta node for the old scroll node that links to both exit/entrance nodes
-            convertedScreen.nodes.meta ??= new List<Meta>();
+            convertedScreen.nodes.meta ??= [];
             convertedScreen.nodes.meta.Add(new Meta
             {
                 name = node.name,
@@ -553,7 +553,7 @@ public class YamlReader
             });
 
             // Route the entrance through the meta node and on to the exit (entrance -> meta -> exit)
-            convertedScreen.edges.directed ??= new Dictionary<string, List<object>>();
+            convertedScreen.edges.directed ??= [];
             if (!convertedScreen.edges.directed.TryGetValue("fixed", out var directedEdges))
             {
                 directedEdges = [];
@@ -574,12 +574,12 @@ public class YamlReader
 
     public Dictionary<string, DirectedUndirectedPair> GetEdges(World world)
     {
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
+        return edges.Select(e => { e.Value.Directed = [.. e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; e.Value.Undirected = [.. e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
     public List<Dictionary<string, object>> GetVertices(World world)
     {
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
+        return [.. vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; })];
     }
 
     public void BuildGraph(IReadOnlySet<int>? reservedPortalCaveMaps = null)
@@ -792,7 +792,7 @@ public class YamlReader
 
         // Fall back to the allow-list if the data ever fails to yield anything, so shops never become
         // unreachable in logic by accident.
-        return candidates.Count > 0 ? candidates : FreeInfiniteWeapons.ToList();
+        return candidates.Count > 0 ? candidates : [.. FreeInfiniteWeapons];
     }
 
     private void BuildOverworldMap(OverworldMap map, IReadOnlySet<int> reservedPortalCaveMaps)

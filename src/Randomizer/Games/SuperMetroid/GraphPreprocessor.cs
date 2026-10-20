@@ -161,10 +161,9 @@ public class GraphPreprocessor
         var alternatives = Enumerable.Range(0, 1 << bossFlags.Length)
             .Where(mask => Enumerable.Range(0, bossFlags.Length)
                 .Count(index => (mask & (1 << index)) != 0) == requiredBosses)
-            .Select(mask => new Requirement.And(Enumerable.Range(0, bossFlags.Length)
+            .Select(mask => new Requirement.And([.. Enumerable.Range(0, bossFlags.Length)
                 .Where(index => (mask & (1 << index)) != 0)
-                .Select(index => (Requirement)new Requirement.Single(bossFlags[index]))
-                .ToArray()))
+                .Select(index => (Requirement)new Requirement.Single(bossFlags[index]))]))
             .Cast<Requirement>()
             .ToArray();
 
@@ -251,13 +250,13 @@ public class GraphPreprocessor
         }
     }
 
-    private void BuildRunways()
+    private static void BuildRunways()
     {
         //TODO: Resolve runways to enable shinesparking requirements
 
     }
 
-    private void PruneGraph()
+    private static void PruneGraph()
     {
         //TODO: Prune edges that can't be fullfilled or have invalid strats or no strats
 
@@ -341,7 +340,7 @@ public class GraphPreprocessor
         if (optimizedSubs.Count == 1)
             return optimizedSubs[0];
 
-        return new Requirement.And(optimizedSubs.ToArray());
+        return new Requirement.And([.. optimizedSubs]);
     }
 
     private Requirement OptimizeOr(Requirement.Or orReq)
@@ -375,7 +374,7 @@ public class GraphPreprocessor
         if (optimizedSubs.Count == 1)
             return optimizedSubs[0];
 
-        return new Requirement.Or(optimizedSubs.ToArray());
+        return new Requirement.Or([.. optimizedSubs]);
     }
 
     /// <summary>
@@ -531,8 +530,8 @@ public class GraphPreprocessor
             && (fromRoom.Name == "Mother Brain Room" && fromNode.Name == "Left Blast Door"
                 || toRoom.Name == "Mother Brain Room" && toNode.Name == "Left Blast Door");
 
-        List<Strat> fromStrats = fromRoom.Strats.Where(s => s.Link![0] == fromNode.Id && s.ExitCondition != null).ToList();
-        List<Strat> toStrats = toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null).ToList();
+        List<Strat> fromStrats = [.. fromRoom.Strats.Where(s => s.Link![0] == fromNode.Id && s.ExitCondition != null)];
+        List<Strat> toStrats = [.. toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null)];
         Requirement? unlockReq = null;
 
         if (fromNode.NodeType == "door" && fromNode.UseImplicitDoorUnlocks == null || fromNode.UseImplicitDoorUnlocks == true)
@@ -619,7 +618,7 @@ public class GraphPreprocessor
                     requirements.Add(BossRequirement(int.Parse(_world.Config.Bosses)));
                 }
                 newFromStrat.Requires = OptimizeRequirement(
-                    new Requirement.And(requirements.ToArray()));
+                    new Requirement.And([.. requirements]));
 
                 var fromStratVtx = _entranceVertices.GetValueOrDefault(strat) ?? fromVtx;
                 var targetStratVtx = _entranceVertices.GetValueOrDefault(targetStrat) ?? toVtx;
@@ -634,7 +633,7 @@ public class GraphPreprocessor
             EntranceCondition.ComeInJumping or
             EntranceCondition.ComeInSpinning;
 
-    private Requirement RunwayEntranceRequirement(ExitCondition.LeaveWithRunway runway,
+    private static Requirement RunwayEntranceRequirement(ExitCondition.LeaveWithRunway runway,
         EntranceCondition entrance, Room fromRoom, Node fromNode)
     {
         var requirements = new List<Requirement>();
@@ -710,7 +709,7 @@ public class GraphPreprocessor
         {
             0 => new Requirement.Always(),
             1 => requirements[0],
-            _ => new Requirement.And(requirements.ToArray()),
+            _ => new Requirement.And([.. requirements]),
         };
     }
 
@@ -744,7 +743,7 @@ public class GraphPreprocessor
         return speeds[tiles];
     }
 
-    public Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
+    public static Node PatchNodeWithKey(Node node, string nameToPatch, string keycardName)
     {
         if (node.Name == nameToPatch)
         {
@@ -758,21 +757,21 @@ public class GraphPreprocessor
     {
         var room = reader.Rooms.First(x => x.Name == roomName && x.Area == areaName);
         var newNodes = room.Nodes.Select(x => PatchNodeWithKey(x, doorName, keyCardName));
-        room.Nodes = newNodes.ToArray();
+        room.Nodes = [.. newNodes];
     }
 }
 
 
 public class SmGraph
 {
-    public List<Vertex> Vertices { get; } = new();
-    public List<BaseEdge> Edges { get; } = new();
-    public Dictionary<Vertex, List<BaseEdge>> AdjecencyList { get; } = new();
+    public List<Vertex> Vertices { get; } = [];
+    public List<BaseEdge> Edges { get; } = [];
+    public Dictionary<Vertex, List<BaseEdge>> AdjecencyList { get; } = [];
 
     public Vertex AddVertex(Vertex vertex)
     {
         Vertices.Add(vertex);
-        AdjecencyList.Add(vertex, new());
+        AdjecencyList.Add(vertex, []);
         return vertex;
     }
 

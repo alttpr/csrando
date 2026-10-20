@@ -217,7 +217,7 @@ internal sealed class ItemPooler : IItemPooler
 
     /// <summary>Get Prizes for a world.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetPrizes(IWorld world)
+    private static PooledItem[] GetPrizes(IWorld world)
     {
         return
         [
@@ -236,7 +236,7 @@ internal sealed class ItemPooler : IItemPooler
 
     /// <summary>Get Small keys for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetSmallKeys(World world)
+    private static PooledItem[] GetSmallKeys(World world)
     {
         PooledItem[] keys =
         [
@@ -262,7 +262,7 @@ internal sealed class ItemPooler : IItemPooler
 
     /// <summary>Get Big keys for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetBigKeys(World world)
+    private static PooledItem[] GetBigKeys(World world)
     {
         PooledItem[] bigKeys =
         [
@@ -287,7 +287,7 @@ internal sealed class ItemPooler : IItemPooler
 
     /// <summary>Get Maps for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetMaps(World world)
+    private static PooledItem[] GetMaps(World world)
     {
         int priority = world.Config.Accessibility == AccessibilityOption.Items ? 9999 : 9010;
         PooledItem[] maps =
@@ -314,7 +314,7 @@ internal sealed class ItemPooler : IItemPooler
 
     /// <summary>Get Compasses for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetCompasses(World world)
+    private static PooledItem[] GetCompasses(World world)
     {
         int priority = world.Config.Accessibility == AccessibilityOption.Items ? 9999 : 9010;
         PooledItem[] compasses =
@@ -364,7 +364,7 @@ internal sealed class ItemPooler : IItemPooler
 
     /// <summary>Get Shop Items for world in proper placement groups.</summary>
     /// <param name="world">world to get items for</param>
-    private PooledItem[] GetShopItems(World world)
+    private static PooledItem[] GetShopItems(World world)
     {
         if (world.Config.RegionShopSupply != ShopSupplyOption.Shuffled)
             return [];

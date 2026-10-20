@@ -14,7 +14,7 @@ internal sealed class EnemyStatRandomizer : IAlttpWorldModifier
     /// <summary>
     /// Randomizes enemy damage data
     /// </summary>
-    public void RandomizeEnemyDamage(World world, PRNG prng)
+    public static void RandomizeEnemyDamage(World world, PRNG prng)
     {
         var opt = world.Config.EnemyDamage;
 
@@ -66,7 +66,7 @@ internal sealed class EnemyStatRandomizer : IAlttpWorldModifier
     /// <summary>
     /// Randomizes enemy health data
     /// </summary>
-    public void RandomizeEnemyHealth(World world, PRNG prng)
+    public static void RandomizeEnemyHealth(World world, PRNG prng)
     {
         if (world.Config.EnemyHealth == EnemyHealthOption.Default)
             return;

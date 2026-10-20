@@ -488,7 +488,7 @@ internal sealed class Text
         if (!IsValidKey(id))
             throw new Exception($"Attempted to update a non-existant text id ({id}).");
 
-        _texts[id] = _converter.ConvertDialogCompressed(value, pause, maxBytes, wrap);
+        _texts[id] = Dialog.ConvertDialogCompressed(value, pause, maxBytes, wrap);
     }
 
     /// <summary>Updates a specific string in the table, given the raw bytes</summary>
@@ -529,14 +529,14 @@ internal sealed class Text
             { "choice_3_3", [0xFB, 0xFC, 0x00, 0xF7, 0xFF, 0xF8, 0xFF, 0xF9, 0x99, 0xFE, 0x71] },
             { "choice_1_2", [0xFB, 0xFC, 0x00, 0xF7, 0x99, 0xF8, 0xFF, 0xFE, 0x72] },
             { "choice_2_2", [0xFB, 0xFC, 0x00, 0xF7, 0xFF, 0xF8, 0x99, 0xFE, 0x72] },
-            { "end_pad_data", _converter.ConvertDialogCompressed("") },
+            { "end_pad_data", Dialog.ConvertDialogCompressed("") },
             { "terminator", [0xFF, 0xFF] },
         };
 
         foreach (var (key, text) in baseText)
         {
             bool pause = !IsNoPause(key);
-            compressedDialog[key] = _converter.ConvertDialogCompressed(text, pause);
+            compressedDialog[key] = Dialog.ConvertDialogCompressed(text, pause);
         }
 
         return compressedDialog;
@@ -723,6 +723,6 @@ internal sealed class Text
         ];
 
         foreach (string msg in messages_to_zero)
-            _texts[msg] = _converter.ConvertDialogCompressed("{NOTEXT}", false);
+            _texts[msg] = Dialog.ConvertDialogCompressed("{NOTEXT}", false);
     }
 }

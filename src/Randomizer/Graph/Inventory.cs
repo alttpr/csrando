@@ -13,8 +13,8 @@ public sealed class Inventory
     private static readonly ILogger _logger = ClassLogger.Get();
 
     private readonly BitArray _bits = new(400);
-    private readonly Dictionary<IItem, int> _itemCount = new();
-    private readonly Dictionary<IWorld, float> _health = new();
+    private readonly Dictionary<IItem, int> _itemCount = [];
+    private readonly Dictionary<IWorld, float> _health = [];
 
     public Inventory(params IItem[] items)
     {

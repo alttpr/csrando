@@ -143,24 +143,18 @@ internal sealed class AssembleBaseRoms : Command
         };
     }
 
-    private void RunAsar(string workingDirectory, IEnumerable<string> asarArgs, string? asarRootDirectory = null)
+    private static void RunAsar(string workingDirectory, IEnumerable<string> asarArgs, string? asarRootDirectory = null)
     {
         string asarExecutable = GetAsarExecutable();
         string asarDirectory = asarRootDirectory ?? workingDirectory;
         string asarPath = Path.Combine(asarDirectory, "bin", asarExecutable);
 
-        var argumentList = asarArgs as IList<string> ?? asarArgs.ToList();
+        var argumentList = asarArgs as IList<string> ?? [.. asarArgs];
 
         using var process = Process.Start(new ProcessStartInfo(asarPath, argumentList)
         {
             WorkingDirectory = workingDirectory,
-        });
-
-        if (process is null)
-        {
-            throw new InvalidOperationException($"Failed to start asar at '{asarPath}'.");
-        }
-
+        }) ?? throw new InvalidOperationException($"Failed to start asar at '{asarPath}'.");
         process.WaitForExit();
 
         if (process.ExitCode != 0)
@@ -169,7 +163,7 @@ internal sealed class AssembleBaseRoms : Command
         }
     }
 
-    private void CreateBPSPatch(FileInfo[] originalFiles, string modifiedFile, string outputPatchFile)
+    private static void CreateBPSPatch(FileInfo[] originalFiles, string modifiedFile, string outputPatchFile)
     {
         // If we get an array of input filenames, we need to combine them into a single original file in the order they were given
         byte[] original;

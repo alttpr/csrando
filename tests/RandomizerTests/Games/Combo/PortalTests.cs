@@ -52,7 +52,7 @@ public sealed class PortalTests
     }
 
     private static byte[] Words(params int[] words) =>
-        words.SelectMany(w => new[] { (byte)(w & 0xFF), (byte)(w >> 8 & 0xFF) }).ToArray();
+        [.. words.SelectMany(w => new[] { (byte)(w & 0xFF), (byte)(w >> 8 & 0xFF) })];
 
     private static void AssertTable(MemoryRom rom, int address, byte[] expected, string table)
     {
@@ -573,7 +573,7 @@ public sealed class PortalTests
             games.Add("z1");
         if (m1)
             games.Add("m1");
-        return games.ToArray();
+        return [.. games];
     }
 
     private static IEnumerable<(string A, string B)> GamePairs(IReadOnlyList<string> games)

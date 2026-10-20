@@ -58,6 +58,6 @@ public static class SaveStations
                 geometry.room_id));
         }
 
-        return stations.OrderBy(s => s.Area).ThenBy(s => s.Slot).ToList();
+        return [.. stations.OrderBy(s => s.Area).ThenBy(s => s.Slot)];
     }
 }

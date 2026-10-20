@@ -12,12 +12,12 @@ using Randomizer.Games.Metadata;
 public sealed partial class MetaController : ControllerBase
 {
     [HttpGet]
-    public IEnumerable<MetaRandomizer> Get() => Enum.GetValues<RandomizerTarget>().Select(GameRandomizer);
+    public static IEnumerable<MetaRandomizer> Get() => Enum.GetValues<RandomizerTarget>().Select(GameRandomizer);
     private static MetaRandomizer GameRandomizer(RandomizerTarget randomizer) => new(Name(randomizer), Description(randomizer), randomizer);
     private static MetaTarget Game(Game? game, RandomizerTarget? randomizer) => new(Name((Enum?)game ?? randomizer), Description((Enum?)game ?? randomizer), game, randomizer);
 
     [HttpGet("{randomizer}")]
-    public IResult Get(RandomizerTarget randomizer)
+    public static IResult Get(RandomizerTarget randomizer)
     {
         // TODO: all of this lends itself to a source generator that builds a static result once.
         var rootSettings = new List<MetaSetting>();

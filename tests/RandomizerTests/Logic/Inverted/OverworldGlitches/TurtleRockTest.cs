@@ -7,7 +7,7 @@ public sealed class TurtleRockTest : InvertedOverworldGlitchesLogicTests
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public override void TestLogic(string location, bool expected, string[] inventory)
     {
-        base.TestLogic(location, expected, inventory.Concat(new[] { "TurtleRockEntryQuake" }).ToArray());
+        base.TestLogic(location, expected, [.. inventory, .. new[] { "TurtleRockEntryQuake" }]);
     }
 
     public static IEnumerable<object[]> TestData => [

@@ -591,7 +591,7 @@ public sealed class Rom : GameRom
     /// <param name="shops">shops to write to ROM</param>
     public void SetupCustomShops(Shop[] shops)
     {
-        shops = shops.Where(s => s.Active).ToArray();
+        shops = [.. shops.Where(s => s.Active)];
 
         var shopData = new List<byte>();
         var itemsData = new List<byte>();
@@ -1611,7 +1611,7 @@ public sealed class Rom : GameRom
             Write((SNES)address, [music]);
     }
 
-    public void WriteLocationSpecificData(World world, Vertex location, Item? item)
+    public static void WriteLocationSpecificData(World world, Vertex location, Item? item)
     {
         if (item == null)
             return;
@@ -1951,12 +1951,7 @@ public sealed class Rom : GameRom
 
         foreach (var roomId in roomPatches.Rooms)
         {
-            var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId);
-            if (roomDataHeader == null)
-            {
-                throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
-            }
-
+            var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId) ?? throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
             var upperLayer = roomDataHeader.UpperLayer; // usually floor/wall data
             var lowerLayer = roomDataHeader.LowerLayer; // usually background under the floor
             var priorityLayer = roomDataHeader.PriorityLayer; // upper priority layer, overwrites the upper layer if something draws over both upper/lower

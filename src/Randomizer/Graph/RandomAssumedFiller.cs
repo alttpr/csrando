@@ -65,7 +65,7 @@ internal sealed class RandomAssumedFiller
             }
         }
 
-        flatItemsArray = flatItems.ToArray();
+        flatItemsArray = [.. flatItems];
 
         var searchers = new ISearcher[_randomizer.Worlds.Length];
         for (int i = 0; i < _randomizer.Worlds.Length; ++i)
@@ -127,7 +127,7 @@ internal sealed class RandomAssumedFiller
                     var backtrackItems = flatItems.Where(i => i.Weight <= 9000 && item.World.Id == i.Item.World.Id)
                             .Select(i => i.Item)
                             .ToList();
-                    var backtrackInventory = new Inventory(backtrackItems.ToArray());
+                    var backtrackInventory = new Inventory([.. backtrackItems]);
                     backtrackCheck = statefulSearcher.BacktrackLocation((Games.SuperMetroid.Vertex)location, backtrackInventory, (Games.SuperMetroid.Vertex)location.World.Start, item);
                     if (!backtrackCheck)
                     {
@@ -260,7 +260,7 @@ internal sealed class RandomAssumedFiller
         {
             if (currentKey != itemSet)
             {
-                locations = _prng.Shuffle(searcher.GetEmptyLocationsInSet(itemSet, null, false).ToArray()).ToList();
+                locations = [.. _prng.Shuffle(searcher.GetEmptyLocationsInSet(itemSet, null, false).ToArray())];
                 currentKey = itemSet;
             }
 

@@ -248,7 +248,7 @@ public class YamlReader
 
     public static Dictionary<string, YamlItem> LoadItems() => _cachedItems.Value;
 
-    private List<T> LoadFiles<T>(string path)
+    private static List<T> LoadFiles<T>(string path)
     {
         var yamlData = new List<T>();
         var deserializer = new DeserializerBuilder().Build();
@@ -272,7 +272,7 @@ public class YamlReader
         return yamlData;
     }
 
-    private T? LoadFile<T>(string path)
+    private static T? LoadFile<T>(string path)
     {
         var deserializer = new DeserializerBuilder().Build();
         try
@@ -303,12 +303,12 @@ public class YamlReader
 
     public Dictionary<string, DirectedUndirectedPair> GetEdges(World world)
     {
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
+        return edges.Select(e => { e.Value.Directed = [.. e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; e.Value.Undirected = [.. e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
     public List<Dictionary<string, object?>> GetVertices(World world)
     {
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
+        return [.. vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; })];
     }
 
     public void BuildGraph()
@@ -392,11 +392,7 @@ public class YamlReader
 
         foreach (var (screenNum, screenId) in room.screens.Select((s, i) => (i, s)))
         {
-            var screen = data!.screens.Find(s => s.area == room.area && s.screen == screenId);
-            if (screen == null)
-            {
-                throw new Exception($"Could not find screen {screenId} in {roomName}");
-            }
+            var screen = data!.screens.Find(s => s.area == room.area && s.screen == screenId) ?? throw new Exception($"Could not find screen {screenId} in {roomName}");
             var screenName = $"{roomName} - {screen.name} ({screenNum})";
             int[] position = room.scroll switch
             {
@@ -406,7 +402,7 @@ public class YamlReader
             };
 
             // Add and connect the doors for this screen
-            foreach (var door in screen.nodes?.doors ?? new List<Door>())
+            foreach (var door in screen.nodes?.doors ?? [])
             {
                 var doorName = $"{screenName} - {door.name}";
                 var doorNode = FindOrCreateNode(doorName);
@@ -528,7 +524,7 @@ public class YamlReader
             }
 
             // Create location nodes
-            foreach (var location in screen.nodes?.locations ?? new List<Location>())
+            foreach (var location in screen.nodes?.locations ?? [])
             {
                 var locationName = $"{screenName} - {location.name}";
                 var locationNode = FindOrCreateNode(locationName, location.item);
@@ -550,8 +546,8 @@ public class YamlReader
                 }
             }
 
-            var allEdges = screen.edges?.undirected?.Select(u => ("undirected", u.Key, u.Value)).ToList() ?? new();
-            allEdges.AddRange(screen.edges?.directed?.Select(d => ("directed", d.Key, d.Value)).ToList() ?? new());
+            var allEdges = screen.edges?.undirected?.Select(u => ("undirected", u.Key, u.Value)).ToList() ?? [];
+            allEdges.AddRange(screen.edges?.directed?.Select(d => ("directed", d.Key, d.Value)).ToList() ?? []);
 
             // Create all edges
             foreach (var (type, weight, edges) in allEdges)
@@ -562,7 +558,7 @@ public class YamlReader
                 if (config.MapShuffle && weight.Contains(":NoShuffle"))
                     continue;
 
-                foreach (var edge in edges ?? new())
+                foreach (var edge in edges ?? [])
                 {
                     var edgeNames = ((List<object>)edge).Cast<string>().ToList();
                     var fromNodeName = $"{screenName} - {edgeNames[0]}";
@@ -770,9 +766,9 @@ public class YamlReader
 public class DirectedUndirectedPair
 {
     [YamlMember(Alias = "directed")]
-    public List<List<string>> Directed { get; set; } = new();
+    public List<List<string>> Directed { get; set; } = [];
     [YamlMember(Alias = "undirected")]
-    public List<List<string>> Undirected { get; set; } = new();
+    public List<List<string>> Undirected { get; set; } = [];
 }
 
 public class YamlItem

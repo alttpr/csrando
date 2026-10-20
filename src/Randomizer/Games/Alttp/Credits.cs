@@ -217,35 +217,35 @@ public sealed class Credits
     /// <summary>Convert string to byte array for Credits that can be written to ROM</summary>
     /// @param string string string to convert
     public static byte[] ConvertLargeCreditsTop(string str)
-        => str.ToLowerInvariant().Select(c => c switch
+        => [.. str.ToLowerInvariant().Select(c => c switch
         {
             >= 'a' and <= 'z' => (byte)(c - 0x4),
             '\'' => (byte)0xD9,
             '!' => (byte)0xE5,
             '_' => (byte)0xDE,
             _ => (byte)0x9F,
-        }).ToArray();
+        })];
 
     /// <summary>
     /// Convert string to byte array for Credits that can be written to ROM
     /// </summary>
     /// <param name="str">string to convert</param>
     public static byte[] ConvertLargeCreditsBottom(string str)
-        => str.ToLowerInvariant().Select(c => c switch
+        => [.. str.ToLowerInvariant().Select(c => c switch
         {
             >= 'a' and <= 'z' => (byte)(c + 0x22),
             '\'' => (byte)0xEC,
             '!' => (byte)0xF8,
             '_' => (byte)0xF1,
             _ => (byte)0x9F,
-        }).ToArray();
+        })];
 
     /// <summary>
     /// Convert string to byte array for Credits that can be written to ROM
     /// </summary>
     /// <param name="str">string to convert</param>
     public static byte[] ConvertAltCredits(string str)
-        => str.ToLowerInvariant().Select(CharToAltCreditsHex).ToArray();
+        => [.. str.ToLowerInvariant().Select(CharToAltCreditsHex)];
 
     /// <summary>
     /// Convert character to byte for ROM in Credits Sequence
@@ -263,7 +263,7 @@ public sealed class Credits
     /// </summary>
     /// <param name="str">string to convert</param>
     public static byte[] ConvertCredits(string str)
-        => str.ToLowerInvariant().Select(CharToCreditsHex).ToArray();
+        => [.. str.ToLowerInvariant().Select(CharToCreditsHex)];
 
     /// <summary>
     /// Convert character to byte for ROM in Credits Sequence

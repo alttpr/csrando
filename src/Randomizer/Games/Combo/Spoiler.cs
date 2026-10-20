@@ -135,7 +135,7 @@ internal static partial class Spoiler
     {
         if (!spoiler.TryGetValue(key, out var section))
         {
-            section = new Dictionary<string, string>();
+            section = [];
             spoiler[key] = section;
         }
 

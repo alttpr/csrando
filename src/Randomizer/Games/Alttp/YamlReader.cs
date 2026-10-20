@@ -166,7 +166,7 @@ public class YamlReader
             {
                 dest.Add(entry.Key, new()
                 {
-                    Directed = entry.Value.Directed.ToList(),
+                    Directed = [.. entry.Value.Directed],
                 });
             }
         }
@@ -218,7 +218,7 @@ public class YamlReader
 
     public class GameData
     {
-        [YamlMember(Alias = "rooms")] public List<GameRoom> Rooms { get; set; } = new();
+        [YamlMember(Alias = "rooms")] public List<GameRoom> Rooms { get; set; } = [];
     }
     public class GameRoom
     {
@@ -249,7 +249,7 @@ public class YamlReader
         var path = Path.Combine(DataRoot, "outlet_overrides.yml");
         using var reader = File.OpenText(path);
         var deserializer = new DeserializerBuilder().Build();
-        return deserializer.Deserialize<Dictionary<int, YamlOutletData>>(reader) ?? new();
+        return deserializer.Deserialize<Dictionary<int, YamlOutletData>>(reader) ?? [];
     });
     public static Dictionary<int, YamlOutletData> LoadOutletData() => _outletData.Value;
 
@@ -354,7 +354,7 @@ public class YamlOutletData
 public class YamlItem
 {
     [YamlMember(Alias = "bytes")]
-    public List<byte> Bytes { get; set; } = new();
+    public List<byte> Bytes { get; set; } = [];
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = string.Empty;
     [YamlMember(Alias = "tier")]
@@ -526,7 +526,7 @@ public class DirectedUndirectedPair
 {
 
     [YamlMember(Alias = "directed")]
-    public List<List<string>> Directed { get; set; } = new();
+    public List<List<string>> Directed { get; set; } = [];
 }
 
 public class ConnectionGroup
@@ -535,19 +535,19 @@ public class ConnectionGroup
     public string Group { get; set; } = string.Empty;
 
     [YamlMember(Alias = "overworld")]
-    public List<List<List<string>>> Overworld { get; set; } = new();
+    public List<List<List<string>>> Overworld { get; set; } = [];
     [YamlMember(Alias = "underworld")]
-    public List<List<List<string>>> Underworld { get; set; } = new();
+    public List<List<List<string>>> Underworld { get; set; } = [];
 }
 
 public class Entrances
 {
     [YamlMember(Alias = "fixed")]
-    public List<List<string>> Fixed { get; set; } = new();
+    public List<List<string>> Fixed { get; set; } = [];
     [YamlMember(Alias = "scoped")]
-    public List<ConnectionGroup> Scoped { get; set; } = new();
+    public List<ConnectionGroup> Scoped { get; set; } = [];
     [YamlMember(Alias = "connections")]
-    public List<ConnectionGroup> Connections { get; set; } = new();
+    public List<ConnectionGroup> Connections { get; set; } = [];
 }
 
 public partial class Map
@@ -568,13 +568,13 @@ public partial class Map
 public partial class MapNodes
 {
     [YamlMember(Alias = "regions")]
-    public List<Region> Regions { get; set; } = new();
+    public List<Region> Regions { get; set; } = [];
 
     [YamlMember(Alias = "meta")]
-    public List<MetaEntry> Meta { get; set; } = new();
+    public List<MetaEntry> Meta { get; set; } = [];
 
     [YamlMember(Alias = "prizepacks")]
-    public List<Prizepack> Prizepacks { get; set; } = new();
+    public List<Prizepack> Prizepacks { get; set; } = [];
 }
 
 public class MetaEntry
@@ -583,10 +583,10 @@ public class MetaEntry
     public required string Name { get; set; }
 
     [YamlMember(Alias = "items")]
-    public List<string> Items { get; set; } = new();
+    public List<string> Items { get; set; } = [];
 
     [YamlMember(Alias = "connections")]
-    public Dictionary<string, List<string>> Connections { get; set; } = new();
+    public Dictionary<string, List<string>> Connections { get; set; } = [];
 }
 
 public class Prizepack
@@ -619,7 +619,7 @@ public partial class Entrance
     public int OutletId { get; set; }
 
     [YamlMember(Alias = "conditions")]
-    public List<string> Conditions { get; set; } = new();
+    public List<string> Conditions { get; set; } = [];
 }
 
 public partial class Hole
@@ -628,10 +628,10 @@ public partial class Hole
     public required string Name { get; set; }
 
     [YamlMember(Alias = "entranceids")]
-    public List<int> EntranceIds { get; set; } = new();
+    public List<int> EntranceIds { get; set; } = [];
 
     [YamlMember(Alias = "conditions")]
-    public List<string> Conditions { get; set; } = new();
+    public List<string> Conditions { get; set; } = [];
 }
 
 public partial class ItemEntry
@@ -640,7 +640,7 @@ public partial class ItemEntry
     public required string Name { get; set; }
 
     [YamlMember(Alias = "addresses")]
-    public List<long> Addresses { get; set; } = new();
+    public List<long> Addresses { get; set; } = [];
 
     [YamlMember(Alias = "type")]
     public VertexType Type { get; set; }
@@ -649,10 +649,10 @@ public partial class ItemEntry
     public string? Item { get; set; }
 
     [YamlMember(Alias = "itemset")]
-    public List<string> ItemSet { get; set; } = new();
+    public List<string> ItemSet { get; set; } = [];
 
     [YamlMember(Alias = "conditions")]
-    public List<string> Conditions { get; set; } = new();
+    public List<string> Conditions { get; set; } = [];
 }
 
 public partial class Warp
@@ -664,7 +664,7 @@ public partial class Warp
     public Position? Position { get; set; }
 
     [YamlMember(Alias = "connections")]
-    public Dictionary<string, List<string>> Connections { get; set; } = new();
+    public Dictionary<string, List<string>> Connections { get; set; } = [];
 }
 
 public partial class Room
@@ -688,7 +688,7 @@ public partial class Room
     public byte?[] Sheets { get; set; } = [null, null, null, null];
 
     [YamlMember(Alias = "extralight")]
-    public List<string> ExtraLight { get; set; } = new();
+    public List<string> ExtraLight { get; set; } = [];
 
     [YamlMember(Alias = "bosses")]
     public object? Bosses { get; set; }
@@ -697,13 +697,13 @@ public partial class Room
 public partial class RoomNodes
 {
     [YamlMember(Alias = "regions")]
-    public List<Region> Regions { get; set; } = new();
+    public List<Region> Regions { get; set; } = [];
 
     [YamlMember(Alias = "items")]
-    public List<ItemEntry> Items { get; set; } = new();
+    public List<ItemEntry> Items { get; set; } = [];
 
     [YamlMember(Alias = "mobs")]
-    public List<Entity> Mobs { get; set; } = new();
+    public List<Entity> Mobs { get; set; } = [];
 
 }
 
@@ -722,7 +722,7 @@ public partial class InventoryEntry
     public int Cost { get; set; }
 
     [YamlMember(Alias = "itemset")]
-    public List<string> ItemSet { get; set; } = new();
+    public List<string> ItemSet { get; set; } = [];
 }
 
 public partial class Entity
@@ -737,7 +737,7 @@ public partial class Entity
     public required string Sprite { get; set; }
 
     [YamlMember(Alias = "state")]
-    public List<int> State { get; set; } = new();
+    public List<int> State { get; set; } = [];
 
     [YamlMember(Alias = "type")]
     public VertexType? Type { get; set; }
@@ -746,13 +746,13 @@ public partial class Entity
     public string? Item { get; set; }
 
     [YamlMember(Alias = "itemset")]
-    public List<string> ItemSet { get; set; } = new();
+    public List<string> ItemSet { get; set; } = [];
 
     [YamlMember(Alias = "deny")]
-    public List<string> Deny { get; set; } = new();
+    public List<string> Deny { get; set; } = [];
 
     [YamlMember(Alias = "allow")]
-    public List<string> Allow { get; set; } = new();
+    public List<string> Allow { get; set; } = [];
 
     [YamlMember(Alias = "trophy")]
     public string? Trophy { get; set; }
@@ -835,31 +835,31 @@ public partial class Region
     public bool Pit { get; set; } = false;
 
     [YamlMember(Alias = "mobs")]
-    public List<Entity> Mobs { get; set; } = new();
+    public List<Entity> Mobs { get; set; } = [];
 
     [YamlMember(Alias = "entrances")]
-    public List<Entrance> Entrances { get; set; } = new();
+    public List<Entrance> Entrances { get; set; } = [];
 
     [YamlMember(Alias = "holes")]
-    public List<Hole> Holes { get; set; } = new();
+    public List<Hole> Holes { get; set; } = [];
 
     [YamlMember(Alias = "warps")]
-    public List<Warp> Warps { get; set; } = new();
+    public List<Warp> Warps { get; set; } = [];
 
     [YamlMember(Alias = "items")]
-    public List<ItemEntry> Items { get; set; } = new();
+    public List<ItemEntry> Items { get; set; } = [];
 
     [YamlMember(Alias = "pots")]
-    public List<Entity> Pots { get; set; } = new();
+    public List<Entity> Pots { get; set; } = [];
 
     [YamlMember(Alias = "inventory")]
-    public List<InventoryEntry> Inventory { get; set; } = new();
+    public List<InventoryEntry> Inventory { get; set; } = [];
 
     [YamlMember(Alias = "connections")]
-    public Dictionary<string, List<string>> Connections { get; set; } = new();
+    public Dictionary<string, List<string>> Connections { get; set; } = [];
 
     [YamlMember(Alias = "bosses")]
-    public List<string> Bosses { get; set; } = new();
+    public List<string> Bosses { get; set; } = [];
     [YamlMember(Alias = "offset")]
     public Position? Offset { get; set; }
 }
@@ -867,7 +867,7 @@ public partial class Region
 public class Vertices
 {
     [YamlMember(Alias = "maps")]
-    public List<Map> Maps { get; set; } = new();
+    public List<Map> Maps { get; set; } = [];
     [YamlMember(Alias = "rooms")]
-    public List<Room> Rooms { get; set; } = new();
+    public List<Room> Rooms { get; set; } = [];
 }

@@ -7,7 +7,7 @@ public sealed class MiseryMireTest : StandardMajorGlitchesLogicTests
     [DynamicData(nameof(TestData), DynamicDataDisplayName = nameof(GetLogicTestDisplayNames), DynamicDataDisplayNameDeclaringType = typeof(LogicTestBase))]
     public override void TestLogic(string location, bool expected, string[] inventory)
     {
-        base.TestLogic(location, expected, inventory.Concat(new[] { "MireEntryEther" }).ToArray());
+        base.TestLogic(location, expected, [.. inventory, .. new[] { "MireEntryEther" }]);
     }
 
     public static IEnumerable<object[]> TestData => [

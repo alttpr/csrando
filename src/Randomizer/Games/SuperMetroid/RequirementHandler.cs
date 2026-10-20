@@ -113,11 +113,11 @@ public struct RequirementCost
 
 public class RequirementHandler
 {
-    private readonly Dictionary<string, Requirement> HelperTechs = new Dictionary<string, Requirement>();
-    private readonly Dictionary<string, Enemy> Enemies = new Dictionary<string, Enemy>();
-    private readonly Dictionary<(string, string), Attack> EnemyDamage = new Dictionary<(string, string), Attack>();
-    private readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = new Dictionary<string, EnemyDrops>();
-    private readonly HashSet<string> AllowedNotableStrategies = new HashSet<string>();
+    private readonly Dictionary<string, Requirement> HelperTechs = [];
+    private readonly Dictionary<string, Enemy> Enemies = [];
+    private readonly Dictionary<(string, string), Attack> EnemyDamage = [];
+    private readonly Dictionary<string, EnemyDrops> EnemyDropExpectations = [];
+    private readonly HashSet<string> AllowedNotableStrategies = [];
     private const decimal DropRateDenominator = 102m;
     private static readonly EnemyDrops ZeroEnemyDrops = new EnemyDrops(0, 0, 0, 0, 0, 0);
     // Vanilla SM drop contents per pickup; used to convert expected drop counts to resources.
@@ -933,7 +933,7 @@ public class RequirementHandler
         };
     }
 
-    private bool IsStrategyAllowed(NotableStrategy strategy, Logic logic) =>
+    private static bool IsStrategyAllowed(NotableStrategy strategy, Logic logic) =>
         strategy.Difficulty switch
         {
             "Basic" => logic == Logic.Basic,

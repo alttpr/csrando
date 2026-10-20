@@ -45,27 +45,27 @@ public class JsonReader
         set => _dataRoot = new(value);
     }
 
-    public Dictionary<int, Room> RoomById { get; set; } = new();
-    public Dictionary<(int, int), Node> NodeById { get; set; } = new();
+    public Dictionary<int, Room> RoomById { get; set; } = [];
+    public Dictionary<(int, int), Node> NodeById { get; set; } = [];
 
-    public List<Room> Rooms { get; set; } = new();
-    public List<ConnectionCollection> Connections { get; set; } = new();
+    public List<Room> Rooms { get; set; } = [];
+    public List<ConnectionCollection> Connections { get; set; } = [];
     public TechCollection Techs { get; set; } = new TechCollection([]);
     public HelperCollection Helpers { get; set; } = new HelperCollection([]);
-    public List<EnemyCollection> Enemies { get; set; } = new();
+    public List<EnemyCollection> Enemies { get; set; } = [];
     public WeaponCollection Weapons { get; set; } = new WeaponCollection([]);
-    public List<BossScenarioCollection> BossScenarios { get; set; } = new();
-    public List<RoomGeometry> RoomGeometries { get; set; } = new();
-    public MapRoomData MapRoomData { get; set; } = new() { Rooms = new() };
-    public List<RoomHeader> RoomHeaders { get; set; } = new();
-    public List<RoomPLM> RoomPLMs { get; set; } = new();
-    public List<DoorPLMMap> DoorPLMMaps { get; set; } = new();
-    public List<NotableStrategy> NotableStrategies { get; set; } = new();
+    public List<BossScenarioCollection> BossScenarios { get; set; } = [];
+    public List<RoomGeometry> RoomGeometries { get; set; } = [];
+    public MapRoomData MapRoomData { get; set; } = new() { Rooms = [] };
+    public List<RoomHeader> RoomHeaders { get; set; } = [];
+    public List<RoomPLM> RoomPLMs { get; set; } = [];
+    public List<DoorPLMMap> DoorPLMMaps { get; set; } = [];
+    public List<NotableStrategy> NotableStrategies { get; set; } = [];
 
-    private readonly Dictionary<string, Dictionary<string, object>> vertices = new();
-    private readonly Dictionary<Requirement, DirectedUndirectedPair> edges = new();
+    private readonly Dictionary<string, Dictionary<string, object>> vertices = [];
+    private readonly Dictionary<Requirement, DirectedUndirectedPair> edges = [];
 
-    private readonly HashSet<(string, string, string)> _edgeExists = new();
+    private readonly HashSet<(string, string, string)> _edgeExists = [];
 
     private Dictionary<string, object> CreateNode(Dictionary<string, object> nodeData)
     {
@@ -133,7 +133,7 @@ public class JsonReader
         AddEdge(from, to, requirement, true);
     }
 
-    private List<T> LoadFiles<T>(string path)
+    private static List<T> LoadFiles<T>(string path)
     {
         var jsonData = new List<T>();
 
@@ -166,7 +166,7 @@ public class JsonReader
         return jsonData;
     }
 
-    private T? LoadFile<T>(string path)
+    private static T? LoadFile<T>(string path)
     {
         try
         {
@@ -191,7 +191,7 @@ public class JsonReader
             Load();
         }
 
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => e.Key, e => e.Value);
+        return edges.Select(e => { e.Value.Directed = [.. e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; e.Value.Undirected = [.. e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; return e; }).ToDictionary(e => e.Key, e => e.Value);
         //return new();
     }
 
@@ -202,7 +202,7 @@ public class JsonReader
             Load();
         }
 
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
+        return [.. vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; })];
     }
 
     // Load all JSON data into memory
@@ -213,15 +213,15 @@ public class JsonReader
         Connections = LoadFiles<ConnectionCollection>(Path.Combine(path, "connection"));
         Techs = LoadFile<TechCollection>(Path.Combine(path, "tech.json")) ?? new TechCollection([]);
         Helpers = LoadFile<HelperCollection>(Path.Combine(path, "helpers.json")) ?? new HelperCollection([]);
-        Enemies = LoadFiles<EnemyCollection>(Path.Combine(path, "enemies")).Where(x => x.Enemies != null).ToList();
-        BossScenarios = LoadFiles<BossScenarioCollection>(Path.Combine(path, "enemies")).Where(x => x.Scenarios != null).ToList();
+        Enemies = [.. LoadFiles<EnemyCollection>(Path.Combine(path, "enemies")).Where(x => x.Enemies != null)];
+        BossScenarios = [.. LoadFiles<BossScenarioCollection>(Path.Combine(path, "enemies")).Where(x => x.Scenarios != null)];
         Weapons = LoadFile<WeaponCollection>(Path.Combine(path, "weapons/main.json")) ?? new WeaponCollection([]);
-        RoomGeometries = LoadFile<List<RoomGeometry>>(Path.Combine(path, "room_geometry.json")) ?? new List<RoomGeometry>();
-        MapRoomData = LoadFile<MapRoomData>(Path.Combine(path, "map_tiles.json")) ?? new MapRoomData { Rooms = new() };
-        RoomHeaders = LoadFile<List<RoomHeader>>(Path.Combine(path, "room_headers.json")) ?? new List<RoomHeader>();
-        RoomPLMs = LoadFile<List<RoomPLM>>(Path.Combine(path, "plm_data.json")) ?? new List<RoomPLM>();
-        DoorPLMMaps = LoadFile<List<DoorPLMMap>>(Path.Combine(path, "plm_door_map.json")) ?? new List<DoorPLMMap>();
-        NotableStrategies = LoadFile<List<NotableStrategy>>(Path.Combine(path, "notable_data.json")) ?? new List<NotableStrategy>();
+        RoomGeometries = LoadFile<List<RoomGeometry>>(Path.Combine(path, "room_geometry.json")) ?? [];
+        MapRoomData = LoadFile<MapRoomData>(Path.Combine(path, "map_tiles.json")) ?? new MapRoomData { Rooms = [] };
+        RoomHeaders = LoadFile<List<RoomHeader>>(Path.Combine(path, "room_headers.json")) ?? [];
+        RoomPLMs = LoadFile<List<RoomPLM>>(Path.Combine(path, "plm_data.json")) ?? [];
+        DoorPLMMaps = LoadFile<List<DoorPLMMap>>(Path.Combine(path, "plm_door_map.json")) ?? [];
+        NotableStrategies = LoadFile<List<NotableStrategy>>(Path.Combine(path, "notable_data.json")) ?? [];
 
         RoomById = Rooms.ToDictionary(r => r.Id);
         NodeById = Rooms
@@ -650,8 +650,8 @@ public class JsonReader
 
 public class DirectedUndirectedPair
 {
-    public List<List<string>> Directed { get; set; } = new();
-    public List<List<string>> Undirected { get; set; } = new();
+    public List<List<string>> Directed { get; set; } = [];
+    public List<List<string>> Undirected { get; set; } = [];
 }
 
 
@@ -659,7 +659,7 @@ public static class GraphExtensions
 {
     public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> source)
     {
-        T[] elements = source.ToArray();
+        T[] elements = [.. source];
         int combinationCount = 1 << elements.Length; // 2^N combinations
 
         for (int i = 1; i < combinationCount; i++) // Start at 1 to exclude the empty set

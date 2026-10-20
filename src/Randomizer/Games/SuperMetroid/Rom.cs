@@ -840,7 +840,7 @@ public class Rom : GameRom
 
             Console.WriteLine($"Writing sand entrance clamp ASM to outgoing ptr {entranceDoorExitPtr:X4} for door ptr {toPtr:X4} in room {exitRoom?.name} (room ID {exitRoom?.room_id}) coming from room {entranceRoom?.name} (room ID {entranceRoom?.room_id})");
 
-            asmPtr = WriteExtraDoorAsm(world, entranceDoorExitPtr!.Value & 0xFFFF, asmPtr, asm.ToArray());
+            asmPtr = WriteExtraDoorAsm(world, entranceDoorExitPtr!.Value & 0xFFFF, asmPtr, [.. asm]);
 
         }
 
@@ -926,7 +926,7 @@ public class Rom : GameRom
             area_y_offsets[i] = world.Map!.room_y.Select((r, idx) => (r, idx)).Where(r => world.Map.room_area[r.idx] == i).Min(r => r.r);
         }
 
-        Dictionary<(int, int, int), bool> mapTileWrites = new Dictionary<(int, int, int), bool>();
+        Dictionary<(int, int, int), bool> mapTileWrites = [];
 
         // Map tile writes are first-write-wins per cell. The Toilet overlaps the
         // rooms it passes through, so write it last: its shaft tiles then only
@@ -1136,7 +1136,7 @@ public class Rom : GameRom
         List<(int, int, int)>[] areaDecoInstructions = new List<(int, int, int)>[6];
         for (int i = 0; i < 6; i++)
         {
-            areaDecoInstructions[i] = new List<(int, int, int)>();
+            areaDecoInstructions[i] = [];
         }
 
 
@@ -1410,7 +1410,7 @@ public class Rom : GameRom
     }
 
     // Builds a door header entry
-    private byte[] BuildDoorData(ushort roomHeader, byte[] doorProps, ushort distance = 0x8000, ushort asmPtr = 0x0000)
+    private static byte[] BuildDoorData(ushort roomHeader, byte[] doorProps, ushort distance = 0x8000, ushort asmPtr = 0x0000)
     {
         if (doorProps == null || doorProps.Length != 6)
         {
@@ -1422,11 +1422,11 @@ public class Rom : GameRom
         buf.AddRange(doorProps);
         buf.AddRange(UshortBytes(distance));
         buf.AddRange(UshortBytes(asmPtr));
-        return buf.ToArray();
+        return [.. buf];
     }
 
     // Builds a door out list entry table
-    private byte[] BuildDoorList(params ushort[] doorPtrs)
+    private static byte[] BuildDoorList(params ushort[] doorPtrs)
     {
         var buf = new List<byte>(2 * doorPtrs.Length);
         foreach (var p in doorPtrs)
@@ -1438,7 +1438,7 @@ public class Rom : GameRom
 
 
     // Builds a PLM list entry table
-    private byte[] BuildPlmList(params PlmEntry[] entries)
+    private static byte[] BuildPlmList(params PlmEntry[] entries)
     {
         var buf = new List<byte>(entries.Length * 6 + 2);
         foreach (var e in entries)
@@ -1662,7 +1662,7 @@ public sealed class FreeSpaceManager
         public Segment(int s, int e) { Start = s; End = e; }
     }
 
-    private readonly Dictionary<byte, List<Segment>> _free = new();
+    private readonly Dictionary<byte, List<Segment>> _free = [];
 
     public FreeSpaceManager()
     {
@@ -1679,7 +1679,7 @@ public sealed class FreeSpaceManager
         if (b0 != b1) throw new ArgumentException("Free range must be in a single bank.");
 
         if (!_free.TryGetValue(b0, out var list))
-            _free[b0] = list = new List<Segment>();
+            _free[b0] = list = [];
 
         list.Add(new Segment(startLong, endLong));
         Coalesce(list);

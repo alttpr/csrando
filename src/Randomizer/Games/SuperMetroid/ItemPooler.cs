@@ -22,7 +22,7 @@ internal sealed class ItemPooler : IItemPooler
         SetLocations = BuildLocations(worlds);
     }
 
-    private SetLocations BuildLocations(IWorld[] worlds)
+    private static SetLocations BuildLocations(IWorld[] worlds)
     {
         var setLocations = new SetLocations();
         foreach (var vertex in worlds.SelectMany(world => world.GetLocations()).OfType<Vertex>())

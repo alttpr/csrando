@@ -339,7 +339,7 @@ public static class Portals
     };
 
     private static byte[] Words(ushort[] words) =>
-        words.SelectMany(w => new[] { (byte)(w & 0xFF), (byte)(w >> 8) }).ToArray();
+        [.. words.SelectMany(w => new[] { (byte)(w & 0xFF), (byte)(w >> 8) })];
 
     // SM sits at the start of the combo ROM with plain LoROM mapping.
     private static int SnesToPc(int address) => Randomizer.RomModifications.SNES.ToPC(address);

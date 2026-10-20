@@ -578,10 +578,9 @@ public sealed class DungeonBuilderTest
         builder.Write();
 
         var levelData = data.levels.First(l => l.level == level && l.area == YamlReader.Area.Underworld);
-        return data.underworld_maps
+        return [.. data.underworld_maps
             .Where(m => m.generated && m.generated_level == level && !m.passage
-                && m.map != levelData.boss_room_id && m.room_item == 0x01)
-            .ToList();
+                && m.map != levelData.boss_room_id && m.room_item == 0x01)];
     }
 
     [TestMethod]
