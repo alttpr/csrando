@@ -82,7 +82,7 @@ public static class DoorReader
         bytes.Add(door.y_high);
         bytes.AddRange(BitConverter.GetBytes(door.distance));
         bytes.AddRange(BitConverter.GetBytes(door.asm));
-        return bytes.ToArray();
+        return [.. bytes];
 
     }
 }

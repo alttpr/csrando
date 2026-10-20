@@ -840,7 +840,7 @@ public class Rom : GameRom
 
             Console.WriteLine($"Writing sand entrance clamp ASM to outgoing ptr {entranceDoorExitPtr:X4} for door ptr {toPtr:X4} in room {exitRoom?.name} (room ID {exitRoom?.room_id}) coming from room {entranceRoom?.name} (room ID {entranceRoom?.room_id})");
 
-            asmPtr = WriteExtraDoorAsm(world, entranceDoorExitPtr!.Value & 0xFFFF, asmPtr, asm.ToArray());
+            asmPtr = WriteExtraDoorAsm(world, entranceDoorExitPtr!.Value & 0xFFFF, asmPtr, [.. asm]);
 
         }
 
@@ -1422,7 +1422,7 @@ public class Rom : GameRom
         buf.AddRange(doorProps);
         buf.AddRange(UshortBytes(distance));
         buf.AddRange(UshortBytes(asmPtr));
-        return buf.ToArray();
+        return [.. buf];
     }
 
     // Builds a door out list entry table

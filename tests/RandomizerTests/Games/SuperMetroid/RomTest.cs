@@ -28,7 +28,7 @@ public sealed class RomTest
 
     private sealed class MemoryRom : IRom
     {
-        private readonly byte[] _data = Enumerable.Repeat((byte)0xCC, 8 * 1024 * 1024).ToArray();
+        private readonly byte[] _data = [.. Enumerable.Repeat((byte)0xCC, 8 * 1024 * 1024)];
 
         public byte[] Read(Address address, int length) => _data[address.Value..(address.Value + length)];
         public void Write(Address address, in ReadOnlySpan<byte> data) => data.CopyTo(_data.AsSpan(address.Value));

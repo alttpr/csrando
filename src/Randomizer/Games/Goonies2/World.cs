@@ -22,7 +22,7 @@ public sealed class World : World<Item>
         items.Add(GetItem($"ConfigWorldEnemyShuffle{Config.EnemyShuffle}"));
 
         items.AddRange(Config.StartingEquipment.Select(GetItem));
-        StartingItems = new Inventory(items.ToArray());
+        StartingItems = new Inventory([.. items]);
 
         Start = DataLoader.Fill(this);
     }

@@ -32,7 +32,7 @@ internal static class DataLoader
         if (world.Config.EntranceShuffle == EntranceShuffleOption.Overworld)
         {
             var entranceShuffler = new EntranceShuffler(world.Prng, yamlReader,
-                PortalCaveCandidates.Select(c => c.Map).ToList());
+                [.. PortalCaveCandidates.Select(c => c.Map)]);
             entranceShuffler.Shuffle();
         }
 
@@ -129,7 +129,7 @@ internal static class DataLoader
             || world.WorldConfig.Metroid != null;
 
         return hasPortalPartner
-            ? PortalCaveCandidates.Select(c => c.Map).ToHashSet()
+            ? [.. PortalCaveCandidates.Select(c => c.Map)]
             : [];
     }
 

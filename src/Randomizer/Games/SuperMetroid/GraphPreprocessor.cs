@@ -161,10 +161,9 @@ public class GraphPreprocessor
         var alternatives = Enumerable.Range(0, 1 << bossFlags.Length)
             .Where(mask => Enumerable.Range(0, bossFlags.Length)
                 .Count(index => (mask & (1 << index)) != 0) == requiredBosses)
-            .Select(mask => new Requirement.And(Enumerable.Range(0, bossFlags.Length)
+            .Select(mask => new Requirement.And([.. Enumerable.Range(0, bossFlags.Length)
                 .Where(index => (mask & (1 << index)) != 0)
-                .Select(index => (Requirement)new Requirement.Single(bossFlags[index]))
-                .ToArray()))
+                .Select(index => (Requirement)new Requirement.Single(bossFlags[index]))]))
             .Cast<Requirement>()
             .ToArray();
 
@@ -341,7 +340,7 @@ public class GraphPreprocessor
         if (optimizedSubs.Count == 1)
             return optimizedSubs[0];
 
-        return new Requirement.And(optimizedSubs.ToArray());
+        return new Requirement.And([.. optimizedSubs]);
     }
 
     private Requirement OptimizeOr(Requirement.Or orReq)
@@ -375,7 +374,7 @@ public class GraphPreprocessor
         if (optimizedSubs.Count == 1)
             return optimizedSubs[0];
 
-        return new Requirement.Or(optimizedSubs.ToArray());
+        return new Requirement.Or([.. optimizedSubs]);
     }
 
     /// <summary>
@@ -531,8 +530,8 @@ public class GraphPreprocessor
             && (fromRoom.Name == "Mother Brain Room" && fromNode.Name == "Left Blast Door"
                 || toRoom.Name == "Mother Brain Room" && toNode.Name == "Left Blast Door");
 
-        List<Strat> fromStrats = fromRoom.Strats.Where(s => s.Link![0] == fromNode.Id && s.ExitCondition != null).ToList();
-        List<Strat> toStrats = toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null).ToList();
+        List<Strat> fromStrats = [.. fromRoom.Strats.Where(s => s.Link![0] == fromNode.Id && s.ExitCondition != null)];
+        List<Strat> toStrats = [.. toRoom.Strats.Where(s => s.Link![0] == toNode.Id && s.EntranceCondition != null)];
         Requirement? unlockReq = null;
 
         if (fromNode.NodeType == "door" && fromNode.UseImplicitDoorUnlocks == null || fromNode.UseImplicitDoorUnlocks == true)
@@ -619,7 +618,7 @@ public class GraphPreprocessor
                     requirements.Add(BossRequirement(int.Parse(_world.Config.Bosses)));
                 }
                 newFromStrat.Requires = OptimizeRequirement(
-                    new Requirement.And(requirements.ToArray()));
+                    new Requirement.And([.. requirements]));
 
                 var fromStratVtx = _entranceVertices.GetValueOrDefault(strat) ?? fromVtx;
                 var targetStratVtx = _entranceVertices.GetValueOrDefault(targetStrat) ?? toVtx;
@@ -710,7 +709,7 @@ public class GraphPreprocessor
         {
             0 => new Requirement.Always(),
             1 => requirements[0],
-            _ => new Requirement.And(requirements.ToArray()),
+            _ => new Requirement.And([.. requirements]),
         };
     }
 
@@ -758,7 +757,7 @@ public class GraphPreprocessor
     {
         var room = reader.Rooms.First(x => x.Name == roomName && x.Area == areaName);
         var newNodes = room.Nodes.Select(x => PatchNodeWithKey(x, doorName, keyCardName));
-        room.Nodes = newNodes.ToArray();
+        room.Nodes = [.. newNodes];
     }
 }
 

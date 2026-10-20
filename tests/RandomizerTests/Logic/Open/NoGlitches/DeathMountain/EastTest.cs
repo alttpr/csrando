@@ -156,6 +156,6 @@ public class EastTest : OpenNoGlitchesLogicTests
     [DynamicData(nameof(TestDataWithMedallion))]
     public void TestLogicWithMedallion(string location, bool expected, string medallion, string[] inventory)
     {
-        base.TestLogic(location, expected, inventory.Concat(new[] { "TurtleRockEntry" + medallion }).ToArray());
+        base.TestLogic(location, expected, [.. inventory, .. new[] { "TurtleRockEntry" + medallion }]);
     }
 }

@@ -56,7 +56,7 @@ public class MapRandomizer
             }
         }
 
-        _reader.Connections = [new ConnectionCollection(connections.ToArray())];
+        _reader.Connections = [new ConnectionCollection([.. connections])];
         _world.Map = map;
         _world.MapInfo = mapInfo;
     }

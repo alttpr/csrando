@@ -149,7 +149,7 @@ internal sealed class AssembleBaseRoms : Command
         string asarDirectory = asarRootDirectory ?? workingDirectory;
         string asarPath = Path.Combine(asarDirectory, "bin", asarExecutable);
 
-        var argumentList = asarArgs as IList<string> ?? asarArgs.ToList();
+        var argumentList = asarArgs as IList<string> ?? [.. asarArgs];
 
         using var process = Process.Start(new ProcessStartInfo(asarPath, argumentList)
         {

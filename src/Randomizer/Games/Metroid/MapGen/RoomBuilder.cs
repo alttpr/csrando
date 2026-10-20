@@ -54,8 +54,8 @@ public static class RoomBuilder
                 area = run.Area,
                 scroll = run.Axis,
                 position = [first.Position.X, first.Position.Y],
-                screens = run.Cells.Select(c => c.AssignedScreen?.ScreenId
-                    ?? throw new InvalidOperationException($"cell {c} has no assigned screen")).ToArray(),
+                screens = [.. run.Cells.Select(c => c.AssignedScreen?.ScreenId
+                    ?? throw new InvalidOperationException($"cell {c} has no assigned screen"))],
                 sprites = []
             };
 

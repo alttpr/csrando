@@ -15,14 +15,14 @@ internal sealed class ItemPooler : IItemPooler
         _prng = prng;
         foreach (var world in worlds.OfType<World>())
         {
-            _poolersForWorld[world] = world.GameWorlds().Select<IWorld, IItemPooler>(w => w switch
+            _poolersForWorld[world] = [.. world.GameWorlds().Select<IWorld, IItemPooler>(w => w switch
             {
                 Alttp.World alttpWorld => new Alttp.ItemPooler([alttpWorld], _prng),
                 SuperMetroid.World smWorld => new SuperMetroid.ItemPooler([smWorld], _prng),
                 Zelda1.World z1World => new Zelda1.ItemPooler([z1World], _prng),
                 Metroid.World m1World => new Metroid.ItemPooler([m1World], _prng),
                 _ => throw new NotSupportedException("Unsupported world found."),
-            }).ToArray();
+            })];
         }
         Pool = [.. worlds.OfType<World>().SelectMany(GetPoolForWorld)];
         SetLocations = BuildLocations(worlds);

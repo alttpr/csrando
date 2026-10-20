@@ -45,7 +45,7 @@ public sealed class StartLocationTests
         new(0, config, new Graph(), new PRNG(seed));
 
     private static byte[] Words(params int[] words) =>
-        words.SelectMany(w => new[] { (byte)(w & 0xFF), (byte)(w >> 8 & 0xFF) }).ToArray();
+        [.. words.SelectMany(w => new[] { (byte)(w & 0xFF), (byte)(w >> 8 & 0xFF) })];
 
     [TestMethod]
     public void Sm_StartLocationValues_MatchDataCatalog()

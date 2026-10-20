@@ -191,7 +191,7 @@ public class JsonReader
             Load();
         }
 
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => e.Key, e => e.Value);
+        return edges.Select(e => { e.Value.Directed = [.. e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; e.Value.Undirected = [.. e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; return e; }).ToDictionary(e => e.Key, e => e.Value);
         //return new();
     }
 
@@ -202,7 +202,7 @@ public class JsonReader
             Load();
         }
 
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
+        return [.. vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; })];
     }
 
     // Load all JSON data into memory
@@ -213,8 +213,8 @@ public class JsonReader
         Connections = LoadFiles<ConnectionCollection>(Path.Combine(path, "connection"));
         Techs = LoadFile<TechCollection>(Path.Combine(path, "tech.json")) ?? new TechCollection([]);
         Helpers = LoadFile<HelperCollection>(Path.Combine(path, "helpers.json")) ?? new HelperCollection([]);
-        Enemies = LoadFiles<EnemyCollection>(Path.Combine(path, "enemies")).Where(x => x.Enemies != null).ToList();
-        BossScenarios = LoadFiles<BossScenarioCollection>(Path.Combine(path, "enemies")).Where(x => x.Scenarios != null).ToList();
+        Enemies = [.. LoadFiles<EnemyCollection>(Path.Combine(path, "enemies")).Where(x => x.Enemies != null)];
+        BossScenarios = [.. LoadFiles<BossScenarioCollection>(Path.Combine(path, "enemies")).Where(x => x.Scenarios != null)];
         Weapons = LoadFile<WeaponCollection>(Path.Combine(path, "weapons/main.json")) ?? new WeaponCollection([]);
         RoomGeometries = LoadFile<List<RoomGeometry>>(Path.Combine(path, "room_geometry.json")) ?? new List<RoomGeometry>();
         MapRoomData = LoadFile<MapRoomData>(Path.Combine(path, "map_tiles.json")) ?? new MapRoomData { Rooms = new() };
@@ -659,7 +659,7 @@ public static class GraphExtensions
 {
     public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> source)
     {
-        T[] elements = source.ToArray();
+        T[] elements = [.. source];
         int combinationCount = 1 << elements.Length; // 2^N combinations
 
         for (int i = 1; i < combinationCount; i++) // Start at 1 to exclude the empty set

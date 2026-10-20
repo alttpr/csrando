@@ -166,7 +166,7 @@ public class YamlReader
             {
                 dest.Add(entry.Key, new()
                 {
-                    Directed = entry.Value.Directed.ToList(),
+                    Directed = [.. entry.Value.Directed],
                 });
             }
         }

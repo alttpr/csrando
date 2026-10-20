@@ -65,7 +65,7 @@ public sealed class WorldTest
         };
         items.AddRange(Enumerable.Repeat(world.GetItem("Missile"), 30));
         items.AddRange(Enumerable.Repeat(world.GetItem("EnergyTank"), 6));
-        return new Inventory(items.ToArray());
+        return new Inventory([.. items]);
     }
 
     [TestMethod]

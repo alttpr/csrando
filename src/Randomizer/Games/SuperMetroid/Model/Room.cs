@@ -306,11 +306,11 @@ public class EntranceConditionConverter : JsonConverter<EntranceCondition>
                 entranceCondition.Value.GetProperty("unusableTiles").GetDecimal()),
             "comeInWithMockball" => new EntranceCondition.ComeInWithMockball(
                 entranceCondition.Value.TryGetProperty("adjacentMinTiles", out var adjacentMinTiles) ? adjacentMinTiles.GetDecimal() : null,
-                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray()).ToArray() : null),
+                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? [.. remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray())] : null),
             "comeInWithSpringBallBounce" => new EntranceCondition.ComeInWithSpringBallBounce(
                 entranceCondition.Value.GetProperty("movementType").GetString() ?? "",
                 entranceCondition.Value.TryGetProperty("adjacentMinTiles", out var adjacentMinTiles) ? adjacentMinTiles.GetDecimal() : null,
-                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray()).ToArray() : null),
+                entranceCondition.Value.TryGetProperty("remoteAndLandingMinTiles", out var remoteAndLandingMinTiles) ? [.. remoteAndLandingMinTiles.EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetDecimal()).ToArray())] : null),
             "comeInWithBlueSpringBallBounce" => new EntranceCondition.ComeInWithBlueSpringBallBounce(
                 entranceCondition.Value.GetProperty("movementType").GetString() ?? "",
                 entranceCondition.Value.TryGetProperty("minExtraRunSpeed", out var minExtraRunSpeed) ? minExtraRunSpeed.GetString() : null,
@@ -330,7 +330,7 @@ public class EntranceConditionConverter : JsonConverter<EntranceCondition>
                 entranceCondition.Value.TryGetProperty("maxLeftPosition", out var maxLeftPosition) ? maxLeftPosition.GetDecimal() : null,
                 entranceCondition.Value.TryGetProperty("minRightPosition", out var minRightPosition) ? minRightPosition.GetDecimal() : null),
             "comeInWithGrappleTeleport" => new EntranceCondition.ComeInWithGrappleTeleport(
-                entranceCondition.Value.GetProperty("blockPositions").EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetInt32()).ToArray()).ToArray()),
+                [.. entranceCondition.Value.GetProperty("blockPositions").EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetInt32()).ToArray())]),
             "comesThroughToilet" => new EntranceCondition.ComesThroughToilet(entranceCondition.Value.GetString() ?? ""),
             _ => throw new Exception($"Unknown entrance condition: {entranceCondition.Name}")
         };
@@ -441,7 +441,7 @@ public class ExitConditionConverter : JsonConverter<ExitCondition>
                 exitCondition.Value.GetProperty("leftPosition").GetDecimal(),
                 exitCondition.Value.GetProperty("rightPosition").GetDecimal()),
             "leaveWithGrappleTeleport" => new ExitCondition.LeaveWithGrappleTeleport(
-                exitCondition.Value.GetProperty("blockPositions").EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetInt32()).ToArray()).ToArray()),
+                [.. exitCondition.Value.GetProperty("blockPositions").EnumerateArray().Select(e => e.EnumerateArray().Select(e => e.GetInt32()).ToArray())]),
             _ => throw new Exception($"Unknown exit condition: {exitCondition.Name}")
         };
     }

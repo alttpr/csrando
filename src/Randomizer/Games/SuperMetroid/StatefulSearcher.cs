@@ -231,13 +231,13 @@ public class StatefulSearcher : ISearcher
             if (states.Item2.Any(s => s.Dominates(state)))
             {
                 // There is a better state already in the list, only update the missing items
-                states.Item1 = mergedItems.ToHashSet();
+                states.Item1 = [.. mergedItems];
             }
             else
             {
                 states.Item2.RemoveAll(s => state.Dominates(s));
                 states.Item2.Add(state);
-                states.Item1 = mergedItems.ToHashSet();
+                states.Item1 = [.. mergedItems];
             }
             _unvisitedStates[vertex] = states;
         }

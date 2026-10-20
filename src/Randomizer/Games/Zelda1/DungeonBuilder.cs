@@ -477,7 +477,7 @@ internal class DungeonBuilder
 
         int rotation = Mod(amount, values.Count);
         if (rotation == 0)
-            return values.ToArray();
+            return [.. values];
 
         var rotated = new int[values.Count];
         for (int i = 0; i < values.Count; i++)
@@ -562,19 +562,16 @@ internal class DungeonBuilder
     {
         if (_vanillaLevelMaps != null) return _vanillaLevelMaps;
         var levelRooms = _levelData.rooms.ToHashSet();
-        _vanillaLevelMaps = _data.underworld_maps
-            .Where(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && levelRooms.Contains(m.map))
-            .ToList();
+        _vanillaLevelMaps = [.. _data.underworld_maps.Where(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && levelRooms.Contains(m.map))];
         return _vanillaLevelMaps;
     }
 
     private HashSet<int> GetVanillaScreensForBehaviours(params YamlReader.RoomBehaviour[] behaviours)
     {
         var behaviourSet = behaviours.Select(b => (int)b).ToHashSet();
-        return _data.underworld_maps
+        return [.. _data.underworld_maps
             .Where(m => m.map < 0x100 && m.area == YamlReader.Area.Underworld && !m.passage && behaviourSet.Contains(m.behaviour))
-            .Select(m => m.screen)
-            .ToHashSet();
+            .Select(m => m.screen)];
     }
 
     private int[] GetDefaultRoomPalettes()
@@ -968,8 +965,8 @@ internal class DungeonBuilder
 
     private void UpdateLevelData(List<int> itemPositionSlots)
     {
-        _levelData.rooms = _map.UsedRooms.Select(r => GetMapId(r)).ToArray();
-        _levelData.cellar_room_id_array = _map.FindRooms(RoomRole.Cellar).Select(r => GetMapId(r)).ToArray();
+        _levelData.rooms = [.. _map.UsedRooms.Select(r => GetMapId(r))];
+        _levelData.cellar_room_id_array = [.. _map.FindRooms(RoomRole.Cellar).Select(r => GetMapId(r))];
 
         var startRoom = _map.FindRoom(RoomRole.Start);
         var bossRoom = _map.FindRoom(RoomRole.Boss);
@@ -1029,7 +1026,7 @@ internal class DungeonBuilder
         var endRoom = _map.FindRoom(RoomRole.End);
 
         var criticalPath = GetShortestPath(startRoom, endRoom);
-        var criticalPathDistances = CalculateDistancesFromPath(criticalPath.ToHashSet());
+        var criticalPathDistances = CalculateDistancesFromPath([.. criticalPath]);
 
         CreateItemCellars(criticalPathDistances);
 
@@ -1113,10 +1110,9 @@ internal class DungeonBuilder
             int[][]? connectedTo = null;
             if (room.HasAnyRole(RoomRole.Cellar))
             {
-                connectedTo = room.Neighbors
+                connectedTo = [.. room.Neighbors
                     .Where(n => !n.HasAnyRole(RoomRole.Cellar))
-                    .Select(n => new[] { n.X, n.Y })
-                    .ToArray();
+                    .Select(n => new[] { n.X, n.Y })];
             }
 
             rooms.Add(new RoomSpoilerData(
@@ -1469,8 +1465,8 @@ internal class DungeonBuilder
     }
 
     private List<Room> GetAccessibleRoomsWithoutKeys()
-        => DoorReachableDistances(_map.FindRoom(RoomRole.Start),
-            YamlReader.DoorType.Locked, YamlReader.DoorType.Locked2).Keys.ToList();
+        => [.. DoorReachableDistances(_map.FindRoom(RoomRole.Start),
+            YamlReader.DoorType.Locked, YamlReader.DoorType.Locked2).Keys];
 
     /// <summary>
     /// BFS over the room graph from <paramref name="startRoom"/>, traversing doors but refusing to
@@ -1772,7 +1768,7 @@ internal class DungeonBuilder
 
             startCandidates = deadEndL9.Length > 0
                 ? deadEndL9
-                : startCandidates.Where(r => GetLevelNineCheckRoom(r) != null).ToArray();
+                : [.. startCandidates.Where(r => GetLevelNineCheckRoom(r) != null)];
         }
 
         if (startCandidates.Length == 0)
@@ -1834,34 +1830,32 @@ internal class DungeonBuilder
             .ToArray();
 
         if (forceOtherSegment && candidates.Any(r => r.Segment != startRoom.Segment))
-            candidates = candidates.Where(r => r.Segment != startRoom.Segment).ToArray();
+            candidates = [.. candidates.Where(r => r.Segment != startRoom.Segment)];
 
         // Fallback 1: any dead-end room, ordered by distance
         if (candidates.Length == 0)
         {
-            candidates = distances
+            candidates = [.. distances
                 .Where(d => d.room.Neighbors.Count == 1 &&
                             !d.room.HasAnyRole(EndCandidateExcludedRoles))
                 .OrderByDescending(d => d.dist)
                 .Select(d => d.room)
-                .Take(3)
-                .ToArray();
+                .Take(3)];
         }
 
         // Fallback 2: any non-start, non-cellar room farthest from start
         if (candidates.Length == 0)
         {
-            candidates = distances
+            candidates = [.. distances
                 .Where(d => !d.room.HasAnyRole(EndCandidateExcludedRoles))
                 .OrderByDescending(d => d.dist)
                 .Select(d => d.room)
-                .Take(3)
-                .ToArray();
+                .Take(3)];
         }
 
         // Level 9: end room must be directly above boss room
         if (_level == 9)
-            candidates = candidates.Where(r => r.Neighbors.Count == 1 && r.Neighbors.First().Y > r.Y).ToArray();
+            candidates = [.. candidates.Where(r => r.Neighbors.Count == 1 && r.Neighbors.First().Y > r.Y)];
 
         return candidates;
     }
@@ -1983,7 +1977,7 @@ internal class DungeonBuilder
     private HashSet<int> GetValidEnemyLevels() => _config.EnemyPlacement switch
     {
         EnemyPlacementOption.Vanilla => [_level],
-        EnemyPlacementOption.Progressive => EnemyTiers.First(t => t.Contains(_level)).ToHashSet(),
+        EnemyPlacementOption.Progressive => [.. EnemyTiers.First(t => t.Contains(_level))],
         EnemyPlacementOption.Random => [1, 2, 3, 4, 5, 6, 7, 8, 9],
         _ => [_level],
     };
@@ -2191,7 +2185,7 @@ internal class DungeonBuilder
 
             bool needsClearableRoom = room.Doors.Values.Any(d => d == YamlReader.DoorType.Shutter) && !RoomSupportsPushBlockShutters(room);
             if (needsClearableRoom)
-                candidates = candidates.Where(TemplateHasKillableEnemies).ToArray();
+                candidates = [.. candidates.Where(TemplateHasKillableEnemies)];
 
             if (candidates.Length == 0 || (!needsClearableRoom && _rnd.NextDouble() < _config.EmptyRoomChance))
                 continue;

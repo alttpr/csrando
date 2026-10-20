@@ -303,12 +303,12 @@ public class YamlReader
 
     public Dictionary<string, DirectedUndirectedPair> GetEdges(World world)
     {
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
+        return edges.Select(e => { e.Value.Directed = [.. e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; e.Value.Undirected = [.. e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
     public List<Dictionary<string, object?>> GetVertices(World world)
     {
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
+        return [.. vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; })];
     }
 
     public void BuildGraph()

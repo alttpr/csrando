@@ -968,7 +968,7 @@ public static class RomWriter
             foreach (var bossSprite in bossSprites)
             {
                 if (bossSprite.LowerLayer is { } lowerLayerPatches)
-                    roomChanges[roomId].LowerLayer = lowerLayerPatches.SelectMany(patch => makeObjectLayerValue(patch, bossSprite, boss)).ToArray();
+                    roomChanges[roomId].LowerLayer = [.. lowerLayerPatches.SelectMany(patch => makeObjectLayerValue(patch, bossSprite, boss))];
 
                 if (bossSprite.BG2Prop is byte bg2Prop)
                 {

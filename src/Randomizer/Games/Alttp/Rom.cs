@@ -591,7 +591,7 @@ public sealed class Rom : GameRom
     /// <param name="shops">shops to write to ROM</param>
     public void SetupCustomShops(Shop[] shops)
     {
-        shops = shops.Where(s => s.Active).ToArray();
+        shops = [.. shops.Where(s => s.Active)];
 
         var shopData = new List<byte>();
         var itemsData = new List<byte>();

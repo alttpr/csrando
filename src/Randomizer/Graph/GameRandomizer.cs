@@ -25,11 +25,10 @@ public abstract class GameRandomizer
 
     internal Inventory PlaythroughStartingItems => _startingItems.Clone();
     internal HashSet<Vertex> PlaythroughRandomizedLocations =>
-        _itemPooler.SetLocations.All().Values.SelectMany(locations => locations).ToHashSet();
-    internal HashSet<IItem> PlaythroughAssumedItems => _itemPooler.Pool
+        [.. _itemPooler.SetLocations.All().Values.SelectMany(locations => locations)];
+    internal HashSet<IItem> PlaythroughAssumedItems => [.. _itemPooler.Pool
         .Where(item => item.Weight is > 0 and <= 9000)
-        .Select(item => item.Item)
-        .ToHashSet();
+        .Select(item => item.Item)];
 
     /// <summary>
     /// Set up the Randomizer. This involves:
@@ -87,7 +86,7 @@ public abstract class GameRandomizer
     /// </summary>
     public ISearcher GetSearcherForInventory(IWorld world, IEnumerable<IItem> items, Vertex? start = null)
     {
-        return world.GetSearcherForWorld(Graph, start ?? _start, _startingItems.Merge(new Inventory(items.ToArray())), _itemPooler.SetLocations);
+        return world.GetSearcherForWorld(Graph, start ?? _start, _startingItems.Merge(new Inventory([.. items])), _itemPooler.SetLocations);
     }
 
     /// <summary>

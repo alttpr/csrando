@@ -501,7 +501,7 @@ public class YamlReader
     // room-to-room connections can be modelled as directed edges (enter one room, leave another).
     private List<Screen> ConvertUnderworldExits(IEnumerable<Screen> screens)
     {
-        return screens.Select(ConvertScrollNodes).ToList();
+        return [.. screens.Select(ConvertScrollNodes)];
     }
 
     private Screen ConvertScrollNodes(Screen screen)
@@ -574,12 +574,12 @@ public class YamlReader
 
     public Dictionary<string, DirectedUndirectedPair> GetEdges(World world)
     {
-        return edges.Select(e => { e.Value.Directed = e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); e.Value.Undirected = e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; }).ToList(); return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
+        return edges.Select(e => { e.Value.Directed = [.. e.Value.Directed.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; e.Value.Undirected = [.. e.Value.Undirected.Select(d => { d[0] = $"{d[0]}"; d[1] = $"{d[1]}"; return d; })]; return e; }).ToDictionary(e => $"{e.Key}", e => e.Value);
     }
 
     public List<Dictionary<string, object>> GetVertices(World world)
     {
-        return vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; }).ToList();
+        return [.. vertices.Values.Select(v => { v["name"] = $"{v["name"]}"; return v; })];
     }
 
     public void BuildGraph(IReadOnlySet<int>? reservedPortalCaveMaps = null)
@@ -792,7 +792,7 @@ public class YamlReader
 
         // Fall back to the allow-list if the data ever fails to yield anything, so shops never become
         // unreachable in logic by accident.
-        return candidates.Count > 0 ? candidates : FreeInfiniteWeapons.ToList();
+        return candidates.Count > 0 ? candidates : [.. FreeInfiniteWeapons];
     }
 
     private void BuildOverworldMap(OverworldMap map, IReadOnlySet<int> reservedPortalCaveMaps)

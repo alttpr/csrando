@@ -114,11 +114,10 @@ public static class WorldConfigValidator
     /// <summary>The game-config properties of <see cref="WorldConfig"/> (the Combo
     /// wrapper is not a selectable game and carries no settings of its own).</summary>
     private static readonly Lazy<(PropertyInfo Property, Game Game)[]> GameConfigProperties = new(() =>
-        typeof(WorldConfig).GetProperties()
+        [.. typeof(WorldConfig).GetProperties()
             .Select(p => (Property: p, Game: p.PropertyType.GetCustomAttribute<TargetGameAttribute>()?.Game))
             .Where(p => p.Game is not null and not Game.Combo)
-            .Select(p => (p.Property, p.Game!.Value))
-            .ToArray());
+            .Select(p => (p.Property, p.Game!.Value))]);
 
     private static IEnumerable<PropertyInfo> SettingProperties(Type configType) =>
         configType.GetProperties().Where(p => p.GetCustomAttribute<IgnoreAttribute>() == null);

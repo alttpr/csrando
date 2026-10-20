@@ -218,7 +218,6 @@ public sealed class GameRandomizer(WorldConfig[] randomizerConfigs, PRNG prng)
 
     public static byte[] ConvertStringToByteArray(string input)
     {
-        return input.Select(c => charToByteMap.TryGetValue(c, out byte value) ? value : (byte)0)
-                    .ToArray();
+        return [.. input.Select(c => charToByteMap.TryGetValue(c, out byte value) ? value : (byte)0)];
     }
 }
