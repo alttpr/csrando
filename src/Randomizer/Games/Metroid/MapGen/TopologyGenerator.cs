@@ -1372,10 +1372,7 @@ public class TopologyGenerator(ScreenCatalog catalog)
             if (TryPlaceMapStationRoom(area, depths, targetDepth))
                 continue;
 
-            var conversion = ConvertibleCellNear(area, depths, targetDepth);
-            if (conversion == null)
-                throw new GenerationException($"could not place a {area} map station");
-
+            var conversion = ConvertibleCellNear(area, depths, targetDepth) ?? throw new GenerationException($"could not place a {area} map station");
             conversion.Role = CellRole.MapStation;
             landmarks[$"{area}MapStation"] = conversion.Position;
         }

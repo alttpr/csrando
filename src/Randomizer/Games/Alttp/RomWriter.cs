@@ -865,13 +865,8 @@ public static class RomWriter
                 continue;
 
             // entrances connect to a virtual entry node, which then connect to the inside
-            var entranceTransition = entranceVertex.Edges.Select(e => e.To).FirstOrDefault();
-            if (entranceTransition == null)
-                throw new Exception($"No entrance connection for '{entranceVertex.Name}'");
-            var target = entranceTransition.Edges.Select(e => e.To as Vertex).FirstOrDefault(e => (e?.InletId).HasValue);
-            if (target == null)
-                throw new Exception($"No entrance target for '{entranceVertex.Name}'");
-
+            var entranceTransition = entranceVertex.Edges.Select(e => e.To).FirstOrDefault() ?? throw new Exception($"No entrance connection for '{entranceVertex.Name}'");
+            var target = entranceTransition.Edges.Select(e => e.To as Vertex).FirstOrDefault(e => (e?.InletId).HasValue) ?? throw new Exception($"No entrance target for '{entranceVertex.Name}'");
             entrances.Add(entranceVertex.EntranceId!.Value, target.InletId!.Value);
         }
 
@@ -881,10 +876,7 @@ public static class RomWriter
         {
             if (holeVertex.EntranceIds == null)
                 throw new Exception($"Hole '{holeVertex.Name}' has no entrance ids");
-            var target = holeVertex.Edges.Select(e => e.To as Vertex).FirstOrDefault(e => (e?.InletId).HasValue);
-            if (target == null)
-                throw new Exception($"No entrance target for '{holeVertex.Name}'");
-
+            var target = holeVertex.Edges.Select(e => e.To as Vertex).FirstOrDefault(e => (e?.InletId).HasValue) ?? throw new Exception($"No entrance target for '{holeVertex.Name}'");
             foreach (var entranceId in holeVertex.EntranceIds ?? [])
                 holes.Add(entranceId, target.InletId!.Value);
         }

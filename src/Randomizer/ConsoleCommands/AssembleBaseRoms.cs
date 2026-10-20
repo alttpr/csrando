@@ -154,13 +154,7 @@ internal sealed class AssembleBaseRoms : Command
         using var process = Process.Start(new ProcessStartInfo(asarPath, argumentList)
         {
             WorkingDirectory = workingDirectory,
-        });
-
-        if (process is null)
-        {
-            throw new InvalidOperationException($"Failed to start asar at '{asarPath}'.");
-        }
-
+        }) ?? throw new InvalidOperationException($"Failed to start asar at '{asarPath}'.");
         process.WaitForExit();
 
         if (process.ExitCode != 0)

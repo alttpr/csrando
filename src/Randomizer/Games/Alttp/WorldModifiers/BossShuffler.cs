@@ -190,9 +190,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
         });
         world.Graph.AddDirected(from, bossVertex, worldBossItem);
 
-        var bossEdge = from.Edges.Find(e => e.Condition.Item.Name == BOSS_SHUFFLER_ITEM_CONDITION);
-        if (bossEdge is null)
-            throw new Exception($"Can't place boss in {from.Name}, missing the boss connection with condition {BOSS_SHUFFLER_ITEM_CONDITION}.");
+        var bossEdge = from.Edges.Find(e => e.Condition.Item.Name == BOSS_SHUFFLER_ITEM_CONDITION) ?? throw new Exception($"Can't place boss in {from.Name}, missing the boss connection with condition {BOSS_SHUFFLER_ITEM_CONDITION}.");
 
         // attach Mob-type vertices to the boss, so the rom writer can place them.
         var bossSprites = YamlReader.LoadBossSprites();

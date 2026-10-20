@@ -392,11 +392,7 @@ public class YamlReader
 
         foreach (var (screenNum, screenId) in room.screens.Select((s, i) => (i, s)))
         {
-            var screen = data!.screens.Find(s => s.area == room.area && s.screen == screenId);
-            if (screen == null)
-            {
-                throw new Exception($"Could not find screen {screenId} in {roomName}");
-            }
+            var screen = data!.screens.Find(s => s.area == room.area && s.screen == screenId) ?? throw new Exception($"Could not find screen {screenId} in {roomName}");
             var screenName = $"{roomName} - {screen.name} ({screenNum})";
             int[] position = room.scroll switch
             {

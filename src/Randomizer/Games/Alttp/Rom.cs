@@ -1951,12 +1951,7 @@ public sealed class Rom : GameRom
 
         foreach (var roomId in roomPatches.Rooms)
         {
-            var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId);
-            if (roomDataHeader == null)
-            {
-                throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
-            }
-
+            var roomDataHeader = _gameData.Rooms.FirstOrDefault(r => r.Room == roomId) ?? throw new ArgumentOutOfRangeException($"Room ID {roomId} does not exist in the game data.");
             var upperLayer = roomDataHeader.UpperLayer; // usually floor/wall data
             var lowerLayer = roomDataHeader.LowerLayer; // usually background under the floor
             var priorityLayer = roomDataHeader.PriorityLayer; // upper priority layer, overwrites the upper layer if something draws over both upper/lower
