@@ -216,6 +216,7 @@ public static class RomWriter
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
         WriteEnemiesToRom(world, rom);
+        rom.SetHiddenVisibleEnemies(config.VisibleHiddenEnemies);
 
         rom.SetPersistentFloodGate(config.EntranceShuffle != EntranceShuffleOption.None);
         rom.SetSmithyFreeTravel(config.EntranceShuffle != EntranceShuffleOption.None);

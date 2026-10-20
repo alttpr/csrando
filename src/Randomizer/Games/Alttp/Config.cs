@@ -193,6 +193,9 @@ public class Config
     [Description("Sets whether the old man on Death Mountain allows you to escape his forced spawn point.")]
     public OldManRespawnOption OldManRespawn { get; init; } = OldManRespawnOption.Vanilla;
 
+    [Description("When set, the following enemies have visual cues for their position: geldmen, stalfos knights, blobs (zols)")]
+    public bool VisibleHiddenEnemies { get; init; } = false;
+
     public bool PseudoBoots { get; init; } = false;
     [Ignore("Is there even a reason to turn this off?")]
     public bool FastRom { get; init; } = true;
