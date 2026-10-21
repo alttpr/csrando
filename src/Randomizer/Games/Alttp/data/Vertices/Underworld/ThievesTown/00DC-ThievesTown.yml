@@ -78,8 +78,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Thieves' Town - Grand Room SE - Zol 3"
               position: { x: 0x0f, y: 0x1c, z: 0x00 }

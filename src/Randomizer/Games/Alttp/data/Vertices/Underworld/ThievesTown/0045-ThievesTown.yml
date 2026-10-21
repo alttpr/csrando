@@ -81,7 +81,9 @@ rooms:
               sprite: "ZazakBlue"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Thieves' Town - Cell 2"
           connections:

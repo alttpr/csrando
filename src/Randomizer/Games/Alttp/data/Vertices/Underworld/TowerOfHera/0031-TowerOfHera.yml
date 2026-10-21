@@ -36,6 +36,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
         # Players are expected to go through this room using pots only if necessary
         # when the EnemyShuffle is disabled.
@@ -88,3 +89,4 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"

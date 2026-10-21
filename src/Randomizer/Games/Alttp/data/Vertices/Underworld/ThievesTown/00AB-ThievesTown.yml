@@ -23,6 +23,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
             - name: "Thieves' Town - Spike Dodge - Spike Trap 1"
               position: { x: 0x03, y: 0x15, z: 0x00 }

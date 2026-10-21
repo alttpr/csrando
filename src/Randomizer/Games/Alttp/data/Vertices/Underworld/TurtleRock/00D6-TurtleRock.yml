@@ -44,6 +44,7 @@ rooms:
               sprite: "LaserEyeD"
               allow:
                 - "LaserEyeD"
+                - "LaserEyeDAlternative"
             - name: "Turtle Rock - Spike Room - Medusa 1"
               position: { x: 0x03, y: 0x16, z: 0x00 }
               sprite: "Medusa"

@@ -25,16 +25,23 @@ rooms:
               sprite: "StalfosRed"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Thieves' Town - Torch Hallway - Stalfos 3"
               position: { x: 0x18, y: 0x11, z: 0x00 }
               sprite: "StalfosBlue"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Thieves' Town - Torch Hallway - Stalfos 4"
               position: { x: 0x16, y: 0x16, z: 0x00 }
               sprite: "StalfosBlue"

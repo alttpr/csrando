@@ -30,8 +30,11 @@ rooms:
                 - "RollerVD"
                 - "RollerHL"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ice Palace - Ice T - Blue Bari 2"
               position: { x: 0x15, y: 0x07, z: 0x00 }
@@ -41,5 +44,8 @@ rooms:
                 - "RollerVD"
                 - "RollerHL"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"

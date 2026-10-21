@@ -17,6 +17,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
             - name: "Turtle Rock - Pokey C - Pokey Key"
               position: { x: 0x16, y: 0x18, z: 0x00 }

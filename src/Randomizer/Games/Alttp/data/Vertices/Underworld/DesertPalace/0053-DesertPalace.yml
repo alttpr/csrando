@@ -74,7 +74,9 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Desert Palace - Popo Hallway - Beamos 4"
               position: { x: 0x1b, y: 0x1a, z: 0x00 }
               sprite: "Beamos"
@@ -97,4 +99,6 @@ rooms:
               sprite: "Beamos"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"

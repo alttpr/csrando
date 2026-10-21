@@ -21,9 +21,13 @@ rooms:
               deny:
                 - "RollerVU"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Hyrule Castle - East - Green Guard 1"
               position: { x: 0x0a, y: 0x0d, z: 0x01 }
               sprite: "GreenSwordGuard"

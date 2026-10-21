@@ -29,17 +29,17 @@ maps:
               position: { x: 0x11, y: 0x19 }
               sprite: "GreenSwordGuard"
               state: [1]
-            - name: "Graveyard - Medusa 1"
+            - name: "Graveyard - Poe in Grave 1"
               position: { x: 0x08, y: 0x0c }
-              sprite: "Medusa"
+              sprite: "PoeInGrave"
               state: [1]
-            - name: "Graveyard - Medusa 2"
+            - name: "Graveyard - Poe in Grave 2"
               position: { x: 0x17, y: 0x11 }
-              sprite: "Medusa"
+              sprite: "PoeInGrave"
               state: [1]
-            - name: "Graveyard - Medusa 3"
+            - name: "Graveyard - Poe in Grave 3"
               position: { x: 0x12, y: 0x0e }
-              sprite: "Medusa"
+              sprite: "PoeInGrave"
               state: [1]
             - name: "Graveyard - Poe 1"
               position: { x: 0x0d, y: 0x0d }

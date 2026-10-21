@@ -25,5 +25,8 @@ rooms:
                 - "RollerVU"
                 - "RollerHL"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"

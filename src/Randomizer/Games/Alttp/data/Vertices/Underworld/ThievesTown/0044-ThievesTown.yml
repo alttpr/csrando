@@ -25,9 +25,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Thieves' Town - Conveyor Bridge - Red Bari"
               position: { x: 0x17, y: 0x0f, z: 0x00 }
               sprite: "RedBari"
@@ -36,17 +40,22 @@ rooms:
                 - "RollerVD"
                 - "Beamos"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
             - name: "Thieves' Town - Conveyor Bridge - Blue Bari 4"
               position: { x: 0x18, y: 0x16, z: 0x00 }
               sprite: "BlueBari"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerVD"
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Thieves' Town - Joke Room"
           pit: true

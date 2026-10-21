@@ -51,7 +51,7 @@ rooms:
               sprite: "FallingBridge"
             - name: "Misery Mire - East Wing - Antifairy"
               position: { x: 0x0a, y: 0x1b, z: 0x00 }
-              sprite: "Antifairy"
+              sprite: "AntifairyAlternative"
             - name: "Misery Mire - East Wing - Medusa 2"
               position: { x: 0x07, y: 0x1c, z: 0x00 }
               sprite: "Medusa"

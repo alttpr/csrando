@@ -50,7 +50,6 @@ maps:
               sprite: "FireballZora"
               state: [2]
 
-            # TODO: do we need both the warp and the mob?
             - name: "South Shore Falls - Whirlpool"
               position: { x: 0x07, y: 0x0c }
               sprite: "Whirlpool"

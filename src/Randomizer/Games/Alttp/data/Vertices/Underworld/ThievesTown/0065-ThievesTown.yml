@@ -21,7 +21,9 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Thieves' Town - Attic Chest Room"
           connections:
@@ -53,9 +55,13 @@ rooms:
                 - "RollerVU"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Thieves' Town - Attic Chest Room - Rat 4"
               position: { x: 0x16, y: 0x19, z: 0x00 }
               sprite: "Buzz"

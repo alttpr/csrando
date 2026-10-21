@@ -70,8 +70,11 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Swamp Palace - Waterfall Joke - Octoballoon Hatchlings 1"
               position: { x: 0x04, y: 0x06, z: 0x01 }
               sprite: "PirogusuSpawnerLeft"

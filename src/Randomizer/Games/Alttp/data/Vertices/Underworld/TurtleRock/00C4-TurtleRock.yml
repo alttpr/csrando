@@ -44,24 +44,28 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
             - name: "Turtle Rock - Switch Block Puzzle - Crystal Switch 2"
               position: { x: 0x18, y: 0x0f, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
             - name: "Turtle Rock - Switch Block Puzzle - Crystal Switch 3"
               position: { x: 0x1c, y: 0x1b, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
             - name: "Turtle Rock - Switch Block Puzzle - Crystal Switch 4"
               position: { x: 0x0f, y: 0x15, z: 0x00 }
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
             - name: "Turtle Rock - Switch Block Puzzle - Pokey"
               position: { x: 0x0f, y: 0x0e, z: 0x00 }

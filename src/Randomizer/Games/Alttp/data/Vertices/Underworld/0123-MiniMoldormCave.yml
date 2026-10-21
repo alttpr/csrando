@@ -58,7 +58,6 @@ rooms:
           mobs:
             - name: "Mini Moldorm Cave - Shopkeeper"
               position: { x: 0x08, y: 0x05, z: 0x00 }
-              # TODO: this might not be the correct sprite?
-              sprite: "Shopkeeper"
+              sprite: "NiceThief"
               allow:
-                - "Shopkeeper"
+                - "NiceThief"

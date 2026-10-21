@@ -43,11 +43,15 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Palace of Darkness - Falling Bridge - Mini Helmasaur 2"
               position: { x: 0x07, y: 0x10, z: 0x00 }
               sprite: "MiniHelmasaur"
@@ -60,11 +64,15 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Palace of Darkness - Falling Bridge - Falling Bridge"
               position: { x: 0x07, y: 0x1a, z: 0x00 }
               sprite: "FallingBridge"
@@ -145,7 +153,7 @@ rooms:
               position: { x: 0x15, y: 0x19, z: 0x00 }
               sprite: "Statue"
               allow:
-                - "Statue"
+                - "Statue" # No *Alternative, because it conflicts with the falling floor
             - name: "Palace of Darkness - Harmless Hellway - Spike Trap 3"
               position: { x: 0x16, y: 0x19, z: 0x00 }
               sprite: "SpikeTrap"

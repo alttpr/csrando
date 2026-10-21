@@ -25,6 +25,7 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
 
@@ -37,6 +38,7 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
 
@@ -49,6 +51,7 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
 
@@ -61,6 +64,7 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
 
@@ -73,6 +77,7 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
 
@@ -85,5 +90,6 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"

@@ -20,8 +20,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ice Palace - Lonely Firebar"
           connections:

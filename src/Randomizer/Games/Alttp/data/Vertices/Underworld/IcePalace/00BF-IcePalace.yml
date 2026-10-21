@@ -16,6 +16,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
         - name: "Ice Palace - Restock Room - Sides"
           connections:

@@ -19,36 +19,49 @@ rooms:
                 - "RollerVD"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
 
             - name: "Ganon's Tower - Conveyor Falling Bridge - Red Spear Guard 2"
               position: { x: 0x17, y: 0x0c, z: 0x00 }
               sprite: "RedTaros"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerVU"
                 - "RollerVD"
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Conveyor Falling Bridge - Red Spear Guard 3"
               position: { x: 0x18, y: 0x0c, z: 0x00 }
               sprite: "RedTaros"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerVU"
                 - "RollerVD"
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Conveyor Falling Bridge - Red Spear Guard 4"
               position: { x: 0x19, y: 0x0c, z: 0x00 }
@@ -58,8 +71,11 @@ rooms:
                 - "RollerVD"
                 - "RollerHL"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
 
             - name: "Ganon's Tower - Conveyor Falling Bridge - Falling Bridge"
               position: { x: 0x17, y: 0x1a, z: 0x00 }

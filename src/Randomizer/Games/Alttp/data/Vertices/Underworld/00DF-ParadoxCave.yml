@@ -16,9 +16,13 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Paradox Cave - Top - Mini Moldorm 2"
               position: { x: 0x0c, y: 0x16, z: 0x01 }
               sprite: "MiniMoldorm"
@@ -26,3 +30,4 @@ rooms:
                 - "RollerVD"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"

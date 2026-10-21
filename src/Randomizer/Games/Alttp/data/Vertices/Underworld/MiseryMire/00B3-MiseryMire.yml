@@ -35,7 +35,9 @@ rooms:
                 - "RollerVU"
                 - "RollerHR"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
             - name: "Misery Mire - Spike Room - Stalfos 2"
               position: { x: 0x0b, y: 0x15, z: 0x00 }
               sprite: "StalfosRed"
@@ -44,21 +46,27 @@ rooms:
               sprite: "Beamos"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerVU"
                 - "RollerVD"
                 - "RollerHL"
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Misery Mire - Spike Room - Yomo Medusa"
               position: { x: 0x0a, y: 0x1a, z: 0x00 }
               sprite: "YomoMedusa"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Misery Mire - Spike Room - Stalfos 3"
               position: { x: 0x07, y: 0x1c, z: 0x00 }
               sprite: "StalfosRed"

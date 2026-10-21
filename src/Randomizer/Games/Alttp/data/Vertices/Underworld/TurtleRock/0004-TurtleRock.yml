@@ -62,7 +62,7 @@ rooms:
               position: { x: 0x09, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitchAlternative"
               allow:
-                - "CrystalSwitchAlternative"
+                - "CrystalSwitchAlternative" # Only Alternative, because of tongue switch graphics
             - name: "Turtle Rock - Crystaroller Room - Roller (Horizontal, Left) 1"
               position: { x: 0x05, y: 0x07, z: 0x00 }
               sprite: "RollerHL"

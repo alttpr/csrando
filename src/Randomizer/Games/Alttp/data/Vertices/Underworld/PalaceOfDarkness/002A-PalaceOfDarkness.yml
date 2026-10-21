@@ -25,6 +25,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Palace of Darkness - Arena Main - Bumper"
               position: { x: 0x0f, y: 0x0f, z: 0x00 }
               sprite: "Bumper"
@@ -33,6 +34,7 @@ rooms:
               sprite: "HardhatBeetleBlue"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "SparkCW"
                 - "SparkCCW"
                 - "RollerVD"
@@ -41,11 +43,15 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "FireBarCW"
                 - "FireBarCCW"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Palace of Darkness - Arena Main - Hardhat Beetle 3"
               position: { x: 0x10, y: 0x0c, z: 0x00 }
               sprite: "HardhatBeetleRed"
@@ -61,9 +67,13 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Palace of Darkness - Arena Main - Hardhat Beetle 6"
               position: { x: 0x0f, y: 0x13, z: 0x00 }
               sprite: "HardhatBeetleBlue"
@@ -85,8 +95,11 @@ rooms:
                 - "RollerHR"
                 - "RollerHL"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
 
         - name: "Palace of Darkness - The Arena - Bridge Ledge"
           pit: true

@@ -29,6 +29,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Misery Mire - Dark Weave - Antifairy 1"
               position: { x: 0x18, y: 0x04, z: 0x00 }
               sprite: "Antifairy"
@@ -45,7 +46,9 @@ rooms:
                 - "RollerVU"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Misery Mire - Dark Weave - Spike Area"
           pit: true
@@ -78,6 +81,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
         - name: "Misery Mire - Air Lock - Left"
           connections:

@@ -52,11 +52,16 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Turtle Rock - Catwalk - Laser Eye (Left) 4"
               position: { x: 0x0e, y: 0x15, z: 0x00 }
               sprite: "LaserEyeL"
               deny:
                 - "Statue"
+                - "StatueAlternative"

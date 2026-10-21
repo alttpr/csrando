@@ -47,3 +47,4 @@ rooms:
               sprite: "Bumper"
               allow:
                 - "Bumper"
+                - "BumperAlternative"

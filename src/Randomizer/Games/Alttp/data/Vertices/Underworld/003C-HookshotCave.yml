@@ -53,27 +53,12 @@ rooms:
             Hookshot:
               - "Hookshot Cave - Top Left Pad"
               - "Hookshot Cave - Middle Center South Pad"
-          mobs:
-            - name: "Hookshot Cave - Blue Bari 2"
-              position: { x: 0x12, y: 0x14, z: 0x00 }
-              sprite: "BlueBari"
-              deny:
-                - "SparkCW"
-                - "SparkCCW"
-                - "RollerVU"
-                - "RollerVD"
-                - "RollerHL"
-                - "RollerHR"
-                - "Beamos"
-                - "AntifairyCircle"
-                - "BigSpikeTrap"
-                - "SpikeTrap"
-                - "Bumper"
           pots:
-            # TODO: Check which is the missing empty pot south of the pad
             - name: "Hookshot Cave - Pot 3"
               position: { x: 0x0a, y: 0x1c, z: 0x00 }
               sprite: "@RupeeGreen"
+            - name: "Hookshot Cave - Pot 3"
+              position: { x: 0x0a, y: 0x26, z: 0x00 }
 
         - name: "Hookshot Cave - Middle Center North Pad"
           pit: true
@@ -112,8 +97,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Hookshot Cave - Middle Right Pad"
           pit: true
@@ -125,8 +113,27 @@ rooms:
               - "Hookshot Cave - Middle Center North Pad"
             PegasusBoots:
               - "Hookshot Cave - Bottom Pad"
+          mobs:
+            - name: "Hookshot Cave - Blue Bari 2"
+              position: { x: 0x12, y: 0x14, z: 0x00 }
+              sprite: "BlueBari"
+              deny:
+                - "SparkCW"
+                - "SparkCCW"
+                - "RollerVU"
+                - "RollerVD"
+                - "RollerHL"
+                - "RollerHR"
+                - "Beamos"
+                - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
+                - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
+                - "SpikeTrap"
+                - "SpikeTrapAlternative"
+                - "Bumper"
+                - "BumperAlternative"
           pots:
-            # TODO: Check if those are correct
             - name: "Hookshot Cave - Pot 4"
               position: { x: 0x22, y: 0x24, z: 0x00 }
               sprite: "@RupeeBlue"

@@ -82,7 +82,9 @@ rooms:
                 - "RollerVD"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Skull Woods - Statue Puzzle - Blue Bari 2"
               position: { x: 0x08, y: 0x18, z: 0x00 }
               sprite: "BlueBari"
@@ -90,12 +92,15 @@ rooms:
                 - "RollerVD"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Skull Woods - Statue Puzzle - Statue"
               position: { x: 0x0b, y: 0x18, z: 0x00 }
               sprite: "Statue"
               allow:
                 - "Statue"
+                - "StatueAlternative"
 
         - name: "Skull Woods - Statue Puzzle Nook"
           connections:
@@ -128,7 +133,9 @@ rooms:
               deny:
                 - "RollerVU"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Skull Woods - Big Key Room - Stalfos 1"
               position: { x: 0x04, y: 0x07, z: 0x00 }
               sprite: "StalfosBlue"

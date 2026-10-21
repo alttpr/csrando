@@ -77,8 +77,11 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Tower Of Hera - Bumper Room - Hardhat Beetle 3"
               position: { x: 0x12, y: 0x11, z: 0x00 }

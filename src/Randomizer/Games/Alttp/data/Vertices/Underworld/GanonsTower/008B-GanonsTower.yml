@@ -63,11 +63,14 @@ rooms:
               sprite: "SpikeTrap"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerVU"
                 - "RollerVD"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ganon's Tower - Bonk Pits - Bottom Upper"
           switch: true
@@ -90,11 +93,15 @@ rooms:
             - name: "Ganon's Tower - Bonk Pits - Crystal Switch 1"
               position: { x: 0x04, y: 0x18, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow: 
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Bonk Pits - Crystal Switch 2"
               position: { x: 0x0b, y: 0x18, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Bonk Pits - Stalfos"
               position: { x: 0x07, y: 0x18, z: 0x00 }
               sprite: "StalfosRed"
@@ -141,13 +148,19 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Map Room - Fire Bar (Counterclockwise)"
               position: { x: 0x18, y: 0x18, z: 0x00 }
               sprite: "FireBarCCW"
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"

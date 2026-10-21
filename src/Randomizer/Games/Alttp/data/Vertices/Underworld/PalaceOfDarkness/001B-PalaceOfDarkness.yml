@@ -24,7 +24,9 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Palace of Darkness - Mimics 2 - Green Eyegore L"
               position: { x: 0x03, y: 0x1c, z: 0x00 }
               sprite: "EyegoreGreen"
@@ -48,6 +50,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Palace of Darkness - Bow Statue - Arrow Target"
               position: { x: 0x10, y: 0x04, z: 0x00 }
               sprite: "ArrowTarget"
