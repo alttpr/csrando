@@ -1793,7 +1793,7 @@ public sealed class Rom : GameRom
     }
 
     public void SetHiddenVisibleEnemies(bool enable)
-        => Write((SNES)0xB0821A, [(byte)(enable ? 0x01 : 0x00)]);
+        => Write((SNES)0xB0F034, [(byte)(enable ? 0x01 : 0x00)]);
 
     public void WriteSpriteData(IEnumerable<Sprite> sprites)
     {
