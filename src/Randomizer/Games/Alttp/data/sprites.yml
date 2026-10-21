@@ -885,12 +885,12 @@ GreenStalfos: #GREEN STALFOS, DR: Floating Skull
 BigSpikeTrap: #BIG SPIKE
   id: 0x7D
   flags: NoDrop
-  sheets: [null, null, null, 0x53]
+  sheets: [null, null, null, 0x52]
   properties: BigSpikeTrap_properties
 BigSpikeTrapAlternative: #BIG SPIKE
   id: 0x7D
   flags: NoDrop
-  sheets: [null, null, null, 0x52]
+  sheets: [null, null, null, 0x53]
   properties: BigSpikeTrap_properties
 FireBarCW: #FIREBAR CLOCKWISE
   id: 0x7E
