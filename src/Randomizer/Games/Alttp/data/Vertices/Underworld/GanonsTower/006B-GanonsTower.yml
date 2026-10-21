@@ -31,11 +31,13 @@ rooms:
             - name: "Ganon's Tower - Spike Switches - Crystal Switch 1"
               position: { x: 0x07, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Spike Switches - Crystal Switch 2"
               position: { x: 0x0b, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Spike Switches - Green Eyegore"

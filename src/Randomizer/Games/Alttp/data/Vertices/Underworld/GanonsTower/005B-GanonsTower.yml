@@ -32,6 +32,7 @@ rooms:
             - name: "Ganon's Tower - Spike Alley - Crystal Switch 2"
               position: { x: 0x18, y: 0x13, z: 0x01 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
 

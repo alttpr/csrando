@@ -57,7 +57,7 @@ rooms:
             - name: "Hookshot Cave - Pot 3"
               position: { x: 0x0a, y: 0x1c, z: 0x00 }
               sprite: "@RupeeGreen"
-            - name: "Hookshot Cave - Pot 3"
+            - name: "Hookshot Cave - Pot 8"
               position: { x: 0x0a, y: 0x26, z: 0x00 }
 
         - name: "Hookshot Cave - Middle Center North Pad"

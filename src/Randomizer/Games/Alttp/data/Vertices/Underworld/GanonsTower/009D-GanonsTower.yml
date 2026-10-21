@@ -16,6 +16,7 @@ rooms:
             - name: "Ganon's Tower - Gibdo Airlock - Crystal Switch"
               position: { x: 0x1c, y: 0x06, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Gibdo Airlock - Gibdo 2"

@@ -27,6 +27,7 @@ rooms:
             - name: "Ganon's Tower - Twin Switches - Crystal Switch 1"
               position: { x: 0x06, y: 0x08, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Twin Switches - Crystal Switch 2"
@@ -96,6 +97,7 @@ rooms:
             - name: "Ganon's Tower - Spike Switch - Crystal Switch 3"
               position: { x: 0x14, y: 0x08, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
 

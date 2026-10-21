@@ -134,11 +134,13 @@ rooms:
             - name: "Ganon's Tower - Pre-Moldorm - Crystal Switch 1"
               position: { x: 0x05, y: 0x17, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Pre-Moldorm - Crystal Switch 2"
               position: { x: 0x0a, y: 0x19, z: 0x00 }
               sprite: "CrystalSwitch"
+              allow:
                 - "CrystalSwitch"
                 - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Pre-Moldorm - Spark (Clockwise) 2"
