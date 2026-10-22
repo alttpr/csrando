@@ -41,8 +41,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Fire Snakes - Fire Snake 2"
               position: { x: 0x11, y: 0x08, z: 0x00 }
               sprite: "FireSnake"
@@ -52,8 +55,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Fire Snakes - Fire Snake 3"
               position: { x: 0x11, y: 0x0a, z: 0x00 }
               sprite: "FireSnake"
@@ -63,8 +69,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Fire Snakes - Fire Snake 4"
               position: { x: 0x11, y: 0x0c, z: 0x00 }
               sprite: "FireSnake"
@@ -74,8 +83,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ganon's Tower - Teleports - Start"
           connections:

@@ -19,8 +19,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ice Palace - Blob Ambush - Zol 2"
               position: { x: 0x05, y: 0x1c, z: 0x00 }
               sprite: "Zol"
@@ -33,8 +36,11 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ice Palace - Cross Puzzle - Left"
           connections:
@@ -79,6 +85,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ice Palace - Bomb Switch - Red Bari 3"
               position: { x: 0x16, y: 0x0a, z: 0x00 }
               sprite: "RedBari"
@@ -88,7 +95,9 @@ rooms:
                 - "RollerHR"
                 - "RollerHL"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ice Palace - Bomb Switch - Red Bari 4"
               position: { x: 0x19, y: 0x0a, z: 0x00 }
               sprite: "RedBari"
@@ -98,7 +107,9 @@ rooms:
                 - "RollerHR"
                 - "RollerHL"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ice Palace - Bomb Switch Top"
           connections:

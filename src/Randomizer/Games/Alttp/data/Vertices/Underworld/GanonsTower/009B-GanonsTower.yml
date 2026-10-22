@@ -27,10 +27,13 @@ rooms:
             - name: "Ganon's Tower - Twin Switches - Crystal Switch 1"
               position: { x: 0x06, y: 0x08, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Twin Switches - Crystal Switch 2"
               position: { x: 0x07, y: 0x08, z: 0x00 }
               sprite: "CrystalSwitch"
+              # No forced sprite, because we only need 1 switch, and the above is enough
             - name: "Ganon's Tower - Twin Switches - Yomo Medusa"
               position: { x: 0x03, y: 0x08, z: 0x00 }
               sprite: "YomoMedusa"
@@ -41,8 +44,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         # Node used to transition to the corner as blue from the swith on the left side
         # using timed items
@@ -91,7 +97,9 @@ rooms:
             - name: "Ganon's Tower - Spike Switch - Crystal Switch 3"
               position: { x: 0x14, y: 0x08, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
         - name: "Ganon's Tower - Spike Switch Right"
           connections:
@@ -142,8 +150,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Beetle Pits - Spike Trap 2"
               position: { x: 0x1c, y: 0x06, z: 0x00 }
               sprite: "SpikeTrap"
@@ -154,8 +165,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Beetle Pits - Spike Trap 3"
               position: { x: 0x1c, y: 0x07, z: 0x00 }
               sprite: "SpikeTrap"
@@ -169,8 +183,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Beetle Pits - Spike Trap 5"
               position: { x: 0x1c, y: 0x09, z: 0x00 }
               sprite: "SpikeTrap"
@@ -181,8 +198,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Beetle Pits - Spike Trap 6"
               position: { x: 0x1c, y: 0x0a, z: 0x00 }
               sprite: "SpikeTrap"
@@ -193,8 +213,11 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Beetle Pits - Spike Trap 7"
               position: { x: 0x1c, y: 0x0b, z: 0x00 }
               sprite: "SpikeTrap"
@@ -205,5 +228,8 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"

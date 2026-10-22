@@ -15,7 +15,6 @@ maps:
                 fixed:
                   - "Wetlands Portal East whirlpool"
           mobs:
-            # TODO: do we need both the warp and the mob?
             - name: "Hylia River North Bend - Whirlpool"
               position: { x: 0x11, y: 0x09 }
               sprite: "Whirlpool"

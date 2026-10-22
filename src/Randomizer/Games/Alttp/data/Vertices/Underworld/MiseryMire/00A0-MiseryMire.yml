@@ -20,9 +20,13 @@ rooms:
               deny:
                 - "RollerHL"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Misery Mire - Boss Antichamber Right"
           pit: true

@@ -60,9 +60,13 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Misery Mire - Mire 2 - Popo BR"
               position: { x: 0x1c, y: 0x14, z: 0x00 }

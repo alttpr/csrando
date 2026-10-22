@@ -23,9 +23,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Torches 2 - Spark (Clockwise) 1"
               position: { x: 0x1c, y: 0x16, z: 0x00 }
               sprite: "SparkCW"
@@ -35,9 +39,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ganon's Tower - Mini Helmasaur Room"
           connections:
@@ -126,11 +134,15 @@ rooms:
             - name: "Ganon's Tower - Pre-Moldorm - Crystal Switch 1"
               position: { x: 0x05, y: 0x17, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Pre-Moldorm - Crystal Switch 2"
               position: { x: 0x0a, y: 0x19, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Pre-Moldorm - Spark (Clockwise) 2"
               position: { x: 0x09, y: 0x16, z: 0x00 }
               sprite: "SparkCW"
@@ -139,10 +151,14 @@ rooms:
               sprite: "BunnyBeam"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Pre-Moldorm - Antifairy"
               position: { x: 0x08, y: 0x17, z: 0x00 }
               sprite: "Antifairy"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"

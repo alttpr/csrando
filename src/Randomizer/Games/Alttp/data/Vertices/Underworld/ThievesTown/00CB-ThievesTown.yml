@@ -48,9 +48,13 @@ rooms:
                 - "RollerVD"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Thieves' Town - Grand Room NW - Spark (Clockwise)"
               position: { x: 0x16, y: 0x0a, z: 0x01 }
@@ -64,9 +68,13 @@ rooms:
                 - "RollerVD"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Thieves' Town - Grand Room NW - Stalfos"
               position: { x: 0x0c, y: 0x10, z: 0x00 }

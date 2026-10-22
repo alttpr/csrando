@@ -16,7 +16,9 @@ rooms:
             - name: "Ganon's Tower - Gibdo Airlock - Crystal Switch"
               position: { x: 0x1c, y: 0x06, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Gibdo Airlock - Gibdo 2"
               position: { x: 0x18, y: 0x09, z: 0x00 }
               sprite: "Gibdo"
@@ -26,9 +28,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Ganon's Tower - Gibdo Airlock - Middle - Switch"
           switch: true
@@ -131,8 +137,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Invisible, E - Blue Bari 3"
               position: { x: 0x11, y: 0x1c, z: 0x00 }
               sprite: "BlueBari"

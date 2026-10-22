@@ -31,11 +31,15 @@ rooms:
             - name: "Ganon's Tower - Spike Switches - Crystal Switch 1"
               position: { x: 0x07, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Spike Switches - Crystal Switch 2"
               position: { x: 0x0b, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
-              allow: ["CrystalSwitch"]
+              allow:
+                - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Ganon's Tower - Spike Switches - Green Eyegore"
               position: { x: 0x0a, y: 0x06, z: 0x00 }
               sprite: "EyegoreGreen"
@@ -68,7 +72,9 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Mimics 1 - Spike Trap 2"
               position: { x: 0x04, y: 0x1b, z: 0x00 }
               sprite: "SpikeTrap"

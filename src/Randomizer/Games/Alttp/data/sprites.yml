@@ -120,7 +120,9 @@ Octoballoon:
   flags: Challenge, NoDrop
   sheets: [null, null, 0x0C, null]
   properties: Octoballoon_properties
-  weight: 2
+  weight: 4
+  not_with:
+    - Octoballoon
 Octobaby: #OCTOBALLOON BABY
   id: 0x10
   flags: NoPlace
@@ -149,6 +151,11 @@ Antifairy:
   id: 0x15
   flags: NoDrop
   sheets: [null, null, null, 0x52]
+  properties: Antifairy_properties
+AntifairyAlternative:
+  id: 0x15
+  flags: NoDrop
+  sheets: [null, null, null, 0x53]
   properties: Antifairy_properties
 Sahasrahla: #SAHASRAHLA / AGINAH
   id: 0x16
@@ -197,7 +204,6 @@ Statue:
   sheets: [null, null, null, 0x52]
   properties: Statue_properties
   not_with:
-    - PushSwitch
     - Statue
     - StatueAlternative
 StatueAlternative:
@@ -207,7 +213,6 @@ StatueAlternative:
   sheets: [null, null, null, 0x53]
   properties: Statue_properties
   not_with:
-    - PushSwitch
     - Statue
     - StatueAlternative
 FluteQuest:
@@ -245,6 +250,8 @@ PushSwitch: #WATER SWITCH
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   properties: PushSwitch_properties
+  # Water switch MUST be in the lowest sprite slot or statues, etc can override their action
+  priority: 100
 Ropa:
   id: 0x22
   flags: Challenge
@@ -843,6 +850,13 @@ Zelda:
 UnusedAntifairy: # ANTIFAIRY
   id: 0x77
   flags: NoPlace
+  sheets: [null, null, null, 0x52]
+  properties: UnusedAntifairy_properties
+UnusedAntifairyAlternative: # ANTIFAIRY
+  id: 0x77
+  flags: NoPlace
+  sheets: [null, null, null, 0x53]
+  properties: UnusedAntifairy_properties
 SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
   id: 0x78
   flags: NoPlace
@@ -873,6 +887,11 @@ BigSpikeTrap: #BIG SPIKE
   flags: NoDrop
   sheets: [null, null, null, 0x52]
   properties: BigSpikeTrap_properties
+BigSpikeTrapAlternative: #BIG SPIKE
+  id: 0x7D
+  flags: NoDrop
+  sheets: [null, null, null, 0x53]
+  properties: BigSpikeTrap_properties
 FireBarCW: #FIREBAR CLOCKWISE
   id: 0x7E
   flags: NoDrop
@@ -897,6 +916,12 @@ AntifairyCircle: #ANTIFAIRY CIRCLE
   id: 0x82
   flags: NoDrop
   sheets: [null, null, null, 0x52]
+  properties: AntifairyCircle_properties
+  weight: 4
+AntifairyCircleAlternative: #ANTIFAIRY CIRCLE
+  id: 0x82
+  flags: NoDrop
+  sheets: [null, null, null, 0x53]
   properties: AntifairyCircle_properties
   weight: 4
 EyegoreGreen: #GREEN EYEGORE / GREEN MIMIC
@@ -1001,6 +1026,11 @@ Bumper:
   flags: NoDrop
   sheets: [null, null, null, 0x52]
   properties: Bumper_properties
+BumperAlternative:
+  id: 0x93
+  flags: NoDrop
+  sheets: [null, null, null, 0x53]
+  properties: Bumper_properties
 Pirogusu: #PIROGUSU / TILE ROOM TILE
   id: 0x94
   flags: NoPlace
@@ -1011,20 +1041,40 @@ LaserEyeR: #LASER EYE RIGHT (placed left, shooting right)
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   properties: LaserEyeR_properties
+LaserEyeRAlternative:
+  id: 0x95
+  flags: NoPlace
+  sheets: [null, null, null, 0x53]
+  properties: LaserEyeR_properties
 LaserEyeL: #LASER EYE LEFT (placed right, shooting left)
   id: 0x96
   flags: NoPlace
   sheets: [null, null, null, 0x52]
+  properties: LaserEyeL_properties
+LaserEyeLAlternative:
+  id: 0x96
+  flags: NoPlace
+  sheets: [null, null, null, 0x53]
   properties: LaserEyeL_properties
 LaserEyeD: #LASER EYE BOTTOM (placed high, shooting down)
   id: 0x97
   flags: NoPlace
   sheets: [null, null, null, 0x52]
   properties: LaserEyeD_properties
+LaserEyeDAlternative:
+  id: 0x97
+  flags: NoPlace
+  sheets: [null, null, null, 0x53]
+  properties: LaserEyeD_properties
 LaserEyeU: #LASER EYE TOP (placed low, shooting up)
   id: 0x98
   flags: NoPlace
   sheets: [null, null, null, 0x52]
+  properties: LaserEyeU_properties
+LaserEyeUAlternative:
+  id: 0x98
+  flags: NoPlace
+  sheets: [null, null, null, 0x53]
   properties: LaserEyeU_properties
 Pengator:
   id: 0x99
@@ -1222,6 +1272,11 @@ Shopkeeper: #SHOPKEEPER / CHEST GAME GUY
   flags: NoPlace
   sheets: [0x0E, null, 0x4A, null]
   properties: Proprieter_properties
+NiceThief: #SHOPKEEPER / CHEST GAME GUY
+  id: 0xBB
+  flags: NoPlace
+  sheets: [0x0E, null, 0x4A, null]
+  properties: Proprieter_properties
 ChestGameGuy: #SHOPKEEPER / CHEST GAME GUY
   id: 0xBB
   flags: NoPlace
@@ -1295,6 +1350,10 @@ Medusa:
   id: 0xC5
   flags: NoPlace
   properties: Medusa_properties
+PoeInGrave: #Hardcoded overworld behavior change
+  id: 0xC5
+  flags: NoPlace, OverworldOnly
+  properties: Poe_properties
 YomoMedusa: #4WAY SHOOTER
   id: 0xC6
   flags: NoPlace
@@ -1309,7 +1368,6 @@ FairyBig: #BIG FAIRY
   flags: NoPlace
   sheets: [null, null, 0x39, null] #TODO: DR has 0x36 in slot 3 (fat fairy)
   properties: FairyBig_properties
-# TODO we don't have a way to differentiate them by color, since it's decided by coordinate...
 TektiteBlue: #TEKTITE / FIREBAT
   id: 0xC9
   subtype: 0x00

@@ -14,6 +14,7 @@ rooms:
               sprite: "Statue"
               allow:
                 - "Statue"
+                - "StatueAlternative"
 
             - name: "Agahnims Tower - Push Statue - Red Spear Guard"
               position: { x: 0x1b, y: 0x18, z: 0x01 }
@@ -41,18 +42,27 @@ rooms:
                 - "RollerVU"
                 - "RollerVD"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Agahnims Tower - Bridge - Blue Guard 2"
               position: { x: 0x09, y: 0x0f, z: 0x01 }
               sprite: "BlueSwordGuard1B"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerVU"
                 - "RollerVD"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"

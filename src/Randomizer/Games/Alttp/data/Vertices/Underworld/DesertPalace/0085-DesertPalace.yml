@@ -80,9 +80,13 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Desert Palace - Right Hallway - Leever 3"
               position: { x: 0x07, y: 0x1c, z: 0x00 }
               sprite: "Leever"

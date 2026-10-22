@@ -17,6 +17,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Misery Mire - Mire-go-round - Bari Key"
               position: { x: 0x13, y: 0x1b, z: 0x00 }
               sprite: "BlueBari"

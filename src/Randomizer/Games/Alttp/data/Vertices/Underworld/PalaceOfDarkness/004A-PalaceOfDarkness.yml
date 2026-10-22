@@ -65,6 +65,7 @@ rooms:
               sprite: "Statue"
               allow:
                 - "Statue"
+                - "StatueAlternative"
             - name: "Palace of Darkness - Lobby - Mini Helmasaur 2"
               position: { x: 0x18, y: 0x08, z: 0x00 }
               sprite: "MiniHelmasaur"

@@ -45,8 +45,11 @@ rooms:
                 - "RollerVU"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Secret Passage Exit - Green Knife Guard 2"
               position: { x: 0x0d, y: 0x16, z: 0x00 }
               sprite: "GreenGuardRecruit"

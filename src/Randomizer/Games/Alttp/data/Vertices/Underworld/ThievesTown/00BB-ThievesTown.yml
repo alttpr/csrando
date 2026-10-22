@@ -52,7 +52,9 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Thieves' Town - Hellway - Gibo 3"
               position: { x: 0x09, y: 0x0e, z: 0x00 }
               sprite: "Gibo"
@@ -62,9 +64,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Thieves' Town - Hellway - Fire Snake"
               position: { x: 0x07, y: 0x10, z: 0x00 }
               sprite: "FireSnake"
@@ -82,8 +88,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Thieves' Town - Hellway Bottom Right"
           connections:

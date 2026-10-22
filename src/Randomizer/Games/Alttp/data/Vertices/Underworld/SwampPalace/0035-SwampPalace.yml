@@ -15,7 +15,7 @@ rooms:
               position: { x: 0x16, y: 0x06, z: 0x00 }
               sprite: "CrystalSwitchAlternative"
               allow:
-                - "CrystalSwitchAlternative"
+                - "CrystalSwitchAlternative" # Only alternative is allowed, because of push switch graphics.
             - name: "Swamp Palace - West Lever - Push Switch"
               position: { x: 0x14, y: 0x05, z: 0x00 }
               item: "SwampWater2"
@@ -131,7 +131,9 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Swamp Palace - West Moat - Stalfos 3"
               position: { x: 0x1b, y: 0x1c, z: 0x00 }
               sprite: "StalfosRed"

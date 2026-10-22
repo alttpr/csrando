@@ -48,8 +48,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Laser Bridge - Blue Guard"
               position: { x: 0x13, y: 0x18, z: 0x00 }
               sprite: "BlueTaros"

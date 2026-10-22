@@ -31,9 +31,13 @@ rooms:
                 - "RollerVU"
                 - "RollerVD"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Invisible Floor Maze - Hardhat Beetle 2"
               position: { x: 0x11, y: 0x0f, z: 0x00 }
@@ -44,9 +48,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Invisible Floor Maze - Hardhat Beetle 3"
               position: { x: 0x17, y: 0x0e, z: 0x00 }
@@ -57,9 +65,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Invisible Floor Maze - Hardhat Beetle 4"
               position: { x: 0x0d, y: 0x12, z: 0x00 }
@@ -70,8 +82,11 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Invisible Floor Maze - Hardhat Beetle 5"
               position: { x: 0x09, y: 0x13, z: 0x00 }
@@ -79,8 +94,11 @@ rooms:
               deny:
                 - "RollerVU"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
             - name: "Ganon's Tower - Invisible Floor Maze - Fire Snake"
               position: { x: 0x0f, y: 0x1c, z: 0x00 }

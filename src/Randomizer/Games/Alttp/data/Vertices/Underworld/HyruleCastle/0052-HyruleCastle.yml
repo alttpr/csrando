@@ -23,7 +23,9 @@ rooms:
                 - "RollerVU"
                 - "RollerVD"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Hyrule Castle - North East Passage - Green Knife Guard 1"
               position: { x: 0x08, y: 0x0f, z: 0x01 }
               sprite: "GreenGuardRecruit"
@@ -31,7 +33,9 @@ rooms:
                 - "RollerVU"
                 - "RollerVD"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Hyrule Castle - North East Passage - Green Knife Guard 2"
               position: { x: 0x07, y: 0x12, z: 0x01 }
               sprite: "GreenGuardRecruit"
@@ -39,4 +43,6 @@ rooms:
                 - "RollerVU"
                 - "RollerVD"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"

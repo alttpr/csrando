@@ -55,5 +55,5 @@ maps:
           connections:
             fixed:
               - "Dark Lake Hylia River End Brook"
-              # TODO: Check if we need flippers when hoping from water to water
+            Flippers:
               - "Dark Lake Hylia Waterfall Brook"

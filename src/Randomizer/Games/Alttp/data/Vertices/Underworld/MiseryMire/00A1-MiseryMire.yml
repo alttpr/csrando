@@ -33,6 +33,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Misery Mire - Fish Room - blue - Spark (Clockwise) 1"
               position: { x: 0x18, y: 0x07, z: 0x00 }
               sprite: "SparkCW"
@@ -41,12 +42,17 @@ rooms:
               sprite: "SparkCW"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Misery Mire - Fish Room - blue - Wizzrobe"
               position: { x: 0x19, y: 0x10, z: 0x00 }
               sprite: "Wizzrobe"

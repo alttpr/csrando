@@ -30,6 +30,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Palace of Darkness - Dark Pegs - Terrorpin 2"
               position: { x: 0x16, y: 0x0b, z: 0x00 }
               sprite: "Terrorpin"
@@ -52,9 +53,13 @@ rooms:
                 - "RollerHR"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Palace of Darkness - Turtle Party"
           connections:

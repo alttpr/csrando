@@ -30,6 +30,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
 
         - name: "Tower Of Hera - Basement Corner"
           connections:
@@ -63,6 +64,7 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Tower Of Hera - Basement Corner - Stalfos 2"
               position: { x: 0x19, y: 0x18, z: 0x00 }
               sprite: "StalfosRed"
@@ -101,3 +103,4 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"

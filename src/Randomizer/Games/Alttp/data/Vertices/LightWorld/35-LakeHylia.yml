@@ -60,6 +60,11 @@ maps:
               - "South of Ruins"
             Flippers:
               - "Lake Hylia"
+          mobs:          
+            - name: "Lake Hylia - Octorok (Four Way)"
+              position: { x: 0x38, y: 0x0a }
+              sprite: "Octorok4"
+              state: [2]
 
         - name: "Lake Hylia North West Shore"
           connections:
@@ -121,11 +126,6 @@ maps:
               position: { x: 0x2e, y: 0x3a }
               sprite: "Crab"
               state: [1]
-            - name: "Lake Hylia - Octorok (Four Way)"
-              # TODO: Check mob coordinates or region
-              position: { x: 0x38, y: 0x0a }
-              sprite: "Octorok4"
-              state: [2]
             - name: "Lake Hylia - Raven 3"
               position: { x: 0x0d, y: 0x2f }
               sprite: "Raven"

@@ -83,7 +83,9 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Skull Woods - Vine Door Room"
           connections:

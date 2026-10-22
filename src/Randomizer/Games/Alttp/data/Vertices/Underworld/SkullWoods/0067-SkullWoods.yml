@@ -40,7 +40,9 @@ rooms:
               deny:
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Skull Woods - Trap Chest Room - Hardhat Beetle 5"
               position: { x: 0x18, y: 0x1a, z: 0x00 }
               sprite: "HardhatBeetleRed"

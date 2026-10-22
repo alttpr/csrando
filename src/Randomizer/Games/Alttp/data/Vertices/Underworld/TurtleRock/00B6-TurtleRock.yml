@@ -23,9 +23,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Turtle Rock - Pokey Ambush - Zol 2"
               position: { x: 0x08, y: 0x1b, z: 0x00 }
               sprite: "Zol"
@@ -35,9 +39,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
 
         - name: "Turtle Rock - Chain Chomps Room"
           switch: true
@@ -63,10 +71,11 @@ rooms:
               sprite: "CrystalSwitch"
               allow:
                 - "CrystalSwitch"
+                - "CrystalSwitchAlternative"
             - name: "Turtle Rock - Chain Chomps Room - Crystal Switch 2"
               position: { x: 0x0c, y: 0x04, z: 0x00 }
               sprite: "CrystalSwitch"
-
+              # No forced sprite, because 1 is enough
         - name: "Turtle Rock - Tile Room"
           connections:
             fixed:

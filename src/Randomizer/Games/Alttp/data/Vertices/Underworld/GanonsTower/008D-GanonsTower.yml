@@ -26,7 +26,9 @@ rooms:
               trophy: "GanonsTowerTileRoomTrophy"
               deny:
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Tile Room - Antifairy"
               position: { x: 0x09, y: 0x08, z: 0x00 }
               sprite: "Antifairy"
@@ -55,10 +57,11 @@ rooms:
             KeyA2:
               - "Ganon's Tower - Tile Room"
           pots:
-            # TODO: Missing empty pot around gibdo
             - name: "Ganon's Tower - Long Torch Puzzle - Pot 1"
-              position: { x: 0x26, y: 0x1d, z: 0x00 }
+              position: { x: 0x26, y: 0x1c, z: 0x00 }
               sprite: "@MagicRefillFull"
+            - name: "Ganon's Tower - Long Torch Puzzle - Pot 5"
+              position: { x: 0x26, y: 0x16, z: 0x00 }
           mobs:
             - name: "Ganon's Tower - Long Torch Puzzle - Gibdo"
               position: { x: 0x13, y: 0x0d, z: 0x00 }
@@ -72,8 +75,11 @@ rooms:
                 - "RollerHL"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Long Torch Puzzle - Stalfos"
               position: { x: 0x17, y: 0x14, z: 0x00 }
               sprite: "StalfosRed"
@@ -82,9 +88,13 @@ rooms:
                 - "RollerHL"
                 - "RollerHR"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
             - name: "Ganon's Tower - Long Torch Puzzle - Blue Bari 1"
               position: { x: 0x14, y: 0x1b, z: 0x00 }
               sprite: "BlueBari"
@@ -121,8 +131,13 @@ rooms:
               sprite: "FireBarCW"
               deny:
                 - "Statue"
+                - "StatueAlternative"
                 - "Beamos"
                 - "AntifairyCircle"
+                - "AntifairyCircleAlternative"
                 - "BigSpikeTrap"
+                - "BigSpikeTrapAlternative"
                 - "SpikeTrap"
+                - "SpikeTrapAlternative"
                 - "Bumper"
+                - "BumperAlternative"
