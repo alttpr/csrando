@@ -10,7 +10,6 @@ public sealed class Rom : GameRom
 {
     private static readonly ILogger _logger = ClassLogger.Get();
 
-
     private readonly Text _text;
     private readonly Credits _credits;
     private readonly YamlReader.GameData _gameData;
@@ -338,6 +337,7 @@ public sealed class Rom : GameRom
         switch (custom)
         {
             case "bees":
+                // TODO this is machine code and kan should probably allow some sort of "AssembleString()" in futaba...
                 Write((SNES)0xBB8000, [
                     0xA9,
                     0x79,
@@ -473,78 +473,10 @@ public sealed class Rom : GameRom
     /// <param name="prizes">ids of sprites to drop (0x03 empty)</param>
     public void SetOverworldBonkPrizes(byte[]? prizes = null)
     {
-        prizes ??= [];
-        SNES[] addresses = [
-            (SNES)0x09CF6C,
-            (SNES)0x09CFBA,
-            (SNES)0x09CFE0,
-            (SNES)0x09CFFB,
-            (SNES)0x09D018,
-            (SNES)0x09D01B,
-            (SNES)0x09D028,
-            (SNES)0x09D03C,
-            (SNES)0x09D059,
-            (SNES)0x09D07A,
-            (SNES)0x09D09E,
-            (SNES)0x09D0A8,
-            (SNES)0x09D0AB,
-            (SNES)0x09D0AE,
-            (SNES)0x09D0BE,
-            (SNES)0x09D0DD,
-            (SNES)0x09D16A,
-            (SNES)0x09D1E5,
-            (SNES)0x09D1EE,
-            (SNES)0x09D20B,
-            (SNES)0x09CBBF,
-            (SNES)0x09CBBF,
-            (SNES)0x09CC17,
-            (SNES)0x09CC1A,
-            (SNES)0x09CC4A,
-            (SNES)0x09CC4D,
-            (SNES)0x09CC53,
-            (SNES)0x09CC69,
-            (SNES)0x09CC6F,
-            (SNES)0x09CC7C,
-            (SNES)0x09CCEF,
-            (SNES)0x09CD51,
-            (SNES)0x09CDC0,
-            (SNES)0x09CDC3,
-            (SNES)0x09CDC6,
-            (SNES)0x09CE37,
-            (SNES)0x09D2DE,
-            (SNES)0x09D32F,
-            (SNES)0x09D355,
-            (SNES)0x09D367,
-            (SNES)0x09D384,
-            (SNES)0x09D387,
-            (SNES)0x09D397,
-            (SNES)0x09D39E,
-            (SNES)0x09D3AB,
-            (SNES)0x09D3AE,
-            (SNES)0x09D3D1,
-            (SNES)0x09D3D7,
-            (SNES)0x09D3F8,
-            (SNES)0x09D416,
-            (SNES)0x09D420,
-            (SNES)0x09D423,
-            (SNES)0x09D42D,
-            (SNES)0x09D449,
-            (SNES)0x09D48C,
-            (SNES)0x09D4D9,
-            (SNES)0x09D4DC,
-            (SNES)0x09D4E3,
-            (SNES)0x09D504,
-            (SNES)0x09D507,
-            (SNES)0x09D55E,
-            (SNES)0x09D56A,
-        ];
-
-        int prizeIdx = 0;
-        foreach (var address in addresses)
-        {
-            byte item = prizeIdx < prizes.Length ? prizes[prizeIdx++] : (byte)0x03;
-            Write(address, [item]);
-        }
+        // we don't use this yet, but I want to make sure we don't,
+        // TODO kan will address this in a later commit once he figures out how to read sprite vertices
+        // or we can delete this if shuffling bonk prizes is too far down the roadmap.
+        throw new NotImplementedException();
     }
 
     /// <summary>Set Overworld dig prizes.</summary>
@@ -888,22 +820,22 @@ public sealed class Rom : GameRom
     {
         // this mode is based on open mode ;)
         SetOpenMode(enable);
-
+        Write((SNES)0x06DB78, [0x8B]); // ; residual portal graphics
         Write((SNES)0xB0804A, [0x01]); // ; main toggle
-        Write((SNES)0x0283E0, [0xF0]); // ; residual portal
-        Write((SNES)0x02B34D, [0xF0]); // ; residual portal
-        Write((SNES)0x06DB78, [0x8B]); // ; residual portal
-        Write((SNES)0x05AF79, [0xF0]); // ; vortex
-        Write((SNES)0x0DB3C5, [0xC6]); // ; vortex
-        Write((SNES)0x07A3F4, [0xF0]); // ; duck
-        Write((SNES)0x07A3F4, [0xF0]); // ; duck
         Write((SNES)0x02E849, [0x43, 0x00, 0x56, 0x00, 0x58, 0x00, 0x6c, 0x00, 0x6F, 0x00, 0x70, 0x00, 0x7B, 0x00, 0x7F, 0x00, 0x1B, 0x00]); // ; Dark World Flute Spots
         Write((SNES)0x02E8D5, [0xC8, 0x07]); // ; nudge flute spot 3 out of gargoyle statue
         Write((SNES)0x02E8F7, [0xF8, 0x01]); // ; nudge flute spot 3 out of gargoyle statue
-        Write((SNES)0x07A943, [0xF0]); // ; Dark to light world mirror
-        Write((SNES)0x07A96D, [0xD0]); // ; residual portal?
-        Write((SNES)0x08D40C, [0xD0]); // ; morph poof
         SetFixFakeWorld(enable); // ; ER's Fix fake worlds fix. Currently needed for inverted
+
+        // TODO remove machine code (replace the LDA,AND for JSL, easy)
+        Write((SNES)0x0283E0, [0xF0]); // ; residual portal - BNE => BEQ
+        Write((SNES)0x02B34D, [0xF0]); // ; residual portal - BNE => BEQ
+        Write((SNES)0x05AF79, [0xF0]); // ; vortex
+        Write((SNES)0x07A3F4, [0xF0]); // ; duck
+        Write((SNES)0x07A3F4, [0xF0]); // ; duck
+        Write((SNES)0x07A943, [0xF0]); // ; Dark to light world mirror - BNE => BEQ
+        Write((SNES)0x07A96D, [0xD0]); // ; BEQ => BNE
+        Write((SNES)0x08D40C, [0xD0]); // ; morph poof - BEQ => BNE
 
         // remove diggable light world portals
         Write((SNES)0x1BC428, [0x00]);
@@ -945,57 +877,58 @@ public sealed class Rom : GameRom
         // fix trock doors for reverse entrances
         PreOpenBombableWalls();
 
-        // TODO add special handler for entrances/exits
-
         // Dark Death Mountain Healer Fairy => Old Man Cave (East)
         Write((SNES)(0x1BBB73 + 0x6F), [0x07]);
-        Write((SNES)(0x02DAEE + 2 * 0x18), [0xf1, 0x00]);
-        Write((SNES)(0x02DB8C + 0x18), [0x43]);
-        Write((SNES)(0x02DBDB + 2 * 0x18), [0x00, 0x14]);
-        Write((SNES)(0x02DC79 + 2 * 0x18), [0x94, 0x02]);
-        Write((SNES)(0x02DD17 + 2 * 0x18), [0x00, 0x06]);
-        Write((SNES)(0x02DDB5 + 2 * 0x18), [0xe8, 0x02]);
-        Write((SNES)(0x02DE53 + 2 * 0x18), [0x78, 0x06]);
-        Write((SNES)(0x02DEF1 + 2 * 0x18), [0x03, 0x03]);
-        Write((SNES)(0x02DF8F + 2 * 0x18), [0x85, 0x06]);
-        Write((SNES)(0x02E02D + 0x18), [0x0a]);
-        Write((SNES)(0x02E07C + 0x18), [0xf6]);
-        Write((SNES)(0x02E0CB + 2 * 0x18), [0x00, 0x00]);
-        Write((SNES)(0x02E169 + 2 * 0x18), [0x00, 0x00]);
+        WriteOutlet(new(0x18)
+        {
+            RoomId = 0x00F1,
+            OverworldId = 0x43,
+            TilemapDrawOffset = 0x1400,
+            CameraPositionY = 0x0294,
+            CameraPositionX = 0x0600,
+            LinkY = 0x02E8,
+            LinkX = 0x0678,
+            CameraTriggerY = 0x0303,
+            CameraTriggerX = 0x0685,
+            ScrollModY = 0x0A,
+            ScrollModX = 0xF6,
+            DoorGraphic = 0x0000,
+            DoorLocation = 0x0000
+        });
 
         // Pyramid Exit <= Houlihan
-        Write((SNES)(0x02DAEE + 2 * 0x3D), [0x03, 0x00]);
-        Write((SNES)(0x02DB8C + 0x3D), [0x5b]);
-        Write((SNES)(0x02DBDB + 2 * 0x3D), [0x0e, 0x0b]);
-        Write((SNES)(0x02DC79 + 2 * 0x3D), [0x5a, 0x07]);
-        Write((SNES)(0x02DD17 + 2 * 0x3D), [0x74, 0x06]);
-        Write((SNES)(0x02DDB5 + 2 * 0x3D), [0xa8, 0x07]);
-        Write((SNES)(0x02DE53 + 2 * 0x3D), [0xe8, 0x06]);
-        Write((SNES)(0x02DEF1 + 2 * 0x3D), [0xc7, 0x07]);
-        Write((SNES)(0x02DF8F + 2 * 0x3D), [0xf3, 0x06]);
-        Write((SNES)(0x02E02D + 0x3D), [0x06]);
-        Write((SNES)(0x02E07C + 0x3D), [0xfa]);
-        Write((SNES)(0x02E0CB + 2 * 0x3D), [0x00, 0x00]);
-        Write((SNES)(0x02E169 + 2 * 0x3D), [0x00, 0x00]);
+        WriteOutlet(new(0x3D)
+        {
+            RoomId = 0x0003,
+            OverworldId = 0x5B,
+            TilemapDrawOffset = 0x0B0E,
+            CameraPositionY = 0x075A,
+            CameraPositionX = 0x0674,
+            LinkY = 0x07A8,
+            LinkX = 0x06E8,
+            CameraTriggerY = 0x07C7,
+            CameraTriggerX = 0x06F3,
+            ScrollModY = 0x06,
+            ScrollModX = 0xFA,
+            DoorGraphic = 0x0000,
+            DoorLocation = 0x0000
+        });
 
         // Change sanc spawn point to dark sanc
-        Write((SNES)0x02D8D4, [0x12, 0x01]);
-        Write((SNES)0x02D8E8, [0x22, 0x22, 0x22, 0x23, 0x04, 0x04, 0x04, 0x05]);
-        Write((SNES)0x02D91A, [0x00, 0x04]);
-        Write((SNES)0x02D928, [0x2e, 0x22]);
-        Write((SNES)0x02D936, [0x9a, 0x22]);
-        Write((SNES)0x02D944, [0x80, 0x04]);
-        Write((SNES)0x02D952, [0xa5, 0x00]);
-        Write((SNES)0x02D960, [0x7F, 0x00]);
-        Write((SNES)0x02D96D, [0x14]);
-        Write((SNES)0x02D974, [0x00]);
-        Write((SNES)0x02D97B, [0xFF]);
-        Write((SNES)0x02D982, [0x00]);
-        Write((SNES)0x02D989, [0x02]);
-        Write((SNES)0x02D990, [0x00]);
-        Write((SNES)0x02D998, [0x00, 0x00]);
-        Write((SNES)0x02D9A6, [0x5A, 0x00]);
-        Write((SNES)0x02D9B3, [0x12]);
+        WriteSpawnPoint(new(0x01)
+        {
+            RoomId = 0x0012,
+            LinkY = 0x229A,
+            LinkX = 0x0480,
+            EntranceGraphics = 0x14,
+            Floor = 0x00,
+            DungeonId = 0xFF,
+            LayerControl = 0x00,
+            CameraControl = 0x02,
+            OverworldDoorLocation = 0x0000,
+            AssociatedEntranceID = 0x005A,
+            Music = 0x12,
+        });
 
         // Write dark sanc exit data to StartingAreaExitTable table
         Write((SNES)0xB08250, [
@@ -1029,42 +962,42 @@ public sealed class Rom : GameRom
         Write((SNES)0xB08350, [0x00, 0x00, 0x01]); // Death mountain cave should start on overworld
 
         // Change old man spawn point to End of old man cave
-        Write((SNES)0x02D8DE, [0xF1, 0x00]);
-        Write((SNES)0x02D910, [0x1F, 0x1E, 0x1F, 0x1F, 0x03, 0x02, 0x03, 0x03]);
-        Write((SNES)0x02D924, [0x00, 0x03]);
-        Write((SNES)0x02D932, [0x10, 0x1F]);
-        Write((SNES)0x02D940, [0xC0, 0x1F]);
-        Write((SNES)0x02D94E, [0x78, 0x03]);
-        Write((SNES)0x02D95C, [0x87, 0x01]);
-        Write((SNES)0x02D96A, [0x7F, 0x01]);
-        Write((SNES)0x02D972, [0x06]);
-        Write((SNES)0x02D979, [0x00]);
-        Write((SNES)0x02D980, [0xFF]);
-        Write((SNES)0x02D987, [0x00]);
-        Write((SNES)0x02D98E, [0x22]);
-        Write((SNES)0x02D995, [0x12]);
-        Write((SNES)0x02D9A2, [0x00, 0x00]);
-        Write((SNES)0x02D9B0, [0x07, 0x00]);
-        Write((SNES)0x02D9B8, [0x12]);
+        WriteSpawnPoint(new(0x06)
+        {
+            RoomId = 0x00F1,
+            LinkY = 0x1FC0,
+            LinkX = 0x0378,
+            EntranceGraphics = 0x06,
+            Floor = 0x00,
+            DungeonId = 0xFF,
+            LayerControl = 0x00,
+            CameraControl = 0x22,
+            OverworldDoorLocation = 0x0000,
+            AssociatedEntranceID = 0x0007,
+            Music = 0x12,
+        });
 
         // Write to StartingAreaOverworldDoor table to indicate the overworld door being used for
         // the single entrance spawn point
         Write((SNES)0xB08247, [0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
         // aga tower exit/ pyramid spawn (now hyrule castle ledge spawn)
-        Write((SNES)(0x02DAEE + 2 * 0x06), [0x20, 0x00]);
-        Write((SNES)(0x02DB8C + 0x06), [0x1B]);
-        Write((SNES)(0x02DBDB + 2 * 0x06), [0xAE, 0x00]);
-        Write((SNES)(0x02DC79 + 2 * 0x06), [0x10, 0x06]);
-        Write((SNES)(0x02DD17 + 2 * 0x06), [0x7E, 0x07]);
-        Write((SNES)(0x02DDB5 + 2 * 0x06), [0x72, 0x06]);
-        Write((SNES)(0x02DE53 + 2 * 0x06), [0xF8, 0x07]);
-        Write((SNES)(0x02DEF1 + 2 * 0x06), [0x7D, 0x06]);
-        Write((SNES)(0x02DF8F + 2 * 0x06), [0x03, 0x08]);
-        Write((SNES)(0x02E02D + 0x06), [0x00]);
-        Write((SNES)(0x02E07C + 0x06), [0xf2]);
-        Write((SNES)(0x02E0CB + 2 * 0x06), [0x00, 0x00]);
-        Write((SNES)(0x02E169 + 2 * 0x06), [0x00, 0x00]);
+        WriteOutlet(new(0x06)
+        {
+            RoomId = 0x0020,
+            OverworldId = 0x1B,
+            TilemapDrawOffset = 0x00AE,
+            CameraPositionY = 0x0610,
+            CameraPositionX = 0x077E,
+            LinkY = 0x0672,
+            LinkX = 0x07F8,
+            CameraTriggerY = 0x067D,
+            CameraTriggerX = 0x0803,
+            ScrollModY = 0x00,
+            ScrollModX = 0xF2,
+            DoorGraphic = 0x0000,
+            DoorLocation = 0x0000
+        });
 
         // move flute spot 9 (notice that the values of this match the 2nd, 3rd etc value of hyrule castle spawn)
         Write((SNES)0x02E87B, [0xae, 0x00]);
@@ -1080,6 +1013,7 @@ public sealed class Rom : GameRom
         Write((SNES)0x1AF696, [0xF0]); // Bat X position (sprite_retreat_bat.asm:130)
         Write((SNES)0x1AF6B2, [0x33]); // Bat Delay (sprite_retreat_bat.asm:136)
 
+        // TODO kan: I have this as "BatCrash_DrawHardcodedGarbage", so we might not need this...?
         // New Hole Mask Position
         Write((SNES)0x1AF730, [
             0x6A,
@@ -1172,11 +1106,14 @@ public sealed class Rom : GameRom
         Write((SNES)0x00D009, [0x31]);
         Write((SNES)0x00D0E8, [0xE0]);
         Write((SNES)0x00D1C7, [0x00]);
+
+        // question for review: do we need a SnesColor struct/method? or is there not much use for this outside of tiny usecases?
         Write((SNES)0x1BE8DA, [0xAD, 0x39]); // add color for shading for castle hole
 
         Write((SNES)0xB08169, [0x02]); // lock aga door
         Write((SNES)0x1EEE58, [0x80]); // don't allow "whirlpool" under castle gate
 
+        // TODO remove machine code
         // Turtle rock tail
         Write((SNES)0x00886E, [0x5C, 0x00, 0xA0, 0xA1]); // JML.l A1A000 (a.k.a. JML.l InvertedTileAttributeLookup)
 
@@ -1220,6 +1157,8 @@ public sealed class Rom : GameRom
 
         Write((SNES)0x0280A6, [0xD0]); // Spawn logic
 
+        // TODO remove machine code
+        // |06B2AA| JSL ShowSolicitedMessage => JSL InvertedFrogMessage
         Write((SNES)0x06B2AB, [0xF0, 0xE1, 0x05]); // frog pickup on contact
 
         foreach (var (key, text) in YamlReader.LoadDialogForInverted(_text.Language))
@@ -2055,5 +1994,106 @@ public sealed class Rom : GameRom
             Write(address, [0x80, 0x00]); // BRA + : +
         else
             Write(address, [0x4C, (byte)target, (byte)(target >> 8)]); // JMP target
+    }
+
+    /// <summary>
+    /// Writes this outlet's data to ROM.
+    /// </summary>
+    private void WriteOutlet(OutletData outlet)
+    {
+        if (outlet.RoomId > 0x019F)
+        {
+            throw new InvalidOperationException($"Room ID is too big! 0x{outlet.RoomId:X4} > 0x019F");
+        }
+
+        int outletIdW = outlet.OutletId * 2;
+
+        // NOTE: these tables will be moved then fixed in ROM before this is live.
+        Write((SNES)(0xAB8000 + outlet.OutletId), [outlet.OverworldId]);
+        Write((SNES)(0xB0EB00 + outlet.RoomId), [outlet.OutletId]);
+        WriteUInt16((SNES)(0xAB8100 + outletIdW), [outlet.TilemapDrawOffset]);
+        WriteUInt16((SNES)(0xAB8300 + outletIdW), [outlet.CameraPositionY]);
+        WriteUInt16((SNES)(0xAB8500 + outletIdW), [outlet.CameraPositionX]);
+        WriteUInt16((SNES)(0xAB8700 + outletIdW), [outlet.LinkX]);
+        WriteUInt16((SNES)(0xAB8900 + outletIdW), [outlet.LinkY]);
+        WriteUInt16((SNES)(0xAB8B00 + outletIdW), [outlet.CameraTriggerX]);
+        WriteUInt16((SNES)(0xAB8D00 + outletIdW), [outlet.CameraTriggerY]);
+        WriteUInt16((SNES)(0xAB8F00 + outletIdW), [outlet.ScrollModX]);
+        WriteUInt16((SNES)(0xAB9000 + outletIdW), [outlet.ScrollModY]);
+        WriteUInt16((SNES)(0xAB9100 + outletIdW), [outlet.DoorGraphic]);
+        WriteUInt16((SNES)(0xAB9300 + outletIdW), [outlet.DoorLocation]);
+    }
+
+    private void WriteEntrance(EntranceData entrance)
+    {
+        int entranceId = entrance.Id;
+        int entranceIdW = entranceId * 2;
+
+        if (entranceId > 0x84)
+        {
+            throw new InvalidOperationException($"Entrance ID is too high: {entranceId:X2} > 0x84");
+        }
+
+        if (!entrance.PositionMatchesRoom())
+        {
+            throw new InvalidOperationException("Entrance position and room ID do not match");
+        }
+
+        WriteUInt16((SNES)(0x02C577 + entranceIdW), [entrance.RoomId]);
+        Write((SNES)(0x02C681 + entranceId * 8), entrance.CameraBoundaries);
+        WriteUInt16((SNES)(0x02CAA9 + entranceIdW), [entrance.CameraX]);
+        WriteUInt16((SNES)(0x02CBB3 + entranceIdW), [entrance.CameraY]);
+        WriteUInt16((SNES)(0x02CCBD + entranceIdW), [entrance.LinkY]);
+        WriteUInt16((SNES)(0x02CDC7 + entranceIdW), [entrance.LinkX]);
+        WriteUInt16((SNES)(0x02CED1 + entranceIdW), [entrance.CameraTriggerY]);
+        WriteUInt16((SNES)(0x02CFDB + entranceIdW), [entrance.CameraTriggerX]);
+
+        Write((SNES)(0x02D0E5 + entranceId), [entrance.EntranceGraphics]);
+        Write((SNES)(0x02D16A + entranceId), [entrance.Floor]);
+        Write((SNES)(0x02D274 + entranceId), [entrance.LandsInDoor]);
+        Write((SNES)(0x02D2F9 + entranceId), [entrance.LayerControl]);
+        Write((SNES)(0x02D37E + entranceId), [entrance.CameraControl]);
+        Write((SNES)(0x02D403 + entranceId), [entrance.Quadrant]);
+
+        WriteUInt16((SNES)(0x02D488 + entranceIdW), [entrance.OverworldDoorLocation]);
+
+        Write((SNES)(0x02D592 + entranceId), [entrance.Music]);
+    }
+
+    private void WriteSpawnPoint(SpawnPointData entrance)
+    {
+        int entranceId = entrance.Id;
+        int entranceIdW = entranceId * 2;
+
+        if (entranceId > 0x06)
+        {
+            throw new InvalidOperationException($"Entrance ID is too high: {entranceId:X2} > 0x06");
+        }
+
+        if (!entrance.PositionMatchesRoom())
+        {
+            throw new InvalidOperationException("Entrance position and room ID do not match");
+        }
+
+        WriteUInt16((SNES)(0x02D8D2 + entranceIdW), [entrance.RoomId]);
+        Write((SNES)(0x02D8E0 + entranceId * 8), entrance.CameraBoundaries);
+        WriteUInt16((SNES)(0x02D918 + entranceIdW), [entrance.CameraX]);
+        WriteUInt16((SNES)(0x02D962 + entranceIdW), [entrance.CameraY]);
+        WriteUInt16((SNES)(0x02D934 + entranceIdW), [entrance.LinkY]);
+        WriteUInt16((SNES)(0x02D942 + entranceIdW), [entrance.LinkX]);
+        WriteUInt16((SNES)(0x02D950 + entranceIdW), [entrance.CameraTriggerY]);
+        WriteUInt16((SNES)(0x02D95E + entranceIdW), [entrance.CameraTriggerX]);
+
+        Write((SNES)(0x02D96C + entranceId), [entrance.EntranceGraphics]);
+        Write((SNES)(0x02D973 + entranceId), [entrance.Floor]);
+        Write((SNES)(0x02D97A + entranceId), [entrance.LandsInDoor]);
+        Write((SNES)(0x02D981 + entranceId), [entrance.LayerControl]);
+        Write((SNES)(0x02D988 + entranceId), [entrance.CameraControl]);
+        Write((SNES)(0x02D98F + entranceId), [entrance.Quadrant]);
+
+        WriteUInt16((SNES)(0x02D996 + entranceIdW), [entrance.OverworldDoorLocation]);
+        WriteUInt16((SNES)(0x02D9A4 + entranceIdW), [entrance.AssociatedEntranceID]);
+
+        Write((SNES)(0x02D9B2 + entranceId), [entrance.Music]);
     }
 }
