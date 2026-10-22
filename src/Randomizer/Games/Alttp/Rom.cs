@@ -1917,7 +1917,6 @@ public sealed class Rom : GameRom
 
         int outletIdW = outlet.OutletId * 2;
 
-        // NOTE: these tables will be moved then fixed in ROM before this is live.
         Write((SNES)(0xAB8000 + outlet.OutletId), [outlet.OverworldId]);
         Write((SNES)(0xB0EB00 + outlet.RoomId), [outlet.OutletId]);
         WriteUInt16((SNES)(0xAB8100 + outletIdW), [outlet.TilemapDrawOffset]);
@@ -1927,8 +1926,8 @@ public sealed class Rom : GameRom
         WriteUInt16((SNES)(0xAB8900 + outletIdW), [outlet.LinkY]);
         WriteUInt16((SNES)(0xAB8B00 + outletIdW), [outlet.CameraTriggerX]);
         WriteUInt16((SNES)(0xAB8D00 + outletIdW), [outlet.CameraTriggerY]);
-        WriteUInt16((SNES)(0xAB8F00 + outletIdW), [outlet.ScrollModX]);
-        WriteUInt16((SNES)(0xAB9000 + outletIdW), [outlet.ScrollModY]);
+        WriteUInt16((SNES)(0xAB8F00 + outlet.OutletId), [outlet.ScrollModX]);
+        WriteUInt16((SNES)(0xAB9000 + outlet.OutletId), [outlet.ScrollModY]);
         WriteUInt16((SNES)(0xAB9100 + outletIdW), [outlet.DoorGraphic]);
         WriteUInt16((SNES)(0xAB9300 + outletIdW), [outlet.DoorLocation]);
     }
