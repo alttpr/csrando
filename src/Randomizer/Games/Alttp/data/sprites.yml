@@ -204,7 +204,6 @@ Statue:
   sheets: [null, null, null, 0x52]
   properties: Statue_properties
   not_with:
-    - PushSwitch
     - Statue
     - StatueAlternative
 StatueAlternative:
@@ -214,7 +213,6 @@ StatueAlternative:
   sheets: [null, null, null, 0x53]
   properties: Statue_properties
   not_with:
-    - PushSwitch
     - Statue
     - StatueAlternative
 FluteQuest:
@@ -252,6 +250,8 @@ PushSwitch: #WATER SWITCH
   flags: NoPlace
   sheets: [null, null, null, 0x53]
   properties: PushSwitch_properties
+  # Water switch MUST be in the lowest sprite slot or statues, etc can override their action
+  priority: 100
 Ropa:
   id: 0x22
   flags: Challenge
