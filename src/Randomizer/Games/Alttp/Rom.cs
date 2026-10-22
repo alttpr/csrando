@@ -706,8 +706,8 @@ public sealed class Rom : GameRom
     public void SetWishingWellChests(bool enable = false)
     {
         // set item table to proper room
-        WriteUInt16((SNES)0x01E9AE, (ushort) (enable ? 0x0114 : 0x0005));
-        WriteUInt16((SNES)0x01E9CF, (ushort) (enable ? 0x0114 : 0x013D));
+        WriteUInt16((SNES)0x01E9AE, (ushort)(enable ? 0x0114 : 0x0005));
+        WriteUInt16((SNES)0x01E9CF, (ushort)(enable ? 0x0114 : 0x013D));
 
         // room 276 remodel
         Write((SNES)0x03F714, enable
@@ -1528,7 +1528,7 @@ public sealed class Rom : GameRom
             // NewOutletData_x_coordinate
             if (outletOverrides.X.HasValue)
             {
-                WriteUInt16((SNES)(0xAB8900 + outletOffsetW), (ushort)(outletOverrides.X.Value + pixelMapX)); 
+                WriteUInt16((SNES)(0xAB8900 + outletOffsetW), (ushort)(outletOverrides.X.Value + pixelMapX));
             }
             // NewOutletData_y_coordinate
             if (outletOverrides.Y.HasValue)
