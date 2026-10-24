@@ -1456,49 +1456,53 @@ Heart:
   id: 0xD8
   flags: NoPlace
   properties: Heart_properties
+BonkBomb: #Same ID as heart with hardcoded behavior change in the overworld.
+  id: 0xD8
+  flags: NoPlace, OverworldOnly, BonkPrize
+  properties: Heart_properties
 RupeeGreen: #GREEN RUPEE
   id: 0xD9
   flags: NoPlace
   properties: RupeeGreen_properties
 RupeeBlue: #BLUE RUPEE
   id: 0xDA
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: RupeeBlue_properties
 RupeeRed: #RED RUPEE
   id: 0xDB
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: RupeeRed_properties
 BombRefill1: #BOMB REFILL 1
   id: 0xDC
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: BombRefill1_properties
 BombRefill4: #BOMB REFILL 4
   id: 0xDD
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: BombRefill4_properties
 BombRefill8: #BOMB REFILL 8
   id: 0xDE
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: BombRefill8_properties
 MagicRefillSmall: #SMALL MAGIC DECANTER
   id: 0xDF
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: MagicRefillSmall_properties
 MagicRefillFull: #LARGE MAGIC DECANTER
   id: 0xE0
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: MagicRefillFull_properties
 ArrowRefill5: #ARROW REFILL 5
   id: 0xE1
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: ArrowRefill5_properties
 ArrowRefill10: #ARROW REFILL 10
   id: 0xE2
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: ArrowRefill10_properties
 Fairy:
   id: 0xE3
-  flags: NoPlace
+  flags: NoPlace, BonkPrize
   properties: Fairy_properties
 Key: #SMALL KEY
   id: 0xE4

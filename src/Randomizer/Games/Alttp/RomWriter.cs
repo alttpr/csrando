@@ -206,6 +206,13 @@ public static class RomWriter
 
         rom.WriteRNGBlock(() => (byte)prng.GetRandomInt(0, 0x100));
 
+        // This MUST occur before writing sprite data
+        if (config.State is StateOption.Inverted)
+        {
+            var portal = world.GetSprite("MirrorPortal").Properties;
+            portal?.InitialPalette = 3;
+        }
+
         WritePrizePacksToRom(world, rom);
         WriteEntrancesToRom(world, rom);
         WriteEnemiesToRom(world, rom);

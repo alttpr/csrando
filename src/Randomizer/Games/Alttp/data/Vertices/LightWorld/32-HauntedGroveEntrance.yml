@@ -17,9 +17,9 @@ maps:
               position: { x: 0x1a, y: 0x09 }
               sprite: "BombRefill1"
               state: [0]
-            - name: "Cave 45 Ledge - Green Bomb"
+            - name: "Cave 45 Ledge - Bonk Bomb 1"
               position: { x: 0x18, y: 0x12 }
-              sprite: "Heart"
+              sprite: "BonkBomb"
               state: [0]
             - name: "Cave 45 Ledge - Blue Guard 1"
               position: { x: 0x0b, y: 0x0b }
@@ -53,9 +53,9 @@ maps:
               position: { x: 0x08, y: 0x15 }
               sprite: "Landmine"
               state: [2]
-            - name: "Cave 45 Ledge - Bonk Bomb"
+            - name: "Cave 45 Ledge - Bonk Bomb 2"
               position: { x: 0x1a, y: 0x09 }
-              sprite: "Heart"
+              sprite: "BonkBomb"
               state: [1, 2]
 
         - name: "Cave 45 Ledge"
