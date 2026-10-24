@@ -1,6 +1,5 @@
 ﻿namespace Randomizer.Games.Alttp;
 
-// TODO question during review. Do we want a new folder/namespace for these game struct handlers? Maybe Randomizer.Games.Alttp.GameStructs?
 internal class OutletData(byte id)
 {
     public byte OutletId { get; set; } = id;

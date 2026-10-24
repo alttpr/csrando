@@ -377,9 +377,14 @@ public sealed class Rom : GameRom
     /// <summary>Set the Game Type</summary>
     /// <param name="setting">name</param>
     // TODO: don't use a string for this
-    // TODO can we get consts/enum for the bits too?
+    // TODO: are these correct?
     public void SetGameType(string setting)
     {
+        // .... ridn
+        // r - room rando
+        // i - item rando
+        // d - entrance rando
+        // n - enemy rando
         var b = setting switch
         {
             "enemizer" => (byte)0b0000_0101,
