@@ -442,6 +442,29 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         }
     }
 
+    private sealed class SheetCount(int slot, byte sheetId) : IComparable<SheetCount>
+    {
+        public byte ID => sheetId;
+        public int Slot => slot;
+        public int Count { get; set; }
+
+        public static SheetCount[] CreateNewCollection(int sheetslot)
+        {
+            SheetCount[] ret = new SheetCount[256];
+            for (int i = 0; i < 256; i++)
+            {
+                ret[i] = new(sheetslot, (byte)i);
+            }
+            return ret;
+        }
+
+        public int CompareTo(SheetCount? other)
+        {
+            if (other is null)
+                return 1000;
+            return Count - other.Count;
+        }
+    }
     private sealed class EnemySprite(Sprite sprite)
     {
         public Sprite Sprite { get; } = sprite;
@@ -453,14 +476,56 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
     {
         private readonly byte?[] _sheets = sheets;
 
+        public byte? this[int i] => _sheets[i];
+
         public SheetSet() : this(new byte?[4]) { }
         public bool IsEmpty => _sheets.All(b => b == null);
         public bool IsFull => _sheets.All(b => b != null);
+
+        public bool IsContainedIn(SheetSet other)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                byte? ours = _sheets[i];
+                if (ours is null)
+                    continue;
+
+                byte? check = other[0];
+                if (check is null)
+                    return false;
+
+                if (check != ours)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool Contains(SheetSet? other)
+        {
+            if (other is null)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                byte? ours = _sheets[i];
+                byte? check = other[0];
+                if (check is null)
+                    continue;
+
+                if (check != ours)
+                    return false;
+            }
+
+            return true;
+        }
+
         public bool CanMergeWith(SheetSet other)
         {
             return CanMergeWith(other._sheets);
         }
-
         public bool CanMergeWith(byte?[]? otherSheets)
         {
             if (otherSheets == null)
@@ -645,6 +710,101 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
             // they affect the available room budget and reduce it, attempting to stay within the underworld sprite limit.
             var roomsWithExtraSprites = world.GetLocationsOfType(VertexType.Pot).Where(v => v.RoomId.HasValue).Select(v => v.RoomId!.Value).ToHashSet();
             roomsWithExtraSprites.UnionWith([0x3f, 0x44, 0x45, 0x93, 0xce, 0x117]); // large blocks
+
+            //
+            // Bush pack shuffle
+            //
+
+            // find the most common sheets used by overworld screens
+            var owSheet0Usage = SheetCount.CreateNewCollection(0);
+            var owSheet1Usage = SheetCount.CreateNewCollection(1);
+            var owSheet2Usage = SheetCount.CreateNewCollection(2);
+            var owSheet3Usage = SheetCount.CreateNewCollection(3);
+
+            foreach (var ow in owSheets)
+            {
+                if (ow[0] is byte s1)
+                    owSheet0Usage[s1].Count++;
+
+                if (ow[1] is byte s2)
+                    owSheet0Usage[s2].Count++;
+
+                if (ow[2] is byte s3)
+                    owSheet0Usage[s3].Count++;
+
+                if (ow[3] is byte s4)
+                    owSheet0Usage[s4].Count++;
+            }
+
+            EnemySprite bushSprite0 = new(null!);
+
+            static bool SheetSelect(SheetCount s) => s.Count > 10;
+            var owSheet0Candidates = owSheet0Usage.Where(SheetSelect);
+            var owSheet1Candidates = owSheet1Usage.Where(SheetSelect);
+            var owSheet2Candidates = owSheet2Usage.Where(SheetSelect);
+            var owSheet3Candidates = owSheet3Usage.Where(SheetSelect);
+
+            // if we have any clear and obvious winners, select those
+            static bool SuperSheetSelect(SheetCount s) => s.Count > 20;
+            if (owSheet0Candidates.Any(SuperSheetSelect))
+                owSheet0Candidates = owSheet0Candidates.Where(SuperSheetSelect);
+
+            if (owSheet1Candidates.Any(SuperSheetSelect))
+                owSheet1Candidates = owSheet1Candidates.Where(SuperSheetSelect);
+
+            if (owSheet2Candidates.Any(SuperSheetSelect))
+                owSheet2Candidates = owSheet2Candidates.Where(SuperSheetSelect);
+
+            if (owSheet3Candidates.Any(SuperSheetSelect))
+                owSheet3Candidates = owSheet3Candidates.Where(SuperSheetSelect);
+
+            // pick 4 random sheets
+            SheetSet bushSheets = new([
+                prng.GetRandomElementOrNull(owSheet0Candidates)?.ID,
+                prng.GetRandomElementOrNull(owSheet1Candidates)?.ID,
+                prng.GetRandomElementOrNull(owSheet2Candidates)?.ID,
+                prng.GetRandomElementOrNull(owSheet3Candidates)?.ID,
+            ]);
+
+            // create a list of candidate sprites and select some winners
+            BushAndPotsPrizeHandler bushHandler = new();
+
+            var bushCandidates = allEnemies.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.UnderBush) && s.Sheets.IsContainedIn(bushSheets));
+            prng.Shuffle(bushCandidates);
+
+            var bushWinner1 = bushCandidates.ElementAtOrDefault(0); // default to green rupee (vanilla: hoarder)
+            var bushWinner2 = bushCandidates.ElementAtOrDefault(1); 
+            var bushWinner3 = bushCandidates.ElementAtOrDefault(2); 
+            var bushWinner4 = bushCandidates.ElementAtOrDefault(3); 
+
+            bushHandler.Prize0FSpriteId = bushWinner1?.Sprite.Id ?? 0xD9; // default to green rupee
+            bushHandler.Prize10SpriteId = bushWinner2?.Sprite.Id ?? 0xD9; // default to green rupee
+            bushHandler.Prize11SpriteId = bushWinner3?.Sprite.Id ?? 0xD9; // default to green rupee
+            bushHandler.Prize12SpriteId = bushWinner4?.Sprite.Id ?? 0xD4; // default to landmine
+
+            var winnerSheets1 = bushWinner1?.Sheets;
+            var winnerSheets2 = bushWinner2?.Sheets;
+            var winnerSheets3 = bushWinner3?.Sheets;
+            var winnerSheets4 = bushWinner4?.Sheets;
+
+            // ban sprites using the in-game mask table if they're not compatible with the screen's sheets
+            for (int id = 0; id < owSheets.Length; id++)
+            {
+                var sheet = owSheets[id];
+                if (!sheet.Contains(winnerSheets1))
+                    bushHandler.BanSlotOnScreen(id, 0x0F);
+
+                if (!sheet.Contains(winnerSheets2))
+                    bushHandler.BanSlotOnScreen(id, 0x10);
+
+                if (!sheet.Contains(winnerSheets3))
+                    bushHandler.BanSlotOnScreen(id, 0x11);
+
+                if (!sheet.Contains(winnerSheets4))
+                    bushHandler.BanSlotOnScreen(id, 0x12);
+            }
+
+            world.SecretsHandler = bushHandler;
 
             void place(
                 SheetSet[] sheets,

@@ -2,13 +2,13 @@
 # when they differ from the internally used sprite name (to help discoverability when searching for them.)
 Raven:
   id: 0x00
-  flags: Challenge, NoDrop
+  flags: Challenge, NoDrop, UnderBush
   sheets: [null, null, null, 0x11]
   properties: Raven_properties
 Dacto:
   alternative: Raven
   id: 0x00
-  flags: Challenge, NoDrop
+  flags: Challenge, NoDrop, UnderBush
   sheets: [null, null, null, 0x19]
   properties: Dacto_properties
 Vulture:
@@ -57,13 +57,13 @@ MimicRed: #RED EYEGORE / RED MIMIC - Commandeering UNUSED WRONG PULL SWITCH
   properties: MimicRed_properties
 Octorok1: #OKTOROK
   id: 0x08
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x0C, null]
   properties: Octorok1_properties
 Slarok1: #SLAROK
   alternative: Octorok1
   id: 0x08
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x18, null]
   properties: Slarok1_properties
 Moldorm:
@@ -74,24 +74,24 @@ Moldorm:
   priority: 100
 Octorok4: #OCTOROK 4WAY
   id: 0x0A
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x0C, null]
   properties: Octorok4_properties
 Slarok4: #SLAROK 4WAY
   alternative: Octorok4
   id: 0x0A
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x18, null]
   properties: Slarok4_properties
 Chicken: #CUCCO
   id: 0x0B
-  flags: Challenge, NoDrop
+  flags: Challenge, NoDrop, UnderBush
   sheets: [null, null, null, 0x50]
   properties: Chicken_properties
 SkullChicken: #SKULL CUCCO
   alternative: Chicken
   id: 0x0B
-  flags: Challenge, NoDrop
+  flags: Challenge, NoDrop, UnderBush
   sheets: [null, null, null, 0x15]
   properties: Chicken_properties
 OctorokStone: #OCTOROK STONE
@@ -112,7 +112,7 @@ Buzzblob:
   properties: Buzzblob_properties
 Snapdragon:
   id: 0x0E
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [0x16, null, 0x17, null]
   properties: Snapdragon_properties
 Octoballoon:
@@ -135,7 +135,7 @@ Hinox:
   properties: Hinox_properties
 Moblin:
   id: 0x12
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x17, null]
   properties: Moblin_properties
 MiniHelmasaur: #MINI HELMASAUR
@@ -164,29 +164,29 @@ Sahasrahla: #SAHASRAHLA / AGINAH
   properties: Sahasrahla_properties
 BushHoarder: #HOARDER
   id: 0x17
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, null, 0x11]
   properties: BushHoarder_properties
 BushHoarderAlternative:
   alternative: BushHoarder
   id: 0x17
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, null, 0x10]
   properties: BushHoarder_properties
 MiniMoldorm: #MINI MOLDORM
   id: 0x18
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x1E, null, null]
   properties: MiniMoldorm_properties
 Poe:
   id: 0x19
-  flags: Challenge, NoDrop
+  flags: Challenge, NoDrop, UnderBush
   sheets: [null, null, null, 0x0E]
   properties: Poe_properties
 Hyu:
   alternative: Poe
   id: 0x19
-  flags: Challenge, NoDrop
+  flags: Challenge, NoDrop, UnderBush
   sheets: [null, null, null, 0x15]
   properties: Poe_properties
 DwarfSmith: #SMITHY
@@ -254,18 +254,18 @@ PushSwitch: #WATER SWITCH
   priority: 100
 Ropa:
   id: 0x22
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [0x16, null, null, null]
   properties: Ropa_properties
 RedBari: #RED BARI
   id: 0x23
-  flags: Challenge, NoDrop #DR allows them to drop items with fire
+  flags: Challenge, NoDrop, UnderBush #DR allows them to drop items with fire
   sheets: [0x1F, null, null, null]
   properties: RedBari_properties
   weight: 2
 BlueBari: #BLUE BARI
   id: 0x24
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [0x1F, null, null, null]
   properties: BlueBari_properties
 TalkingTree: #TALKING TREE
@@ -408,13 +408,13 @@ OldSnitch: #OLD SNITCH
   properties: OldSnitch_properties
 RockHoarder: #HOARDER
   id: 0x3E
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, null, 0x11]
   properties: RockHoarder_properties
 RockHoarderAlternative: #HOARDER
   alternative: RockHoarder
   id: 0x3E
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, null, 0x10]
   properties: RockHoarder_properties
 TutorialGuard: #TUTORIAL GUARD
@@ -429,7 +429,7 @@ LightningLock: #LIGHTNING GATE
   properties: LightningLock_properties
 BlueSwordGuard: #BLUE GUARD
   id: 0x41
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard01: #BLUE GUARD
@@ -492,7 +492,7 @@ BlueSwordGuard1B: #BLUE GUARD
 BlueTaros: #BLUE TAROS
   alternative: BlueSwordGuard
   id: 0x41
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x0D, null, null]
   properties: BlueSwordGuard_properties
 BlueTarosFalling: #BLUE TAROS
@@ -504,7 +504,7 @@ BlueTarosFalling: #BLUE TAROS
   properties: BlueSwordGuard_properties
 GreenSwordGuard: #GREEN GUARD
   id: 0x42
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x49, null, null]
   properties: GreenSwordGuard_properties
 GreenSwordGuardFalling: #GREEN GUARD
@@ -535,12 +535,12 @@ GreenSwordGuard1B: #GREEN GUARD
 RedTaros: #RED TAROS
   alternative: RedSpearGuard
   id: 0x43
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x0D, null, null]
   properties: RedSpearGuard_properties
 RedSpearGuard: #RED SPEAR GUARD
   id: 0x43
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x49, null, null]
   properties: RedSpearGuard_properties
 AssaultSwordGuard: #BLUESAIN BOLT
@@ -566,7 +566,7 @@ BlueArcher: #BLUE ARCHER
   properties: BlueArcher_properties
 GreenArcher: #GREEN BUSH GUARD
   id: 0x47
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [0x48, 0x49, null, null]
   properties: GreenArcher_properties
 RedJavelinGuard: #RED JAVELIN GUARD
@@ -586,12 +586,12 @@ RedBombGuard: #BOMB GUARD
   properties: RedBombGuard_properties
 GreenGuardRecruit: #GREEN KNIFE GUARD
   id: 0x4B
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the knife guard legs and the falling guard sprite
   properties: GreenGuardRecruit_properties
 Geldman:
   id: 0x4C
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x12, null]
   properties: Geldman_properties
 Rabbit: #TOPPO
@@ -601,12 +601,12 @@ Rabbit: #TOPPO
   properties: Rabbit_properties
 Popo:
   id: 0x4E
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x2C, null, null]
   properties: Popo_properties
 PopoFast: #POPO?
   id: 0x4F
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x2C, null, null]
   properties: PopoFast_properties
 Cannonball:
@@ -666,7 +666,7 @@ DesertPalaceBarrier: #DESERT STATUE
   properties: DesertPalaceBarrier_properties
 Crab:
   id: 0x58
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x0C, null]
   properties: Crab_properties
 Bird: #LOST WOODS BIRD
@@ -777,35 +777,35 @@ MirrorPortal: #MIRROR PORTAL
   properties: MirrorPortal_properties
 Rat: #RAT / CRICKET
   id: 0x6D
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x1C, null]
   properties: Rat_properties
 Buzz: #BUZZ / CRICKET
   alternative: Rat
   id: 0x6D
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x24, null]
   properties: Buzz_properties
 Rope: #ROPE
   id: 0x6E
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x1C, null]
   properties: Rope_properties
 Skullrope: #STAL ROPE
   alternative: Rope
   id: 0x6E
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x24, null]
   properties: Skullrope_properties
 Keese:
   id: 0x6F
-  flags: NoDrop
+  flags: NoDrop, UnderBush
   sheets: [null, null, 0x1C, null]
   properties: Keese_properties
 Chasupa:
   alternative: Keese
   id: 0x6F
-  flags: NoDrop
+  flags: NoDrop, UnderBush
   sheets: [null, null, 0x24, null]
   properties: Chasupa_properties
 HelmasaurFireball: #KING HELMASAUR FIREBALL
@@ -815,7 +815,7 @@ HelmasaurFireball: #KING HELMASAUR FIREBALL
   properties: HelmasaurFireball_properties
 Leever:
   id: 0x71
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [0x2F, null, null, null]
   properties: Leever_properties
 PondActivation: #FAIRY POND TRIGGER
@@ -864,7 +864,7 @@ SahaWife: #SAHASRAHLAS WIFE / DR: Grandma
   properties: SahaWife_properties
 Bee:
   id: 0x79
-  flags: NoPlace
+  flags: NoPlace, UnderBush
   properties: Bee_properties
 Agahnim:
   id: 0x7A
@@ -909,7 +909,7 @@ FireSnake:
   properties: FireSnake_properties
 Hover:
   id: 0x81
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x22, null]
   properties: Hover_properties
 AntifairyCircle: #ANTIFAIRY CIRCLE
@@ -946,7 +946,8 @@ Kodongo:
   properties: Kodongo_properties
 Flames: #KONDONGO FIRE
   id: 0x87
-  flags: NoPlace
+  flags: NoPlace # TODO: it'd be funny to place this under a bush, but it needs some other fixes to work... (timer $0DF0,X);
+                 # hijack hardcoded stuff at 0682E0? make something for every sprite?
   sheets: [null, null, 0x2A, null]
   properties: Flames_properties
 Mothula:
@@ -997,12 +998,12 @@ Terrorpin:
   properties: Terrorpin_properties
 Zol: #BLOB
   id: 0x8F
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, 0x20, null, null]
   properties: Zol_properties
 PowderBlob: #BLOB
   id: 0x8F
-  flags: NoPlace
+  flags: NoPlace, UnderBush
   sheets: [null, null, null, null]
   properties: PowderBlob_properties
 Wallmaster:
@@ -1083,18 +1084,18 @@ Pengator:
   properties: Pengator_properties
 Kyameron:
   id: 0x9A
-  flags: NoDrop
+  flags: NoDrop, UnderBush
   sheets: [null, null, 0x22, null]
   properties: Kyameron_properties
 Wizzrobe:
   id: 0x9B
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x25, null]
   properties: Wizzrobe_properties
 SkullWizzrobe:
   alternative: Wizzrobe
   id: 0x9B
-  flags: Challenge
+  flags: Challenge, UnderBush
   sheets: [null, null, 0x29, null]
   properties: Wizzrobe_properties
 # TODO add babasu version of 0x9C after investigating, etc (it's a valid variant)
@@ -1430,11 +1431,11 @@ FloppingFish: #FLOPPING FISH
   properties: FloppingFish_properties
 Stal:
   id: 0xD3
-  flags: Challenge
+  flags: Challenge, UnderBush
   properties: Stal_properties
 Landmine:
   id: 0xD4
-  flags: OverworldOnly
+  flags: OverworldOnly, UnderBush
   properties: Landmine_properties
 DiggingGameNPC: #DIG GAME GUY
   id: 0xD5
@@ -1745,8 +1746,8 @@ BadSwitchBomb: #BAD SWITCH BOMB
   subtype: 0x07
   weight: 0 # Not visible by default, ignore for the room budget
 
-# other sprites that appear in code, for example for use under pots
-# id might not correspond to actual sprite bytes, and is specific to under-pot usage.
+# other sprites that appear in code; namely, for use under pots
+# ID does not correspond to actual an sprite ID, and is specific to under-pot usage.
 Hole:
   id: 0x80
   flags: NoPlace, UnderPots

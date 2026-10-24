@@ -1930,6 +1930,15 @@ public sealed class Rom : GameRom
         }
     }
 
+    public void WriteBushAndPotSecrets(BushAndPotsPrizeHandler secrets)
+    {
+        byte[] banMasks = secrets.GetBanMasks(out byte[] prizeMasks);
+
+        Write((SNES)0x1AFB7B, banMasks);
+        Write((SNES)0x1AFBCB, prizeMasks);
+        Write((SNES)0x0681F4, secrets.SpriteIds);
+    }
+
     public void WriteSpriteSheetSets(byte[] spriteSheetSets)
     {
         if (spriteSheetSets.Length > 0xBF * 4)

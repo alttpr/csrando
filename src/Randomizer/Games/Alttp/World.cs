@@ -24,8 +24,10 @@ public sealed class World : World<Item>, IPortalHost
     /// </summary>
     public List<PortalAnchor> PortalAnchors { get; } = [];
 
-    public readonly Dictionary<string, Sprite> Sprites = [];
-    public readonly Dictionary<string, SpriteProperties> SpriteData = [];
+    public Dictionary<string, Sprite> Sprites { get; set; } = [];
+    public Dictionary<string, SpriteProperties> SpriteData { get; set; } = [];
+
+    public BushAndPotsPrizeHandler? SecretsHandler { get; set; }
 
     public Sprite GetSprite(string name)
         => Sprites.GetValueOrDefault(name)

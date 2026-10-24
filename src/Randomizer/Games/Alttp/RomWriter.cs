@@ -1087,6 +1087,9 @@ public static class RomWriter
         rom.WriteSpriteSheetSets(world.SpriteSheets.Sets);
 
         rom.WriteSpriteData(world.Sprites.Values);
+
+        if (world.SecretsHandler is not null)
+            rom.WriteBushAndPotSecrets(world.SecretsHandler);
     }
 }
 

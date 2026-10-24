@@ -460,6 +460,8 @@ public enum YamlSpriteFlags
     NoDrop = 1 << 4,
     /// <summary>This sprite only appears under a pot.</summary>
     UnderPots = 1 << 5,
+    /// <summary>This sprite is allowed to appear under bushes. This overrides <see cref="NoPlace"/>.</summary>
+    UnderBush = 1 << 6,
 }
 
 public class YamlBossSprite
