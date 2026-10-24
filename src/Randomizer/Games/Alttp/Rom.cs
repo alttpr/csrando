@@ -377,7 +377,7 @@ public sealed class Rom : GameRom
     /// <summary>Set the Game Type</summary>
     /// <param name="setting">name</param>
     // TODO: don't use a string for this
-    // TODO: are these correct?
+    // TODO: reconcile our usage of this field with other projects/reconsider its format in ROM
     public void SetGameType(string setting)
     {
         // .... ridn
