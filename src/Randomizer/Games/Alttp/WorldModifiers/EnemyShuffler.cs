@@ -574,20 +574,19 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
 
         // Set up sprite sheets
         var sheetableSprites = allEnemies.Where(s => !s.Sheets.IsEmpty);
-        // sprites that can be moved to any room as they don't have any sheet
-        // requirements. ignoring subtype sprites since they are only variants.
-        var placableSprites = allEnemies.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace) && s.Sprite.SubType == 0x00).ToHashSet();
+        // sprites that can be moved to any room as they don't have any sheet requirements.
+        var placeableSprites = allEnemies.Where(s => !s.Sprite.Flags.HasFlag(YamlSpriteFlags.NoPlace)).ToHashSet();
         // falling sprites sometimes have additional sheet requirements (including a falling sprite)
         // those need to be selected for rooms that have pits, and might limit the rest of the sprites that can go there.
         var fallingSprites = new Dictionary<EnemySprite, EnemySprite>();
-        foreach (var fallingSprite in placableSprites.Where(s => !string.IsNullOrEmpty(s.Sprite.FallingSpriteFor)))
+        foreach (var fallingSprite in placeableSprites.Where(s => !string.IsNullOrEmpty(s.Sprite.FallingSpriteFor)))
         {
             // this intentionally throws when no matching sprite is found. this is a data issue!
             var nonFallingSprite = allEnemies.First(e => e.Sprite.Name == fallingSprite.Sprite.FallingSpriteFor);
             fallingSprites[nonFallingSprite] = fallingSprite;
         }
-        placableSprites.RemoveWhere(e => !string.IsNullOrEmpty(e.Sprite.FallingSpriteFor));
-        var challengeSprites = placableSprites.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)).ToHashSet();
+        placeableSprites.RemoveWhere(e => !string.IsNullOrEmpty(e.Sprite.FallingSpriteFor));
+        var challengeSprites = placeableSprites.Where(s => s.Sprite.Flags.HasFlag(YamlSpriteFlags.Challenge)).ToHashSet();
 
         var roomSheets = Enumerable.Range(0, 0x140).Select(roomId =>
         {
@@ -676,7 +675,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                         }
 
                         // 2. build a list of suitable sprites based on what the room currently has in the sheet set
-                        IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placableSprites : challengeSprites;
+                        IEnumerable<EnemySprite> spriteSource = enemy.Trophy == null ? placeableSprites : challengeSprites;
                         int availableBudget = budget - minimumBudgetRequired + 1;
                         spriteSource = spriteSource.Where(s => s.Sprite.Weight <= availableBudget);
                         if (enemy.Item != null)
