@@ -3,8 +3,8 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Randomizer.Graph;
-using BaseSpoilerLog = Graph.SpoilerLog;
 using AlttpWorld = Alttp.World;
+using BaseSpoilerLog = Graph.SpoilerLog;
 using MetroidWorld = Metroid.World;
 using SuperMetroidWorld = SuperMetroid.World;
 using Zelda1World = Zelda1.World;
