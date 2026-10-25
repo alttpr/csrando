@@ -1,11 +1,11 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
-using Randomizer.Games.SuperMetroid.Model;
-using Randomizer.Graph;
-using SolTechnology.Avro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Games.SuperMetroid.Model;
+using Randomizer.Graph;
+using SolTechnology.Avro;
 
 public class MapRandomizer
 {

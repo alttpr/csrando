@@ -1,12 +1,12 @@
 ﻿namespace Randomizer.Games.SuperMetroid;
 
-using Randomizer.Games.SuperMetroid.Model;
-using Randomizer.Graph;
-using Randomizer.RomModifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Randomizer.Games.SuperMetroid.Model;
+using Randomizer.Graph;
+using Randomizer.RomModifications;
 
 
 public class Rom : GameRom
@@ -384,7 +384,7 @@ public class Rom : GameRom
                 // Debug write
                 Console.WriteLine($"Door {fromRoom?.Name} ({fromRoomId:X4}) -> {toRoom?.Name} ({toRoomId:X4}), bidir: {bidirectional}, ptrs: {fromGeoDoor.exit_ptr:X4}->{fromGeoDoor.entrance_ptr:X4} to {toGeoDoor.exit_ptr:X4}->{toGeoDoor.entrance_ptr:X4}");
 
-                var originalDoorData = doorData.Where(d => d.ptr == toGeoDoor.entrance_ptr).FirstOrDefault();
+                var originalDoorData = doorData.Where(d => d.Ptr == toGeoDoor.entrance_ptr).FirstOrDefault();
                 if (originalDoorData == null)
                 {
                     Console.WriteLine($"Failed to find door data for door ptr {toGeoDoor.entrance_ptr:X4} ({fromRoom?.Name} -> {toRoom?.Name})");
@@ -393,11 +393,11 @@ public class Rom : GameRom
 
                 if (from_area != to_area)
                 {
-                    originalDoorData.elevator |= 0x40;
+                    originalDoorData.Elevator |= 0x40;
                 }
                 else
                 {
-                    originalDoorData.elevator = (byte)(originalDoorData.elevator & ~0x40);
+                    originalDoorData.Elevator = (byte)(originalDoorData.Elevator & ~0x40);
                 }
 
                 Console.WriteLine($" Writing door ptr {fromGeoDoor.exit_ptr:X4} to point to room {toRoomId:X4} at door ptr {toGeoDoor.entrance_ptr:X4}, original data: {originalDoorData}");
@@ -415,14 +415,14 @@ public class Rom : GameRom
                     if (fromGeoDoor.entrance_ptr == 0)
                         continue;
 
-                    originalDoorData = doorData.Where(d => d.ptr == fromGeoDoor.entrance_ptr).First();
+                    originalDoorData = doorData.Where(d => d.Ptr == fromGeoDoor.entrance_ptr).First();
                     if (from_area != to_area)
                     {
-                        originalDoorData.elevator |= 0x40;
+                        originalDoorData.Elevator |= 0x40;
                     }
                     else
                     {
-                        originalDoorData.elevator = (byte)(originalDoorData.elevator & ~0x40);
+                        originalDoorData.Elevator = (byte)(originalDoorData.Elevator & ~0x40);
                     }
                     Console.WriteLine($" Writing reverse door ptr {toGeoDoor.exit_ptr:X4} to point to room {fromRoomId:X4} at door ptr {fromGeoDoor.entrance_ptr:X4}, original data: {originalDoorData}");
                     Write((Address)toGeoDoor.exit_ptr!, DoorReader.GetDoorBytes(originalDoorData));

@@ -4,8 +4,8 @@ rooms:
       regions:
         - name: "Dark Lake Hylia Shop"
           type: "shop"
-          shopkeeper: 0xC1
-          shopstyle: 0x03
+          shopkeeper: 0x01
+          palette: 0x06
           inletid: 0x60
           inventory:
             - name: "Dark Lake Hylia Shop - Left"

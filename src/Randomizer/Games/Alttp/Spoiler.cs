@@ -40,7 +40,12 @@ internal static class Spoiler
             }
         }
 
-        // TODO: implement shops
+        if (world.RandomizedShops is [.. { } shops])
+        {
+            spoiler[g + "Shops"] = shops.ToDictionary(
+                k => k.ShopVertex.Name,
+                v => string.Join(", ", v.Inventory.OrderByDescending(i => i.Price).Select(i => $"{i.Item?.Name ?? "Nothing"} - {i.Price}")));
+        }
 
         if (config.BossShuffle != BossShuffleOption.None)
         {

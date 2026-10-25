@@ -22,16 +22,26 @@ using YamlDotNet.Serialization;
 
 public class Door
 {
-    public int ptr { get; set; }
-    public ushort room { get; set; }
-    public byte elevator { get; set; }
-    public byte orientation { get; set; }
-    public byte x_low { get; set; }
-    public byte y_low { get; set; }
-    public byte x_high { get; set; }
-    public byte y_high { get; set; }
-    public ushort distance { get; set; }
-    public ushort asm { get; set; }
+    [YamlMember(Alias = "ptr")]
+    public int Ptr { get; set; }
+    [YamlMember(Alias = "room")]
+    public ushort Room { get; set; }
+    [YamlMember(Alias = "elevator")]
+    public byte Elevator { get; set; }
+    [YamlMember(Alias = "orientation")]
+    public byte Orientation { get; set; }
+    [YamlMember(Alias = "x_low")]
+    public byte XLow { get; set; }
+    [YamlMember(Alias = "y_low")]
+    public byte YLow { get; set; }
+    [YamlMember(Alias = "x_high")]
+    public byte XHigh { get; set; }
+    [YamlMember(Alias = "y_high")]
+    public byte YHigh { get; set; }
+    [YamlMember(Alias = "distance")]
+    public ushort Distance { get; set; }
+    [YamlMember(Alias = "asm")]
+    public ushort Asm { get; set; }
 };
 
 public static class DoorReader
@@ -73,15 +83,15 @@ public static class DoorReader
     {
         var bytes = new List<byte>();
 
-        bytes.AddRange(BitConverter.GetBytes(door.room));
-        bytes.Add(door.elevator);
-        bytes.Add(door.orientation);
-        bytes.Add(door.x_low);
-        bytes.Add(door.y_low);
-        bytes.Add(door.x_high);
-        bytes.Add(door.y_high);
-        bytes.AddRange(BitConverter.GetBytes(door.distance));
-        bytes.AddRange(BitConverter.GetBytes(door.asm));
+        bytes.AddRange(BitConverter.GetBytes(door.Room));
+        bytes.Add(door.Elevator);
+        bytes.Add(door.Orientation);
+        bytes.Add(door.XLow);
+        bytes.Add(door.YLow);
+        bytes.Add(door.XHigh);
+        bytes.Add(door.YHigh);
+        bytes.AddRange(BitConverter.GetBytes(door.Distance));
+        bytes.AddRange(BitConverter.GetBytes(door.Asm));
         return bytes.ToArray();
 
     }

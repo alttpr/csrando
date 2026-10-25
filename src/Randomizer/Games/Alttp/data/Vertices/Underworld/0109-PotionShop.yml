@@ -4,8 +4,9 @@ rooms:
       regions:
         - name: "Potion Shop"
           type: "shop"
-          shopkeeper: 0xA0
-          shopstyle: 0x83
+          shopkeeper: 0x00
+          palette: 0x05
+          infinite_stock: true
           inletid: 0x4C
           items:
             - name: "Potion Shop Item"
