@@ -432,10 +432,17 @@ BlueSwordGuard: #BLUE GUARD
   flags: Challenge
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
+BlueSwordGuardFalling: #BLUE GUARD
+  alternative: BlueSwordGuard
+  falling: BlueSwordGuard
+  id: 0x41
+  sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
+  properties: BlueSwordGuard_properties
 BlueSwordGuard01: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x01
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard01Falling: #BLUE GUARD
@@ -443,18 +450,21 @@ BlueSwordGuard01Falling: #BLUE GUARD
   falling: BlueSwordGuard01
   id: 0x41
   subtype: 0x01
+  flags: NoPlace
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   properties: BlueSwordGuard_properties
 BlueSwordGuard02: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x02
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard03: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x03
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard03Falling: #BLUE GUARD
@@ -462,30 +472,35 @@ BlueSwordGuard03Falling: #BLUE GUARD
   falling: BlueSwordGuard03
   id: 0x41
   subtype: 0x03
+  flags: NoPlace
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   properties: BlueSwordGuard_properties
 BlueSwordGuard05: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x05
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard13: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x13
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard15: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x15
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: BlueSwordGuard_properties
 BlueSwordGuard1B: #BLUE GUARD
   alternative: BlueSwordGuard
   id: 0x41
   subtype: 0x1B
+  flags: NoPlace
   # this sprite is used in pit rooms in vanilla
   sheets: [null, 0x49, 0x13, null] # 0x13 in slot 2 is the falling guard sprite
   properties: BlueSwordGuard_properties
@@ -518,18 +533,21 @@ GreenSwordGuard01: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x01
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: GreenSwordGuard_properties
 GreenSwordGuard03: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x03
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: GreenSwordGuard_properties
 GreenSwordGuard1B: #GREEN GUARD
   alternative: GreenSwordGuard
   id: 0x42
   subtype: 0x1B
+  flags: NoPlace
   sheets: [null, 0x49, null, null]
   properties: GreenSwordGuard_properties
 RedTaros: #RED TAROS
