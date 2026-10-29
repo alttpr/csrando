@@ -608,7 +608,7 @@ Moldorm_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x13
+  bump_damage_class: 0x3
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
@@ -4703,7 +4703,7 @@ ArmosKnight_properties: #ARMOS KNIGHT
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x11
+  bump_damage_class: 0x1
   # OAMPROP: $49
   custom_death: false
   invulnerable: true
@@ -4756,7 +4756,7 @@ Lanmolas_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x14
+  bump_damage_class: 0x4
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
@@ -7008,7 +7008,7 @@ Agahnim_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x14
+  bump_damage_class: 0x4
   # OAMPROP: $8B
   custom_death: true
   invulnerable: false
@@ -7751,7 +7751,7 @@ Mothula_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
@@ -7963,7 +7963,7 @@ Arrghus_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
@@ -8016,7 +8016,7 @@ ArrghusSpawn_properties: #ARRGHI
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
@@ -8338,7 +8338,7 @@ Helmasaur_properties: #KING HELMASAUR
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
@@ -9243,7 +9243,7 @@ Kholdstare_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x17
+  bump_damage_class: 0x7
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
@@ -9296,7 +9296,7 @@ KholdstareShell_properties: #KHOLDSTARE SHELL
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $80
   custom_death: true
   invulnerable: false
@@ -9349,7 +9349,7 @@ FallingIce_properties: #FALLING ICE
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $4D
   custom_death: false
   invulnerable: true
@@ -10728,7 +10728,7 @@ Vitreous_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x17
+  bump_damage_class: 0x7
   # OAMPROP: $0A
   custom_death: false
   invulnerable: false
@@ -10781,7 +10781,7 @@ VitreousSmallEyeball_properties: #VITREOUS SMALL EYE
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x17
+  bump_damage_class: 0x7
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
@@ -11152,7 +11152,7 @@ Medusa_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x10
+  bump_damage_class: 0x0
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
@@ -11530,7 +11530,7 @@ Trinexx_properties: #TRINEXX ROCK HEAD
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x17
+  bump_damage_class: 0x7
   # OAMPROP: $41
   custom_death: false
   invulnerable: true
@@ -11583,7 +11583,7 @@ TrinexxHeadFire_properties: #TRINEXX FIRE HEAD
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x17
+  bump_damage_class: 0x7
   # OAMPROP: $0B
   custom_death: false
   invulnerable: false
@@ -11636,7 +11636,7 @@ TrinexxHeadIce_properties: #TRINEXX ICE HEAD
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x17
+  bump_damage_class: 0x7
   # OAMPROP: $0D
   custom_death: false
   invulnerable: false
@@ -11689,7 +11689,7 @@ Blind_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x15
+  bump_damage_class: 0x5
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
@@ -11848,7 +11848,7 @@ BunnyBeam_properties: #BUNNYBEAM / SMOKE
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x10
+  bump_damage_class: 0x0
   # OAMPROP: $00
   custom_death: false
   invulnerable: false
@@ -12113,7 +12113,7 @@ Ganon_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x19
+  bump_damage_class: 0x9
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
@@ -12166,7 +12166,7 @@ GanonStunned_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x19
+  bump_damage_class: 0x9
   # OAMPROP: $01
   custom_death: false
   invulnerable: false
@@ -12802,7 +12802,7 @@ Fairy_properties:
   bee_target: false
   powder_immune: false
   survives_boss_prep: true
-  bump_damage_class: 0x10
+  bump_damage_class: 0x0
   # OAMPROP: $D8
   custom_death: true
   invulnerable: true
