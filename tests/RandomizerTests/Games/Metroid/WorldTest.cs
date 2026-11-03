@@ -1,12 +1,12 @@
 namespace RandomizerTests.Games.Metroid;
 
+using System.Text.Json;
 using Randomizer.Games;
 using Randomizer.Games.Metroid;
 using Randomizer.Graph;
-using System.Text.Json;
+using GameRandomizer = Randomizer.Games.Metroid.GameRandomizer;
 using Graph = Randomizer.Graph.Graph;
 using Vertex = Randomizer.Graph.Vertex;
-using GameRandomizer = Randomizer.Games.Metroid.GameRandomizer;
 
 [TestClass]
 public sealed class WorldTest

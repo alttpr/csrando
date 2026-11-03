@@ -1,14 +1,14 @@
 ﻿namespace RandomizerTests.Logic;
 
-using Randomizer.Games;
-using Randomizer.Graph;
-using Randomizer.RomModifications;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using Randomizer.Games;
+using Randomizer.Graph;
+using Randomizer.RomModifications;
 using AlttpRandomizer = Randomizer.Games.Alttp.GameRandomizer;
 
 public abstract class LogicTestBase

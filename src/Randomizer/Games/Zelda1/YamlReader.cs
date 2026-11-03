@@ -334,10 +334,10 @@ public class YamlReader
         public required string name;
         public required List<int> allowed_levels;
         [YamlMember(Alias = "kill_items")]
-        public List<string> kill_items { get; set; } = new();
+        public List<string> KillItems { get; set; } = new();
 
         [YamlMember(Alias = "blocks_passage")]
-        public bool blocks_passage { get; set; }
+        public bool BlocksPassage { get; set; }
     }
 
     public class EnemyList
@@ -781,13 +781,13 @@ public class YamlReader
 
         // Overworld enemies that reliably drop rupees and appear in farmable spots.
         var overworldEnemies = data.enemies.enemies
-            .Where(e => e.allowed_levels.Contains(0) && e.kill_items.Count > 0)
+            .Where(e => e.allowed_levels.Contains(0) && e.KillItems.Count > 0)
             .ToList();
 
         // A weapon qualifies if it is in the free+infinite allow-list AND can kill at least most of
         // the overworld enemies (so the player isn't stuck farming a single rare spawn).
         var candidates = FreeInfiniteWeapons
-            .Where(w => overworldEnemies.Count(e => e.kill_items.Contains(w)) >= overworldEnemies.Count / 2)
+            .Where(w => overworldEnemies.Count(e => e.KillItems.Contains(w)) >= overworldEnemies.Count / 2)
             .ToList();
 
         // Fall back to the allow-list if the data ever fails to yield anything, so shops never become
@@ -1068,7 +1068,7 @@ public class YamlReader
             // room? Its kill_items (Bait) drive the room-clear requirement; the Bait supply is
             // guaranteed by BuildCaves (vanilla shops) or ItemPooler (shuffled shops).
             bool passageBlocked = GetEnemiesInRoom(map).Any(name =>
-                data.enemies.enemies.FirstOrDefault(e => e.name == name)?.blocks_passage == true);
+                data.enemies.enemies.FirstOrDefault(e => e.name == name)?.BlocksPassage == true);
 
             // Go through doors and create nodes for them
             for (int i = 0; i <= 3; i++)
@@ -1488,7 +1488,7 @@ public class YamlReader
         foreach (var enemyName in enemies)
         {
             var enemy = data!.enemies.enemies.FirstOrDefault(e => e.name == enemyName);
-            if (enemy != null && enemy.kill_items != null && enemy.kill_items.Count > 0)
+            if (enemy != null && enemy.KillItems != null && enemy.KillItems.Count > 0)
             {
                 killableEnemies.Add(enemyName);
             }
@@ -1554,7 +1554,7 @@ public class YamlReader
 
         foreach (var enemy in data!.enemies.enemies)
         {
-            if (enemy.kill_items != null && enemy.kill_items.Count > 0)
+            if (enemy.KillItems != null && enemy.KillItems.Count > 0)
             {
                 var fightNodeName = $"Fight{enemy.name}";
                 var fightNode = FindOrCreateNode(fightNodeName);
@@ -1563,7 +1563,7 @@ public class YamlReader
                 var defeatNodeName = $"Defeat{enemy.name}";
                 var defeatNode = FindOrCreateNode(defeatNodeName, defeatNodeName);
 
-                foreach (var item in enemy.kill_items)
+                foreach (var item in enemy.KillItems)
                 {
                     AddDirectedEdge(fightNode, defeatNode, item);
                 }

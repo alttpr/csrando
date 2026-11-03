@@ -96,7 +96,7 @@ public abstract record Requirement
     public record Notable(string NotableName) : Requirement;
     public record DisableEquipment(string Equipment) : Requirement;
     public record ResourceConsumed(ResourceTypeCount[] Resources) : Requirement;
-    public record CycleFrames(int cycleFrames) : Requirement;
+    public record CycleFrames(int FrameCount) : Requirement;
 
     public Requirement ModifyObstacleState(string[] obstaclesCleared)
     {

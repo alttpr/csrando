@@ -6,8 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Randomizer.Games.Metroid.MapGen;
 using Randomizer.Graph;
-using BaseVertex = Randomizer.Graph.Vertex;
 using static Randomizer.Games.Metroid.YamlReader;
+using BaseVertex = Randomizer.Graph.Vertex;
 
 /// <summary>One cell of the generated map, shaped for the web spoiler map viewer.</summary>
 public sealed class MapSpoilerCell

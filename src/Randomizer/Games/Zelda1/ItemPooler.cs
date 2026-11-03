@@ -157,7 +157,7 @@ internal sealed class ItemPooler : IItemPooler
         if (data == null)
             return !world.Config.DungeonShuffle; // no data means vanilla layout, which has the Goriya
 
-        var blockingIds = data.enemies.enemies.Where(e => e.blocks_passage).Select(e => e.id).ToHashSet();
+        var blockingIds = data.enemies.enemies.Where(e => e.BlocksPassage).Select(e => e.id).ToHashSet();
         var levelRooms = data.levels.Where(l => l.area == YamlReader.Area.Underworld)
             .SelectMany(l => l.rooms).ToHashSet();
 

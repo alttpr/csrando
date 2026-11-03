@@ -1,5 +1,6 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
 
+#pragma warning disable IDE1006 // Naming Styles: These are direct JSON member names, and it's easier to suppress the rule than sprinkling attributes
 public record GeometryDoor(
     string direction,
     int x,
@@ -32,3 +33,4 @@ public record RoomGeometry(
     object? twin_node_tiles,
     bool heated
 );
+#pragma warning restore IDE1006 // Naming Styles

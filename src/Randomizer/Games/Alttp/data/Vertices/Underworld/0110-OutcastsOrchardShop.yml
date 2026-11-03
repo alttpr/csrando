@@ -4,6 +4,8 @@ rooms:
       regions:
         - name: "Outcasts Orchard Shop"
           type: "shop"
+          shopkeeper: 0x01
+          palette: 0x06
           inletid: 0x57
           inventory:
             - name: "Outcasts Orchard Shop - Left"

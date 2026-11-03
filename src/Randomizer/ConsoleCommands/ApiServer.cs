@@ -3,9 +3,9 @@ namespace Randomizer.ConsoleCommands;
 using System.CommandLine;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Randomizer.ApiControllers;
 

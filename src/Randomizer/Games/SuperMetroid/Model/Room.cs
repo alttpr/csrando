@@ -239,7 +239,7 @@ abstract public record EntranceCondition
     public record ComeInWithSpaceJumpBelow() : EntranceCondition;
     public record ComeInWithPlatformBelow(decimal? MinHeight, decimal? MaxHeight, decimal? MaxLeftPosition, decimal? MinRightPosition) : EntranceCondition;
     public record ComeInWithGrappleTeleport(int[][] BlockPositions) : EntranceCondition;
-    public record ComesThroughToilet(string comesThroughToilet) : EntranceCondition;
+    public record ComesThroughToilet(string ToiletCondition) : EntranceCondition;
 }
 
 public class EntranceConditionConverter : JsonConverter<EntranceCondition>

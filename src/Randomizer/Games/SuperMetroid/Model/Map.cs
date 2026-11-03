@@ -1,6 +1,7 @@
 ﻿namespace Randomizer.Games.SuperMetroid.Model;
 
 public record Map(
+#pragma warning disable IDE1006 // Naming Styles: Not sure if Avro serialization supports aliases or varying naming conventions
     List<int> room_id,
     List<int> room_x,
     List<int> room_y,
@@ -12,6 +13,7 @@ public record Map(
     List<int> conn_to_room_id,
     List<int> conn_to_door_id,
     List<bool> conn_bidirectional
+#pragma warning restore IDE1006 // Naming Styles
 );
 
 

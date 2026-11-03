@@ -1,9 +1,9 @@
 namespace Randomizer.Games.Zelda1;
 
-using Randomizer.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Graph;
 
 internal record DungeonConfig
 {
@@ -1428,11 +1428,11 @@ internal class DungeonBuilder
 
     private bool RoomHasKillableEnemies(Room room)
         => GetEnemyNames(room.EnemyCount, room.EnemyId, room.EnemyMode)
-            .Any(enemyName => _data.enemies.enemies.Any(e => e.name == enemyName && e.kill_items.Count > 0));
+            .Any(enemyName => _data.enemies.enemies.Any(e => e.name == enemyName && e.KillItems.Count > 0));
 
     private bool TemplateHasKillableEnemies((int enemies, int enemy_id, int enemy_mode) template)
         => GetEnemyNames(template.enemies, template.enemy_id, template.enemy_mode)
-            .Any(enemyName => _data.enemies.enemies.Any(e => e.name == enemyName && e.kill_items.Count > 0));
+            .Any(enemyName => _data.enemies.enemies.Any(e => e.name == enemyName && e.KillItems.Count > 0));
 
     private IEnumerable<string> GetEnemyNames(int enemyCountIndex, int enemyId, int enemyMode)
     {

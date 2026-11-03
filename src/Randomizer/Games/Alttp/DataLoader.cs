@@ -173,7 +173,10 @@ internal static class DataLoader
                     Sheets = map.Sheets,
                     InletId = region.InletId,
                     Shopkeeper = region.Shopkeeper,
-                    ShopStyle = region.Shopstyle,
+                    ShopPalette = region.ShopPalette,
+                    InfiniteStock = region.InfiniteStock,
+                    ShopInventory = convertInventory(region),
+                    AlternativeVRAM = region.AlternativeVRAM,
                     Switch = region.Switch ?? false,
                     MoonPearl = moonPearlTransform(map.Moonpearl, region.Name),
                 };
@@ -324,7 +327,10 @@ internal static class DataLoader
                     ExtraLight = room.ExtraLight,
                     InletId = region.InletId,
                     Shopkeeper = region.Shopkeeper,
-                    ShopStyle = region.Shopstyle,
+                    ShopPalette = region.ShopPalette,
+                    InfiniteStock = region.InfiniteStock,
+                    ShopInventory = convertInventory(region),
+                    AlternativeVRAM = region.AlternativeVRAM,
                     Switch = region.Switch ?? false,
                     // TODO: should allowed bosses be more explicit in boss rooms?
                     Allow = region.Bosses?.ToArray(),
@@ -467,6 +473,18 @@ internal static class DataLoader
         }
 
         return structuredVertices.Values;
+
+        static ShopItem[]? convertInventory(Region region)
+        {
+            if (region.Type != VertexType.Shop || region.Inventory is not { } inventory)
+                return null;
+
+            return inventory.Select(i => new ShopItem
+            {
+                Max = (byte)i.Count,
+                Price = (ushort)i.Cost,
+            }).ToArray();
+        }
     }
 
     /// <summary>

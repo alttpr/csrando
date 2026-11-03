@@ -3,6 +3,8 @@ rooms:
     nodes:
       regions:
         - name: "Dark Death Mountain Shop"
+          shopkeeper: 0x01
+          palette: 0x06
           inletid: 0x58
           mobs:
             - name: "Rock Wall - Shopkeeper"
@@ -10,3 +12,19 @@ rooms:
               sprite: "Salesman"
               allow:
                 - "Salesman"
+          inventory:
+            - name: "Dark Death Mountain Shop - Left"
+              type: "shopitem"
+              item: "RedPotion"
+              cost: 150
+              itemset: ["dw", "shop"]
+            - name: "Dark Death Mountain Shop - Middle"
+              type: "shopitem"
+              item: "Heart"
+              cost: 10
+              itemset: ["dw", "shop"]
+            - name: "Dark Death Mountain Shop - Right"
+              type: "shopitem"
+              item: "TenBombs"
+              cost: 50
+              itemset: ["dw", "shop"]

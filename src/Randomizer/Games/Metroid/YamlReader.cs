@@ -164,7 +164,7 @@ public class YamlReader
         public Area area;
         public Scrolling scroll;
         public required int[] position;
-        public required int[] screens { get; set; } = Array.Empty<int>();
+        public required int[] screens = Array.Empty<int>();
         public List<Sprite>? sprites;
     }
 

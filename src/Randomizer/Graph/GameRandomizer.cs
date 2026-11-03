@@ -77,10 +77,19 @@ public abstract class GameRandomizer
         var filler = new RandomAssumedFiller(this, PRNG);
         var sets = _itemPooler.Pool;
 
+        BeforeRandomize();
+
         filler.FillGraph(sets);
+
+        AfterRandomize();
 
         SpoilerLog = new SpoilerLog(this);
     }
+
+    /// <summary>Hook that runs before graph filling begins.</summary>
+    protected virtual void BeforeRandomize() { }
+    /// <summary>Hook that runs after graph filling has concluded (but before the spoiler is computed).</summary>
+    protected virtual void AfterRandomize() { }
 
     /// <summary>
     /// Get a graph searched based on the items in the inventory.
