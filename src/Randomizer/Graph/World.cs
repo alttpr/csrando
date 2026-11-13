@@ -12,6 +12,8 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
 {
     public string GameId { get; } = gameId;
     public int Id { get; } = id;
+    private readonly string _preParsedID = $"{gameId}:{id}";
+
     public Graph Graph { get; } = graph;
     public WorldConfig WorldConfig { get; } = worldConfig;
 
@@ -61,15 +63,8 @@ public abstract class World<TItem>(string gameId, int id, Graph graph, WorldConf
     /// Get a vertex by name in this world.
     /// </summary>
     /// <param name="locationName">name to search for</param>
-    public Vertex GetLocation(string locationName) => Graph.GetVertex($"{locationName}:{GameId}:{Id}");
-    public bool HasLocation(string locationName) => Graph.HasVertex($"{locationName}:{GameId}:{Id}");
-
-    /// <summary>Get all vertices in this world.</summary>
-    /// <returns></returns>
-    public IEnumerable<Vertex> GetLocations() => Graph.GetVertices().Where(vertex => vertex.World == this);
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type);
+    public Vertex GetLocation(string locationName) => Graph.GetVertex($"{locationName}:{_preParsedID}");
+    public bool HasLocation(string locationName) => Graph.HasVertex($"{locationName}:{_preParsedID}");
 
     public void TrackPlacedItem(Vertex location)
     {

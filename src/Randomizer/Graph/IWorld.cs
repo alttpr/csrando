@@ -15,13 +15,6 @@ public interface IWorld
     /// <param name="locationName">name to search for</param>
     Vertex GetLocation(string locationName);
 
-    /// <summary>Get all vertices in this world.</summary>
-    /// <returns></returns>
-    IEnumerable<Vertex> GetLocations();
-
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(v => v.Type == type);
     bool HasLocation(string locationName);
 
     IEnumerable<Vertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts);
@@ -61,3 +54,38 @@ public interface IWorld
     /// <summary>The entry point for this world, where everything begins.</summary>
     Vertex Start { get; }
 }
+
+public static class IWorldExtensions
+{
+    extension(IWorld world)
+    {
+        /// <summary>Get all vertices in this world.</summary>
+        /// <returns></returns>
+        public IEnumerable<Vertex> GetLocations() => world.Graph.GetVertices().Where(vertex => vertex.World == world);
+
+        /// <summary>Get all vertices in this world that match a condition.</summary>
+        /// <returns></returns>
+        public IEnumerable<Vertex> GetLocationsWhere(Predicate<Vertex> condition) =>
+            world.Graph.GetVertices().Where(vertex => vertex.World == world && condition(vertex));
+
+        /// <summary>Get all vertices of a given type in this world.</summary>
+        /// <param name="type">type to search for</param>
+        public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => world.GetLocationsWhere(v => v.Type == type);
+
+        public IEnumerable<T> GetLocations<T>() where T : Vertex =>
+            world.Graph.GetVertices().OfType<T>().Where(vertex => vertex.World == world);
+
+        /// <summary>Get all vertices in this world that match a condition.</summary>
+        /// <returns></returns>
+        public IEnumerable<T> GetLocationsWhere<T>(Predicate<T> condition) where T : Vertex =>
+             world.Graph.GetVertices().OfType<T>().Where(vertex => vertex.World == world && condition(vertex));
+
+        /// <summary>Get all vertices of a given type in this world.</summary>
+        /// <param name="type">type to search for</param>
+        public IEnumerable<T> GetLocationsOfType<T>(VertexType type) where T : Vertex =>
+            world.GetLocationsWhere<T>(v => v.Type == type);
+    }
+
+}
+
+

@@ -7,7 +7,7 @@ internal sealed class ShopFiller : IAlttpWorldModifier
 {
     public void AdjustEdges(World world, PRNG prng)
     {
-        var shops = world.GetLocationsOfType(VertexType.Shop);
+        var shops = world.GetLocationsOfType<Vertex>(VertexType.Shop);
         var graph = world.Graph;
 
         if (world.Config.RegionShopSupply == ShopSupplyOption.Shuffled)

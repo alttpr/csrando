@@ -16,7 +16,7 @@ internal sealed class DarknessGraphifier : IAlttpWorldModifier
     public void AdjustEdges(World world, PRNG prng)
     {
         var graph = world.Graph;
-        var lightRooms = graph.GetVertices().OfType<Vertex>().Where(v => !v.Dark && v.World == world).ToList();
+        var lightRooms = world.GetLocationsWhere<Vertex>(v => !v.Dark).ToList();
         foreach (var lightRoom in lightRooms)
         {
             foreach (var edge in lightRoom.Edges.Where(e => ((Vertex)e.To).Dark))

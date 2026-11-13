@@ -50,8 +50,7 @@ internal sealed class DoorReplacer : IAlttpWorldModifier
     {
         var fixedKeys = world.Graph.FixedKeys;
 
-        var worldKeys = world.Graph.GetVertices()
-                    .Where(v => v.World == world && v.Item is Item { Type: ItemType.SmallKey })
+        var worldKeys = world.GetLocationsWhere(v => v.Item is Item { Type: ItemType.SmallKey })
                     .GroupBy(v => v.Item!)
                     .ToDictionary(k => k.Key, v => v.ToHashSet());
 

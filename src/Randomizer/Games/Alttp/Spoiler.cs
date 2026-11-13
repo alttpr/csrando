@@ -31,7 +31,7 @@ internal static class Spoiler
 
         if (config.EnemyShuffle != EnemyShuffleOption.None)
         {
-            foreach (var enemy in world.GetLocationsOfType(VertexType.Mob))
+            foreach (var enemy in world.GetLocationsOfType<Vertex>(VertexType.Mob))
             {
                 var parts = enemy.Name.Split(" - ", 2);
                 var group = g + (parts.Length > 1 ? parts[0] : "Enemies");

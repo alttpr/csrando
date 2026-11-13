@@ -33,7 +33,7 @@ internal sealed class PrizePackShuffler : IAlttpWorldModifier
     /// <summary>Pick items for each prize pack.</summary>
     public void AdjustEdges(World world, PRNG prng)
     {
-        var prizepacks = world.GetLocationsOfType(VertexType.PrizePack);
+        var prizepacks = world.GetLocationsOfType<Alttp.Vertex>(VertexType.PrizePack);
 
         if (!world.Config.CustomPrizePacks)
         {

@@ -173,8 +173,6 @@ public sealed class World : Randomizer.Graph.World<Item>, IPortalHost
 
     protected override Item CreateItem(string name, IWorld world) => new(name, world);
 
-    public new IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().Where(vertex => vertex.Type == type).Cast<Vertex>();
-
     public override bool IsWinnable(BaseVertex start, Inventory startingInventory)
     {
         var winSearcher = new StatefulSearcher(Graph, (Vertex)this.Start, startingInventory);

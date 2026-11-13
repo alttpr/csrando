@@ -62,7 +62,7 @@ public class Rom : GameRom
 
     public void WriteItems(World world)
     {
-        foreach (var location in world.GetLocationsOfType(VertexType.Item).Where(l => l.Item != null))
+        foreach (var location in world.GetLocationsOfType<Vertex>(VertexType.Item).Where(l => l.Item != null))
         {
             if (location.Item!.Bytes == null)
                 continue;

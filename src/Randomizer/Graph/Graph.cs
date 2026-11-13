@@ -7,6 +7,7 @@ namespace Randomizer.Graph;
 /// </summary>
 public sealed class Graph
 {
+    // TODO - SortedDictionary?
     private readonly HashSet<Vertex> _vertices = [];
     private Vertex[] _verticesById = [];
     private readonly Dictionary<string, Vertex> _verticesByName = [];

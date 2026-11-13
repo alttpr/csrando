@@ -31,7 +31,6 @@ internal sealed class RootWorld : IWorld
     IItem IWorld.GetItem(string name) => throw _doNotUseThis;
     IItem? IWorld.GetExistingItem(string name) => throw _doNotUseThis;
     Vertex IWorld.GetLocation(string locationName) => throw _doNotUseThis;
-    IEnumerable<Vertex> IWorld.GetLocations() => throw _doNotUseThis;
     bool IWorld.HasLocation(string locationName) => throw _doNotUseThis;
     public IEnumerable<Vertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts) => throw _doNotUseThis;
     public void TrackPlacedItem(Vertex location) => throw _doNotUseThis;

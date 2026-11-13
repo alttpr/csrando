@@ -87,7 +87,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
                 if (edge.To is not Vertex { Sprite: Sprite sprite })
                     continue;
 
-                var item = world.GetExistingItem($"Defeat{sprite.DefeatName}");
+                var item = world.GetExistingItem(sprite.DefeatItem);
                 if (item != null)
                     edge.Condition = new ItemCondition(item, 1);
             }
@@ -556,10 +556,10 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
         // 1. enemies are already placed (including no enemization): read enemies, calculate sets for them.
         // 2. enemies are not placed: pick random sheets, match other enemies to them to create sets, write enemies.
         // the latter tries to maximize variability in placement (vs. placing enemies first then trying to match sets.)
-        var regionVertices = world.GetLocationsOfType(VertexType.Region).ToArray();
+        var regionVertices = world.GetLocationsOfType<Vertex>(VertexType.Region).ToArray();
         var roomVertices = regionVertices.Where(v => v.RoomId.HasValue).GroupBy(v => v.RoomId).Select(v => (Key: v.Key!.Value, Value: v.First())).ToDictionary(k => k.Key, v => v.Value);
         var mapVertices = regionVertices.Where(v => v.Map.HasValue).GroupBy(v => v.Map).Select(v => (Key: v.Key!.Value, Value: v.First())).ToDictionary(k => k.Key, v => v.Value);
-        var enemyVertices = world.GetLocationsOfType(VertexType.Mob);
+        var enemyVertices = world.GetLocationsOfType<Vertex>(VertexType.Mob);
 
         // remove the maiden if blind isn't in thieves town.
         var thievesTownBoss = world.GetLocation("Thieves' Town - Boss Room - Blind Active");
@@ -642,7 +642,7 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
             var alreadyRandomized = new HashSet<Vertex>();
             // rooms that have sprites we need to account for. commonly, that's pots/skulls but also large blocks.
             // they affect the available room budget and reduce it, attempting to stay within the underworld sprite limit.
-            var roomsWithExtraSprites = world.GetLocationsOfType(VertexType.Pot).Where(v => v.RoomId.HasValue).Select(v => v.RoomId!.Value).ToHashSet();
+            var roomsWithExtraSprites = world.GetLocationsOfType<Vertex>(VertexType.Pot).Where(v => v.RoomId.HasValue).Select(v => v.RoomId!.Value).ToHashSet();
             roomsWithExtraSprites.UnionWith([0x3f, 0x44, 0x45, 0x93, 0xce, 0x117]); // large blocks
 
             void place(

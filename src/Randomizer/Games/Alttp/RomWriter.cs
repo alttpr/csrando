@@ -39,7 +39,7 @@ public static class RomWriter
 
         if (!false) //config("multiworld", false))
         {
-            var itemLocations = world.GetLocationsOfType(VertexType.Item).ToArray();
+            var itemLocations = world.GetLocationsOfType<Vertex>(VertexType.Item).ToArray();
             // replace one of the bows with the alternate, so we can give a silvers hint at the end.
             var alternateBowLocation = itemLocations
                 .Where(v => v.Item?.Name == "ProgressiveBow")
@@ -366,7 +366,7 @@ public static class RomWriter
             { "sahasrahla_bring_courage", progressionHints["GreenPendantLocation"] },
             { "bomb_shop", progressionHints["Crystal56Location"] },
         };
-        var locationByItem = world.GetLocationsOfType(VertexType.Item)
+        var locationByItem = world.GetLocationsOfType<Vertex>(VertexType.Item)
             .Where(v => v.Item != null)
             .OfType<Vertex>()
             .ToLookup(v => v.Item!.Name);
@@ -547,7 +547,7 @@ public static class RomWriter
         string language = world.WorldConfig.Language;
         var tiles = prng.Shuffle([.. YamlReader.LoadHintLocations(language)]);
         var hints = new Queue<(string Location, string[] Items)>();
-        var locationByItem = world.GetLocationsOfType(VertexType.Item)
+        var locationByItem = world.GetLocationsOfType<Vertex>(VertexType.Item)
             // FIXME: this returns meta items that have bytes, but aren't used as items (MM/TR entry)
             .Where(v => v.Item?.Bytes != null) // some locations have meta-items (which don't have bytes to write)
             .ToLookup(v => v.Item!.Name);
@@ -816,7 +816,7 @@ public static class RomWriter
     {
         var config = world.Config;
 
-        foreach (var prizePack in world.GetLocationsOfType(VertexType.PrizePack).OfType<Vertex>())
+        foreach (var prizePack in world.GetLocationsOfType<Vertex>(VertexType.PrizePack))
             rom.WriteSprite(prizePack);
 
         if (config.RomRupeeBow)
@@ -843,13 +843,11 @@ public static class RomWriter
 
     private static void WriteEntrancesToRom(World world, Rom rom)
     {
-        var sourcesByTarget = world.Graph.GetVertices()
-            .Where(v => v.World == world)
-            .OfType<Vertex>()
+        var sourcesByTarget = world.GetLocations<Vertex>()
             .SelectMany(v => v.Edges.Select(e => (Target: e.To, Source: v)))
             .ToLookup(k => k.Target, v => v.Source);
 
-        var outletVertices = world.GetLocationsOfType(VertexType.Outlet).OfType<Vertex>().Where(v => v.OutletId.HasValue);
+        var outletVertices = world.GetLocationsOfType<Vertex>(VertexType.Outlet).Where(v => v.OutletId.HasValue);
         var outletToMap = new Dictionary<int, int>();
         var outlets = new Dictionary<int, int>();
         foreach (var outletVertex in outletVertices)
@@ -866,7 +864,7 @@ public static class RomWriter
         }
 
         // we also tag exits as Entrance, so we have to look for the ones that have an EntranceId set.
-        var entranceVertices = world.GetLocationsOfType(VertexType.Entrance).Where(v => v.EntranceId.HasValue);
+        var entranceVertices = world.GetLocationsOfType<Vertex>(VertexType.Entrance).Where(v => v.EntranceId.HasValue);
         var entrances = new Dictionary<int, int>();
         foreach (var entranceVertex in entranceVertices)
         {
@@ -884,7 +882,7 @@ public static class RomWriter
             entrances.Add(entranceVertex.EntranceId!.Value, target.InletId!.Value);
         }
 
-        var holeVertices = world.GetLocationsOfType(VertexType.Hole);
+        var holeVertices = world.GetLocationsOfType<Vertex>(VertexType.Hole);
         var holes = new Dictionary<int, int>();
         foreach (var holeVertex in holeVertices)
         {
@@ -908,7 +906,7 @@ public static class RomWriter
     /// <param name="rom">rom to write data to</param>
     private static void WriteEnemiesToRom(World world, Rom rom)
     {
-        var enemies = world.GetLocationsOfType(VertexType.Mob);
+        var enemies = world.GetLocationsOfType<Vertex>(VertexType.Mob);
         var enemyRooms = enemies.ToLookup(enemy => enemy.RoomId);
 
         // remove the maiden if blind isn't in thieves town.
@@ -962,7 +960,7 @@ public static class RomWriter
         var headerChanges = new RoomHeaderPatches();
         var roomChanges = new RoomObjectPatches();
         var bossData = YamlReader.LoadBossSprites();
-        foreach (var boss in world.GetLocationsOfType(VertexType.Boss))
+        foreach (var boss in world.GetLocationsOfType<Vertex>(VertexType.Boss))
         {
             int roomId = boss.RoomId!.Value;
             var vanillaBoss = BossShuffler.GetVanillaBoss(boss);

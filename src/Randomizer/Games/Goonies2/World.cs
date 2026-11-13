@@ -36,10 +36,6 @@ public sealed class World : World<Item>
 
     protected override Item CreateItem(string name, IWorld world) => new(name, world);
 
-    /// <summary>Get all vertices of a given type in this world.</summary>
-    /// <param name="type">type to search for</param>
-    public new IEnumerable<Vertex> GetLocationsOfType(VertexType type) => GetLocations().OfType<Vertex>().Where(vertex => vertex.Type == type);
-
     public override IEnumerable<BaseVertex> GetEmptyLocationsInSet(ISearcher searcher, IItem itemToPlace, ItemSetName itemSet, Dictionary<ItemSetName, int> setCounts)
     {
         var locations = new List<BaseVertex>();

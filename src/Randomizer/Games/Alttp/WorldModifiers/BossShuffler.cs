@@ -51,10 +51,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
     /// <summary>Swap Entrances based on world settings.</summary>
     public void AdjustEdges(World world, PRNG prng)
     {
-        var bossRooms = world.GetLocations()
-            .Where(v => v.World == world
-                     && v.Edges.Any(e => e.Condition.Item.Name == BOSS_SHUFFLER_ITEM_CONDITION))
-            .ToList();
+        var bossRooms = world.GetLocationsWhere(v => v.Edges.Any(e => e.Condition.Item.Name == BOSS_SHUFFLER_ITEM_CONDITION)).ToList();
 
         // force Kholdstare for swordless to be in Ice Palace
         // we'd like to have him elsewhere, but that requires us to make Bombos work in the room and put a tile down first.
@@ -167,7 +164,7 @@ internal sealed class BossShuffler : IAlttpWorldModifier
 
     /// <summary>Place Boss item in location.</summary>
     /// <param name="bossItem">Boss item name</param>
-    /// <param name="location">Location name</param>
+    /// <param name="from">Vertex coming from</param>
     /// <param name="world">World</param>
     /// <exception cref="Exception">If can't place boss in location</exception>
     private static void PlaceBossItemInLocation(string bossItem, BaseVertex from, World world)
