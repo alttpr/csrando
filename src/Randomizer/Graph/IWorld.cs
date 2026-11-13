@@ -73,12 +73,12 @@ public static class IWorldExtensions
         public IEnumerable<Vertex> GetLocationsOfType(VertexType type) => world.GetLocationsWhere(v => v.Type == type);
 
         public IEnumerable<T> GetLocations<T>() where T : Vertex =>
-            world.Graph.GetVertices().OfType<T>().Where(vertex => vertex.World == world);
+            (IEnumerable<T>)world.Graph.GetVertices().Where(vertex => vertex is T && vertex.World == world);
 
         /// <summary>Get all vertices in this world that match a condition.</summary>
         /// <returns></returns>
         public IEnumerable<T> GetLocationsWhere<T>(Predicate<T> condition) where T : Vertex =>
-             world.Graph.GetVertices().OfType<T>().Where(vertex => vertex.World == world && condition(vertex));
+            (IEnumerable<T>)world.Graph.GetVertices().Where(vertex => vertex is T vT && vertex.World == world && condition(vT));
 
         /// <summary>Get all vertices of a given type in this world.</summary>
         /// <param name="type">type to search for</param>
