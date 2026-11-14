@@ -420,7 +420,7 @@ public class GraphPreprocessor
                     World = _world,
                     RoomId = room.Id,
                     NodeId = node.Id,
-                    Addresses = node.NodeAddress != null ? [long.Parse(node.NodeAddress.Substring(2), System.Globalization.NumberStyles.HexNumber)] : null,
+                    Addresses = node.NodeAddress != null ? [long.Parse(node.NodeAddress[2..], System.Globalization.NumberStyles.HexNumber)] : null,
                     Node = node
                 };
 

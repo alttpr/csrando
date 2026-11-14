@@ -378,8 +378,8 @@ public class Rom : GameRom
                     SetCreReloadFlag(world, fromGeo);
                 }
 
-                ushort fromRoomId = (ushort)(int.Parse(fromRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
-                ushort toRoomId = (ushort)(int.Parse(toRoom?.RoomAddress?.Substring(2) ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
+                ushort fromRoomId = (ushort)(int.Parse(fromRoom?.RoomAddress?[2..] ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
+                ushort toRoomId = (ushort)(int.Parse(toRoom?.RoomAddress?[2..] ?? "0", System.Globalization.NumberStyles.HexNumber) & 0xFFFF);
 
                 // Debug write
                 Console.WriteLine($"Door {fromRoom?.Name} ({fromRoomId:X4}) -> {toRoom?.Name} ({toRoomId:X4}), bidir: {bidirectional}, ptrs: {fromGeoDoor.exit_ptr:X4}->{fromGeoDoor.entrance_ptr:X4} to {toGeoDoor.exit_ptr:X4}->{toGeoDoor.entrance_ptr:X4}");
@@ -1152,11 +1152,11 @@ public class Rom : GameRom
                 Console.WriteLine($"Warning: Could not find nodes for cross-area connection between room {connection.Nodes[0].RoomId} and {connection.Nodes[1].RoomId}");
             }
 
-            var leftExitPtr = Convert.ToInt32(leftNode?.NodeAddress?.Substring(2) ?? "0", 16);
+            var leftExitPtr = Convert.ToInt32(leftNode?.NodeAddress?[2..] ?? "0", 16);
             var leftRoomGeometry = world.JsonData.RoomGeometries.FirstOrDefault(r => r.doors.Any(d => d.exit_ptr == leftExitPtr));
             var leftRoomMapIdx = world.Map!.room_id.IndexOf(leftRoomGeometry?.room_id ?? -1);
 
-            var rightExitPtr = Convert.ToInt32(rightNode?.NodeAddress?.Substring(2) ?? "0", 16);
+            var rightExitPtr = Convert.ToInt32(rightNode?.NodeAddress?[2..] ?? "0", 16);
             var rightRoomGeometry = world.JsonData.RoomGeometries.FirstOrDefault(r => r.doors.Any(d => d.exit_ptr == rightExitPtr));
             var rightRoomMapIdx = world.Map!.room_id.IndexOf(rightRoomGeometry?.room_id ?? -1);
 
@@ -1178,7 +1178,7 @@ public class Rom : GameRom
             foreach (var node in new[] { (leftNode, rightArea), (rightNode, leftArea) })
             {
                 // Get exitptr of source node
-                var exitPtr = Convert.ToInt32(node.Item1?.NodeAddress?.Substring(2) ?? "0", 16);
+                var exitPtr = Convert.ToInt32(node.Item1?.NodeAddress?[2..] ?? "0", 16);
                 var roomGeometry = world.JsonData.RoomGeometries.FirstOrDefault(r => r.doors.Any(d => d.exit_ptr == exitPtr));
                 var doorGeometry = roomGeometry?.doors.FirstOrDefault(d => d.exit_ptr == exitPtr)!;
                 var roomMapIdx = world.Map!.room_id.IndexOf(roomGeometry?.room_id ?? -1);
