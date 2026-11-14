@@ -1239,7 +1239,6 @@ public class Rom : GameRom
             Write((SNES)decoTileDataPtr, [0x00, 0x00]);
             decoTileDataPtr += 2;
         }
-
     }
 
     internal static ushort GetMapStationDecoTileValue(bool? portalOnLeft) => portalOnLeft switch
@@ -1453,12 +1452,14 @@ public class Rom : GameRom
 
 
     // Default door properties for refill/map/save room door replacement
-    private static byte[] PropsIn(OriginalDoorPosition dir) =>
-        dir == OriginalDoorPosition.Left ? [0x40, 0x05, 0x0E, 0x06, 0x00, 0x00]
-                                         : [0x40, 0x04, 0x01, 0x06, 0x00, 0x00];
-    private static byte[] PropsOut(OriginalDoorPosition dir) =>
-        dir == OriginalDoorPosition.Left ? [0x40, 0x04, 0x0E, 0x06, 0x00, 0x00]
-                                         : [0x40, 0x05, 0x01, 0x06, 0x00, 0x00];
+    private static byte[] PropsIn(OriginalDoorPosition dir)
+        => dir == OriginalDoorPosition.Left
+            ? [0x40, 0x05, 0x0E, 0x06, 0x00, 0x00]
+            : [0x40, 0x04, 0x01, 0x06, 0x00, 0x00];
+    private static byte[] PropsOut(OriginalDoorPosition dir)
+        => dir == OriginalDoorPosition.Left
+            ? [0x40, 0x04, 0x0E, 0x06, 0x00, 0x00]
+            : [0x40, 0x05, 0x01, 0x06, 0x00, 0x00];
 
     private void PatchRoomHeader(int roomHeaderLong, ushort doorList, int levelDataPtr, ushort plmList)
     {

@@ -95,5 +95,4 @@ public sealed class World : World<Item>, IPortalHost
     {
         return new Searcher(graph, start ?? Start, inventory, setLocations, this);
     }
-
 }

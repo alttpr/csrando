@@ -134,10 +134,10 @@ public static class DoorTypeExtensions
 
 public class HexStringToIntConverter : JsonConverterFactory
 {
-    public override bool CanConvert(Type typeToConvert) =>
-        typeToConvert == typeof(int) ||
-        typeToConvert == typeof(ushort) ||
-        typeToConvert == typeof(byte);
+    public override bool CanConvert(Type typeToConvert)
+        => typeToConvert == typeof(int)
+        || typeToConvert == typeof(ushort)
+        || typeToConvert == typeof(byte);
 
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {

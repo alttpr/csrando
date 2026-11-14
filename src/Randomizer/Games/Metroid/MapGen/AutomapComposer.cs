@@ -172,8 +172,9 @@ public sealed class AutomapTiles
         elevatorShaft = Elevator("shaft");
     }
 
-    private static ushort Require(Dictionary<int, ushort> group, int connections, string what) =>
-        group.TryGetValue(connections, out var word) ? word
+    private static ushort Require(Dictionary<int, ushort> group, int connections, string what)
+        => group.TryGetValue(connections, out var word)
+            ? word
             : throw new InvalidOperationException($"no {what} map glyph for connection mask {connections}");
 
     public ushort Topology(int connections) => Require(topology, connections, "topology");
@@ -183,12 +184,14 @@ public sealed class AutomapTiles
     public ushort Portal(int connections) => Require(portals, connections, "portal");
     public ushort MapStation(int connections) => Require(mapStations, connections, "map station");
 
-    public ushort Door(int connections, int doorMask) =>
-        doors.TryGetValue((connections, doorMask), out var word) ? word
+    public ushort Door(int connections, int doorMask)
+        => doors.TryGetValue((connections, doorMask), out var word)
+            ? word
             : throw new InvalidOperationException($"no door map glyph for connections {connections} doors {doorMask}");
 
-    public ushort Boss(int doorMask) =>
-        bosses.TryGetValue(doorMask, out var word) ? word
+    public ushort Boss(int doorMask)
+        => bosses.TryGetValue(doorMask, out var word)
+            ? word
             : throw new InvalidOperationException($"no boss map glyph for door mask {doorMask}");
 
     public ushort ElevatorEntrance(bool doorEast) => doorEast ? elevatorEntranceEast : elevatorEntranceWest;

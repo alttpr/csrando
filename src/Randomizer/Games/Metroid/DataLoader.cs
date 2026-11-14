@@ -368,5 +368,4 @@ internal static class DataLoader
 
         return CoordToAddressMap.TryGetValue((y, x), out var addr) ? addr : null;
     }
-
 }

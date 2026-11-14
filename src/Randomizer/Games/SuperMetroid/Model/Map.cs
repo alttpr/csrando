@@ -36,7 +36,6 @@ public class MapConnection
     public int ToDoorId { get; init; }
     public required GeometryDoor ToDoor { get; init; }
     public bool Bidirectional { get; init; }
-
 }
 
 // This takes the raw map data and roomgeometry data to build a more useful map representation
@@ -111,5 +110,4 @@ public class MapInfo
     {
         return Connections.FirstOrDefault(c => c.ToDoor.entrance_ptr == doorPtr);
     }
-
 }

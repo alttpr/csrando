@@ -332,5 +332,4 @@ public sealed class World : World<Item>
     {
         return new ComboSearcher(graph, (Vertex)(start ?? Start), inventory, setLocations);
     }
-
 }

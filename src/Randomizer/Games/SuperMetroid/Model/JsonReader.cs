@@ -120,7 +120,6 @@ public class JsonReader
         {
             edgePair.Directed.Add([(string)from["name"], (string)to["name"]]);
         }
-
     }
 
     private void AddDirectedEdge(Dictionary<string, object> from, Dictionary<string, object> to, Requirement requirement)
@@ -243,7 +242,6 @@ public class JsonReader
         {
             BuildConnection(connection);
         }
-
     }
 
     private void BuildConnection(Connection connection)
@@ -303,7 +301,6 @@ public class JsonReader
             AddDirectedEdge(firstNodeRevData, secondNodeRevData, secondRequirement);
             //Console.WriteLine($"Adding reverse edge from {firstNodeRevData["name"]} to {secondNodeRevData["name"]}");
         }
-
     }
 
     private void BuildRoom(Room room)
@@ -437,7 +434,6 @@ public class JsonReader
                         // This is required for backtracking
                         AddDirectedEdge(itemNode, newNode, new Requirement.Single("BacktrackSearch"));
                     }
-
                 }
 
                 // If this node yields flags, add a flag node and connection to it
@@ -541,7 +537,6 @@ public class JsonReader
                     AddDirectedEdge(obstacleNode, outNode, new Requirement.Always());
                 }
             }
-
         }
     }
 
@@ -641,7 +636,6 @@ public class JsonReader
                         //Console.WriteLine($"Added edge from {fromNodeName} to {stratNodeName} with requirement {requirement}");
                         ConnectNode(room, toNode, newObstacleState);
                     }
-
                 }
             }
         }
