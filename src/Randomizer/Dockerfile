@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:11.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore as distinct layers
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
        | tar -x -C /app/publish/Games/SuperMetroid/data/maps \
     && rm -rf /var/lib/apt/lists/*
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS runtime
 WORKDIR /app
 
 # ASP.NET will listen on 8080 inside the container
