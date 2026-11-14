@@ -25,8 +25,9 @@ internal sealed class ApiServer : Command
     public int Handle(ParseResult parseResult)
     {
         var builder = WebApplication.CreateBuilder(parseResult.GetValue(_others)!);
-        builder.Services.AddControllers();
-        builder.Services.AddOpenApi();
+        bool enableOpenApi = parseResult.GetValue(_enableOpenApi);
+        if (enableOpenApi)
+            builder.Services.AddOpenApi();
         builder.Services.AddLogging();
 
         var generationLimits = new GenerationLimitsOptions();
@@ -38,35 +39,30 @@ internal sealed class ApiServer : Command
 
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowAll", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            options.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         });
 
-        builder.Services.Configure<JsonOptions>(options =>
-        {
-            options.SerializerOptions.PropertyNameCaseInsensitive = true;
-            options.SerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
-            options.SerializerOptions.AllowTrailingCommas = true;
-            options.SerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        });
+        builder.Services.ConfigureHttpJsonOptions(options => configureJsonOptions(options.SerializerOptions));
         builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
-                options.JsonSerializerOptions.AllowTrailingCommas = true;
-                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            });
+            .AddJsonOptions(options => configureJsonOptions(options.JsonSerializerOptions));
 
         var app = builder.Build();
+        app.UseCors();
         app.MapControllers();
-        if (parseResult.GetValue(_enableOpenApi))
+        if (enableOpenApi)
             app.MapOpenApi();
 
         app.Run();
         return 0;
+
+        static void configureJsonOptions(JsonSerializerOptions serializerOptions)
+        {
+            serializerOptions.PropertyNameCaseInsensitive = true;
+            serializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+            serializerOptions.AllowTrailingCommas = true;
+            serializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            serializerOptions.Converters.Add(new JsonStringEnumConverter());
+            serializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        }
     }
 }
