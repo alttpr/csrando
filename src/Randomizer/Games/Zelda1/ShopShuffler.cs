@@ -114,8 +114,8 @@ internal sealed class ShopShuffler
 
     // A cave is a shop if it has the Shop flag and shows items, and isn't a money game or hint.
     // Also used by YamlReader.BuildCaves to find the vanilla Bait shops when shops aren't shuffled.
-    internal static bool IsShop(CaveData c) =>
-        c.Flag.HasFlag(CaveFlags.Shop)
+    internal static bool IsShop(CaveData c)
+        => c.Flag.HasFlag(CaveFlags.Shop)
         && c.Flag.HasFlag(CaveFlags.ShowItems)
         && !c.Flag.HasFlag(CaveFlags.MoneyGame)
         && !c.Flag.HasFlag(CaveFlags.Hint);

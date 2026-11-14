@@ -109,8 +109,6 @@ public abstract record Requirement
             _ => this
         };
     }
-
-
 }
 
 public class RequirementConverter : JsonConverter<Requirement>

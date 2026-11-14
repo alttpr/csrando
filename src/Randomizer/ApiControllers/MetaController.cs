@@ -88,8 +88,9 @@ public sealed partial class MetaController : ControllerBase
     /// WorldConfig property name), which is also how the web identifies selected
     /// games — so OnlyWithGames lists are emitted in the same vocabulary.
     /// </summary>
-    private static string GameKey(Game game) =>
-        gameKeys.Value.TryGetValue(game, out string? key) ? key
+    private static string GameKey(Game game)
+        => gameKeys.Value.TryGetValue(game, out string? key)
+            ? key
             : throw new InvalidOperationException($"no {nameof(WorldConfig)} property exists for game {game}");
 
     private static readonly Lazy<Dictionary<Game, string>> gameKeys = new(() =>

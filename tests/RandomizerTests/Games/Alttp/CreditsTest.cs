@@ -74,5 +74,4 @@ public sealed class CreditsTest
 
         return string.Join(", ", values);
     }
-
 }

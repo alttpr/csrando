@@ -951,5 +951,4 @@ internal sealed class EnemyShuffler : IAlttpWorldModifier
 
         return ret;
     }
-
 }

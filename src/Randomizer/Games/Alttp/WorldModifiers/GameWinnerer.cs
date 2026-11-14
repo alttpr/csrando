@@ -28,7 +28,6 @@ internal sealed class GameWinnerer : IAlttpWorldModifier
             default:
                 throw new ArgumentException("Unknown Goal option: " + world.Config.Goal);
         }
-
     }
 
     private static void SetTriforcePiecesGoal(World world)

@@ -2669,5 +2669,4 @@ internal class DungeonBuilder
 
         return distances;
     }
-
 }
